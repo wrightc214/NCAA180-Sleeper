@@ -25,7 +25,7 @@ import pandas as pd
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from site_common import page_head  # noqa: E402
 
-CARD_VERSION = 1
+CARD_VERSION = 2
 STATE = "data/OrphanCard_Current.json"
 OUT_HTML = "reports/orphans.html"
 OUT_PNG = "reports/orphans.png"
@@ -141,7 +141,6 @@ def build_html(cards):
     .oc ul{list-style:none;margin:0;padding:0}
     .oc li{display:flex;justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px solid var(--line);font-size:15px}
     .oc li small{font:600 12px var(--num);letter-spacing:.06em}
-    .cta{margin-top:16px;font:700 18px var(--num);letter-spacing:.06em;text-transform:uppercase;text-align:center;color:var(--accent)}
     """
     parts = []
     for c in cards:
@@ -160,8 +159,7 @@ def build_html(cards):
     return (page_head("NCAA 180 · Open Teams", css)
             + f"""<div class="wrap"><header><div><div class="eyebrow">Dynasty · now recruiting</div>
 <h1>NCAA 180 <em>Open Teams</em></h1></div><div class="kpi"><b>{n}</b><span>team{'s' if n != 1 else ''} available</span></div></header>
-<div class="grid">{''.join(parts) or '<p>No open teams right now.</p>'}</div>
-<div class="cta">Interested? Message the league manager.</div></div></body></html>""")
+<div class="grid">{''.join(parts) or '<p>No open teams right now.</p>'}</div></div></body></html>""")
 
 
 def render():
