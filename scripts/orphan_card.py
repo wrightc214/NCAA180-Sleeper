@@ -133,7 +133,7 @@ def _contrast(a, b):
 def readable(bg, fg):
     """Team font color if it reads on the team background, else white or black."""
     try:
-        if fg and _contrast(bg, fg) >= 3:
+        if fg and _contrast(bg, fg) >= 4.5:
             return fg
         return "#ffffff" if _contrast(bg, "#ffffff") >= _contrast(bg, "#000000") else "#000000"
     except Exception:
@@ -143,8 +143,8 @@ def readable(bg, fg):
 def build_html(cards):
     col = colors()
     css = """
-    .wrap{max-width:1100px;margin:0 auto;padding:24px}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;margin-top:16px}
+    .wrap{width:max-content;min-width:760px;margin:0 auto;padding:24px}
+    .grid{display:grid;grid-template-columns:repeat(var(--cols),340px);gap:16px;margin-top:16px;justify-content:center}
     .oc{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden}
     .oc .top{display:flex;align-items:center;gap:12px;padding:12px 14px}
     .oc .top img{width:64px;height:64px;object-fit:contain;background:#fff;border-radius:50%;padding:4px}
@@ -155,7 +155,7 @@ def build_html(cards):
     .rk div{flex:1;min-width:0;border:1px solid var(--line);border-radius:6px;padding:6px 8px;text-align:center}
     .rk b{display:block;font:700 24px/1.1 var(--num);white-space:nowrap}
     .rk b small{font-size:13px;color:var(--mute);margin-left:2px}
-    .rk span{white-space:nowrap;font:600 10px var(--num);letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
+    .rk span{display:block;line-height:1.25;margin-top:2px;font:600 11px var(--num);letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
     .asof{margin-top:12px;font:500 12px var(--num);letter-spacing:.08em;color:var(--mute);text-align:right}
     .oc h3{font:700 12px var(--num);letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin:8px 0 4px}
     .oc ul{list-style:none;margin:0;padding:0}
@@ -174,9 +174,9 @@ def build_html(cards):
         rank_html = ""
         if c.get("rank"):
             lg, n, al, tot, win = c["rank"]
-            rank_html = (f'<div class="rk"><div><b>#{lg}<small>/{n}</small></b><span>Dynasty · conf</span></div>'
-                         f'<div><b>#{al}<small>/{tot}</small></b><span>Dynasty · all</span></div>'
-                         f'<div><b>#{win}<small>/{n}</small></b><span>Win-now · conf</span></div></div>')
+            rank_html = (f'<div class="rk"><div><b>#{lg}<small>/{n}</small></b><span>Dynasty<br>conf</span></div>'
+                         f'<div><b>#{al}<small>/{tot}</small></b><span>Dynasty<br>all 180</span></div>'
+                         f'<div><b>#{win}<small>/{n}</small></b><span>Win-now<br>conf</span></div></div>')
         parts.append(f"""<div class="oc"><div class="top" style="background:{bg};color:{fg}">
 <img src="{html.escape(logo)}" alt=""><div><b>{html.escape(c['team'])}</b><span>{html.escape(c['league'])}</span></div></div>
 {rank_html}<div class="body"><h3>Key players</h3><ul>{players}</ul>
@@ -185,12 +185,20 @@ def build_html(cards):
     return (page_head("NCAA 180 · Open Teams", css)
             + f"""<div class="wrap"><header><div><div class="eyebrow">Dynasty · now recruiting</div>
 <h1>NCAA 180 <em>Open Teams</em></h1></div><div class="kpi"><b>{n}</b><span>team{'s' if n != 1 else ''} available</span></div></header>
-<div class="grid">{''.join(parts) or '<p>No open teams right now.</p>'}</div>
+<div class="grid" style="--cols:{min(max(n, 1), 3)}">{''.join(parts) or '<p>No open teams right now.</p>'}</div>
 <div class="asof">Values: FantasyCalc dynasty (players + picks) as of {datetime.date.today():%b %-d, %Y}</div></div></body></html>""")
 
 
 def render():
     cards = assets(orphans(), team_names())
+    fp, teams = fingerprint()
+    if not cards:  # nothing to recruit for: no graphic, nothing to post
+        for f in (OUT_PNG, OUT_HTML):
+            if os.path.exists(f):
+                os.remove(f)
+        json.dump({"fingerprint": fp, "teams": [], "posted": True}, open(STATE, "w"))
+        print("No open teams; graphic removed")
+        return
     open(OUT_HTML, "w", encoding="utf-8").write(build_html(cards))
     from playwright.sync_api import sync_playwright
     with sync_playwright() as p:
@@ -200,7 +208,6 @@ def render():
         pg.evaluate("document.fonts.ready")
         pg.locator(".wrap").screenshot(path=OUT_PNG)
         b.close()
-    fp, teams = fingerprint()
     # posted=false until inactivity_report.py delivers it to the LM channel
     json.dump({"fingerprint": fp, "teams": teams, "posted": False}, open(STATE, "w"))
     print(f"Wrote {OUT_PNG} ({len(cards)} teams)")
