@@ -24,9 +24,9 @@ import sys
 import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from site_common import page_head  # noqa: E402
+from site_common import page_head, team_colors  # noqa: E402
 
-CARD_VERSION = 3
+CARD_VERSION = 4
 STATE = "data/OrphanCard_Current.json"
 OUT_HTML = "reports/orphans.html"
 OUT_PNG = "reports/orphans.png"
@@ -118,28 +118,6 @@ def colors():
     return {r.Team: (fix(r.Background), fix(r.Font)) for r in tc.itertuples()}
 
 
-def _lum(h):
-    h = h.lstrip("#")
-    c = [int(h[i:i + 2], 16) / 255 for i in (0, 2, 4)]
-    c = [x / 12.92 if x <= 0.03928 else ((x + 0.055) / 1.055) ** 2.4 for x in c]
-    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
-
-
-def _contrast(a, b):
-    la, lb = sorted((_lum(a), _lum(b)), reverse=True)
-    return (la + 0.05) / (lb + 0.05)
-
-
-def readable(bg, fg):
-    """Team font color if it reads on the team background, else white or black."""
-    try:
-        if fg and _contrast(bg, fg) >= 4.5:
-            return fg
-        return "#ffffff" if _contrast(bg, "#ffffff") >= _contrast(bg, "#000000") else "#000000"
-    except Exception:
-        return "#ffffff"
-
-
 def build_html(cards):
     col = colors()
     css = """
@@ -164,9 +142,7 @@ def build_html(cards):
     """
     parts = []
     for c in cards:
-        bg, fg = col.get(c["team"], ("#14213a", "#ffffff"))
-        bg = bg or "#14213a"
-        fg = readable(bg, fg)
+        bg, fg = team_colors(*col.get(c["team"], (None, None)))
         logo = os.path.join("..", LOGO_DIR, c["team"] + ".png")
         players = "".join(f"<li>{html.escape(n)}<small>{html.escape(p)} · {html.escape(t)}</small></li>"
                           for n, p, t in c["players"]) or "<li>—</li>"

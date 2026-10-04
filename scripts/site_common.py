@@ -42,3 +42,51 @@ def page_head(title, extra_css=""):
             "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n"
             f"<title>{html.escape(title)}</title>\n" + "\n".join(fonts) + "\n" + style +
             (f"\n<style>{extra_css}</style>" if extra_css else "") + "\n</head><body>")
+
+
+# ---- Team colors: standing rule for every graphic -------------------------------------
+# Use the team's own pair (Background + Font from "Colors - Teams.csv") when the Font
+# color reads on the Background (WCAG contrast >= 4.5). Otherwise fall back to white or
+# black text, and if the Background is a gray (low saturation) use the team's other color
+# as the background instead -- e.g. Alabama: gray/crimson -> crimson with white text.
+
+def _hex(c):
+    if not isinstance(c, str) or not c.strip():
+        return None
+    c = c.strip()
+    return c if c.startswith("#") else "#" + c
+
+
+def _lum(h):
+    h = h.lstrip("#")
+    c = [int(h[i:i + 2], 16) / 255 for i in (0, 2, 4)]
+    c = [x / 12.92 if x <= 0.03928 else ((x + 0.055) / 1.055) ** 2.4 for x in c]
+    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
+
+
+def contrast(a, b):
+    la, lb = sorted((_lum(a), _lum(b)), reverse=True)
+    return (la + 0.05) / (lb + 0.05)
+
+
+def _sat(h):
+    import colorsys
+    h = h.lstrip("#")
+    r, g, b = (int(h[i:i + 2], 16) / 255 for i in (0, 2, 4))
+    return colorsys.rgb_to_hsv(r, g, b)[1]
+
+
+def team_colors(bg, fg, default=("#14213a", "#ffffff")):
+    """(background, text) for a team block, applying the fallback rule above."""
+    bg, fg = _hex(bg), _hex(fg)
+    try:
+        if not bg:
+            return default
+        if fg and contrast(bg, fg) >= 4.5:
+            return bg, fg
+        if fg and _sat(bg) < 0.35 and _sat(fg) >= 0.35:
+            bg = fg  # gray background -> the team's real color
+        text = "#ffffff" if contrast(bg, "#ffffff") >= contrast(bg, "#000000") else "#000000"
+        return bg, text
+    except Exception:
+        return default
