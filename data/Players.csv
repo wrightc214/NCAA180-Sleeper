@@ -358,7 +358,7 @@ CLE,Cleveland,Browns,DEF,,CLE
 10213,Tre,Tucker,WR,Active,LV
 13696,Ja'Mori,Maclin,WR,Active,BUF
 8130,Trey,McBride,TE,Active,ARI
-13286,Jadarian,Price,RB,Active,SEA
+13286,Jadarian,Price,RB,Inactive,SEA
 7536,Quintin,Morris,TE,Active,JAX
 13339,Davon,Booth,RB,Active,IND
 8142,Alec,Pierce,WR,Inactive,IND
@@ -656,7 +656,7 @@ PHI,Philadelphia,Eagles,DEF,,PHI
 SF,San Francisco,49ers,DEF,,SF
 6136,Jarrett,Stidham,QB,Active,DEN
 12494,Kyle,McCord,QB,Active,MIA
-11626,Xavier,Legette,WR,Active,CAR
+11626,Xavier,Legette,WR,Inactive,CAR
 11582,Carson,Steele,RB,Active,PHI
 11637,Keon,Coleman,WR,Active,BUF
 11573,Frank,Gore,RB,Active,BUF
@@ -728,7 +728,6 @@ TEN,Tennessee,Titans,DEF,,TEN
 8249,Lucas,Krull,TE,Active,DEN
 13712,Hayden,Large,TE,Inactive,CHI
 13345,Jonah,Coleman,RB,Inactive,DEN
-11168,Xavier,Smith,WR,Active,LAR
 6853,Van,Jefferson,WR,Active,WAS
 13293,Ja'Kobi,Lane,WR,Inactive,BAL
 8489,Drew,Ogletree,TE,Active,IND
