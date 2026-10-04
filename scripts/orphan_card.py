@@ -14,6 +14,7 @@ Per team: logo, team, conference, top players by FantasyCalc dynasty value, and 
 team's best owned future picks (own or acquired). Needs Playwright for `render`.
 CWD must be repo root.
 """
+import datetime
 import hashlib
 import html
 import json
@@ -25,7 +26,7 @@ import pandas as pd
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from site_common import page_head  # noqa: E402
 
-CARD_VERSION = 2
+CARD_VERSION = 3
 STATE = "data/OrphanCard_Current.json"
 OUT_HTML = "reports/orphans.html"
 OUT_PNG = "reports/orphans.png"
@@ -70,6 +71,18 @@ def team_names():
     return {(r.League, str(r._3)): r.Team for r in t.itertuples()}  # (league full name, roster id)
 
 
+def ranks():
+    """(league full name, roster id) -> (dyn rank in league, league size, dyn rank of all, total, win-now rank in league)."""
+    rv = pd.read_csv("data/RosterValues_Season.csv", dtype={"RosterID": str})
+    rv = rv[rv["Week"] == rv["Week"].max()].copy()
+    rv["DynAll"] = rv["DynastyTotal"].rank(ascending=False, method="min").astype(int)
+    rv["DynLg"] = rv.groupby("LeagueName")["DynastyTotal"].rank(ascending=False, method="min").astype(int)
+    rv["WinLg"] = rv.groupby("LeagueName")["Contender"].rank(ascending=False, method="min").astype(int)
+    size = rv.groupby("LeagueName").size()
+    return {(r.LeagueName, r.RosterID): (r.DynLg, size[r.LeagueName], r.DynAll, len(rv), r.WinLg)
+            for r in rv.itertuples()}
+
+
 def assets(o, names):
     rp = pd.read_csv("data/Rosters_Players_Season.csv", dtype=str)
     pv = pd.read_csv("data/PlayerValues_Current.csv", dtype={"SleeperID": str})
@@ -77,6 +90,7 @@ def assets(o, names):
     pk = pd.read_csv("data/PickValues_Current.csv")
     pick_val = {(int(r.Season), int(r.Round)): r.Value for r in pk.itertuples()}
     out = []
+    rk = ranks()
     for r in o.itertuples():
         mine = rp[(rp["LeagueName"] == r.LeagueName) & (rp["RosterID"] == str(r.RosterID))]
         pl = mine.merge(pv, left_on="PlayerID", right_on="SleeperID", how="inner")
@@ -94,7 +108,7 @@ def assets(o, names):
             picks.append(label)
         n_picks = len(fp[(fp["LeagueName"] == r.LeagueName) & (fp["OwnerRosterID"] == str(r.RosterID))])
         out.append({"team": r.Team, "league": r.League, "players": players, "picks": picks,
-                    "n_picks": n_picks})
+                    "n_picks": n_picks, "rank": rk.get((r.LeagueName, str(r.RosterID)))})
     return out
 
 
@@ -137,6 +151,12 @@ def build_html(cards):
     .oc .top b{display:block;font:800 26px/1 var(--disp);text-transform:uppercase}
     .oc .top span{font:600 12px var(--num);letter-spacing:.12em;text-transform:uppercase;opacity:.85}
     .oc .body{padding:10px 14px 14px}
+    .rk{display:flex;gap:8px;padding:10px 14px 0}
+    .rk div{flex:1;min-width:0;border:1px solid var(--line);border-radius:6px;padding:6px 8px;text-align:center}
+    .rk b{display:block;font:700 24px/1.1 var(--num);white-space:nowrap}
+    .rk b small{font-size:13px;color:var(--mute);margin-left:2px}
+    .rk span{white-space:nowrap;font:600 10px var(--num);letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
+    .asof{margin-top:12px;font:500 12px var(--num);letter-spacing:.08em;color:var(--mute);text-align:right}
     .oc h3{font:700 12px var(--num);letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin:8px 0 4px}
     .oc ul{list-style:none;margin:0;padding:0}
     .oc li{display:flex;justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px solid var(--line);font-size:15px}
@@ -151,15 +171,22 @@ def build_html(cards):
         players = "".join(f"<li>{html.escape(n)}<small>{html.escape(p)} · {html.escape(t)}</small></li>"
                           for n, p, t in c["players"]) or "<li>—</li>"
         picks = "".join(f"<li>{html.escape(p)}</li>" for p in c["picks"]) or "<li>None</li>"
+        rank_html = ""
+        if c.get("rank"):
+            lg, n, al, tot, win = c["rank"]
+            rank_html = (f'<div class="rk"><div><b>#{lg}<small>/{n}</small></b><span>Dynasty · conf</span></div>'
+                         f'<div><b>#{al}<small>/{tot}</small></b><span>Dynasty · all</span></div>'
+                         f'<div><b>#{win}<small>/{n}</small></b><span>Win-now · conf</span></div></div>')
         parts.append(f"""<div class="oc"><div class="top" style="background:{bg};color:{fg}">
 <img src="{html.escape(logo)}" alt=""><div><b>{html.escape(c['team'])}</b><span>{html.escape(c['league'])}</span></div></div>
-<div class="body"><h3>Key players</h3><ul>{players}</ul>
+{rank_html}<div class="body"><h3>Key players</h3><ul>{players}</ul>
 <h3>Top draft picks <small>({c['n_picks']} owned)</small></h3><ul>{picks}</ul></div></div>""")
     n = len(cards)
     return (page_head("NCAA 180 · Open Teams", css)
             + f"""<div class="wrap"><header><div><div class="eyebrow">Dynasty · now recruiting</div>
 <h1>NCAA 180 <em>Open Teams</em></h1></div><div class="kpi"><b>{n}</b><span>team{'s' if n != 1 else ''} available</span></div></header>
-<div class="grid">{''.join(parts) or '<p>No open teams right now.</p>'}</div></div></body></html>""")
+<div class="grid">{''.join(parts) or '<p>No open teams right now.</p>'}</div>
+<div class="asof">Values: FantasyCalc dynasty (players + picks) as of {datetime.date.today():%b %-d, %Y}</div></div></body></html>""")
 
 
 def render():
