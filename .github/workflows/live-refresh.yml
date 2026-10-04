@@ -19,6 +19,12 @@ on:
 permissions:
   contents: write
 
+# Live scores only matter once the postseason starts (CCG = week 12). Before that the
+# daily update-leagues run already captures every finished week, so live commits only
+# bloat the repo. (Later: also allow ranked-vs-ranked games once the poll exists.)
+env:
+  LIVE_START_WEEK: 12
+
 concurrency:
   group: live-scoreboard-refresh
   cancel-in-progress: true
@@ -106,6 +112,14 @@ jobs:
             echo "📅 Week: $WEEK_NUM | 🏈 Games active: $GAMES_ACTIVE | 🔁 Refresh: ${REFRESH_INTERVAL}m | 🕒 $TIMESTAMP_ET"
           else
             echo "⚠️ nfl_status.json not found — likely API error."
+            echo "GAMES_ACTIVE=false" >> $GITHUB_ENV
+          fi
+
+      - name: Skip regular-season weeks
+        if: env.GAMES_ACTIVE == 'true'
+        run: |
+          if [ -n "$WEEK_NUM" ] && [ "$WEEK_NUM" -lt "$LIVE_START_WEEK" ] 2>/dev/null; then
+            echo "📴 Week $WEEK_NUM is before week $LIVE_START_WEEK; live refresh not needed (daily run covers it)."
             echo "GAMES_ACTIVE=false" >> $GITHUB_ENV
           fi
 
