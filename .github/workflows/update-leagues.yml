@@ -179,6 +179,14 @@ jobs:
           export FAILED="$(cat /tmp/failed_scripts.txt 2>/dev/null)"
           python scripts/discord_post.py
 
+      # Weekly inactive-manager report -> private LM channel (alert webhook), same trigger as the post.
+      - name: Inactivity report to LM channel
+        if: always() && ((github.event_name == 'schedule') || (github.event.inputs.post == 'true'))
+        env:
+          DISCORD_ALERT_WEBHOOK_URL: ${{ secrets.DISCORD_ALERT_WEBHOOK_URL }}
+          DISCORD_CONTACT_ID: ${{ vars.DISCORD_CONTACT_ID }}
+        run: python scripts/inactivity_report.py
+
       - name: List CSVs
         if: always()
         run: ls -l data/
