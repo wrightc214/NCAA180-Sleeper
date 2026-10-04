@@ -171,8 +171,8 @@ jobs:
         if: always() && ((github.event_name == 'schedule') || (github.event.inputs.post == 'true'))
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          DISCORD_COMMISH_WEBHOOK_URL: ${{ secrets.DISCORD_COMMISH_WEBHOOK_URL }}
-          DISCORD_COMMISH_ID: ${{ vars.DISCORD_COMMISH_ID }}
+          DISCORD_ALERT_WEBHOOK_URL: ${{ secrets.DISCORD_ALERT_WEBHOOK_URL }}
+          DISCORD_CONTACT_ID: ${{ vars.DISCORD_CONTACT_ID }}
           PNG_STATUS: ${{ steps.render.outcome }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |

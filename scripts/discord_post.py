@@ -1,15 +1,15 @@
 """
 discord_post.py -- post the weekly report to the league Discord, or hold it and alert the
-commissioner privately if anything about the run looks wrong.
+data manager privately if anything about the run looks wrong.
 
-Normal:   league channel gets the message + reports/latest.png + short link + @commissioner.
-Abnormal: nothing goes to the league; the commissioner channel gets the reason, the exact
+Normal:   league channel gets the message + reports/latest.png + short link + @data manager.
+Abnormal: nothing goes to the league; the data manager channel gets the reason, the exact
           message/image that would have posted, and the run-log link.
 
 Inputs (environment, set by the workflow):
   DISCORD_WEBHOOK_URL          league channel webhook (secret)
-  DISCORD_COMMISH_WEBHOOK_URL  private commissioner channel webhook (secret)
-  DISCORD_COMMISH_ID           commissioner's Discord user ID (repo variable)
+  DISCORD_ALERT_WEBHOOK_URL  private data manager channel webhook (secret)
+  DISCORD_CONTACT_ID           data manager's Discord user ID (repo variable)
   FAILED                       space-separated failed script names ("" = none)
   PNG_STATUS                   outcome of the render step: success / skipped / failure / ""
   RUN_URL                      link to this workflow run
@@ -30,8 +30,8 @@ SHORT_LINK = "https://ncaa180.short.gy/home"
 MAX_BYTES = 9_500_000  # stay under Discord's smallest upload limit
 
 
-def message(week, commish):
-    ask = f"<@{commish}>" if commish else "the commissioner"
+def message(week, contact):
+    ask = f"<@{contact}>" if contact else "the data manager"
     return (f"**NCAA 180 · Week {week} Awards** 🏆\n"
             f"Full report, standings and roster map: {SHORT_LINK}\n"
             f"Questions? Ask {ask}.")
@@ -50,13 +50,13 @@ def send(url, content, mention_ids, with_png):
 
 def main():
     league = os.environ.get("DISCORD_WEBHOOK_URL", "").strip()
-    commish_hook = os.environ.get("DISCORD_COMMISH_WEBHOOK_URL", "").strip()
-    commish = os.environ.get("DISCORD_COMMISH_ID", "").strip()
+    alert_hook = os.environ.get("DISCORD_ALERT_WEBHOOK_URL", "").strip()
+    contact = os.environ.get("DISCORD_CONTACT_ID", "").strip()
     failed = os.environ.get("FAILED", "").split()
     png_status = os.environ.get("PNG_STATUS", "")
     run_url = os.environ.get("RUN_URL", "")
 
-    if not league or not commish_hook:
+    if not league or not alert_hook:
         print("Discord webhooks not configured; skipping post.")
         return
 
@@ -76,9 +76,9 @@ def main():
     elif png_status == "failure":
         problems.append("Report image failed to render (existing image may be last week's)")
 
-    msg = message(week if week else "?", commish)
+    msg = message(week if week else "?", contact)
     if not problems:
-        send(league, msg, [commish] if commish else [], True)
+        send(league, msg, [contact] if contact else [], True)
         print(f"Posted week {week} to the league channel.")
         return
 
@@ -87,8 +87,8 @@ def main():
              + (f"\nRun log: {run_url}" if run_url else "")
              + "\nTo release after fixing: run the workflow manually with `post` checked."
              + "\n\n**Would have posted:**\n>>> " + msg)
-    send(commish_hook, alert, [commish] if commish else [], png_ok)
-    print("Held league post; alerted commissioner:\n" + "\n".join(problems))
+    send(alert_hook, alert, [contact] if contact else [], png_ok)
+    print("Held league post; alerted data manager:\n" + "\n".join(problems))
 
 
 if __name__ == "__main__":
