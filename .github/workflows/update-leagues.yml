@@ -7,6 +7,10 @@ on:
         description: 'Script to run (league_ids, rosters, users, rosterhistory, matchups, scores, max_points, weekly_awards, players, transactions, drafts, standings, orphans, lineup_streaks, player_values, draft_picks, weekly_report, roster_map, standings_page, conference_championships, playoff_field, bowls, nit, patch_orphans, all). Postseason scripts are manual only - not in all.'
         required: true
         default: 'all'
+      post:
+        description: 'Post the weekly report to Discord after this run (use to release a held post)'
+        type: boolean
+        default: false
   schedule:
     # Weekly: Sleeper advances the NFL week on Tuesday at a variable time. Wake every
     # 2h Tue 12:00 UTC -> Wed 18:00 UTC; week_gate.py runs the full job once per week.
@@ -131,6 +135,7 @@ jobs:
           key: playwright-shell-${{ runner.os }}-${{ steps.pw.outputs.version }}
 
       - name: Render report image
+        id: render
         if: always() && steps.needpng.outputs.render == 'true'
         continue-on-error: true
         run: |
@@ -159,6 +164,20 @@ jobs:
           git add reports/ || true
           git commit -m "Auto-update CSVs" || echo "No changes to commit"
           git push
+
+      # Weekly Discord post: automatic on the scheduled weekly run, or manual with `post`.
+      # Problems -> held, commissioner alerted privately instead.
+      - name: Post to Discord
+        if: always() && ((github.event_name == 'schedule') || (github.event.inputs.post == 'true'))
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_COMMISH_WEBHOOK_URL: ${{ secrets.DISCORD_COMMISH_WEBHOOK_URL }}
+          DISCORD_COMMISH_ID: ${{ vars.DISCORD_COMMISH_ID }}
+          PNG_STATUS: ${{ steps.render.outcome }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          export FAILED="$(cat /tmp/failed_scripts.txt 2>/dev/null)"
+          python scripts/discord_post.py
 
       - name: List CSVs
         if: always()
