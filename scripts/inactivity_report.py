@@ -132,7 +132,7 @@ def main():
             why.append(f"no roster moves in {r.R} weeks")
         add(r.League, r.Team, r.OwnerName, r.Tier, ", ".join(why))
     icon_by_sev = {v: ICON[k] for k, v in SEV.items()}
-    items = sorted(((lg, sev, team, f"{icon_by_sev[sev]} {team} · {owner} — " + "; ".join(why) + ".")
+    items = sorted(((lg, sev, team, f"{icon_by_sev[sev]} **{team}** · {owner} — " + "; ".join(why) + ".")
                     for (lg, team), (sev, owner, why) in teams.items()), key=lambda x: (x[0], x[1], x[2]))
 
     head = (f"📋 **LM report · week {last_done}**{mention}\n"
@@ -140,14 +140,13 @@ def main():
             f"🔴 Likely inactive **{len(red)}** · 🟡 Watch **{len(yel)}** · Orphans {orphans} (not listed)\n"
             "-# 🚨/⚠️ = benched clearly better players who played that week (under 60% / 75% of their "
             "best possible lineup, by FantasyCalc value). 🔴/🟡 = signs nobody is managing the team.")
-    # Header message, then ONE MESSAGE PER LEAGUE in plain text (no Discord markup) so the LM
-    # can copy a league's block straight into that Sleeper league chat.
+    # Header message, then ONE MESSAGE PER LEAGUE (Discord formatting; easy to copy per league).
     by_league = {}
     for league, _, _, text in items:
         by_league.setdefault(league, []).append(text)
     msgs = [head + ("" if by_league else "\n\n✅ Nothing flagged this week.")]
     for league in sorted(by_league):
-        body = f"{league} · week {last_done} lineup/activity flags\n" + "\n".join(by_league[league])
+        body = f"__**{league}**__ · week {last_done}\n" + "\n".join(by_league[league])
         if len(body) > LIMIT:
             body = body[:LIMIT].rsplit("\n", 1)[0] + "\n… (more in the attached CSV)"
         msgs.append(body)
