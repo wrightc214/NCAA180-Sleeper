@@ -17,6 +17,7 @@ Missing webhooks -> prints a notice and exits 0 (feature not set up yet).
 CWD must be repo root.
 """
 import json
+import re
 import os
 import sys
 
@@ -37,14 +38,28 @@ def message(week, contact):
             f"Questions? Ask {ask}.")
 
 
+def note(kind, text):
+    """Print + GitHub annotation, so the outcome shows on the run summary page."""
+    print(f"::{kind}::{text}")
+
+
+def valid(url):
+    return re.match(r"^https://(discord|discordapp)\.com/api/webhooks/\d+/[\w-]+$", url) is not None
+
+
 def send(url, content, mention_ids, with_png):
     payload = {"content": content, "allowed_mentions": {"parse": [], "users": mention_ids}}
     files = {}
     if with_png:
         files["files[0]"] = ("ncaa180-weekly.png", open(PNG, "rb"), "image/png")
-    r = requests.post(url, data={"payload_json": json.dumps(payload)}, files=files or None, timeout=60)
-    if r.status_code >= 300:
-        print(f"ERROR: Discord returned {r.status_code}: {r.text[:300]}")
+    r = requests.post(url + "?wait=true", data={"payload_json": json.dumps(payload)}, files=files or None, timeout=60)
+    ok = r.status_code < 300
+    try:
+        ok = ok and "id" in r.json()  # wait=true returns the created message
+    except ValueError:
+        ok = False
+    if not ok:
+        note("error", f"Discord did not accept the post (HTTP {r.status_code}): {r.text[:200]}")
         sys.exit(1)
 
 
@@ -57,8 +72,14 @@ def main():
     run_url = os.environ.get("RUN_URL", "")
 
     if not league or not alert_hook:
-        print("Discord webhooks not configured; skipping post.")
+        note("warning", "Discord post skipped: DISCORD_WEBHOOK_URL / DISCORD_ALERT_WEBHOOK_URL secret not set")
         return
+    for name, u in (("DISCORD_WEBHOOK_URL", league), ("DISCORD_ALERT_WEBHOOK_URL", alert_hook)):
+        if not valid(u):
+            note("error", f"{name} is not a Discord webhook URL (expected https://discord.com/api/webhooks/<id>/<token>)")
+            sys.exit(1)
+    if not contact:
+        note("warning", "DISCORD_CONTACT_ID variable not set; posting without the @ mention")
 
     weeks = built_weeks()
     week = max(weeks) if weeks else None
@@ -79,7 +100,7 @@ def main():
     msg = message(week if week else "?", contact)
     if not problems:
         send(league, msg, [contact] if contact else [], True)
-        print(f"Posted week {week} to the league channel.")
+        note("notice", f"Posted week {week} to the league channel.")
         return
 
     alert = ("⚠️ **NCAA 180 weekly post held** — nothing went to the league.\n"
@@ -88,7 +109,7 @@ def main():
              + "\nTo release after fixing: run the workflow manually with `post` checked."
              + "\n\n**Would have posted:**\n>>> " + msg)
     send(alert_hook, alert, [contact] if contact else [], png_ok)
-    print("Held league post; alerted data manager:\n" + "\n".join(problems))
+    note("warning", "League post held; alert sent: " + "; ".join(problems))
 
 
 if __name__ == "__main__":
