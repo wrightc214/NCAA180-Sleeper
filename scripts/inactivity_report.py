@@ -29,10 +29,19 @@ import requests
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from week_status import completed_weeks  # noqa: E402
+from tank_check import check_week  # noqa: E402
 
 SRC = "data/LineupStreaks_Season.csv"
 MATCHUPS = "data/Matchups_Season.csv"
 LIMIT = 1800
+LEAGUE_SHORT = {
+    "NCAA BIG EAST & CO.": "Big East", "NCAA SEC": "SEC", "NCAA PAC 12": "Pac 12",
+    "NCAA ACC": "ACC", "NCAA BIG 12": "Big 12", "NCAA SUN BELT": "Sun Belt",
+    "NCAA PIONEER": "Pioneer", "NCAA IVY": "Ivy", "NCAA USA": "CUSA",
+    "NCAA HISTORICALLY BLACK": "HBCU", "NCAA MOUNTAIN WEST": "Mountain West",
+    "NCAA OHIO VALLEY": "Ohio Valley", "NCAA WILD": "Wild", "NCAA BIG 10": "Big 10",
+    "NCAA BIG SKY": "Big Sky",
+}
 ORPHAN_PNG = "reports/orphans.png"
 ORPHAN_STATE = "data/OrphanCard_Current.json"  # posted=false -> new graphic not yet delivered  # Discord message cap is 2000 chars
 
@@ -84,57 +93,93 @@ def main():
         return
     flagged, orphans = tiers(df, last_done)
 
+    try:
+        tank = check_week(last_done, year)
+        tank = tank[tank["Tier"] != ""] if not tank.empty else tank
+    except Exception as e:
+        note("warning", f"Tank check failed: {e}")
+        tank = pd.DataFrame()
+    t_alert = tank[tank["Tier"] == "Tank alert"] if not tank.empty else tank
+    t_check = tank[tank["Tier"] == "Lineup check"] if not tank.empty else tank
+
     red = flagged[flagged["Tier"] == "Likely inactive"]
     yel = flagged[flagged["Tier"] == "Watch"]
-    head = (f"📋 **Inactivity report · through week {last_done}**"
-            + (f" · <@{contact}>" if contact else "")
+    mention = f" · <@{contact}>" if contact else ""
+
+    # Message 1: tank check (lineup choices in the last completed week)
+    t_head = (f"🚨 **Tank check · week {last_done} lineups**{mention}"
+              f"\n🚨 Tank alert: **{len(t_alert)}** · ⚠️ Lineup check: **{len(t_check)}**")
+    t_body = ""
+    for title, part in (("\n\n🚨 **Tank alert**", t_alert), ("\n\n⚠️ **Lineup check**", t_check)):
+        if part.empty:
+            continue
+        t_body += title
+        for r in part.itertuples():
+            ben = ", ".join(r.Benched.split(", ")[:4])
+            sta = ", ".join(r.Started.split(", ")[:4])
+            t_body += (f"\n• **{r.Team}** ({LEAGUE_SHORT.get(r.LeagueName, r.LeagueName)}) {r.OwnerName} · "
+                       f"{int(r.Ratio * 100)}% of best lineup · benched {ben} · started {sta}")
+    t_tail = ("\n\n*% of best lineup* = starters' FantasyCalc redraft value vs. the best legal lineup from "
+              "players who played that week. 🚨 under 60%, ⚠️ under 75% (with a meaningful value gap). "
+              "Injured/bye/inactive bench players don't count. Full table attached.")
+    t_files = {}
+    if not tank.empty:
+        tb = io.BytesIO(tank.drop(columns=["LeagueID"]).to_csv(index=False).encode())
+        t_files["files[0]"] = (f"tank-check-week{last_done}.csv", tb, "text/csv")
+    post(hook, fit(t_head, t_body, t_tail), contact, t_files)
+
+    # Message 2: inactivity (+ orphan graphic when it changed)
+    head = (f"📋 **Inactivity report · through week {last_done}**{mention}"
             + f"\n🔴 Likely inactive: **{len(red)}** · 🟡 Watch: **{len(yel)}** · Orphans (excluded): {orphans}")
     body = ""
     for title, part in (("\n\n🔴 **Likely inactive**", red), ("\n\n🟡 **Watch**", yel)):
         if part.empty:
             continue
-        chunk = title
-        for r in part.itertuples():
-            chunk += "\n" + line(r)
-        body += chunk
+        body += title + "".join("\n" + line(r) for r in part.itertuples())
     tail = ("\n\n*lineup Nw* = same starters N completed weeks · *N×0pt* = starters who scored 0 last week · "
             "*no moves Nw* = no adds/drops/trades.\n🔴 lineup 3w+ with 2+ 0-pt starters, or 3+ 0-pt starters. "
             "🟡 lineup 3w+, or 2 0-pt starters. Full list attached.")
-    msg = head + body + tail
-    if len(msg) > LIMIT:
-        keep = LIMIT - len(head) - len(tail) - 60
-        msg = head + body[:keep].rsplit("\n", 1)[0] + "\n… (truncated — see attached CSV)" + tail
-
     out = flagged[["Tier", "Team", "League", "OwnerName", "OwnerID", "L", "Z", "R"]].rename(
         columns={"L": "SameLineupWeeks", "Z": "ZeroPointStarters", "R": "NoRosterMoveWeeks"})
-    buf = io.BytesIO(out.to_csv(index=False).encode())
-    payload = {"content": msg, "allowed_mentions": {"parse": [], "users": [contact] if contact else []}}
     files = {}
     if not out.empty:
-        files["files[0]"] = (f"inactivity-week{last_done}.csv", buf, "text/csv")
+        files["files[0]"] = (f"inactivity-week{last_done}.csv", io.BytesIO(out.to_csv(index=False).encode()), "text/csv")
     state = {}
     try:
         state = json.load(open(ORPHAN_STATE))
     except Exception:
         pass
     send_orphans = state.get("posted") is False and os.path.exists(ORPHAN_PNG)
+    extra = ""
     if send_orphans:
         files["files[1]"] = ("ncaa180-open-teams.png", open(ORPHAN_PNG, "rb"), "image/png")
-        payload["content"] += "\n\n🆕 **Open-teams recruiting graphic updated** (attached) — ready to share."
-    files = files or None
-    r = requests.post(hook + "?wait=true", data={"payload_json": json.dumps(payload)}, files=files, timeout=60)
+        extra = "\n\n🆕 **Open-teams recruiting graphic updated** (attached) — ready to share."
+    post(hook, fit(head, body, tail + extra), contact, files)
+    if send_orphans:
+        state["posted"] = True
+        json.dump(state, open(ORPHAN_STATE, "w"))
+    note("notice", f"LM reports posted (week {last_done}): {len(t_alert)} tank alert, {len(t_check)} lineup check, "
+                   f"{len(red)} likely inactive, {len(yel)} watch")
+
+
+def fit(head, body, tail):
+    msg = head + body + tail
+    if len(msg) <= LIMIT:
+        return msg
+    keep = LIMIT - len(head) - len(tail) - 40
+    return head + body[:keep].rsplit("\n", 1)[0] + "\n… (truncated — see attached CSV)" + tail
+
+
+def post(hook, content, contact, files):
+    payload = {"content": content, "allowed_mentions": {"parse": [], "users": [contact] if contact else []}}
+    r = requests.post(hook + "?wait=true", data={"payload_json": json.dumps(payload)}, files=files or None, timeout=60)
     try:
         ok = r.status_code < 300 and "id" in r.json()
     except ValueError:
         ok = False
     if not ok:
-        note("error", f"Discord did not accept the inactivity report (HTTP {r.status_code}): {r.text[:200]}")
+        note("error", f"Discord did not accept the LM report (HTTP {r.status_code}): {r.text[:200]}")
         sys.exit(1)
-    if send_orphans:
-        state["posted"] = True
-        json.dump(state, open(ORPHAN_STATE, "w"))
-    note("notice", f"Inactivity report posted: {len(red)} likely inactive, {len(yel)} watch (week {last_done})")
-
 
 if __name__ == "__main__":
     main()
