@@ -19,6 +19,7 @@ Posts every run (an empty report confirms it ran).
 Env: DISCORD_ALERT_WEBHOOK_URL (secret), DISCORD_CONTACT_ID (variable). CWD must be repo root.
 """
 import io
+import time
 import json
 import os
 import re
@@ -131,7 +132,7 @@ def main():
             why.append(f"no roster moves in {r.R} weeks")
         add(r.League, r.Team, r.OwnerName, r.Tier, ", ".join(why))
     icon_by_sev = {v: ICON[k] for k, v in SEV.items()}
-    items = sorted(((lg, sev, team, f"{icon_by_sev[sev]} **{team}** · {owner} — " + "; ".join(why) + ".")
+    items = sorted(((lg, sev, team, f"{icon_by_sev[sev]} {team} · {owner} — " + "; ".join(why) + ".")
                     for (lg, team), (sev, owner, why) in teams.items()), key=lambda x: (x[0], x[1], x[2]))
 
     head = (f"📋 **LM report · week {last_done}**{mention}\n"
@@ -139,26 +140,17 @@ def main():
             f"🔴 Likely inactive **{len(red)}** · 🟡 Watch **{len(yel)}** · Orphans {orphans} (not listed)\n"
             "-# 🚨/⚠️ = benched clearly better players who played that week (under 60% / 75% of their "
             "best possible lineup, by FantasyCalc value). 🔴/🟡 = signs nobody is managing the team.")
-    blocks, cur, lg = [], [], None
+    # Header message, then ONE MESSAGE PER LEAGUE in plain text (no Discord markup) so the LM
+    # can copy a league's block straight into that Sleeper league chat.
+    by_league = {}
     for league, _, _, text in items:
-        if league != lg:
-            if cur:
-                blocks.append("\n".join(cur))
-            cur, lg = [f"__**{league}**__"], league
-        cur.append(text)
-    if cur:
-        blocks.append("\n".join(cur))
-    if not blocks:
-        blocks = ["✅ Nothing flagged this week."]
-
-    msgs, buf = [], head
-    for blk in blocks:
-        if len(buf) + 2 + len(blk) > LIMIT:
-            msgs.append(buf)
-            buf = blk
-        else:
-            buf += "\n\n" + blk
-    msgs.append(buf)
+        by_league.setdefault(league, []).append(text)
+    msgs = [head + ("" if by_league else "\n\n✅ Nothing flagged this week.")]
+    for league in sorted(by_league):
+        body = f"{league} · week {last_done} lineup/activity flags\n" + "\n".join(by_league[league])
+        if len(body) > LIMIT:
+            body = body[:LIMIT].rsplit("\n", 1)[0] + "\n… (more in the attached CSV)"
+        msgs.append(body)
 
     files = {}
     if not tank.empty:
@@ -177,10 +169,11 @@ def main():
     send_orphans = state.get("posted") is False and os.path.exists(ORPHAN_PNG)
     if send_orphans:
         files["files[2]"] = ("ncaa180-open-teams.png", open(ORPHAN_PNG, "rb"), "image/png")
-        msgs[-1] += "\n\n🆕 **Open-teams recruiting graphic updated** (attached) — ready to share."
+        msgs[0] += "\n\n🆕 **Open-teams recruiting graphic updated** (attached) — ready to share."
 
     for i, m in enumerate(msgs):
-        post(hook, m, contact if i == 0 else "", files if i == len(msgs) - 1 else {})
+        post(hook, m, contact if i == 0 else "", files if i == 0 else {})
+        time.sleep(1.2)  # stay under Discord's webhook rate limit
     if send_orphans:
         state["posted"] = True
         json.dump(state, open(ORPHAN_STATE, "w"))
