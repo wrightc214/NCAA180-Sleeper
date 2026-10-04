@@ -32,7 +32,9 @@ from week_status import completed_weeks  # noqa: E402
 
 SRC = "data/LineupStreaks_Season.csv"
 MATCHUPS = "data/Matchups_Season.csv"
-LIMIT = 1900  # Discord message cap is 2000 chars
+LIMIT = 1800
+ORPHAN_PNG = "reports/orphans.png"
+ORPHAN_STATE = "data/OrphanCard_Current.json"  # posted=false -> new graphic not yet delivered  # Discord message cap is 2000 chars
 
 
 def note(kind, text):
@@ -107,7 +109,19 @@ def main():
         columns={"L": "SameLineupWeeks", "Z": "ZeroPointStarters", "R": "NoRosterMoveWeeks"})
     buf = io.BytesIO(out.to_csv(index=False).encode())
     payload = {"content": msg, "allowed_mentions": {"parse": [], "users": [contact] if contact else []}}
-    files = {"files[0]": (f"inactivity-week{last_done}.csv", buf, "text/csv")} if not out.empty else None
+    files = {}
+    if not out.empty:
+        files["files[0]"] = (f"inactivity-week{last_done}.csv", buf, "text/csv")
+    state = {}
+    try:
+        state = json.load(open(ORPHAN_STATE))
+    except Exception:
+        pass
+    send_orphans = state.get("posted") is False and os.path.exists(ORPHAN_PNG)
+    if send_orphans:
+        files["files[1]"] = ("ncaa180-open-teams.png", open(ORPHAN_PNG, "rb"), "image/png")
+        payload["content"] += "\n\n🆕 **Open-teams recruiting graphic updated** (attached) — ready to share."
+    files = files or None
     r = requests.post(hook + "?wait=true", data={"payload_json": json.dumps(payload)}, files=files, timeout=60)
     try:
         ok = r.status_code < 300 and "id" in r.json()
@@ -116,6 +130,9 @@ def main():
     if not ok:
         note("error", f"Discord did not accept the inactivity report (HTTP {r.status_code}): {r.text[:200]}")
         sys.exit(1)
+    if send_orphans:
+        state["posted"] = True
+        json.dump(state, open(ORPHAN_STATE, "w"))
     note("notice", f"Inactivity report posted: {len(red)} likely inactive, {len(yel)} watch (week {last_done})")
 
 

@@ -119,16 +119,22 @@ jobs:
             echo "Report data unchanged; skipping image."
           fi
 
+      # Orphan recruiting card: re-render only when the open-team set changes or a draft completes.
+      - name: Check orphan card
+        id: orphan
+        if: always()
+        run: python scripts/orphan_card.py check
+
       - name: Install Playwright
         id: pw
-        if: always() && steps.needpng.outputs.render == 'true'
+        if: always() && (steps.needpng.outputs.render == 'true' || steps.orphan.outputs.render == 'true')
         run: |
           pip install playwright
           echo "version=$(python -c 'import importlib.metadata as m; print(m.version("playwright"))')" >> "$GITHUB_OUTPUT"
 
       # Browser is cached per Playwright version: downloaded once, then reused.
       - name: Cache Playwright browser
-        if: always() && steps.needpng.outputs.render == 'true'
+        if: always() && (steps.needpng.outputs.render == 'true' || steps.orphan.outputs.render == 'true')
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
@@ -144,6 +150,14 @@ jobs:
           python scripts/report_png.py
 
       # Mark the Sleeper week done only after a clean full run, so a failed run retries.
+      - name: Render orphan card
+        if: always() && steps.orphan.outputs.render == 'true'
+        continue-on-error: true
+        run: |
+          python -m playwright install-deps chromium
+          python -m playwright install --only-shell chromium
+          python scripts/orphan_card.py render
+
       - name: Mark week processed
         if: always()
         run: |
@@ -161,6 +175,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/*.csv
+          git add data/OrphanCard_Current.json 2>/dev/null || true
           git add reports/ || true
           git commit -m "Auto-update CSVs" || echo "No changes to commit"
           git push
@@ -203,6 +218,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/*.csv
+          git add data/OrphanCard_Current.json 2>/dev/null || true
           git commit -m "Auto-update CSVs" || echo "No changes to commit"
           git push
 
