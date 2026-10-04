@@ -1,3 +1,11 @@
+"""
+league_drafts.py -- drafts and draft picks, CURRENT SEASON ONLY.
+
+Writes data/Drafts_Season.csv and data/DraftPicks_Season.csv. Past seasons are frozen in
+data/Drafts_Historic.csv and data/DraftPicks_Historic.csv (never rewritten; the offseason
+rollover moves the finished season there). Current season = latest Year in
+LeagueIDs_AllYears.csv. Rows sorted for byte-identical output when nothing changed.
+"""
 import pandas as pd
 import time
 from sleeper_wrapper.league import League
@@ -8,8 +16,8 @@ import requests
 # CONFIG
 # -------------------------
 INPUT_FILE = "data/LeagueIDs_AllYears.csv"
-OUTPUT_DRAFTS = "data/Drafts_AllYears.csv"
-OUTPUT_PICKS = "data/DraftPicks_AllYears.csv"
+OUTPUT_DRAFTS = "data/Drafts_Season.csv"
+OUTPUT_PICKS = "data/DraftPicks_Season.csv"
 
 # -------------------------
 # HELPER FUNCTIONS
@@ -48,6 +56,7 @@ def safe_get_picks(draft_id, league_name):
 # MAIN SCRIPT
 # -------------------------
 league_ids_df = pd.read_csv(INPUT_FILE)
+league_ids_df = league_ids_df[league_ids_df["Year"] == league_ids_df["Year"].max()]
 all_drafts = []
 all_picks = []
 
@@ -117,6 +126,11 @@ for _, row in league_ids_df.iterrows():
 # -------------------------
 drafts_df = pd.DataFrame(all_drafts)
 picks_df = pd.DataFrame(all_picks)
+if not drafts_df.empty:
+    drafts_df = drafts_df.sort_values(["LeagueName", "DraftID"], key=lambda c: c if c.dtype.kind in "iuf" else c.astype(str)).reset_index(drop=True)
+if not picks_df.empty:
+    picks_df = picks_df.sort_values(["LeagueName", "DraftID", "Round", "Pick_No"],
+                                    key=lambda c: c if c.dtype.kind in "iuf" else c.astype(str)).reset_index(drop=True)
 
 drafts_df.to_csv(OUTPUT_DRAFTS, index=False)
 picks_df.to_csv(OUTPUT_PICKS, index=False)

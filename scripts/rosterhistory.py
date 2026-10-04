@@ -1,8 +1,16 @@
+"""
+rosterhistory.py -- every player on every roster, CURRENT SEASON ONLY.
+
+Writes data/Rosters_Players_Season.csv. Past seasons are frozen in
+data/Rosters_Players_Historic.csv (never rewritten; the offseason rollover moves the
+finished season there). Current season = latest Year in LeagueIDs_AllYears.csv.
+Rows are sorted so an unchanged roster produces a byte-identical file (no git churn).
+"""
 import pandas as pd
 from sleeper_wrapper import League
 
-# Load league IDs
 league_df = pd.read_csv("data/LeagueIDs_AllYears.csv")
+league_df = league_df[league_df["Year"] == league_df["Year"].max()]
 
 all_players = []
 
@@ -42,10 +50,10 @@ for idx, row in league_df.iterrows():
                 "PlayerID": player_id
             })
 
-# Convert to DataFrame
 df = pd.DataFrame(all_players)
+if not df.empty:
+    df = df.sort_values(["LeagueName", "RosterID", "PlayerID"], key=lambda c: c if c.dtype.kind in "iuf" else c.astype(str)).reset_index(drop=True)
 
-# Save CSV
-out_file = "data/Rosters_Players_AllYears.csv"
+out_file = "data/Rosters_Players_Season.csv"
 df.to_csv(out_file, index=False)
 print(f"Saved {len(df)} player rows to {out_file}")

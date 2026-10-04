@@ -8,10 +8,28 @@ on:
         required: true
         default: 'all'
   schedule:
-    - cron: '0 7 * * *'  # Runs daily at 07:00 UTC (3 AM ET)
+    # Weekly: Sleeper advances the NFL week on Tuesday at a variable time. Wake every
+    # 2h Tue 12:00 UTC -> Wed 18:00 UTC; week_gate.py runs the full job once per week.
+    - cron: '0 12-22/2 * * TUE'
+    - cron: '0 0-18/2 * * WED'
 
 jobs:
+  gate:
+    runs-on: ubuntu-latest
+    outputs:
+      run: ${{ steps.check.outputs.run }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install pandas requests
+      - id: check
+        run: python scripts/week_gate.py check
+
   build:
+    needs: gate
+    if: needs.gate.outputs.run == 'true'
     runs-on: ubuntu-latest
 
     steps:
@@ -119,6 +137,16 @@ jobs:
           python -m playwright install-deps chromium
           python -m playwright install --only-shell chromium
           python scripts/report_png.py
+
+      # Mark the Sleeper week done only after a clean full run, so a failed run retries.
+      - name: Mark week processed
+        if: always()
+        run: |
+          SCRIPT_TO_RUN="${{ github.event.inputs.script_to_run }}"
+          FAILED=$(cat /tmp/failed_scripts.txt 2>/dev/null)
+          if [ "${SCRIPT_TO_RUN:-all}" = "all" ] && [ -z "$(echo $FAILED)" ]; then
+              python scripts/week_gate.py mark
+          fi
 
       - name: Commit and push CSVs
         if: always()
