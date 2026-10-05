@@ -6,9 +6,11 @@ Settings match NCAA 180: 1 QB, 12 teams, full PPR. Kickers/DEF are not valued.
 
 Writes:
   data/PlayerValues_Current.csv  overwritten each run
-  data/PlayerValues_Season.csv   one snapshot per NFL week (first run of that week wins,
-                                 so the snapshot is the start-of-week market). This is the
-                                 only history: past values cannot be fetched later.
+  data/PlayerValues_Season.csv   value history labeled by Date: the scheduled weekly run
+                                 (Tuesday, after the week advances) adds a snapshot for its
+                                 date; manual runs only fill a week with no snapshot. Trades
+                                 are valued against the latest snapshot on/before their date.
+                                 Past values cannot be fetched later.
 Columns: Date, Week, SleeperID, Name, Position, NFLTeam, DynastyValue, RedraftValue
   data/PickValues_Current.csv    future rookie-pick values: Season, Round, Value, Early, Mid,
                                  Late. Value is FantasyCalc's plain round entry ("2027 1st");
@@ -104,10 +106,17 @@ def main():
     cur.to_csv(CURRENT, index=False)
     print(f"Wrote {CURRENT}: {len(cur)} players (week {week})")
 
+    # History is labeled by DATE (Sleeper's week counter flips mid-week). The scheduled
+    # weekly run (Tuesday, right after the week advances) always records a snapshot for its
+    # date; a manual run only fills in a week that has no snapshot yet. One row-set per date.
+    scheduled = os.environ.get("GITHUB_EVENT_NAME") == "schedule"
     if os.path.exists(SEASON):
         hist = pd.read_csv(SEASON, dtype={"SleeperID": str})
-        if (hist["Week"].astype(int) == week).any():
-            print(f"Week {week} snapshot already saved; {SEASON} unchanged")
+        if (hist["Date"] == today).any():
+            print(f"Snapshot for {today} already saved; {SEASON} unchanged")
+            return
+        if not scheduled and (hist["Week"].astype(int) == week).any():
+            print(f"Week {week} already has a snapshot and this is a manual run; {SEASON} unchanged")
             return
         hist = pd.concat([hist, cur], ignore_index=True)
     else:

@@ -1,0 +1,47 @@
+name: Pregame projection snapshot
+
+# Captures every rostered player's projection + lineup status shortly before each NFL kickoff
+# window (past projections can't be fetched later). Times are UTC and chosen to land before
+# kickoff in both EDT and EST. The script skips quietly when no game kicks off within 8h.
+on:
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Write a snapshot even if no game kicks off soon (testing)'
+        type: boolean
+        default: true
+  schedule:
+    - cron: '30 22 * * THU'          # before Thursday night
+    - cron: '0 16 * * SAT'           # late-season Saturday games
+    - cron: '30 19 * * SAT'
+    - cron: '30 12 * * SUN'          # before international morning games
+    - cron: '0 16 * * SUN'           # before 1pm ET games (best lineup read)
+    - cron: '30 19 * * SUN'          # before late afternoon games
+    - cron: '30 23 * * SUN'          # before Sunday night
+    - cron: '30 22 * * MON'          # before Monday night
+
+concurrency:
+  group: projection-snapshot
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install pandas requests
+      - name: Snapshot projections
+        env:
+          FORCE: ${{ github.event.inputs.force == 'true' && '1' || '0' }}
+        run: python scripts/projection_snapshot.py
+      - name: Commit snapshot
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/projections || true
+          if git diff --cached --quiet; then echo "Nothing to commit"; exit 0; fi
+          git commit -m "Pregame projection snapshot"
+          for i in 1 2 3; do git pull --rebase -q && git push && break; sleep 5; done
