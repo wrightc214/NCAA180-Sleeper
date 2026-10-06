@@ -41,7 +41,7 @@ jobs:
         env:
           FORCE: ${{ github.event.inputs.force == 'true' && '1' || '0' }}
           DISCORD_WEBHOOK_LM_PRIVATE_DATA: ${{ secrets.DISCORD_WEBHOOK_LM_PRIVATE_DATA }}
-          SCORING_ALERT: ${{ github.event.inputs.scoring_alert == 'false' && '0' || '1' }}
+          SCORING_ALERT: ${{ (github.event_name == 'schedule' && vars.SCORING_ALERT_ENABLED != 'true') && '0' || (github.event.inputs.scoring_alert == 'false' && '0' || '1') }}
         run: python scripts/projection_snapshot.py
       - name: Commit snapshot
         run: |

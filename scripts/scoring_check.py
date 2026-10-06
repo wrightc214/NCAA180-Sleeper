@@ -23,8 +23,15 @@ import requests
 STATE = "data/ScoringCheck_Current.json"
 
 
+def _norm(d):
+    """Sleeper stores some leagues with explicit 0.0 keys and float noise (0.03999 vs 0.04);
+    treat missing == 0 and compare at 4 decimals."""
+    return {k: round(float(v), 4) for k, v in (d or {}).items()
+            if isinstance(v, (int, float)) and round(float(v), 4) != 0}
+
+
 def _key(d):
-    return json.dumps(d, sort_keys=True)
+    return json.dumps(_norm(d), sort_keys=True)
 
 
 def _diff(a, b):
@@ -40,7 +47,7 @@ def check(scoring_all, names, previous):
     majority = json.loads(majority_key)
     for lid, s in scoring_all.items():
         if _key(s) != majority_key:
-            d = _diff(majority, s)
+            d = _diff(majority, _norm(s))
             problems.append(f"**{names.get(lid, lid)}** differs from the other leagues "
                             f"({len(d)} setting{'s' if len(d) != 1 else ''}): " + "; ".join(d[:8])
                             + (" …" if len(d) > 8 else ""))

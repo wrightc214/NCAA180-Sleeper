@@ -155,6 +155,7 @@ jobs:
         continue-on-error: true
         env:
           FORCE: "1"
+          SCORING_ALERT: ${{ vars.SCORING_ALERT_ENABLED == 'true' && '1' || '0' }}
           DISCORD_WEBHOOK_LM_PRIVATE_DATA: ${{ secrets.DISCORD_WEBHOOK_LM_PRIVATE_DATA }}
         run: python scripts/projection_snapshot.py
 
