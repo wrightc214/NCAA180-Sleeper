@@ -35,6 +35,9 @@ from tank_check import check_week  # noqa: E402
 SRC = "data/LineupStreaks_Season.csv"
 MATCHUPS = "data/Matchups_Season.csv"
 LIMIT = 1900  # Discord message cap is 2000 chars
+# 🟡 Watch rows are listed only while 🔴 Likely inactive is short enough to act on (Chris, 2026-10-06).
+# Hidden watches still go in the attached CSV. Override with repo variable LM_WATCH_MAX_INACTIVE.
+WATCH_MAX_INACTIVE = int(os.environ.get("LM_WATCH_MAX_INACTIVE") or 10)
 LEAGUE_SHORT = {
     "NCAA BIG EAST & CO.": "Big East", "NCAA SEC": "SEC", "NCAA PAC 12": "Pac 12",
     "NCAA ACC": "ACC", "NCAA BIG 12": "Big 12", "NCAA SUN BELT": "Sun Belt",
@@ -106,6 +109,7 @@ def main():
     red = flagged[flagged["Tier"] == "Likely inactive"]
     yel = flagged[flagged["Tier"] == "Watch"]
     mention = f" · <@{contact}>" if contact else ""
+    hide_watch = len(red) > WATCH_MAX_INACTIVE
 
     # One combined report, grouped by league (how the LM investigates), most serious first.
     SEV = {"Tank alert": 0, "Lineup check": 1, "Likely inactive": 2, "Watch": 3}
@@ -123,6 +127,8 @@ def main():
         add(LEAGUE_SHORT.get(r.LeagueName, r.LeagueName), r.Team, r.OwnerName, r.Tier,
             f"started only {int(r.Ratio * 100)}% of their best lineup (benched {ben}; started {sta})")
     for r in flagged.itertuples():
+        if hide_watch and r.Tier == "Watch":
+            continue
         why = []
         if r.L >= 2:
             why.append(f"same starting lineup {r.L} weeks in a row")
@@ -137,7 +143,9 @@ def main():
 
     head = (f"📋 **LM report · week {last_done}**{mention}\n"
             f"🚨 Tank alert **{len(t_alert)}** · ⚠️ Lineup check **{len(t_check)}** · "
-            f"🔴 Likely inactive **{len(red)}** · 🟡 Watch **{len(yel)}** · Orphans {orphans} (not listed)\n"
+            f"🔴 Likely inactive **{len(red)}** · 🟡 Watch **{len(yel)}**"
+            + (f" (not listed until 🔴 ≤ {WATCH_MAX_INACTIVE}; in the CSV)" if hide_watch and len(yel) else "")
+            + f" · Orphans {orphans} (not listed)\n"
             "-# 🚨/⚠️ = benched clearly better players who played that week (under 60% / 75% of their "
             "best possible lineup, by FantasyCalc value). 🔴/🟡 = signs nobody is managing the team.")
     # Header message, then ONE MESSAGE PER LEAGUE (Discord formatting; easy to copy per league).

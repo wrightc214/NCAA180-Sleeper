@@ -213,6 +213,7 @@ jobs:
         env:
           DISCORD_WEBHOOK_LM_PRIVATE_DATA: ${{ secrets.DISCORD_WEBHOOK_LM_PRIVATE_DATA }}
           DISCORD_CONTACT_ID: ${{ vars.DISCORD_CONTACT_ID }}
+          LM_WATCH_MAX_INACTIVE: ${{ vars.LM_WATCH_MAX_INACTIVE }}
         run: python scripts/inactivity_report.py
 
       - name: List CSVs
