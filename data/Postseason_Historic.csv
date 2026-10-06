@@ -105,21 +105,21 @@ Season,Event,Round,RoundName,Week,Bowl,TeamA,SeedA,TeamB,SeedB,ScoreA,ScoreB,Win
 2020,Bowl,1,Bowl,,,Stony Brook,,,,,,Stony Brook,"bowl winner only, from Chris's draft-order sheet; opponent/score/bowl unknown"
 2020,Bowl,1,Bowl,,,Northern Iowa,,,,,,Northern Iowa,"bowl winner only, from Chris's draft-order sheet; opponent/score/bowl unknown"
 2020,Bowl,1,Bowl,,,Furman,,,,,,Furman,"bowl winner only, from Chris's draft-order sheet; opponent/score/bowl unknown"
-2021,CCG,1,Conference Championship,12,ACC,Virginia Tech,,Clemson,,,,Virginia Tech,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2021,CCG,1,Conference Championship,12,Big 10,Wisconsin,,Penn State,,,,Wisconsin,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2021,CCG,1,Conference Championship,12,Big 12,Baylor,,Oklahoma,,,,Baylor,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2021,CCG,1,Conference Championship,12,Big East,South Dakota State,,Rutgers,,,,South Dakota State,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2021,CCG,1,Conference Championship,12,Big Sky,Youngstown State,,Stony Brook,,,,Youngstown State,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2021,CCG,1,Conference Championship,12,CUSA,Arkansas State,,Florida International,,,,Arkansas State,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2021,CCG,1,Conference Championship,12,HBCU,Jackson State,,Grambling State,,,,Jackson State,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2021,CCG,1,Conference Championship,12,Ivy,Yale,,Harvard,,,,Yale,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2021,CCG,1,Conference Championship,12,Mountain West,Colorado State,,Utah State,,,,Colorado State,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2021,CCG,1,Conference Championship,12,Ohio Valley,North Alabama,,Kennesaw State,,,,North Alabama,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2021,CCG,1,Conference Championship,12,PAC 12,Washington,,Arizona State,,,,Washington,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2021,CCG,1,Conference Championship,12,Pioneer,SE Missouri State,,Davidson,,,,SE Missouri State,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2021,CCG,1,Conference Championship,12,SEC,Vanderbilt,,Ole Miss,,,,Vanderbilt,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2021,CCG,1,Conference Championship,12,Sun Belt,UTEP,,UAB,,,,UTEP,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2021,CCG,1,Conference Championship,12,Wild,Montana,,Citadel,,,,Montana,winner/runner-up from Chris's CCG history list; scores not yet sourced
+2021,CCG,1,Conference Championship,12,ACC,Virginia Tech,,Clemson,,129.38,128.34,Virginia Tech,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list
+2021,CCG,1,Conference Championship,12,Big 10,Wisconsin,,Penn State,,145.6,133.34,Wisconsin,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list
+2021,CCG,1,Conference Championship,12,Big 12,Baylor,,Oklahoma,,156.22,147.8,Baylor,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list
+2021,CCG,1,Conference Championship,12,Big East,South Dakota State,,Rutgers,,137.2,127.48,South Dakota State,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list
+2021,CCG,1,Conference Championship,12,Big Sky,Youngstown State,,Stony Brook,,120.16,115.84,Youngstown State,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list
+2021,CCG,1,Conference Championship,12,CUSA,Arkansas State,,Florida International,,155.42,135.26,Arkansas State,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list
+2021,CCG,1,Conference Championship,12,HBCU,Jackson State,,Grambling State,,144.72,101.42,Jackson State,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list
+2021,CCG,1,Conference Championship,12,Ivy,Yale,,Harvard,,129.5,124.08,Yale,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list
+2021,CCG,1,Conference Championship,12,Mountain West,Colorado State,,Utah State,,125.4,105.74,Colorado State,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list
+2021,CCG,1,Conference Championship,12,Ohio Valley,North Alabama,,Kennesaw State,,172.2,165.52,North Alabama,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list
+2021,CCG,1,Conference Championship,12,PAC 12,Washington,,Arizona State,,123.52,122.4,Washington,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list
+2021,CCG,1,Conference Championship,12,Pioneer,SE Missouri State,,Davidson,,131.12,95.96,SE Missouri State,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list
+2021,CCG,1,Conference Championship,12,SEC,Vanderbilt,,Ole Miss,,127.66,70.42,Vanderbilt,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list
+2021,CCG,1,Conference Championship,12,Sun Belt,UTEP,,UAB,,127.8,111.48,UTEP,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list
+2021,CCG,1,Conference Championship,12,Wild,Montana,,Citadel,,139.82,137.92,Montana,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list
 2021,Playoff,1,First Round,13,,Yale,1,Clemson,32,,,Yale,
 2021,Playoff,1,First Round,13,,Davidson,16,Penn State,17,,,Davidson,
 2021,Playoff,1,First Round,13,,Arkansas State,9,Wofford,24,,,Wofford,
