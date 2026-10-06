@@ -317,6 +317,13 @@ svg.map{width:100%;height:auto;display:block;overflow:visible}
 .stats div b{display:block;font:600 22px var(--num);font-variant-numeric:tabular-nums}
 .stats div span{font:600 11px var(--num);letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
 .hint{color:var(--mute);font-size:13px}
+.qlab.go{cursor:pointer;fill:var(--ink);text-decoration:underline;text-decoration-color:var(--line)}
+.ctr{fill:transparent;stroke:var(--mute);stroke-opacity:.55;stroke-dasharray:3 5;cursor:zoom-in}
+.ctr:hover{fill:var(--ink);fill-opacity:.04}
+.zoombar{display:none;align-items:center;gap:10px;margin:6px 0}
+.zoombar.on{display:flex}
+.zoombar button{font:600 13px var(--num);padding:5px 10px;border:1px solid var(--ink);border-radius:3px;background:var(--ink);color:var(--panel);cursor:pointer}
+.zoombar b{font:700 18px var(--disp);text-transform:uppercase;letter-spacing:.03em}
 """
 
 MAP_BODY = """
@@ -329,10 +336,12 @@ MAP_BODY = """
   <h2>Dynasty value vs. contender <small>Tap a team</small></h2>
   <div class="picker" id="picker" role="group" aria-label="Conference"></div>
   <label class="lsel">Conference <select id="lsel"></select></label>
+  <div class="zoombar" id="zoombar"><button type="button" id="zback">← All 180</button><b id="ztitle"></b><span class="hint" id="zcount"></span></div>
   <div class="chartwrap"><svg class="map" id="map" viewBox="0 0 800 560" role="img" aria-label="Scatter of dynasty value against contender score"></svg></div>
   <p class="note">Right = more total dynasty value (FantasyCalc: whole roster plus future rookie picks). Up = stronger contender:
   a blend of the best lineup's redraft value and actual points per game. Results count {{WPCT}}% this week
-  and take over fully by week 6. Dashed lines are the NCAA 180 medians. From week 6, next year's picks from clearly bad or good teams get an early/late bump.</p>
+  and take over fully by week 6. Dashed lines are the NCAA 180 medians. Tap a corner label to zoom into that quadrant, or the dotted center box
+  (the middle half on both axes) to zoom into the middle of the pack. From week 6, next year's picks from clearly bad or good teams get an early/late bump.</p>
 </section>
 <section id="card" aria-live="polite"><p class="hint">Hover or tap a team to see its numbers.</p></section>
 <footer>Values: FantasyCalc (1 QB, 12 teams, PPR). Results: Sleeper, via the NCAA180-Sleeper pipeline.</footer>
@@ -343,16 +352,40 @@ let W = 800, H = 560; const M = {l: 46, r: 24, t: 20, b: 46};
 const svg = document.getElementById('map'), NS = 'http://www.w3.org/2000/svg';
 const med = a => { const s = [...a].sort((x, y) => x - y), n = s.length; return n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2; };
 const mx = med(D.teams.map(t => t.dyn)), my = med(D.teams.map(t => t.con));
+const pct = (a, p) => { const s = [...a].sort((x, y) => x - y), i = (s.length - 1) * p, lo = Math.floor(i);
+  return s[lo] + (s[Math.min(lo + 1, s.length - 1)] - s[lo]) * (i - lo); };
+const dyns = D.teams.map(t => t.dyn), cons = D.teams.map(t => t.con);
+const box = {x0: pct(dyns, .25), x1: pct(dyns, .75), y0: pct(cons, .25), y1: pct(cons, .75)};
+// Zoom views: quadrants split at the medians; Center = middle half on BOTH axes (25th-75th pct).
+const ZOOM = {
+  'Loaded':   t => t.dyn >= mx && t.con >= my,
+  'Win now':  t => t.dyn <  mx && t.con >= my,
+  'Building': t => t.dyn >= mx && t.con <  my,
+  'Rebuild':  t => t.dyn <  mx && t.con <  my,
+  'Center':   t => t.dyn >= box.x0 && t.dyn <= box.x1 && t.con >= box.y0 && t.con <= box.y1,
+};
+const HASH = {'loaded': 'Loaded', 'win-now': 'Win now', 'building': 'Building', 'rebuild': 'Rebuild', 'center': 'Center'};
+const slug = v => Object.keys(HASH).find(k => HASH[k] === v) || '';
+const valid = v => v === 'All 180' || D.leagues.includes(v) || v in ZOOM;
 let view = 'All 180', sel = null;
-try { const v = localStorage.getItem('rm-view'); if (v && (v === 'All 180' || D.leagues.includes(v))) view = v; } catch (e) {}
+try { const v = localStorage.getItem('rm-view'); if (v && valid(v)) view = v; } catch (e) {}
+if (HASH[location.hash.slice(1)]) view = HASH[location.hash.slice(1)];
+function go(v) {
+  view = v; sel = null;
+  try { localStorage.setItem('rm-view', v); } catch (e) {}
+  try { history.replaceState(null, '', slug(v) ? '#' + slug(v) : location.pathname + location.search); } catch (e) {}
+  draw();
+}
+window.addEventListener('hashchange', () => { const v = HASH[location.hash.slice(1)]; if (v && v !== view) { view = v; sel = null; draw(); } });
+document.getElementById('zback').onclick = () => go('All 180');
 
 const picker = document.getElementById('picker'), lsel = document.getElementById('lsel');
 ['All 180', ...D.leagues].forEach(n => { const o = document.createElement('option'); o.textContent = n; lsel.appendChild(o); });
-lsel.onchange = () => { view = lsel.value; sel = null; try { localStorage.setItem('rm-view', view); } catch (e) {} draw(); };
+lsel.onchange = () => go(lsel.value);
 let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(draw, 150); });
 ['All 180', ...D.leagues].forEach(name => {
   const b = document.createElement('button'); b.type = 'button'; b.textContent = name;
-  b.onclick = () => { view = name; sel = null; try { localStorage.setItem('rm-view', name); } catch (e) {} draw(); };
+  b.onclick = () => go(name);
   picker.appendChild(b);
 });
 function el(tag, attrs, parent) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); (parent || svg).appendChild(e); return e; }
@@ -366,11 +399,17 @@ function draw() {
   [...picker.children].forEach(b => b.setAttribute('aria-pressed', b.textContent === view));
   const narrow = svg.parentNode.clientWidth < 600;
   W = narrow ? 400 : 800; H = narrow ? 520 : 560; svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
-  if (lsel) lsel.value = view;
+  const zoom = view in ZOOM;
+  if (lsel) lsel.value = zoom ? 'All 180' : view;
   svg.textContent = '';
-  const all = view === 'All 180', ts = all ? D.teams : D.teams.filter(t => t.lg === view);
+  const all = view === 'All 180';
+  const ts = all ? D.teams : zoom ? D.teams.filter(ZOOM[view]) : D.teams.filter(t => t.lg === view);
+  const zb = document.getElementById('zoombar'); zb.classList.toggle('on', zoom);
+  if (zoom) { document.getElementById('ztitle').textContent = view;
+    document.getElementById('zcount').textContent = `${ts.length} teams`; }
   const fx = v => v;  // linear: real dynasty totals are near-symmetric (sqrt tested, no gain)
-  const xs = ts.map(t => fx(t.dyn)).concat([fx(mx)]), ys = ts.map(t => t.con).concat([my]);
+  const xs = ts.map(t => fx(t.dyn)).concat(view === 'Center' ? [box.x0, box.x1] : [fx(mx)]),
+        ys = ts.map(t => t.con).concat(view === 'Center' ? [box.y0, box.y1] : [my]);
   let x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
   const px = (x1 - x0) * 0.1 || 1, py = (y1 - y0) * 0.16 || 0.1; x0 -= px; x1 += px; y0 -= py; y1 += py;
   const X = v => M.l + (fx(v) - x0) / (x1 - x0) * (W - M.l - M.r), Y = v => H - M.b - (v - y0) / (y1 - y0) * (H - M.t - M.b);
@@ -378,12 +417,24 @@ function draw() {
   el('line', {x1: M.l, x2: W - M.r, y1: Y(my), y2: Y(my), class: 'mid'});
   el('line', {x1: M.l, x2: M.l, y1: M.t, y2: H - M.b, class: 'ax'});
   el('line', {x1: M.l, x2: W - M.r, y1: H - M.b, y2: H - M.b, class: 'ax'});
-  const q = (x, y, t, a) => { const e = el('text', {x, y, class: 'qlab', 'text-anchor': a}); e.textContent = t; };
-  q(W - M.r - 4, M.t + 14, 'Loaded', 'end'); q(M.l + 8, M.t + 14, 'Win now', 'start');
-  q(W - M.r - 4, H - M.b - 8, 'Building', 'end'); q(M.l + 8, H - M.b - 8, 'Rebuild', 'start');
+  if (all) {  // tap the dotted middle box (white space) to zoom to the center of the pack
+    const cb = el('rect', {x: X(box.x0), y: Y(box.y1), width: X(box.x1) - X(box.x0), height: Y(box.y0) - Y(box.y1),
+                           class: 'ctr', role: 'button', tabindex: 0, 'aria-label': 'Zoom to the middle of the pack'});
+    cb.addEventListener('click', () => go('Center'));
+    cb.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go('Center'); } });
+  }
+  const q = (x, y, t, a) => { if (view === t) return;
+    const e = el('text', {x, y, class: 'qlab' + (all ? ' go' : ''), 'text-anchor': a}); e.textContent = t;
+    if (all) { e.setAttribute('role', 'button'); e.setAttribute('tabindex', 0);
+      e.addEventListener('click', () => go(t));
+      e.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); go(t); } }); } };
+  if (!zoom || view === 'Center') {
+    q(W - M.r - 4, M.t + 14, 'Loaded', 'end'); q(M.l + 8, M.t + 14, 'Win now', 'start');
+    q(W - M.r - 4, H - M.b - 8, 'Building', 'end'); q(M.l + 8, H - M.b - 8, 'Rebuild', 'start');
+  }
   const xl = el('text', {x: (M.l + W - M.r) / 2, y: H - 12, class: 'axlab', 'text-anchor': 'middle'}); xl.textContent = 'Dynasty value →';
   const yl = el('text', {x: 14, y: (M.t + H - M.b) / 2, class: 'axlab', 'text-anchor': 'middle', transform: `rotate(-90 14 ${(M.t + H - M.b) / 2})`}); yl.textContent = 'Contender →';
-  const r = all ? (narrow ? 4.5 : 6) : (narrow ? 15 : 22);
+  const r = all ? (narrow ? 4.5 : 6) : zoom ? (narrow ? 9 : 12) : (narrow ? 15 : 22);
   ts.slice().sort((a, b) => (a === sel) - (b === sel)).forEach(t => {
     const g = el('g', {class: 'dot' + (t === sel ? ' sel' : ''), tabindex: 0, role: 'button', 'aria-label': `${t.team}, ${t.owner}`});
     const cx = X(t.dyn), cy = Y(t.con);
@@ -398,8 +449,8 @@ function draw() {
       el('circle', {cx, cy, r: all ? r : 10, fill: tc ? tc[0] : (D.colors[t.lg] || '#888'),
                     stroke: ring, 'stroke-width': all ? (pale ? 0.8 : 1.6) : 2.5, class: 'pt'}, g);
     }
-    el('circle', {cx, cy, r: all ? 11 : r + 4, fill: 'transparent'}, g);  // larger tap target
-    if (!all) { const lb = el('text', {x: cx, y: cy + r + (narrow ? 12 : 15), class: 'tlab', 'font-size': narrow ? 9 : 11}, g); lb.textContent = t.team; }
+    el('circle', {cx, cy, r: all ? 11 : r + 4, fill: 'transparent'}, g);  // larger tap target (sits above the center box)
+    if (!all && !zoom) { const lb = el('text', {x: cx, y: cy + r + (narrow ? 12 : 15), class: 'tlab', 'font-size': narrow ? 9 : 11}, g); lb.textContent = t.team; }
     const pick = () => { sel = t; show(t); draw(); };
     g.addEventListener('mouseenter', () => show(t));
     g.addEventListener('click', pick);
