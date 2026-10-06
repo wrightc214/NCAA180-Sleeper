@@ -121,11 +121,19 @@ def main():
         t[0] = min(t[0], SEV[tier])
         t[2].append(reason)
 
-    for r in (tank.itertuples() if not tank.empty else []):
+    # 1) Tank / lineup concerns: ALL leagues together in their own message(s), most serious first
+    #    (Chris, 2026-10-06: these are a serious concern, kept apart from routine activity).
+    tank_lines = []
+    for r in (tank.sort_values(["Tier", "Ratio"]).itertuples() if not tank.empty else []):
         ben = ", ".join(r.Benched.split(", ")[:3])
         sta = ", ".join(r.Started.split(", ")[:3])
-        add(LEAGUE_SHORT.get(r.LeagueName, r.LeagueName), r.Team, r.OwnerName, r.Tier,
-            f"started only {int(r.Ratio * 100)}% of their best lineup (benched {ben}; started {sta})")
+        tank_lines.append((SEV[r.Tier], LEAGUE_SHORT.get(r.LeagueName, r.LeagueName),
+                           f"{ICON[r.Tier]} **{r.Team}** ({LEAGUE_SHORT.get(r.LeagueName, r.LeagueName)}) · "
+                           f"{r.OwnerName} — started only {int(r.Ratio * 100)}% of their best lineup "
+                           f"(benched {ben}; started {sta})."))
+    tank_lines = [t for _, _, t in sorted(tank_lines, key=lambda x: (x[0], x[1]))]
+
+    # 2) Activity (🔴/🟡): one message per league.
     for r in flagged.itertuples():
         if hide_watch and r.Tier == "Watch":
             continue
@@ -148,11 +156,23 @@ def main():
             + f" · Orphans {orphans} (not listed)\n"
             "-# 🚨/⚠️ = benched clearly better players who played that week (under 60% / 75% of their "
             "best possible lineup, by FantasyCalc value). 🔴/🟡 = signs nobody is managing the team.")
-    # Header message, then ONE MESSAGE PER LEAGUE (Discord formatting; easy to copy per league).
+    msgs = [head + ("" if (tank_lines or teams) else "\n\n✅ Nothing flagged this week.")]
+
+    def chunk(title, lines):
+        out, body = [], title
+        for ln in lines:
+            if len(body) + len(ln) + 1 > LIMIT:
+                out.append(body)
+                body = title + " (cont.)"
+            body += "\n" + ln
+        out.append(body)
+        return out
+
+    if tank_lines:
+        msgs += chunk(f"🚨 __**Tank / lineup concerns — all leagues**__ · week {last_done}", tank_lines)
     by_league = {}
     for league, _, _, text in items:
         by_league.setdefault(league, []).append(text)
-    msgs = [head + ("" if by_league else "\n\n✅ Nothing flagged this week.")]
     for league in sorted(by_league):
         body = f"__**{league}**__ · week {last_done}\n" + "\n".join(by_league[league])
         if len(body) > LIMIT:
