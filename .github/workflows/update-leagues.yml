@@ -185,8 +185,8 @@ jobs:
       - name: Post to Discord
         if: always() && ((github.event_name == 'schedule') || (github.event.inputs.post == 'true'))
         env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          DISCORD_ALERT_WEBHOOK_URL: ${{ secrets.DISCORD_ALERT_WEBHOOK_URL }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_TEAM_STATS || secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_ALERT_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_LM_PRIVATE_DATA || secrets.DISCORD_ALERT_WEBHOOK_URL }}
           DISCORD_CONTACT_ID: ${{ vars.DISCORD_CONTACT_ID }}
           PNG_STATUS: ${{ steps.render.outcome }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
@@ -198,7 +198,7 @@ jobs:
       - name: Inactivity report to LM channel
         if: always() && ((github.event_name == 'schedule') || (github.event.inputs.post == 'true'))
         env:
-          DISCORD_ALERT_WEBHOOK_URL: ${{ secrets.DISCORD_ALERT_WEBHOOK_URL }}
+          DISCORD_ALERT_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_LM_PRIVATE_DATA || secrets.DISCORD_ALERT_WEBHOOK_URL }}
           DISCORD_CONTACT_ID: ${{ vars.DISCORD_CONTACT_ID }}
         run: python scripts/inactivity_report.py
 
