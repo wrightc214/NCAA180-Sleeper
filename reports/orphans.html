@@ -66,14 +66,20 @@ footer{font-size:12px;color:var(--mute)}
 .weeks{display:flex;flex-wrap:wrap;gap:6px;font:600 13px var(--num)}.weeks a{color:var(--mute);text-decoration:none;padding:2px 8px;border:1px solid var(--line);border-radius:3px}.weeks a[aria-current]{color:var(--panel);background:var(--ink);border-color:var(--ink)}
 </style>
 <style>
-    .wrap{max-width:1100px;margin:0 auto;padding:24px}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;margin-top:16px}
+    .wrap{width:max-content;min-width:760px;margin:0 auto;padding:24px}
+    .grid{display:grid;grid-template-columns:repeat(var(--cols),340px);gap:16px;margin-top:16px;justify-content:center}
     .oc{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden}
     .oc .top{display:flex;align-items:center;gap:12px;padding:12px 14px}
     .oc .top img{width:64px;height:64px;object-fit:contain;background:#fff;border-radius:50%;padding:4px}
     .oc .top b{display:block;font:800 26px/1 var(--disp);text-transform:uppercase}
     .oc .top span{font:600 12px var(--num);letter-spacing:.12em;text-transform:uppercase;opacity:.85}
     .oc .body{padding:10px 14px 14px}
+    .rk{display:flex;gap:8px;padding:10px 14px 0}
+    .rk div{flex:1;min-width:0;border:1px solid var(--line);border-radius:6px;padding:6px 8px;text-align:center}
+    .rk b{display:block;font:700 24px/1.1 var(--num);white-space:nowrap}
+    .rk b small{font-size:13px;color:var(--mute);margin-left:2px}
+    .rk span{display:block;line-height:1.25;margin-top:2px;font:600 11px var(--num);letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
+    .asof{margin-top:12px;font:500 12px var(--num);letter-spacing:.08em;color:var(--mute);text-align:right}
     .oc h3{font:700 12px var(--num);letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin:8px 0 4px}
     .oc ul{list-style:none;margin:0;padding:0}
     .oc li{display:flex;justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px solid var(--line);font-size:15px}
@@ -81,13 +87,14 @@ footer{font-size:12px;color:var(--mute)}
     </style>
 </head><body><div class="wrap"><header><div><div class="eyebrow">Dynasty · now recruiting</div>
 <h1>NCAA 180 <em>Open Teams</em></h1></div><div class="kpi"><b>3</b><span>teams available</span></div></header>
-<div class="grid"><div class="oc"><div class="top" style="background:#FFFFFF;color:#00853E">
+<div class="grid" style="--cols:3"><div class="oc"><div class="top" style="background:#FFFFFF;color:#00853E">
 <img src="../assets/logos/teams/North Texas.png" alt=""><div><b>North Texas</b><span>CUSA</span></div></div>
-<div class="body"><h3>Key players</h3><ul><li>Garrett Wilson<small>WR · NYJ</small></li><li>Chase Brown<small>RB · CIN</small></li><li>Saquon Barkley<small>RB · PHI</small></li><li>Bhayshul Tuten<small>RB · JAX</small></li><li>Davante Adams<small>WR · LAR</small></li><li>Jordan Love<small>QB · GB</small></li></ul>
+<div class="rk"><div><b>#9<small>/12</small></b><span>Dynasty<br>conf</span></div><div><b>#120<small>/180</small></b><span>Dynasty<br>all 180</span></div><div><b>#9<small>/12</small></b><span>Win-now<br>conf</span></div></div><div class="body"><h3>Key players</h3><ul><li>Garrett Wilson<small>WR · NYJ</small></li><li>Chase Brown<small>RB · CIN</small></li><li>Saquon Barkley<small>RB · PHI</small></li><li>Bhayshul Tuten<small>RB · JAX</small></li><li>Davante Adams<small>WR · LAR</small></li><li>Jordan Love<small>QB · GB</small></li></ul>
 <h3>Top draft picks <small>(11 owned)</small></h3><ul><li>2027 1st</li><li>2027 1st (via Texas State)</li><li>2028 1st</li><li>2029 1st</li></ul></div></div><div class="oc"><div class="top" style="background:#73000A;color:#ffffff">
 <img src="../assets/logos/teams/South Carolina.png" alt=""><div><b>South Carolina</b><span>SEC</span></div></div>
-<div class="body"><h3>Key players</h3><ul><li>Bijan Robinson<small>RB · ATL</small></li><li>Kenneth Walker<small>RB · KC</small></li><li>Trey McBride<small>TE · ARI</small></li><li>Javonte Williams<small>RB · DAL</small></li><li>Christian Watson<small>WR · GB</small></li><li>TreVeyon Henderson<small>RB · NE</small></li></ul>
-<h3>Top draft picks <small>(13 owned)</small></h3><ul><li>2027 1st</li><li>2028 1st</li><li>2029 1st</li><li>2027 2nd (via Kentucky)</li></ul></div></div><div class="oc"><div class="top" style="background:#CC0000;color:#000000">
+<div class="rk"><div><b>#1<small>/12</small></b><span>Dynasty<br>conf</span></div><div><b>#11<small>/180</small></b><span>Dynasty<br>all 180</span></div><div><b>#3<small>/12</small></b><span>Win-now<br>conf</span></div></div><div class="body"><h3>Key players</h3><ul><li>Bijan Robinson<small>RB · ATL</small></li><li>Kenneth Walker<small>RB · KC</small></li><li>Trey McBride<small>TE · ARI</small></li><li>Javonte Williams<small>RB · DAL</small></li><li>TreVeyon Henderson<small>RB · NE</small></li><li>Christian Watson<small>WR · GB</small></li></ul>
+<h3>Top draft picks <small>(13 owned)</small></h3><ul><li>2027 1st</li><li>2028 1st</li><li>2029 1st</li><li>2027 2nd (via Kentucky)</li></ul></div></div><div class="oc"><div class="top" style="background:#CC0000;color:#ffffff">
 <img src="../assets/logos/teams/Texas Tech.png" alt=""><div><b>Texas Tech</b><span>Big 12</span></div></div>
-<div class="body"><h3>Key players</h3><ul><li>Josh Allen<small>QB · BUF</small></li><li>Chase Brown<small>RB · CIN</small></li><li>Kyren Williams<small>RB · LAR</small></li><li>Carnell Tate<small>WR · TEN</small></li><li>A.J. Brown<small>WR · NE</small></li><li>Dak Prescott<small>QB · DAL</small></li></ul>
-<h3>Top draft picks <small>(12 owned)</small></h3><ul><li>2027 1st</li><li>2028 1st</li><li>2029 1st</li><li>2027 2nd</li></ul></div></div></div></div></body></html>
+<div class="rk"><div><b>#8<small>/12</small></b><span>Dynasty<br>conf</span></div><div><b>#113<small>/180</small></b><span>Dynasty<br>all 180</span></div><div><b>#9<small>/12</small></b><span>Win-now<br>conf</span></div></div><div class="body"><h3>Key players</h3><ul><li>Josh Allen<small>QB · BUF</small></li><li>Chase Brown<small>RB · CIN</small></li><li>Kyren Williams<small>RB · LAR</small></li><li>Carnell Tate<small>WR · TEN</small></li><li>A.J. Brown<small>WR · NE</small></li><li>Dak Prescott<small>QB · DAL</small></li></ul>
+<h3>Top draft picks <small>(12 owned)</small></h3><ul><li>2027 1st</li><li>2028 1st</li><li>2029 1st</li><li>2027 2nd</li></ul></div></div></div>
+<div class="asof">Values: FantasyCalc dynasty (players + picks) as of Oct 6, 2026</div></div></body></html>
