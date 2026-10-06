@@ -3,15 +3,18 @@ projection_snapshot.py -- capture PREGAME expectations before kickoffs (raw data
 Exceeding Expectations award, pregame projections, and later analysis). Past projections
 cannot be fetched after the fact, so this runs on a schedule around kickoff windows.
 
-Each run writes ONE new file (never rewritten, so git growth stays small):
-  data/projections/<season>/wk<WW>_<YYYYMMDDTHHMM>Z.csv
-One row per rostered player in every NCAA 180 league for the current week:
-  SnapshotUTC, Season, Week, LeagueID, LeagueName, RosterID, PlayerID, Position, NFLTeam,
-  Starter (1/0), Slot (starter position index, blank for bench), ProjPts (projected
-  fantasy points under THAT league's scoring settings), ProjPPR (Sleeper's own pts_ppr),
-  GameState (pre/in/post from ESPN), Kickoff (UTC ISO)
-How to use later: a starter's pregame projection = his row from the latest snapshot taken
-while his GameState was "pre". Lineups and projections both change until kickoff.
+Each run writes two NEW files (never rewritten, so git growth stays small):
+  data/projections/<season>/wk<WW>_<stamp>Z_lineups.csv  one row per roster (180):
+      LeagueID, LeagueName, RosterID, Starters (ordered, "|"-joined), Players ("|")
+  data/projections/<season>/wk<WW>_<stamp>Z_proj.csv     one row per player rostered in
+      any league: PlayerID, Position, NFLTeam, GameState (ESPN pre/in/post), Kickoff,
+      ProjPPR, Stats (raw projected stat line, JSON)
+  data/projections/<season>/scoring.json  each league's scoring_settings (only when changed)
+Projected points for any league = sum(stat x that league's scoring weight).
+How to use later: a starter's pregame projection = the latest snapshot taken while his
+GameState was "pre"; his lineup status from the lineups file of that same snapshot.
+Baseline: the weekly update runs this with FORCE=1 right after the week advances, so each
+week has a snapshot even if every game-day run failed.
 
 Skips (writes nothing) when no NFL game kicks off within the next WINDOW_HOURS, unless
 FORCE=1 (manual runs). Sleeper projections come from Sleeper's public (unofficial, read-
@@ -19,6 +22,7 @@ only) projections feed; if it fails the run exits 1 so the workflow flags it.
 CWD must be repo root.
 """
 import datetime as dt
+import json
 import os
 import sys
 
@@ -103,33 +107,48 @@ def main():
         note("error", f"No leagues for season {season} in LeagueIDs_AllYears.csv")
         sys.exit(1)
 
-    snap = now.strftime("%Y%m%dT%H%MZ")
-    rows = []
-    for r in lg.itertuples():
-        scoring = get(f"{SLEEPER}/league/{r.LeagueID}").get("scoring_settings") or {}
-        for m in get(f"{SLEEPER}/league/{r.LeagueID}/matchups/{week}"):
-            starters = [str(p) for p in (m.get("starters") or [])]
-            for pid in [str(p) for p in (m.get("players") or [])]:
-                st = proj.get(pid, {})
-                team = players["team"].get(pid, "") if pid in players.index else pid  # DEF ids are team codes
-                pos = players["position"].get(pid, "") if pid in players.index else "DEF"
-                gs, kick = games.get(team if isinstance(team, str) else "", ("", ""))
-                rows.append({"SnapshotUTC": snap, "Season": season, "Week": week,
-                             "LeagueID": r.LeagueID, "LeagueName": r.LeagueName,
-                             "RosterID": m.get("roster_id"), "PlayerID": pid,
-                             "Position": pos, "NFLTeam": team,
-                             "Starter": int(pid in starters),
-                             "Slot": starters.index(pid) if pid in starters else "",
-                             "ProjPts": score(st, scoring), "ProjPPR": st.get("pts_ppr", ""),
-                             "GameState": gs, "Kickoff": kick})
     out_dir = os.path.join("data", "projections", season)
     os.makedirs(out_dir, exist_ok=True)
-    path = os.path.join(out_dir, f"wk{week:02d}_{snap}.csv")
-    pd.DataFrame(rows).to_csv(path, index=False)
-    pre = sum(1 for x in rows if x["GameState"] == "pre" and x["Starter"])
-    note("notice", f"Projection snapshot {season} wk{week}: {len(rows)} rostered players, "
-                   f"{pre} starters still pregame -> {path}")
+    snap = now.strftime("%Y%m%dT%H%MZ")
 
+    # 1) Lineups: one row per roster (starters change until kickoff; must be per roster).
+    lineups, rostered, scoring_all = [], set(), {}
+    for r in lg.itertuples():
+        scoring_all[r.LeagueID] = get(f"{SLEEPER}/league/{r.LeagueID}").get("scoring_settings") or {}
+        for m in get(f"{SLEEPER}/league/{r.LeagueID}/matchups/{week}"):
+            starters = [str(p) for p in (m.get("starters") or [])]
+            plist = [str(p) for p in (m.get("players") or [])]
+            rostered.update(plist)
+            lineups.append({"SnapshotUTC": snap, "Season": season, "Week": week,
+                            "LeagueID": r.LeagueID, "LeagueName": r.LeagueName,
+                            "RosterID": m.get("roster_id"),
+                            "Starters": "|".join(starters), "Players": "|".join(plist)})
+
+    # 2) Projections: ONE row per player (rostered anywhere in NCAA 180), raw projected stats
+    #    kept so any league's scoring can be applied later.
+    prow = []
+    for pid in sorted(rostered):
+        team = players["team"].get(pid, "") if pid in players.index else pid  # DEF ids are team codes
+        team = team if isinstance(team, str) else ""
+        pos = players["position"].get(pid, "") if pid in players.index else "DEF"
+        gs, kick = games.get(team, ("", ""))
+        st = proj.get(pid, {})
+        prow.append({"SnapshotUTC": snap, "Season": season, "Week": week, "PlayerID": pid,
+                     "Position": pos if isinstance(pos, str) else "", "NFLTeam": team,
+                     "GameState": gs, "Kickoff": kick, "ProjPPR": st.get("pts_ppr", ""),
+                     "Stats": json.dumps({k: v for k, v in st.items() if isinstance(v, (int, float)) and v},
+                                         separators=(",", ":"), sort_keys=True)})
+
+    pd.DataFrame(lineups).to_csv(os.path.join(out_dir, f"wk{week:02d}_{snap}_lineups.csv"), index=False)
+    pd.DataFrame(prow).to_csv(os.path.join(out_dir, f"wk{week:02d}_{snap}_proj.csv"), index=False)
+    # League scoring rules: rewritten only when they change (they rarely do).
+    sc_path = os.path.join(out_dir, "scoring.json")
+    old = json.load(open(sc_path)) if os.path.exists(sc_path) else None
+    if old != scoring_all:
+        json.dump(scoring_all, open(sc_path, "w"), indent=0, sort_keys=True)
+    pre = sum(1 for x in prow if x["GameState"] == "pre")
+    note("notice", f"Projection snapshot {season} wk{week}: {len(lineups)} lineups, {len(prow)} players "
+                   f"({pre} still pregame)")
 
 if __name__ == "__main__":
     main()

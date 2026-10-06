@@ -149,6 +149,14 @@ jobs:
           python -m playwright install --only-shell chromium
           python scripts/report_png.py
 
+      # Baseline pregame projection snapshot for the new week (game-day runs refresh it).
+      - name: Baseline projection snapshot
+        if: always() && (github.event_name == 'schedule' || github.event.inputs.script_to_run == 'all')
+        continue-on-error: true
+        env:
+          FORCE: "1"
+        run: python scripts/projection_snapshot.py
+
       # Mark the Sleeper week done only after a clean full run, so a failed run retries.
       - name: Render orphan card
         if: always() && steps.orphan.outputs.render == 'true'
@@ -176,6 +184,7 @@ jobs:
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/*.csv
           git add data/OrphanCard_Current.json 2>/dev/null || true
+          git add data/projections 2>/dev/null || true
           git add reports/ || true
           git commit -m "Auto-update CSVs" || echo "No changes to commit"
           git push
