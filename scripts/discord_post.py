@@ -16,6 +16,7 @@ Inputs (environment, set by the workflow):
 Missing webhooks -> prints a notice and exits 0 (feature not set up yet).
 CWD must be repo root.
 """
+import glob
 import json
 import re
 import os
@@ -29,6 +30,15 @@ from site_common import built_weeks  # noqa: E402
 PNG = "reports/latest.png"
 SHORT_LINK = "https://ncaa180.short.gy/home"
 MAX_BYTES = 9_500_000  # stay under Discord's smallest upload limit
+PARTS = "reports/discord/*.png"  # one image per report section (legible on phones); max 10 per message
+
+
+def images():
+    """Section images if report_png.py made them, else the single full-page image."""
+    parts = sorted(glob.glob(PARTS))[:10]
+    if parts and sum(os.path.getsize(f) for f in parts) <= MAX_BYTES:
+        return parts
+    return [PNG]
 
 
 def message(week, contact):
@@ -51,7 +61,9 @@ def send(url, content, mention_ids, with_png):
     payload = {"content": content, "allowed_mentions": {"parse": [], "users": mention_ids}}
     files = {}
     if with_png:
-        files["files[0]"] = ("ncaa180-weekly.png", open(PNG, "rb"), "image/png")
+        for i, f in enumerate(images()):
+            name = "ncaa180-weekly.png" if f == PNG else "ncaa180-" + os.path.basename(f)
+            files[f"files[{i}]"] = (name, open(f, "rb"), "image/png")
     r = requests.post(url + "?wait=true", data={"payload_json": json.dumps(payload)}, files=files or None, timeout=60)
     ok = r.status_code < 300
     try:
