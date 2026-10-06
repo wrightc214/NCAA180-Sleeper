@@ -29,6 +29,8 @@ import sys
 import pandas as pd
 import requests
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 UA = {"User-Agent": "NCAA180-Sleeper/1.0"}
 SLEEPER = "https://api.sleeper.app/v1"
 ESPN = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard"
@@ -144,6 +146,11 @@ def main():
     # League scoring rules: rewritten only when they change (they rarely do).
     sc_path = os.path.join(out_dir, "scoring.json")
     old = json.load(open(sc_path)) if os.path.exists(sc_path) else None
+    try:  # 🚨 all leagues must share identical scoring -- alert the LM channel if not
+        from scoring_check import check, alert
+        alert(check(scoring_all, dict(zip(lg["LeagueID"], lg["LeagueName"])), old), season)
+    except Exception as e:
+        note("warning", f"Scoring check failed to run: {e}")
     if old != scoring_all:
         json.dump(scoring_all, open(sc_path, "w"), indent=0, sort_keys=True)
     pre = sum(1 for x in prow if x["GameState"] == "pre")

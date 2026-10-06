@@ -36,12 +36,13 @@ jobs:
       - name: Snapshot projections
         env:
           FORCE: ${{ github.event.inputs.force == 'true' && '1' || '0' }}
+          DISCORD_WEBHOOK_LM_PRIVATE_DATA: ${{ secrets.DISCORD_WEBHOOK_LM_PRIVATE_DATA }}
         run: python scripts/projection_snapshot.py
       - name: Commit snapshot
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/projections || true
+          git add data/projections 2>/dev/null || true; git add data/ScoringCheck_Current.json 2>/dev/null || true
           if git diff --cached --quiet; then echo "Nothing to commit"; exit 0; fi
           git commit -m "Pregame projection snapshot"
           for i in 1 2 3; do git pull --rebase -q && git push && break; sleep 5; done

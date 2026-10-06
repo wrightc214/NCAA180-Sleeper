@@ -155,6 +155,7 @@ jobs:
         continue-on-error: true
         env:
           FORCE: "1"
+          DISCORD_WEBHOOK_LM_PRIVATE_DATA: ${{ secrets.DISCORD_WEBHOOK_LM_PRIVATE_DATA }}
         run: python scripts/projection_snapshot.py
 
       # Mark the Sleeper week done only after a clean full run, so a failed run retries.
@@ -184,7 +185,7 @@ jobs:
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/*.csv
           git add data/OrphanCard_Current.json 2>/dev/null || true
-          git add data/projections 2>/dev/null || true
+          git add data/projections 2>/dev/null || true; git add data/ScoringCheck_Current.json 2>/dev/null || true
           git add reports/ || true
           git commit -m "Auto-update CSVs" || echo "No changes to commit"
           git push
