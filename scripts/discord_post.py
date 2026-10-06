@@ -7,8 +7,8 @@ Abnormal: nothing goes to the league; the data manager channel gets the reason, 
           message/image that would have posted, and the run-log link.
 
 Inputs (environment, set by the workflow):
-  DISCORD_WEBHOOK_URL          league channel webhook (secret)
-  DISCORD_ALERT_WEBHOOK_URL  private data manager channel webhook (secret)
+  DISCORD_WEBHOOK_TEAM_STATS          league channel webhook (secret)
+  DISCORD_WEBHOOK_LM_PRIVATE_DATA  private data manager channel webhook (secret)
   DISCORD_CONTACT_ID           data manager's Discord user ID (repo variable)
   FAILED                       space-separated failed script names ("" = none)
   PNG_STATUS                   outcome of the render step: success / skipped / failure / ""
@@ -64,17 +64,17 @@ def send(url, content, mention_ids, with_png):
 
 
 def main():
-    league = os.environ.get("DISCORD_WEBHOOK_URL", "").strip()
-    alert_hook = os.environ.get("DISCORD_ALERT_WEBHOOK_URL", "").strip()
+    league = os.environ.get("DISCORD_WEBHOOK_TEAM_STATS", "").strip()
+    alert_hook = os.environ.get("DISCORD_WEBHOOK_LM_PRIVATE_DATA", "").strip()
     contact = os.environ.get("DISCORD_CONTACT_ID", "").strip()
     failed = os.environ.get("FAILED", "").split()
     png_status = os.environ.get("PNG_STATUS", "")
     run_url = os.environ.get("RUN_URL", "")
 
     if not league or not alert_hook:
-        note("warning", "Discord post skipped: DISCORD_WEBHOOK_URL / DISCORD_ALERT_WEBHOOK_URL secret not set")
+        note("warning", "Discord post skipped: DISCORD_WEBHOOK_TEAM_STATS / DISCORD_WEBHOOK_LM_PRIVATE_DATA secret not set")
         return
-    for name, u in (("DISCORD_WEBHOOK_URL", league), ("DISCORD_ALERT_WEBHOOK_URL", alert_hook)):
+    for name, u in (("DISCORD_WEBHOOK_TEAM_STATS", league), ("DISCORD_WEBHOOK_LM_PRIVATE_DATA", alert_hook)):
         if not valid(u):
             note("error", f"{name} is not a Discord webhook URL (expected https://discord.com/api/webhooks/<id>/<token>)")
             sys.exit(1)

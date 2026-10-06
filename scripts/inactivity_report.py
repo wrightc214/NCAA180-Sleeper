@@ -1,6 +1,6 @@
 """
 inactivity_report.py -- weekly inactive-manager report to the private LM Discord channel
-(lm-private-data, via DISCORD_ALERT_WEBHOOK_URL). Never posts to the league channel.
+(lm-private-data, via DISCORD_WEBHOOK_LM_PRIVATE_DATA). Never posts to the league channel.
 
 Source: data/LineupStreaks_Season.csv (lineup_streaks.py). Orphans are excluded (already
 known) and only counted.
@@ -16,7 +16,7 @@ in the last completed week -- bye/injured/cut players left in):
 Full flagged list attached as CSV.
 
 Posts every run (an empty report confirms it ran).
-Env: DISCORD_ALERT_WEBHOOK_URL (secret), DISCORD_CONTACT_ID (variable). CWD must be repo root.
+Env: DISCORD_WEBHOOK_LM_PRIVATE_DATA (secret), DISCORD_CONTACT_ID (variable). CWD must be repo root.
 """
 import io
 import time
@@ -76,13 +76,13 @@ def line(r):
 
 
 def main():
-    hook = os.environ.get("DISCORD_ALERT_WEBHOOK_URL", "").strip()
+    hook = os.environ.get("DISCORD_WEBHOOK_LM_PRIVATE_DATA", "").strip()
     contact = os.environ.get("DISCORD_CONTACT_ID", "").strip()
     if not hook:
-        note("warning", "Inactivity report skipped: DISCORD_ALERT_WEBHOOK_URL not set")
+        note("warning", "Inactivity report skipped: DISCORD_WEBHOOK_LM_PRIVATE_DATA not set")
         return
     if not re.match(r"^https://(discord|discordapp)\.com/api/webhooks/\d+/[\w-]+$", hook):
-        note("error", "DISCORD_ALERT_WEBHOOK_URL is not a Discord webhook URL")
+        note("error", "DISCORD_WEBHOOK_LM_PRIVATE_DATA is not a Discord webhook URL")
         sys.exit(1)
 
     df = pd.read_csv(SRC)
