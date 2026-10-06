@@ -287,9 +287,17 @@ def render(d, weeks, colors, tpl, updated, lcolors):
         f'<td class="n">{r["Rec"]}</td><td class="n">{r["Pts"]:.2f}</td>'
         f'<td class="n {"up" if r["Luck"] > 0.005 else "dn" if r["Luck"] < -0.005 else "eq"}">{r["Luck"]:+.2f}</td></tr>'
         for r in d["top32"])
+    def result(g):
+        """Top-score row result; a top score that LOST stands out in red with the winning score."""
+        if g["Margin"] > 0:
+            return f'def. {e(str(g["Opp"]))}'
+        if g["Margin"] < 0:
+            return f'<b class="dn">lost to {e(str(g["Opp"]))}, {g["PA"]:.2f}</b>'
+        return f'tied {e(str(g["Opp"]))}'
+
     ts = "".join(
         f'<li><span class="n rk">{i + 1}</span>{chip(g["Team"])}<span class="nm"><b>{e(g["Team"])}</b>'
-        f'<small>{e(g["Owner"])} · {e(g["Lg"])} · {"def." if g["Margin"] > 0 else "vs."} {e(str(g["Opp"]))}</small></span>'
+        f'<small>{e(g["Owner"])} · {e(g["Lg"])} · {result(g)}</small></span>'
         f'<span class="n v">{g["P"]:.2f}</span></li>' for i, g in enumerate(d["top_scores"]))
     lo, hi = 115, max(l["Avg"] for l in d["leagues"])
     lo = min(lo, min(l["Avg"] for l in d["leagues"]) - 5)
