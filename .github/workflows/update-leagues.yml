@@ -1,4 +1,4 @@
-name: Python application
+name: Weekly League Update
 
 on:
   workflow_dispatch:
