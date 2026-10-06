@@ -10,6 +10,10 @@ on:
         description: 'Write a snapshot even if no game kicks off soon (testing)'
         type: boolean
         default: true
+      scoring_alert:
+        description: 'Send the Discord alert if league scoring settings differ'
+        type: boolean
+        default: true
   schedule:
     - cron: '30 22 * * THU'          # before Thursday night
     - cron: '0 16 * * SAT'           # late-season Saturday games
@@ -37,6 +41,7 @@ jobs:
         env:
           FORCE: ${{ github.event.inputs.force == 'true' && '1' || '0' }}
           DISCORD_WEBHOOK_LM_PRIVATE_DATA: ${{ secrets.DISCORD_WEBHOOK_LM_PRIVATE_DATA }}
+          SCORING_ALERT: ${{ github.event.inputs.scoring_alert == 'false' && '0' || '1' }}
         run: python scripts/projection_snapshot.py
       - name: Commit snapshot
         run: |

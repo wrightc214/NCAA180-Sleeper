@@ -67,6 +67,9 @@ def alert(problems, season):
             json.dump({"status": "ok", "checked": now.isoformat()}, open(STATE, "w"))
         print("Scoring check: all leagues identical")
         return
+    if os.environ.get("SCORING_ALERT", "1") == "0":
+        print("::warning::SCORING MISMATCH (alert disabled for this run): " + " | ".join(problems))
+        return
     last = st.get("alerted")
     if st.get("fingerprint") == fp and last and (now - dt.datetime.fromisoformat(last)).total_seconds() < 86400:
         print("::warning::Scoring mismatch still present (alerted within 24h)")
