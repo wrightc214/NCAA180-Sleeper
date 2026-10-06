@@ -49,13 +49,23 @@ def get(url, **kw):
     return r.json()
 
 
-def nfl_games():
-    """NFL team -> (state, kickoff UTC) for the current scoreboard week."""
+def nfl_games(season, week, season_type="regular"):
+    """NFL team -> (state, kickoff UTC) for the given NFL week.
+
+    Asks ESPN for that exact week (its default scoreboard can still show the previous week on
+    Tuesday). A game whose kickoff is still in the future is always "pre", whatever ESPN says.
+    """
     out = {}
-    d = get(ESPN)
+    now = dt.datetime.now(dt.timezone.utc)
+    d = get(ESPN, params={"seasontype": 3 if season_type == "post" else 2, "week": week, "dates": season})
     for ev in d.get("events", []):
         state = ev.get("status", {}).get("type", {}).get("state", "")
         kick = ev.get("date", "")
+        try:
+            if kick and dt.datetime.fromisoformat(kick.replace("Z", "+00:00")) > now:
+                state = "pre"
+        except ValueError:
+            pass
         for comp in ev.get("competitions", []):
             for c in comp.get("competitors", []):
                 ab = c.get("team", {}).get("abbreviation", "")
@@ -90,7 +100,7 @@ def main():
         note("notice", f"Projection snapshot skipped: season_type={state.get('season_type')}")
         return
 
-    games = nfl_games()
+    games = nfl_games(season, week, state.get("season_type"))
     soon = [k for s, k in games.values() if s == "pre" and k and
             0 <= (dt.datetime.fromisoformat(k.replace("Z", "+00:00")) - now).total_seconds() <= WINDOW_HOURS * 3600]
     if not soon and os.environ.get("FORCE") != "1":
