@@ -12,7 +12,8 @@ deliberate step). Nothing existing is modified.
    LeagueIDs_AllYears.csv, then widen the net by searching every member of the found leagues
    for other leagues named "NCAA ..." in the same season (catches leagues that later folded).
 2. Per league, same schemas as the existing _Historic files:
-   LeagueIDs, Matchups, Scores (starters), Standings, Rosters_Players (final roster),
+   LeagueIDs, Matchups, Scores (starters), Standings, Rosters_Players (final roster), TeamNames
+   (owner's Sleeper team name per roster, to map old roster slots to schools),
    Transactions, Drafts, DraftPicks.
 3. data/backfill/Discovery.txt logs how each league was found, and anything odd.
 
@@ -120,7 +121,9 @@ def pull_league(r, labels, out):
     lid, year, name = r.LeagueID, int(r.Year), r.LeagueName
     print(f"Pulling {name} {year}")
     rosters = get(f"/league/{lid}/rosters") or []
-    users = {u["user_id"]: u.get("display_name") for u in (get(f"/league/{lid}/users") or [])}
+    ulist = get(f"/league/{lid}/users") or []
+    users = {u["user_id"]: u.get("display_name") for u in ulist}
+    tname = {u["user_id"]: (u.get("metadata") or {}).get("team_name") for u in ulist}
     owner = {x["roster_id"]: x.get("owner_id") for x in rosters}
     divnames = {1: r.Division1, 2: r.Division2}
 
@@ -134,6 +137,10 @@ def pull_league(r, labels, out):
             "Losses": st.get("losses"),
             "PointsFor": round((st.get("fpts") or 0) + (st.get("fpts_decimal") or 0) / 100, 2),
             "PointsAgainst": round((st.get("fpts_against") or 0) + (st.get("fpts_against_decimal") or 0) / 100, 2)})
+        out["TeamNames"].append({"Year": year, "LeagueID": lid, "LeagueName": name,
+                                 "RosterID": x["roster_id"], "OwnerID": x.get("owner_id"),
+                                 "OwnerName": users.get(x.get("owner_id")),
+                                 "SleeperTeamName": tname.get(x.get("owner_id"))})
         for p in x.get("players") or []:
             out["Rosters_Players"].append({"Year": year, "LeagueID": lid, "LeagueName": name,
                                            "RosterID": x["roster_id"], "OwnerID": oid,
