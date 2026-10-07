@@ -1,0 +1,11 @@
+Season,Round,RoundName,Week,TeamA,SeedA,TeamB,SeedB,ScoreA,ScoreB,Winner,Notes
+2025,1,First Round,15,Eastern Washington,8,Nebraska,9,179.88,155.5,Eastern Washington,
+2025,1,First Round,15,North Alabama,7,Wake Forest,10,125.12,130.78,Wake Forest,
+2025,1,First Round,15,New Mexico,6,Stony Brook,11,192.24,83.5,New Mexico,Sleeper shows Stony Brook 83.00
+2025,2,Quarterfinal,16,Arizona State,1,Eastern Washington,8,175.5,132.38,Arizona State,
+2025,2,Quarterfinal,16,Montana,4,Louisiana Monroe,5,171.12,107.58,Montana,"4 v 5, both byes"
+2025,2,Quarterfinal,16,Minnesota,2,Wake Forest,10,140.4,111,Minnesota,
+2025,2,Quarterfinal,16,Wisconsin,3,New Mexico,6,74.56,114.62,New Mexico,
+2025,3,Semifinal,17,Arizona State,1,Louisiana Monroe,5,168.32,117.56,Arizona State,bracket image shows Louisiana Monroe here though Montana won wk16 171.12-107.58 - verify
+2025,3,Semifinal,17,Minnesota,2,Wisconsin,3,162.48,111.68,Minnesota,bracket shows Wisconsin though New Mexico won wk16 114.62-74.56 - verify
+2025,4,Final,18,Arizona State,1,Minnesota,2,91.98,99.7,Minnesota,score not on bracket image; filled from Sleeper week-18 team scores
