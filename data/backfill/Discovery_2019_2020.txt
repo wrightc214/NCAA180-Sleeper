@@ -3,6 +3,7 @@
 2019: 11 leagues, 132 rosters
 2020: 15 leagues, 180 rosters
 Standings: 312 rows
+TeamNames: 312 rows
 Rosters_Players: 12295 rows
 Scores: 58344 rows
 Matchups: 5304 rows
