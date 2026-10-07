@@ -1,0 +1,23 @@
+2020: 14 leagues by chain; searching 166 members for others
+2019: 10 leagues by chain; searching 114 members for others
+2019: 11 leagues, 132 rosters
+2020: 15 leagues, 180 rosters
+Standings: 312 rows
+Rosters_Players: 12295 rows
+Scores: 58344 rows
+Matchups: 5304 rows
+Transactions: 8572 rows
+Drafts: 35 rows
+DraftPicks: 6555 rows
+2019 wk1: 132 rosters, 132 scored, 132 with an opponent
+2019 wk11: 132 rosters, 132 scored, 132 with an opponent
+2019 wk12: 132 rosters, 132 scored, 132 with an opponent
+2019 wk13: 132 rosters, 132 scored, 132 with an opponent
+2019 wk16: 132 rosters, 132 scored, 116 with an opponent
+2019 wk17: 132 rosters, 132 scored, 116 with an opponent
+2020 wk1: 180 rosters, 180 scored, 180 with an opponent
+2020 wk11: 180 rosters, 180 scored, 180 with an opponent
+2020 wk12: 180 rosters, 180 scored, 180 with an opponent
+2020 wk13: 180 rosters, 180 scored, 180 with an opponent
+2020 wk16: 180 rosters, 180 scored, 164 with an opponent
+2020 wk17: 180 rosters, 180 scored, 164 with an opponent
