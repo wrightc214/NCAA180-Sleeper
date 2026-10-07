@@ -37,4 +37,4 @@ jobs:
           git add data/backfill || true
           if git diff --cached --quiet; then echo "Nothing to commit"; exit 0; fi
           git commit -m "History projections: pregame projections 2019+"
-          git push origin HEAD:${GITHUB_REF_NAME}
+          for i in 1 2 3; do git pull --rebase -q origin ${GITHUB_REF_NAME} && git push origin HEAD:${GITHUB_REF_NAME} && break; sleep 5; done
