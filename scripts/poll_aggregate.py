@@ -14,6 +14,7 @@ FirstPlaceVotes = bots (and ballots) ranking the team #1.
 Timing: bots-only publishes as soon as it runs (the Tuesday weekly run). With
 human_component on it waits for the ballot deadline (pass --force to override).
 Seeding (week 12) needs data/PlayoffField_Season.csv; without it the script skips (exit 0).
+Final (week 17) needs the season's postseason results (poll_bots.postseason_season); skips without.
 
 Writes (public):
   data/Poll_Season.csv         Top25 / Seeding rows + BotConsensus (all teams ranked, for history)
@@ -79,18 +80,25 @@ def human_component(cfg, ballots, size, pool_keys):
     return pts, fpv, ballots["VoterID"].nunique()
 
 
-def build(cfg, year, week, ptype, ballots, stamp, extra=None, pool="auto"):
-    """extra/pool default to the live season's inputs; the history backfill passes its own."""
+def build(cfg, year, week, ptype, ballots, stamp, extra=None, pool="auto", games=None):
+    """extra/pool/games default to the live season's inputs; the history backfill passes its own."""
     pcfg = pc.poll_cfg(cfg, ptype)
     size = int(pcfg["size"])
     if pool == "auto":
         pool = pc.playoff_pool(year) if pcfg.get("pool") == "playoff_field" else None
     m = pc.matchups(year)
     keys = all_keys(year)
+    last = int(cfg.get("last_regular_week", 11))
+    final = ptype == "Final"
     if extra is None:
-        extra = pb.current_extra(year, week)
-    pts_thru = 12 if (ptype == "Seeding" and cfg.get("seeding", {}).get("include_week12_points")) else None
-    rk, used = pb.bot_ranks(cfg, m, week, extra, keys, points_through=pts_thru)
+        extra = pb.current_extra(year, last if final else week)
+    if final:
+        if games is None:
+            games = pb.postseason_season(year)
+        rk, used = pb.final_ranks(cfg, m, extra, keys, games)
+    else:
+        pts_thru = 12 if (ptype == "Seeding" and cfg.get("seeding", {}).get("include_week12_points")) else None
+        rk, used = pb.bot_ranks(cfg, m, week, extra, keys, points_through=pts_thru)
     if not used:
         raise SystemExit("No bot has data for this week.")
 
@@ -98,10 +106,20 @@ def build(cfg, year, week, ptype, ballots, stamp, extra=None, pool="auto"):
     hp, hf, nh = human_component(cfg, ballots, size, pool)
     cons["HumanPoints"] = [round(hp.get(k, 0), 2) if nh else "" for k in zip(cons["LeagueID"], cons["RosterID"])]
     cons["HumanPct"] = [round(hp.get(k, 0) / (nh * size), 4) if nh else "" for k in zip(cons["LeagueID"], cons["RosterID"])]
-    cons["Score"] = [round((c + h) / 2, 4) if nh else c for c, h in zip(cons["ComputerPct"], cons["HumanPct"])]
+    zmode = "ZScore" in cons.columns
+    base_score = cons["ZScore"] if zmode else cons["ComputerPct"]
+    if final:
+        bumps = pb.final_bumps(cfg, games)
+        base_score = base_score + [bumps.get(k, 0.0) for k in zip(cons["LeagueID"], cons["RosterID"])]
+    cons["Score"] = [round((c + h) / 2, 4) if nh else round(float(b), 4)
+                     for c, h, b in zip(cons["ComputerPct"], cons["HumanPct"], base_score)]
     cons["FirstPlaceVotes"] = [int(b + hf.get(k, 0)) for b, k in zip(cons["BotFirst"], zip(cons["LeagueID"], cons["RosterID"]))]
     tie = cons["record"] if "record" in used else 0
     cons = cons.assign(_t=tie).sort_values(["Score", "BotAvgRank", "_t"], ascending=[False, True, True]).reset_index(drop=True)
+    if final and pc.poll_cfg(cfg, ptype).get("final_four_rule", True):
+        order = pb.final_four(list(zip(cons["LeagueID"], cons["RosterID"])), games)
+        cons = cons.set_index(pd.Index(list(zip(cons["LeagueID"], cons["RosterID"])))).loc[order].reset_index(drop=True)
+        cons["_t"] = range(len(cons))  # order is now final; no shared ranks
     key3 = list(zip(cons["Score"], cons["BotAvgRank"], cons["_t"]))
     ranks, prev = [], None
     for i, k in enumerate(key3):
@@ -110,14 +128,17 @@ def build(cfg, year, week, ptype, ballots, stamp, extra=None, pool="auto"):
     cons["Rank"] = ranks
     cons["Status"] = ["Ranked" if r <= size else ("ORV" if v > 0 else "") for r, v in zip(cons["Rank"], cons["TopVotes"])]
 
-    st = pc.standings_through(cfg, m, week)
+    st = pc.standings_through(cfg, m, min(week, last))
     poll = frame(year, week, ptype, cons[cons["Status"] != ""], st, prev_ranks(year, week), nh, stamp)
 
     # Full ranking of every team by the bots (history / prestige / record book)
-    full = pb.consensus(cfg, rk, used, size)
+    if final:  # the final poll already ranks everyone (bumps + final-four order)
+        full = cons.drop(columns=["Status"]).copy()
+    else:
+        full = pb.consensus(cfg, rk, used, size)
+        full["Score"] = full["ZScore"] if "ZScore" in full.columns else full["ComputerPct"]
     full["Rank"] = range(1, len(full) + 1)
     full["Status"] = "Consensus"
-    full["Score"] = full["ComputerPct"]
     full["FirstPlaceVotes"] = full["BotFirst"]
     full["HumanPoints"] = full["HumanPct"] = ""
     allr = frame(year, week, pc.CONSENSUS, full, st, prev_ranks(year, week, consensus=True), 0, stamp)
@@ -288,6 +309,15 @@ def main():
         print(f"::warning::{ptype} poll skipped: {pc.FIELD} missing (run playoff_field first, then the Poll workflow).")
         output(published="false")
         return
+
+    if ptype == "Final":
+        g = pb.postseason_season(year)
+        if g.empty or not ((g["Event"] == "Playoff") & (g["PlayoffRound"] == g["PlayoffRound"].max())
+                           & (g["PlayoffRound"] > 0)).any():
+            print(f"::warning::Final poll skipped: no final postseason results in Postseason_Season.csv for {year} "
+                  "(needs the playoff bracket + NIT scripts writing the per-team format; see poll_bots.postseason_season).")
+            output(published="false")
+            return
 
     ballots = None
     if human_on:

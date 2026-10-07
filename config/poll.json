@@ -26,6 +26,27 @@
         "time": "12:00"
       },
       "pool": "playoff_field"
+    },
+    "Final": {
+      "label": "Final Poll",
+      "size": 25,
+      "first_week": 17,
+      "last_week": 17,
+      "pool": "all",
+      "bump": {
+        "Playoff": [
+          0.15,
+          0.25,
+          0.45,
+          0.85,
+          1.65
+        ],
+        "CCG": 0.15,
+        "Bowl": 0.15,
+        "NIT": 0.05
+      },
+      "final_four_rule": true,
+      "_note": "Same 7 bots. Postseason games that needed a lineup (CCG, Playoff, Bowl, every NIT round) are extra games for The Standings (win %), The Resume (+ real opponents' regular-season all-play) and The Coach; All-Play, Hot Hand, The Ceiling, The Market stay at week 11. NIT group = one game, result = share of rivals outscored. Bumps are added to Score per win (standard deviations): playoff by round R1..Final, CCG/Bowl flat, NIT x share. One regular-season win is worth about +0.13 (max +0.165), so every CCG/Bowl/playoff win counts more; NIT is a deliberate exception (weak field, up to 5 games). final_four_rule: a semifinal/final winner is raised directly above the team it beat (backstop; never fired 2024-2025). Decided 2026-10-07."
     }
   },
   "_points": "'linear' = size, size-1, ... 1 for ranks 1..size. Or an explicit list, e.g. [25,24,23,...].",
@@ -121,8 +142,8 @@
   "_bots": "Each bot ranks every team. Turn one off with enabled=false; ids map to functions in scripts/poll_bots.py (also available: points, median, elo). Lineup chosen by backtest 2026-10-07 (claude/poll-backtest-2026-10-07.md).",
   "consensus": {
     "drop_high_low": true,
-    "method": "avg_rank",
-    "_note": "Per team drop the best and worst bot rank, average the rest (full 1-N ranks). Score = (N - avg) / (N - 1). method 'points' = classic BCS top-25 points instead (lets a team in on one bot's vote; backtest 2026-10-07 chose avg_rank). ORV = outside the poll but in the top `size` of at least one counted bot. method 'zscore' = standardized bot values (gaps count); backtest 2026-10-07 tied avg_rank (seeds 0.958/0.927 vs 0.955/0.925), kept avg_rank."
+    "method": "zscore",
+    "_note": "Per team: each bot's value is standardized across the pool (z-score, clipped at +/-3), the best and worst bot are dropped, the rest averaged = Score (0 = average team; +1 = one standard deviation better). Chosen 2026-10-07: ties average rank in the backtest (seeds 0.958/0.927 vs 0.955/0.925) and gives the final poll's bumps a fixed meaning. Other methods: 'avg_rank' (average of best/worst-dropped ranks), 'points' (classic BCS top-25 points). ORV = outside the poll but in the top `size` of at least one counted bot."
   },
   "human_component": {
     "enabled": false,

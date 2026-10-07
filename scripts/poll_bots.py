@@ -283,3 +283,186 @@ def league_slots(year):
     lg = lg[lg["Year"] == str(year)]
     return {r.LeagueID: [s for s in r.RosterPositions.split(",") if s not in ("BN", "IR", "TAXI")]
             for r in lg.itertuples() if isinstance(r.RosterPositions, str)}
+
+
+# ---------------------------------------------------------------- final poll (after the postseason)
+# Postseason games = every game that needed a lineup: CCG, Playoff, Bowl, every NIT round.
+# One lineup = one game. Result = share of rivals outscored (1/0 head-to-head; NIT groups 0..1).
+# Normalized games table: LeagueID, RosterID, Week, Event (CCG/Playoff/Bowl/NIT), PlayoffRound
+# (1..5 for Playoff, else 0), Res, PF, Opp (list of (LeagueID, RosterID)).
+
+ALIASES = "data/TeamAliases_Historic.csv"  # OldName, LeagueName, RosterID, FirstYear, LastYear
+
+
+def name_lookup(year):
+    """{normalized school name: (LeagueID, RosterID)} for a season, incl. historical aliases."""
+    import poll_common as pc
+    t = pc.teams(year)
+    by = {r.Key: (r.LeagueID, r.RosterID) for r in t.itertuples()}
+    if os.path.exists(ALIASES):
+        ids = pc.league_ids(year)
+        a = pd.read_csv(ALIASES, dtype=str, encoding="utf-8-sig")
+        for r in a.itertuples():
+            if int(r.FirstYear) <= int(year) <= int(r.LastYear) and r.LeagueName.upper() in ids:
+                by[pc.norm(r.OldName)] = (ids[r.LeagueName.upper()], r.RosterID)
+    return by
+
+
+def postseason_historic(year):
+    """Games from data/Postseason_Historic.csv (one row per game; NIT groups 'A | B | C').
+    Missing scores are filled from each team's own PointsFor that week (real in Sleeper);
+    a recorded winner that disagrees with those points is reported, not overridden."""
+    import poll_common as pc
+    p = pd.read_csv("data/Postseason_Historic.csv", dtype=str)
+    p = p[p["Season"] == str(year)]
+    by = name_lookup(year)
+    m = pc.matchups(year)
+    own_pts = {(a, b, int(w)): float(x) for a, b, w, x in zip(m["LeagueID"], m["RosterID"], m["Week"], m["PointsFor"])}
+    rows, miss, unscored, mismatch = [], set(), [], []
+    for r in p.itertuples():
+        wk = int(r.Week) if isinstance(r.Week, str) and r.Week.strip() else 12 + int(r.Round)
+        teams = [x.strip() for x in str(r.TeamA).split("|")]
+        if isinstance(r.TeamB, str) and r.TeamB.strip():
+            teams.append(r.TeamB.strip())
+        if len(teams) < 2:
+            continue  # single-team row (no game)
+        keys = [by.get(pc.norm(x)) for x in teams]
+        try:
+            pts = [float(x) for x in str(r.ScoreA).split("|")]
+            if isinstance(r.ScoreB, str) and r.ScoreB.strip():
+                pts.append(float(r.ScoreB))
+        except ValueError:
+            pts = []
+        if len(pts) != len(teams):
+            # Scores not recorded: each team's own points that week are real in Sleeper.
+            pts = [own_pts.get((k[0], k[1], wk)) if k else None for k in keys]
+            if any(x is None for x in pts):
+                unscored.append(f"{r.Event} wk{wk} {' v '.join(teams)}")
+                continue
+            if isinstance(r.Winner, str) and r.Winner.strip() and len(teams) == 2:
+                wi = [pc.norm(x) for x in teams].index(pc.norm(r.Winner)) if pc.norm(r.Winner) in [pc.norm(x) for x in teams] else None
+                if wi is not None and pts[wi] < pts[1 - wi]:
+                    mismatch.append(f"{r.Event} wk{wk} {r.Winner} (Sleeper points disagree)")
+        miss |= {x for x, k in zip(teams, keys) if k is None}
+        for i, k in enumerate(keys):
+            if k is None:
+                continue
+            others = [j for j in range(len(teams)) if j != i]
+            res = sum((pts[i] > pts[j]) + 0.5 * (pts[i] == pts[j]) for j in others) / len(others)
+            rows.append({"LeagueID": k[0], "RosterID": k[1], "Week": wk, "Event": r.Event,
+                         "PlayoffRound": int(r.Round) if r.Event == "Playoff" else 0,
+                         "Res": res, "PF": pts[i], "Opp": [keys[j] for j in others if keys[j]]})
+    if unscored:
+        print(f"WARNING {year}: {len(unscored)} postseason game(s) with no score anywhere, skipped: {unscored[:5]}")
+    if mismatch:
+        print(f"WARNING {year}: recorded winner disagrees with Sleeper points: {mismatch}")
+    return pd.DataFrame(rows, columns=["LeagueID", "RosterID", "Week", "Event", "PlayoffRound", "Res", "PF", "Opp"]), miss
+
+
+def postseason_season(year):
+    """Games from data/Postseason_Season.csv, the live per-team format (one row per team per
+    game, Status = Final). Contract for every postseason script (CCG and bowls follow it; NIT
+    and the playoff bracket must too):
+      Year, Round (CCG / Bowl / NIT / Playoff), Week, LeagueID, RosterID, Points, Status,
+      OpponentRosterID + OpponentLeague (name; blank = same league) + OpponentPoints --
+      for a group game, '|'-separated lists of every group rival --
+      and PlayoffRound (1..5) on Playoff rows.
+    """
+    import poll_common as pc
+    path = "data/Postseason_Season.csv"
+    cols = ["LeagueID", "RosterID", "Week", "Event", "PlayoffRound", "Res", "PF", "Opp"]
+    if not os.path.exists(path) or os.path.getsize(path) < 10:
+        return pd.DataFrame(columns=cols)
+    p = pd.read_csv(path, dtype=str).fillna("")
+    p = p[(p["Year"] == str(year)) & (p["Status"] == "Final")]
+    ids = pc.league_ids(year)
+    rows = []
+    for r in p.itertuples():
+        opp_r = [x.strip() for x in str(r.OpponentRosterID).split("|")]
+        opp_l = [x.strip() for x in str(getattr(r, "OpponentLeague", "")).split("|")]
+        opp_p = [float(x) for x in str(r.OpponentPoints).split("|") if x.strip()]
+        opp_l += [""] * (len(opp_r) - len(opp_l))
+        keys = [(ids.get(lg.upper(), r.LeagueID) if lg else r.LeagueID, rid) for rid, lg in zip(opp_r, opp_l)]
+        me = float(r.Points)
+        res = sum((me > o) + 0.5 * (me == o) for o in opp_p) / len(opp_p) if opp_p else None
+        if res is None:
+            continue
+        rows.append({"LeagueID": r.LeagueID, "RosterID": r.RosterID, "Week": int(r.Week), "Event": r.Round,
+                     "PlayoffRound": int(getattr(r, "PlayoffRound", 0) or 0) if r.Round == "Playoff" else 0,
+                     "Res": res, "PF": me, "Opp": keys})
+    return pd.DataFrame(rows, columns=cols)
+
+
+def final_ranks(cfg, m, extra, keys, games):
+    """The 7 bots for the final poll. All-Play, Hot Hand, The Ceiling, The Market: frozen at the
+    regular season. The Standings, The Resume, The Coach: regular season + postseason games."""
+    last = int(cfg.get("last_regular_week", 11))
+    rk, used = bot_ranks(cfg, m, last, extra, keys)
+    reg = base(m, last, last)
+    ap = reg.groupby(["LeagueID", "RosterID"])["AP"].mean()
+    rr = reg.groupby(["LeagueID", "RosterID"]).agg(W=("Wv", "sum"), N=("Wv", "size"), PF=("PointsFor", "sum"))
+    ro = reg.assign(o=[ap.get((a, b)) for a, b in zip(reg["LeagueID"], reg["OpponentRosterID"])]) \
+        .groupby(["LeagueID", "RosterID"])["o"].agg(["sum", "count"])
+    g = games.copy()
+    gp = g.groupby(["LeagueID", "RosterID"]).agg(W=("Res", "sum"), N=("Res", "size"), PF=("PF", "sum"))
+    g["o"] = g["Opp"].map(lambda ks: sum(ap.get(k, 0.5) for k in ks) / len(ks) if ks else None)
+    go = g.dropna(subset=["o"]).groupby(["LeagueID", "RosterID"])["o"].agg(["sum", "count"])
+    mx = extra.get("maxpts", pd.DataFrame(columns=["LeagueID", "RosterID", "Week", "MaxPoints"]))
+    mx = mx.assign(Week=mx["Week"].astype(int))
+    mx_reg = mx[mx["Week"] <= last].groupby(["LeagueID", "RosterID"])["MaxPoints"].sum()
+    played = set(zip(g["LeagueID"], g["RosterID"], g["Week"].astype(int)))
+    mx_post = mx[[(a, b, w) in played for a, b, w in zip(mx["LeagueID"], mx["RosterID"], mx["Week"])]] \
+        .groupby(["LeagueID", "RosterID"])["MaxPoints"].sum()
+
+    def get(df, k, c):
+        return df.loc[k, c] if k in df.index else 0
+
+    vals = {}
+    for k in zip(rk["LeagueID"], rk["RosterID"]):
+        if k not in rr.index:
+            continue
+        W, N = rr.loc[k, "W"] + get(gp, k, "W"), rr.loc[k, "N"] + get(gp, k, "N")
+        PF = rr.loc[k, "PF"] + get(gp, k, "PF")
+        osum, ocnt = ro.loc[k, "sum"] + get(go, k, "sum"), ro.loc[k, "count"] + get(go, k, "count")
+        mxt = mx_reg.get(k, 0) + mx_post.get(k, 0)
+        vals[k] = {"record": W / N + PF * 1e-9, "resume": 0.6 * W / N + 0.4 * osum / ocnt + PF * 1e-12,
+                   "efficiency": PF / mxt if mxt else None}
+    for b in ("record", "resume", "efficiency"):
+        if b in used:
+            rk[b + "_val"] = [vals.get(k, {}).get(b) for k in zip(rk["LeagueID"], rk["RosterID"])]
+            rk[b] = rk[b + "_val"].astype(float).rank(ascending=False, method="min", na_option="bottom").astype(int)
+    return rk, used
+
+
+def final_bumps(cfg, games):
+    """{key: bump} on the standardized scale: per postseason win, by event (x share for groups);
+    playoff wins escalate by round."""
+    fc = cfg["polls"]["Final"]
+    bump = fc.get("bump", {})
+    sched = bump.get("Playoff", [])
+    out = {}
+    for r in games.itertuples():
+        k = (r.LeagueID, r.RosterID)
+        if r.Event == "Playoff":
+            b = sched[r.PlayoffRound - 1] if r.Res == 1.0 and 0 < r.PlayoffRound <= len(sched) else 0.0
+        else:
+            b = float(bump.get(r.Event, 0.0)) * float(r.Res)
+        out[k] = out.get(k, 0.0) + b
+    return out
+
+
+def final_four(order, games):
+    """Backstop: a semifinal or final winner sits directly above the team it beat (winner raised)."""
+    pl = games[games["Event"] == "Playoff"]
+    if pl.empty:
+        return order
+    top = int(pl["PlayoffRound"].max())
+    order = list(order)
+    for rnd in (top - 1, top):
+        for r in pl[(pl["PlayoffRound"] == rnd) & (pl["Res"] == 1.0)].itertuples():
+            w = (r.LeagueID, r.RosterID)
+            for lo in r.Opp:
+                if w in order and lo in order and order.index(w) > order.index(lo):
+                    order.remove(w)
+                    order.insert(order.index(lo), w)
+    return order

@@ -109,8 +109,11 @@ def page(cfg, poll, bots, archive, col, year, week, ptype, prev_ranked):
     nbots = int(float(poll["BotsUsed"].iloc[0] or 0))
     human = int(float(poll["HumanBallots"].iloc[0] or 0))
 
+    zmode = cfg.get("consensus", {}).get("method") == "zscore" and not human
+    final = ptype == "Final"
+
     def pct(x):
-        return f"{float(x):.3f}".lstrip("0")
+        return f"{float(x):+.2f}" if zmode else f"{float(x):.3f}".lstrip("0")
 
     first = not prev_ranked and poll["PrevRank"].replace("", None).isna().all()
     rows = "".join(
@@ -125,7 +128,7 @@ def page(cfg, poll, bots, archive, col, year, week, ptype, prev_ranked):
     dropped_html = ", ".join(e(t) for t in dropped) or "None"
 
     games = ranked_games(cfg, year, week, poll)
-    if len(games):
+    if len(games) and not final:
         g = "".join(
             f'<li class="{"rvr" if str(r.RankedVsRanked) == "True" else ""}">{pill(r.Team, col, r.Rank)}'
             f'<span class="vs">VS</span>{pill(r.OppTeam, col, r.OppRank if str(r.OppRank) not in ("", "nan") else None)}'
@@ -139,16 +142,21 @@ def page(cfg, poll, bots, archive, col, year, week, ptype, prev_ranked):
         (f'<b>{e(a_label)} wk {w}</b>' if (t == ptype and w == week) else f'<a href="{fname(t, w)}">{e(a_label)} wk {w}</a>')
         for t, w, a_label in archive)
     kpi_h = f'<div class="kpi"><b>{human}</b><span>Panel ballots</span></div>' if human else ""
-    method = (f"Each of the {nbots} bots ranks every team. For each team the best and worst bot are dropped "
-              "(BCS style) and the rest averaged; Score runs from 1.000 (every counted bot has the team #1) down to 0. "
+    method = (f"Each of the {nbots} bots rates every team; ratings are put on one scale (standard deviations from the "
+              "average team). For each team the best and worst bot are dropped (BCS style) and the rest averaged = Score. "
+              + ("Final poll: postseason games count as extra games for The Standings, The Resume and The Coach, and each "
+                 "postseason win adds a bump (playoff rounds +.15/+.25/+.45/+.85/+1.65, CCG and bowl +.15, NIT +.05); "
+                 "a semifinal or final winner always ranks above the team it beat. " if final else "")
               + ("The panel's ballots (#1 = " + str(size) + " points) are a second component, averaged with the bots. " if human else "")
               + "Others receiving votes: in at least one counted bot's top " + str(size) + ". "
               "(First-place votes) = bots ranking the team #1.")
 
+    eyebrow = ("Season complete · regular season + postseason" if final
+               else f"Results through week {week} · applies to week {week + 1} games")
     body = f"""
 <div class="wrap">
 <nav class="weeks" aria-label="Pages">{nav_html("poll")}</nav>
-<header><div><div class="eyebrow">Results through week {week} · applies to week {week + 1} games</div>
+<header><div><div class="eyebrow">{eyebrow}</div>
 <h1>NCAA 180 <em>{e(label)}</em></h1></div>
 <div class="kpis"><div class="kpi"><b>{nbots}</b><span>Computer bots</span></div>{kpi_h}</div></header>
 <section id="poll"><h2>{e(label)} <small>Score (first-place votes)</small></h2>
