@@ -1,0 +1,40 @@
+name: History Backfill (one-off)
+
+# Pulls pre-2021 seasons into data/backfill/ for review. Run it from a branch: results are
+# committed back to the SAME branch it ran on, never to main.
+on:
+  workflow_dispatch:
+    inputs:
+      years:
+        description: 'Seasons to pull, space-separated'
+        required: true
+        default: '2020 2019'
+
+permissions:
+  contents: write
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install pandas requests
+      - name: Pull history
+        run: python scripts/history_backfill.py ${{ github.event.inputs.years }}
+      - name: Summary
+        if: always()
+        run: |
+          for f in data/backfill/Discovery_*.txt; do [ -f "$f" ] && while read -r l; do echo "::notice::$l"; done < "$f"; done
+      - name: Commit to this branch
+        if: always()
+        run: |
+          if [ "${GITHUB_REF_NAME}" = "main" ]; then echo "::error::Refusing to commit backfill to main"; exit 1; fi
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/backfill || true
+          if git diff --cached --quiet; then echo "Nothing to commit"; exit 0; fi
+          git commit -m "History backfill: ${{ github.event.inputs.years }}"
+          git push origin HEAD:${GITHUB_REF_NAME}
