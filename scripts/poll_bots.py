@@ -292,6 +292,7 @@ def league_slots(year):
 # (1..5 for Playoff, else 0), Res, PF, Opp (list of (LeagueID, RosterID)).
 
 ALIASES = "data/TeamAliases_Historic.csv"  # OldName, LeagueName, RosterID, FirstYear, LastYear
+# Only years backed by evidence (score match). Idaho = MW roster 7 verified 2022-2025; Fresno State from 2026.
 
 
 def name_lookup(year):
