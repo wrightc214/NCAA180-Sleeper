@@ -45,10 +45,22 @@ def page_head(title, extra_css=""):
 
 
 # ---- Team colors: standing rule for every graphic -------------------------------------
-# Use the team's own pair (Background + Font from "Colors - Teams.csv") when the Font
-# color reads on the Background (WCAG contrast >= 4.5). Otherwise fall back to white or
-# black text, and if the Background is a gray (low saturation) use the team's other color
-# as the background instead -- e.g. Alabama: gray/crimson -> crimson with white text.
+# "Colors - Teams.csv" / "Colors - Leagues.csv": Primary, Secondary, Background, Text.
+#   Primary / Secondary   the school's identity colors. Plain color blocks with no text
+#                         (chips, award bars, map dots/rings) use these directly.
+#   Background / Text     optional manual override for blocks that carry text. Leave blank
+#                         and the pair is picked automatically by display_pair().
+# "Colors - Palette.csv" lists every official color per school/league (Name, Order, Hex,
+# ColorName, Role). display_pair() mixes and matches from it, with the background always
+# the Primary or Secondary and text needing contrast >= MIN_CONTRAST (3.0, bold-text bar):
+#   1. Primary + Secondary
+#   2. Primary + another palette color, taken in the palette's official order (the brand's
+#      own priority): the first one that reads comfortably (>= 4.5), else the first >= 3.0
+#   3. Secondary + another palette color, same way
+#   4. borderline pair (>= 2.5): the lighter of Primary/Secondary behind, the darker as text
+#   5. last resort: Primary with white or black text
+
+MIN_CONTRAST = 3.0
 
 def _hex(c):
     if not isinstance(c, str) or not c.strip():
@@ -76,17 +88,54 @@ def _sat(h):
     return colorsys.rgb_to_hsv(r, g, b)[1]
 
 
-def team_colors(bg, fg, default=("#14213a", "#ffffff")):
-    """(background, text) for a team block, applying the fallback rule above."""
-    bg, fg = _hex(bg), _hex(fg)
-    try:
+BORDERLINE = 2.5
+PALETTE = "data/Colors - Palette.csv"
+_palettes = None
+
+
+def palettes():
+    """{name: [hex, ...]} in official order, from Colors - Palette.csv (empty if missing)."""
+    global _palettes
+    if _palettes is None:
+        _palettes = {}
+        if os.path.exists(PALETTE):
+            import csv
+            with open(PALETTE, encoding="utf-8-sig") as f:
+                for r in sorted(csv.DictReader(f), key=lambda r: (r["Name"], int(r["Order"]))):
+                    h = _hex(r["Hex"])
+                    if h:
+                        _palettes.setdefault(r["Name"], []).append(h.upper())
+    return _palettes
+
+
+def display_pair(primary, secondary, palette=()):
+    """(background, text) chosen by the rule above."""
+    p, s = _hex(primary), _hex(secondary)
+    if s and contrast(p, s) >= MIN_CONTRAST:
+        return p, s
+    for bg in (p, s):
         if not bg:
+            continue
+        others = [c for c in palette if c not in (p.upper(), (s or "").upper())]
+        pick = ([c for c in others if contrast(bg, c) >= 4.5]
+                or [c for c in others if contrast(bg, c) >= MIN_CONTRAST])
+        if pick:
+            return bg, pick[0]
+    if s and contrast(p, s) >= BORDERLINE:
+        return (p, s) if _lum(p) >= _lum(s) else (s, p)
+    return p, ("#ffffff" if contrast(p, "#ffffff") >= contrast(p, "#000000") else "#000000")
+
+
+def team_colors(primary, secondary, background=None, text=None, name=None,
+                default=("#14213a", "#ffffff")):
+    """(background, text) for a block that carries text: the row's manual Background/Text
+    if filled in, else display_pair() over the school's palette (looked up by `name`)."""
+    p, sc, bg, tx = _hex(primary), _hex(secondary), _hex(background), _hex(text)
+    try:
+        if bg and tx:
+            return bg, tx
+        if not p:
             return default
-        if fg and contrast(bg, fg) >= 4.5:
-            return bg, fg
-        if fg and _sat(bg) < 0.35 and _sat(fg) >= 0.35:
-            bg = fg  # gray background -> the team's real color
-        text = "#ffffff" if contrast(bg, "#ffffff") >= contrast(bg, "#000000") else "#000000"
-        return bg, text
+        return display_pair(p, sc, palettes().get(name, []))
     except Exception:
         return default

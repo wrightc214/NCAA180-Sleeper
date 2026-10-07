@@ -356,13 +356,13 @@ def main():
         print(f"WARNING: {MAXPTS} missing; 'You Beat Yourself' award skipped")
 
     c = pd.read_csv(COLORS, dtype=str, encoding="utf-8-sig")
-    colors = {r.Team: (r.Background, r.Font) for r in c.itertuples()}
+    colors = {r.Team: (r.Primary, r.Secondary) for r in c.itertuples()}
     lc = pd.read_csv(LEAGUE_COLORS, dtype=str, encoding="utf-8-sig")
     full_to_short = {k.upper(): v for k, v in LEAGUE_DISPLAY.items()}
     lcolors = {}
     for r in lc.itertuples():
         short = full_to_short.get(str(r.League).upper())
-        bg = str(r.Background).strip()
+        bg = str(r.Primary).strip()
         if short and bg:
             lcolors[short] = bg if bg.startswith("#") else "#" + bg
     tpl = open(TEMPLATE, encoding="utf-8").read()

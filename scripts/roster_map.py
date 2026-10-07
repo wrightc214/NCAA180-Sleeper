@@ -262,13 +262,13 @@ def main():
     lc = pd.read_csv(LEAGUE_COLORS, dtype=str, encoding="utf-8-sig")
     up = {k.upper(): v for k, v in LEAGUE_DISPLAY.items()}
     tc = pd.read_csv("data/Colors - Teams.csv", dtype=str, encoding="utf-8-sig")
-    team_colors = {r.Team: [r.Background, r.Font] for r in tc.itertuples()
-                   if isinstance(r.Background, str) and isinstance(r.Font, str)}
+    team_colors = {r.Team: [r.Primary, r.Secondary] for r in tc.itertuples()
+                   if isinstance(r.Primary, str) and isinstance(r.Secondary, str)}
     colors = {}
     for r in lc.itertuples():
         s = up.get(str(r.League).upper())
-        if s and isinstance(r.Background, str):
-            colors[s] = r.Background if r.Background.startswith("#") else "#" + r.Background
+        if s and isinstance(r.Primary, str):
+            colors[s] = r.Primary if r.Primary.startswith("#") else "#" + r.Primary
 
     teams = []
     for r in t.itertuples():

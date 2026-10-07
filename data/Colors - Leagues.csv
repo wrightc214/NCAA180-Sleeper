@@ -1,21 +1,21 @@
-﻿League,Background,Font,URL
-NCAA,#009CDE,#000000,https://1000logos.net/wp-content/uploads/2021/12/NCAA-Logo.png
-NCAA Playoffs,#c9920e,#000000,https://en.wikipedia.org/wiki/File:Logo_of_college_football_playoff.svg
-NIT,563B87,#E0902F,https://en.wikipedia.org/wiki/File:NIT_North_Texas_2021_logo.png
-NCAA ACC,#013ca6,#FFFFFF,https://1000logos.net/wp-content/uploads/2016/10/ACC-Logo.png
-NCAA American,#e2231a,#041e41,https://1000logos.net/wp-content/uploads/2021/06/American-Athletic-Conference-logo.png
-NCAA Big 10,#0088ce,#000000,https://1000logos.net/wp-content/uploads/2021/06/Big-Ten-Conference-logo.png
-NCAA Big 12,#ef483e,#cfd4d8,https://1000logos.net/wp-content/uploads/2021/06/Big-12-Conference-logo.png
-NCAA Big East & CO.,#1a427d,#e41c39,https://1000logos.net/wp-content/uploads/2021/06/Big-East-Conference-logo.png
-NCAA Big Sky,#005daa,#70cde3,https://1000logos.net/wp-content/uploads/2020/04/Big-Sky-Conference-Logo.png
-NCAA USA,#a6192e,#bbbcbc,https://1000logos.net/wp-content/uploads/2020/05/Conference-USA-Logo.png
-NCAA HISTORICALLY BLACK,#ed192d,#000000,https://1000logos.net/wp-content/uploads/2021/07/Southwestern-Athletic-Conference-logo.png
-NCAA Ivy,#01563f,#FFFFFF,https://1000logos.net/wp-content/uploads/2020/06/Ivy-League-Logo.png
-NCAA Mountain West,#4f2d7f,#afafaf,https://1000logos.net/wp-content/uploads/2020/06/Mountain-West-Conference-Logo.png
-NCAA Ohio Valley,#9C243F,#887744,https://1000logos.net/ohio-valley-conference-logo/
-NCAA PAC 12,#004b91,#FFFFFF,https://1000logos.net/wp-content/uploads/2022/02/Pacific-10-Conference-logo.png
-NCAA Pioneer,#9b745b,#dcdee2,https://1000logos.net/wp-content/uploads/2021/07/Pioneer-Football-League-logo.png
-NCAA SEC,#004b8d,#ffd046,https://1000logos.net/wp-content/uploads/2021/07/Southeastern-Conference-logo.png
-NCAA Sun Belt,#0c2342,#f2a900,https://1000logos.net/wp-content/uploads/2022/02/Sun-Belt-Conference-logo.png
-NCAA Wild,#2A454B,#DAD7CD,https://1000logos.net/wp-content/uploads/2021/06/Division-I-FBS-Independents-logo.png
+﻿League,Primary,Secondary,Background,Text,URL
+NCAA,#009CDE,#000000,,,https://1000logos.net/wp-content/uploads/2021/12/NCAA-Logo.png
+NCAA Playoffs,#C28C19,#130C0E,,,https://en.wikipedia.org/wiki/File:Logo_of_college_football_playoff.svg
+NIT,#563B87,#E0902F,,,https://en.wikipedia.org/wiki/File:NIT_North_Texas_2021_logo.png
+NCAA ACC,#013CA6,#A5A9AB,,,https://1000logos.net/wp-content/uploads/2016/10/ACC-Logo.png
+NCAA American,#002D62,#EE2231,,,https://1000logos.net/wp-content/uploads/2021/06/American-Athletic-Conference-logo.png
+NCAA Big 10,#0088ce,#000000,,,https://1000logos.net/wp-content/uploads/2021/06/Big-Ten-Conference-logo.png
+NCAA Big 12,#C41230,#FFFFFF,,,https://1000logos.net/wp-content/uploads/2021/06/Big-12-Conference-logo.png
+NCAA Big East & CO.,#003E7E,#ED1A39,,,https://1000logos.net/wp-content/uploads/2021/06/Big-East-Conference-logo.png
+NCAA Big Sky,#005daa,#70cde3,,,https://1000logos.net/wp-content/uploads/2020/04/Big-Sky-Conference-Logo.png
+NCAA USA,#003865,#A6192E,,,https://1000logos.net/wp-content/uploads/2020/05/Conference-USA-Logo.png
+NCAA HISTORICALLY BLACK,#E01821,#B0B0B0,,,https://1000logos.net/wp-content/uploads/2021/07/Southwestern-Athletic-Conference-logo.png
+NCAA Ivy,#026937,#FFFFFF,,,https://1000logos.net/wp-content/uploads/2020/06/Ivy-League-Logo.png
+NCAA Mountain West,#4f2d7f,#afafaf,,,https://1000logos.net/wp-content/uploads/2020/06/Mountain-West-Conference-Logo.png
+NCAA Ohio Valley,#9D2440,#D1AD85,,,https://1000logos.net/ohio-valley-conference-logo/
+NCAA PAC 12,#092346,#FFFFFF,,,https://1000logos.net/wp-content/uploads/2022/02/Pacific-10-Conference-logo.png
+NCAA Pioneer,#9b745b,#dcdee2,,,https://1000logos.net/wp-content/uploads/2021/07/Pioneer-Football-League-logo.png
+NCAA SEC,#002D72,#FED141,,,https://1000logos.net/wp-content/uploads/2021/07/Southeastern-Conference-logo.png
+NCAA Sun Belt,#0A2240,#F6A800,,,https://1000logos.net/wp-content/uploads/2022/02/Sun-Belt-Conference-logo.png
+NCAA Wild,#2A454B,#DAD7CD,,,https://1000logos.net/wp-content/uploads/2021/06/Division-I-FBS-Independents-logo.png
 

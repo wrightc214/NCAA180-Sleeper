@@ -115,7 +115,7 @@ def assets(o, names):
 def colors():
     tc = pd.read_csv("data/Colors - Teams.csv", dtype=str, encoding="utf-8-sig")
     fix = lambda c: c if isinstance(c, str) and c.startswith("#") else ("#" + c if isinstance(c, str) else None)
-    return {r.Team: (fix(r.Background), fix(r.Font)) for r in tc.itertuples()}
+    return {r.Team: (fix(r.Primary), fix(r.Secondary), fix(r.Background), fix(r.Text)) for r in tc.itertuples()}
 
 
 def build_html(cards):
@@ -142,7 +142,7 @@ def build_html(cards):
     """
     parts = []
     for c in cards:
-        bg, fg = team_colors(*col.get(c["team"], (None, None)))
+        bg, fg = team_colors(*col.get(c["team"], (None, None, None, None)), name=c["team"])
         logo = os.path.join("..", LOGO_DIR, c["team"] + ".png")
         players = "".join(f"<li>{html.escape(n)}<small>{html.escape(p)} · {html.escape(t)}</small></li>"
                           for n, p, t in c["players"]) or "<li>—</li>"
