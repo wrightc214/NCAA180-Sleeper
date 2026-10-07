@@ -201,7 +201,16 @@ def consensus(cfg, ranks, used, size, pool=None):
         top = top - (rk.min(axis=1) <= size).astype(int) - ((rk.max(axis=1) <= size) & (top > 1)).astype(int)
     d["TopVotes"] = top.clip(lower=0)
     d["BotsUsed"] = len(used)
-    if cfg.get("consensus", {}).get("method", "points") == "avg_rank":
+    method = cfg.get("consensus", {}).get("method", "points")
+    if method == "zscore":
+        # Magnitude: each bot's value standardized within the pool (gaps count, not just order).
+        z = pd.DataFrame({b: (d[b + "_val"].astype(float) - d[b + "_val"].astype(float).mean())
+                          / d[b + "_val"].astype(float).std(ddof=0) for b in used}, index=d.index).fillna(-3.0)
+        z = z.clip(-3, 3)
+        zs = (z.sum(axis=1) - z.max(axis=1) - z.min(axis=1)) / (len(used) - 2) if drop else z.mean(axis=1)
+        d["ZScore"] = zs.round(4)
+        d["ComputerPct"] = ((zs + 3) / 6).round(4)
+    if method == "avg_rank":
         # Score from the trimmed average full rank: 1.0 for an average of 1, 0 at pool size.
         n_pool = len(d)
         d["ComputerPct"] = ((n_pool - d["BotAvgRank"]) / (n_pool - 1)).round(4)
