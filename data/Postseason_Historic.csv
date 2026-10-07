@@ -1,14 +1,14 @@
 Season,Event,Round,RoundName,Week,Bowl,TeamA,SeedA,TeamB,SeedB,ScoreA,ScoreB,Winner,Notes
-2019,CCG,1,Conference Championship,12,ACC,Clemson,,Georgia Tech,,,,Clemson,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2019,CCG,1,Conference Championship,12,Big 10,Northwestern,,Michigan State,,,,Northwestern,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2019,CCG,1,Conference Championship,12,Big 12,Texas Tech,,Kansas State,,,,Texas Tech,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2019,CCG,1,Conference Championship,12,Big East,Army,,Notre Dame,,,,Army,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2019,CCG,1,Conference Championship,12,Ivy,Bucknell,,Harvard,,,,Bucknell,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2019,CCG,1,Conference Championship,12,Mountain West,New Mexico,,Nevada,,,,New Mexico,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2019,CCG,1,Conference Championship,12,PAC 12,Washington,,Utah,,,,Washington,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2019,CCG,1,Conference Championship,12,SEC,Kentucky,,Auburn,,,,Kentucky,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2019,CCG,1,Conference Championship,12,Sun Belt,Memphis,,Louisiana Tech,,,,Memphis,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2019,CCG,1,Conference Championship,12,Wild,Citadel,,North Dakota State,,,,Citadel,winner/runner-up from Chris's CCG history list; scores not yet sourced
+2019,CCG,1,Conference Championship,12,ACC,Clemson,,Georgia Tech,,134.32,93.6,Clemson,scores from Sleeper week-12 matchup (history backfill)
+2019,CCG,1,Conference Championship,12,Big 10,Northwestern,,Michigan State,,174.96,163.22,Northwestern,scores from Sleeper week-12 matchup (history backfill)
+2019,CCG,1,Conference Championship,12,Big 12,Texas Tech,,Kansas State,,131.24,111.88,Texas Tech,scores from Sleeper week-12 matchup (history backfill)
+2019,CCG,1,Conference Championship,12,Big East,Army,,Notre Dame,,119.96,93.5,Army,scores from Sleeper week-12 matchup (history backfill)
+2019,CCG,1,Conference Championship,12,Ivy,Bucknell,,Harvard,,200.8,77.18,Bucknell,scores from Sleeper week-12 matchup (history backfill)
+2019,CCG,1,Conference Championship,12,Mountain West,New Mexico,,Nevada,,112.2,74.54,New Mexico,scores from Sleeper week-12 matchup (history backfill)
+2019,CCG,1,Conference Championship,12,PAC 12,Washington,,Utah,,139.36,118.12,Washington,scores from Sleeper week-12 matchup (history backfill)
+2019,CCG,1,Conference Championship,12,SEC,Kentucky,,Auburn,,116,63.18,Kentucky,scores from Sleeper week-12 matchup (history backfill); opponent's roster slot maps to Mississippi State in today's Teams.csv (slot names may have differed in 2019) - verify runner-up
+2019,CCG,1,Conference Championship,12,Sun Belt,Memphis,,Louisiana Tech,,162.64,135.82,Memphis,scores from Sleeper week-12 matchup (history backfill)
+2019,CCG,1,Conference Championship,12,Wild,Citadel,,North Dakota State,,141.64,111.36,Citadel,scores from Sleeper week-12 matchup (history backfill); opponent's roster slot maps to Wichita State in today's Teams.csv (slot names may have differed in 2019) - verify runner-up
 2019,Playoff,1,Sweet 16,,,Washington,1,Maryland,16,,,Maryland,2019: Chris not yet in league; verify
 2019,Playoff,1,Sweet 16,,,Northwestern,8,Clemson,9,,,Northwestern,2019: Chris not yet in league; verify
 2019,Playoff,1,Sweet 16,,,Memphis,4,Virginia Tech,13,,,Virginia Tech,2019: Chris not yet in league; verify
@@ -48,20 +48,20 @@ Season,Event,Round,RoundName,Week,Bowl,TeamA,SeedA,TeamB,SeedB,ScoreA,ScoreB,Win
 2019,Bowl,1,Bowl,,,Eastern Michigan,,,,,,Eastern Michigan,"bowl winner only, from Chris's draft-order sheet; opponent/score/bowl unknown"
 2019,Bowl,1,Bowl,,,Wichita State,,,,,,Wichita State,"bowl winner only, from Chris's draft-order sheet; opponent/score/bowl unknown"
 2019,Bowl,1,Bowl,,,Brown,,,,,,Brown,"bowl winner only, from Chris's draft-order sheet; opponent/score/bowl unknown"
-2020,CCG,1,Conference Championship,12,ACC,Clemson,,Virginia Tech,,,,Clemson,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2020,CCG,1,Conference Championship,12,Big 10,Michigan,,Wisconsin,,,,Michigan,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2020,CCG,1,Conference Championship,12,Big 12,West Virginia,,Oklahoma,,,,West Virginia,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2020,CCG,1,Conference Championship,12,Big East,UCF,,Syracuse,,,,UCF,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2020,CCG,1,Conference Championship,12,Big Sky,Villanova,,Maine,,,,Villanova,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2020,CCG,1,Conference Championship,12,CUSA,Louisiana,,Troy,,,,Louisiana,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2020,CCG,1,Conference Championship,12,HBCU,Mississippi Valley State,,Jackson State,,,,Mississippi Valley State,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2020,CCG,1,Conference Championship,12,Ivy,Penn,,Lehigh,,,,Penn,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2020,CCG,1,Conference Championship,12,Mountain West,Utah State,,Nevada,,,,Utah State,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2020,CCG,1,Conference Championship,12,PAC 12,Utah,,California,,,,Utah,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2020,CCG,1,Conference Championship,12,Pioneer,SE Missouri State,,Campbell,,,,SE Missouri State,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2020,CCG,1,Conference Championship,12,SEC,Ole Miss,,Vanderbilt,,,,Ole Miss,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2020,CCG,1,Conference Championship,12,Sun Belt,Rice,,Tulane,,,,Rice,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2020,CCG,1,Conference Championship,12,Wild,Citadel,,Wichita State,,,,Citadel,winner/runner-up from Chris's CCG history list; scores not yet sourced
+2020,CCG,1,Conference Championship,12,ACC,Clemson,,Virginia Tech,,152.14,124.08,Clemson,scores from Sleeper week-12 matchup (history backfill)
+2020,CCG,1,Conference Championship,12,Big 10,Michigan,,Wisconsin,,157.28,137.8,Michigan,scores from Sleeper week-12 matchup (history backfill)
+2020,CCG,1,Conference Championship,12,Big 12,West Virginia,,Oklahoma,,131.1,127.78,West Virginia,scores from Sleeper week-12 matchup (history backfill)
+2020,CCG,1,Conference Championship,12,Big East,UCF,,Syracuse,,158.2,108.6,UCF,scores from Sleeper week-12 matchup (history backfill)
+2020,CCG,1,Conference Championship,12,Big Sky,Villanova,,Maine,,220.08,146.6,Villanova,scores from Sleeper week-12 matchup (history backfill)
+2020,CCG,1,Conference Championship,12,CUSA,Louisiana,,Troy,,147.28,127.24,Louisiana,scores from Sleeper week-12 matchup (history backfill)
+2020,CCG,1,Conference Championship,12,HBCU,Mississippi Valley State,,Jackson State,,198.12,155.58,Mississippi Valley State,scores from Sleeper week-12 matchup (history backfill)
+2020,CCG,1,Conference Championship,12,Ivy,Penn,,Lehigh,,195.22,172.98,Penn,scores from Sleeper week-12 matchup (history backfill)
+2020,CCG,1,Conference Championship,12,Mountain West,Utah State,,Nevada,,199.68,163.28,Utah State,scores from Sleeper week-12 matchup (history backfill)
+2020,CCG,1,Conference Championship,12,PAC 12,Utah,,California,,208.92,147.88,Utah,scores from Sleeper week-12 matchup (history backfill)
+2020,CCG,1,Conference Championship,12,Pioneer,SE Missouri State,,Campbell,,186,151,SE Missouri State,scores from Sleeper week-12 matchup (history backfill)
+2020,CCG,1,Conference Championship,12,SEC,Ole Miss,,Vanderbilt,,195.78,193.2,Ole Miss,scores from Sleeper week-12 matchup (history backfill)
+2020,CCG,1,Conference Championship,12,Sun Belt,Rice,,Tulane,,172.8,137.66,Rice,scores from Sleeper week-12 matchup (history backfill)
+2020,CCG,1,Conference Championship,12,Wild,Citadel,,Wichita State,,150.5,100.68,Citadel,scores from Sleeper week-12 matchup (history backfill); opponent's roster slot maps to North Dakota State in today's Teams.csv (slot names may have differed in 2020) - verify runner-up
 2020,Playoff,1,Group Stage,,,Utah | Wisconsin | Jackson State | Louisiana Tech,1 | 16 | 17 | 32,,,,,Jackson State,4-team group; winner advances. Scoring: group winner = 1 playoff win; all 4 = playoff appearance
 2020,Playoff,1,Group Stage,,,Villanova | Dixie State | Iowa | Campbell,8 | 9 | 24 | 25,,,,,Campbell,4-team group; winner advances. Scoring: group winner = 1 playoff win; all 4 = playoff appearance | Dixie State (later Utah Tech) slot no longer active (league contraction to 180)
 2020,Playoff,1,Group Stage,,,Ole Miss | UCF | Lehigh | Nebraska,4 | 13 | 20 | 29,,,,,Lehigh,4-team group; winner advances. Scoring: group winner = 1 playoff win; all 4 = playoff appearance
