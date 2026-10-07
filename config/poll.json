@@ -30,17 +30,11 @@
   },
   "_points": "'linear' = size, size-1, ... 1 for ranks 1..size. Or an explicit list, e.g. [25,24,23,...].",
   "tiebreak": [
-    "points",
-    "first_place_votes",
-    "computer_rank"
+    "score",
+    "bot_avg_rank",
+    "record"
   ],
-  "_tiebreak": "Applied in order; teams still exactly tied after the last one share a rank (shown T-12).",
-  "computer_ballot": {
-    "enabled": true,
-    "voter_id": "computer",
-    "voter_name": "Computer (W-L, PF)",
-    "weight": 1
-  },
+  "_tiebreak": "Score (BCS), then trimmed average bot rank, then the Standings bot. Teams still exactly tied share a rank.",
   "role_weights": {
     "panel": 1
   },
@@ -68,16 +62,74 @@
   "voter_alerts": {
     "consecutive_misses": 2
   },
-  "fan_poll": {
-    "enabled": false,
-    "min_votes": 20,
-    "_note": "Phase 2: Discord native poll. Needs a Discord bot token (REST only, no hosting) to read results. Published only when distinct voters >= min_votes."
-  },
   "publish": {
-    "min_human_ballots": 3,
-    "_note": "Below this the league post is held and lm-private-data gets an alert (computer-only results are not posted as 'the poll').",
     "page_url": "https://wrightc214.github.io/NCAA180-Sleeper/reports/poll.html",
     "post_to_league": false,
-    "_post_to_league": "false = the league post goes to lm-private-data as a preview only. Flip to true once the panel and form are live."
+    "_post_to_league": "false = the league post goes to lm-private-data as a preview only. Flip to true when ready."
+  },
+  "bots": [
+    {
+      "id": "record",
+      "name": "The Standings",
+      "enabled": true,
+      "blurb": "Wins, then points for",
+      "short": "STND"
+    },
+    {
+      "id": "allplay",
+      "name": "All-Play",
+      "enabled": true,
+      "blurb": "Expected wins vs. every other team, every week",
+      "short": "ALLP"
+    },
+    {
+      "id": "form",
+      "name": "Hot Hand",
+      "enabled": true,
+      "blurb": "All-play, last 3 weeks weighted 3:2:1",
+      "short": "HOT"
+    },
+    {
+      "id": "resume",
+      "name": "The Resume",
+      "enabled": true,
+      "blurb": "Win % plus opponents' all-play strength",
+      "short": "RES"
+    },
+    {
+      "id": "ceiling",
+      "name": "The Ceiling",
+      "enabled": true,
+      "blurb": "Best possible lineup per game",
+      "short": "CEIL"
+    },
+    {
+      "id": "efficiency",
+      "name": "The Coach",
+      "enabled": true,
+      "blurb": "Points scored / best possible lineup",
+      "short": "COACH"
+    },
+    {
+      "id": "redraft",
+      "name": "The Market",
+      "enabled": true,
+      "blurb": "Redraft value of the best starting lineup (FantasyCalc)",
+      "short": "MKT"
+    }
+  ],
+  "_bots": "Each bot ranks every team. Turn one off with enabled=false; ids map to functions in scripts/poll_bots.py (also available: points, median, elo). Lineup chosen by backtest 2026-10-07 (claude/poll-backtest-2026-10-07.md).",
+  "consensus": {
+    "drop_high_low": true,
+    "method": "avg_rank",
+    "_note": "Per team drop the best and worst bot rank, average the rest (full 1-N ranks). Score = (N - avg) / (N - 1). method 'points' = classic BCS top-25 points instead (lets a team in on one bot's vote; backtest 2026-10-07 chose avg_rank). ORV = outside the poll but in the top `size` of at least one counted bot."
+  },
+  "human_component": {
+    "enabled": false,
+    "_note": "When true, panel ballots (Google Form) become a second BCS component: HumanPct = ballot points / max. Score = mean of ComputerPct and HumanPct. The poll then waits for the ballot deadline; while false it publishes in the Tuesday weekly run."
+  },
+  "seeding": {
+    "include_week12_points": false,
+    "_note": "Week 12 (CCG) points count for the Seeding poll bots only if true. Backtest compares both."
   }
 }

@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       script_to_run:
-        description: 'Script to run (league_ids, rosters, users, rosterhistory, matchups, scores, max_points, weekly_awards, players, transactions, drafts, standings, orphans, lineup_streaks, player_values, draft_picks, weekly_report, roster_map, standings_page, conference_championships, playoff_field, bowls, nit, patch_orphans, all). Postseason scripts are manual only - not in all.'
+        description: 'Script to run (league_ids, rosters, users, rosterhistory, matchups, scores, max_points, weekly_awards, players, transactions, drafts, standings, orphans, lineup_streaks, player_values, draft_picks, weekly_report, roster_map, poll, poll_page, standings_page, conference_championships, playoff_field, bowls, nit, patch_orphans, all). Postseason scripts are manual only - not in all.'
         required: true
         default: 'all'
       post:
@@ -95,6 +95,8 @@ jobs:
           run draft_picks           draft_picks.py           all
           run weekly_report         weekly_report.py         all
           run roster_map            roster_map.py            all
+          run poll                poll_aggregate.py        all
+          run poll_page           poll_page.py             all
           run standings_page        standings_page.py        all
 
           # One-time - delete after use
@@ -120,6 +122,17 @@ jobs:
             echo "Report data unchanged; skipping image."
           fi
 
+      # Bot poll: poll_aggregate.py writes work/poll/published.env when it published this run.
+      - name: Check poll
+        id: pollchk
+        if: always()
+        run: |
+          if grep -q '^PUBLISHED=true' work/poll/published.env 2>/dev/null; then
+            awk -F= '{print tolower($1) "=" $2}' work/poll/published.env >> "$GITHUB_OUTPUT"
+          else
+            echo "published=false" >> "$GITHUB_OUTPUT"
+          fi
+
       # Orphan recruiting card: re-render only when the open-team set changes or a draft completes.
       - name: Check orphan card
         id: orphan
@@ -128,14 +141,14 @@ jobs:
 
       - name: Install Playwright
         id: pw
-        if: always() && (steps.needpng.outputs.render == 'true' || steps.orphan.outputs.render == 'true')
+        if: always() && (steps.needpng.outputs.render == 'true' || steps.orphan.outputs.render == 'true' || steps.pollchk.outputs.published == 'true')
         run: |
           pip install playwright
           echo "version=$(python -c 'import importlib.metadata as m; print(m.version("playwright"))')" >> "$GITHUB_OUTPUT"
 
       # Browser is cached per Playwright version: downloaded once, then reused.
       - name: Cache Playwright browser
-        if: always() && (steps.needpng.outputs.render == 'true' || steps.orphan.outputs.render == 'true')
+        if: always() && (steps.needpng.outputs.render == 'true' || steps.orphan.outputs.render == 'true' || steps.pollchk.outputs.published == 'true')
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
@@ -149,6 +162,15 @@ jobs:
           python -m playwright install-deps chromium
           python -m playwright install --only-shell chromium
           python scripts/report_png.py
+
+      - name: Render poll images
+        id: pollpng
+        if: always() && steps.pollchk.outputs.published == 'true'
+        continue-on-error: true
+        run: |
+          python -m playwright install-deps chromium
+          python -m playwright install --only-shell chromium
+          python scripts/poll_png.py
 
       # Baseline pregame projection snapshot for the new week (game-day runs refresh it).
       - name: Baseline projection snapshot
@@ -206,6 +228,20 @@ jobs:
         run: |
           export FAILED="$(cat /tmp/failed_scripts.txt 2>/dev/null)"
           python scripts/discord_post.py
+
+      # Bot poll post (preview to lm-private-data until publish.post_to_league is true in config/poll.json).
+      - name: Post poll to Discord
+        if: always() && steps.pollchk.outputs.published == 'true' && ((github.event_name == 'schedule') || (github.event.inputs.post == 'true'))
+        continue-on-error: true
+        env:
+          DISCORD_WEBHOOK_TEAM_STATS: ${{ secrets.DISCORD_WEBHOOK_TEAM_STATS }}
+          DISCORD_WEBHOOK_LM_PRIVATE_DATA: ${{ secrets.DISCORD_WEBHOOK_LM_PRIVATE_DATA }}
+          DISCORD_CONTACT_ID: ${{ vars.DISCORD_CONTACT_ID }}
+          POLL_TYPE: ${{ steps.pollchk.outputs.poll_type }}
+          WEEK: ${{ steps.pollchk.outputs.week }}
+          HUMAN_BALLOTS: ${{ steps.pollchk.outputs.human_ballots }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: python scripts/poll_discord.py
 
       # Weekly inactive-manager report -> private LM channel (alert webhook), same trigger as the post.
       - name: Inactivity report to LM channel

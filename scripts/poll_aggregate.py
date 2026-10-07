@@ -1,24 +1,27 @@
 """
-poll_aggregate.py -- turn counted ballots (work/poll/ballots.csv from poll_ingest.py) plus
-the computer ballot into the poll, and the files other pages read.
+poll_aggregate.py -- build the poll: 7 computer bots (scripts/poll_bots.py) combined
+BCS-style, plus panel ballots as a second component once human_component is enabled.
 
-Scoring (config/poll.json): each ballot gives points by rank (linear = size..1), times the
-voter's weight (role_weights by Role in PollVoters_Current.csv; computer_ballot.weight).
-Order: tiebreak list (points, first-place votes, computer rank); exact ties left after
-that share a rank. Top `size` = Ranked; any other team with points = Others receiving votes.
+BCS math (config/poll.json):
+  ComputerPct  per team, drop the best and worst bot rank and average the rest (BotAvgRank);
+               ComputerPct = (N - BotAvgRank) / (N - 1) over the N teams in the pool
+  HumanPct     panel ballot points / (ballots x size)          -- only when human_component on
+  Score        mean of the components present
+Order: Score, then trimmed average bot rank (BotAvgRank), then the Standings bot. Top `size`
+= Ranked; any other team in a counted bot's top `size` = Others receiving votes (ORV).
+FirstPlaceVotes = bots (and ballots) ranking the team #1.
 
-Writes (committed, public):
-  data/Poll_Season.csv           the poll (PollType Top25/Seeding) and the full computer
-                                 ranking (PollType Computer, all teams), replaced per
-                                 (Year, PollType, ThroughWeek) on rerun
-  data/PollRanks_Current.csv     the latest poll's ranked teams (for the report/scoreboard)
-  data/RankedMatchups_Current.csv  AppliesToWeek games with a ranked team (regular season)
-Writes (private, work/poll/, never committed):
-  flags.md   participation, ballot audit, own-team rank, highest/lowest outlier per ballot
+Timing: bots-only publishes as soon as it runs (the Tuesday weekly run). With
+human_component on it waits for the ballot deadline (pass --force to override).
+Seeding (week 12) needs data/PlayoffField_Season.csv; without it the script skips (exit 0).
 
+Writes (public):
+  data/Poll_Season.csv         Top25 / Seeding rows + BotConsensus (all teams ranked, for history)
+  data/PollBots_Season.csv     every bot's full ranking that week
+  data/PollRanks_Current.csv   latest poll's ranked teams
+  data/RankedMatchups_Current.csv  next week's regular-season games with a ranked team
+Writes (private, work/poll/, gitignored): flags.md -- only when panel ballots exist.
 Usage: python scripts/poll_aggregate.py [--year Y] [--week W] [--type T] [--force]
-  Without --force, a poll that's already in Poll_Season.csv is left alone (exit 0) so the
-  scheduled job can wake more than once.
 CWD must be repo root.
 """
 import argparse
@@ -30,6 +33,7 @@ import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import poll_common as pc  # noqa: E402
+import poll_bots as pb  # noqa: E402
 from poll_ingest import target  # noqa: E402
 
 
@@ -40,102 +44,125 @@ def already(year, ptype, week):
     return ((p["Year"] == str(year)) & (p["PollType"] == ptype) & (p["ThroughWeek"] == str(week))).any()
 
 
-def prev_ranks(year, week, ptype):
-    """{(LeagueID, RosterID): rank} from the previous week's poll of the same family
-    (official polls compare with the last official poll; Computer with Computer)."""
+def prev_ranks(year, week, consensus=False):
+    """{(LeagueID, RosterID): rank} from the previous week's poll (official polls compare
+    with the last official poll; the full consensus with the last full consensus)."""
     p = pc.read_polls()
     if p.empty:
         return {}
     p = p[(p["Year"] == str(year)) & (p["ThroughWeek"] == str(week - 1))]
-    p = p[p["PollType"] == "Computer"] if ptype == "Computer" else p[p["PollType"] != "Computer"]
-    p = p[p["Status"].isin(["Ranked", "Computer"])]
+    p = p[p["PollType"] == pc.CONSENSUS] if consensus else p[(p["PollType"] != pc.CONSENSUS) & (p["Status"] == "Ranked")]
     return {(r.LeagueID, r.RosterID): int(r.Rank) for r in p.itertuples()}
 
 
-def rank_rows(order, ties_key):
-    """Competition ranks (1,2,2,4) where ties_key(i) equal means a shared rank."""
-    ranks, prev = [], None
-    for i, k in enumerate(order):
-        key = ties_key(k)
-        ranks.append(ranks[-1] if key == prev else i + 1)
-        prev = key
-    return ranks
+def all_keys(year):
+    t = pc.teams(year)
+    t = t.dropna(subset=["LeagueID"])
+    return sorted(zip(t["LeagueID"], t["RosterID"]))
 
 
-def build(cfg, year, week, ptype, ballots, st, teams):
-    pcfg = pc.poll_cfg(cfg, ptype)
-    size, pts = int(pcfg["size"]), pc.points_table(pcfg)
-    pool = pc.playoff_pool(year) if pcfg.get("pool") == "playoff_field" else None
-
-    comp = pc.computer_order(st, pool)
-    comp_rank = {k: i + 1 for i, k in enumerate(comp)}
-
+def human_component(cfg, ballots, size, pool_keys):
+    """{key: (points, first_place)} and ballot count from counted panel ballots."""
+    if ballots is None or len(ballots) == 0:
+        return {}, {}, 0
     v = pc.voters()
     weights = {r.VoterID: float(cfg.get("role_weights", {}).get(str(r.Role).strip().lower() or "panel", 1))
                for r in v.itertuples()}
-    long = []
+    pts_tbl = pc.points_table({"size": size, "points": "linear"})
+    pts, fpv = {}, {}
     for r in ballots.itertuples():
-        long.append((r.VoterID, int(r.Rank), (r.LeagueID, r.RosterID), weights.get(r.VoterID, 1.0)))
-    cb = cfg.get("computer_ballot", {})
-    if cb.get("enabled", True):
-        for i, k in enumerate(comp[:size]):
-            long.append((cb.get("voter_id", "computer"), i + 1, k, float(cb.get("weight", 1))))
-
-    tot, fpv, listed = {}, {}, {}
-    for voter, rank, key, w in long:
-        if rank > size:
+        k, rank = (r.LeagueID, r.RosterID), int(r.Rank)
+        if rank > size or (pool_keys is not None and k not in pool_keys):
             continue
-        tot[key] = tot.get(key, 0) + w * pts[rank - 1]
-        fpv[key] = fpv.get(key, 0) + (1 if rank == 1 else 0)
-        listed[key] = listed.get(key, 0) + 1
-    n_ballots = len({x[0] for x in long})
-
-    def sort_key(k):
-        out = []
-        for tb in cfg.get("tiebreak", ["points"]):
-            if tb == "points":
-                out.append(-round(tot.get(k, 0), 6))
-            elif tb == "first_place_votes":
-                out.append(-fpv.get(k, 0))
-            elif tb == "computer_rank":
-                out.append(comp_rank.get(k, 10 ** 6))
-        return tuple(out)
-
-    order = sorted(tot, key=lambda k: (sort_key(k), k))
-    ranks = rank_rows(order, sort_key)
-    return order, ranks, tot, fpv, listed, n_ballots, comp_rank
+        pts[k] = pts.get(k, 0) + weights.get(r.VoterID, 1.0) * pts_tbl[rank - 1]
+        fpv[k] = fpv.get(k, 0) + (rank == 1)
+    return pts, fpv, ballots["VoterID"].nunique()
 
 
-def frame(year, week, ptype, order, ranks, status, tot, fpv, listed, n_ballots, comp_rank, st, teams, prev, now):
+def build(cfg, year, week, ptype, ballots, stamp, extra=None, pool="auto"):
+    """extra/pool default to the live season's inputs; the history backfill passes its own."""
+    pcfg = pc.poll_cfg(cfg, ptype)
+    size = int(pcfg["size"])
+    if pool == "auto":
+        pool = pc.playoff_pool(year) if pcfg.get("pool") == "playoff_field" else None
+    m = pc.matchups(year)
+    keys = all_keys(year)
+    if extra is None:
+        extra = pb.current_extra(year, week)
+    pts_thru = 12 if (ptype == "Seeding" and cfg.get("seeding", {}).get("include_week12_points")) else None
+    rk, used = pb.bot_ranks(cfg, m, week, extra, keys, points_through=pts_thru)
+    if not used:
+        raise SystemExit("No bot has data for this week.")
+
+    cons = pb.consensus(cfg, rk, used, size, pool)
+    hp, hf, nh = human_component(cfg, ballots, size, pool)
+    cons["HumanPoints"] = [round(hp.get(k, 0), 2) if nh else "" for k in zip(cons["LeagueID"], cons["RosterID"])]
+    cons["HumanPct"] = [round(hp.get(k, 0) / (nh * size), 4) if nh else "" for k in zip(cons["LeagueID"], cons["RosterID"])]
+    cons["Score"] = [round((c + h) / 2, 4) if nh else c for c, h in zip(cons["ComputerPct"], cons["HumanPct"])]
+    cons["FirstPlaceVotes"] = [int(b + hf.get(k, 0)) for b, k in zip(cons["BotFirst"], zip(cons["LeagueID"], cons["RosterID"]))]
+    tie = cons["record"] if "record" in used else 0
+    cons = cons.assign(_t=tie).sort_values(["Score", "BotAvgRank", "_t"], ascending=[False, True, True]).reset_index(drop=True)
+    key3 = list(zip(cons["Score"], cons["BotAvgRank"], cons["_t"]))
+    ranks, prev = [], None
+    for i, k in enumerate(key3):
+        ranks.append(ranks[-1] if k == prev else i + 1)
+        prev = k
+    cons["Rank"] = ranks
+    cons["Status"] = ["Ranked" if r <= size else ("ORV" if v > 0 else "") for r, v in zip(cons["Rank"], cons["TopVotes"])]
+
+    st = pc.standings_through(cfg, m, week)
+    poll = frame(year, week, ptype, cons[cons["Status"] != ""], st, prev_ranks(year, week), nh, stamp)
+
+    # Full ranking of every team by the bots (history / prestige / record book)
+    full = pb.consensus(cfg, rk, used, size)
+    full["Rank"] = range(1, len(full) + 1)
+    full["Status"] = "Consensus"
+    full["Score"] = full["ComputerPct"]
+    full["FirstPlaceVotes"] = full["BotFirst"]
+    full["HumanPoints"] = full["HumanPct"] = ""
+    allr = frame(year, week, pc.CONSENSUS, full, st, prev_ranks(year, week, consensus=True), 0, stamp)
+
+    names = {b["id"]: b["name"] for b in cfg["bots"]}
+    tn = {(r.LeagueID, r.RosterID): r.Team for r in pc.teams(year).itertuples()}
+    bots = pd.concat([pd.DataFrame({"Year": year, "ThroughWeek": week, "Bot": b, "BotName": names[b],
+                                    "Rank": rk[b], "Team": [tn.get(k, "") for k in zip(rk["LeagueID"], rk["RosterID"])],
+                                    "LeagueID": rk["LeagueID"], "RosterID": rk["RosterID"],
+                                    "Value": rk[b + "_val"].astype(float).round(4)}) for b in used], ignore_index=True)
+    return poll, allr, bots, used, nh
+
+
+def frame(year, week, ptype, d, st, prev, nh, stamp):
+    teams = pc.teams(year)
     slot = {(r.LeagueID, r.RosterID): r for r in teams.itertuples()}
     rec = {(r.LeagueID, r.RosterID): r for r in st.itertuples()}
-    tied = pd.Series(ranks).duplicated(keep=False).tolist()
+    tied = d["Rank"].duplicated(keep=False).tolist()
     rows = []
-    for k, rk, s, t in zip(order, ranks, status, tied):
-        tm, sr = slot.get(k), rec.get(k)
-        pr = prev.get(k)
+    for r, t in zip(d.itertuples(), tied):
+        k = (r.LeagueID, r.RosterID)
+        tm, sr, pr = slot.get(k), rec.get(k), prev.get(k)
         rows.append({
             "Year": year, "PollType": ptype, "ThroughWeek": week, "AppliesToWeek": week + 1,
-            "Rank": rk, "Tied": t, "Status": s,
-            "Team": tm.Team if tm else "", "LeagueID": k[0],
-            "LeagueName": tm.LeagueName if tm else (sr.LeagueName if sr else ""),
+            "Rank": r.Rank, "Tied": t, "Status": r.Status,
+            "Team": tm.Team if tm else "", "LeagueID": k[0], "LeagueName": tm.LeagueName if tm else "",
             "League": tm.League if tm else "", "RosterID": k[1],
-            "Points": round(tot.get(k, 0), 2) if tot else "", "FirstPlaceVotes": fpv.get(k, 0) if fpv else "",
-            "BallotsListing": listed.get(k, 0) if listed else "", "Ballots": n_ballots,
-            "ComputerRank": comp_rank.get(k, ""), "PrevRank": pr if pr else "",
-            "Move": (pr - rk) if (pr and s in ("Ranked", "Computer")) else "",
+            "Score": r.Score, "ComputerPct": r.ComputerPct, "HumanPct": r.HumanPct, "HumanPoints": r.HumanPoints,
+            "FirstPlaceVotes": r.FirstPlaceVotes, "BotAvgRank": r.BotAvgRank, "BotHigh": r.BotHigh,
+            "BotLow": r.BotLow, "BotsUsed": r.BotsUsed, "HumanBallots": nh,
+            "PrevRank": pr if pr else "", "Move": (pr - r.Rank) if (pr and r.Status in ("Ranked", "Consensus")) else "",
             "Wins": int(sr.Wins) if sr else "", "Losses": int(sr.Losses) if sr else "",
-            "Ties": int(sr.Ties) if sr else "", "PF": sr.PF if sr else "", "PublishedAt": now})
+            "Ties": int(sr.Ties) if sr else "", "PF": sr.PF if sr else "", "PublishedAt": stamp})
     return pd.DataFrame(rows, columns=pc.POLL_COLS)
 
 
-def save_poll(df, year, week, types):
-    old = pd.read_csv(pc.POLL_SEASON, dtype=str) if os.path.exists(pc.POLL_SEASON) else pd.DataFrame(columns=pc.POLL_COLS)
-    keep = ~((old["Year"] == str(year)) & (old["ThroughWeek"] == str(week)) & (old["PollType"].isin(types)))
-    out = pd.concat([old[keep], df.astype(str)], ignore_index=True)
-    out = out.sort_values(["Year", "PollType", "ThroughWeek", "Rank"],
-                          key=lambda c: c.astype(int) if c.name in ("Year", "ThroughWeek", "Rank") else c)
-    out.to_csv(pc.POLL_SEASON, index=False)
+def replace_rows(path, df, year, week, types=None, cols=None):
+    old = pd.read_csv(path, dtype=str) if os.path.exists(path) else pd.DataFrame(columns=cols or df.columns)
+    drop = (old["Year"] == str(year)) & (old["ThroughWeek"] == str(week))
+    if types is not None:
+        drop &= old["PollType"].isin(types)
+    out = pd.concat([old[~drop], df.astype(str)], ignore_index=True)
+    sort = [c for c in ("Year", "PollType", "Bot", "ThroughWeek", "Rank") if c in out.columns]
+    out = out.sort_values(sort, key=lambda c: c.astype(int) if c.name in ("Year", "ThroughWeek", "Rank") else c)
+    out.to_csv(path, index=False)
 
 
 def ranked_games(cfg, year, week, poll_df):
@@ -166,11 +193,11 @@ def ranked_games(cfg, year, week, poll_df):
 
 
 def flags(cfg, year, week, ptype, ballots, poll_df, size, m, teams):
-    """Private notes for the data manager / LM; returned as markdown text."""
+    """Private notes about panel ballots (only when ballots exist); markdown text."""
     out = [f"**NCAA 180 poll — private ballot notes** ({ptype}, {year} through week {week})"]
     v = pc.voters()
-    counted = set(ballots["VoterID"]) if len(ballots) else set()
-    out.append(f"Ballots counted: {len(counted)} of {len(v)} active panel voters (+ computer).")
+    counted = set(ballots["VoterID"])
+    out.append(f"Panel ballots counted: {len(counted)} of {len(v)} active voters.")
     miss = [r.VoterName for r in v.itertuples() if r.VoterID not in counted]
     if miss:
         out.append("No ballot: " + ", ".join(sorted(miss)))
@@ -182,11 +209,7 @@ def flags(cfg, year, week, ptype, ballots, poll_df, size, m, teams):
         streak = []
         for r in v.itertuples():
             wks = set(part.loc[part["VoterID"] == r.VoterID, "ThroughWeek"].astype(int))
-            n = 0
-            for w in range(week, first - 1, -1):
-                if w in wks:
-                    break
-                n += 1
+            n = next((i for i, w in enumerate(range(week, first - 1, -1)) if w in wks), week - first + 1)
             if n >= k:
                 streak.append(f"{r.VoterName} ({n} straight)")
         if streak:
@@ -194,30 +217,23 @@ def flags(cfg, year, week, ptype, ballots, poll_df, size, m, teams):
     audit_f = os.path.join(pc.WORK, "audit.csv")
     if os.path.exists(audit_f) and os.path.getsize(audit_f) > 2:
         au = pd.read_csv(audit_f, dtype=str).fillna("")
-        bad = au[~au["Status"].isin(["counted"])]
-        for r in bad.itertuples():
-            who = r.VoterName or r.VoterInput
-            out.append(f"• {who}: {r.Status}" + (f" — {r.Reason}" if r.Reason else ""))
-    if len(ballots) == 0:
-        return "\n".join(out)
-
+        for r in au[au["Status"] != "counted"].itertuples():
+            out.append(f"• {r.VoterName or r.VoterInput}: {r.Status}" + (f" — {r.Reason}" if r.Reason else ""))
     cons = {(r.LeagueID, r.RosterID): int(r.Rank) for r in poll_df.itertuples() if r.Status == "Ranked"}
+    names = {(r.LeagueID, r.RosterID): r.Team for r in teams.itertuples()}
     thr = int(cfg["ballots"].get("outlier_spots", 8))
     out.append(f"\n**Per ballot** (consensus = this poll; unranked = {size + 1}; ⚠️ = {thr}+ spots off)")
     for vid, b in ballots.groupby("VoterID"):
-        name = b["VoterName"].iloc[0]
         mine = {(r.LeagueID, r.RosterID): int(r.Rank) for r in b.itertuples()}
-        names = {(r.LeagueID, r.RosterID): r.Team for r in teams.itertuples()}
         diffs = {kk: cons.get(kk, size + 1) - mine.get(kk, size + 1) for kk in set(mine) | set(cons)}
-        hi = max(diffs, key=lambda kk: diffs[kk])
-        lo = min(diffs, key=lambda kk: diffs[kk])
+        hi, lo = max(diffs, key=diffs.get), min(diffs, key=diffs.get)
         vr = v[v["VoterID"] == vid]
         own = pc.own_slot(m, vr["SleeperUserID"].iloc[0]) if len(vr) else None
 
         def fmt(kk):
             r = mine.get(kk)
             return f"{names.get(kk, kk)} {'#' + str(r) if r else 'unranked'} (poll {'#' + str(cons[kk]) if kk in cons else 'unranked'})"
-        line = (f"• {name}: highest {'⚠️ ' if diffs[hi] >= thr else ''}{fmt(hi)}; "
+        line = (f"• {b['VoterName'].iloc[0]}: highest {'⚠️ ' if diffs[hi] >= thr else ''}{fmt(hi)}; "
                 f"lowest {'⚠️ ' if -diffs[lo] >= thr else ''}{fmt(lo)}")
         if own:
             line += f"; own team {fmt(own)}"
@@ -230,71 +246,75 @@ def main():
     ap.add_argument("--year", type=int)
     ap.add_argument("--week", type=int)
     ap.add_argument("--type")
-    ap.add_argument("--force", action="store_true", help="rebuild even if already published")
+    ap.add_argument("--force", action="store_true", help="rebuild even if published / before the deadline")
     ap.add_argument("--now", help="ISO time to treat as now (testing)")
     args = ap.parse_args()
 
     cfg = pc.config()
-    year, week, ptype = target(args, cfg)
-    pcfg = pc.poll_cfg(cfg, ptype)
-    size = int(pcfg["size"])
-    due = pc.deadline(cfg, year, ptype, week)
-    now = dt.datetime.fromisoformat(args.now) if args.now else dt.datetime.now(dt.timezone.utc)
     gh = os.environ.get("GITHUB_OUTPUT")
+    os.makedirs(pc.WORK, exist_ok=True)
 
-    def output(k, v):
+    def output(**kv):
         if gh:
             with open(gh, "a") as f:
-                f.write(f"{k}={v}\n")
+                for k, v in kv.items():
+                    f.write(f"{k}={v}\n")
+        with open(os.path.join(pc.WORK, "published.env"), "w") as f:
+            for k, v in kv.items():
+                f.write(f"{k.upper()}={v}\n")
 
-    if now < due and not args.force:
-        print(f"Deadline {due:%a %Y-%m-%d %H:%M %Z} not reached; nothing to do.")
-        output("published", "false")
+    try:
+        year, week, ptype = target(args, cfg)
+    except SystemExit as e:
+        print(e)
+        output(published="false")
         return
+    pcfg = pc.poll_cfg(cfg, ptype)
+    size = int(pcfg["size"])
+    human_on = bool(cfg.get("human_component", {}).get("enabled"))
+    now = dt.datetime.fromisoformat(args.now) if args.now else dt.datetime.now(dt.timezone.utc)
+
+    if human_on and not args.force:
+        due = pc.deadline(cfg, year, ptype, week)
+        if now < due:
+            print(f"Panel ballots due {due:%a %Y-%m-%d %H:%M %Z}; poll waits until then.")
+            output(published="false")
+            return
     if already(year, ptype, week) and not args.force:
         print(f"{ptype} {year} week {week} already published; use --force to rebuild.")
-        output("published", "false")
+        output(published="false")
+        return
+    if pcfg.get("pool") == "playoff_field" and not os.path.exists(pc.FIELD):
+        print(f"::warning::{ptype} poll skipped: {pc.FIELD} missing (run playoff_field first, then the Poll workflow).")
+        output(published="false")
         return
 
-    bf = os.path.join(pc.WORK, "ballots.csv")
-    ballots = pd.read_csv(bf, dtype=str) if os.path.exists(bf) and os.path.getsize(bf) > 2 else pd.DataFrame(
-        columns=["VoterID", "VoterName", "Rank", "Team", "LeagueID", "RosterID"])
-    if len(ballots):
-        ballots = ballots[(ballots["Year"] == str(year)) & (ballots["PollType"] == ptype)
-                          & (ballots["ThroughWeek"] == str(week))]
+    ballots = None
+    if human_on:
+        bf = os.path.join(pc.WORK, "ballots.csv")
+        if os.path.exists(bf) and os.path.getsize(bf) > 2:
+            ballots = pd.read_csv(bf, dtype=str)
+            ballots = ballots[(ballots["Year"] == str(year)) & (ballots["PollType"] == ptype)
+                              & (ballots["ThroughWeek"] == str(week))]
 
-    m = pc.matchups(year)
-    st = pc.standings_through(cfg, m, week)
-    teams = pc.teams(year)
     stamp = now.strftime("%Y-%m-%d %H:%M UTC")
-
-    order, ranks, tot, fpv, listed, n_ballots, comp_rank = build(cfg, year, week, ptype, ballots, st, teams)
-    status = ["Ranked" if r <= size else "ORV" for r in ranks]
-    poll = frame(year, week, ptype, order, ranks, status, tot, fpv, listed, n_ballots, comp_rank, st,
-                 teams, prev_ranks(year, week, ptype), stamp)
-
-    comp_all = pc.computer_order(st)
-    comp = frame(year, week, "Computer", comp_all, list(range(1, len(comp_all) + 1)), ["Computer"] * len(comp_all),
-                 {}, {}, {}, 1, {k: i + 1 for i, k in enumerate(comp_all)}, st, teams,
-                 prev_ranks(year, week, "Computer"), stamp)
-    save_poll(pd.concat([poll, comp], ignore_index=True), year, week, [ptype, "Computer"])
-
+    poll, allr, bots, used, nh = build(cfg, year, week, ptype, ballots, stamp)
+    replace_rows(pc.POLL_SEASON, pd.concat([poll, allr], ignore_index=True), year, week, [ptype, pc.CONSENSUS], pc.POLL_COLS)
+    replace_rows(pc.BOTS_SEASON, bots, year, week, cols=pc.BOT_COLS)
     poll[poll["Status"] == "Ranked"][["Year", "PollType", "ThroughWeek", "AppliesToWeek", "Rank", "Tied",
                                       "Team", "LeagueID", "LeagueName", "League", "RosterID"]].to_csv(pc.RANKS_CURRENT, index=False)
     ranked_games(cfg, year, week, poll).to_csv(pc.RANKED_GAMES, index=False)
+    flag_f = os.path.join(pc.WORK, "flags.md")
+    if nh:
+        with open(flag_f, "w", encoding="utf-8") as f:
+            f.write(flags(cfg, year, week, ptype, ballots, poll, size, pc.matchups(year), pc.teams(year)))
+    elif os.path.exists(flag_f):
+        os.remove(flag_f)
 
-    os.makedirs(pc.WORK, exist_ok=True)
-    with open(os.path.join(pc.WORK, "flags.md"), "w", encoding="utf-8") as f:
-        f.write(flags(cfg, year, week, ptype, ballots, poll, size, m, teams))
-
-    human = ballots["VoterID"].nunique() if len(ballots) else 0
     top = poll.iloc[0]
-    print(f"{ptype} {year} wk {week}: {human} panel ballot(s) + computer; #1 {top.Team} "
-          f"({top.Points} pts, {top.FirstPlaceVotes} first-place); ORV {int((poll['Status'] == 'ORV').sum())}")
-    output("published", "true")
-    output("human_ballots", human)
-    output("poll_type", ptype)
-    output("week", week)
+    print(f"{ptype} {year} wk {week}: {len(used)} bots ({', '.join(used)}) + {nh} panel ballot(s); "
+          f"#1 {top.Team} (score {top.Score}, {top.FirstPlaceVotes} first-place); ORV {int((poll['Status'] == 'ORV').sum())}")
+    output(published="true", poll_type=ptype, week=week, human_ballots=nh, bots=len(used))
 
 
 if __name__ == "__main__":

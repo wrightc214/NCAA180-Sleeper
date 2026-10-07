@@ -4,10 +4,9 @@ to the data manager / LM channel.
 
 League channel (team-stats): headline + reports/discord-poll/*.png + link to the poll page.
   Held instead (private alert, nothing to the league) when publish.post_to_league is
-  false (preview mode), fewer than publish.min_human_ballots panel ballots counted, or
-  the images are missing.
-Private channel (lm-private-data): work/poll/flags.md (participation, ballot audit,
-  own-team rank, highest/lowest outlier per ballot). Never written to the repo.
+  false (preview mode) or the images are missing.
+Private channel (lm-private-data): work/poll/flags.md when panel ballots exist
+  (participation, ballot audit, own-team rank, highest/lowest outlier). Never in the repo.
 
 Environment (set by poll.yml):
   DISCORD_WEBHOOK_TEAM_STATS, DISCORD_WEBHOOK_LM_PRIVATE_DATA (secrets), DISCORD_CONTACT_ID
@@ -62,9 +61,10 @@ def headline(cfg, ptype, week, human):
         rvr = int((g["RankedVsRanked"] == "True").sum())
     label = pc.poll_cfg(cfg, ptype).get("label", ptype)
     url = cfg.get("publish", {}).get("page_url", "")
+    nb = int(float(top.get("BotsUsed") or 0))
+    voters = f"{nb} bots" + (f" + {human} panel ballot{'s' if human != 1 else ''}" if human else "")
     lines = [f"**NCAA 180 {label} · through week {week}** 📊",
-             f"#1 {top['Team']} ({fpv} first-place vote{'s' if fpv != 1 else ''}) · "
-             f"{human} panel ballot{'s' if human != 1 else ''} + computer"]
+             f"#1 {top['Team']} ({fpv} first-place vote{'s' if fpv != 1 else ''}) · {voters}"]
     if rvr:
         lines.append(f"{rvr} ranked-vs-ranked game{'s' if rvr != 1 else ''} in week {week + 1}")
     if url:
@@ -90,10 +90,7 @@ def main():
     cfg = pc.config()
     imgs = sorted(glob.glob(IMAGES))[:10]
     msg = headline(cfg, ptype, week, human)
-    mins = int(cfg.get("publish", {}).get("min_human_ballots", 1))
     problems = []
-    if human < mins:
-        problems.append(f"Only {human} panel ballot(s) counted (minimum {mins})")
     if not imgs:
         problems.append("Poll image missing")
     if not cfg.get("publish", {}).get("post_to_league", False):
@@ -103,7 +100,7 @@ def main():
         send(private, "⚠️ **NCAA 180 poll post held** — nothing went to the league.\n"
              + "\n".join(f"• {p}" for p in problems)
              + (f"\nRun log: {run_url}" if run_url else "")
-             + "\nTo release: rerun the Poll workflow manually with `force` and `post` checked."
+             + "\nTo release: set publish.post_to_league to true, then rerun the Poll workflow with `force` and `post` checked."
              + "\n\n**Would have posted:**\n>>> " + msg, [contact] if contact else [], imgs)
         note("warning", "Poll post held: " + "; ".join(problems))
     else:

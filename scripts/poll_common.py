@@ -40,9 +40,14 @@ RANKED_GAMES = "data/RankedMatchups_Current.csv"
 WORK = "work/poll"  # job-local scratch (gitignored): raw ballots, private flags
 
 POLL_COLS = ["Year", "PollType", "ThroughWeek", "AppliesToWeek", "Rank", "Tied", "Status",
-             "Team", "LeagueID", "LeagueName", "League", "RosterID", "Points", "FirstPlaceVotes",
-             "BallotsListing", "Ballots", "ComputerRank", "PrevRank", "Move",
-             "Wins", "Losses", "Ties", "PF", "PublishedAt"]
+             "Team", "LeagueID", "LeagueName", "League", "RosterID",
+             "Score", "ComputerPct", "HumanPct", "HumanPoints", "FirstPlaceVotes",
+             "BotAvgRank", "BotHigh", "BotLow", "BotsUsed", "HumanBallots",
+             "PrevRank", "Move", "Wins", "Losses", "Ties", "PF", "PublishedAt"]
+BOT_COLS = ["Year", "ThroughWeek", "Bot", "BotName", "Rank", "Team", "LeagueID", "RosterID", "Value"]
+BOTS_SEASON = "data/PollBots_Season.csv"
+BOTS_HISTORIC = "data/PollBots_Historic.csv"
+CONSENSUS = "BotConsensus"  # PollType of the full 180-team bot ranking kept for history
 WEEKDAYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 
 
@@ -213,11 +218,11 @@ def read_polls():
 
 
 def latest_official(year=None):
-    """Latest published human poll (not Computer) rows, optionally for one year."""
+    """Latest published poll (Top25/Seeding, not the full bot consensus), optionally for one year."""
     p = read_polls()
     if p.empty:
         return p
-    p = p[p["PollType"] != "Computer"]
+    p = p[p["PollType"] != CONSENSUS]
     if year is not None:
         p = p[p["Year"] == str(year)]
     if p.empty:
@@ -233,5 +238,5 @@ def ranks_for_week(year, applies_to_week):
         return {}
     p = pd.read_csv(POLL_SEASON, dtype=str)
     p = p[(p["Year"] == str(year)) & (p["AppliesToWeek"] == str(applies_to_week))
-          & (p["Status"] == "Ranked") & (p["PollType"] != "Computer")]
+          & (p["Status"] == "Ranked") & (p["PollType"] != CONSENSUS)]
     return {r.Team: int(r.Rank) for r in p.itertuples()}

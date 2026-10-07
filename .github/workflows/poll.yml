@@ -1,15 +1,11 @@
 name: Poll
 
-# Builds and posts the weekly poll once its ballot deadline passes (config/poll.json).
-# Wakes twice per poll day (one run per UTC offset, so DST never shifts it past the
-# deadline); poll_aggregate.py exits quietly if the deadline hasn't passed or the poll is
-# already published, so extra wake-ups are harmless.
-#   Top25    deadline Sat 12:00 ET -> wakes Sat 16:15 + 17:15 UTC
-#   Seeding  deadline Thu 12:00 ET -> wakes Thu 16:15 + 17:15 UTC
-# If a deadline in config changes, change these crons to match.
+# The bot poll is built and posted by the Tuesday "Weekly League Update" run (poll,
+# poll_page steps). This workflow is for manual rebuilds -- e.g. the Seeding poll after
+# playoff_field has run, or a forced rebuild -- and for panel ballots once
+# human_component is enabled in config/poll.json (then add a schedule after the ballot
+# deadline here).
 on:
-  schedule:
-    - cron: '15 16,17 * * THU,SAT'
   workflow_dispatch:
     inputs:
       week:
@@ -47,7 +43,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt requests
 
-      - name: Ingest ballots
+      - name: Ingest panel ballots (skips itself while human_component is off)
         env:
           POLL_BALLOTS_CSV_URL: ${{ secrets.POLL_BALLOTS_CSV_URL }}
         run: |
@@ -98,7 +94,7 @@ jobs:
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/Poll_Season.csv data/PollRanks_Current.csv data/RankedMatchups_Current.csv
+          git add data/Poll_Season.csv data/PollBots_Season.csv data/PollRanks_Current.csv data/RankedMatchups_Current.csv
           git add reports/poll*.html reports/discord-poll 2>/dev/null || true
           git commit -m "Poll: ${{ steps.agg.outputs.poll_type }} through week ${{ steps.agg.outputs.week }}" || exit 0
           for i in 1 2 3; do

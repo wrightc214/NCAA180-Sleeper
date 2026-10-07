@@ -99,6 +99,9 @@ def main():
     args = ap.parse_args()
 
     cfg = pc.config()
+    if not cfg.get("human_component", {}).get("enabled"):
+        print("Panel ballots are off (human_component.enabled = false); nothing to ingest.")
+        return
     year, week, ptype = target(args, cfg)
     pcfg = pc.poll_cfg(cfg, ptype)
     size, bcfg, icfg = int(pcfg["size"]), cfg["ballots"], cfg["intake"]
