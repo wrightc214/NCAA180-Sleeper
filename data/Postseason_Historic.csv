@@ -6,9 +6,9 @@ Season,Event,Round,RoundName,Week,Bowl,TeamA,SeedA,TeamB,SeedB,ScoreA,ScoreB,Win
 2019,CCG,1,Conference Championship,12,Ivy,Bucknell,,Harvard,,200.8,77.18,Bucknell,scores from Sleeper week-12 matchup (history backfill)
 2019,CCG,1,Conference Championship,12,Mountain West,New Mexico,,Nevada,,112.2,74.54,New Mexico,scores from Sleeper week-12 matchup (history backfill)
 2019,CCG,1,Conference Championship,12,PAC 12,Washington,,Utah,,139.36,118.12,Washington,scores from Sleeper week-12 matchup (history backfill)
-2019,CCG,1,Conference Championship,12,SEC,Kentucky,,Auburn,,116,63.18,Kentucky,scores from Sleeper week-12 matchup (history backfill); opponent's roster slot maps to Mississippi State in today's Teams.csv (slot names may have differed in 2019) - verify runner-up
+2019,CCG,1,Conference Championship,12,SEC,Kentucky,,Auburn,,143.92,138.78,Kentucky,Sleeper wk12: 2019 'Kentucky' was roster slot 10 (today South Carolina's slot) and beat Auburn 143.92-138.78
 2019,CCG,1,Conference Championship,12,Sun Belt,Memphis,,Louisiana Tech,,162.64,135.82,Memphis,scores from Sleeper week-12 matchup (history backfill)
-2019,CCG,1,Conference Championship,12,Wild,Citadel,,North Dakota State,,141.64,111.36,Citadel,scores from Sleeper week-12 matchup (history backfill); opponent's roster slot maps to Wichita State in today's Teams.csv (slot names may have differed in 2019) - verify runner-up
+2019,CCG,1,Conference Championship,12,Wild,Citadel,,Wichita State,,141.64,111.36,Citadel,Sleeper wk12 shows Citadel beat Wichita State (Chris's CCG list said North Dakota State) - verify
 2019,Playoff,1,Sweet 16,,,Washington,1,Maryland,16,,,Maryland,2019: Chris not yet in league; verify
 2019,Playoff,1,Sweet 16,,,Northwestern,8,Clemson,9,,,Northwestern,2019: Chris not yet in league; verify
 2019,Playoff,1,Sweet 16,,,Memphis,4,Virginia Tech,13,,,Virginia Tech,2019: Chris not yet in league; verify
@@ -61,7 +61,7 @@ Season,Event,Round,RoundName,Week,Bowl,TeamA,SeedA,TeamB,SeedB,ScoreA,ScoreB,Win
 2020,CCG,1,Conference Championship,12,Pioneer,SE Missouri State,,Campbell,,186,151,SE Missouri State,scores from Sleeper week-12 matchup (history backfill)
 2020,CCG,1,Conference Championship,12,SEC,Ole Miss,,Vanderbilt,,195.78,193.2,Ole Miss,scores from Sleeper week-12 matchup (history backfill)
 2020,CCG,1,Conference Championship,12,Sun Belt,Rice,,Tulane,,172.8,137.66,Rice,scores from Sleeper week-12 matchup (history backfill)
-2020,CCG,1,Conference Championship,12,Wild,Citadel,,Wichita State,,150.5,100.68,Citadel,scores from Sleeper week-12 matchup (history backfill); opponent's roster slot maps to North Dakota State in today's Teams.csv (slot names may have differed in 2020) - verify runner-up
+2020,CCG,1,Conference Championship,12,Wild,Citadel,,North Dakota State,,150.5,100.68,Citadel,Sleeper wk12 shows Citadel beat North Dakota State (Chris's CCG list said Wichita State) - verify
 2020,Playoff,1,Group Stage,,,Utah | Wisconsin | Jackson State | Louisiana Tech,1 | 16 | 17 | 32,,,,,Jackson State,4-team group; winner advances. Scoring: group winner = 1 playoff win; all 4 = playoff appearance
 2020,Playoff,1,Group Stage,,,Villanova | Dixie State | Iowa | Campbell,8 | 9 | 24 | 25,,,,,Campbell,4-team group; winner advances. Scoring: group winner = 1 playoff win; all 4 = playoff appearance | Dixie State (later Utah Tech) slot no longer active (league contraction to 180)
 2020,Playoff,1,Group Stage,,,Ole Miss | UCF | Lehigh | Nebraska,4 | 13 | 20 | 29,,,,,Lehigh,4-team group; winner advances. Scoring: group winner = 1 playoff win; all 4 = playoff appearance
