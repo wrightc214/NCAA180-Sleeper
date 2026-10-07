@@ -21,7 +21,7 @@ permissions:
 
 # Live scores only matter once the postseason starts (CCG = week 12). Before that the
 # daily update-leagues run already captures every finished week, so live commits only
-# bloat the repo. (Later: also allow ranked-vs-ranked games once the poll exists.)
+# bloat the repo. Exception: weeks with a ranked-vs-ranked game (from the poll) refresh live too.
 env:
   LIVE_START_WEEK: 12
 
@@ -119,8 +119,14 @@ jobs:
         if: env.GAMES_ACTIVE == 'true'
         run: |
           if [ -n "$WEEK_NUM" ] && [ "$WEEK_NUM" -lt "$LIVE_START_WEEK" ] 2>/dev/null; then
-            echo "📴 Week $WEEK_NUM is before week $LIVE_START_WEEK; live refresh not needed (daily run covers it)."
-            echo "GAMES_ACTIVE=false" >> $GITHUB_ENV
+            # Exception: a ranked-vs-ranked game this week (data/RankedMatchups_Current.csv, from the poll).
+            RVR=$(python -c "import csv,sys; r=list(csv.DictReader(open('data/RankedMatchups_Current.csv'))); print(sum(1 for x in r if x['Week']=='$WEEK_NUM' and x['RankedVsRanked']=='True'))" 2>/dev/null || echo 0)
+            if [ "${RVR:-0}" -gt 0 ]; then
+              echo "🏈 Week $WEEK_NUM has $RVR ranked-vs-ranked game(s); refreshing live."
+            else
+              echo "📴 Week $WEEK_NUM is before week $LIVE_START_WEEK; live refresh not needed (daily run covers it)."
+              echo "GAMES_ACTIVE=false" >> $GITHUB_ENV
+            fi
           fi
 
       # --------------------------------------------------------

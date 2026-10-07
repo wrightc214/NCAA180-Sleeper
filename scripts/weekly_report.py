@@ -37,6 +37,7 @@ import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from site_common import nav_html  # noqa: E402
+from poll_common import ranks_for_week  # noqa: E402
 from week_status import completed_weeks as finished_weeks  # noqa: E402
 
 MATCHUPS = "data/Matchups_Season.csv"
@@ -221,8 +222,14 @@ def award_cols(n):
     return min((3, 4, 5), key=lambda c: ((-n) % c, c))
 
 
-def render(d, weeks, colors, tpl, updated, lcolors):
+def render(d, weeks, colors, tpl, updated, lcolors, ranks=None):
     W = d["week"]
+    ranks = ranks or {}
+
+    def rk(team):
+        """Poll rank going into this week's games (the poll that applied to week W)."""
+        n = ranks.get(team)
+        return f'<span style="color:var(--mute);font-size:.85em">#{n}</span> ' if n else ""
 
     def chip(team):
         bg, fg = colors.get(team, ("#666666", "#ffffff"))
@@ -250,7 +257,7 @@ def render(d, weeks, colors, tpl, updated, lcolors):
                  if has else "")
         return (f'<div class="aw"><div class="al">{label}</div>'
                 f'<div class="av n">{val}<small>{unit}</small></div>'
-                f'<div class="at">{"" if has else chip(g["Team"])}<b>{e(g["Team"])}</b></div>'
+                f'<div class="at">{"" if has else chip(g["Team"])}<b>{rk(g["Team"])}{e(g["Team"])}</b></div>'
                 f'<div class="ao">{e(g["Owner"])} · {e(g["Lg"])}</div>'
                 f'<div class="an">{note}</div>{strip}</div>')
 
@@ -283,7 +290,7 @@ def render(d, weeks, colors, tpl, updated, lcolors):
 
     rows = "".join(
         f'<tr><td class="n">{r["Rank"]}</td><td class="mv">{mv(r["Move"])}</td>'
-        f'<td class="tm">{chip(r["Team"])}<b>{e(r["Team"])}</b><small>{e(r["Owner"])} · {e(r["Lg"])}</small></td>'
+        f'<td class="tm">{chip(r["Team"])}<b>{rk(r["Team"])}{e(r["Team"])}</b><small>{e(r["Owner"])} · {e(r["Lg"])}</small></td>'
         f'<td class="n">{r["Rec"]}</td><td class="n">{r["Pts"]:.2f}</td>'
         f'<td class="n {"up" if r["Luck"] > 0.005 else "dn" if r["Luck"] < -0.005 else "eq"}">{r["Luck"]:+.2f}</td></tr>'
         for r in d["top32"])
@@ -296,7 +303,7 @@ def render(d, weeks, colors, tpl, updated, lcolors):
         return f'tied {e(str(g["Opp"]))}'
 
     ts = "".join(
-        f'<li><span class="n rk">{i + 1}</span>{chip(g["Team"])}<span class="nm"><b>{e(g["Team"])}</b>'
+        f'<li><span class="n rk">{i + 1}</span>{chip(g["Team"])}<span class="nm"><b>{rk(g["Team"])}{e(g["Team"])}</b>'
         f'<small>{e(g["Owner"])} · {e(g["Lg"])} · {result(g)}</small></span>'
         f'<span class="n v">{g["P"]:.2f}</span></li>' for i, g in enumerate(d["top_scores"]))
     lo, hi = 115, max(l["Avg"] for l in d["leagues"])
@@ -373,7 +380,7 @@ def main():
         if only and W != only:
             continue
         d = week_data(m, sc, mx, pos_map, W)
-        page = render(d, weeks, colors, tpl, updated, lcolors)
+        page = render(d, weeks, colors, tpl, updated, lcolors, ranks_for_week(m["Year"].iloc[0], W))
         with open(os.path.join(OUT_DIR, f"week-{W:02d}.html"), "w", encoding="utf-8") as f:
             f.write(page)
         with open(os.path.join(OUT_DIR, "data", f"week-{W:02d}.json"), "w", encoding="utf-8") as f:

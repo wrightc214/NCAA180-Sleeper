@@ -21,3 +21,4 @@ Thumbs.db
 
 # Keep data/ in repo (we want the CSV accessible for Power BI), so do NOT ignore data/
 # If you later want to avoid pushing data files, add `data/` here.
+work/

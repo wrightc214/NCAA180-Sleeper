@@ -1,0 +1,120 @@
+name: Poll
+
+# Builds and posts the weekly poll once its ballot deadline passes (config/poll.json).
+# Wakes twice per poll day (one run per UTC offset, so DST never shifts it past the
+# deadline); poll_aggregate.py exits quietly if the deadline hasn't passed or the poll is
+# already published, so extra wake-ups are harmless.
+#   Top25    deadline Sat 12:00 ET -> wakes Sat 16:15 + 17:15 UTC
+#   Seeding  deadline Thu 12:00 ET -> wakes Thu 16:15 + 17:15 UTC
+# If a deadline in config changes, change these crons to match.
+on:
+  schedule:
+    - cron: '15 16,17 * * THU,SAT'
+  workflow_dispatch:
+    inputs:
+      week:
+        description: 'Results-through week (blank = latest finished week)'
+        required: false
+      type:
+        description: 'Poll type from config (blank = by week: Top25 / Seeding)'
+        required: false
+      force:
+        description: 'Rebuild even if already published / before the deadline'
+        type: boolean
+        default: false
+      post:
+        description: 'Post to Discord after building'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: poll
+  cancel-in-progress: false
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt requests
+
+      - name: Ingest ballots
+        env:
+          POLL_BALLOTS_CSV_URL: ${{ secrets.POLL_BALLOTS_CSV_URL }}
+        run: |
+          ARGS=""
+          [ -n "${{ github.event.inputs.week }}" ] && ARGS="$ARGS --week ${{ github.event.inputs.week }}"
+          [ -n "${{ github.event.inputs.type }}" ] && ARGS="$ARGS --type ${{ github.event.inputs.type }}"
+          python scripts/poll_ingest.py $ARGS
+
+      - name: Aggregate
+        id: agg
+        run: |
+          ARGS=""
+          [ -n "${{ github.event.inputs.week }}" ] && ARGS="$ARGS --week ${{ github.event.inputs.week }}"
+          [ -n "${{ github.event.inputs.type }}" ] && ARGS="$ARGS --type ${{ github.event.inputs.type }}"
+          [ "${{ github.event.inputs.force }}" = "true" ] && ARGS="$ARGS --force"
+          python scripts/poll_aggregate.py $ARGS
+
+      - name: Poll page
+        if: steps.agg.outputs.published == 'true'
+        run: python scripts/poll_page.py
+
+      - name: Install Playwright
+        id: pw
+        if: steps.agg.outputs.published == 'true'
+        run: |
+          pip install playwright
+          echo "version=$(python -c 'import importlib.metadata as m; print(m.version("playwright"))')" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright browser
+        if: steps.agg.outputs.published == 'true'
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-shell-${{ runner.os }}-${{ steps.pw.outputs.version }}
+
+      - name: Render poll images
+        id: render
+        if: steps.agg.outputs.published == 'true'
+        continue-on-error: true
+        run: |
+          python -m playwright install-deps chromium
+          python -m playwright install --only-shell chromium
+          python scripts/poll_png.py
+
+      # Raw ballots stay in work/ (gitignored); only aggregates and pages are committed.
+      - name: Commit
+        if: steps.agg.outputs.published == 'true'
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/Poll_Season.csv data/PollRanks_Current.csv data/RankedMatchups_Current.csv
+          git add reports/poll*.html reports/discord-poll 2>/dev/null || true
+          git commit -m "Poll: ${{ steps.agg.outputs.poll_type }} through week ${{ steps.agg.outputs.week }}" || exit 0
+          for i in 1 2 3; do
+            git pull --rebase && git push && exit 0
+            sleep 10
+          done
+          exit 1
+
+      - name: Post to Discord
+        if: steps.agg.outputs.published == 'true' && (github.event_name == 'schedule' || github.event.inputs.post == 'true')
+        env:
+          DISCORD_WEBHOOK_TEAM_STATS: ${{ secrets.DISCORD_WEBHOOK_TEAM_STATS }}
+          DISCORD_WEBHOOK_LM_PRIVATE_DATA: ${{ secrets.DISCORD_WEBHOOK_LM_PRIVATE_DATA }}
+          DISCORD_CONTACT_ID: ${{ vars.DISCORD_CONTACT_ID }}
+          HUMAN_BALLOTS: ${{ steps.agg.outputs.human_ballots }}
+          POLL_TYPE: ${{ steps.agg.outputs.poll_type }}
+          WEEK: ${{ steps.agg.outputs.week }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: python scripts/poll_discord.py

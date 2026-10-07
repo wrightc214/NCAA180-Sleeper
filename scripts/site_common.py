@@ -1,8 +1,9 @@
 """
 site_common.py -- pieces shared by every page under reports/ (imported, not run).
 
-nav_html(current)   the tab bar: one tab per built week, then Roster Map and Standings.
-                    `current` is an int week, "map", or "standings".
+nav_html(current)   the tab bar: one tab per built week, then Roster Map, Standings, and Poll
+                    (once reports/poll.html exists).
+                    `current` is an int week, "map", "standings", or "poll".
 page_head(title)    <head> with the same fonts + stylesheet as the weekly report
                     (style block lifted from templates/weekly_report.html, so every page
                     stays visually identical without a second copy of the CSS).
@@ -31,6 +32,8 @@ def nav_html(current, weeks=None):
     links = [f'<a href="week-{w:02d}.html"{cur if current == w else ""}>Wk {w}</a>' for w in weeks]
     links.append(f'<a href="roster-map.html"{cur if current == "map" else ""}>Roster Map</a>')
     links.append(f'<a href="standings.html"{cur if current == "standings" else ""}>Standings</a>')
+    if current == "poll" or os.path.exists(os.path.join(OUT_DIR, "poll.html")):
+        links.append(f'<a href="poll.html"{cur if current == "poll" else ""}>Poll</a>')
     return "".join(links)
 
 

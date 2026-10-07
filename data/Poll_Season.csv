@@ -1,0 +1,721 @@
+Year,PollType,ThroughWeek,AppliesToWeek,Rank,Tied,Status,Team,LeagueID,LeagueName,League,RosterID,Points,FirstPlaceVotes,BallotsListing,Ballots,ComputerRank,PrevRank,Move,Wins,Losses,Ties,PF,PublishedAt
+2026,Computer,1,2,1,False,Computer,Florida A&M,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,5,,,,1,1,,,1,0,0,203.3,backfill
+2026,Computer,1,2,2,False,Computer,Kansas State,1331774880181399552,NCAA BIG 12,Big 12,7,,,,1,2,,,1,0,0,198.52,backfill
+2026,Computer,1,2,3,False,Computer,South Carolina,1331775170712444928,NCAA SEC,SEC,10,,,,1,3,,,1,0,0,195.6,backfill
+2026,Computer,1,2,4,False,Computer,Chattanooga,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,4,,,,1,4,,,1,0,0,190.36,backfill
+2026,Computer,1,2,5,False,Computer,Louisiana Tech,1331774846710849536,NCAA SUN BELT,Sun Belt,11,,,,1,5,,,1,0,0,188.16,backfill
+2026,Computer,1,2,6,False,Computer,Syracuse,1331775206619885568,NCAA BIG EAST & CO.,Big East,7,,,,1,6,,,1,0,0,187.8,backfill
+2026,Computer,1,2,7,False,Computer,NC State,1331774915392577536,NCAA ACC,ACC,10,,,,1,7,,,1,0,0,187.1,backfill
+2026,Computer,1,2,8,False,Computer,Auburn,1331775170712444928,NCAA SEC,SEC,4,,,,1,8,,,1,0,0,185.66,backfill
+2026,Computer,1,2,9,False,Computer,Mississippi Valley State,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,7,,,,1,9,,,1,0,0,184.76,backfill
+2026,Computer,1,2,10,False,Computer,Colorado State,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,8,,,,1,10,,,1,0,0,182.86,backfill
+2026,Computer,1,2,11,False,Computer,Georgia State,1331774695346823168,NCAA USA,CUSA,5,,,,1,11,,,1,0,0,181.76,backfill
+2026,Computer,1,2,12,False,Computer,Dartmouth,1331774741488369664,NCAA IVY,Ivy,11,,,,1,12,,,1,0,0,180.96,backfill
+2026,Computer,1,2,13,False,Computer,Memphis,1331774846710849536,NCAA SUN BELT,Sun Belt,8,,,,1,13,,,1,0,0,179.62,backfill
+2026,Computer,1,2,14,False,Computer,Eastern Michigan,1331774454493122560,NCAA WILD,Wild,6,,,,1,14,,,1,0,0,179.6,backfill
+2026,Computer,1,2,15,False,Computer,Colorado,1331775106527006720,NCAA PAC 12,PAC 12,8,,,,1,15,,,1,0,0,179.32,backfill
+2026,Computer,1,2,16,False,Computer,South Alabama,1331774695346823168,NCAA USA,CUSA,4,,,,1,16,,,1,0,0,179.0,backfill
+2026,Computer,1,2,17,False,Computer,Oregon State,1331775106527006720,NCAA PAC 12,PAC 12,3,,,,1,17,,,1,0,0,178.88,backfill
+2026,Computer,1,2,18,False,Computer,West Virginia,1331774880181399552,NCAA BIG 12,Big 12,8,,,,1,18,,,1,0,0,174.34,backfill
+2026,Computer,1,2,19,False,Computer,Portland State,1316899756005412864,NCAA BIG SKY,Big Sky,8,,,,1,19,,,1,0,0,174.26,backfill
+2026,Computer,1,2,20,False,Computer,TCU,1331774880181399552,NCAA BIG 12,Big 12,11,,,,1,20,,,1,0,0,173.66,backfill
+2026,Computer,1,2,21,False,Computer,North Carolina Central,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,12,,,,1,21,,,1,0,0,172.96,backfill
+2026,Computer,1,2,22,False,Computer,North Carolina A&T,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,1,,,,1,22,,,1,0,0,171.46,backfill
+2026,Computer,1,2,23,False,Computer,UCLA,1331775106527006720,NCAA PAC 12,PAC 12,12,,,,1,23,,,1,0,0,171.36,backfill
+2026,Computer,1,2,24,False,Computer,Hawaii,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,1,,,,1,24,,,1,0,0,170.86,backfill
+2026,Computer,1,2,25,False,Computer,Washington State,1331775106527006720,NCAA PAC 12,PAC 12,4,,,,1,25,,,1,0,0,170.0,backfill
+2026,Computer,1,2,26,False,Computer,Virginia,1331774915392577536,NCAA ACC,ACC,1,,,,1,26,,,1,0,0,166.06,backfill
+2026,Computer,1,2,27,False,Computer,Monmouth,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,10,,,,1,27,,,1,0,0,164.36,backfill
+2026,Computer,1,2,28,False,Computer,Purdue,1316899936696016896,NCAA BIG 10,Big 10,1,,,,1,28,,,1,0,0,164.3,backfill
+2026,Computer,1,2,29,False,Computer,FSU,1331774915392577536,NCAA ACC,ACC,5,,,,1,29,,,1,0,0,162.96,backfill
+2026,Computer,1,2,30,False,Computer,Yale,1331774741488369664,NCAA IVY,Ivy,9,,,,1,30,,,1,0,0,162.72,backfill
+2026,Computer,1,2,31,False,Computer,Pittsburgh,1331775206619885568,NCAA BIG EAST & CO.,Big East,4,,,,1,31,,,1,0,0,160.32,backfill
+2026,Computer,1,2,32,False,Computer,Furman,1331774804222545920,NCAA PIONEER,Pioneer,10,,,,1,32,,,1,0,0,160.16,backfill
+2026,Computer,1,2,33,False,Computer,Utah State,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,5,,,,1,33,,,1,0,0,158.26,backfill
+2026,Computer,1,2,34,False,Computer,Southern Miss,1331774846710849536,NCAA SUN BELT,Sun Belt,9,,,,1,34,,,1,0,0,157.86,backfill
+2026,Computer,1,2,35,False,Computer,UCF,1331775206619885568,NCAA BIG EAST & CO.,Big East,9,,,,1,35,,,1,0,0,157.6,backfill
+2026,Computer,1,2,36,False,Computer,Baylor,1331774880181399552,NCAA BIG 12,Big 12,5,,,,1,36,,,1,0,0,157.5,backfill
+2026,Computer,1,2,37,False,Computer,UTSA,1331774846710849536,NCAA SUN BELT,Sun Belt,12,,,,1,37,,,1,0,0,157.16,backfill
+2026,Computer,1,2,38,False,Computer,SE Missouri State,1331774804222545920,NCAA PIONEER,Pioneer,6,,,,1,38,,,1,0,0,155.82,backfill
+2026,Computer,1,2,39,False,Computer,Duke,1331774915392577536,NCAA ACC,ACC,7,,,,1,39,,,1,0,0,155.22,backfill
+2026,Computer,1,2,40,False,Computer,Youngstown State,1316899756005412864,NCAA BIG SKY,Big Sky,12,,,,1,40,,,1,0,0,155.1,backfill
+2026,Computer,1,2,41,False,Computer,Delaware State,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,3,,,,1,41,,,1,0,0,155.1,backfill
+2026,Computer,1,2,42,False,Computer,Minnesota,1316899936696016896,NCAA BIG 10,Big 10,7,,,,1,42,,,1,0,0,154.76,backfill
+2026,Computer,1,2,43,False,Computer,Mississippi State,1331775170712444928,NCAA SEC,SEC,6,,,,1,43,,,1,0,0,154.54,backfill
+2026,Computer,1,2,44,False,Computer,Temple,1331774846710849536,NCAA SUN BELT,Sun Belt,1,,,,1,44,,,1,0,0,152.8,backfill
+2026,Computer,1,2,45,False,Computer,San Diego State,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,12,,,,1,45,,,1,0,0,152.66,backfill
+2026,Computer,1,2,46,False,Computer,Middle Tennessee State,1331774695346823168,NCAA USA,CUSA,7,,,,1,46,,,1,0,0,151.74,backfill
+2026,Computer,1,2,47,False,Computer,William & Mary,1316899756005412864,NCAA BIG SKY,Big Sky,3,,,,1,47,,,1,0,0,151.46,backfill
+2026,Computer,1,2,48,False,Computer,BYU,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,6,,,,1,48,,,1,0,0,151.14,backfill
+2026,Computer,1,2,49,False,Computer,Georgia Tech,1331774915392577536,NCAA ACC,ACC,3,,,,1,49,,,1,0,0,149.1,backfill
+2026,Computer,1,2,50,False,Computer,Wisconsin,1316899936696016896,NCAA BIG 10,Big 10,6,,,,1,50,,,1,0,0,147.46,backfill
+2026,Computer,1,2,51,False,Computer,Davidson,1331774804222545920,NCAA PIONEER,Pioneer,12,,,,1,51,,,1,0,0,146.82,backfill
+2026,Computer,1,2,52,False,Computer,Delaware,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,7,,,,1,52,,,1,0,0,146.2,backfill
+2026,Computer,1,2,53,False,Computer,Arkansas State,1331774695346823168,NCAA USA,CUSA,8,,,,1,53,,,1,0,0,144.06,backfill
+2026,Computer,1,2,54,False,Computer,Penn State,1316899936696016896,NCAA BIG 10,Big 10,5,,,,1,54,,,1,0,0,141.82,backfill
+2026,Computer,1,2,55,False,Computer,Utah,1331775106527006720,NCAA PAC 12,PAC 12,11,,,,1,55,,,1,0,0,141.0,backfill
+2026,Computer,1,2,56,False,Computer,Georgia,1331775170712444928,NCAA SEC,SEC,7,,,,1,56,,,1,0,0,140.96,backfill
+2026,Computer,1,2,57,False,Computer,UNC Charlotte,1331774454493122560,NCAA WILD,Wild,12,,,,1,57,,,1,0,0,140.3,backfill
+2026,Computer,1,2,58,False,Computer,Indiana,1316899936696016896,NCAA BIG 10,Big 10,8,,,,1,58,,,1,0,0,140.2,backfill
+2026,Computer,1,2,59,False,Computer,Clemson,1331774915392577536,NCAA ACC,ACC,12,,,,1,59,,,1,0,0,139.56,backfill
+2026,Computer,1,2,60,False,Computer,Stony Brook,1316899756005412864,NCAA BIG SKY,Big Sky,5,,,,1,60,,,1,0,0,139.16,backfill
+2026,Computer,1,2,61,False,Computer,Campbell,1331774804222545920,NCAA PIONEER,Pioneer,8,,,,1,61,,,1,0,0,138.96,backfill
+2026,Computer,1,2,62,False,Computer,Marshall,1331774846710849536,NCAA SUN BELT,Sun Belt,5,,,,1,62,,,1,0,0,138.62,backfill
+2026,Computer,1,2,63,False,Computer,Iowa,1316899936696016896,NCAA BIG 10,Big 10,11,,,,1,63,,,1,0,0,138.36,backfill
+2026,Computer,1,2,64,False,Computer,Columbia,1331774741488369664,NCAA IVY,Ivy,4,,,,1,64,,,1,0,0,138.0,backfill
+2026,Computer,1,2,65,False,Computer,Charleston Southern,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,6,,,,1,65,,,1,0,0,137.12,backfill
+2026,Computer,1,2,66,False,Computer,UT Martin,1331774804222545920,NCAA PIONEER,Pioneer,11,,,,1,66,,,1,0,0,135.44,backfill
+2026,Computer,1,2,67,False,Computer,USF,1331775206619885568,NCAA BIG EAST & CO.,Big East,10,,,,1,67,,,1,0,0,134.76,backfill
+2026,Computer,1,2,68,False,Computer,Morehead State,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,8,,,,1,68,,,1,0,0,134.74,backfill
+2026,Computer,1,2,69,False,Computer,Colgate,1331774741488369664,NCAA IVY,Ivy,8,,,,1,69,,,1,0,0,133.36,backfill
+2026,Computer,1,2,70,False,Computer,Old Dominion,1331774454493122560,NCAA WILD,Wild,10,,,,1,70,,,1,0,0,132.36,backfill
+2026,Computer,1,2,71,False,Computer,Princeton,1331774741488369664,NCAA IVY,Ivy,10,,,,1,71,,,1,0,0,132.36,backfill
+2026,Computer,1,2,72,False,Computer,Austin Peay,1331774804222545920,NCAA PIONEER,Pioneer,9,,,,1,72,,,1,0,0,131.1,backfill
+2026,Computer,1,2,73,False,Computer,Army,1331775206619885568,NCAA BIG EAST & CO.,Big East,8,,,,1,73,,,1,0,0,128.7,backfill
+2026,Computer,1,2,74,False,Computer,Kentucky,1331775170712444928,NCAA SEC,SEC,8,,,,1,74,,,1,0,0,128.22,backfill
+2026,Computer,1,2,75,False,Computer,UNLV,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,11,,,,1,75,,,1,0,0,125.36,backfill
+2026,Computer,1,2,76,False,Computer,Wichita State,1331774454493122560,NCAA WILD,Wild,5,,,,1,76,,,1,0,0,123.14,backfill
+2026,Computer,1,2,77,False,Computer,Rutgers,1331775206619885568,NCAA BIG EAST & CO.,Big East,1,,,,1,77,,,1,0,0,123.0,backfill
+2026,Computer,1,2,78,False,Computer,Texas State,1331774695346823168,NCAA USA,CUSA,9,,,,1,78,,,1,0,0,120.06,backfill
+2026,Computer,1,2,79,False,Computer,South Dakota,1331774454493122560,NCAA WILD,Wild,11,,,,1,79,,,1,0,0,116.84,backfill
+2026,Computer,1,2,80,False,Computer,Richmond,1316899756005412864,NCAA BIG SKY,Big Sky,7,,,,1,80,,,1,0,0,116.72,backfill
+2026,Computer,1,2,81,False,Computer,Eastern Washington,1316899756005412864,NCAA BIG SKY,Big Sky,4,,,,1,81,,,1,0,0,116.44,backfill
+2026,Computer,1,2,82,False,Computer,Brown,1331774741488369664,NCAA IVY,Ivy,1,,,,1,82,,,1,0,0,116.02,backfill
+2026,Computer,1,2,83,False,Computer,Missouri,1331774880181399552,NCAA BIG 12,Big 12,3,,,,1,83,,,1,0,0,113.76,backfill
+2026,Computer,1,2,84,False,Computer,Oklahoma,1331774880181399552,NCAA BIG 12,Big 12,9,,,,1,84,,,1,0,0,112.72,backfill
+2026,Computer,1,2,85,False,Computer,Florida International,1331774695346823168,NCAA USA,CUSA,10,,,,1,85,,,1,0,0,110.86,backfill
+2026,Computer,1,2,86,False,Computer,Alcorn State,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,8,,,,1,86,,,1,0,0,107.68,backfill
+2026,Computer,1,2,87,False,Computer,Alabama,1331775170712444928,NCAA SEC,SEC,11,,,,1,87,,,1,0,0,100.2,backfill
+2026,Computer,1,2,88,False,Computer,North Dakota State,1331774454493122560,NCAA WILD,Wild,3,,,,1,88,,,1,0,0,99.56,backfill
+2026,Computer,1,2,89,False,Computer,Alabama A&M,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,2,,,,1,89,,,1,0,0,94.14,backfill
+2026,Computer,1,2,90,False,Computer,California,1331775106527006720,NCAA PAC 12,PAC 12,10,,,,1,90,,,1,0,0,89.06,backfill
+2026,Computer,1,2,91,False,Computer,North Alabama,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,11,,,,1,91,,,0,1,0,163.86,backfill
+2026,Computer,1,2,92,False,Computer,Citadel,1331774454493122560,NCAA WILD,Wild,8,,,,1,92,,,0,1,0,163.56,backfill
+2026,Computer,1,2,93,False,Computer,Wake Forest,1331774915392577536,NCAA ACC,ACC,6,,,,1,93,,,0,1,0,160.56,backfill
+2026,Computer,1,2,94,False,Computer,Georgetown,1331774741488369664,NCAA IVY,Ivy,5,,,,1,94,,,0,1,0,158.6,backfill
+2026,Computer,1,2,95,False,Computer,USC,1331775106527006720,NCAA PAC 12,PAC 12,2,,,,1,95,,,0,1,0,154.42,backfill
+2026,Computer,1,2,96,False,Computer,Jackson State,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,10,,,,1,96,,,0,1,0,153.9,backfill
+2026,Computer,1,2,97,False,Computer,Fresno State,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,7,,,,1,97,,,0,1,0,152.32,backfill
+2026,Computer,1,2,98,False,Computer,Boston College,1331774915392577536,NCAA ACC,ACC,8,,,,1,98,,,0,1,0,152.12,backfill
+2026,Computer,1,2,99,False,Computer,Nebraska,1316899936696016896,NCAA BIG 10,Big 10,2,,,,1,99,,,0,1,0,150.82,backfill
+2026,Computer,1,2,100,False,Computer,Southern,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,4,,,,1,100,,,0,1,0,149.76,backfill
+2026,Computer,1,2,101,False,Computer,South Dakota State,1331775206619885568,NCAA BIG EAST & CO.,Big East,3,,,,1,101,,,0,1,0,149.56,backfill
+2026,Computer,1,2,102,False,Computer,Miami,1331774915392577536,NCAA ACC,ACC,9,,,,1,102,,,0,1,0,146.16,backfill
+2026,Computer,1,2,103,False,Computer,Villanova,1316899756005412864,NCAA BIG SKY,Big Sky,2,,,,1,103,,,0,1,0,145.86,backfill
+2026,Computer,1,2,104,False,Computer,Western Kentucky,1331774695346823168,NCAA USA,CUSA,6,,,,1,104,,,0,1,0,141.66,backfill
+2026,Computer,1,2,105,False,Computer,LSU,1331775170712444928,NCAA SEC,SEC,2,,,,1,105,,,0,1,0,141.16,backfill
+2026,Computer,1,2,106,False,Computer,James Madison,1331774454493122560,NCAA WILD,Wild,2,,,,1,106,,,0,1,0,140.02,backfill
+2026,Computer,1,2,107,False,Computer,Arizona State,1331775106527006720,NCAA PAC 12,PAC 12,7,,,,1,107,,,0,1,0,139.4,backfill
+2026,Computer,1,2,108,False,Computer,Butler,1331774804222545920,NCAA PIONEER,Pioneer,4,,,,1,108,,,0,1,0,138.5,backfill
+2026,Computer,1,2,109,False,Computer,Lehigh,1331774741488369664,NCAA IVY,Ivy,6,,,,1,109,,,0,1,0,137.84,backfill
+2026,Computer,1,2,110,False,Computer,UTEP,1331774846710849536,NCAA SUN BELT,Sun Belt,2,,,,1,110,,,0,1,0,136.76,backfill
+2026,Computer,1,2,111,False,Computer,Tulsa,1331774846710849536,NCAA SUN BELT,Sun Belt,6,,,,1,111,,,0,1,0,136.26,backfill
+2026,Computer,1,2,112,False,Computer,Oklahoma State,1331774880181399552,NCAA BIG 12,Big 12,12,,,,1,112,,,0,1,0,135.46,backfill
+2026,Computer,1,2,113,False,Computer,Texas A&M,1331774880181399552,NCAA BIG 12,Big 12,4,,,,1,113,,,0,1,0,135.16,backfill
+2026,Computer,1,2,114,False,Computer,Tulane,1331774846710849536,NCAA SUN BELT,Sun Belt,3,,,,1,114,,,0,1,0,134.5,backfill
+2026,Computer,1,2,115,False,Computer,Bethune - Cookman,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,9,,,,1,115,,,0,1,0,134.26,backfill
+2026,Computer,1,2,116,False,Computer,Ohio State,1316899936696016896,NCAA BIG 10,Big 10,9,,,,1,116,,,0,1,0,133.36,backfill
+2026,Computer,1,2,117,False,Computer,Arkansas,1331775170712444928,NCAA SEC,SEC,12,,,,1,117,,,0,1,0,131.56,backfill
+2026,Computer,1,2,118,False,Computer,Notre Dame,1331775206619885568,NCAA BIG EAST & CO.,Big East,12,,,,1,118,,,0,1,0,131.36,backfill
+2026,Computer,1,2,119,False,Computer,Michigan State,1316899936696016896,NCAA BIG 10,Big 10,4,,,,1,119,,,0,1,0,130.76,backfill
+2026,Computer,1,2,120,False,Computer,Michigan,1316899936696016896,NCAA BIG 10,Big 10,12,,,,1,120,,,0,1,0,130.34,backfill
+2026,Computer,1,2,121,False,Computer,ETSU,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,2,,,,1,121,,,0,1,0,130.16,backfill
+2026,Computer,1,2,122,False,Computer,Montana State,1316899756005412864,NCAA BIG SKY,Big Sky,6,,,,1,122,,,0,1,0,128.96,backfill
+2026,Computer,1,2,123,False,Computer,Holy Cross,1331774804222545920,NCAA PIONEER,Pioneer,2,,,,1,123,,,0,1,0,128.84,backfill
+2026,Computer,1,2,124,False,Computer,Illinois,1316899936696016896,NCAA BIG 10,Big 10,10,,,,1,124,,,0,1,0,128.56,backfill
+2026,Computer,1,2,125,False,Computer,Murray State,1331774804222545920,NCAA PIONEER,Pioneer,3,,,,1,125,,,0,1,0,127.96,backfill
+2026,Computer,1,2,126,False,Computer,North Carolina,1331774915392577536,NCAA ACC,ACC,2,,,,1,126,,,0,1,0,126.9,backfill
+2026,Computer,1,2,127,False,Computer,Florida Atlantic,1331774695346823168,NCAA USA,CUSA,3,,,,1,127,,,0,1,0,126.72,backfill
+2026,Computer,1,2,128,False,Computer,Bucknell,1331774741488369664,NCAA IVY,Ivy,3,,,,1,128,,,0,1,0,125.5,backfill
+2026,Computer,1,2,129,False,Computer,Texas Tech,1331774880181399552,NCAA BIG 12,Big 12,1,,,,1,129,,,0,1,0,125.16,backfill
+2026,Computer,1,2,130,False,Computer,Texas,1331774880181399552,NCAA BIG 12,Big 12,6,,,,1,130,,,0,1,0,124.46,backfill
+2026,Computer,1,2,131,False,Computer,Vanderbilt,1331775170712444928,NCAA SEC,SEC,9,,,,1,131,,,0,1,0,124.46,backfill
+2026,Computer,1,2,132,False,Computer,North Texas,1331774695346823168,NCAA USA,CUSA,2,,,,1,132,,,0,1,0,124.14,backfill
+2026,Computer,1,2,133,False,Computer,Tennessee,1331775170712444928,NCAA SEC,SEC,3,,,,1,133,,,0,1,0,123.96,backfill
+2026,Computer,1,2,134,False,Computer,Rice,1331774846710849536,NCAA SUN BELT,Sun Belt,4,,,,1,134,,,0,1,0,122.24,backfill
+2026,Computer,1,2,135,False,Computer,UCONN,1331775206619885568,NCAA BIG EAST & CO.,Big East,5,,,,1,135,,,0,1,0,121.48,backfill
+2026,Computer,1,2,136,False,Computer,Kennesaw State,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,3,,,,1,136,,,0,1,0,121.42,backfill
+2026,Computer,1,2,137,False,Computer,Howard,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,6,,,,1,137,,,0,1,0,121.36,backfill
+2026,Computer,1,2,138,False,Computer,Nevada,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,10,,,,1,138,,,0,1,0,120.82,backfill
+2026,Computer,1,2,139,False,Computer,Georgia Southern,1331774846710849536,NCAA SUN BELT,Sun Belt,7,,,,1,139,,,0,1,0,120.36,backfill
+2026,Computer,1,2,140,False,Computer,Troy,1331774695346823168,NCAA USA,CUSA,1,,,,1,140,,,0,1,0,119.86,backfill
+2026,Computer,1,2,141,False,Computer,Wofford,1331774804222545920,NCAA PIONEER,Pioneer,1,,,,1,141,,,0,1,0,119.72,backfill
+2026,Computer,1,2,142,False,Computer,Rhode Island,1316899756005412864,NCAA BIG SKY,Big Sky,1,,,,1,142,,,0,1,0,116.5,backfill
+2026,Computer,1,2,143,False,Computer,Central Michigan,1331774454493122560,NCAA WILD,Wild,4,,,,1,143,,,0,1,0,114.7,backfill
+2026,Computer,1,2,144,False,Computer,Penn,1331774741488369664,NCAA IVY,Ivy,7,,,,1,144,,,0,1,0,114.52,backfill
+2026,Computer,1,2,145,False,Computer,Navy,1331775206619885568,NCAA BIG EAST & CO.,Big East,11,,,,1,145,,,0,1,0,114.16,backfill
+2026,Computer,1,2,146,False,Computer,Cornell,1331774741488369664,NCAA IVY,Ivy,12,,,,1,146,,,0,1,0,113.66,backfill
+2026,Computer,1,2,147,False,Computer,Florida,1331775170712444928,NCAA SEC,SEC,1,,,,1,147,,,0,1,0,111.92,backfill
+2026,Computer,1,2,148,False,Computer,Louisville,1331774915392577536,NCAA ACC,ACC,11,,,,1,148,,,0,1,0,110.84,backfill
+2026,Computer,1,2,149,False,Computer,Coastal Carolina,1331775206619885568,NCAA BIG EAST & CO.,Big East,6,,,,1,149,,,0,1,0,108.96,backfill
+2026,Computer,1,2,150,False,Computer,Grambling State,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,12,,,,1,150,,,0,1,0,107.04,backfill
+2026,Computer,1,2,151,False,Computer,Wyoming,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,3,,,,1,151,,,0,1,0,106.46,backfill
+2026,Computer,1,2,152,False,Computer,Montana,1331774454493122560,NCAA WILD,Wild,1,,,,1,152,,,0,1,0,105.82,backfill
+2026,Computer,1,2,153,False,Computer,Stanford,1331775106527006720,NCAA PAC 12,PAC 12,5,,,,1,153,,,0,1,0,105.04,backfill
+2026,Computer,1,2,154,False,Computer,Belmont,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,1,,,,1,154,,,0,1,0,103.8,backfill
+2026,Computer,1,2,155,False,Computer,Louisiana Monroe,1331774695346823168,NCAA USA,CUSA,12,,,,1,155,,,0,1,0,101.9,backfill
+2026,Computer,1,2,156,False,Computer,Virginia Tech,1331774915392577536,NCAA ACC,ACC,4,,,,1,156,,,0,1,0,101.78,backfill
+2026,Computer,1,2,157,False,Computer,Boise State,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,2,,,,1,157,,,0,1,0,101.6,backfill
+2026,Computer,1,2,158,False,Computer,Washington,1331775106527006720,NCAA PAC 12,PAC 12,6,,,,1,158,,,0,1,0,100.76,backfill
+2026,Computer,1,2,159,False,Computer,Eastern Kentucky,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,5,,,,1,159,,,0,1,0,100.36,backfill
+2026,Computer,1,2,160,False,Computer,Central Arkansas,1331774454493122560,NCAA WILD,Wild,9,,,,1,160,,,0,1,0,99.56,backfill
+2026,Computer,1,2,161,False,Computer,New Mexico,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,9,,,,1,161,,,0,1,0,95.8,backfill
+2026,Computer,1,2,162,False,Computer,Ole Miss,1331775170712444928,NCAA SEC,SEC,5,,,,1,162,,,0,1,0,94.74,backfill
+2026,Computer,1,2,163,False,Computer,Arizona,1331775106527006720,NCAA PAC 12,PAC 12,1,,,,1,163,,,0,1,0,94.46,backfill
+2026,Computer,1,2,164,False,Computer,Maine,1316899756005412864,NCAA BIG SKY,Big Sky,11,,,,1,164,,,0,1,0,93.92,backfill
+2026,Computer,1,2,165,False,Computer,Maryland,1331775206619885568,NCAA BIG EAST & CO.,Big East,2,,,,1,165,,,0,1,0,93.14,backfill
+2026,Computer,1,2,166,False,Computer,Jacksonville State,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,9,,,,1,166,,,0,1,0,87.46,backfill
+2026,Computer,1,2,167,False,Computer,Tuskegee,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,11,,,,1,167,,,0,1,0,87.32,backfill
+2026,Computer,1,2,168,False,Computer,Harvard,1331774741488369664,NCAA IVY,Ivy,2,,,,1,168,,,0,1,0,86.36,backfill
+2026,Computer,1,2,169,False,Computer,Dayton,1331774804222545920,NCAA PIONEER,Pioneer,7,,,,1,169,,,0,1,0,86.12,backfill
+2026,Computer,1,2,170,False,Computer,Oregon,1331775106527006720,NCAA PAC 12,PAC 12,9,,,,1,170,,,0,1,0,85.16,backfill
+2026,Computer,1,2,171,False,Computer,Air Force,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,4,,,,1,171,,,0,1,0,84.6,backfill
+2026,Computer,1,2,172,False,Computer,UAB,1331774846710849536,NCAA SUN BELT,Sun Belt,10,,,,1,172,,,0,1,0,84.34,backfill
+2026,Computer,1,2,173,False,Computer,Iowa State,1331774880181399552,NCAA BIG 12,Big 12,2,,,,1,173,,,0,1,0,83.8,backfill
+2026,Computer,1,2,174,False,Computer,Northwestern,1316899936696016896,NCAA BIG 10,Big 10,3,,,,1,174,,,0,1,0,82.9,backfill
+2026,Computer,1,2,175,False,Computer,Tennessee State,1331774804222545920,NCAA PIONEER,Pioneer,5,,,,1,175,,,0,1,0,81.96,backfill
+2026,Computer,1,2,176,False,Computer,Louisiana,1331774695346823168,NCAA USA,CUSA,11,,,,1,176,,,0,1,0,81.0,backfill
+2026,Computer,1,2,177,False,Computer,San Jose State,1331774454493122560,NCAA WILD,Wild,7,,,,1,177,,,0,1,0,80.6,backfill
+2026,Computer,1,2,178,False,Computer,Kansas,1331774880181399552,NCAA BIG 12,Big 12,10,,,,1,178,,,0,1,0,79.4,backfill
+2026,Computer,1,2,179,False,Computer,Northern Iowa,1316899756005412864,NCAA BIG SKY,Big Sky,10,,,,1,179,,,0,1,0,70.1,backfill
+2026,Computer,1,2,180,False,Computer,Weber State,1316899756005412864,NCAA BIG SKY,Big Sky,9,,,,1,180,,,0,1,0,32.34,backfill
+2026,Computer,2,3,1,False,Computer,Minnesota,1316899936696016896,NCAA BIG 10,Big 10,7,,,,1,1,42,41,2,0,0,408.48,backfill
+2026,Computer,2,3,2,False,Computer,Hawaii,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,1,,,,1,2,24,22,2,0,0,402.68,backfill
+2026,Computer,2,3,3,False,Computer,Mississippi State,1331775170712444928,NCAA SEC,SEC,6,,,,1,3,43,40,2,0,0,385.22,backfill
+2026,Computer,2,3,4,False,Computer,Louisiana Tech,1331774846710849536,NCAA SUN BELT,Sun Belt,11,,,,1,4,5,1,2,0,0,371.88,backfill
+2026,Computer,2,3,5,False,Computer,Chattanooga,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,4,,,,1,5,4,-1,2,0,0,359.66,backfill
+2026,Computer,2,3,6,False,Computer,Kansas State,1331774880181399552,NCAA BIG 12,Big 12,7,,,,1,6,2,-4,2,0,0,356.58,backfill
+2026,Computer,2,3,7,False,Computer,Baylor,1331774880181399552,NCAA BIG 12,Big 12,5,,,,1,7,36,29,2,0,0,354.56,backfill
+2026,Computer,2,3,8,False,Computer,Portland State,1316899756005412864,NCAA BIG SKY,Big Sky,8,,,,1,8,19,11,2,0,0,354.38,backfill
+2026,Computer,2,3,9,False,Computer,Middle Tennessee State,1331774695346823168,NCAA USA,CUSA,7,,,,1,9,46,37,2,0,0,349.92,backfill
+2026,Computer,2,3,10,False,Computer,Auburn,1331775170712444928,NCAA SEC,SEC,4,,,,1,10,8,-2,2,0,0,346.14,backfill
+2026,Computer,2,3,11,False,Computer,William & Mary,1316899756005412864,NCAA BIG SKY,Big Sky,3,,,,1,11,47,36,2,0,0,338.24,backfill
+2026,Computer,2,3,12,False,Computer,Youngstown State,1316899756005412864,NCAA BIG SKY,Big Sky,12,,,,1,12,40,28,2,0,0,333.58,backfill
+2026,Computer,2,3,13,False,Computer,Clemson,1331774915392577536,NCAA ACC,ACC,12,,,,1,13,59,46,2,0,0,332.94,backfill
+2026,Computer,2,3,14,False,Computer,FSU,1331774915392577536,NCAA ACC,ACC,5,,,,1,14,29,15,2,0,0,326.88,backfill
+2026,Computer,2,3,15,False,Computer,West Virginia,1331774880181399552,NCAA BIG 12,Big 12,8,,,,1,15,18,3,2,0,0,320.12,backfill
+2026,Computer,2,3,16,False,Computer,Old Dominion,1331774454493122560,NCAA WILD,Wild,10,,,,1,16,70,54,2,0,0,316.48,backfill
+2026,Computer,2,3,17,False,Computer,Dartmouth,1331774741488369664,NCAA IVY,Ivy,11,,,,1,17,12,-5,2,0,0,316.28,backfill
+2026,Computer,2,3,18,False,Computer,South Carolina,1331775170712444928,NCAA SEC,SEC,10,,,,1,18,3,-15,2,0,0,315.4,backfill
+2026,Computer,2,3,19,False,Computer,UCLA,1331775106527006720,NCAA PAC 12,PAC 12,12,,,,1,19,23,4,2,0,0,312.5,backfill
+2026,Computer,2,3,20,False,Computer,Washington State,1331775106527006720,NCAA PAC 12,PAC 12,4,,,,1,20,25,5,2,0,0,311.96,backfill
+2026,Computer,2,3,21,False,Computer,Virginia,1331774915392577536,NCAA ACC,ACC,1,,,,1,21,26,5,2,0,0,311.04,backfill
+2026,Computer,2,3,22,False,Computer,Delaware State,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,3,,,,1,22,41,19,2,0,0,305.28,backfill
+2026,Computer,2,3,23,False,Computer,South Alabama,1331774695346823168,NCAA USA,CUSA,4,,,,1,23,16,-7,2,0,0,304.58,backfill
+2026,Computer,2,3,24,False,Computer,North Carolina A&T,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,1,,,,1,24,22,-2,2,0,0,303.28,backfill
+2026,Computer,2,3,25,False,Computer,Purdue,1316899936696016896,NCAA BIG 10,Big 10,1,,,,1,25,28,3,2,0,0,303.02,backfill
+2026,Computer,2,3,26,False,Computer,Georgia State,1331774695346823168,NCAA USA,CUSA,5,,,,1,26,11,-15,2,0,0,300.38,backfill
+2026,Computer,2,3,27,False,Computer,Pittsburgh,1331775206619885568,NCAA BIG EAST & CO.,Big East,4,,,,1,27,31,4,2,0,0,297.4,backfill
+2026,Computer,2,3,28,False,Computer,Colorado,1331775106527006720,NCAA PAC 12,PAC 12,8,,,,1,28,15,-13,2,0,0,294.64,backfill
+2026,Computer,2,3,29,False,Computer,Campbell,1331774804222545920,NCAA PIONEER,Pioneer,8,,,,1,29,61,32,2,0,0,294.56,backfill
+2026,Computer,2,3,30,False,Computer,Delaware,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,7,,,,1,30,52,22,2,0,0,286.26,backfill
+2026,Computer,2,3,31,False,Computer,Georgia Tech,1331774915392577536,NCAA ACC,ACC,3,,,,1,31,49,18,2,0,0,284.18,backfill
+2026,Computer,2,3,32,False,Computer,San Diego State,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,12,,,,1,32,45,13,2,0,0,279.98,backfill
+2026,Computer,2,3,33,False,Computer,BYU,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,6,,,,1,33,48,15,2,0,0,279.02,backfill
+2026,Computer,2,3,34,False,Computer,Southern Miss,1331774846710849536,NCAA SUN BELT,Sun Belt,9,,,,1,34,34,0,2,0,0,277.08,backfill
+2026,Computer,2,3,35,False,Computer,Arkansas State,1331774695346823168,NCAA USA,CUSA,8,,,,1,35,53,18,2,0,0,276.44,backfill
+2026,Computer,2,3,36,False,Computer,Davidson,1331774804222545920,NCAA PIONEER,Pioneer,12,,,,1,36,51,15,2,0,0,275.78,backfill
+2026,Computer,2,3,37,False,Computer,Alcorn State,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,8,,,,1,37,86,49,2,0,0,275.48,backfill
+2026,Computer,2,3,38,False,Computer,Furman,1331774804222545920,NCAA PIONEER,Pioneer,10,,,,1,38,32,-6,2,0,0,275.48,backfill
+2026,Computer,2,3,39,False,Computer,Austin Peay,1331774804222545920,NCAA PIONEER,Pioneer,9,,,,1,39,72,33,2,0,0,275.16,backfill
+2026,Computer,2,3,40,False,Computer,UTSA,1331774846710849536,NCAA SUN BELT,Sun Belt,12,,,,1,40,37,-3,2,0,0,272.88,backfill
+2026,Computer,2,3,41,False,Computer,Columbia,1331774741488369664,NCAA IVY,Ivy,4,,,,1,41,64,23,2,0,0,267.8,backfill
+2026,Computer,2,3,42,False,Computer,Army,1331775206619885568,NCAA BIG EAST & CO.,Big East,8,,,,1,42,73,31,2,0,0,260.76,backfill
+2026,Computer,2,3,43,False,Computer,Wichita State,1331774454493122560,NCAA WILD,Wild,5,,,,1,43,76,33,2,0,0,258.94,backfill
+2026,Computer,2,3,44,False,Computer,Penn State,1316899936696016896,NCAA BIG 10,Big 10,5,,,,1,44,54,10,2,0,0,253.7,backfill
+2026,Computer,2,3,45,False,Computer,Georgia,1331775170712444928,NCAA SEC,SEC,7,,,,1,45,56,11,2,0,0,252.54,backfill
+2026,Computer,2,3,46,False,Computer,Kentucky,1331775170712444928,NCAA SEC,SEC,8,,,,1,46,74,28,2,0,0,251.44,backfill
+2026,Computer,2,3,47,False,Computer,UNC Charlotte,1331774454493122560,NCAA WILD,Wild,12,,,,1,47,57,10,2,0,0,244.16,backfill
+2026,Computer,2,3,48,False,Computer,South Dakota,1331774454493122560,NCAA WILD,Wild,11,,,,1,48,79,31,2,0,0,241.16,backfill
+2026,Computer,2,3,49,False,Computer,Florida International,1331774695346823168,NCAA USA,CUSA,10,,,,1,49,85,36,2,0,0,240.06,backfill
+2026,Computer,2,3,50,False,Computer,UNLV,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,11,,,,1,50,75,25,2,0,0,232.8,backfill
+2026,Computer,2,3,51,False,Computer,Missouri,1331774880181399552,NCAA BIG 12,Big 12,3,,,,1,51,83,32,2,0,0,216.3,backfill
+2026,Computer,2,3,52,False,Computer,Richmond,1316899756005412864,NCAA BIG SKY,Big Sky,7,,,,1,52,80,28,2,0,0,199.28,backfill
+2026,Computer,2,3,53,False,Computer,California,1331775106527006720,NCAA PAC 12,PAC 12,10,,,,1,53,90,37,2,0,0,192.24,backfill
+2026,Computer,2,3,54,False,Computer,Arizona State,1331775106527006720,NCAA PAC 12,PAC 12,7,,,,1,54,107,53,1,1,0,356.08,backfill
+2026,Computer,2,3,55,False,Computer,North Alabama,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,11,,,,1,55,91,36,1,1,0,329.88,backfill
+2026,Computer,2,3,56,False,Computer,Georgetown,1331774741488369664,NCAA IVY,Ivy,5,,,,1,56,94,38,1,1,0,328.06,backfill
+2026,Computer,2,3,57,False,Computer,LSU,1331775170712444928,NCAA SEC,SEC,2,,,,1,57,105,48,1,1,0,327.38,backfill
+2026,Computer,2,3,58,False,Computer,Montana,1331774454493122560,NCAA WILD,Wild,1,,,,1,58,152,94,1,1,0,319.3,backfill
+2026,Computer,2,3,59,False,Computer,ETSU,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,2,,,,1,59,121,62,1,1,0,314.04,backfill
+2026,Computer,2,3,60,False,Computer,Florida A&M,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,5,,,,1,60,1,-59,1,1,0,311.56,backfill
+2026,Computer,2,3,61,False,Computer,Memphis,1331774846710849536,NCAA SUN BELT,Sun Belt,8,,,,1,61,13,-48,1,1,0,310.98,backfill
+2026,Computer,2,3,62,False,Computer,Murray State,1331774804222545920,NCAA PIONEER,Pioneer,3,,,,1,62,125,63,1,1,0,308.64,backfill
+2026,Computer,2,3,63,False,Computer,North Carolina Central,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,12,,,,1,63,21,-42,1,1,0,308.26,backfill
+2026,Computer,2,3,64,False,Computer,Ohio State,1316899936696016896,NCAA BIG 10,Big 10,9,,,,1,64,116,52,1,1,0,306.84,backfill
+2026,Computer,2,3,65,False,Computer,Colorado State,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,8,,,,1,65,10,-55,1,1,0,297.64,backfill
+2026,Computer,2,3,66,False,Computer,Eastern Michigan,1331774454493122560,NCAA WILD,Wild,6,,,,1,66,14,-52,1,1,0,297.6,backfill
+2026,Computer,2,3,67,False,Computer,Syracuse,1331775206619885568,NCAA BIG EAST & CO.,Big East,7,,,,1,67,6,-61,1,1,0,297.1,backfill
+2026,Computer,2,3,68,False,Computer,Oregon State,1331775106527006720,NCAA PAC 12,PAC 12,3,,,,1,68,17,-51,1,1,0,296.78,backfill
+2026,Computer,2,3,69,False,Computer,Southern,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,4,,,,1,69,100,31,1,1,0,292.36,backfill
+2026,Computer,2,3,70,False,Computer,Wake Forest,1331774915392577536,NCAA ACC,ACC,6,,,,1,70,93,23,1,1,0,288.98,backfill
+2026,Computer,2,3,71,False,Computer,Yale,1331774741488369664,NCAA IVY,Ivy,9,,,,1,71,30,-41,1,1,0,288.22,backfill
+2026,Computer,2,3,72,False,Computer,Rhode Island,1316899756005412864,NCAA BIG SKY,Big Sky,1,,,,1,72,142,70,1,1,0,287.5,backfill
+2026,Computer,2,3,73,False,Computer,Nebraska,1316899936696016896,NCAA BIG 10,Big 10,2,,,,1,73,99,26,1,1,0,284.58,backfill
+2026,Computer,2,3,74,False,Computer,Notre Dame,1331775206619885568,NCAA BIG EAST & CO.,Big East,12,,,,1,74,118,44,1,1,0,283.58,backfill
+2026,Computer,2,3,75,False,Computer,NC State,1331774915392577536,NCAA ACC,ACC,10,,,,1,75,7,-68,1,1,0,283.36,backfill
+2026,Computer,2,3,76,False,Computer,Mississippi Valley State,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,7,,,,1,76,9,-67,1,1,0,279.18,backfill
+2026,Computer,2,3,77,False,Computer,Tulsa,1331774846710849536,NCAA SUN BELT,Sun Belt,6,,,,1,77,111,34,1,1,0,277.44,backfill
+2026,Computer,2,3,78,False,Computer,TCU,1331774880181399552,NCAA BIG 12,Big 12,11,,,,1,78,20,-58,1,1,0,276.58,backfill
+2026,Computer,2,3,79,False,Computer,UTEP,1331774846710849536,NCAA SUN BELT,Sun Belt,2,,,,1,79,110,31,1,1,0,276.36,backfill
+2026,Computer,2,3,80,False,Computer,Miami,1331774915392577536,NCAA ACC,ACC,9,,,,1,80,102,22,1,1,0,275.16,backfill
+2026,Computer,2,3,81,False,Computer,UCF,1331775206619885568,NCAA BIG EAST & CO.,Big East,9,,,,1,81,35,-46,1,1,0,274.68,backfill
+2026,Computer,2,3,82,False,Computer,Temple,1331774846710849536,NCAA SUN BELT,Sun Belt,1,,,,1,82,44,-38,1,1,0,273.82,backfill
+2026,Computer,2,3,83,False,Computer,SE Missouri State,1331774804222545920,NCAA PIONEER,Pioneer,6,,,,1,83,38,-45,1,1,0,269.12,backfill
+2026,Computer,2,3,84,False,Computer,Georgia Southern,1331774846710849536,NCAA SUN BELT,Sun Belt,7,,,,1,84,139,55,1,1,0,267.44,backfill
+2026,Computer,2,3,85,False,Computer,Lehigh,1331774741488369664,NCAA IVY,Ivy,6,,,,1,85,109,24,1,1,0,264.16,backfill
+2026,Computer,2,3,86,False,Computer,UT Martin,1331774804222545920,NCAA PIONEER,Pioneer,11,,,,1,86,66,-20,1,1,0,264.12,backfill
+2026,Computer,2,3,87,False,Computer,Utah State,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,5,,,,1,87,33,-54,1,1,0,262.86,backfill
+2026,Computer,2,3,88,False,Computer,Charleston Southern,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,6,,,,1,88,65,-23,1,1,0,262.78,backfill
+2026,Computer,2,3,89,False,Computer,Stony Brook,1316899756005412864,NCAA BIG SKY,Big Sky,5,,,,1,89,60,-29,1,1,0,261.74,backfill
+2026,Computer,2,3,90,False,Computer,James Madison,1331774454493122560,NCAA WILD,Wild,2,,,,1,90,106,16,1,1,0,259.84,backfill
+2026,Computer,2,3,91,False,Computer,Duke,1331774915392577536,NCAA ACC,ACC,7,,,,1,91,39,-52,1,1,0,258.08,backfill
+2026,Computer,2,3,92,False,Computer,Coastal Carolina,1331775206619885568,NCAA BIG EAST & CO.,Big East,6,,,,1,92,149,57,1,1,0,257.94,backfill
+2026,Computer,2,3,93,False,Computer,Iowa,1316899936696016896,NCAA BIG 10,Big 10,11,,,,1,93,63,-30,1,1,0,257.14,backfill
+2026,Computer,2,3,94,False,Computer,Eastern Washington,1316899756005412864,NCAA BIG SKY,Big Sky,4,,,,1,94,81,-13,1,1,0,253.94,backfill
+2026,Computer,2,3,95,False,Computer,Cornell,1331774741488369664,NCAA IVY,Ivy,12,,,,1,95,146,51,1,1,0,252.64,backfill
+2026,Computer,2,3,96,False,Computer,Grambling State,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,12,,,,1,96,150,54,1,1,0,250.92,backfill
+2026,Computer,2,3,97,False,Computer,USF,1331775206619885568,NCAA BIG EAST & CO.,Big East,10,,,,1,97,67,-30,1,1,0,248.28,backfill
+2026,Computer,2,3,98,False,Computer,Brown,1331774741488369664,NCAA IVY,Ivy,1,,,,1,98,82,-16,1,1,0,246.3,backfill
+2026,Computer,2,3,99,False,Computer,Colgate,1331774741488369664,NCAA IVY,Ivy,8,,,,1,99,69,-30,1,1,0,246.16,backfill
+2026,Computer,2,3,100,False,Computer,Bethune - Cookman,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,9,,,,1,100,115,15,1,1,0,246.04,backfill
+2026,Computer,2,3,101,False,Computer,Illinois,1316899936696016896,NCAA BIG 10,Big 10,10,,,,1,101,124,23,1,1,0,246.0,backfill
+2026,Computer,2,3,102,False,Computer,Navy,1331775206619885568,NCAA BIG EAST & CO.,Big East,11,,,,1,102,145,43,1,1,0,245.94,backfill
+2026,Computer,2,3,103,False,Computer,Penn,1331774741488369664,NCAA IVY,Ivy,7,,,,1,103,144,41,1,1,0,245.68,backfill
+2026,Computer,2,3,104,False,Computer,Wisconsin,1316899936696016896,NCAA BIG 10,Big 10,6,,,,1,104,50,-54,1,1,0,245.38,backfill
+2026,Computer,2,3,105,False,Computer,Princeton,1331774741488369664,NCAA IVY,Ivy,10,,,,1,105,71,-34,1,1,0,245.34,backfill
+2026,Computer,2,3,106,False,Computer,Belmont,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,1,,,,1,106,154,48,1,1,0,244.16,backfill
+2026,Computer,2,3,107,False,Computer,Monmouth,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,10,,,,1,107,27,-80,1,1,0,239.98,backfill
+2026,Computer,2,3,108,False,Computer,UCONN,1331775206619885568,NCAA BIG EAST & CO.,Big East,5,,,,1,108,135,27,1,1,0,239.58,backfill
+2026,Computer,2,3,109,False,Computer,Morehead State,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,8,,,,1,109,68,-41,1,1,0,238.82,backfill
+2026,Computer,2,3,110,False,Computer,Iowa State,1331774880181399552,NCAA BIG 12,Big 12,2,,,,1,110,173,63,1,1,0,232.72,backfill
+2026,Computer,2,3,111,False,Computer,Texas,1331774880181399552,NCAA BIG 12,Big 12,6,,,,1,111,130,19,1,1,0,230.44,backfill
+2026,Computer,2,3,112,False,Computer,Utah,1331775106527006720,NCAA PAC 12,PAC 12,11,,,,1,112,55,-57,1,1,0,229.3,backfill
+2026,Computer,2,3,113,False,Computer,Louisiana Monroe,1331774695346823168,NCAA USA,CUSA,12,,,,1,113,155,42,1,1,0,227.32,backfill
+2026,Computer,2,3,114,False,Computer,New Mexico,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,9,,,,1,114,161,47,1,1,0,223.0,backfill
+2026,Computer,2,3,115,False,Computer,Rutgers,1331775206619885568,NCAA BIG EAST & CO.,Big East,1,,,,1,115,77,-38,1,1,0,222.88,backfill
+2026,Computer,2,3,116,False,Computer,North Dakota State,1331774454493122560,NCAA WILD,Wild,3,,,,1,116,88,-28,1,1,0,216.32,backfill
+2026,Computer,2,3,117,False,Computer,Marshall,1331774846710849536,NCAA SUN BELT,Sun Belt,5,,,,1,117,62,-55,1,1,0,212.22,backfill
+2026,Computer,2,3,118,False,Computer,Indiana,1316899936696016896,NCAA BIG 10,Big 10,8,,,,1,118,58,-60,1,1,0,211.26,backfill
+2026,Computer,2,3,119,False,Computer,Texas State,1331774695346823168,NCAA USA,CUSA,9,,,,1,119,78,-41,1,1,0,205.2,backfill
+2026,Computer,2,3,120,False,Computer,Washington,1331775106527006720,NCAA PAC 12,PAC 12,6,,,,1,120,158,38,1,1,0,199.76,backfill
+2026,Computer,2,3,121,False,Computer,Tennessee State,1331774804222545920,NCAA PIONEER,Pioneer,5,,,,1,121,175,54,1,1,0,197.28,backfill
+2026,Computer,2,3,122,False,Computer,Alabama A&M,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,2,,,,1,122,89,-33,1,1,0,190.92,backfill
+2026,Computer,2,3,123,False,Computer,Oklahoma,1331774880181399552,NCAA BIG 12,Big 12,9,,,,1,123,84,-39,1,1,0,188.04,backfill
+2026,Computer,2,3,124,False,Computer,Air Force,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,4,,,,1,124,171,47,1,1,0,183.28,backfill
+2026,Computer,2,3,125,False,Computer,Alabama,1331775170712444928,NCAA SEC,SEC,11,,,,1,125,87,-38,1,1,0,181.42,backfill
+2026,Computer,2,3,126,False,Computer,Jacksonville State,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,9,,,,1,126,166,40,1,1,0,165.7,backfill
+2026,Computer,2,3,127,False,Computer,Maine,1316899756005412864,NCAA BIG SKY,Big Sky,11,,,,1,127,164,37,1,1,0,150.54,backfill
+2026,Computer,2,3,128,False,Computer,USC,1331775106527006720,NCAA PAC 12,PAC 12,2,,,,1,128,95,-33,0,2,0,320.38,backfill
+2026,Computer,2,3,129,False,Computer,Florida Atlantic,1331774695346823168,NCAA USA,CUSA,3,,,,1,129,127,-2,0,2,0,299.54,backfill
+2026,Computer,2,3,130,False,Computer,Fresno State,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,7,,,,1,130,97,-33,0,2,0,290.1,backfill
+2026,Computer,2,3,131,False,Computer,South Dakota State,1331775206619885568,NCAA BIG EAST & CO.,Big East,3,,,,1,131,101,-30,0,2,0,282.4,backfill
+2026,Computer,2,3,132,False,Computer,Jackson State,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,10,,,,1,132,96,-36,0,2,0,270.6,backfill
+2026,Computer,2,3,133,False,Computer,Citadel,1331774454493122560,NCAA WILD,Wild,8,,,,1,133,92,-41,0,2,0,267.26,backfill
+2026,Computer,2,3,134,False,Computer,Texas A&M,1331774880181399552,NCAA BIG 12,Big 12,4,,,,1,134,113,-21,0,2,0,259.26,backfill
+2026,Computer,2,3,135,False,Computer,Boston College,1331774915392577536,NCAA ACC,ACC,8,,,,1,135,98,-37,0,2,0,258.94,backfill
+2026,Computer,2,3,136,False,Computer,Michigan,1316899936696016896,NCAA BIG 10,Big 10,12,,,,1,136,120,-16,0,2,0,253.96,backfill
+2026,Computer,2,3,137,False,Computer,Texas Tech,1331774880181399552,NCAA BIG 12,Big 12,1,,,,1,137,129,-8,0,2,0,247.28,backfill
+2026,Computer,2,3,138,False,Computer,Nevada,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,10,,,,1,138,138,0,0,2,0,245.24,backfill
+2026,Computer,2,3,139,False,Computer,North Texas,1331774695346823168,NCAA USA,CUSA,2,,,,1,139,132,-7,0,2,0,243.92,backfill
+2026,Computer,2,3,140,False,Computer,Tulane,1331774846710849536,NCAA SUN BELT,Sun Belt,3,,,,1,140,114,-26,0,2,0,243.34,backfill
+2026,Computer,2,3,141,False,Computer,Louisville,1331774915392577536,NCAA ACC,ACC,11,,,,1,141,148,7,0,2,0,243.32,backfill
+2026,Computer,2,3,142,False,Computer,Eastern Kentucky,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,5,,,,1,142,159,17,0,2,0,243.04,backfill
+2026,Computer,2,3,143,False,Computer,Montana State,1316899756005412864,NCAA BIG SKY,Big Sky,6,,,,1,143,122,-21,0,2,0,241.46,backfill
+2026,Computer,2,3,144,False,Computer,Arkansas,1331775170712444928,NCAA SEC,SEC,12,,,,1,144,117,-27,0,2,0,239.3,backfill
+2026,Computer,2,3,145,False,Computer,Western Kentucky,1331774695346823168,NCAA USA,CUSA,6,,,,1,145,104,-41,0,2,0,238.78,backfill
+2026,Computer,2,3,146,False,Computer,Wofford,1331774804222545920,NCAA PIONEER,Pioneer,1,,,,1,146,141,-5,0,2,0,236.0,backfill
+2026,Computer,2,3,147,False,Computer,North Carolina,1331774915392577536,NCAA ACC,ACC,2,,,,1,147,126,-21,0,2,0,232.5,backfill
+2026,Computer,2,3,148,False,Computer,Tennessee,1331775170712444928,NCAA SEC,SEC,3,,,,1,148,133,-15,0,2,0,231.86,backfill
+2026,Computer,2,3,149,False,Computer,Vanderbilt,1331775170712444928,NCAA SEC,SEC,9,,,,1,149,131,-18,0,2,0,231.28,backfill
+2026,Computer,2,3,150,False,Computer,Holy Cross,1331774804222545920,NCAA PIONEER,Pioneer,2,,,,1,150,123,-27,0,2,0,221.22,backfill
+2026,Computer,2,3,151,False,Computer,Troy,1331774695346823168,NCAA USA,CUSA,1,,,,1,151,140,-11,0,2,0,220.02,backfill
+2026,Computer,2,3,152,False,Computer,Villanova,1316899756005412864,NCAA BIG SKY,Big Sky,2,,,,1,152,103,-49,0,2,0,219.0,backfill
+2026,Computer,2,3,153,False,Computer,Oklahoma State,1331774880181399552,NCAA BIG 12,Big 12,12,,,,1,153,112,-41,0,2,0,216.54,backfill
+2026,Computer,2,3,154,False,Computer,Kennesaw State,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,3,,,,1,154,136,-18,0,2,0,216.34,backfill
+2026,Computer,2,3,155,False,Computer,Central Michigan,1331774454493122560,NCAA WILD,Wild,4,,,,1,155,143,-12,0,2,0,213.62,backfill
+2026,Computer,2,3,156,False,Computer,Bucknell,1331774741488369664,NCAA IVY,Ivy,3,,,,1,156,128,-28,0,2,0,213.4,backfill
+2026,Computer,2,3,157,False,Computer,Rice,1331774846710849536,NCAA SUN BELT,Sun Belt,4,,,,1,157,134,-23,0,2,0,213.12,backfill
+2026,Computer,2,3,158,False,Computer,Virginia Tech,1331774915392577536,NCAA ACC,ACC,4,,,,1,158,156,-2,0,2,0,209.68,backfill
+2026,Computer,2,3,159,False,Computer,Howard,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,6,,,,1,159,137,-22,0,2,0,209.6,backfill
+2026,Computer,2,3,160,False,Computer,Michigan State,1316899936696016896,NCAA BIG 10,Big 10,4,,,,1,160,119,-41,0,2,0,209.46,backfill
+2026,Computer,2,3,161,False,Computer,Ole Miss,1331775170712444928,NCAA SEC,SEC,5,,,,1,161,162,1,0,2,0,205.06,backfill
+2026,Computer,2,3,162,False,Computer,Florida,1331775170712444928,NCAA SEC,SEC,1,,,,1,162,147,-15,0,2,0,199.48,backfill
+2026,Computer,2,3,163,False,Computer,San Jose State,1331774454493122560,NCAA WILD,Wild,7,,,,1,163,177,14,0,2,0,198.78,backfill
+2026,Computer,2,3,164,False,Computer,Dayton,1331774804222545920,NCAA PIONEER,Pioneer,7,,,,1,164,169,5,0,2,0,197.54,backfill
+2026,Computer,2,3,165,False,Computer,Wyoming,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,3,,,,1,165,151,-14,0,2,0,196.14,backfill
+2026,Computer,2,3,166,False,Computer,Butler,1331774804222545920,NCAA PIONEER,Pioneer,4,,,,1,166,108,-58,0,2,0,196.1,backfill
+2026,Computer,2,3,167,False,Computer,Harvard,1331774741488369664,NCAA IVY,Ivy,2,,,,1,167,168,1,0,2,0,194.3,backfill
+2026,Computer,2,3,168,False,Computer,Louisiana,1331774695346823168,NCAA USA,CUSA,11,,,,1,168,176,8,0,2,0,191.58,backfill
+2026,Computer,2,3,169,False,Computer,Stanford,1331775106527006720,NCAA PAC 12,PAC 12,5,,,,1,169,153,-16,0,2,0,187.62,backfill
+2026,Computer,2,3,170,False,Computer,Tuskegee,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,11,,,,1,170,167,-3,0,2,0,183.0,backfill
+2026,Computer,2,3,171,False,Computer,Arizona,1331775106527006720,NCAA PAC 12,PAC 12,1,,,,1,171,163,-8,0,2,0,180.38,backfill
+2026,Computer,2,3,172,False,Computer,Central Arkansas,1331774454493122560,NCAA WILD,Wild,9,,,,1,172,160,-12,0,2,0,170.9,backfill
+2026,Computer,2,3,173,False,Computer,UAB,1331774846710849536,NCAA SUN BELT,Sun Belt,10,,,,1,173,172,-1,0,2,0,162.32,backfill
+2026,Computer,2,3,174,False,Computer,Kansas,1331774880181399552,NCAA BIG 12,Big 12,10,,,,1,174,178,4,0,2,0,157.68,backfill
+2026,Computer,2,3,175,False,Computer,Boise State,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,2,,,,1,175,157,-18,0,2,0,152.8,backfill
+2026,Computer,2,3,176,False,Computer,Maryland,1331775206619885568,NCAA BIG EAST & CO.,Big East,2,,,,1,176,165,-11,0,2,0,151.62,backfill
+2026,Computer,2,3,177,False,Computer,Oregon,1331775106527006720,NCAA PAC 12,PAC 12,9,,,,1,177,170,-7,0,2,0,151.24,backfill
+2026,Computer,2,3,178,False,Computer,Northwestern,1316899936696016896,NCAA BIG 10,Big 10,3,,,,1,178,174,-4,0,2,0,142.12,backfill
+2026,Computer,2,3,179,False,Computer,Northern Iowa,1316899756005412864,NCAA BIG SKY,Big Sky,10,,,,1,179,179,0,0,2,0,131.38,backfill
+2026,Computer,2,3,180,False,Computer,Weber State,1316899756005412864,NCAA BIG SKY,Big Sky,9,,,,1,180,180,0,0,2,0,70.62,backfill
+2026,Computer,3,4,1,False,Computer,Minnesota,1316899936696016896,NCAA BIG 10,Big 10,7,,,,1,1,1,0,3,0,0,567.04,backfill
+2026,Computer,3,4,2,False,Computer,Hawaii,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,1,,,,1,2,2,0,3,0,0,556.34,backfill
+2026,Computer,3,4,3,False,Computer,Baylor,1331774880181399552,NCAA BIG 12,Big 12,5,,,,1,3,7,4,3,0,0,528.74,backfill
+2026,Computer,3,4,4,False,Computer,Clemson,1331774915392577536,NCAA ACC,ACC,12,,,,1,4,13,9,3,0,0,519.38,backfill
+2026,Computer,3,4,5,False,Computer,Auburn,1331775170712444928,NCAA SEC,SEC,4,,,,1,5,10,5,3,0,0,517.68,backfill
+2026,Computer,3,4,6,False,Computer,William & Mary,1316899756005412864,NCAA BIG SKY,Big Sky,3,,,,1,6,11,5,3,0,0,513.28,backfill
+2026,Computer,3,4,7,False,Computer,Kansas State,1331774880181399552,NCAA BIG 12,Big 12,7,,,,1,7,6,-1,3,0,0,513.06,backfill
+2026,Computer,3,4,8,False,Computer,South Alabama,1331774695346823168,NCAA USA,CUSA,4,,,,1,8,23,15,3,0,0,509.96,backfill
+2026,Computer,3,4,9,False,Computer,Youngstown State,1316899756005412864,NCAA BIG SKY,Big Sky,12,,,,1,9,12,3,3,0,0,507.88,backfill
+2026,Computer,3,4,10,False,Computer,Middle Tennessee State,1331774695346823168,NCAA USA,CUSA,7,,,,1,10,9,-1,3,0,0,502.08,backfill
+2026,Computer,3,4,11,False,Computer,Dartmouth,1331774741488369664,NCAA IVY,Ivy,11,,,,1,11,17,6,3,0,0,479.04,backfill
+2026,Computer,3,4,12,False,Computer,Colorado,1331775106527006720,NCAA PAC 12,PAC 12,8,,,,1,12,28,16,3,0,0,478.6,backfill
+2026,Computer,3,4,13,False,Computer,Washington State,1331775106527006720,NCAA PAC 12,PAC 12,4,,,,1,13,20,7,3,0,0,477.84,backfill
+2026,Computer,3,4,14,False,Computer,BYU,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,6,,,,1,14,33,19,3,0,0,474.28,backfill
+2026,Computer,3,4,15,False,Computer,FSU,1331774915392577536,NCAA ACC,ACC,5,,,,1,15,14,-1,3,0,0,465.24,backfill
+2026,Computer,3,4,16,False,Computer,South Carolina,1331775170712444928,NCAA SEC,SEC,10,,,,1,16,18,2,3,0,0,457.5,backfill
+2026,Computer,3,4,17,False,Computer,Southern Miss,1331774846710849536,NCAA SUN BELT,Sun Belt,9,,,,1,17,34,17,3,0,0,452.82,backfill
+2026,Computer,3,4,18,False,Computer,Georgia Tech,1331774915392577536,NCAA ACC,ACC,3,,,,1,18,31,13,3,0,0,443.66,backfill
+2026,Computer,3,4,19,False,Computer,Old Dominion,1331774454493122560,NCAA WILD,Wild,10,,,,1,19,16,-3,3,0,0,442.74,backfill
+2026,Computer,3,4,20,False,Computer,Arkansas State,1331774695346823168,NCAA USA,CUSA,8,,,,1,20,35,15,3,0,0,434.18,backfill
+2026,Computer,3,4,21,False,Computer,North Carolina A&T,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,1,,,,1,21,24,3,3,0,0,432.94,backfill
+2026,Computer,3,4,22,False,Computer,Pittsburgh,1331775206619885568,NCAA BIG EAST & CO.,Big East,4,,,,1,22,27,5,3,0,0,431.32,backfill
+2026,Computer,3,4,23,False,Computer,Delaware,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,7,,,,1,23,30,7,3,0,0,429.34,backfill
+2026,Computer,3,4,24,False,Computer,Purdue,1316899936696016896,NCAA BIG 10,Big 10,1,,,,1,24,25,1,3,0,0,425.84,backfill
+2026,Computer,3,4,25,False,Computer,Army,1331775206619885568,NCAA BIG EAST & CO.,Big East,8,,,,1,25,42,17,3,0,0,417.64,backfill
+2026,Computer,3,4,26,False,Computer,Campbell,1331774804222545920,NCAA PIONEER,Pioneer,8,,,,1,26,29,3,3,0,0,417.6,backfill
+2026,Computer,3,4,27,False,Computer,Davidson,1331774804222545920,NCAA PIONEER,Pioneer,12,,,,1,27,36,9,3,0,0,407.1,backfill
+2026,Computer,3,4,28,False,Computer,Columbia,1331774741488369664,NCAA IVY,Ivy,4,,,,1,28,41,13,3,0,0,400.94,backfill
+2026,Computer,3,4,29,False,Computer,Kentucky,1331775170712444928,NCAA SEC,SEC,8,,,,1,29,46,17,3,0,0,397.2,backfill
+2026,Computer,3,4,30,False,Computer,South Dakota,1331774454493122560,NCAA WILD,Wild,11,,,,1,30,48,18,3,0,0,353.0,backfill
+2026,Computer,3,4,31,False,Computer,Penn State,1316899936696016896,NCAA BIG 10,Big 10,5,,,,1,31,44,13,3,0,0,352.64,backfill
+2026,Computer,3,4,32,False,Computer,Montana,1331774454493122560,NCAA WILD,Wild,1,,,,1,32,58,26,2,1,0,529.54,backfill
+2026,Computer,3,4,33,False,Computer,Mississippi State,1331775170712444928,NCAA SEC,SEC,6,,,,1,33,3,-30,2,1,0,521.08,backfill
+2026,Computer,3,4,34,False,Computer,Portland State,1316899756005412864,NCAA BIG SKY,Big Sky,8,,,,1,34,8,-26,2,1,0,510.94,backfill
+2026,Computer,3,4,35,False,Computer,Arizona State,1331775106527006720,NCAA PAC 12,PAC 12,7,,,,1,35,54,19,2,1,0,501.72,backfill
+2026,Computer,3,4,36,False,Computer,Chattanooga,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,4,,,,1,36,5,-31,2,1,0,493.38,backfill
+2026,Computer,3,4,37,False,Computer,Louisiana Tech,1331774846710849536,NCAA SUN BELT,Sun Belt,11,,,,1,37,4,-33,2,1,0,492.24,backfill
+2026,Computer,3,4,38,False,Computer,Syracuse,1331775206619885568,NCAA BIG EAST & CO.,Big East,7,,,,1,38,67,29,2,1,0,474.84,backfill
+2026,Computer,3,4,39,False,Computer,North Alabama,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,11,,,,1,39,55,16,2,1,0,473.34,backfill
+2026,Computer,3,4,40,False,Computer,North Carolina Central,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,12,,,,1,40,63,23,2,1,0,469.3,backfill
+2026,Computer,3,4,41,False,Computer,LSU,1331775170712444928,NCAA SEC,SEC,2,,,,1,41,57,16,2,1,0,465.94,backfill
+2026,Computer,3,4,42,False,Computer,West Virginia,1331774880181399552,NCAA BIG 12,Big 12,8,,,,1,42,15,-27,2,1,0,461.88,backfill
+2026,Computer,3,4,43,False,Computer,Georgetown,1331774741488369664,NCAA IVY,Ivy,5,,,,1,43,56,13,2,1,0,461.2,backfill
+2026,Computer,3,4,44,False,Computer,Virginia,1331774915392577536,NCAA ACC,ACC,1,,,,1,44,21,-23,2,1,0,459.18,backfill
+2026,Computer,3,4,45,False,Computer,Murray State,1331774804222545920,NCAA PIONEER,Pioneer,3,,,,1,45,62,17,2,1,0,457.24,backfill
+2026,Computer,3,4,46,False,Computer,ETSU,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,2,,,,1,46,59,13,2,1,0,450.58,backfill
+2026,Computer,3,4,47,False,Computer,Florida A&M,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,5,,,,1,47,60,13,2,1,0,449.64,backfill
+2026,Computer,3,4,48,False,Computer,Memphis,1331774846710849536,NCAA SUN BELT,Sun Belt,8,,,,1,48,61,13,2,1,0,446.86,backfill
+2026,Computer,3,4,49,False,Computer,Georgia State,1331774695346823168,NCAA USA,CUSA,5,,,,1,49,26,-23,2,1,0,439.26,backfill
+2026,Computer,3,4,50,False,Computer,Southern,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,4,,,,1,50,69,19,2,1,0,436.2,backfill
+2026,Computer,3,4,51,False,Computer,UCLA,1331775106527006720,NCAA PAC 12,PAC 12,12,,,,1,51,19,-32,2,1,0,434.68,backfill
+2026,Computer,3,4,52,False,Computer,UT Martin,1331774804222545920,NCAA PIONEER,Pioneer,11,,,,1,52,86,34,2,1,0,433.98,backfill
+2026,Computer,3,4,53,False,Computer,NC State,1331774915392577536,NCAA ACC,ACC,10,,,,1,53,75,22,2,1,0,432.76,backfill
+2026,Computer,3,4,54,False,Computer,Colorado State,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,8,,,,1,54,65,11,2,1,0,431.72,backfill
+2026,Computer,3,4,55,False,Computer,Temple,1331774846710849536,NCAA SUN BELT,Sun Belt,1,,,,1,55,82,27,2,1,0,428.34,backfill
+2026,Computer,3,4,56,False,Computer,Stony Brook,1316899756005412864,NCAA BIG SKY,Big Sky,5,,,,1,56,89,33,2,1,0,424.32,backfill
+2026,Computer,3,4,57,False,Computer,Coastal Carolina,1331775206619885568,NCAA BIG EAST & CO.,Big East,6,,,,1,57,92,35,2,1,0,419.92,backfill
+2026,Computer,3,4,58,False,Computer,Alcorn State,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,8,,,,1,58,37,-21,2,1,0,419.46,backfill
+2026,Computer,3,4,59,False,Computer,Iowa,1316899936696016896,NCAA BIG 10,Big 10,11,,,,1,59,93,34,2,1,0,418.52,backfill
+2026,Computer,3,4,60,False,Computer,Oregon State,1331775106527006720,NCAA PAC 12,PAC 12,3,,,,1,60,68,8,2,1,0,416.56,backfill
+2026,Computer,3,4,61,False,Computer,SE Missouri State,1331774804222545920,NCAA PIONEER,Pioneer,6,,,,1,61,83,22,2,1,0,415.04,backfill
+2026,Computer,3,4,62,False,Computer,Georgia Southern,1331774846710849536,NCAA SUN BELT,Sun Belt,7,,,,1,62,84,22,2,1,0,414.42,backfill
+2026,Computer,3,4,63,False,Computer,Cornell,1331774741488369664,NCAA IVY,Ivy,12,,,,1,63,95,32,2,1,0,414.12,backfill
+2026,Computer,3,4,64,False,Computer,Illinois,1316899936696016896,NCAA BIG 10,Big 10,10,,,,1,64,101,37,2,1,0,413.44,backfill
+2026,Computer,3,4,65,False,Computer,Belmont,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,1,,,,1,65,106,41,2,1,0,410.3,backfill
+2026,Computer,3,4,66,False,Computer,Tulsa,1331774846710849536,NCAA SUN BELT,Sun Belt,6,,,,1,66,77,11,2,1,0,408.02,backfill
+2026,Computer,3,4,67,False,Computer,Furman,1331774804222545920,NCAA PIONEER,Pioneer,10,,,,1,67,38,-29,2,1,0,405.88,backfill
+2026,Computer,3,4,68,False,Computer,San Diego State,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,12,,,,1,68,32,-36,2,1,0,404.08,backfill
+2026,Computer,3,4,69,False,Computer,Eastern Washington,1316899756005412864,NCAA BIG SKY,Big Sky,4,,,,1,69,94,25,2,1,0,400.18,backfill
+2026,Computer,3,4,70,False,Computer,Austin Peay,1331774804222545920,NCAA PIONEER,Pioneer,9,,,,1,70,39,-31,2,1,0,398.1,backfill
+2026,Computer,3,4,71,False,Computer,Lehigh,1331774741488369664,NCAA IVY,Ivy,6,,,,1,71,85,14,2,1,0,395.2,backfill
+2026,Computer,3,4,72,False,Computer,UTSA,1331774846710849536,NCAA SUN BELT,Sun Belt,12,,,,1,72,40,-32,2,1,0,393.92,backfill
+2026,Computer,3,4,73,False,Computer,Delaware State,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,3,,,,1,73,22,-51,2,1,0,393.68,backfill
+2026,Computer,3,4,74,False,Computer,Mississippi Valley State,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,7,,,,1,74,76,2,2,1,0,387.68,backfill
+2026,Computer,3,4,75,False,Computer,James Madison,1331774454493122560,NCAA WILD,Wild,2,,,,1,75,90,15,2,1,0,384.18,backfill
+2026,Computer,3,4,76,False,Computer,Georgia,1331775170712444928,NCAA SEC,SEC,7,,,,1,76,45,-31,2,1,0,378.32,backfill
+2026,Computer,3,4,77,False,Computer,Brown,1331774741488369664,NCAA IVY,Ivy,1,,,,1,77,98,21,2,1,0,374.28,backfill
+2026,Computer,3,4,78,False,Computer,Navy,1331775206619885568,NCAA BIG EAST & CO.,Big East,11,,,,1,78,102,24,2,1,0,373.28,backfill
+2026,Computer,3,4,79,False,Computer,UNC Charlotte,1331774454493122560,NCAA WILD,Wild,12,,,,1,79,47,-32,2,1,0,370.24,backfill
+2026,Computer,3,4,80,False,Computer,UNLV,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,11,,,,1,80,50,-30,2,1,0,369.7,backfill
+2026,Computer,3,4,81,False,Computer,Wichita State,1331774454493122560,NCAA WILD,Wild,5,,,,1,81,43,-38,2,1,0,360.54,backfill
+2026,Computer,3,4,82,False,Computer,Texas,1331774880181399552,NCAA BIG 12,Big 12,6,,,,1,82,111,29,2,1,0,360.08,backfill
+2026,Computer,3,4,83,False,Computer,Iowa State,1331774880181399552,NCAA BIG 12,Big 12,2,,,,1,83,110,27,2,1,0,359.36,backfill
+2026,Computer,3,4,84,False,Computer,Louisiana Monroe,1331774695346823168,NCAA USA,CUSA,12,,,,1,84,113,29,2,1,0,359.3,backfill
+2026,Computer,3,4,85,False,Computer,Monmouth,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,10,,,,1,85,107,22,2,1,0,351.92,backfill
+2026,Computer,3,4,86,False,Computer,Florida International,1331774695346823168,NCAA USA,CUSA,10,,,,1,86,49,-37,2,1,0,344.4,backfill
+2026,Computer,3,4,87,False,Computer,Marshall,1331774846710849536,NCAA SUN BELT,Sun Belt,5,,,,1,87,117,30,2,1,0,339.64,backfill
+2026,Computer,3,4,88,False,Computer,Texas State,1331774695346823168,NCAA USA,CUSA,9,,,,1,88,119,31,2,1,0,334.3,backfill
+2026,Computer,3,4,89,False,Computer,Richmond,1316899756005412864,NCAA BIG SKY,Big Sky,7,,,,1,89,52,-37,2,1,0,326.7,backfill
+2026,Computer,3,4,90,False,Computer,Missouri,1331774880181399552,NCAA BIG 12,Big 12,3,,,,1,90,51,-39,2,1,0,316.18,backfill
+2026,Computer,3,4,91,False,Computer,Oklahoma,1331774880181399552,NCAA BIG 12,Big 12,9,,,,1,91,123,32,2,1,0,298.6,backfill
+2026,Computer,3,4,92,False,Computer,California,1331775106527006720,NCAA PAC 12,PAC 12,10,,,,1,92,53,-39,2,1,0,281.94,backfill
+2026,Computer,3,4,93,False,Computer,USC,1331775106527006720,NCAA PAC 12,PAC 12,2,,,,1,93,128,35,1,2,0,453.06,backfill
+2026,Computer,3,4,94,False,Computer,Eastern Michigan,1331774454493122560,NCAA WILD,Wild,6,,,,1,94,66,-28,1,2,0,443.5,backfill
+2026,Computer,3,4,95,False,Computer,Ohio State,1316899936696016896,NCAA BIG 10,Big 10,9,,,,1,95,64,-31,1,2,0,443.38,backfill
+2026,Computer,3,4,96,False,Computer,Fresno State,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,7,,,,1,96,130,34,1,2,0,434.34,backfill
+2026,Computer,3,4,97,False,Computer,Texas A&M,1331774880181399552,NCAA BIG 12,Big 12,4,,,,1,97,134,37,1,2,0,431.6,backfill
+2026,Computer,3,4,98,False,Computer,Florida Atlantic,1331774695346823168,NCAA USA,CUSA,3,,,,1,98,129,31,1,2,0,426.86,backfill
+2026,Computer,3,4,99,False,Computer,TCU,1331774880181399552,NCAA BIG 12,Big 12,11,,,,1,99,78,-21,1,2,0,420.82,backfill
+2026,Computer,3,4,100,False,Computer,Nebraska,1316899936696016896,NCAA BIG 10,Big 10,2,,,,1,100,73,-27,1,2,0,418.1,backfill
+2026,Computer,3,4,101,False,Computer,Wake Forest,1331774915392577536,NCAA ACC,ACC,6,,,,1,101,70,-31,1,2,0,414.82,backfill
+2026,Computer,3,4,102,False,Computer,UCF,1331775206619885568,NCAA BIG EAST & CO.,Big East,9,,,,1,102,81,-21,1,2,0,410.58,backfill
+2026,Computer,3,4,103,False,Computer,Michigan,1316899936696016896,NCAA BIG 10,Big 10,12,,,,1,103,136,33,1,2,0,409.7,backfill
+2026,Computer,3,4,104,False,Computer,South Dakota State,1331775206619885568,NCAA BIG EAST & CO.,Big East,3,,,,1,104,131,27,1,2,0,403.5,backfill
+2026,Computer,3,4,105,False,Computer,UTEP,1331774846710849536,NCAA SUN BELT,Sun Belt,2,,,,1,105,79,-26,1,2,0,401.2,backfill
+2026,Computer,3,4,106,False,Computer,Charleston Southern,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,6,,,,1,106,88,-18,1,2,0,399.7,backfill
+2026,Computer,3,4,107,False,Computer,Colgate,1331774741488369664,NCAA IVY,Ivy,8,,,,1,107,99,-8,1,2,0,398.4,backfill
+2026,Computer,3,4,108,False,Computer,Yale,1331774741488369664,NCAA IVY,Ivy,9,,,,1,108,71,-37,1,2,0,394.94,backfill
+2026,Computer,3,4,109,False,Computer,Notre Dame,1331775206619885568,NCAA BIG EAST & CO.,Big East,12,,,,1,109,74,-35,1,2,0,394.54,backfill
+2026,Computer,3,4,110,False,Computer,Montana State,1316899756005412864,NCAA BIG SKY,Big Sky,6,,,,1,110,143,33,1,2,0,393.6,backfill
+2026,Computer,3,4,111,False,Computer,Grambling State,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,12,,,,1,111,96,-15,1,2,0,388.3,backfill
+2026,Computer,3,4,112,False,Computer,Utah State,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,5,,,,1,112,87,-25,1,2,0,385.1,backfill
+2026,Computer,3,4,113,False,Computer,Miami,1331774915392577536,NCAA ACC,ACC,9,,,,1,113,80,-33,1,2,0,375.5,backfill
+2026,Computer,3,4,114,False,Computer,Duke,1331774915392577536,NCAA ACC,ACC,7,,,,1,114,91,-23,1,2,0,369.0,backfill
+2026,Computer,3,4,115,False,Computer,Central Michigan,1331774454493122560,NCAA WILD,Wild,4,,,,1,115,155,40,1,2,0,368.76,backfill
+2026,Computer,3,4,116,False,Computer,Morehead State,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,8,,,,1,116,109,-7,1,2,0,366.6,backfill
+2026,Computer,3,4,117,False,Computer,Rutgers,1331775206619885568,NCAA BIG EAST & CO.,Big East,1,,,,1,117,115,-2,1,2,0,364.9,backfill
+2026,Computer,3,4,118,False,Computer,Nevada,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,10,,,,1,118,138,20,1,2,0,363.6,backfill
+2026,Computer,3,4,119,False,Computer,Rhode Island,1316899756005412864,NCAA BIG SKY,Big Sky,1,,,,1,119,72,-47,1,2,0,362.74,backfill
+2026,Computer,3,4,120,False,Computer,USF,1331775206619885568,NCAA BIG EAST & CO.,Big East,10,,,,1,120,97,-23,1,2,0,359.58,backfill
+2026,Computer,3,4,121,False,Computer,Penn,1331774741488369664,NCAA IVY,Ivy,7,,,,1,121,103,-18,1,2,0,359.54,backfill
+2026,Computer,3,4,122,False,Computer,UCONN,1331775206619885568,NCAA BIG EAST & CO.,Big East,5,,,,1,122,108,-14,1,2,0,355.76,backfill
+2026,Computer,3,4,123,False,Computer,Utah,1331775106527006720,NCAA PAC 12,PAC 12,11,,,,1,123,112,-11,1,2,0,353.16,backfill
+2026,Computer,3,4,124,False,Computer,North Carolina,1331774915392577536,NCAA ACC,ACC,2,,,,1,124,147,23,1,2,0,352.04,backfill
+2026,Computer,3,4,125,False,Computer,Bethune - Cookman,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,9,,,,1,125,100,-25,1,2,0,351.04,backfill
+2026,Computer,3,4,126,False,Computer,Princeton,1331774741488369664,NCAA IVY,Ivy,10,,,,1,126,105,-21,1,2,0,349.78,backfill
+2026,Computer,3,4,127,False,Computer,Wyoming,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,3,,,,1,127,165,38,1,2,0,345.88,backfill
+2026,Computer,3,4,128,False,Computer,Villanova,1316899756005412864,NCAA BIG SKY,Big Sky,2,,,,1,128,152,24,1,2,0,343.72,backfill
+2026,Computer,3,4,129,False,Computer,Washington,1331775106527006720,NCAA PAC 12,PAC 12,6,,,,1,129,120,-9,1,2,0,343.6,backfill
+2026,Computer,3,4,130,False,Computer,Tuskegee,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,11,,,,1,130,170,40,1,2,0,335.78,backfill
+2026,Computer,3,4,131,False,Computer,Wisconsin,1316899936696016896,NCAA BIG 10,Big 10,6,,,,1,131,104,-27,1,2,0,335.32,backfill
+2026,Computer,3,4,132,False,Computer,Virginia Tech,1331774915392577536,NCAA ACC,ACC,4,,,,1,132,158,26,1,2,0,334.66,backfill
+2026,Computer,3,4,133,False,Computer,Arkansas,1331775170712444928,NCAA SEC,SEC,12,,,,1,133,144,11,1,2,0,333.26,backfill
+2026,Computer,3,4,134,False,Computer,Howard,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,6,,,,1,134,159,25,1,2,0,331.64,backfill
+2026,Computer,3,4,135,False,Computer,Stanford,1331775106527006720,NCAA PAC 12,PAC 12,5,,,,1,135,169,34,1,2,0,325.2,backfill
+2026,Computer,3,4,136,False,Computer,New Mexico,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,9,,,,1,136,114,-22,1,2,0,323.18,backfill
+2026,Computer,3,4,137,False,Computer,Butler,1331774804222545920,NCAA PIONEER,Pioneer,4,,,,1,137,166,29,1,2,0,320.24,backfill
+2026,Computer,3,4,138,False,Computer,Vanderbilt,1331775170712444928,NCAA SEC,SEC,9,,,,1,138,149,11,1,2,0,313.66,backfill
+2026,Computer,3,4,139,False,Computer,Tennessee State,1331774804222545920,NCAA PIONEER,Pioneer,5,,,,1,139,121,-18,1,2,0,310.84,backfill
+2026,Computer,3,4,140,False,Computer,North Dakota State,1331774454493122560,NCAA WILD,Wild,3,,,,1,140,116,-24,1,2,0,303.14,backfill
+2026,Computer,3,4,141,False,Computer,Air Force,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,4,,,,1,141,124,-17,1,2,0,296.22,backfill
+2026,Computer,3,4,142,False,Computer,Alabama A&M,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,2,,,,1,142,122,-20,1,2,0,292.08,backfill
+2026,Computer,3,4,143,False,Computer,Indiana,1316899936696016896,NCAA BIG 10,Big 10,8,,,,1,143,118,-25,1,2,0,289.74,backfill
+2026,Computer,3,4,144,False,Computer,Central Arkansas,1331774454493122560,NCAA WILD,Wild,9,,,,1,144,172,28,1,2,0,282.1,backfill
+2026,Computer,3,4,145,False,Computer,Alabama,1331775170712444928,NCAA SEC,SEC,11,,,,1,145,125,-20,1,2,0,274.06,backfill
+2026,Computer,3,4,146,False,Computer,Jacksonville State,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,9,,,,1,146,126,-20,1,2,0,260.08,backfill
+2026,Computer,3,4,147,False,Computer,Maine,1316899756005412864,NCAA BIG SKY,Big Sky,11,,,,1,147,127,-20,1,2,0,232.9,backfill
+2026,Computer,3,4,148,False,Computer,Jackson State,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,10,,,,1,148,132,-16,0,3,0,380.94,backfill
+2026,Computer,3,4,149,False,Computer,Citadel,1331774454493122560,NCAA WILD,Wild,8,,,,1,149,133,-16,0,3,0,377.8,backfill
+2026,Computer,3,4,150,False,Computer,Boston College,1331774915392577536,NCAA ACC,ACC,8,,,,1,150,135,-15,0,3,0,372.3,backfill
+2026,Computer,3,4,151,False,Computer,Tennessee,1331775170712444928,NCAA SEC,SEC,3,,,,1,151,148,-3,0,3,0,364.8,backfill
+2026,Computer,3,4,152,False,Computer,North Texas,1331774695346823168,NCAA USA,CUSA,2,,,,1,152,139,-13,0,3,0,362.4,backfill
+2026,Computer,3,4,153,False,Computer,Louisville,1331774915392577536,NCAA ACC,ACC,11,,,,1,153,141,-12,0,3,0,360.88,backfill
+2026,Computer,3,4,154,False,Computer,Tulane,1331774846710849536,NCAA SUN BELT,Sun Belt,3,,,,1,154,140,-14,0,3,0,360.4,backfill
+2026,Computer,3,4,155,False,Computer,Holy Cross,1331774804222545920,NCAA PIONEER,Pioneer,2,,,,1,155,150,-5,0,3,0,359.6,backfill
+2026,Computer,3,4,156,False,Computer,Wofford,1331774804222545920,NCAA PIONEER,Pioneer,1,,,,1,156,146,-10,0,3,0,357.94,backfill
+2026,Computer,3,4,157,False,Computer,Western Kentucky,1331774695346823168,NCAA USA,CUSA,6,,,,1,157,145,-12,0,3,0,349.84,backfill
+2026,Computer,3,4,158,False,Computer,Eastern Kentucky,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,5,,,,1,158,142,-16,0,3,0,345.9,backfill
+2026,Computer,3,4,159,False,Computer,Bucknell,1331774741488369664,NCAA IVY,Ivy,3,,,,1,159,156,-3,0,3,0,338.5,backfill
+2026,Computer,3,4,160,False,Computer,Troy,1331774695346823168,NCAA USA,CUSA,1,,,,1,160,151,-9,0,3,0,335.44,backfill
+2026,Computer,3,4,161,False,Computer,Ole Miss,1331775170712444928,NCAA SEC,SEC,5,,,,1,161,161,0,0,3,0,324.3,backfill
+2026,Computer,3,4,162,False,Computer,Oklahoma State,1331774880181399552,NCAA BIG 12,Big 12,12,,,,1,162,153,-9,0,3,0,324.28,backfill
+2026,Computer,3,4,163,False,Computer,Texas Tech,1331774880181399552,NCAA BIG 12,Big 12,1,,,,1,163,137,-26,0,3,0,322.94,backfill
+2026,Computer,3,4,164,False,Computer,Harvard,1331774741488369664,NCAA IVY,Ivy,2,,,,1,164,167,3,0,3,0,322.14,backfill
+2026,Computer,3,4,165,False,Computer,Kennesaw State,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,3,,,,1,165,154,-11,0,3,0,321.56,backfill
+2026,Computer,3,4,166,False,Computer,Dayton,1331774804222545920,NCAA PIONEER,Pioneer,7,,,,1,166,164,-2,0,3,0,309.4,backfill
+2026,Computer,3,4,167,False,Computer,San Jose State,1331774454493122560,NCAA WILD,Wild,7,,,,1,167,163,-4,0,3,0,304.28,backfill
+2026,Computer,3,4,168,False,Computer,Rice,1331774846710849536,NCAA SUN BELT,Sun Belt,4,,,,1,168,157,-11,0,3,0,302.38,backfill
+2026,Computer,3,4,169,False,Computer,Arizona,1331775106527006720,NCAA PAC 12,PAC 12,1,,,,1,169,171,2,0,3,0,301.92,backfill
+2026,Computer,3,4,170,False,Computer,Boise State,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,2,,,,1,170,175,5,0,3,0,290.24,backfill
+2026,Computer,3,4,171,False,Computer,Michigan State,1316899936696016896,NCAA BIG 10,Big 10,4,,,,1,171,160,-11,0,3,0,288.8,backfill
+2026,Computer,3,4,172,False,Computer,Florida,1331775170712444928,NCAA SEC,SEC,1,,,,1,172,162,-10,0,3,0,272.8,backfill
+2026,Computer,3,4,173,False,Computer,Louisiana,1331774695346823168,NCAA USA,CUSA,11,,,,1,173,168,-5,0,3,0,269.52,backfill
+2026,Computer,3,4,174,False,Computer,Northwestern,1316899936696016896,NCAA BIG 10,Big 10,3,,,,1,174,178,4,0,3,0,268.16,backfill
+2026,Computer,3,4,175,False,Computer,UAB,1331774846710849536,NCAA SUN BELT,Sun Belt,10,,,,1,175,173,-2,0,3,0,262.6,backfill
+2026,Computer,3,4,176,False,Computer,Kansas,1331774880181399552,NCAA BIG 12,Big 12,10,,,,1,176,174,-2,0,3,0,237.86,backfill
+2026,Computer,3,4,177,False,Computer,Oregon,1331775106527006720,NCAA PAC 12,PAC 12,9,,,,1,177,177,0,0,3,0,231.78,backfill
+2026,Computer,3,4,178,False,Computer,Maryland,1331775206619885568,NCAA BIG EAST & CO.,Big East,2,,,,1,178,176,-2,0,3,0,215.76,backfill
+2026,Computer,3,4,179,False,Computer,Northern Iowa,1316899756005412864,NCAA BIG SKY,Big Sky,10,,,,1,179,179,0,0,3,0,199.18,backfill
+2026,Computer,3,4,180,False,Computer,Weber State,1316899756005412864,NCAA BIG SKY,Big Sky,9,,,,1,180,180,0,0,3,0,108.2,backfill
+2026,Computer,4,5,1,False,Computer,Hawaii,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,1,,,,1,1,2,1,4,0,0,738.86,backfill
+2026,Computer,4,5,2,False,Computer,Auburn,1331775170712444928,NCAA SEC,SEC,4,,,,1,2,5,3,4,0,0,702.28,backfill
+2026,Computer,4,5,3,False,Computer,Middle Tennessee State,1331774695346823168,NCAA USA,CUSA,7,,,,1,3,10,7,4,0,0,696.92,backfill
+2026,Computer,4,5,4,False,Computer,William & Mary,1316899756005412864,NCAA BIG SKY,Big Sky,3,,,,1,4,6,2,4,0,0,685.2,backfill
+2026,Computer,4,5,5,False,Computer,Youngstown State,1316899756005412864,NCAA BIG SKY,Big Sky,12,,,,1,5,9,4,4,0,0,671.46,backfill
+2026,Computer,4,5,6,False,Computer,Washington State,1331775106527006720,NCAA PAC 12,PAC 12,4,,,,1,6,13,7,4,0,0,667.68,backfill
+2026,Computer,4,5,7,False,Computer,Kansas State,1331774880181399552,NCAA BIG 12,Big 12,7,,,,1,7,7,0,4,0,0,657.38,backfill
+2026,Computer,4,5,8,False,Computer,Old Dominion,1331774454493122560,NCAA WILD,Wild,10,,,,1,8,19,11,4,0,0,636.56,backfill
+2026,Computer,4,5,9,False,Computer,Dartmouth,1331774741488369664,NCAA IVY,Ivy,11,,,,1,9,11,2,4,0,0,629.86,backfill
+2026,Computer,4,5,10,False,Computer,South Alabama,1331774695346823168,NCAA USA,CUSA,4,,,,1,10,8,-2,4,0,0,627.58,backfill
+2026,Computer,4,5,11,False,Computer,Colorado,1331775106527006720,NCAA PAC 12,PAC 12,8,,,,1,11,12,1,4,0,0,613.86,backfill
+2026,Computer,4,5,12,False,Computer,Southern Miss,1331774846710849536,NCAA SUN BELT,Sun Belt,9,,,,1,12,17,5,4,0,0,613.6,backfill
+2026,Computer,4,5,13,False,Computer,FSU,1331774915392577536,NCAA ACC,ACC,5,,,,1,13,15,2,4,0,0,609.26,backfill
+2026,Computer,4,5,14,False,Computer,South Carolina,1331775170712444928,NCAA SEC,SEC,10,,,,1,14,16,2,4,0,0,601.5,backfill
+2026,Computer,4,5,15,False,Computer,Purdue,1316899936696016896,NCAA BIG 10,Big 10,1,,,,1,15,24,9,4,0,0,599.24,backfill
+2026,Computer,4,5,16,False,Computer,Kentucky,1331775170712444928,NCAA SEC,SEC,8,,,,1,16,29,13,4,0,0,591.76,backfill
+2026,Computer,4,5,17,False,Computer,BYU,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,6,,,,1,17,14,-3,4,0,0,590.96,backfill
+2026,Computer,4,5,18,False,Computer,Campbell,1331774804222545920,NCAA PIONEER,Pioneer,8,,,,1,18,26,8,4,0,0,573.68,backfill
+2026,Computer,4,5,19,False,Computer,Pittsburgh,1331775206619885568,NCAA BIG EAST & CO.,Big East,4,,,,1,19,22,3,4,0,0,543.0,backfill
+2026,Computer,4,5,20,False,Computer,Georgetown,1331774741488369664,NCAA IVY,Ivy,5,,,,1,20,43,23,3,1,0,699.6,backfill
+2026,Computer,4,5,21,False,Computer,Baylor,1331774880181399552,NCAA BIG 12,Big 12,5,,,,1,21,3,-18,3,1,0,685.02,backfill
+2026,Computer,4,5,22,False,Computer,Minnesota,1316899936696016896,NCAA BIG 10,Big 10,7,,,,1,22,1,-21,3,1,0,674.16,backfill
+2026,Computer,4,5,23,False,Computer,Arizona State,1331775106527006720,NCAA PAC 12,PAC 12,7,,,,1,23,35,12,3,1,0,667.72,backfill
+2026,Computer,4,5,24,False,Computer,Syracuse,1331775206619885568,NCAA BIG EAST & CO.,Big East,7,,,,1,24,38,14,3,1,0,667.24,backfill
+2026,Computer,4,5,25,False,Computer,West Virginia,1331774880181399552,NCAA BIG 12,Big 12,8,,,,1,25,42,17,3,1,0,621.26,backfill
+2026,Computer,4,5,26,False,Computer,Iowa,1316899936696016896,NCAA BIG 10,Big 10,11,,,,1,26,59,33,3,1,0,620.14,backfill
+2026,Computer,4,5,27,False,Computer,Clemson,1331774915392577536,NCAA ACC,ACC,12,,,,1,27,4,-23,3,1,0,619.08,backfill
+2026,Computer,4,5,28,False,Computer,Louisiana Tech,1331774846710849536,NCAA SUN BELT,Sun Belt,11,,,,1,28,37,9,3,1,0,617.46,backfill
+2026,Computer,4,5,29,False,Computer,Southern,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,4,,,,1,29,50,21,3,1,0,616.08,backfill
+2026,Computer,4,5,30,False,Computer,Arkansas State,1331774695346823168,NCAA USA,CUSA,8,,,,1,30,20,-10,3,1,0,603.84,backfill
+2026,Computer,4,5,31,False,Computer,LSU,1331775170712444928,NCAA SEC,SEC,2,,,,1,31,41,10,3,1,0,601.26,backfill
+2026,Computer,4,5,32,False,Computer,Temple,1331774846710849536,NCAA SUN BELT,Sun Belt,1,,,,1,32,55,23,3,1,0,598.44,backfill
+2026,Computer,4,5,33,False,Computer,Colorado State,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,8,,,,1,33,54,21,3,1,0,595.24,backfill
+2026,Computer,4,5,34,False,Computer,Delaware State,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,3,,,,1,34,73,39,3,1,0,594.56,backfill
+2026,Computer,4,5,35,False,Computer,Georgia State,1331774695346823168,NCAA USA,CUSA,5,,,,1,35,49,14,3,1,0,592.44,backfill
+2026,Computer,4,5,36,False,Computer,UT Martin,1331774804222545920,NCAA PIONEER,Pioneer,11,,,,1,36,52,16,3,1,0,591.46,backfill
+2026,Computer,4,5,37,False,Computer,Illinois,1316899936696016896,NCAA BIG 10,Big 10,10,,,,1,37,64,27,3,1,0,589.52,backfill
+2026,Computer,4,5,38,False,Computer,Coastal Carolina,1331775206619885568,NCAA BIG EAST & CO.,Big East,6,,,,1,38,57,19,3,1,0,587.74,backfill
+2026,Computer,4,5,39,False,Computer,Tulsa,1331774846710849536,NCAA SUN BELT,Sun Belt,6,,,,1,39,66,27,3,1,0,586.6,backfill
+2026,Computer,4,5,40,False,Computer,Virginia,1331774915392577536,NCAA ACC,ACC,1,,,,1,40,44,4,3,1,0,580.2,backfill
+2026,Computer,4,5,41,False,Computer,Belmont,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,1,,,,1,41,65,24,3,1,0,579.0,backfill
+2026,Computer,4,5,42,False,Computer,North Carolina A&T,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,1,,,,1,42,21,-21,3,1,0,577.56,backfill
+2026,Computer,4,5,43,False,Computer,Georgia Tech,1331774915392577536,NCAA ACC,ACC,3,,,,1,43,18,-25,3,1,0,570.68,backfill
+2026,Computer,4,5,44,False,Computer,Delaware,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,7,,,,1,44,23,-21,3,1,0,566.82,backfill
+2026,Computer,4,5,45,False,Computer,Eastern Washington,1316899756005412864,NCAA BIG SKY,Big Sky,4,,,,1,45,69,24,3,1,0,557.24,backfill
+2026,Computer,4,5,46,False,Computer,Cornell,1331774741488369664,NCAA IVY,Ivy,12,,,,1,46,63,17,3,1,0,541.84,backfill
+2026,Computer,4,5,47,False,Computer,Davidson,1331774804222545920,NCAA PIONEER,Pioneer,12,,,,1,47,27,-20,3,1,0,541.12,backfill
+2026,Computer,4,5,48,False,Computer,Austin Peay,1331774804222545920,NCAA PIONEER,Pioneer,9,,,,1,48,70,22,3,1,0,537.9,backfill
+2026,Computer,4,5,49,False,Computer,Brown,1331774741488369664,NCAA IVY,Ivy,1,,,,1,49,77,28,3,1,0,537.4,backfill
+2026,Computer,4,5,50,False,Computer,UNC Charlotte,1331774454493122560,NCAA WILD,Wild,12,,,,1,50,79,29,3,1,0,522.52,backfill
+2026,Computer,4,5,51,False,Computer,Columbia,1331774741488369664,NCAA IVY,Ivy,4,,,,1,51,28,-23,3,1,0,522.46,backfill
+2026,Computer,4,5,52,False,Computer,UNLV,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,11,,,,1,52,80,28,3,1,0,520.04,backfill
+2026,Computer,4,5,53,False,Computer,Monmouth,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,10,,,,1,53,85,32,3,1,0,509.08,backfill
+2026,Computer,4,5,54,False,Computer,Wichita State,1331774454493122560,NCAA WILD,Wild,5,,,,1,54,81,27,3,1,0,504.76,backfill
+2026,Computer,4,5,55,False,Computer,Louisiana Monroe,1331774695346823168,NCAA USA,CUSA,12,,,,1,55,84,29,3,1,0,499.58,backfill
+2026,Computer,4,5,56,False,Computer,Army,1331775206619885568,NCAA BIG EAST & CO.,Big East,8,,,,1,56,25,-31,3,1,0,497.62,backfill
+2026,Computer,4,5,57,False,Computer,Navy,1331775206619885568,NCAA BIG EAST & CO.,Big East,11,,,,1,57,78,21,3,1,0,494.78,backfill
+2026,Computer,4,5,58,False,Computer,Missouri,1331774880181399552,NCAA BIG 12,Big 12,3,,,,1,58,90,32,3,1,0,487.4,backfill
+2026,Computer,4,5,59,False,Computer,Penn State,1316899936696016896,NCAA BIG 10,Big 10,5,,,,1,59,31,-28,3,1,0,467.5,backfill
+2026,Computer,4,5,60,False,Computer,Texas State,1331774695346823168,NCAA USA,CUSA,9,,,,1,60,88,28,3,1,0,453.54,backfill
+2026,Computer,4,5,61,False,Computer,Richmond,1316899756005412864,NCAA BIG SKY,Big Sky,7,,,,1,61,89,28,3,1,0,449.92,backfill
+2026,Computer,4,5,62,False,Computer,South Dakota,1331774454493122560,NCAA WILD,Wild,11,,,,1,62,30,-32,3,1,0,447.42,backfill
+2026,Computer,4,5,63,False,Computer,Mississippi State,1331775170712444928,NCAA SEC,SEC,6,,,,1,63,33,-30,2,2,0,656.36,backfill
+2026,Computer,4,5,64,False,Computer,Portland State,1316899756005412864,NCAA BIG SKY,Big Sky,8,,,,1,64,34,-30,2,2,0,653.36,backfill
+2026,Computer,4,5,65,False,Computer,Montana,1331774454493122560,NCAA WILD,Wild,1,,,,1,65,32,-33,2,2,0,635.64,backfill
+2026,Computer,4,5,66,False,Computer,Chattanooga,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,4,,,,1,66,36,-30,2,2,0,611.24,backfill
+2026,Computer,4,5,67,False,Computer,North Alabama,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,11,,,,1,67,39,-28,2,2,0,603.46,backfill
+2026,Computer,4,5,68,False,Computer,ETSU,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,2,,,,1,68,46,-22,2,2,0,603.28,backfill
+2026,Computer,4,5,69,False,Computer,North Carolina Central,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,12,,,,1,69,40,-29,2,2,0,594.58,backfill
+2026,Computer,4,5,70,False,Computer,Fresno State,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,7,,,,1,70,96,26,2,2,0,591.64,backfill
+2026,Computer,4,5,71,False,Computer,Texas A&M,1331774880181399552,NCAA BIG 12,Big 12,4,,,,1,71,97,26,2,2,0,583.98,backfill
+2026,Computer,4,5,72,False,Computer,Wake Forest,1331774915392577536,NCAA ACC,ACC,6,,,,1,72,101,29,2,2,0,582.78,backfill
+2026,Computer,4,5,73,False,Computer,Michigan,1316899936696016896,NCAA BIG 10,Big 10,12,,,,1,73,103,30,2,2,0,577.82,backfill
+2026,Computer,4,5,74,False,Computer,USC,1331775106527006720,NCAA PAC 12,PAC 12,2,,,,1,74,93,19,2,2,0,571.88,backfill
+2026,Computer,4,5,75,False,Computer,Murray State,1331774804222545920,NCAA PIONEER,Pioneer,3,,,,1,75,45,-30,2,2,0,570.14,backfill
+2026,Computer,4,5,76,False,Computer,Memphis,1331774846710849536,NCAA SUN BELT,Sun Belt,8,,,,1,76,48,-28,2,2,0,568.68,backfill
+2026,Computer,4,5,77,False,Computer,UCLA,1331775106527006720,NCAA PAC 12,PAC 12,12,,,,1,77,51,-26,2,2,0,565.3,backfill
+2026,Computer,4,5,78,False,Computer,Ohio State,1316899936696016896,NCAA BIG 10,Big 10,9,,,,1,78,95,17,2,2,0,563.48,backfill
+2026,Computer,4,5,79,False,Computer,Florida A&M,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,5,,,,1,79,47,-32,2,2,0,562.92,backfill
+2026,Computer,4,5,80,False,Computer,UCF,1331775206619885568,NCAA BIG EAST & CO.,Big East,9,,,,1,80,102,22,2,2,0,560.82,backfill
+2026,Computer,4,5,81,False,Computer,Colgate,1331774741488369664,NCAA IVY,Ivy,8,,,,1,81,107,26,2,2,0,559.18,backfill
+2026,Computer,4,5,82,False,Computer,Stony Brook,1316899756005412864,NCAA BIG SKY,Big Sky,5,,,,1,82,56,-26,2,2,0,551.64,backfill
+2026,Computer,4,5,83,False,Computer,NC State,1331774915392577536,NCAA ACC,ACC,10,,,,1,83,53,-30,2,2,0,547.3,backfill
+2026,Computer,4,5,84,False,Computer,UTSA,1331774846710849536,NCAA SUN BELT,Sun Belt,12,,,,1,84,72,-12,2,2,0,543.88,backfill
+2026,Computer,4,5,85,False,Computer,Oregon State,1331775106527006720,NCAA PAC 12,PAC 12,3,,,,1,85,60,-25,2,2,0,540.86,backfill
+2026,Computer,4,5,86,False,Computer,Montana State,1316899756005412864,NCAA BIG SKY,Big Sky,6,,,,1,86,110,24,2,2,0,538.68,backfill
+2026,Computer,4,5,87,False,Computer,James Madison,1331774454493122560,NCAA WILD,Wild,2,,,,1,87,75,-12,2,2,0,535.96,backfill
+2026,Computer,4,5,88,False,Computer,UCONN,1331775206619885568,NCAA BIG EAST & CO.,Big East,5,,,,1,88,122,34,2,2,0,532.84,backfill
+2026,Computer,4,5,89,False,Computer,Georgia Southern,1331774846710849536,NCAA SUN BELT,Sun Belt,7,,,,1,89,62,-27,2,2,0,528.14,backfill
+2026,Computer,4,5,90,False,Computer,Charleston Southern,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,6,,,,1,90,106,16,2,2,0,525.92,backfill
+2026,Computer,4,5,91,False,Computer,Furman,1331774804222545920,NCAA PIONEER,Pioneer,10,,,,1,91,67,-24,2,2,0,523.62,backfill
+2026,Computer,4,5,92,False,Computer,Alcorn State,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,8,,,,1,92,58,-34,2,2,0,520.74,backfill
+2026,Computer,4,5,93,False,Computer,SE Missouri State,1331774804222545920,NCAA PIONEER,Pioneer,6,,,,1,93,61,-32,2,2,0,519.86,backfill
+2026,Computer,4,5,94,False,Computer,North Carolina,1331774915392577536,NCAA ACC,ACC,2,,,,1,94,124,30,2,2,0,513.7,backfill
+2026,Computer,4,5,95,False,Computer,Lehigh,1331774741488369664,NCAA IVY,Ivy,6,,,,1,95,71,-24,2,2,0,511.4,backfill
+2026,Computer,4,5,96,False,Computer,Grambling State,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,12,,,,1,96,111,15,2,2,0,509.7,backfill
+2026,Computer,4,5,97,False,Computer,Nevada,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,10,,,,1,97,118,21,2,2,0,506.02,backfill
+2026,Computer,4,5,98,False,Computer,San Diego State,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,12,,,,1,98,68,-30,2,2,0,505.52,backfill
+2026,Computer,4,5,99,False,Computer,Stanford,1331775106527006720,NCAA PAC 12,PAC 12,5,,,,1,99,135,36,2,2,0,503.56,backfill
+2026,Computer,4,5,100,False,Computer,Texas,1331774880181399552,NCAA BIG 12,Big 12,6,,,,1,100,82,-18,2,2,0,494.08,backfill
+2026,Computer,4,5,101,False,Computer,Georgia,1331775170712444928,NCAA SEC,SEC,7,,,,1,101,76,-25,2,2,0,491.34,backfill
+2026,Computer,4,5,102,False,Computer,Butler,1331774804222545920,NCAA PIONEER,Pioneer,4,,,,1,102,137,35,2,2,0,481.0,backfill
+2026,Computer,4,5,103,False,Computer,Virginia Tech,1331774915392577536,NCAA ACC,ACC,4,,,,1,103,132,29,2,2,0,478.24,backfill
+2026,Computer,4,5,104,False,Computer,Bethune - Cookman,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,9,,,,1,104,125,21,2,2,0,477.7,backfill
+2026,Computer,4,5,105,False,Computer,North Dakota State,1331774454493122560,NCAA WILD,Wild,3,,,,1,105,140,35,2,2,0,474.86,backfill
+2026,Computer,4,5,106,False,Computer,Mississippi Valley State,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,7,,,,1,106,74,-32,2,2,0,474.48,backfill
+2026,Computer,4,5,107,False,Computer,Villanova,1316899756005412864,NCAA BIG SKY,Big Sky,2,,,,1,107,128,21,2,2,0,472.1,backfill
+2026,Computer,4,5,108,False,Computer,Tuskegee,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,11,,,,1,108,130,22,2,2,0,470.8,backfill
+2026,Computer,4,5,109,False,Computer,Oklahoma,1331774880181399552,NCAA BIG 12,Big 12,9,,,,1,109,91,-18,2,2,0,469.46,backfill
+2026,Computer,4,5,110,False,Computer,Marshall,1331774846710849536,NCAA SUN BELT,Sun Belt,5,,,,1,110,87,-23,2,2,0,469.12,backfill
+2026,Computer,4,5,111,False,Computer,Iowa State,1331774880181399552,NCAA BIG 12,Big 12,2,,,,1,111,83,-28,2,2,0,458.54,backfill
+2026,Computer,4,5,112,False,Computer,Howard,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,6,,,,1,112,134,22,2,2,0,458.08,backfill
+2026,Computer,4,5,113,False,Computer,Washington,1331775106527006720,NCAA PAC 12,PAC 12,6,,,,1,113,129,16,2,2,0,449.18,backfill
+2026,Computer,4,5,114,False,Computer,Florida International,1331774695346823168,NCAA USA,CUSA,10,,,,1,114,86,-28,2,2,0,423.68,backfill
+2026,Computer,4,5,115,False,Computer,Central Arkansas,1331774454493122560,NCAA WILD,Wild,9,,,,1,115,144,29,2,2,0,417.2,backfill
+2026,Computer,4,5,116,False,Computer,Jacksonville State,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,9,,,,1,116,146,30,2,2,0,410.2,backfill
+2026,Computer,4,5,117,False,Computer,California,1331775106527006720,NCAA PAC 12,PAC 12,10,,,,1,117,92,-25,2,2,0,361.22,backfill
+2026,Computer,4,5,118,False,Computer,Nebraska,1316899936696016896,NCAA BIG 10,Big 10,2,,,,1,118,100,-18,1,3,0,561.34,backfill
+2026,Computer,4,5,119,False,Computer,Eastern Michigan,1331774454493122560,NCAA WILD,Wild,6,,,,1,119,94,-25,1,3,0,551.74,backfill
+2026,Computer,4,5,120,False,Computer,Citadel,1331774454493122560,NCAA WILD,Wild,8,,,,1,120,149,29,1,3,0,541.78,backfill
+2026,Computer,4,5,121,False,Computer,Notre Dame,1331775206619885568,NCAA BIG EAST & CO.,Big East,12,,,,1,121,109,-12,1,3,0,536.76,backfill
+2026,Computer,4,5,122,False,Computer,Florida Atlantic,1331774695346823168,NCAA USA,CUSA,3,,,,1,122,98,-24,1,3,0,534.62,backfill
+2026,Computer,4,5,123,False,Computer,TCU,1331774880181399552,NCAA BIG 12,Big 12,11,,,,1,123,99,-24,1,3,0,530.18,backfill
+2026,Computer,4,5,124,False,Computer,Tennessee,1331775170712444928,NCAA SEC,SEC,3,,,,1,124,151,27,1,3,0,528.48,backfill
+2026,Computer,4,5,125,False,Computer,South Dakota State,1331775206619885568,NCAA BIG EAST & CO.,Big East,3,,,,1,125,104,-21,1,3,0,528.0,backfill
+2026,Computer,4,5,126,False,Computer,Duke,1331774915392577536,NCAA ACC,ACC,7,,,,1,126,114,-12,1,3,0,517.5,backfill
+2026,Computer,4,5,127,False,Computer,UTEP,1331774846710849536,NCAA SUN BELT,Sun Belt,2,,,,1,127,105,-22,1,3,0,516.38,backfill
+2026,Computer,4,5,128,False,Computer,Yale,1331774741488369664,NCAA IVY,Ivy,9,,,,1,128,108,-20,1,3,0,511.42,backfill
+2026,Computer,4,5,129,False,Computer,Rutgers,1331775206619885568,NCAA BIG EAST & CO.,Big East,1,,,,1,129,117,-12,1,3,0,505.9,backfill
+2026,Computer,4,5,130,False,Computer,Rhode Island,1316899756005412864,NCAA BIG SKY,Big Sky,1,,,,1,130,119,-11,1,3,0,505.3,backfill
+2026,Computer,4,5,131,False,Computer,Tulane,1331774846710849536,NCAA SUN BELT,Sun Belt,3,,,,1,131,154,23,1,3,0,504.56,backfill
+2026,Computer,4,5,132,False,Computer,Boston College,1331774915392577536,NCAA ACC,ACC,8,,,,1,132,150,18,1,3,0,502.92,backfill
+2026,Computer,4,5,133,False,Computer,Utah State,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,5,,,,1,133,112,-21,1,3,0,494.58,backfill
+2026,Computer,4,5,134,False,Computer,Troy,1331774695346823168,NCAA USA,CUSA,1,,,,1,134,160,26,1,3,0,493.66,backfill
+2026,Computer,4,5,135,False,Computer,Ole Miss,1331775170712444928,NCAA SEC,SEC,5,,,,1,135,161,26,1,3,0,492.06,backfill
+2026,Computer,4,5,136,False,Computer,Morehead State,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,8,,,,1,136,116,-20,1,3,0,488.3,backfill
+2026,Computer,4,5,137,False,Computer,Miami,1331774915392577536,NCAA ACC,ACC,9,,,,1,137,113,-24,1,3,0,487.18,backfill
+2026,Computer,4,5,138,False,Computer,Holy Cross,1331774804222545920,NCAA PIONEER,Pioneer,2,,,,1,138,155,17,1,3,0,480.54,backfill
+2026,Computer,4,5,139,False,Computer,Central Michigan,1331774454493122560,NCAA WILD,Wild,4,,,,1,139,115,-24,1,3,0,472.92,backfill
+2026,Computer,4,5,140,False,Computer,Eastern Kentucky,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,5,,,,1,140,158,18,1,3,0,470.48,backfill
+2026,Computer,4,5,141,False,Computer,Utah,1331775106527006720,NCAA PAC 12,PAC 12,11,,,,1,141,123,-18,1,3,0,464.78,backfill
+2026,Computer,4,5,142,False,Computer,USF,1331775206619885568,NCAA BIG EAST & CO.,Big East,10,,,,1,142,120,-22,1,3,0,464.38,backfill
+2026,Computer,4,5,143,False,Computer,Texas Tech,1331774880181399552,NCAA BIG 12,Big 12,1,,,,1,143,163,20,1,3,0,462.96,backfill
+2026,Computer,4,5,144,False,Computer,Dayton,1331774804222545920,NCAA PIONEER,Pioneer,7,,,,1,144,166,22,1,3,0,461.16,backfill
+2026,Computer,4,5,145,False,Computer,Princeton,1331774741488369664,NCAA IVY,Ivy,10,,,,1,145,126,-19,1,3,0,457.14,backfill
+2026,Computer,4,5,146,False,Computer,Kennesaw State,1331774544905510912,NCAA OHIO VALLEY,Ohio Valley,3,,,,1,146,165,19,1,3,0,454.44,backfill
+2026,Computer,4,5,147,False,Computer,Wyoming,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,3,,,,1,147,127,-20,1,3,0,452.8,backfill
+2026,Computer,4,5,148,False,Computer,Arkansas,1331775170712444928,NCAA SEC,SEC,12,,,,1,148,133,-15,1,3,0,451.46,backfill
+2026,Computer,4,5,149,False,Computer,Tennessee State,1331774804222545920,NCAA PIONEER,Pioneer,5,,,,1,149,139,-10,1,3,0,438.86,backfill
+2026,Computer,4,5,150,False,Computer,Harvard,1331774741488369664,NCAA IVY,Ivy,2,,,,1,150,164,14,1,3,0,438.82,backfill
+2026,Computer,4,5,151,False,Computer,Penn,1331774741488369664,NCAA IVY,Ivy,7,,,,1,151,121,-30,1,3,0,436.04,backfill
+2026,Computer,4,5,152,False,Computer,Wisconsin,1316899936696016896,NCAA BIG 10,Big 10,6,,,,1,152,131,-21,1,3,0,432.52,backfill
+2026,Computer,4,5,153,False,Computer,Rice,1331774846710849536,NCAA SUN BELT,Sun Belt,4,,,,1,153,168,15,1,3,0,426.76,backfill
+2026,Computer,4,5,154,False,Computer,New Mexico,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,9,,,,1,154,136,-18,1,3,0,416.86,backfill
+2026,Computer,4,5,155,False,Computer,Air Force,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,4,,,,1,155,141,-14,1,3,0,390.68,backfill
+2026,Computer,4,5,156,False,Computer,Indiana,1316899936696016896,NCAA BIG 10,Big 10,8,,,,1,156,143,-13,1,3,0,380.82,backfill
+2026,Computer,4,5,157,False,Computer,Vanderbilt,1331775170712444928,NCAA SEC,SEC,9,,,,1,157,138,-19,1,3,0,379.08,backfill
+2026,Computer,4,5,158,False,Computer,Alabama,1331775170712444928,NCAA SEC,SEC,11,,,,1,158,145,-13,1,3,0,377.04,backfill
+2026,Computer,4,5,159,False,Computer,Northwestern,1316899936696016896,NCAA BIG 10,Big 10,3,,,,1,159,174,15,1,3,0,372.04,backfill
+2026,Computer,4,5,160,False,Computer,Alabama A&M,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,2,,,,1,160,142,-18,1,3,0,366.46,backfill
+2026,Computer,4,5,161,False,Computer,Kansas,1331774880181399552,NCAA BIG 12,Big 12,10,,,,1,161,176,15,1,3,0,349.58,backfill
+2026,Computer,4,5,162,False,Computer,Maine,1316899756005412864,NCAA BIG SKY,Big Sky,11,,,,1,162,147,-15,1,3,0,340.06,backfill
+2026,Computer,4,5,163,False,Computer,Louisville,1331774915392577536,NCAA ACC,ACC,11,,,,1,163,153,-10,0,4,0,511.16,backfill
+2026,Computer,4,5,164,False,Computer,Jackson State,1331774630620332032,NCAA HISTORICALLY BLACK,HBCU,10,,,,1,164,148,-16,0,4,0,504.14,backfill
+2026,Computer,4,5,165,False,Computer,Bucknell,1331774741488369664,NCAA IVY,Ivy,3,,,,1,165,159,-6,0,4,0,499.98,backfill
+2026,Computer,4,5,166,False,Computer,Western Kentucky,1331774695346823168,NCAA USA,CUSA,6,,,,1,166,157,-9,0,4,0,491.76,backfill
+2026,Computer,4,5,167,False,Computer,North Texas,1331774695346823168,NCAA USA,CUSA,2,,,,1,167,152,-15,0,4,0,461.5,backfill
+2026,Computer,4,5,168,False,Computer,Wofford,1331774804222545920,NCAA PIONEER,Pioneer,1,,,,1,168,156,-12,0,4,0,456.3,backfill
+2026,Computer,4,5,169,False,Computer,Oklahoma State,1331774880181399552,NCAA BIG 12,Big 12,12,,,,1,169,162,-7,0,4,0,434.34,backfill
+2026,Computer,4,5,170,False,Computer,Arizona,1331775106527006720,NCAA PAC 12,PAC 12,1,,,,1,170,169,-1,0,4,0,418.14,backfill
+2026,Computer,4,5,171,False,Computer,Boise State,1331774599196585984,NCAA MOUNTAIN WEST,Mountain West,2,,,,1,171,170,-1,0,4,0,390.72,backfill
+2026,Computer,4,5,172,False,Computer,San Jose State,1331774454493122560,NCAA WILD,Wild,7,,,,1,172,167,-5,0,4,0,386.16,backfill
+2026,Computer,4,5,173,False,Computer,Michigan State,1316899936696016896,NCAA BIG 10,Big 10,4,,,,1,173,171,-2,0,4,0,383.98,backfill
+2026,Computer,4,5,174,False,Computer,Florida,1331775170712444928,NCAA SEC,SEC,1,,,,1,174,172,-2,0,4,0,360.42,backfill
+2026,Computer,4,5,175,False,Computer,Louisiana,1331774695346823168,NCAA USA,CUSA,11,,,,1,175,173,-2,0,4,0,358.42,backfill
+2026,Computer,4,5,176,False,Computer,UAB,1331774846710849536,NCAA SUN BELT,Sun Belt,10,,,,1,176,175,-1,0,4,0,333.26,backfill
+2026,Computer,4,5,177,False,Computer,Maryland,1331775206619885568,NCAA BIG EAST & CO.,Big East,2,,,,1,177,178,1,0,4,0,331.42,backfill
+2026,Computer,4,5,178,False,Computer,Oregon,1331775106527006720,NCAA PAC 12,PAC 12,9,,,,1,178,177,-1,0,4,0,328.02,backfill
+2026,Computer,4,5,179,False,Computer,Northern Iowa,1316899756005412864,NCAA BIG SKY,Big Sky,10,,,,1,179,179,0,0,4,0,264.7,backfill
+2026,Computer,4,5,180,False,Computer,Weber State,1316899756005412864,NCAA BIG SKY,Big Sky,9,,,,1,180,180,0,0,4,0,192.32,backfill

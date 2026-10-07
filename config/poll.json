@@ -1,0 +1,83 @@
+{
+  "_about": "Poll engine settings (scripts/poll_*.py). League-specific values live here, not in code. Times are local to `timezone`.",
+  "timezone": "America/New_York",
+  "last_regular_week": 11,
+  "polls": {
+    "Top25": {
+      "label": "Top 25",
+      "size": 25,
+      "points": "linear",
+      "first_week": 1,
+      "last_week": 11,
+      "deadline": {
+        "weekday": "Saturday",
+        "time": "12:00"
+      },
+      "pool": "all"
+    },
+    "Seeding": {
+      "label": "Playoff Seeding",
+      "size": 32,
+      "points": "linear",
+      "first_week": 12,
+      "last_week": 12,
+      "deadline": {
+        "weekday": "Thursday",
+        "time": "12:00"
+      },
+      "pool": "playoff_field"
+    }
+  },
+  "_points": "'linear' = size, size-1, ... 1 for ranks 1..size. Or an explicit list, e.g. [25,24,23,...].",
+  "tiebreak": [
+    "points",
+    "first_place_votes",
+    "computer_rank"
+  ],
+  "_tiebreak": "Applied in order; teams still exactly tied after the last one share a rank (shown T-12).",
+  "computer_ballot": {
+    "enabled": true,
+    "voter_id": "computer",
+    "voter_name": "Computer (W-L, PF)",
+    "weight": 1
+  },
+  "role_weights": {
+    "panel": 1
+  },
+  "ballots": {
+    "require_full": true,
+    "allow_own_team": true,
+    "commit_raw": false,
+    "_commit_raw": "Repo and site are public; ballots have never been public. Keep false: the Sheet is the record of ballots, only aggregates are committed.",
+    "outlier_spots": 8,
+    "_outlier_spots": "Private flag when a voter ranks a team this many spots above/below consensus (unranked counts as size+1)."
+  },
+  "intake": {
+    "source_env": "POLL_BALLOTS_CSV_URL",
+    "_source_env": "Secret: the Google Sheet response tab 'Publish to web' CSV link. Local files can also be passed with --file.",
+    "columns": {
+      "timestamp": "Timestamp",
+      "voter": "Voter",
+      "week": "Week",
+      "poll": "Poll",
+      "email": "Email Address"
+    },
+    "rank_column_regex": "^\\s*(?:rank\\s*)?#?\\s*(\\d+)\\s*$",
+    "timestamp_format": null
+  },
+  "voter_alerts": {
+    "consecutive_misses": 2
+  },
+  "fan_poll": {
+    "enabled": false,
+    "min_votes": 20,
+    "_note": "Phase 2: Discord native poll. Needs a Discord bot token (REST only, no hosting) to read results. Published only when distinct voters >= min_votes."
+  },
+  "publish": {
+    "min_human_ballots": 3,
+    "_note": "Below this the league post is held and lm-private-data gets an alert (computer-only results are not posted as 'the poll').",
+    "page_url": "https://wrightc214.github.io/NCAA180-Sleeper/reports/poll.html",
+    "post_to_league": false,
+    "_post_to_league": "false = the league post goes to lm-private-data as a preview only. Flip to true once the panel and form are live."
+  }
+}
