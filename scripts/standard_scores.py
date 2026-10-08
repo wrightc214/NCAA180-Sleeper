@@ -5,14 +5,15 @@ settings. Official Sleeper numbers are never overwritten; this script derives:
 
   data/ScoresStandard_Historic.csv  Year, LeagueID, LeagueName, Week, RosterID,
                                     PointsOfficial, PointsStandard, Delta  (every team-week)
-  data/ScoringFlags_Historic.csv    footnotes: results that read differently under standard
-                                    scoring (Type = Game | DivisionTitle | BowlLine)
+  data/ScoringFlags_Historic.csv    footnotes (Type = Game | DivisionTitle)
 
 Rules (Chris, 2026-10-08):
-  - Scores and regular-season records shown on standard scoring; a flipped game is footnoted
-    with its official result.
-  - Division titles, CCG/playoff/bowl/NIT appearances and results stay as actually played,
-    footnoted where standard standings disagree. Draft orders stay as they happened.
+  - Scores are SHOWN on standard scoring ("as they should have been").
+  - OUTCOMES STAND as decided at game time: W/L, records, division titles, CCG/playoff/bowl/NIT
+    appearances and results, draft orders. Where the standard score would have reversed a
+    game, the game keeps its official W/L and gets a footnote (so a W can show the lower
+    standard score). A division title decided on points that standard points would reverse
+    is footnoted the same way.
   - Prestige and bot rankings use the matches actually played (real participants) with
     standard scores.
   - Current season: official Sleeper scores; it is restated when it becomes history.
@@ -107,7 +108,8 @@ def main():
                           Opponent=nm(r.Year, r.LeagueName, r.OpponentRosterID), Type="Game",
                           Official=f"{r.ResO} {float(r.PointsFor):.2f}-{float(r.PointsAgainst):.2f}",
                           Standard=f"{r.ResS} {r.PS:.2f}-{r.PAS:.2f}",
-                          Note=f"Result differs under standard scoring; official result {r.ResO} {float(r.PointsFor):.2f}-{float(r.PointsAgainst):.2f}"))
+                          Note=f"Result stands ({r.ResO}). It was decided under incorrect scoring settings at game time "
+                               f"({float(r.PointsFor):.2f}-{float(r.PointsAgainst):.2f}); standard scoring gives {r.PS:.2f}-{r.PAS:.2f}."))
 
     # division titles (regular season) and the .500 bowl line
     reg = m[m.Week.astype(int) <= lr]
@@ -129,16 +131,14 @@ def main():
     for (y, lid, d), g in agg.dropna(subset=["Division"]).groupby(["Year", "LeagueID", "Division"]):
         real = g[[(y, r.LeagueName, r.RosterID) in played for r in g.itertuples()]]
         o = real.iloc[0] if len(real) == 1 else g.sort_values(["WO", "PFO"], ascending=False).iloc[0]
-        s = g.sort_values(["WS", "PFS"], ascending=False).iloc[0]
-        if o.RosterID != s.RosterID:
+        calc = g.sort_values(["WO", "PFO"], ascending=False).iloc[0]
+        s = g.sort_values(["WO", "PFS"], ascending=False).iloc[0]  # records stand; points restated
+        # flag only when game-time points explain the actual winner and standard points would not
+        if o.RosterID == calc.RosterID and o.RosterID != s.RosterID:
             flags.append(dict(Year=y, LeagueName=o.LeagueName, Week="", RosterID=o.RosterID, Team=nm(y, o.LeagueName, o.RosterID),
                               Opponent=nm(y, o.LeagueName, s.RosterID), Type="DivisionTitle",
-                              Official=f"{o.WO:g}-{o.G - o.WO:g} won the division", Standard=f"{s.WS:g}-{s.G - s.WS:g} ({nm(y, o.LeagueName, s.RosterID)}) leads on standard scoring",
-                              Note="Division title stands as played; standard-scoring standings would favor the team named in Opponent"))
-    for r in agg[(agg.WO >= agg.G / 2) != (agg.WS >= agg.G / 2)].itertuples():
-        flags.append(dict(Year=r.Year, LeagueName=r.LeagueName, Week="", RosterID=r.RosterID, Team=nm(r.Year, r.LeagueName, r.RosterID),
-                          Opponent="", Type="BowlLine", Official=f"{r.WO:g}-{r.G - r.WO:g}", Standard=f"{r.WS:g}-{r.G - r.WS:g}",
-                          Note="Regular-season record crosses .500 under standard scoring; postseason placement stands as played"))
+                              Official=f"{o.WO:g}-{o.G - o.WO:g} won the division", Standard=f"{nm(y, o.LeagueName, s.RosterID)} ({s.WO:g}-{s.G - s.WO:g}) leads on standard points",
+                              Note="Division title stands. The tiebreak on points was decided under incorrect scoring settings; standard points favor the team named in Opponent"))
     f = pd.DataFrame(flags).sort_values(["Year", "LeagueName", "Type", "Week"])
     f.to_csv(OUT_FLAGS, index=False)
     print(f"{len(sc)} team-weeks ({(sc.Delta != 0).sum()} restated); flags: {f.Type.value_counts().to_dict()}")
