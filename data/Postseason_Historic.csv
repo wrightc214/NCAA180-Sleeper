@@ -9,6 +9,7 @@ Season,Event,Round,RoundName,Week,Bowl,TeamA,SeedA,TeamB,SeedB,ScoreA,ScoreB,Win
 2019,CCG,1,Conference Championship,12,SEC,Kentucky,,Auburn,,143.92,138.78,Kentucky,Sleeper wk12: 2019 'Kentucky' was roster slot 10 (today South Carolina's slot) and beat Auburn 143.92-138.78
 2019,CCG,1,Conference Championship,12,Sun Belt,Memphis,,Louisiana Tech,,162.64,135.82,Memphis,scores from Sleeper week-12 matchup (history backfill)
 2019,CCG,1,Conference Championship,12,Wild,Citadel,,Wichita State,,141.64,111.36,Citadel,"scores from Sleeper week-12 matchup; Wichita State runner-up confirmed by 2020 draft order (picks 11-12 Wichita State, Citadel)"
+2019,CCG,1,Conference Championship,12,American,Ohio,,Miami (OH),,179.7,143.66,Ohio,"Sleeper week-12 matchup (American r5 vs r4); confirmed by 2020 draft order (picks 11-12 Miami (OH), Ohio)"
 2019,Playoff,1,Sweet 16,13,,Washington,1,Maryland,16,111.64,128.86,Maryland,scores from Sleeper (teams resolved via 2020 draft-order names); matchups confirmed by 2019 GroupMe LM posts
 2019,Playoff,1,Sweet 16,13,,Northwestern,8,Clemson,9,157.92,111.46,Northwestern,scores from Sleeper (teams resolved via 2020 draft-order names); matchups confirmed by 2019 GroupMe LM posts
 2019,Playoff,1,Sweet 16,13,,Memphis,4,Virginia Tech,13,96.74,156.04,Virginia Tech,scores from Sleeper (teams resolved via 2020 draft-order names); matchups confirmed by 2019 GroupMe LM posts
@@ -154,37 +155,37 @@ Season,Event,Round,RoundName,Week,Bowl,TeamA,SeedA,TeamB,SeedB,ScoreA,ScoreB,Win
 2021,CCG,1,Conference Championship,12,SEC,Vanderbilt,,Ole Miss,,127.66,70.42,Vanderbilt,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list
 2021,CCG,1,Conference Championship,12,Sun Belt,UTEP,,UAB,,127.8,111.48,UTEP,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list
 2021,CCG,1,Conference Championship,12,Wild,Montana,,Citadel,,139.82,137.92,Montana,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list
-2021,Playoff,1,First Round,13,,Yale,1,Clemson,32,,,Yale,
-2021,Playoff,1,First Round,13,,Davidson,16,Penn State,17,,,Davidson,
-2021,Playoff,1,First Round,13,,Arkansas State,9,Wofford,24,,,Wofford,
-2021,Playoff,1,First Round,13,,Baylor,8,Villanova,25,,,Baylor,
-2021,Playoff,1,First Round,13,,Colorado State,12,Stony Brook,21,,,Stony Brook,
-2021,Playoff,1,First Round,13,,Wisconsin,5,Army,28,,,Army,
-2021,Playoff,1,First Round,13,,North Alabama,13,Oklahoma,20,,,Oklahoma,
-2021,Playoff,1,First Round,13,,Virginia Tech,4,Iowa,29,,,Virginia Tech,
-2021,Playoff,1,First Round,13,,UTEP,2,Texas State,31,,,Texas State,
-2021,Playoff,1,First Round,13,,SE Missouri State,15,Rutgers,18,,,Rutgers,
-2021,Playoff,1,First Round,13,,Washington,10,Chattanooga,23,,,Chattanooga,
-2021,Playoff,1,First Round,13,,Jackson State,7,UAB,26,,,UAB,
-2021,Playoff,1,First Round,13,,South Dakota State,11,Kennesaw State,22,,,Kennesaw State,SDSU confirmed = South Dakota State (by color)
-2021,Playoff,1,First Round,13,,Vanderbilt,6,Brown,27,,,Brown,
-2021,Playoff,1,First Round,13,,Youngstown State,14,Florida International,19,,,Youngstown State,
-2021,Playoff,1,First Round,13,,Montana,3,North Dakota State,30,,,Montana,
-2021,Playoff,2,Sweet 16,14,,Yale,,Davidson,,,,Davidson,
-2021,Playoff,2,Sweet 16,14,,Wofford,,Baylor,,,,Wofford,
-2021,Playoff,2,Sweet 16,14,,Stony Brook,,Army,,,,Army,
-2021,Playoff,2,Sweet 16,14,,Oklahoma,,Virginia Tech,,,,Oklahoma,
-2021,Playoff,2,Sweet 16,14,,Texas State,,Rutgers,,,,Texas State,
-2021,Playoff,2,Sweet 16,14,,Chattanooga,,UAB,,,,Chattanooga,
-2021,Playoff,2,Sweet 16,14,,Kennesaw State,,Brown,,,,Brown,
-2021,Playoff,2,Sweet 16,14,,Youngstown State,,Montana,,,,Youngstown State,
-2021,Playoff,3,Elite 8,15,,Davidson,,Wofford,,,,Davidson,
-2021,Playoff,3,Elite 8,15,,Army,,Oklahoma,,,,Oklahoma,
-2021,Playoff,3,Elite 8,15,,Texas State,,Chattanooga,,,,Texas State,
-2021,Playoff,3,Elite 8,15,,Brown,,Youngstown State,,,,Youngstown State,
-2021,Playoff,4,Final Four,16,,Davidson,,Oklahoma,,,,Oklahoma,
-2021,Playoff,4,Final Four,16,,Texas State,,Youngstown State,,,,Youngstown State,
-2021,Playoff,5,National Championship,17,,Oklahoma,,Youngstown State,,,,Youngstown State,
+2021,Playoff,1,First Round,13,,Yale,1,Clemson,32,198.52,178.92,Yale,scores from Sleeper
+2021,Playoff,1,First Round,13,,Davidson,16,Penn State,17,193.06,185.6,Davidson,scores from Sleeper
+2021,Playoff,1,First Round,13,,Arkansas State,9,Wofford,24,93.38,160.92,Wofford,scores from Sleeper
+2021,Playoff,1,First Round,13,,Baylor,8,Villanova,25,180.92,153.78,Baylor,scores from Sleeper
+2021,Playoff,1,First Round,13,,Colorado State,12,Stony Brook,21,136.56,145.02,Stony Brook,scores from Sleeper
+2021,Playoff,1,First Round,13,,Wisconsin,5,Army,28,139.22,151.34,Army,scores from Sleeper
+2021,Playoff,1,First Round,13,,North Alabama,13,Oklahoma,20,121.8,154.2,Oklahoma,scores from Sleeper
+2021,Playoff,1,First Round,13,,Virginia Tech,4,Iowa,29,167.1,112.1,Virginia Tech,scores from Sleeper
+2021,Playoff,1,First Round,13,,UTEP,2,Texas State,31,150.42,178.82,Texas State,scores from Sleeper
+2021,Playoff,1,First Round,13,,SE Missouri State,15,Rutgers,18,125.6,141.64,Rutgers,scores from Sleeper
+2021,Playoff,1,First Round,13,,Washington,10,Chattanooga,23,102.5,180.28,Chattanooga,scores from Sleeper
+2021,Playoff,1,First Round,13,,Jackson State,7,UAB,26,120.86,123.16,UAB,scores from Sleeper
+2021,Playoff,1,First Round,13,,South Dakota State,11,Kennesaw State,22,125.82,161.9,Kennesaw State,SDSU confirmed = South Dakota State (by color); scores from Sleeper
+2021,Playoff,1,First Round,13,,Vanderbilt,6,Brown,27,94.8,138.76,Brown,scores from Sleeper
+2021,Playoff,1,First Round,13,,Youngstown State,14,Florida International,19,181.4,159.32,Youngstown State,scores from Sleeper
+2021,Playoff,1,First Round,13,,Montana,3,North Dakota State,30,195.94,102.6,Montana,scores from Sleeper
+2021,Playoff,2,Sweet 16,14,,Yale,,Davidson,,135.52,156.84,Davidson,scores from Sleeper
+2021,Playoff,2,Sweet 16,14,,Wofford,,Baylor,,150.12,142.82,Wofford,scores from Sleeper
+2021,Playoff,2,Sweet 16,14,,Stony Brook,,Army,,150.22,159.08,Army,scores from Sleeper
+2021,Playoff,2,Sweet 16,14,,Oklahoma,,Virginia Tech,,223.92,173.18,Oklahoma,scores from Sleeper
+2021,Playoff,2,Sweet 16,14,,Texas State,,Rutgers,,175.7,145.9,Texas State,scores from Sleeper
+2021,Playoff,2,Sweet 16,14,,Chattanooga,,UAB,,139.2,109.82,Chattanooga,scores from Sleeper
+2021,Playoff,2,Sweet 16,14,,Kennesaw State,,Brown,,146.72,151.84,Brown,scores from Sleeper
+2021,Playoff,2,Sweet 16,14,,Youngstown State,,Montana,,145.78,127.48,Youngstown State,scores from Sleeper
+2021,Playoff,3,Elite 8,15,,Davidson,,Wofford,,123.62,106.18,Davidson,scores from Sleeper
+2021,Playoff,3,Elite 8,15,,Army,,Oklahoma,,111.52,156.6,Oklahoma,scores from Sleeper
+2021,Playoff,3,Elite 8,15,,Texas State,,Chattanooga,,128.86,119.84,Texas State,scores from Sleeper
+2021,Playoff,3,Elite 8,15,,Brown,,Youngstown State,,81.92,92.16,Youngstown State,scores from Sleeper
+2021,Playoff,4,Final Four,16,,Davidson,,Oklahoma,,143.58,181.46,Oklahoma,scores from Sleeper
+2021,Playoff,4,Final Four,16,,Texas State,,Youngstown State,,140.48,177.28,Youngstown State,scores from Sleeper
+2021,Playoff,5,National Championship,17,,Oklahoma,,Youngstown State,,174.3,177.36,Youngstown State,scores from Sleeper
 2021,Bowl,1,Bowl,13,Armed Forces Bowl,Iowa State,,Navy,,151.56,131.56,Iowa State,matchups from Chris's 2021 bowl list (2026-10-07); week/scores from Sleeper (week 14 = the 2022 week-14 bowl set; winner matches draft-order sheet)
 2021,Bowl,1,Bowl,13,Belk Bowl,Utah State,,Harvard,,116.92,86.6,Utah State,matchups from Chris's 2021 bowl list (2026-10-07); week/scores from Sleeper (week 14 = the 2022 week-14 bowl set; winner matches draft-order sheet)
 2021,Bowl,1,Bowl,14,Music City Bowl,Southern,,Cornell,,152.78,126.02,Southern,matchups from Chris's 2021 bowl list (2026-10-07); week/scores from Sleeper (week 14 = the 2022 week-14 bowl set; winner matches draft-order sheet)
@@ -370,7 +371,7 @@ Season,Event,Round,RoundName,Week,Bowl,TeamA,SeedA,TeamB,SeedB,ScoreA,ScoreB,Win
 2023,Playoff,3,Elite 8,,Peach Bowl,Portland State,7,LSU,18,140.3,201.1,LSU,
 2023,Playoff,4,Final Four,,Rose Bowl,Charleston Southern,8,Utah,12,142.6,197.6,Utah,
 2023,Playoff,4,Final Four,,Sugar Bowl,Georgia Southern,30,LSU,18,122,153.7,LSU,
-2023,Playoff,5,National Championship,,,Utah,12,LSU,18,,,LSU,scores not shown in image
+2023,Playoff,5,National Championship,17,,Utah,12,LSU,18,143.92,169.46,LSU,scores not shown in image; scores from Sleeper
 2023,NIT,1,Group Stage 1,13,Group A,USC | Princeton | Mississippi Valley State | UCF,,,,68.52 | 95.68 | 132 | 59.6,,Mississippi Valley State,"4-team group, top score advances"
 2023,NIT,1,Group Stage 1,13,Group B,Arizona | Nevada | Southern,,,,89.26 | 170.26 | 174.98,,Southern,"3-team group, top score advances"
 2023,NIT,1,Group Stage 1,13,Group C,Wake Forest | Vanderbilt | Troy | Central Michigan,,,,111.4 | 48.92 | 135.02 | 180.96,,Central Michigan,"4-team group, top score advances"
@@ -409,7 +410,7 @@ Season,Event,Round,RoundName,Week,Bowl,TeamA,SeedA,TeamB,SeedB,ScoreA,ScoreB,Win
 2023,NIT,3,Quarterfinal,15,,Washington State,,North Carolina Central,,163.66,119.74,Washington State,
 2023,NIT,4,Semifinal,,,UNLV,,Southern,,129.3,174.18,Southern,
 2023,NIT,4,Semifinal,,,Butler,,Washington State,,89.62,136.14,Washington State,
-2023,NIT,5,Final,,,Southern,,Washington State,,,,Southern,scores not shown; champion per summary
+2023,NIT,5,Final,17,,Southern,,Washington State,,177.04,138.56,Southern,scores not shown; champion per summary; scores from Sleeper
 2023,Bowl,1,Bowl,13,Birmingham Bowl,Cornell,,Idaho,,149.58,125.6,Cornell,
 2023,Bowl,1,Bowl,13,Boca Raton Bowl,Dayton,,Duke,,140.96,89.52,Dayton,
 2023,Bowl,1,Bowl,13,Camellia Bowl,Villanova,,Florida,,117.74,110.02,Villanova,
