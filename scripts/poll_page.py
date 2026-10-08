@@ -38,12 +38,29 @@ ul.games .vs{color:var(--mute);font:600 12px var(--num);letter-spacing:.1em}
 .rvr{border-left:4px solid var(--gold);padding-left:8px}
 #bots td.n{text-align:center;min-width:34px}#bots th.r{text-align:center}
 #bots td.drop{color:var(--mute);text-decoration:line-through}
+#poll table{border-collapse:separate;border-spacing:0 4px}
+#poll tbody td{vertical-align:middle;border:none}
+#poll td.lg{width:44px;padding:2px 6px}
+#poll td.lg img{width:44px;height:44px;object-fit:contain;display:block;margin:auto}
+#poll td.band{padding:7px 12px;border-radius:6px 0 0 6px}
+#poll td.band b{display:block;font-weight:700;line-height:1.2}
+#poll td.band small{display:block;margin:2px 0 0;padding:0;opacity:.85;color:inherit}
+#poll td.bs{text-align:right;padding:7px 6px}
+#poll td.be{padding:7px 10px 7px 4px;border-radius:0 6px 6px 0;font-size:12px}
 """
 
 
 def colors():
     c = pd.read_csv(COLORS, dtype=str, encoding="utf-8-sig").fillna("")
     return {r.Team: team_colors(r.Primary, r.Secondary, r.Background, r.Text, name=r.Team) for r in c.itertuples()}
+
+
+LOGOS = "assets/logos/teams"  # one PNG per school name (that season's name)
+
+
+def logo(team):
+    p = os.path.join(LOGOS, f"{team}.png")
+    return f'<img src="../{e(p)}" alt="">' if os.path.exists(p) else ""
 
 
 def pill(team, col, rank=None):
@@ -123,11 +140,15 @@ def page(cfg, poll, bots, archive, col, year, week, ptype, prev_ranked):
         return f"{float(x):+.2f}" if zmode else f"{float(x):.3f}".lstrip("0")
 
     first = not prev_ranked and poll["PrevRank"].replace("", None).isna().all()
+    def band(team):  # team color band: team name through score (rank, movement, logo stay outside)
+        bg, fg = col.get(team, ("#14213a", "#ffffff"))
+        return f'background:{bg};color:{fg}'
     rows = "".join(
         f'<tr><td class="rk">{"T-" if r.Tied == "True" else ""}{int(r.Rank)}</td><td class="mv">{mv(r, first)}</td>'
-        f'<td class="tm">{pill(r.Team, col)}<small>{rec(r)} · {e(r.League)}</small></td>'
-        f'<td class="n">{pct(r.Score)}</td>'
-        f'<td class="n fpv">{"(" + str(int(float(r.FirstPlaceVotes))) + ")" if float(r.FirstPlaceVotes or 0) else ""}</td></tr>'
+        f'<td class="lg">{logo(r.Team)}</td>'
+        f'<td class="band" style="{band(r.Team)}"><b>{e(r.Team)}</b><small>{rec(r)} · {e(r.League)}</small></td>'
+        f'<td class="n bs" style="{band(r.Team)}">{pct(r.Score)}</td>'
+        f'<td class="be" style="{band(r.Team)}">{"(" + str(int(float(r.FirstPlaceVotes))) + ")" if float(r.FirstPlaceVotes or 0) else ""}</td></tr>'
         for r in ranked.itertuples())
     orv_html = ", ".join(f'{e(r.Team)} {pct(r.Score)}' for r in orv.itertuples()) or "None"
     now_keys = set(zip(ranked["LeagueID"], ranked["RosterID"]))
@@ -169,7 +190,7 @@ def page(cfg, poll, bots, archive, col, year, week, ptype, prev_ranked):
 <h1>NCAA 180 <em>{e(label)}</em></h1></div>
 <div class="kpis"><div class="kpi"><b>{nbots}</b><span>Computer bots</span></div>{kpi_h}</div></header>
 <section id="poll"><h2>{e(label)} <small>Score (first-place votes)</small></h2>
-<div class="tbl"><table><thead><tr><th class="r">Rk</th><th></th><th>Team</th><th class="r">Score</th><th></th></tr></thead>
+<div class="tbl"><table><thead><tr><th class="r">Rk</th><th></th><th></th><th>Team</th><th class="r">Score</th><th></th></tr></thead>
 <tbody>{rows}</tbody></table></div>
 <p class="orv"><b>Others receiving votes:</b> {orv_html}</p>
 {"" if first else f'<p class="orv"><b>Dropped out:</b> {dropped_html}</p>'}</section>
