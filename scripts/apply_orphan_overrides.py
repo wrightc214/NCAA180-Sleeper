@@ -33,6 +33,12 @@ def norm(s):
     return str(s).strip().upper()
 
 
+def rid(x):
+    """Roster IDs appear as '8' or '8.0' depending on the file."""
+    x = str(x).strip()
+    return x[:-2] if x.endswith(".0") else x
+
+
 def league_years():
     """LeagueID -> Year from every LeagueIDs file present."""
     out = {}
@@ -44,7 +50,7 @@ def league_years():
 
 def main(files):
     ov = pd.read_csv(OVERRIDES, dtype=str, encoding="utf-8-sig")
-    keys = {(r.Year, norm(r.LeagueName), str(r.RosterID)): r.OwnerID for r in ov.itertuples()}
+    keys = {(r.Year, norm(r.LeagueName), rid(r.RosterID)): r.OwnerID for r in ov.itertuples()}
     years = league_years()
     for f in files:
         d = pd.read_csv(f, dtype=str, keep_default_na=False)
@@ -52,14 +58,14 @@ def main(files):
         lg = d["LeagueName"].map(norm)
         changed = 0
         if {"OwnerID", "RosterID"} <= set(d.columns):
-            hit = [keys.get((y, l, r)) == o for y, l, r, o in zip(yr, lg, d["RosterID"], d["OwnerID"])]
+            hit = [keys.get((y, l, rid(r))) == o for y, l, r, o in zip(yr, lg, d["RosterID"], d["OwnerID"])]
             hit = pd.Series(hit, index=d.index)
             changed += int(hit.sum())
             d.loc[hit, "OwnerID"] = ORPHAN
             if "OwnerName" in d.columns:
                 d.loc[hit, "OwnerName"] = ORPHAN
         if {"OpponentRosterID", "OpponentName"} <= set(d.columns):
-            hit = pd.Series([(y, l, r) in keys and n != ORPHAN for y, l, r, n in
+            hit = pd.Series([(y, l, rid(r)) in keys and n != ORPHAN for y, l, r, n in
                              zip(yr, lg, d["OpponentRosterID"], d["OpponentName"])], index=d.index)
             # only where the opponent was the listed owner that season
             owner_names = dict(zip(ov["OwnerID"], ov["OwnerName"]))
@@ -73,8 +79,8 @@ def main(files):
                 except (ValueError, SyntaxError):
                     return row["OwnerIDs"], 0
                 n = 0
-                for i, (rid, oid) in enumerate(zip(rids, oids)):
-                    if keys.get((row["_y"], row["_l"], str(rid))) == str(oid):
+                for i, (r_, oid) in enumerate(zip(rids, oids)):
+                    if keys.get((row["_y"], row["_l"], rid(r_))) == str(oid):
                         oids[i] = ORPHAN
                         n += 1
                 return (str(oids), n) if n else (row["OwnerIDs"], 0)
@@ -83,7 +89,7 @@ def main(files):
             d["OwnerIDs"] = [x[0] for x in res]
             changed += sum(x[1] for x in res)
         if {"Picked_By", "RosterID"} <= set(d.columns):
-            hit = pd.Series([keys.get((y, l, r)) == p for y, l, r, p in zip(yr, lg, d["RosterID"], d["Picked_By"])],
+            hit = pd.Series([keys.get((y, l, rid(r))) == p for y, l, r, p in zip(yr, lg, d["RosterID"], d["Picked_By"])],
                             index=d.index)
             changed += int(hit.sum())
             d.loc[hit, "Picked_By"] = ORPHAN
