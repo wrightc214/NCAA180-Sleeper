@@ -6,6 +6,14 @@ data/Transactions_Historic.csv (never rewritten; the offseason rollover moves th
 finished season there). Current season = latest Year in LeagueIDs_AllYears.csv.
 Rosters are fetched once per league (not once per transaction).
 Rows are sorted so unchanged data produces a byte-identical file (no git churn).
+
+Who did it (added 2026-10-08):
+  CreatorID  Sleeper's `creator`: the user who actually made the move (for a commissioner
+             move, the commissioner). Use this for anything credited to a manager
+             (trade database, activity tracker, career stats).
+  OwnerIDs   each roster's owner AT THE TIME OF THE PULL, not at the time of the move.
+             A team that changed hands shows the new owner on the old owner's moves.
+             Team-level counts are fine; never credit a manager from this column.
 """
 import pandas as pd
 from sleeper_wrapper import League
@@ -65,7 +73,8 @@ for idx, row in league_df.iterrows():
                 "Adds": tx.get('adds', {}),
                 "Drops": tx.get('drops', {}),
                 "Status": tx.get('status'),
-                "Created": tx.get('created')
+                "Created": tx.get('created'),
+                "CreatorID": tx.get('creator'),
             })
 
         # Polite pause
