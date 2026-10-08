@@ -52,91 +52,93 @@ Season,Event,Round,RoundName,Week,Bowl,TeamA,SeedA,TeamB,SeedB,ScoreA,ScoreB,Win
 2019,Bowl,1,Bowl,,Xbox Bowl,USC,,Montana,,,,USC,winner/runner-up from Chris's bowl history list (2026-10-07); scores not recorded
 2019,Bowl,1,Bowl,,PlayStation Bowl,NC State,,Boise State,,,,NC State,winner/runner-up from Chris's bowl history list (2026-10-07); scores not recorded
 2019,NIT,5,Final,,,Vanderbilt,,,,,,Vanderbilt,"champion only, from draft-order sheet (matches summary)"
-2020,CCG,1,Conference Championship,12,ACC,Clemson,,Virginia Tech,,,,Clemson,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2020,CCG,1,Conference Championship,12,Big 10,Michigan,,Wisconsin,,,,Michigan,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2020,CCG,1,Conference Championship,12,Big 12,West Virginia,,Oklahoma,,,,West Virginia,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2020,CCG,1,Conference Championship,12,Big East,UCF,,Syracuse,,,,UCF,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2020,CCG,1,Conference Championship,12,Big Sky,Villanova,,Maine,,,,Villanova,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2020,CCG,1,Conference Championship,12,CUSA,Louisiana,,Troy,,,,Louisiana,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2020,CCG,1,Conference Championship,12,HBCU,Mississippi Valley State,,Jackson State,,,,Mississippi Valley State,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2020,CCG,1,Conference Championship,12,Ivy,Penn,,Lehigh,,,,Penn,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2020,CCG,1,Conference Championship,12,Mountain West,Utah State,,Nevada,,,,Utah State,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2020,CCG,1,Conference Championship,12,PAC 12,Utah,,California,,,,Utah,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2020,CCG,1,Conference Championship,12,Pioneer,SE Missouri State,,Campbell,,,,SE Missouri State,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2020,CCG,1,Conference Championship,12,SEC,Ole Miss,,Vanderbilt,,,,Ole Miss,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2020,CCG,1,Conference Championship,12,Sun Belt,Rice,,Tulane,,,,Rice,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2020,CCG,1,Conference Championship,12,Wild,Citadel,,Wichita State,,,,Citadel,winner/runner-up from Chris's CCG history list; scores not yet sourced
-2020,Playoff,1,Group Stage,,,Utah | Wisconsin | Jackson State | Louisiana Tech,1 | 16 | 17 | 32,,,,,Jackson State,4-team group; winner advances. Scoring: group winner = 1 playoff win; all 4 = playoff appearance
-2020,Playoff,1,Group Stage,,,Villanova | Dixie State | Iowa | Campbell,8 | 9 | 24 | 25,,,,,Campbell,4-team group; winner advances. Scoring: group winner = 1 playoff win; all 4 = playoff appearance | Dixie State (later Utah Tech) slot no longer active (league contraction to 180)
-2020,Playoff,1,Group Stage,,,Ole Miss | UCF | Lehigh | Nebraska,4 | 13 | 20 | 29,,,,,Lehigh,4-team group; winner advances. Scoring: group winner = 1 playoff win; all 4 = playoff appearance
-2020,Playoff,1,Group Stage,,,Clemson | Michigan | NC State | California,5 | 12 | 21 | 28,,,,,NC State,4-team group; winner advances. Scoring: group winner = 1 playoff win; all 4 = playoff appearance
-2020,Playoff,1,Group Stage,,,Utah State | Mississippi Valley State | Syracuse | North Carolina A&T,2 | 15 | 18 | 31,,,,,Utah State,4-team group; winner advances. Scoring: group winner = 1 playoff win; all 4 = playoff appearance
-2020,Playoff,1,Group Stage,,,SE Missouri State | Louisiana | Harvard | Tulane,7 | 10 | 23 | 26,,,,,Harvard,4-team group; winner advances. Scoring: group winner = 1 playoff win; all 4 = playoff appearance
-2020,Playoff,1,Group Stage,,,Citadel | West Virginia | Troy | Virginia Tech,3 | 14 | 19 | 30,,,,,Virginia Tech,4-team group; winner advances. Scoring: group winner = 1 playoff win; all 4 = playoff appearance
-2020,Playoff,1,Group Stage,,,Rice | Penn | Vanderbilt | Oklahoma,6 | 11 | 22 | 27,,,,,Vanderbilt,4-team group; winner advances. Scoring: group winner = 1 playoff win; all 4 = playoff appearance
-2020,Playoff,2,Elite 8,,Sugar Bowl,Jackson State,,Campbell,,,,Campbell,
-2020,Playoff,2,Elite 8,,Peach Bowl,Lehigh,,NC State,,,,Lehigh,
-2020,Playoff,2,Elite 8,,Orange Bowl,Utah State,,Harvard,,,,Harvard,
-2020,Playoff,2,Elite 8,,Cotton Bowl,Virginia Tech,,Vanderbilt,,,,Virginia Tech,
-2020,Playoff,3,Final Four,,Fiesta Bowl,Campbell,,Lehigh,,,,Campbell,
-2020,Playoff,3,Final Four,,Rose Bowl,Harvard,,Virginia Tech,,,,Virginia Tech,
-2020,Playoff,4,National Championship,,,Campbell,,Virginia Tech,,,,Campbell,
-2020,Bowl,1,Bowl,,Armed Forces Bowl,Army,,Purdue,,160.68,135.82,Army,scores from Chris's 2020 bowl score sheet (2026-10-07)
-2020,Bowl,1,Bowl,,Belk Bowl,Furman,,Rhode Island,,134.46,107.76,Furman,scores from Chris's 2020 bowl score sheet (2026-10-07)
-2020,Bowl,1,Bowl,,Music City Bowl,Yale,,Sam Houston State,,153.54,139.52,Yale,scores from Chris's 2020 bowl score sheet (2026-10-07)
-2020,Bowl,1,Bowl,,Alamo Bowl,Arizona,,Texas,,163.26,116.2,Arizona,scores from Chris's 2020 bowl score sheet (2026-10-07)
-2020,Bowl,1,Bowl,,Las Vegas Bowl,Fresno State,,Washington,,187.92,151.22,Fresno State,scores from Chris's 2020 bowl score sheet (2026-10-07); Chris's winner list says Air Force over Washington - verify
-2020,Bowl,1,Bowl,,Outback Bowl,Kansas State,,Washington State,,182.54,83.9,Kansas State,scores from Chris's 2020 bowl score sheet (2026-10-07)
-2020,Bowl,1,Bowl,,Holiday Bowl,North Dakota State,,Tennessee,,172.86,155.54,North Dakota State,scores from Chris's 2020 bowl score sheet (2026-10-07)
-2020,Bowl,1,Bowl,,Independence Bowl,UNC Charlotte,,Wofford,,153.5,101.76,UNC Charlotte,scores from Chris's 2020 bowl score sheet (2026-10-07)
-2020,Bowl,1,Bowl,,Liberty Bowl,Georgia Tech,,Florida Atlantic,,136.94,134.56,Georgia Tech,scores from Chris's 2020 bowl score sheet (2026-10-07)
-2020,Bowl,1,Bowl,,Citrus Bowl,Nevada,,Southern Miss,,124.74,113.04,Nevada,scores from Chris's 2020 bowl score sheet (2026-10-07)
-2020,Bowl,1,Bowl,,Sun Bowl,North Carolina,,Navy,,164.66,107.06,North Carolina,scores from Chris's 2020 bowl score sheet (2026-10-07)
-2020,Bowl,1,Bowl,,Gator Bowl,Presbyterian,,Maine,,138.5,114.36,Presbyterian,scores from Chris's 2020 bowl score sheet (2026-10-07)
-2020,Bowl,1,Bowl,,Capital One Bowl,Northwestern,,Auburn,,141.42,138.66,Northwestern,scores from Chris's 2020 bowl score sheet (2026-10-07)
-2020,Bowl,1,Bowl,,Military Bowl,Delaware State,,Stephen F. Austin,,134.5,110.4,Delaware State,scores from Chris's 2020 bowl score sheet (2026-10-07)
-2020,Bowl,1,Bowl,,Texas Bowl,Wichita State,,Baylor,,154.24,123.86,Wichita State,scores from Chris's 2020 bowl score sheet (2026-10-07)
-2020,Bowl,1,Bowl,,New Orleans Bowl,Bucknell,,James Madison,,160.5,116.26,Bucknell,scores from Chris's 2020 bowl score sheet (2026-10-07)
-2020,Bowl,1,Bowl,,Idaho Potato Bowl,Northern Iowa,,Tennessee State,,158.72,97.82,Northern Iowa,scores from Chris's 2020 bowl score sheet (2026-10-07)
-2020,Bowl,1,Bowl,,New Mexico Bowl,Indiana,,Iowa State,,152.46,117.1,Indiana,scores from Chris's 2020 bowl score sheet (2026-10-07)
-2020,Bowl,1,Bowl,,TaxSlayer Bowl,UTEP,,Notre Dame,,174.62,90.16,UTEP,scores from Chris's 2020 bowl score sheet (2026-10-07)
-2020,Bowl,1,Bowl,,Bahamas Bowl,Lamar,,FGCU,,135.32,121.22,Lamar,scores from Chris's 2020 bowl score sheet (2026-10-07)
-2020,Bowl,1,Bowl,,Brooklyn Bowl,Stony Brook,,Davidson,,171.44,103.9,Stony Brook,scores from Chris's 2020 bowl score sheet (2026-10-07)
-2020,Bowl,1,Bowl,,Chick-fil-A Bowl,Wyoming,,Kentucky,,113.92,100.2,Wyoming,scores from Chris's 2020 bowl score sheet (2026-10-07)
-2020,Bowl,1,Bowl,,Geico Bowl,Rutgers,,UTSA,,149.54,102,Rutgers,scores from Chris's 2020 bowl score sheet (2026-10-07)
-2020,Bowl,1,Bowl,,FedEx Bowl,Colorado State,,Temple,,164.06,128.76,Colorado State,scores from Chris's 2020 bowl score sheet (2026-10-07)
-2020,Bowl,1,Bowl,,Birmingham Bowl,Nicholls State,,Middle Tennessee State,,155.26,135.96,Nicholls State,scores from Chris's 2020 bowl score sheet (2026-10-07)
-2020,Bowl,1,Bowl,,EA Sports Bowl,Pittsburgh,,Alabama,,117.82,111.3,Pittsburgh,scores from Chris's 2020 bowl score sheet (2026-10-07)
-2020,Bowl,1,Bowl,,Ice Bowl,Central Arkansas,,Howard,,153.48,130.66,Central Arkansas,scores from Chris's 2020 bowl score sheet (2026-10-07)
-2020,Bowl,1,Bowl,,Boca Raton Bowl,Arkansas State,,San Jose State,,139.02,124.32,Arkansas State,scores from Chris's 2020 bowl score sheet (2026-10-07)
-2020,Bowl,1,Bowl,,Xbox Bowl,Texas State,,Columbia,,132.54,100.7,Texas State,scores from Chris's 2020 bowl score sheet (2026-10-07); Chris's winner list says South Alabama over Columbia - verify
-2020,Bowl,1,Bowl,,PlayStation Bowl,Mississippi State,,Oregon State,,128,68.8,Mississippi State,scores from Chris's 2020 bowl score sheet (2026-10-07)
-2020,NIT,1,Group Stage 1,13,Group 1,McNeese State | Florida International | Alcorn State | Western Kentucky | UCONN,,,,106.86 | 126.9 | 68 | 112.3 | 143.54,,Florida International | UCONN,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07)"
-2020,NIT,1,Group Stage 1,13,Group 2,Missouri | Cornell | Dayton | Butler | Eastern Michigan,,,,76.54 | 153 | 75.9 | 109.26 | 140.48,,Cornell | Eastern Michigan,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07)"
-2020,NIT,1,Group Stage 1,13,Group 3,UT Martin | Georgetown | SDSU | Southern | Holy Cross,,,,107.14 | 89.36 | 118.14 | 67.38 | 89.54,,UT Martin | SDSU,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07)"
-2020,NIT,1,Group Stage 1,13,Group 4,Michigan State | LSU | Stanford | Central Michigan | Arkansas,,,,126.44 | 117.7 | 80.12 | 152.02 | 135.3,,Central Michigan | Arkansas,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07)"
-2020,NIT,1,Group Stage 1,13,Group 5,USC | USF | Louisiana Monroe | New Mexico | Penn State,,,,116.18 | 77.8 | 90.08 | 106.24 | 161.6,,USC | Penn State,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07)"
-2020,NIT,1,Group Stage 1,13,Group 6,Grambling State | Princeton | Wake Forest | Old Dominion | William & Mary,,,,150.94 | 97.86 | 128.32 | 110.9 | 135.64,,Grambling State | William & Mary,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07)"
-2020,NIT,1,Group Stage 1,13,Group 7,Tuskegee | North Texas | Memphis | Louisiana | Marshall,,,,142.02 | 132.86 | 121.22 | 57.92 | 109.82,,Tuskegee | North Texas,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07)"
-2020,NIT,1,Group Stage 1,13,Group 8,Murray State | Ohio State | Youngstown State | Dartmouth | Illinois,,,,173.52 | 104.42 | 115.24 | 146.74 | 132.06,,Murray State | Dartmouth,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07)"
-2020,NIT,1,Group Stage 1,13,Group 9,Texas Tech | FSU | Austin Peay | Miami | Georgia Southern,,,,154 | 105.14 | 124.94 | 120.08 | 141.46,,Texas Tech | Georgia Southern,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07)"
-2020,NIT,1,Group Stage 1,13,Group 10,Georgia State | Bethune-Cookman | Tulsa | Florida A&M | TCU,,,,147.74 | 117.1 | 104.14 | 69.94 | 75.06,,Georgia State | Bethune-Cookman,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07)"
-2020,NIT,1,Group Stage 1,13,Group 11,Idaho | Kansas | Oregon | Coastal Carolina | Hawaii,,,,153.62 | 140.76 | 137.2 | 154.54 | 138.4,,Idaho | Coastal Carolina,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07)"
-2020,NIT,1,Group Stage 1,13,Group 12,South Dakota | South Carolina | Florida | Louisville | Georgia,,,,108.12 | 116.86 | 103.12 | 106.94 | 66.38,,South Dakota | South Carolina,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07)"
-2020,NIT,1,Group Stage 1,13,Group 13,Maryland | Boston College | UCLA | Arizona State | Colorado,,,,104.74 | 131.16 | 92.32 | 135.2 | 109.12,,Boston College | Arizona State,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07)"
-2020,NIT,1,Group Stage 1,13,Group 14,UNLV | Brown | Boise State | Duke | Minnesota,,,,116.38 | 116.06 | 126.38 | 128.2 | 95.9,,Boise State | Duke,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07)"
-2020,NIT,1,Group Stage 1,13,Group 15,Montana | Montana State | Houston Baptist | Colgate | Northwestern State,,,,148.7 | 115.74 | 153.94 | 79.42 | 106.42,,Montana | Houston Baptist,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07)"
-2020,NIT,2,Group Stage 2,14,Group 1,Alabama A&M | Southeastern Louisiana | UCONN | Florida International | Eastern Michigan,,,,98.98 | 136.6 | 122.44 | 104.4 | 115.54,,Southeastern Louisiana,"5-team group, top score advances (10 teams entered here); from Chris's 2020 NIT bracket PDF (2026-10-07)"
-2020,NIT,2,Group Stage 2,14,Group 2,UAB | Cornell | SDSU | UT Martin | Arkansas,,,,192.42 | 121.94 | 99.08 | 156.48 | 144.7,,UAB,"5-team group, top score advances (10 teams entered here); from Chris's 2020 NIT bracket PDF (2026-10-07)"
-2020,NIT,2,Group Stage 2,14,Group 3,Weber State | Central Michigan | Penn State | USC | William & Mary,,,,114.86 | 123.02 | 100.58 | 164.58 | 144.7,,USC,"5-team group, top score advances (10 teams entered here); from Chris's 2020 NIT bracket PDF (2026-10-07)"
-2020,NIT,2,Group Stage 2,14,Group 4,Oklahoma State | Grambling State | Tuskegee | North Texas | Dartmouth,,,,169 | 207.02 | 135.22 | 135.22 | 113.02,,Grambling State,"5-team group, top score advances (10 teams entered here); from Chris's 2020 NIT bracket PDF (2026-10-07)"
-2020,NIT,2,Group Stage 2,14,Group 5,Virginia | Murray State | Texas Tech | Georgia Southern | Bethune-Cookman,,,,127.46 | 123.02 | 109.98 | 84.48 | 111.82,,Virginia,"5-team group, top score advances (10 teams entered here); from Chris's 2020 NIT bracket PDF (2026-10-07)"
-2020,NIT,2,Group Stage 2,14,Group 6,Texas A&M | Georgia State | Coastal Carolina | Idaho | South Dakota,,,,142.52 | 148.38 | 141.96 | 145.86 | 167.44,,South Dakota,"5-team group, top score advances (10 teams entered here); from Chris's 2020 NIT bracket PDF (2026-10-07)"
-2020,NIT,2,Group Stage 2,14,Group 7,Richmond | South Carolina | Arizona State | Boston College | Boise State,,,,94.58 | 119.24 | 116.52 | 157.58 | 125.84,,Boston College,"5-team group, top score advances (10 teams entered here); from Chris's 2020 NIT bracket PDF (2026-10-07)"
-2020,NIT,2,Group Stage 2,14,Group 8,BYU | Incarnate Word | Duke | Houston Baptist | Montana,,,,112 | 150.94 | 109.2 | 101.08 | 116.14,,Incarnate Word,"5-team group, top score advances (10 teams entered here); from Chris's 2020 NIT bracket PDF (2026-10-07)"
-2020,NIT,4,Semifinal,15,Semifinal 1,Southeastern Louisiana | UAB | USC | Grambling State,,,,123.36 | 159.12 | 171.32 | 127.88,,USC,"4-team group, top score advances; from Chris's 2020 NIT bracket PDF (2026-10-07)"
-2020,NIT,4,Semifinal,15,Semifinal 2,Virginia | South Dakota | Boston College | Incarnate Word,,,,99.2 | 116.84 | 88.5 | 103.84,,South Dakota,"4-team group, top score advances; from Chris's 2020 NIT bracket PDF (2026-10-07)"
-2020,NIT,5,Final,16,,South Dakota,,USC,,,,South Dakota,from Chris's 2020 NIT bracket PDF (2026-10-07); final scores not on the bracket
+2020,CCG,1,Conference Championship,12,ACC,Clemson,,Virginia Tech,,152.14,124.08,Clemson,winner/runner-up from Chris's CCG history list; scores from Sleeper
+2020,CCG,1,Conference Championship,12,Big 10,Michigan,,Wisconsin,,157.28,137.8,Michigan,winner/runner-up from Chris's CCG history list; scores from Sleeper
+2020,CCG,1,Conference Championship,12,Big 12,West Virginia,,Oklahoma,,131.1,127.78,West Virginia,winner/runner-up from Chris's CCG history list; scores from Sleeper
+2020,CCG,1,Conference Championship,12,Big East,UCF,,Syracuse,,158.2,108.6,UCF,winner/runner-up from Chris's CCG history list; scores from Sleeper
+2020,CCG,1,Conference Championship,12,Big Sky,Villanova,,Maine,,220.08,146.6,Villanova,winner/runner-up from Chris's CCG history list; scores from Sleeper
+2020,CCG,1,Conference Championship,12,CUSA,South Alabama,,Troy,,147.28,127.24,South Alabama,winner/runner-up from Chris's CCG history list; scores from Sleeper
+2020,CCG,1,Conference Championship,12,HBCU,Mississippi Valley State,,Hampton,,198.12,155.58,Mississippi Valley State,winner/runner-up from Chris's CCG history list; scores from Sleeper
+2020,CCG,1,Conference Championship,12,Ivy,Penn,,Lehigh,,195.22,172.98,Penn,winner/runner-up from Chris's CCG history list; scores from Sleeper
+2020,CCG,1,Conference Championship,12,Mountain West,Utah State,,Nevada,,199.68,163.28,Utah State,winner/runner-up from Chris's CCG history list; scores from Sleeper
+2020,CCG,1,Conference Championship,12,PAC 12,Utah,,California,,208.92,147.88,Utah,winner/runner-up from Chris's CCG history list; scores from Sleeper
+2020,CCG,1,Conference Championship,12,Pioneer,SE Missouri State,,Campbell,,186,151,SE Missouri State,winner/runner-up from Chris's CCG history list; scores from Sleeper
+2020,CCG,1,Conference Championship,12,SEC,Ole Miss,,Vanderbilt,,195.78,193.2,Ole Miss,winner/runner-up from Chris's CCG history list; scores from Sleeper
+2020,CCG,1,Conference Championship,12,Sun Belt,Rice,,Tulane,,172.8,137.66,Rice,winner/runner-up from Chris's CCG history list; scores from Sleeper
+2020,CCG,1,Conference Championship,12,Wild,Citadel,,North Dakota State,,150.5,100.68,Citadel,winner/runner-up from Chris's CCG history list; scores from Sleeper; runner-up corrected Wichita State -> North Dakota State (Chris's 2020 CCG sheet + Sleeper)
+2020,CCG,1,Conference Championship,12,Southland,Dixie State,,Sam Houston State,,128.4,114.66,Dixie State,Chris's 2020 CCG sheet; scores from Sleeper
+2020,Playoff,1,Group Stage,13,,Utah | Wisconsin | Hampton | Louisiana Tech,1 | 16 | 17 | 32,,,124.74 | 146.22 | 158 | 109.1,,Hampton,4-team group; winner advances. Scoring: group winner = 1 playoff win; all 4 = playoff appearance; scores from Sleeper
+2020,Playoff,1,Group Stage,13,,Villanova | Dixie State | Iowa | Campbell,8 | 9 | 24 | 25,,,126.06 | 152.94 | 155.12 | 184.28,,Campbell,4-team group; winner advances. Scoring: group winner = 1 playoff win; all 4 = playoff appearance | Dixie State (later Utah Tech) slot no longer active (league contraction to 180); scores from Sleeper
+2020,Playoff,1,Group Stage,13,,Ole Miss | UCF | Lehigh | Nebraska,4 | 13 | 20 | 29,,,177.6 | 121.1 | 204.72 | 120.56,,Lehigh,4-team group; winner advances. Scoring: group winner = 1 playoff win; all 4 = playoff appearance; scores from Sleeper
+2020,Playoff,1,Group Stage,13,,Clemson | Michigan | NC State | California,5 | 12 | 21 | 28,,,134.3 | 120 | 136.62 | 130.62,,NC State,4-team group; winner advances. Scoring: group winner = 1 playoff win; all 4 = playoff appearance; scores from Sleeper
+2020,Playoff,1,Group Stage,13,,Utah State | Mississippi Valley State | Syracuse | North Carolina A&T,2 | 15 | 18 | 31,,,148.72 | 137.36 | 142.26 | 136.96,,Utah State,4-team group; winner advances. Scoring: group winner = 1 playoff win; all 4 = playoff appearance; scores from Sleeper
+2020,Playoff,1,Group Stage,13,,SE Missouri State | South Alabama | Harvard | Tulane,7 | 10 | 23 | 26,,,114.92 | 150.92 | 169.94 | 106.1,,Harvard,4-team group; winner advances. Scoring: group winner = 1 playoff win; all 4 = playoff appearance; scores from Sleeper
+2020,Playoff,1,Group Stage,13,,Citadel | West Virginia | Troy | Virginia Tech,3 | 14 | 19 | 30,,,132.72 | 128.62 | 134.4 | 134.4,,Virginia Tech,4-team group; winner advances. Scoring: group winner = 1 playoff win; all 4 = playoff appearance; scores from Sleeper
+2020,Playoff,1,Group Stage,13,,Rice | Penn | Vanderbilt | Oklahoma,6 | 11 | 22 | 27,,,130.42 | 146.74 | 205.66 | 156.5,,Vanderbilt,4-team group; winner advances. Scoring: group winner = 1 playoff win; all 4 = playoff appearance; scores from Sleeper
+2020,Playoff,2,Elite 8,14,Sugar Bowl,Hampton,,Campbell,,178.6,204.22,Campbell,scores from Sleeper
+2020,Playoff,2,Elite 8,14,Peach Bowl,Lehigh,,NC State,,174.12,115.26,Lehigh,scores from Sleeper
+2020,Playoff,2,Elite 8,14,Orange Bowl,Utah State,,Harvard,,143.32,163.56,Harvard,scores from Sleeper
+2020,Playoff,2,Elite 8,14,Cotton Bowl,Virginia Tech,,Vanderbilt,,171.02,143.08,Virginia Tech,scores from Sleeper
+2020,Playoff,3,Final Four,15,Fiesta Bowl,Campbell,,Lehigh,,157.12,155.46,Campbell,scores from Sleeper
+2020,Playoff,3,Final Four,15,Rose Bowl,Harvard,,Virginia Tech,,143.56,200.26,Virginia Tech,scores from Sleeper
+2020,Playoff,4,National Championship,16,,Campbell,,Virginia Tech,,193.42,112.2,Campbell,scores from Sleeper
+2020,Playoff,4,Third Place,16,,Harvard,,Lehigh,,240.06,169.02,Harvard,"third-place game (GroupMe, LM 2020); scores from Sleeper"
+2020,Bowl,1,Bowl,14,Armed Forces Bowl,Army,,Purdue,,160.68,135.82,Army,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
+2020,Bowl,1,Bowl,14,Belk Bowl,Furman,,Rhode Island,,134.46,107.76,Furman,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
+2020,Bowl,1,Bowl,15,Music City Bowl,Yale,,Sam Houston State,,153.54,139.52,Yale,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
+2020,Bowl,1,Bowl,14,Alamo Bowl,Arizona,,Texas,,163.26,116.2,Arizona,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
+2020,Bowl,1,Bowl,14,Las Vegas Bowl,Fresno State,,Washington,,187.92,151.22,Fresno State,matchups from Chris's 2020 bowl score sheet; scores from Sleeper; Chris's winner list says Air Force over Washington - verify
+2020,Bowl,1,Bowl,15,Outback Bowl,Kansas State,,Washington State,,182.54,83.9,Kansas State,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
+2020,Bowl,1,Bowl,15,Holiday Bowl,North Dakota State,,Tennessee,,172.86,155.54,North Dakota State,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
+2020,Bowl,1,Bowl,14,Independence Bowl,UNC Charlotte,,Wofford,,153.5,101.76,UNC Charlotte,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
+2020,Bowl,1,Bowl,14,Liberty Bowl,Georgia Tech,,Florida Atlantic,,136.94,134.56,Georgia Tech,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
+2020,Bowl,1,Bowl,15,Citrus Bowl,Nevada,,Southern Miss,,124.74,113.04,Nevada,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
+2020,Bowl,1,Bowl,15,Sun Bowl,North Carolina,,Navy,,164.66,107.06,North Carolina,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
+2020,Bowl,1,Bowl,14,Gator Bowl,Presbyterian,,Maine,,138.5,114.36,Presbyterian,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
+2020,Bowl,1,Bowl,15,Capital One Bowl,Northwestern,,Auburn,,141.42,138.66,Northwestern,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
+2020,Bowl,1,Bowl,14,Military Bowl,Delaware State,,Stephen F. Austin,,134.5,110.4,Delaware State,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
+2020,Bowl,1,Bowl,14,Texas Bowl,Wichita State,,Baylor,,154.24,123.86,Wichita State,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
+2020,Bowl,1,Bowl,14,New Orleans Bowl,Bucknell,,James Madison,,160.5,116.26,Bucknell,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
+2020,Bowl,1,Bowl,14,Idaho Potato Bowl,Northern Iowa,,Tennessee State,,158.72,97.82,Northern Iowa,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
+2020,Bowl,1,Bowl,14,New Mexico Bowl,Indiana,,Iowa State,,152.46,117.1,Indiana,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
+2020,Bowl,1,Bowl,14,TaxSlayer Bowl,UTEP,,Notre Dame,,174.62,90.16,UTEP,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
+2020,Bowl,1,Bowl,14,Bahamas Bowl,Lamar,,FGCU,,135.32,121.22,Lamar,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
+2020,Bowl,1,Bowl,14,Brooklyn Bowl,Stony Brook,,Davidson,,171.44,103.9,Stony Brook,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
+2020,Bowl,1,Bowl,14,Chick-fil-A Bowl,Wyoming,,Kentucky,,113.92,100.2,Wyoming,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
+2020,Bowl,1,Bowl,14,Geico Bowl,Rutgers,,UTSA,,149.54,102,Rutgers,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
+2020,Bowl,1,Bowl,14,FedEx Bowl,Colorado State,,Temple,,164.06,128.76,Colorado State,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
+2020,Bowl,1,Bowl,14,Birmingham Bowl,Nicholls State,,Middle Tennessee State,,155.26,135.96,Nicholls State,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
+2020,Bowl,1,Bowl,14,EA Sports Bowl,Pittsburgh,,Alabama,,117.82,111.3,Pittsburgh,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
+2020,Bowl,1,Bowl,14,Ice Bowl,Central Arkansas,,Howard,,153.48,130.66,Central Arkansas,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
+2020,Bowl,1,Bowl,14,Boca Raton Bowl,Arkansas State,,San Jose State,,139.02,124.32,Arkansas State,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
+2020,Bowl,1,Bowl,14,Xbox Bowl,Texas State,,Columbia,,132.54,110.7,Texas State,matchups from Chris's 2020 bowl score sheet; scores from Sleeper; Chris's winner list says South Alabama over Columbia - verify
+2020,Bowl,1,Bowl,14,PlayStation Bowl,Mississippi State,,Oregon State,,128,68.8,Mississippi State,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
+2020,NIT,1,Group Stage 1,13,Group 1,McNeese State | Florida International | Alcorn State | Western Kentucky | UCONN,,,,106.86 | 126.9 | 68 | 112.3 | 143.54,,Florida International | UCONN,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07); scores from Sleeper"
+2020,NIT,1,Group Stage 1,13,Group 2,Missouri | Cornell | Dayton | Butler | Eastern Michigan,,,,76.54 | 153 | 75.9 | 109.26 | 140.48,,Cornell | Eastern Michigan,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07); scores from Sleeper"
+2020,NIT,1,Group Stage 1,13,Group 3,UT Martin | Georgetown | SDSU | Southern | Holy Cross,,,,107.14 | 89.36 | 118.14 | 67.38 | 89.54,,UT Martin | SDSU,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07); scores from Sleeper"
+2020,NIT,1,Group Stage 1,13,Group 4,Michigan State | LSU | Stanford | Central Michigan | Arkansas,,,,126.44 | 117.7 | 80.12 | 152.02 | 135.3,,Central Michigan | Arkansas,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07); scores from Sleeper"
+2020,NIT,1,Group Stage 1,13,Group 5,USC | USF | Louisiana Monroe | New Mexico | Penn State,,,,116.18 | 77.8 | 90.08 | 106.24 | 161.6,,USC | Penn State,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07); scores from Sleeper"
+2020,NIT,1,Group Stage 1,13,Group 6,Grambling State | Princeton | Wake Forest | Old Dominion | William & Mary,,,,150.94 | 97.86 | 128.32 | 110.9 | 135.64,,Grambling State | William & Mary,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07); scores from Sleeper"
+2020,NIT,1,Group Stage 1,13,Group 7,Tuskegee | North Texas | Memphis | Louisiana | Marshall,,,,142.02 | 132.86 | 121.22 | 57.92 | 109.82,,Tuskegee | North Texas,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07); scores from Sleeper"
+2020,NIT,1,Group Stage 1,13,Group 8,Murray State | Ohio State | Youngstown State | Dartmouth | Illinois,,,,173.52 | 104.42 | 115.24 | 146.74 | 132.06,,Murray State | Dartmouth,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07); scores from Sleeper"
+2020,NIT,1,Group Stage 1,13,Group 9,Texas Tech | FSU | Austin Peay | Miami | Georgia Southern,,,,154 | 105.14 | 124.94 | 120.08 | 141.46,,Texas Tech | Georgia Southern,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07); scores from Sleeper"
+2020,NIT,1,Group Stage 1,13,Group 10,Georgia State | Bethune-Cookman | Tulsa | Florida A&M | TCU,,,,147.74 | 117.1 | 104.14 | 69.94 | 75.06,,Georgia State | Bethune-Cookman,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07); scores from Sleeper"
+2020,NIT,1,Group Stage 1,13,Group 11,Idaho | Kansas | Oregon | Coastal Carolina | Hawaii,,,,153.62 | 140.76 | 137.2 | 154.54 | 138.4,,Idaho | Coastal Carolina,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07); scores from Sleeper"
+2020,NIT,1,Group Stage 1,13,Group 12,South Dakota | South Carolina | Florida | Louisville | Georgia,,,,108.12 | 116.86 | 103.12 | 106.94 | 66.38,,South Dakota | South Carolina,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07); scores from Sleeper"
+2020,NIT,1,Group Stage 1,13,Group 13,Maryland | Boston College | UCLA | Arizona State | Colorado,,,,104.74 | 131.16 | 92.32 | 135.2 | 109.12,,Boston College | Arizona State,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07); scores from Sleeper"
+2020,NIT,1,Group Stage 1,13,Group 14,UNLV | Brown | Boise State | Duke | Minnesota,,,,116.38 | 116.06 | 126.38 | 128.2 | 95.9,,Boise State | Duke,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07); scores from Sleeper"
+2020,NIT,1,Group Stage 1,13,Group 15,Montana | Montana State | Houston Baptist | Colgate | Northwestern State,,,,148.7 | 115.74 | 153.94 | 79.42 | 106.42,,Montana | Houston Baptist,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07); scores from Sleeper"
+2020,NIT,2,Group Stage 2,14,Group 1,Alabama A&M | Southeastern Louisiana | UCONN | Florida International | Eastern Michigan,,,,98.98 | 136.6 | 122.44 | 104.4 | 115.54,,Southeastern Louisiana,"5-team group, top score advances (10 teams entered here); from Chris's 2020 NIT bracket PDF (2026-10-07); scores from Sleeper"
+2020,NIT,2,Group Stage 2,14,Group 2,UAB | Cornell | SDSU | UT Martin | Arkansas,,,,192.42 | 121.94 | 99.08 | 156.48 | 144.7,,UAB,"5-team group, top score advances (10 teams entered here); from Chris's 2020 NIT bracket PDF (2026-10-07); scores from Sleeper"
+2020,NIT,2,Group Stage 2,14,Group 3,Weber State | Central Michigan | Penn State | USC | William & Mary,,,,114.86 | 123.02 | 100.58 | 164.58 | 146.7,,USC,"5-team group, top score advances (10 teams entered here); from Chris's 2020 NIT bracket PDF (2026-10-07); scores from Sleeper"
+2020,NIT,2,Group Stage 2,14,Group 4,Oklahoma State | Grambling State | Tuskegee | North Texas | Dartmouth,,,,169 | 207.02 | 135.22 | 135.22 | 113.02,,Grambling State,"5-team group, top score advances (10 teams entered here); from Chris's 2020 NIT bracket PDF (2026-10-07); scores from Sleeper"
+2020,NIT,2,Group Stage 2,14,Group 5,Virginia | Murray State | Texas Tech | Georgia Southern | Bethune-Cookman,,,,127.46 | 123.02 | 109.98 | 84.48 | 111.82,,Virginia,"5-team group, top score advances (10 teams entered here); from Chris's 2020 NIT bracket PDF (2026-10-07); scores from Sleeper"
+2020,NIT,2,Group Stage 2,14,Group 6,Texas A&M | Georgia State | Coastal Carolina | Idaho | South Dakota,,,,143.52 | 148.38 | 141.96 | 145.86 | 167.44,,South Dakota,"5-team group, top score advances (10 teams entered here); from Chris's 2020 NIT bracket PDF (2026-10-07); scores from Sleeper"
+2020,NIT,2,Group Stage 2,14,Group 7,Richmond | South Carolina | Arizona State | Boston College | Boise State,,,,94.58 | 119.24 | 116.52 | 157.58 | 125.84,,Boston College,"5-team group, top score advances (10 teams entered here); from Chris's 2020 NIT bracket PDF (2026-10-07); scores from Sleeper"
+2020,NIT,2,Group Stage 2,14,Group 8,BYU | Incarnate Word | Duke | Houston Baptist | Montana,,,,112 | 150.94 | 109.2 | 101.08 | 116.14,,Incarnate Word,"5-team group, top score advances (10 teams entered here); from Chris's 2020 NIT bracket PDF (2026-10-07); scores from Sleeper"
+2020,NIT,4,Semifinal,15,Semifinal 1,Southeastern Louisiana | UAB | USC | Grambling State,,,,123.36 | 159.12 | 171.32 | 127.88,,USC,"4-team group, top score advances; from Chris's 2020 NIT bracket PDF (2026-10-07); scores from Sleeper"
+2020,NIT,4,Semifinal,15,Semifinal 2,Virginia | South Dakota | Boston College | Incarnate Word,,,,99.2 | 116.84 | 88.5 | 103.84,,South Dakota,"4-team group, top score advances; from Chris's 2020 NIT bracket PDF (2026-10-07); scores from Sleeper"
+2020,NIT,5,Final,16,,South Dakota,,USC,,156.9,137.58,South Dakota,from Chris's 2020 NIT bracket PDF (2026-10-07); scores from Sleeper
 2021,CCG,1,Conference Championship,12,ACC,Virginia Tech,,Clemson,,129.38,128.34,Virginia Tech,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list
 2021,CCG,1,Conference Championship,12,Big 10,Wisconsin,,Penn State,,145.6,133.34,Wisconsin,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list
 2021,CCG,1,Conference Championship,12,Big 12,Baylor,,Oklahoma,,156.22,147.8,Baylor,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list
