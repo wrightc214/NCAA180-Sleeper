@@ -1,0 +1,244 @@
+{
+  "_about": "Poll engine settings (scripts/poll_*.py). League-specific values live here, not in code. Times are local to `timezone`.",
+  "timezone": "America/New_York",
+  "last_regular_week": 11,
+  "polls": {
+    "Top25": {
+      "label": "Top 25",
+      "size": 25,
+      "points": "linear",
+      "first_week": 1,
+      "last_week": 11,
+      "deadline": {
+        "weekday": "Saturday",
+        "time": "12:00"
+      },
+      "pool": "all"
+    },
+    "Seeding": {
+      "label": "Playoff Seeding",
+      "size": 32,
+      "points": "linear",
+      "first_week": 12,
+      "last_week": 12,
+      "deadline": {
+        "weekday": "Thursday",
+        "time": "12:00"
+      },
+      "pool": "playoff_field"
+    },
+    "Final": {
+      "label": "Final Poll",
+      "size": 25,
+      "first_week": 17,
+      "last_week": 17,
+      "pool": "all",
+      "bump": {
+        "Playoff": [
+          0.15,
+          0.25,
+          0.45,
+          0.85,
+          1.65
+        ],
+        "CCG": 0.15,
+        "Bowl": 0.15,
+        "NIT": 0.05,
+        "align": "final",
+        "PlayoffThird": 0.15
+      },
+      "final_four_rule": true,
+      "_note": "Same bots as the Top 25. Postseason games that needed a lineup (CCG, Playoff, Bowl, every NIT round) are extra games for Scoreboard (win %), Bracketologist (+ real opponents' regular-season all-play) and Monday Morning QB; Vegas, Bandwagon, Headliner, Bagman and Professor stay at week 11. NIT group = one game, result = share of rivals outscored. Bumps are added to Score per win (standard deviations): playoff by round R1..Final, CCG/Bowl flat, NIT x share. One regular-season win is worth about +0.13 (max +0.165), so every CCG/Bowl/playoff win counts more; NIT is a deliberate exception (weak field, up to 5 games). final_four_rule: a semifinal/final winner is raised directly above the team it beat (backstop; never fired 2024-2025). Decided 2026-10-07.",
+      "_bump_align": "'final': playoff bumps count back from the title game, so a shorter bracket (2019: 4 rounds) gives its title game the title bump. Group rounds (2020 playoff round 1) earn the round bump x share of group rivals outscored, like the NIT. PlayoffThird (2020 third-place game) counts as a game; the winner gets the bowl bump (Chris 2026-10-08)."
+    }
+  },
+  "_points": "'linear' = size, size-1, ... 1 for ranks 1..size. Or an explicit list, e.g. [25,24,23,...].",
+  "tiebreak": [
+    "score",
+    "bot_avg_rank",
+    "record"
+  ],
+  "_tiebreak": "Score (BCS), then trimmed average bot rank, then the Standings bot. Teams still exactly tied share a rank.",
+  "role_weights": {
+    "panel": 1
+  },
+  "ballots": {
+    "require_full": true,
+    "allow_own_team": true,
+    "commit_raw": false,
+    "_commit_raw": "Repo and site are public; ballots have never been public. Keep false: the Sheet is the record of ballots, only aggregates are committed.",
+    "outlier_spots": 8,
+    "_outlier_spots": "Private flag when a voter ranks a team this many spots above/below consensus (unranked counts as size+1)."
+  },
+  "intake": {
+    "source_env": "POLL_BALLOTS_CSV_URL",
+    "_source_env": "Secret: the Google Sheet response tab 'Publish to web' CSV link. Local files can also be passed with --file.",
+    "columns": {
+      "timestamp": "Timestamp",
+      "voter": "Voter",
+      "week": "Week",
+      "poll": "Poll",
+      "email": "Email Address"
+    },
+    "rank_column_regex": "^\\s*(?:rank\\s*)?#?\\s*(\\d+)\\s*$",
+    "timestamp_format": null
+  },
+  "voter_alerts": {
+    "consecutive_misses": 2
+  },
+  "publish": {
+    "page_url": "https://wrightc214.github.io/NCAA180-Sleeper/reports/poll.html",
+    "post_to_league": false,
+    "_post_to_league": "false = the league post goes to lm-private-data as a preview only. Flip to true when ready."
+  },
+  "bots": [
+    {
+      "id": "record",
+      "name": "Scoreboard",
+      "enabled": true,
+      "blurb": "Exactly the playoff rank: wins, then points for",
+      "short": "SCB",
+      "voice": "I only care about the standings.",
+      "how": "Wins (ties = half), then official total points as the tiebreaker - the league's real playoff rank. Regular season only."
+    },
+    {
+      "id": "allplay",
+      "name": "Vegas",
+      "enabled": true,
+      "blurb": "Expected wins vs. every other team, every week",
+      "short": "VEG",
+      "voice": "Strip out the schedule luck and tell me who is actually good.",
+      "how": "Each week, the share of all {teams} teams you outscored. Summed over the season; points for breaks ties."
+    },
+    {
+      "id": "form",
+      "name": "Bandwagon",
+      "enabled": true,
+      "blurb": "All-play over the last 3 weeks, weighted 3:2:1",
+      "short": "BAND",
+      "voice": "Whoever is hot right now.",
+      "how": "All-play share over the last 3 weeks, weighted 3:2:1 (most recent heaviest)."
+    },
+    {
+      "id": "resume",
+      "name": "Bracketologist",
+      "enabled": true,
+      "blurb": "Win % plus opponents' all-play strength",
+      "short": "BRKT",
+      "voice": "Who you beat matters as much as how many.",
+      "how": "60% win % + 40% average all-play strength of the opponents you played. Weeks 1-11 only."
+    },
+    {
+      "id": "ceiling",
+      "name": "Headliner",
+      "enabled": true,
+      "blurb": "Best possible lineup per game",
+      "short": "HEAD",
+      "voice": "Star power: the most points this roster could have put up.",
+      "how": "Average points per week of your best possible lineup from your own roster."
+    },
+    {
+      "id": "efficiency",
+      "name": "Monday Morning QB",
+      "enabled": true,
+      "blurb": "Points scored / best possible lineup",
+      "short": "MMQB",
+      "voice": "Second-guesses every start/sit decision.",
+      "how": "Points scored / best possible lineup points, season to date, on the scoring in force at game time."
+    },
+    {
+      "id": "redraft",
+      "name": "Bagman",
+      "enabled": true,
+      "blurb": "Redraft market value of the best starting lineup (FantasyCalc)",
+      "short": "BAG",
+      "voice": "Follows the money: what the market says your starters are worth.",
+      "how": "FantasyCalc redraft value of your best legal starting lineup, from the latest value snapshot. Before 2026 (no market history): Sleeper's projected starter points for the next week."
+    },
+    {
+      "id": "professor",
+      "name": "Professor",
+      "enabled": true,
+      "short": "PROF",
+      "blurb": "Starts with preseason roster strength, rewards quality weeks midseason, finishes on the resume",
+      "voice": "Grades on a curve that shifts as the semester goes on.",
+      "how": "Three blocks, each built from percentile ranks across all {teams} teams; the block weights shift with games played (table below)."
+    }
+  ],
+  "_bots": "Each bot ranks every team. Turn one off with enabled=false; ids map to functions in scripts/poll_bots.py (also available: points, median, elo). Lineup chosen by backtest 2026-10-07 (claude/poll-backtest-2026-10-07.md).",
+  "consensus": {
+    "drop_high_low": true,
+    "method": "zscore",
+    "_note": "Per team: each bot's value is standardized across the pool (z-score, clipped at +/-3), the best and worst bot are dropped, the rest averaged = Score (0 = average team; +1 = one standard deviation better). Chosen 2026-10-07: ties average rank in the backtest (seeds 0.958/0.927 vs 0.955/0.925) and gives the final poll's bumps a fixed meaning. Other methods: 'avg_rank' (average of best/worst-dropped ranks), 'points' (classic BCS top-25 points). ORV = outside the poll but in the top `size` of at least one counted bot."
+  },
+  "human_component": {
+    "enabled": false,
+    "_note": "When true, panel ballots (Google Form) become a second BCS component: HumanPct = ballot points / max. Score = mean of ComputerPct and HumanPct. The poll then waits for the ballot deadline; while false it publishes in the Tuesday weekly run."
+  },
+  "seeding": {
+    "include_week12_points": false,
+    "_note": "Week 12 (CCG) points count for the Seeding poll bots only if true. Backtest compares both."
+  },
+  "professor": {
+    "_note": "All measures are percentile ranks across every team that season. Prior is frozen (scripts/poll_prior.py -> PollPrior_Season/_Historic.csv); a team missing a prior input gets the other inputs' weights rescaled to 100%. Block weights interpolate linearly between anchor weeks (games played). Prior weights 2026-10-08: backtest 2023-2025 vs all-play 0.739 avg (vs 0.700 for 80 PSV / 20 last-year).",
+    "prior": {
+      "psv": 0.3,
+      "wk1_proj": 0.5,
+      "dynasty": 0.1,
+      "last_final": 0.1
+    },
+    "quality": {
+      "allplay": 0.5,
+      "ppg": 0.3,
+      "consistency": 0.2
+    },
+    "resume": {
+      "win_pct": 0.7,
+      "quality_wins": 0.2,
+      "standing": 0.1
+    },
+    "weights": {
+      "0": [
+        100,
+        0,
+        0
+      ],
+      "1": [
+        70,
+        25,
+        5
+      ],
+      "3": [
+        40,
+        40,
+        20
+      ],
+      "6": [
+        15,
+        45,
+        40
+      ],
+      "9": [
+        8,
+        32,
+        60
+      ],
+      "11": [
+        5,
+        25,
+        70
+      ]
+    },
+    "sources": {
+      "values": "data/TeamValuesPreseason_Historic.csv",
+      "projections": [
+        "data/TeamProjectionsWk1_Historic.csv",
+        "data/backfill/TeamProjections_History.csv"
+      ],
+      "psv_rank": "data/PreseasonRank_Historic.csv",
+      "_psv_rank": "Seasons with a preseason starter ranking instead of values (2021: Chris file 9/6/21). Used as the PSV input (rank 1 = best) when the season has no PSV values; unresolved slots get no PSV (renormalized)."
+    },
+    "exclude_value_years": [],
+    "_exclude_value_years": "Seasons whose value capture is not preseason are listed here and ignored (weight renormalized). 2022 now uses the 9/13/22 sheet (after week 1, before week 2), so nothing is excluded."
+  }
+}

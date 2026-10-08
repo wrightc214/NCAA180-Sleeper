@@ -1,0 +1,316 @@
+Year,PollType,ThroughWeek,AppliesToWeek,Rank,Status,Team,LeagueID,LeagueName,RosterID,Notes,Source
+2019,Human,0,1,1.0,Ranked,Fresno State,462407211507773440,NCAA MOUNTAIN WEST,4,MW r4 = Fresno State (2020 verified; r7 was Idaho),"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,0,1,2.0,Ranked,Arizona State,460504411332931584,NCAA PAC 12,7,Pac 12 r7 = benkline (Arizona State),"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,0,1,3.0,Ranked,Kansas,471499316175826944,NCAA BIG 12,10,slot from draft 2019 name map (Assumed = today (blank/nickname) — verify),"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,0,1,4.0,Ranked,USC,460504411332931584,NCAA PAC 12,2,preseason,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,0,1,5.0,Ranked,Nevada,462407211507773440,NCAA MOUNTAIN WEST,10,preseason,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,0,1,6.0,Ranked,Purdue,460505110800232448,NCAA BIG 10,1,preseason,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,0,1,7.0,Ranked,San Diego State,462407211507773440,NCAA MOUNTAIN WEST,12,preseason,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,0,1,8.0,Ranked,Virginia,455862950553448448,NCAA ACC,1,slot from draft 2019 name map (Assumed = today (blank/nickname) — verify),"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,0,1,9.0,Ranked,North Carolina,455862950553448448,NCAA ACC,2,preseason,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,0,1,10.0,Ranked,Ohio,460505297153159168,NCAA AMERICAN,5,Sleeper name Ohio Bobcats,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,0,1,11.0,Ranked,Georgia Tech,455862950553448448,NCAA ACC,3,preseason,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,0,1,12.0,Ranked,Nebraska,460505110800232448,NCAA BIG 10,2,preseason,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,0,1,13.0,Ranked,FSU,455862950553448448,NCAA ACC,5,preseason,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,0,1,14.0,Ranked,Illinois,460505110800232448,NCAA BIG 10,10,preseason,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,0,1,15.0,Ranked,Alabama,460505032731652096,NCAA SEC,11,slot from draft 2019 name map (Assumed = today (blank/nickname) — verify),"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,0,1,16.0,Ranked,Ole Miss,460505032731652096,NCAA SEC,5,preseason,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,0,1,17.0,Ranked,Utah,460504411332931584,NCAA PAC 12,11,preseason,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,0,1,18.0,Ranked,California,460504411332931584,NCAA PAC 12,10,preseason,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,0,1,19.0,Ranked,Vanderbilt,460505032731652096,NCAA SEC,9,preseason,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,0,1,20.0,Ranked,Toledo,460505297153159168,NCAA AMERICAN,3,slot from draft 2019 name map (No match — Chris to fill),"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,0,1,21.0,Ranked,Iowa State,471499316175826944,NCAA BIG 12,2,preseason,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,0,1,22.0,Ranked,Temple,462407340038025216,NCAA SUN BELT,1,preseason,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,0,1,23.0,Ranked,Northwestern,460505110800232448,NCAA BIG 10,3,slot from draft 2019 name map (Assumed = today (blank/nickname) — verify),"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,0,1,24.0,Ranked,South Carolina,460505032731652096,NCAA SEC,8,inferred: SEC r8 = South Carolina in 2020 (verified); 2019 Sleeper name was LSU Tigers (benkline) - verify,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,0,1,25.0,Ranked,Eastern Michigan,462453279037583360,NCAA WILD,6,preseason,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,5,6,1.0,Ranked,Wichita State,462453279037583360,NCAA WILD,5,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,5,6,2.0,Ranked,Georgia Tech,455862950553448448,NCAA ACC,3,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,5,6,3.0,Ranked,Kentucky,460505032731652096,NCAA SEC,10,slot from draft 2019 name map (Check — differs from today),"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,5,6,4.0,Ranked,San Jose State,462453279037583360,NCAA WILD,7,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,5,6,5.0,Ranked,Ohio,460505297153159168,NCAA AMERICAN,5,Sleeper name Ohio Bobcats,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,5,6,6.0,Ranked,Bucknell,462453135504306176,NCAA IVY,3,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,5,6,7.0,Ranked,Virginia Tech,455862950553448448,NCAA ACC,4,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,5,6,8.0,Ranked,Michigan State,460505110800232448,NCAA BIG 10,4,slot from draft 2019 name map (Assumed = today (blank/nickname) — verify),"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,5,6,9.0,Ranked,Rice,462407340038025216,NCAA SUN BELT,4,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,5,6,10.0,Ranked,Harvard,462453135504306176,NCAA IVY,2,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,5,6,11.0,Ranked,Washington State,460504411332931584,NCAA PAC 12,4,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,5,6,12.0,Ranked,Kansas State,471499316175826944,NCAA BIG 12,7,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,5,6,13.0,Ranked,Temple,462407340038025216,NCAA SUN BELT,1,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,5,6,14.0,Ranked,Penn,462453135504306176,NCAA IVY,7,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,5,6,15.0,Ranked,Syracuse,455834597620445184,NCAA BIG EAST & CO.,7,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,5,6,16.0,Ranked,Memphis,462407340038025216,NCAA SUN BELT,8,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,5,6,17.0,Ranked,Arizona,460504411332931584,NCAA PAC 12,1,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,5,6,18.0,Ranked,Clemson,455862950553448448,NCAA ACC,12,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,5,6,19.0,Ranked,Auburn,460505032731652096,NCAA SEC,4,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,5,6,20.0,Ranked,Nevada,462407211507773440,NCAA MOUNTAIN WEST,10,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,5,6,21.0,Ranked,Utah,460504411332931584,NCAA PAC 12,11,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,5,6,22.0,Ranked,New Mexico,462407211507773440,NCAA MOUNTAIN WEST,9,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,5,6,23.0,Ranked,San Diego State,462407211507773440,NCAA MOUNTAIN WEST,12,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,5,6,24.0,Ranked,UCLA,460504411332931584,NCAA PAC 12,12,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,5,6,25.0,Ranked,NC State,455862950553448448,NCAA ACC,10,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,8,9,1.0,Ranked,Georgia Tech,455862950553448448,NCAA ACC,3,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,8,9,2.0,Ranked,Virginia Tech,455862950553448448,NCAA ACC,4,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,8,9,3.0,Ranked,Kansas State,471499316175826944,NCAA BIG 12,7,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,8,9,4.0,Ranked,Washington State,460504411332931584,NCAA PAC 12,4,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,8,9,5.0,Ranked,Ole Miss,460505032731652096,NCAA SEC,5,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,8,9,6.0,Ranked,Wichita State,462453279037583360,NCAA WILD,5,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,8,9,7.0,Ranked,Syracuse,455834597620445184,NCAA BIG EAST & CO.,7,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,8,9,8.0,Ranked,Penn,462453135504306176,NCAA IVY,7,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,8,9,9.0,Ranked,Notre Dame,455834597620445184,NCAA BIG EAST & CO.,12,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,8,9,10.0,Ranked,Michigan State,460505110800232448,NCAA BIG 10,4,slot from draft 2019 name map (Assumed = today (blank/nickname) — verify),"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,8,9,11.0,Ranked,Texas Tech,471499316175826944,NCAA BIG 12,1,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,8,9,12.0,Ranked,Illinois,460505110800232448,NCAA BIG 10,10,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,8,9,13.0,Ranked,Harvard,462453135504306176,NCAA IVY,2,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,8,9,14.0,Ranked,Washington,460504411332931584,NCAA PAC 12,6,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,8,9,15.0,Ranked,San Diego State,462407211507773440,NCAA MOUNTAIN WEST,12,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,8,9,16.0,Ranked,Bucknell,462453135504306176,NCAA IVY,3,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,8,9,17.0,Ranked,Nevada,462407211507773440,NCAA MOUNTAIN WEST,10,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,8,9,18.0,Ranked,Ohio,460505297153159168,NCAA AMERICAN,5,Sleeper name Ohio Bobcats,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,8,9,19.0,Ranked,Rice,462407340038025216,NCAA SUN BELT,4,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,8,9,20.0,Ranked,Army,455834597620445184,NCAA BIG EAST & CO.,8,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,8,9,21.0,Ranked,Clemson,455862950553448448,NCAA ACC,12,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,8,9,22.0,Ranked,Northwestern,460505110800232448,NCAA BIG 10,3,slot from draft 2019 name map (Assumed = today (blank/nickname) — verify),"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,8,9,23.0,Ranked,Maryland,455834597620445184,NCAA BIG EAST & CO.,2,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,8,9,24.0,Ranked,Memphis,462407340038025216,NCAA SUN BELT,8,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,8,9,25.0,Ranked,Buffalo,460505297153159168,NCAA AMERICAN,7,slot from draft 2019 name map (No match — Chris to fill),"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,11,12,1.0,Ranked,Auburn,460505032731652096,NCAA SEC,4,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,11,12,2.0,Ranked,Georgia Tech,455862950553448448,NCAA ACC,3,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,11,12,3.0,Ranked,Michigan State,460505110800232448,NCAA BIG 10,4,slot from draft 2019 name map (Assumed = today (blank/nickname) — verify),"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,11,12,4.0,Ranked,Bucknell,462453135504306176,NCAA IVY,3,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,11,12,5.0,Ranked,Utah,460504411332931584,NCAA PAC 12,11,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,11,12,6.0,Ranked,Washington,460504411332931584,NCAA PAC 12,6,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,11,12,7.0,Ranked,Virginia Tech,455862950553448448,NCAA ACC,4,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,11,12,8.0,Ranked,Kansas State,471499316175826944,NCAA BIG 12,7,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,11,12,9.0,Ranked,Memphis,462407340038025216,NCAA SUN BELT,8,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,11,12,10.0,Ranked,Washington State,460504411332931584,NCAA PAC 12,4,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,11,12,11.0,Ranked,Maryland,455834597620445184,NCAA BIG EAST & CO.,2,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,11,12,12.0,Ranked,Penn,462453135504306176,NCAA IVY,7,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,11,12,13.0,Ranked,Nevada,462407211507773440,NCAA MOUNTAIN WEST,10,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,11,12,14.0,Ranked,Texas Tech,471499316175826944,NCAA BIG 12,1,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,11,12,15.0,Ranked,New Mexico,462407211507773440,NCAA MOUNTAIN WEST,9,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,11,12,16.0,Ranked,Citadel,462453279037583360,NCAA WILD,8,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,11,12,17.0,Ranked,Ole Miss,460505032731652096,NCAA SEC,5,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,11,12,18.0,Ranked,Northwestern,460505110800232448,NCAA BIG 10,3,slot from draft 2019 name map (Assumed = today (blank/nickname) — verify),"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,11,12,19.0,Ranked,Notre Dame,455834597620445184,NCAA BIG EAST & CO.,12,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,11,12,20.0,Ranked,Alabama,460505032731652096,NCAA SEC,11,slot from draft 2019 name map (Assumed = today (blank/nickname) — verify),"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,11,12,21.0,Ranked,San Diego State,462407211507773440,NCAA MOUNTAIN WEST,12,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,11,12,22.0,Ranked,Harvard,462453135504306176,NCAA IVY,2,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,11,12,23.0,Ranked,Kentucky,460505032731652096,NCAA SEC,10,slot from draft 2019 name map (Check — differs from today),"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,11,12,24.0,Ranked,Colgate,462453135504306176,NCAA IVY,8,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2019,Human,11,12,25.0,Ranked,Army,455834597620445184,NCAA BIG EAST & CO.,8,,"Chris's 2019 Top 25 sheet (preseason, weeks 6, 9, 12)"
+2020,Human,1,2,1.0,Ranked,Ole Miss,520081942477230080,NCAA SEC,5,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,1,2,2.0,Ranked,Citadel,519112491566792704,NCAA WILD,8,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,1,2,3.0,Ranked,Utah State,519113931987255296,NCAA MOUNTAIN WEST,5,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,1,2,4.0,Ranked,Tulane,519113796658036736,NCAA SUN BELT,3,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,1,2,5.0,Ranked,UNLV,519113931987255296,NCAA MOUNTAIN WEST,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,1,2,6.0,Ranked,Penn,519109907858935808,NCAA IVY,7,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,1,2,7.0,Ranked,Wisconsin,519114104323002368,NCAA BIG 10,6,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,1,2,8.0,Ranked,Iowa,519114104323002368,NCAA BIG 10,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,1,2,9.0,Ranked,Southern Miss,519113796658036736,NCAA SUN BELT,9,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,1,2,10.0,Ranked,Vanderbilt,520081942477230080,NCAA SEC,9,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,1,2,11.0,Ranked,Texas A&M,520086664899657728,NCAA BIG 12,4,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,1,2,12.0,Ranked,Georgia Tech,520082008453632000,NCAA ACC,3,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,1,2,13.0,Ranked,Rice,519113796658036736,NCAA SUN BELT,4,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,1,2,14.0,Ranked,Campbell,519446956439826432,NCAA PIONEER,8,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,1,2,15.0,Ranked,Presbyterian,552229388243996672,NCAA SOUTHLAND,2,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,1,2,16.0,Ranked,Washington,519108145819570176,NCAA PAC 12,6,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,1,2,17.0,Ranked,Kentucky,520081942477230080,NCAA SEC,10,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,1,2,18.0,Ranked,Utah,519108145819570176,NCAA PAC 12,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,1,2,19.0,Ranked,USF,519112273652240384,NCAA BIG EAST & CO.,10,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,1,2,20.0,Ranked,Troy,519398167841558528,NCAA USA,1,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,1,2,21.0,Ranked,Maine,519431936523956224,NCAA BIG SKY,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,1,2,22.0,Ranked,UT Martin,519446956439826432,NCAA PIONEER,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,1,2,23.0,Ranked,Indiana,519114104323002368,NCAA BIG 10,8,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,1,2,24.0,Ranked,Northwestern,519114104323002368,NCAA BIG 10,3,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,1,2,25.0,Ranked,Michigan,519114104323002368,NCAA BIG 10,12,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,1.0,Ranked,Citadel,519112491566792704,NCAA WILD,8,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,2.0,Ranked,Penn,519109907858935808,NCAA IVY,7,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,3.0,Ranked,Wisconsin,519114104323002368,NCAA BIG 10,6,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,4.0,Ranked,Washington,519108145819570176,NCAA PAC 12,6,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,5.0,Ranked,Vanderbilt,520081942477230080,NCAA SEC,9,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,6.0,Ranked,Ole Miss,520081942477230080,NCAA SEC,5,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,7.0,Ranked,UNLV,519113931987255296,NCAA MOUNTAIN WEST,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,8.0,Ranked,Rice,519113796658036736,NCAA SUN BELT,4,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,9.0,Ranked,Utah State,519113931987255296,NCAA MOUNTAIN WEST,5,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,10.0,Ranked,Louisiana Tech,519113796658036736,NCAA SUN BELT,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,11.0,Ranked,Tulane,519113796658036736,NCAA SUN BELT,3,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,12.0,Ranked,Utah,519108145819570176,NCAA PAC 12,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,13.0,Ranked,Michigan,519114104323002368,NCAA BIG 10,12,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,14.0,Ranked,Northwestern,519114104323002368,NCAA BIG 10,3,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,15.0,Ranked,Iowa,519114104323002368,NCAA BIG 10,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,16.0,Ranked,Southern Miss,519113796658036736,NCAA SUN BELT,9,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,17.0,Ranked,Syracuse,519112273652240384,NCAA BIG EAST & CO.,7,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,18.0,Ranked,Texas A&M,520086664899657728,NCAA BIG 12,4,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,19.0,Ranked,Kentucky,520081942477230080,NCAA SEC,10,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,20.0,Ranked,Dixie State,552229388243996672,NCAA SOUTHLAND,8,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,21.0,Ranked,Southeastern Louisiana,552229388243996672,NCAA SOUTHLAND,7,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,22.0,Ranked,Florida International,519398167841558528,NCAA USA,4,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,23.0,Ranked,Virginia Tech,520082008453632000,NCAA ACC,4,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,24.0,Ranked,Notre Dame,519112273652240384,NCAA BIG EAST & CO.,12,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,25.0,Ranked,Maine,519431936523956224,NCAA BIG SKY,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,,ORV,Presbyterian,552229388243996672,NCAA SOUTHLAND,2,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,,ORV,USF,519112273652240384,NCAA BIG EAST & CO.,10,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,,ORV,Indiana,519114104323002368,NCAA BIG 10,8,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,,ORV,Georgia Tech,520082008453632000,NCAA ACC,3,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,,ORV,UT Martin,519446956439826432,NCAA PIONEER,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,,ORV,Troy,519398167841558528,NCAA USA,1,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,2,3,,ORV,Campbell,519446956439826432,NCAA PIONEER,8,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,1.0,Ranked,Wisconsin,519114104323002368,NCAA BIG 10,6,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,2.0,Ranked,Utah State,519113931987255296,NCAA MOUNTAIN WEST,5,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,3.0,Ranked,Vanderbilt,520081942477230080,NCAA SEC,9,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,4.0,Ranked,Ole Miss,520081942477230080,NCAA SEC,5,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,5.0,Ranked,Rice,519113796658036736,NCAA SUN BELT,4,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,6.0,Ranked,Louisiana Tech,519113796658036736,NCAA SUN BELT,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,7.0,Ranked,Iowa,519114104323002368,NCAA BIG 10,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,8.0,Ranked,Southern Miss,519113796658036736,NCAA SUN BELT,9,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,9.0,Ranked,Washington,519108145819570176,NCAA PAC 12,6,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,10.0,Ranked,Tulane,519113796658036736,NCAA SUN BELT,3,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,11.0,Ranked,Citadel,519112491566792704,NCAA WILD,8,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,12.0,Ranked,Penn,519109907858935808,NCAA IVY,7,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,13.0,Ranked,Dixie State,552229388243996672,NCAA SOUTHLAND,8,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,14.0,Ranked,Utah,519108145819570176,NCAA PAC 12,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,15.0,Ranked,Syracuse,519112273652240384,NCAA BIG EAST & CO.,7,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,16.0,Ranked,Kentucky,520081942477230080,NCAA SEC,10,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,17.0,Ranked,UNLV,519113931987255296,NCAA MOUNTAIN WEST,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,18.0,Ranked,Southeastern Louisiana,552229388243996672,NCAA SOUTHLAND,7,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,19.0,Ranked,Arizona,519108145819570176,NCAA PAC 12,1,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,20.0,Ranked,Maine,519431936523956224,NCAA BIG SKY,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,21.0,Ranked,Virginia Tech,520082008453632000,NCAA ACC,4,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,22.0,Ranked,Troy,519398167841558528,NCAA USA,1,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,23.0,Ranked,Northwestern,519114104323002368,NCAA BIG 10,3,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,24.0,Ranked,Michigan,519114104323002368,NCAA BIG 10,12,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,25.0,Ranked,Indiana,519114104323002368,NCAA BIG 10,8,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,,ORV,Georgia Tech,520082008453632000,NCAA ACC,3,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,,ORV,Texas A&M,520086664899657728,NCAA BIG 12,4,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,,ORV,Harvard,519109907858935808,NCAA IVY,2,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,,ORV,USF,519112273652240384,NCAA BIG EAST & CO.,10,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,,ORV,Presbyterian,552229388243996672,NCAA SOUTHLAND,2,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,,ORV,UT Martin,519446956439826432,NCAA PIONEER,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,3,4,,ORV,Notre Dame,519112273652240384,NCAA BIG EAST & CO.,12,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,4,5,1.0,Ranked,Wisconsin,519114104323002368,NCAA BIG 10,6,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,4,5,2.0,Ranked,Utah State,519113931987255296,NCAA MOUNTAIN WEST,5,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,4,5,3.0,Ranked,Vanderbilt,520081942477230080,NCAA SEC,9,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,4,5,4.0,Ranked,Ole Miss,520081942477230080,NCAA SEC,5,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,4,5,5.0,Ranked,Louisiana Tech,519113796658036736,NCAA SUN BELT,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,4,5,6.0,Ranked,Tulane,519113796658036736,NCAA SUN BELT,3,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,4,5,7.0,Ranked,Citadel,519112491566792704,NCAA WILD,8,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,4,5,8.0,Ranked,Penn,519109907858935808,NCAA IVY,7,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,4,5,9.0,Ranked,Utah,519108145819570176,NCAA PAC 12,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,4,5,10.0,Ranked,Dixie State,552229388243996672,NCAA SOUTHLAND,8,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,4,5,11.0,Ranked,Syracuse,519112273652240384,NCAA BIG EAST & CO.,7,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,4,5,12.0,Ranked,Arizona,519108145819570176,NCAA PAC 12,1,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,4,5,13.0,Ranked,Rice,519113796658036736,NCAA SUN BELT,4,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,4,5,14.0,Ranked,Iowa,519114104323002368,NCAA BIG 10,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,4,5,15.0,Ranked,Virginia Tech,520082008453632000,NCAA ACC,4,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,4,5,16.0,Ranked,Southern Miss,519113796658036736,NCAA SUN BELT,9,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,4,5,17.0,Ranked,Kentucky,520081942477230080,NCAA SEC,10,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,4,5,18.0,Ranked,Maine,519431936523956224,NCAA BIG SKY,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,4,5,19.0,Ranked,Southeastern Louisiana,552229388243996672,NCAA SOUTHLAND,7,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,4,5,20.0,Ranked,Troy,519398167841558528,NCAA USA,1,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,4,5,21.0,Ranked,Harvard,519109907858935808,NCAA IVY,2,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,4,5,22.0,Ranked,Northwestern,519114104323002368,NCAA BIG 10,3,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,4,5,23.0,Ranked,Hampton,519412020617998336,NCAA HISTORICALLY BLACK,10,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,4,5,24.0,Ranked,Michigan,519114104323002368,NCAA BIG 10,12,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,4,5,25.0,Ranked,UT Martin,519446956439826432,NCAA PIONEER,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,4,5,,ORV,Indiana,519114104323002368,NCAA BIG 10,8,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,4,5,,ORV,Presbyterian,552229388243996672,NCAA SOUTHLAND,2,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,4,5,,ORV,Georgia Tech,520082008453632000,NCAA ACC,3,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,4,5,,ORV,Notre Dame,519112273652240384,NCAA BIG EAST & CO.,12,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,4,5,,ORV,UNLV,519113931987255296,NCAA MOUNTAIN WEST,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,1.0,Ranked,Wisconsin,519114104323002368,NCAA BIG 10,6,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,2.0,Ranked,Utah State,519113931987255296,NCAA MOUNTAIN WEST,5,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,3.0,Ranked,Vanderbilt,520081942477230080,NCAA SEC,9,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,4.0,Ranked,Ole Miss,520081942477230080,NCAA SEC,5,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,5.0,Ranked,Tulane,519113796658036736,NCAA SUN BELT,3,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,6.0,Ranked,Citadel,519112491566792704,NCAA WILD,8,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,7.0,Ranked,Penn,519109907858935808,NCAA IVY,7,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,8.0,Ranked,Syracuse,519112273652240384,NCAA BIG EAST & CO.,7,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,9.0,Ranked,Utah,519108145819570176,NCAA PAC 12,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,10.0,Ranked,Dixie State,552229388243996672,NCAA SOUTHLAND,8,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,11.0,Ranked,Maine,519431936523956224,NCAA BIG SKY,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,12.0,Ranked,Virginia Tech,520082008453632000,NCAA ACC,4,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,13.0,Ranked,Arizona,519108145819570176,NCAA PAC 12,1,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,14.0,Ranked,Troy,519398167841558528,NCAA USA,1,Troy listed at both 14 and 18 on the source sheet,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,15.0,Ranked,Louisiana Tech,519113796658036736,NCAA SUN BELT,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,16.0,Ranked,Southern Miss,519113796658036736,NCAA SUN BELT,9,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,17.0,Ranked,Hampton,519412020617998336,NCAA HISTORICALLY BLACK,10,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,18.0,Ranked,Troy,519398167841558528,NCAA USA,1,Troy listed at both 14 and 18 on the source sheet,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,19.0,Ranked,Harvard,519109907858935808,NCAA IVY,2,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,20.0,Ranked,Rice,519113796658036736,NCAA SUN BELT,4,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,21.0,Ranked,Iowa,519114104323002368,NCAA BIG 10,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,22.0,Ranked,Navy,519112273652240384,NCAA BIG EAST & CO.,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,23.0,Ranked,Indiana,519114104323002368,NCAA BIG 10,8,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,24.0,Ranked,Northwestern,519114104323002368,NCAA BIG 10,3,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,25.0,Ranked,UT Martin,519446956439826432,NCAA PIONEER,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,,ORV,Southeastern Louisiana,552229388243996672,NCAA SOUTHLAND,7,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,,ORV,Presbyterian,552229388243996672,NCAA SOUTHLAND,2,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,,ORV,Michigan,519114104323002368,NCAA BIG 10,12,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,,ORV,North Carolina,520082008453632000,NCAA ACC,2,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,,ORV,Central Arkansas,519112491566792704,NCAA WILD,9,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,,ORV,Kentucky,520081942477230080,NCAA SEC,10,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,5,6,,ORV,Georgia Tech,520082008453632000,NCAA ACC,3,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,1.0,Ranked,Wisconsin,519114104323002368,NCAA BIG 10,6,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,2.0,Ranked,Utah State,519113931987255296,NCAA MOUNTAIN WEST,5,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,3.0,Ranked,Vanderbilt,520081942477230080,NCAA SEC,9,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,4.0,Ranked,Ole Miss,520081942477230080,NCAA SEC,5,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,5.0,Ranked,Tulane,519113796658036736,NCAA SUN BELT,3,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,6.0,Ranked,Penn,519109907858935808,NCAA IVY,7,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,7.0,Ranked,Syracuse,519112273652240384,NCAA BIG EAST & CO.,7,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,8.0,Ranked,Utah,519108145819570176,NCAA PAC 12,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,9.0,Ranked,Maine,519431936523956224,NCAA BIG SKY,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,10.0,Ranked,Dixie State,552229388243996672,NCAA SOUTHLAND,8,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,11.0,Ranked,Troy,519398167841558528,NCAA USA,1,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,12.0,Ranked,Hampton,519412020617998336,NCAA HISTORICALLY BLACK,10,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,13.0,Ranked,Virginia Tech,520082008453632000,NCAA ACC,4,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,14.0,Ranked,Southern Miss,519113796658036736,NCAA SUN BELT,9,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,15.0,Ranked,Citadel,519112491566792704,NCAA WILD,8,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,16.0,Ranked,Arizona,519108145819570176,NCAA PAC 12,1,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,17.0,Ranked,Harvard,519109907858935808,NCAA IVY,2,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,18.0,Ranked,Wofford,519446956439826432,NCAA PIONEER,1,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,19.0,Ranked,Navy,519112273652240384,NCAA BIG EAST & CO.,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,20.0,Ranked,Rice,519113796658036736,NCAA SUN BELT,4,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,21.0,Ranked,Indiana,519114104323002368,NCAA BIG 10,8,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,22.0,Ranked,Iowa,519114104323002368,NCAA BIG 10,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,23.0,Ranked,Louisiana Tech,519113796658036736,NCAA SUN BELT,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,24.0,Ranked,Tennessee,520081942477230080,NCAA SEC,3,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,25.0,Ranked,Clemson,520082008453632000,NCAA ACC,12,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,,ORV,Southeastern Louisiana,552229388243996672,NCAA SOUTHLAND,7,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,,ORV,North Carolina,520082008453632000,NCAA ACC,2,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,,ORV,Central Arkansas,519112491566792704,NCAA WILD,9,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,,ORV,Alabama A&M,519412020617998336,NCAA HISTORICALLY BLACK,2,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,,ORV,South Alabama,519398167841558528,NCAA USA,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,,ORV,Sam Houston State,552229388243996672,NCAA SOUTHLAND,5,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,6,7,,ORV,Villanova,519431936523956224,NCAA BIG SKY,2,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,1.0,Ranked,Wisconsin,519114104323002368,NCAA BIG 10,6,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,2.0,Ranked,Utah State,519113931987255296,NCAA MOUNTAIN WEST,5,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,3.0,Ranked,Vanderbilt,520081942477230080,NCAA SEC,9,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,4.0,Ranked,Ole Miss,520081942477230080,NCAA SEC,5,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,5.0,Ranked,Penn,519109907858935808,NCAA IVY,7,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,6.0,Ranked,Syracuse,519112273652240384,NCAA BIG EAST & CO.,7,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,7.0,Ranked,Utah,519108145819570176,NCAA PAC 12,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,8.0,Ranked,Troy,519398167841558528,NCAA USA,1,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,9.0,Ranked,Hampton,519412020617998336,NCAA HISTORICALLY BLACK,10,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,10.0,Ranked,Maine,519431936523956224,NCAA BIG SKY,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,11.0,Ranked,Virginia Tech,520082008453632000,NCAA ACC,4,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,12.0,Ranked,Southern Miss,519113796658036736,NCAA SUN BELT,9,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,13.0,Ranked,Tennessee,520081942477230080,NCAA SEC,3,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,14.0,Ranked,South Alabama,519398167841558528,NCAA USA,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,15.0,Ranked,Dixie State,552229388243996672,NCAA SOUTHLAND,8,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,16.0,Ranked,Clemson,520082008453632000,NCAA ACC,12,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,17.0,Ranked,Citadel,519112491566792704,NCAA WILD,8,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,18.0,Ranked,Arizona,519108145819570176,NCAA PAC 12,1,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,19.0,Ranked,Iowa,519114104323002368,NCAA BIG 10,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,20.0,Ranked,Tennessee State,519446956439826432,NCAA PIONEER,5,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,21.0,Ranked,James Madison,519112491566792704,NCAA WILD,2,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,22.0,Ranked,Rice,519113796658036736,NCAA SUN BELT,4,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,23.0,Ranked,Tulane,519113796658036736,NCAA SUN BELT,3,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,24.0,Ranked,Indiana,519114104323002368,NCAA BIG 10,8,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,25.0,Ranked,Michigan,519114104323002368,NCAA BIG 10,12,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,,ORV,North Carolina,520082008453632000,NCAA ACC,2,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,,ORV,Sam Houston State,552229388243996672,NCAA SOUTHLAND,5,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,,ORV,Louisiana Tech,519113796658036736,NCAA SUN BELT,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,,ORV,Wofford,519446956439826432,NCAA PIONEER,1,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,,ORV,Navy,519112273652240384,NCAA BIG EAST & CO.,11,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,,ORV,Oklahoma,520086664899657728,NCAA BIG 12,9,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games
+2020,Human,7,8,,ORV,Lehigh,519109907858935808,NCAA IVY,6,,Chris's 2020 committee Top 25 sheet (weeks 2-8); 'Week N' = poll before week N games

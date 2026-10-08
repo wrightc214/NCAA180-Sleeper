@@ -1,8 +1,9 @@
 """
 site_common.py -- pieces shared by every page under reports/ (imported, not run).
 
-nav_html(current)   the tab bar: one tab per built week, then Roster Map and Standings.
-                    `current` is an int week, "map", or "standings".
+nav_html(current)   the tab bar: one tab per built week, then Roster Map, Standings, and Poll
+                    (once reports/poll.html exists).
+                    `current` is an int week, "map", "standings", or "poll".
 page_head(title)    <head> with the same fonts + stylesheet as the weekly report
                     (style block lifted from templates/weekly_report.html, so every page
                     stays visually identical without a second copy of the CSS).
@@ -31,6 +32,10 @@ def nav_html(current, weeks=None):
     links = [f'<a href="week-{w:02d}.html"{cur if current == w else ""}>Wk {w}</a>' for w in weeks]
     links.append(f'<a href="roster-map.html"{cur if current == "map" else ""}>Roster Map</a>')
     links.append(f'<a href="standings.html"{cur if current == "standings" else ""}>Standings</a>')
+    if current == "poll" or os.path.exists(os.path.join(OUT_DIR, "poll.html")):
+        links.append(f'<a href="poll.html"{cur if current == "poll" else ""}>Poll</a>')
+    if current == "poll-how" or os.path.exists(os.path.join(OUT_DIR, "poll-how.html")):
+        links.append(f'<a href="poll-how.html"{cur if current == "poll-how" else ""}>How it works</a>')
     return "".join(links)
 
 
@@ -53,14 +58,15 @@ def page_head(title, extra_css=""):
 # "Colors - Palette.csv" lists every official color per school/league (Name, Order, Hex,
 # ColorName, Role). display_pair() mixes and matches from it, with the background always
 # the Primary or Secondary and text needing contrast >= MIN_CONTRAST (3.0, bold-text bar):
-#   1. Primary + Secondary
-#   2. Primary + another palette color, taken in the palette's official order (the brand's
-#      own priority): the first one that reads comfortably (>= 4.5), else the first >= 3.0
-#   3. Secondary + another palette color, same way
-#   4. borderline pair (>= 2.5): the lighter of Primary/Secondary behind, the darker as text
+#   1. Primary + Secondary, if readable (>= READABLE 4.5)
+#   2. Primary background + the first readable school color as text: Secondary, then the
+#      school's accents (tertiary) in official order, then its own neutrals
+#   3. Secondary background, same way (Primary first)
+#   4. borderline pair (>= MIN_CONTRAST 3.0): the lighter of Primary/Secondary behind, the darker as text
 #   5. last resort: Primary with white or black text
 
 MIN_CONTRAST = 3.0
+READABLE = 4.5  # text on a team color block (small text included)
 
 def _hex(c):
     if not isinstance(c, str) or not c.strip():
@@ -94,7 +100,8 @@ _palettes = None
 
 
 def palettes():
-    """{name: [hex, ...]} in official order, from Colors - Palette.csv (empty if missing)."""
+    """{name: [hex, ...]} in official order, from Colors - Palette.csv (empty if missing).
+    Also fills _roles: {name: {hex: role}} (Primary / Secondary / Accent / Neutral)."""
     global _palettes
     if _palettes is None:
         _palettes = {}
@@ -105,23 +112,36 @@ def palettes():
                     h = _hex(r["Hex"])
                     if h:
                         _palettes.setdefault(r["Name"], []).append(h.upper())
+                        _roles.setdefault(r["Name"], {}).setdefault(h.upper(), (r.get("Role") or "").strip())
     return _palettes
 
 
-def display_pair(primary, secondary, palette=()):
+_roles = {}
+
+
+def _text_order(palette, exclude, name=None):
+    """Palette colors usable as text, school accents (tertiary) before neutrals, official order kept."""
+    roles = _roles.get(name, {})
+    others = [c for c in palette if c not in exclude]
+    return ([c for c in others if roles.get(c) != "Neutral"] +
+            [c for c in others if roles.get(c) == "Neutral"])
+
+
+def display_pair(primary, secondary, palette=(), name=None):
     """(background, text) chosen by the rule above."""
     p, s = _hex(primary), _hex(secondary)
-    if s and contrast(p, s) >= MIN_CONTRAST:
+    ex = {p.upper(), (s or "").upper()}
+    if s and contrast(p, s) >= READABLE:
         return p, s
-    for bg in (p, s):
+    for bg in (p, s):  # school colors as text: accents before neutrals
         if not bg:
             continue
-        others = [c for c in palette if c not in (p.upper(), (s or "").upper())]
-        pick = ([c for c in others if contrast(bg, c) >= 4.5]
-                or [c for c in others if contrast(bg, c) >= MIN_CONTRAST])
+        other = [s] if bg == p else [p]
+        cands = [c for c in other if c] + _text_order(palette, ex, name)
+        pick = [c for c in cands if contrast(bg, c) >= READABLE]
         if pick:
             return bg, pick[0]
-    if s and contrast(p, s) >= BORDERLINE:
+    if s and contrast(p, s) >= MIN_CONTRAST:  # borderline: lighter behind, darker as text
         return (p, s) if _lum(p) >= _lum(s) else (s, p)
     return p, ("#ffffff" if contrast(p, "#ffffff") >= contrast(p, "#000000") else "#000000")
 
@@ -136,6 +156,6 @@ def team_colors(primary, secondary, background=None, text=None, name=None,
             return bg, tx
         if not p:
             return default
-        return display_pair(p, sc, palettes().get(name, []))
+        return display_pair(p, sc, palettes().get(name, []), name=name)
     except Exception:
         return default
