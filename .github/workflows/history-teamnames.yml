@@ -1,0 +1,40 @@
+name: History Team Names (one-off)
+
+# One-off research pulls (player points, scoring history, 2021 check, projection test) into
+# data/backfill/ on this branch only, never main.
+on:
+  # A workflow only becomes dispatchable once it exists on main, so a push to this branch
+  # starts it too (the bot's own result commit uses GITHUB_TOKEN and does not re-trigger).
+  push:
+    branches: [preseason-values]
+    paths: [scripts/history_teamnames.py, .github/workflows/history-teamnames.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install pandas requests
+      - name: Pull history
+        run: python scripts/history_teamnames.py
+      - name: Summary
+        if: always()
+        run: |
+          wc -l data/backfill/UserTeamNames_AllYears.csv || true
+      - name: Commit to this branch
+        if: always()
+        run: |
+          if [ "${GITHUB_REF_NAME}" = "main" ]; then echo "::error::Refusing to commit backfill to main"; exit 1; fi
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/backfill || true
+          if git diff --cached --quiet; then echo "Nothing to commit"; exit 0; fi
+          git commit -m "User-entered team names by season"
+          git push origin HEAD:${GITHUB_REF_NAME}
