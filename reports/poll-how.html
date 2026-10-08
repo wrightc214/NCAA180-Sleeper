@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NCAA 180 Poll — How it works</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Barlow:wght@400;600;700&family=Barlow+Condensed:wght@500;600&display=swap">
+<style>
+/* Layout: stadium-scoreboard header, then a two-column stat sheet (poll left, week detail right) that stacks on phones */
+:root{--bg:#eef1f5;--panel:#ffffff;--ink:#14213a;--mute:#5d6a80;--line:#d5dbe5;--accent:#c8102e;--gold:#b8860b;--up:#1d7a43;--dn:#b3261e;
+--disp:"Big Shoulders Display",Impact,"Arial Narrow",sans-serif;--body:"Barlow",system-ui,sans-serif;--num:"Barlow Condensed","Arial Narrow",sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1526;--panel:#16213a;--ink:#e8edf6;--mute:#9aa7bd;--line:#2a3756;--accent:#ff5468;--gold:#e0b44a;--up:#4fc785;--dn:#ff7b72;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0d1526;--panel:#16213a;--ink:#e8edf6;--mute:#9aa7bd;--line:#2a3756;--accent:#ff5468;--gold:#e0b44a;--up:#4fc785;--dn:#ff7b72;color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.4}
+.wrap{max-width:1100px;margin:0 auto;padding-inline:16px;padding-block:24px 40px;display:grid;gap:20px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;border-bottom:4px solid var(--accent);padding-bottom:12px}
+.eyebrow{font:600 13px/1 var(--num);letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+h1{font:900 clamp(40px,8vw,72px)/.9 var(--disp);margin:6px 0 0;letter-spacing:.01em;text-transform:uppercase;text-wrap:balance}
+h1 em{font-style:normal;color:var(--accent)}
+.kpis{display:flex;gap:22px;flex-wrap:wrap}
+.kpi b{display:block;font:600 30px/1 var(--num);font-variant-numeric:tabular-nums}
+.kpi span{font:600 11px/1.2 var(--num);letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+h2{font:700 24px/1 var(--disp);text-transform:uppercase;letter-spacing:.03em;margin:0 0 10px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+h2 small{font:500 12px var(--num);letter-spacing:.1em;color:var(--mute)}
+section{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px;min-width:0}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
+.col{display:grid;gap:20px;min-width:0}
+@media (max-width:820px){.grid{grid-template-columns:1fr}}
+.n{font-family:var(--num);font-variant-numeric:tabular-nums}
+.chip{display:inline-block;width:10px;height:22px;border-radius:2px;flex:none;margin-right:8px;vertical-align:middle;box-shadow:inset 0 0 0 1px rgba(127,127,127,.35)}
+small{color:var(--mute);font-weight:400}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{white-space:nowrap;font:600 11px var(--num);letter-spacing:.12em;text-transform:uppercase;color:var(--mute);text-align:left;padding:4px 6px;border-bottom:2px solid var(--ink)}
+th.r,td.n{text-align:right}
+td{padding:5px 6px;border-bottom:1px solid var(--line);white-space:nowrap}
+td.tm{display:flex;align-items:center;gap:0}
+@media (max-width:640px){table{font-size:13px}td.tm{flex-wrap:wrap;white-space:normal}td.tm b{flex:1;min-width:0}td.tm small{flex-basis:100%;margin-left:18px!important;font-size:11px!important}td,th{padding:5px 3px}td.mv{width:26px;font-size:12px}th{letter-spacing:.06em}}
+td.tm b{font-weight:700}td.tm small{margin-left:8px;font-size:12px}
+td.mv{text-align:center;width:34px;font:600 13px var(--num)}
+.up{color:var(--up)}.dn{color:var(--dn)}.eq{color:var(--mute)}
+tr:nth-child(-n+4) td:first-child{color:var(--accent);font-weight:600}
+.awards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.aw{background:var(--panel);padding:10px 12px;display:flex;flex-direction:column;gap:3px;text-align:center;align-items:center}
+.aw:last-child:nth-child(odd){grid-column:1/-1}
+@media (min-width:1000px){.awards{grid-template-columns:repeat(var(--cols),minmax(0,1fr))}.aw:last-child:nth-child(odd){grid-column:auto}}
+.al{font:600 11px var(--num);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.av{font-size:28px;font-weight:600;line-height:1}.av small{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin-top:3px}
+.at{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;font-size:14px}.at small{margin-left:6px}
+.ao{font-size:12px;color:var(--mute)}
+.an{font-size:12px;color:var(--mute)}
+ol,ul{list-style:none;margin:0;padding:0}
+.list li{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line)}
+.list li:last-child{border-bottom:0}
+.list .rk{width:20px;color:var(--mute)}
+.nm{flex:1;min-width:0;display:grid}.nm small{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.v{font-size:20px;font-weight:600}
+.pos{font:600 12px var(--num);letter-spacing:.08em;width:38px;text-align:center;padding:3px 0;border:1px solid var(--ink);border-radius:3px}
+.lgs li{display:grid;grid-template-columns:104px 1fr 44px;align-items:center;gap:8px;padding:3px 0;font-size:14px}
+.bar{height:12px;background:var(--bg);border-radius:2px;overflow:hidden}.bar i{display:block;height:100%;background:var(--gold)}
+.lgs .n{text-align:right}
+.note{font-size:12px;color:var(--mute);margin:8px 0 0}
+footer{font-size:12px;color:var(--mute)}
+.logo{width:56px;height:56px;object-fit:contain;flex:none;display:block;margin:4px 0 2px}
+.ls{margin-top:auto;padding-top:14px;height:98px;display:flex;align-items:flex-end;justify-content:center}
+.ls img{max-height:84px;max-width:100%;object-fit:contain}
+.weeks{display:flex;flex-wrap:wrap;gap:6px;font:600 13px var(--num)}.weeks a{color:var(--mute);text-decoration:none;padding:2px 8px;border:1px solid var(--line);border-radius:3px}.weeks a[aria-current]{color:var(--panel);background:var(--ink);border-color:var(--ink)}
+</style>
+<style>
+.bots{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.bot{border:1px solid var(--line,#ccc);border-radius:6px;padding:12px 14px}
+.bot h3{margin:0 0 2px;font-size:18px}.bot h3 small{color:var(--mute);font-weight:400;margin-left:6px}
+.bot .voice{font-style:italic;color:var(--mute);margin:0 0 8px}
+.bot p{margin:4px 0}
+table.w{border-collapse:collapse;margin:6px 0 10px;width:100%;min-width:0;table-layout:auto}
+table.w td,table.w th{padding:3px 8px;text-align:right;white-space:normal;color:inherit!important;font-weight:400;font-size:14px}
+table.w th{font-weight:700;font-size:12px}
+table.w td:first-child,table.w th:first-child{text-align:left}
+ul.rules li{margin:4px 0}
+</style>
+</head><body>
+<div class="wrap">
+<nav class="weeks" aria-label="Pages"><a href="week-01.html">Wk 1</a><a href="week-02.html">Wk 2</a><a href="week-03.html">Wk 3</a><a href="week-04.html">Wk 4</a><a href="roster-map.html">Roster Map</a><a href="standings.html">Standings</a><a href="poll.html">Poll</a><a href="poll-how.html" aria-current="page">How it works</a></nav>
+<header><div><div class="eyebrow">NCAA 180 poll</div><h1>How it <em>works</em></h1></div>
+<div class="kpis"><div class="kpi"><b>8</b><span>Computer bots</span></div></div></header>
+<section><h2>The poll</h2><ul class="rules"><li><b>Every bot ranks every team</b> in all leagues, using regular-season weeks 1–11.</li><li><b>One scale.</b> Each bot's rating is turned into standard deviations from the average team (z-score, capped at ±3).</li><li><b>Best and worst dropped.</b> For each team, its single best and single worst bot are thrown out (BCS style); the rest are averaged. That average is the Score: 0 = average team, +1 = one standard deviation better.</li><li><b>Top 25</b> = the 25 highest Scores. Ties: Score, then average bot rank, then Scoreboard.</li><li><b>First-place votes</b> = how many bots rank the team #1.</li><li><b>Others receiving votes</b> = outside the top 25 but in at least one counted bot's top 25.</li><li><b>Bots sit out</b> a week when their data doesn't exist yet (e.g. no value snapshot); the page shows how many counted.</li><li><b>Final poll</b> (after the postseason): postseason games count as extra games for Scoreboard, Bracketologist, Monday Morning QB; Vegas, Bandwagon, Headliner, Bagman, Professor stay at the end of the regular season.</li><li><b>Postseason bumps</b> added to Score per win: playoff rounds +0.15/+0.25/+0.45/+0.85/+1.65, conference title game +0.15, bowl +0.15, NIT +0.05 (× share of rivals outscored).</li><li><b>Final-four backstop:</b> a semifinal or final winner always ranks directly above the team it beat.</li></ul>
+<p class="note"><a href="poll.html">Latest poll</a></p></section>
+<section><h2>The bots</h2><div class="bots"><div class='bot' id='record'><h3>Scoreboard<small>SCB</small></h3><p class='voice'>“I only care about the standings.”</p><p><b>Measures:</b> Exactly the playoff rank: wins, then points for</p><p><b>Inputs:</b> Wins (ties = half), then total points for as the tiebreaker. Weeks 1-11 only.</p></div><div class='bot' id='allplay'><h3>Vegas<small>VEG</small></h3><p class='voice'>“Strip out the schedule luck and tell me who is actually good.”</p><p><b>Measures:</b> Expected wins vs. every other team, every week</p><p><b>Inputs:</b> Each week, the share of all 180 teams you outscored. Summed over the season; points for breaks ties.</p></div><div class='bot' id='form'><h3>Bandwagon<small>BAND</small></h3><p class='voice'>“Whoever is hot right now.”</p><p><b>Measures:</b> All-play over the last 3 weeks, weighted 3:2:1</p><p><b>Inputs:</b> All-play share over the last 3 weeks, weighted 3:2:1 (most recent heaviest).</p></div><div class='bot' id='resume'><h3>Bracketologist<small>BRKT</small></h3><p class='voice'>“Who you beat matters as much as how many.”</p><p><b>Measures:</b> Win % plus opponents&#x27; all-play strength</p><p><b>Inputs:</b> 60% win % + 40% average all-play strength of the opponents you played. Weeks 1-11 only.</p></div><div class='bot' id='ceiling'><h3>Headliner<small>HEAD</small></h3><p class='voice'>“Star power: the most points this roster could have put up.”</p><p><b>Measures:</b> Best possible lineup per game</p><p><b>Inputs:</b> Average points per week of your best possible lineup from your own roster.</p></div><div class='bot' id='efficiency'><h3>Monday Morning QB<small>MMQB</small></h3><p class='voice'>“Second-guesses every start/sit decision.”</p><p><b>Measures:</b> Points scored / best possible lineup</p><p><b>Inputs:</b> Points scored / best possible lineup points, season to date.</p></div><div class='bot' id='redraft'><h3>Bagman<small>BAG</small></h3><p class='voice'>“Follows the money: what the market says your starters are worth.”</p><p><b>Measures:</b> Redraft market value of the best starting lineup (FantasyCalc)</p><p><b>Inputs:</b> FantasyCalc redraft value of your best legal starting lineup, from the latest value snapshot.</p></div><div class='bot' id='professor'><h3>Professor<small>PROF</small></h3><p class='voice'>“Grades on a curve that shifts as the semester goes on.”</p><p><b>Measures:</b> Starts with preseason roster strength, rewards quality weeks midseason, finishes on the resume</p><p><b>Inputs:</b> Three blocks, each built from percentile ranks across all 180 teams; the block weights shift with games played (table below).</p><p><b>Prior</b></p><table class='w'><tr><td>Preseason starter value</td><td>80%</td></tr><tr><td>Last season&#x27;s final rank</td><td>20%</td></tr></table><p class='note'>Frozen before week 1 (last value snapshot before the season); never refreshed in-season. Last season's final rank = the final poll, or the standings if there was no poll.</p><p><b>Quality</b></p><table class='w'><tr><td>All-play win % vs all teams, weekly</td><td>50%</td></tr><tr><td>Points per game</td><td>30%</td></tr><tr><td>Weeks above the all-team weekly median</td><td>20%</td></tr></table><p><b>Resume</b></p><table class='w'><tr><td>Win %</td><td>70%</td></tr><tr><td>Wins over opponents in the top half of Quality that week</td><td>20%</td></tr><tr><td>Division / conference standing</td><td>10%</td></tr></table><p><b>Block weights by games played</b> (straight line between rows)</p><table class='w'><tr><th></th><th>Prior</th><th>Quality</th><th>Resume</th></tr><tr><td>Preseason</td><td>100%</td><td>0%</td><td>0%</td></tr><tr><td>Week 1</td><td>70%</td><td>25%</td><td>5%</td></tr><tr><td>Week 3</td><td>40%</td><td>40%</td><td>20%</td></tr><tr><td>Week 6</td><td>15%</td><td>45%</td><td>40%</td></tr><tr><td>Week 9</td><td>8%</td><td>32%</td><td>60%</td></tr><tr><td>Week 11</td><td>5%</td><td>25%</td><td>70%</td></tr></table><p class='note'>Every measure is a percentile rank across all teams. Not used: lineup efficiency, max points, points against, week-to-week spread.</p></div></div></section>
+</div></body></html>

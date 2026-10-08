@@ -34,6 +34,8 @@ def nav_html(current, weeks=None):
     links.append(f'<a href="standings.html"{cur if current == "standings" else ""}>Standings</a>')
     if current == "poll" or os.path.exists(os.path.join(OUT_DIR, "poll.html")):
         links.append(f'<a href="poll.html"{cur if current == "poll" else ""}>Poll</a>')
+    if current == "poll-how" or os.path.exists(os.path.join(OUT_DIR, "poll-how.html")):
+        links.append(f'<a href="poll-how.html"{cur if current == "poll-how" else ""}>How it works</a>')
     return "".join(links)
 
 

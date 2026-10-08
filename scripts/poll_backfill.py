@@ -6,8 +6,8 @@ finished weeks, so movement, weeks-ranked and the record book have history.
                  data/PollBots_Historic.csv (every bot's ranking)
   This year   -> the _Season files, for finished weeks not yet published
 
-Past-season inputs for The Ceiling / The Coach / The Market come from the history-backfill
-files (POLL_BACKFILL_DIR, default data/backfill). The Market has no FantasyCalc history:
+Past-season inputs for Headliner / Monday Morning QB / Bagman come from the history-backfill
+files (POLL_BACKFILL_DIR, default data/backfill). Bagman has no FantasyCalc history:
 it uses Sleeper's projected lineup for the next week instead. Missing inputs -> that bot
 sits out (BotsUsed shows how many voted).
 Seeding for past years ranks the actual 32-team field (Postseason_Historic.csv round 1),

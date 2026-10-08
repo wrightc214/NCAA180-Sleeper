@@ -6,7 +6,7 @@ Static HTML (no script needed), so poll_png.py can screenshot sections for Disco
 Sections: the poll (rank, movement, team in its colors, record, BCS score, first-place
 votes), others receiving votes + dropped out, ranked games in the week it applies to,
 and every bot's rank for each ranked team (dropped best/worst struck through). Team blocks use site_common.team_colors().
-CWD must be repo root. Run after poll_aggregate.py.
+CWD must be repo root. Run after poll_aggregate.py. Also writes reports/poll-how.html (poll_how.py).
 """
 import html
 import os
@@ -96,7 +96,7 @@ def bot_grid(cfg, bots, poll, col, ptype):
             f'<td class="n{" drop" if i in (hi_i, lo_i) else ""}">{v if v is not None else "–"}</td>' for i, v in enumerate(vals))
         rows.append(f'<tr><td class="rk">{int(r.Rank)}</td><td class="tm">{pill(r.Team, col)}</td>{cells}</tr>')
     legend = " · ".join(f'<b>{e(b.get("short", ""))}</b> {e(b["name"])}: {e(b.get("blurb", ""))}' for b in meta)
-    return (f'<section id="bots"><h2>Bot ballots <small>Struck = dropped (best and worst)</small></h2>'
+    return (f'<section id="bots"><h2>Bot ballots <small>Struck = dropped (best and worst) · <a href="poll-how.html">how each bot works</a></small></h2>'
             f'<div class="tbl"><table><thead><tr><th class="r">Rk</th><th>Team</th>{head}</tr></thead>'
             f'<tbody>{"".join(rows)}</tbody></table></div><p class="note">{legend}</p></section>')
 
@@ -142,9 +142,11 @@ def page(cfg, poll, bots, archive, col, year, week, ptype, prev_ranked):
         (f'<b>{e(a_label)} wk {w}</b>' if (t == ptype and w == week) else f'<a href="{fname(t, w)}">{e(a_label)} wk {w}</a>')
         for t, w, a_label in archive)
     kpi_h = f'<div class="kpi"><b>{human}</b><span>Panel ballots</span></div>' if human else ""
+    nm = {b["id"]: b["name"] for b in cfg["bots"]}
+    post_names = ", ".join(nm[i] for i in ("record", "resume", "efficiency") if i in nm)
     method = (f"Each of the {nbots} bots rates every team; ratings are put on one scale (standard deviations from the "
               "average team). For each team the best and worst bot are dropped (BCS style) and the rest averaged = Score. "
-              + ("Final poll: postseason games count as extra games for The Standings, The Resume and The Coach, and each "
+              + ("Final poll: postseason games count as extra games for " + post_names + ", and each "
                  "postseason win adds a bump (playoff rounds +.15/+.25/+.45/+.85/+1.65, CCG and bowl +.15, NIT +.05); "
                  "a semifinal or final winner always ranks above the team it beat. " if final else "")
               + ("The panel's ballots (#1 = " + str(size) + " points) are a second component, averaged with the bots. " if human else "")
@@ -167,7 +169,7 @@ def page(cfg, poll, bots, archive, col, year, week, ptype, prev_ranked):
 {games_html}
 {bot_grid(cfg, bots, poll, col, ptype)}
 <section><h2>Archive <small>{year}</small></h2><div class="archive">{arch}</div>
-<p class="note">{e(method)} <a href="../data/Poll_Season.csv">Raw CSV</a> · <a href="../data/PollBots_Season.csv">Bot ballots CSV</a></p></section>
+<p class="note">{e(method)} <a href="poll-how.html">How it works</a> · <a href="../data/Poll_Season.csv">Raw CSV</a> · <a href="../data/PollBots_Season.csv">Bot ballots CSV</a></p></section>
 </div></body></html>
 """
     return page_head(f"NCAA 180 {label}", CSS) + body
@@ -208,6 +210,8 @@ def main():
     with open(os.path.join(OUT_DIR, "poll.html"), "w", encoding="utf-8") as f:
         f.write(html_latest)
     print(f"Wrote {OUT_DIR}/poll.html + {len(archive)} archive page(s)")
+    import poll_how  # "How it works" page, built from config/poll.json alongside the poll
+    poll_how.main()
 
 
 if __name__ == "__main__":

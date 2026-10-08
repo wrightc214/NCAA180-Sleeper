@@ -12,6 +12,10 @@ compare across the whole field.
   form       all-play, last 3 weeks weighted 3:2:1
   resume     0.6 x win% + 0.4 x opponents' all-play% (schedule strength that crosses leagues)
   ceiling    average best-possible lineup (MaxPoints) per game -- roster strength
+  professor  blend that shifts with the season (config professor): a frozen preseason prior
+             (starter value + last season's final rank), quality (all-play, points per game,
+             consistency) and resume (win %, quality wins, conference standing); every measure
+             is a percentile across all teams; block weights interpolate between anchor weeks
   redraft    market view of the starting lineup: FantasyCalc redraft value of the best
              legal lineup (roster map LineupRedraft). History has no FantasyCalc data, so
              backtests use Sleeper's projected lineup for the next week as a stand-in.
@@ -143,8 +147,79 @@ def b_elo(r, extra, k=24.0, scale=400.0):
     return pd.Series(rating)
 
 
+# ---------------------------------------------------------------- professor
+def _pct(s):
+    """Percentile rank 0..1 (1 = best) across all teams; ties share the average rank."""
+    s = pd.Series(s, dtype=float)
+    return ((s.rank(method="average") - 1) / max(len(s) - 1, 1)).fillna(0.0)
+
+
+def professor_weights(pcfg, games):
+    """(prior, quality, resume) shares for `games` played, linear between anchor weeks."""
+    anchors = sorted((int(k), v) for k, v in pcfg["weights"].items())
+    g = max(anchors[0][0], min(int(games), anchors[-1][0]))
+    for (w0, a), (w1, b) in zip(anchors, anchors[1:]):
+        if w0 <= g <= w1:
+            f = (g - w0) / (w1 - w0) if w1 > w0 else 0
+            return [(x + f * (y - x)) / 100 for x, y in zip(a, b)]
+    return [x / 100 for x in anchors[-1][1]]
+
+
+def _quality(r, q):
+    t = r.assign(med=r.groupby("Week")["PointsFor"].transform("median"))
+    t["above"] = (t["PointsFor"] > t["med"]).astype(float)
+    g = t.groupby(["LeagueID", "RosterID"]).agg(ap=("AP", "mean"), ppg=("PointsFor", "mean"), cons=("above", "mean"))
+    return q["allplay"] * _pct(g["ap"]) + q["ppg"] * _pct(g["ppg"]) + q["consistency"] * _pct(g["cons"])
+
+
+@bot("professor")
+def b_professor(r, extra):
+    pcfg = extra.get("professor_cfg")
+    if not pcfg or r.empty:
+        return None
+    q, rs = pcfg["quality"], pcfg["resume"]
+    games = int(r["Week"].max())
+    Q = _quality(r, q)
+    # quality wins: wins over opponents in the top half of Quality that week (data through that week)
+    qwins = pd.Series(0.0, index=Q.index)
+    for w in sorted(r["Week"].unique()):
+        qw = _quality(r[r["Week"] <= w], q)
+        top = set(qw[qw >= qw.median()].index)
+        wk = r[(r["Week"] == w) & (r["Wv"] == 1)]
+        for a, b, o in zip(wk["LeagueID"], wk["RosterID"], wk["OpponentRosterID"]):
+            if (a, o) in top and (a, b) in qwins.index:
+                qwins[(a, b)] += 1
+    g = r.groupby(["LeagueID", "RosterID"]).agg(W=("Wv", "mean"), PF=("PointsFor", "sum"))
+    g["k"] = g["W"] * 1e5 + g["PF"]
+    g["lr"] = g.groupby(level="LeagueID")["k"].rank(ascending=False, method="min")
+    g["n"] = g.groupby(level="LeagueID")["W"].transform("size")
+    g["stand"] = (g["n"] - g["lr"]) / (g["n"] - 1).clip(lower=1)
+    R = rs["win_pct"] * _pct(g["W"]) + rs["quality_wins"] * _pct(qwins.reindex(g.index).fillna(0)) \
+        + rs["standing"] * _pct(g["stand"])
+    prior = extra.get("prior") or {}
+    wp, wq, wr = professor_weights(pcfg, games)
+    if prior:
+        pr = pd.Series([prior.get(k) for k in g.index], index=g.index, dtype=float)
+        P = _pct(pr.fillna(pr.median()))
+    else:  # no frozen prior for this season: its share goes to the other blocks pro rata
+        P = pd.Series(0.0, index=g.index)
+        tot = max(wq + wr, 1e-9)
+        wq, wr, wp = wq + wp * wq / tot, wr + wp * wr / tot, 0.0
+    return wp * P + wq * Q.reindex(g.index) + wr * R
+
+
+def load_prior(year):
+    """{(LeagueID, RosterID): Prior} from data/PollPrior_Season.csv for that year, else {}."""
+    f = "data/PollPrior_Season.csv"
+    if not os.path.exists(f):
+        return {}
+    p = pd.read_csv(f, dtype=str)
+    p = p[p["Year"] == str(year)]
+    return {(a, b): float(v) for a, b, v in zip(p["LeagueID"], p["RosterID"], p["Prior"])}
+
+
 # ---------------------------------------------------------------- ranking
-RESULT_BOTS = {"record", "resume"}  # use win/loss; never see weeks past the regular season
+RESULT_BOTS = {"record", "resume", "professor"}  # use win/loss; never see weeks past the regular season
 
 
 def bot_ranks(cfg, m, through_week, extra=None, keys=None, points_through=None):
@@ -152,7 +227,8 @@ def bot_ranks(cfg, m, through_week, extra=None, keys=None, points_through=None):
     that have data. `keys` = every (LeagueID, RosterID) to rank (missing values rank last).
     points_through: let score-only bots see later weeks (e.g. 12 = CCG week points); the
     record/resume bots always stop at the regular season (later opponents are fictional)."""
-    extra = extra or {}
+    extra = dict(extra or {})
+    extra.setdefault("professor_cfg", cfg.get("professor"))
     last = int(cfg.get("last_regular_week", 11))
     full = base(m, points_through or through_week, max(last, int(points_through or 0)))
     r = full[full["Week"] <= min(int(through_week), last)]
@@ -235,6 +311,7 @@ def current_extra(year, through_week):
         if len(rv):
             rv = rv[rv["Week"].astype(int) == rv["Week"].astype(int).max()]
             extra["redraft"] = {(a, b): float(v) for a, b, v in zip(rv["LeagueID"], rv["RosterID"], rv["LineupRedraft"])}
+    extra["prior"] = load_prior(year)
     return extra
 
 
@@ -395,8 +472,8 @@ def postseason_season(year):
 
 
 def final_ranks(cfg, m, extra, keys, games):
-    """The 7 bots for the final poll. All-Play, Hot Hand, The Ceiling, The Market: frozen at the
-    regular season. The Standings, The Resume, The Coach: regular season + postseason games."""
+    """Bots for the final poll. Vegas, Bandwagon, Headliner, Bagman, Professor: frozen at the
+    regular season. Scoreboard, Bracketologist, Monday Morning QB: regular season + postseason games."""
     last = int(cfg.get("last_regular_week", 11))
     rk, used = bot_ranks(cfg, m, last, extra, keys)
     reg = base(m, last, last)

@@ -46,7 +46,7 @@
         "NIT": 0.05
       },
       "final_four_rule": true,
-      "_note": "Same 7 bots. Postseason games that needed a lineup (CCG, Playoff, Bowl, every NIT round) are extra games for The Standings (win %), The Resume (+ real opponents' regular-season all-play) and The Coach; All-Play, Hot Hand, The Ceiling, The Market stay at week 11. NIT group = one game, result = share of rivals outscored. Bumps are added to Score per win (standard deviations): playoff by round R1..Final, CCG/Bowl flat, NIT x share. One regular-season win is worth about +0.13 (max +0.165), so every CCG/Bowl/playoff win counts more; NIT is a deliberate exception (weak field, up to 5 games). final_four_rule: a semifinal/final winner is raised directly above the team it beat (backstop; never fired 2024-2025). Decided 2026-10-07."
+      "_note": "Same bots as the Top 25. Postseason games that needed a lineup (CCG, Playoff, Bowl, every NIT round) are extra games for Scoreboard (win %), Bracketologist (+ real opponents' regular-season all-play) and Monday Morning QB; Vegas, Bandwagon, Headliner, Bagman and Professor stay at week 11. NIT group = one game, result = share of rivals outscored. Bumps are added to Score per win (standard deviations): playoff by round R1..Final, CCG/Bowl flat, NIT x share. One regular-season win is worth about +0.13 (max +0.165), so every CCG/Bowl/playoff win counts more; NIT is a deliberate exception (weak field, up to 5 games). final_four_rule: a semifinal/final winner is raised directly above the team it beat (backstop; never fired 2024-2025). Decided 2026-10-07."
     }
   },
   "_points": "'linear' = size, size-1, ... 1 for ranks 1..size. Or an explicit list, e.g. [25,24,23,...].",
@@ -91,52 +91,75 @@
   "bots": [
     {
       "id": "record",
-      "name": "The Standings",
+      "name": "Scoreboard",
       "enabled": true,
-      "blurb": "Wins, then points for",
-      "short": "STND"
+      "blurb": "Exactly the playoff rank: wins, then points for",
+      "short": "SCB",
+      "voice": "I only care about the standings.",
+      "how": "Wins (ties = half), then total points for as the tiebreaker. Weeks 1-11 only."
     },
     {
       "id": "allplay",
-      "name": "All-Play",
+      "name": "Vegas",
       "enabled": true,
       "blurb": "Expected wins vs. every other team, every week",
-      "short": "ALLP"
+      "short": "VEG",
+      "voice": "Strip out the schedule luck and tell me who is actually good.",
+      "how": "Each week, the share of all 180 teams you outscored. Summed over the season; points for breaks ties."
     },
     {
       "id": "form",
-      "name": "Hot Hand",
+      "name": "Bandwagon",
       "enabled": true,
-      "blurb": "All-play, last 3 weeks weighted 3:2:1",
-      "short": "HOT"
+      "blurb": "All-play over the last 3 weeks, weighted 3:2:1",
+      "short": "BAND",
+      "voice": "Whoever is hot right now.",
+      "how": "All-play share over the last 3 weeks, weighted 3:2:1 (most recent heaviest)."
     },
     {
       "id": "resume",
-      "name": "The Resume",
+      "name": "Bracketologist",
       "enabled": true,
       "blurb": "Win % plus opponents' all-play strength",
-      "short": "RES"
+      "short": "BRKT",
+      "voice": "Who you beat matters as much as how many.",
+      "how": "60% win % + 40% average all-play strength of the opponents you played. Weeks 1-11 only."
     },
     {
       "id": "ceiling",
-      "name": "The Ceiling",
+      "name": "Headliner",
       "enabled": true,
       "blurb": "Best possible lineup per game",
-      "short": "CEIL"
+      "short": "HEAD",
+      "voice": "Star power: the most points this roster could have put up.",
+      "how": "Average points per week of your best possible lineup from your own roster."
     },
     {
       "id": "efficiency",
-      "name": "The Coach",
+      "name": "Monday Morning QB",
       "enabled": true,
       "blurb": "Points scored / best possible lineup",
-      "short": "COACH"
+      "short": "MMQB",
+      "voice": "Second-guesses every start/sit decision.",
+      "how": "Points scored / best possible lineup points, season to date."
     },
     {
       "id": "redraft",
-      "name": "The Market",
+      "name": "Bagman",
       "enabled": true,
-      "blurb": "Redraft value of the best starting lineup (FantasyCalc)",
-      "short": "MKT"
+      "blurb": "Redraft market value of the best starting lineup (FantasyCalc)",
+      "short": "BAG",
+      "voice": "Follows the money: what the market says your starters are worth.",
+      "how": "FantasyCalc redraft value of your best legal starting lineup, from the latest value snapshot."
+    },
+    {
+      "id": "professor",
+      "name": "Professor",
+      "enabled": true,
+      "short": "PROF",
+      "blurb": "Starts with preseason roster strength, rewards quality weeks midseason, finishes on the resume",
+      "voice": "Grades on a curve that shifts as the semester goes on.",
+      "how": "Three blocks, each built from percentile ranks across all 180 teams; the block weights shift with games played (table below)."
     }
   ],
   "_bots": "Each bot ranks every team. Turn one off with enabled=false; ids map to functions in scripts/poll_bots.py (also available: points, median, elo). Lineup chosen by backtest 2026-10-07 (claude/poll-backtest-2026-10-07.md).",
@@ -152,5 +175,54 @@
   "seeding": {
     "include_week12_points": false,
     "_note": "Week 12 (CCG) points count for the Seeding poll bots only if true. Backtest compares both."
+  },
+  "professor": {
+    "_note": "All measures are percentile ranks across every team (all 180). Prior is frozen before week 1 (data/PollPrior_Season.csv, scripts/poll_prior.py). Block weights interpolate linearly between anchor weeks (games played).",
+    "prior": {
+      "psv": 0.8,
+      "last_final": 0.2
+    },
+    "quality": {
+      "allplay": 0.5,
+      "ppg": 0.3,
+      "consistency": 0.2
+    },
+    "resume": {
+      "win_pct": 0.7,
+      "quality_wins": 0.2,
+      "standing": 0.1
+    },
+    "weights": {
+      "0": [
+        100,
+        0,
+        0
+      ],
+      "1": [
+        70,
+        25,
+        5
+      ],
+      "3": [
+        40,
+        40,
+        20
+      ],
+      "6": [
+        15,
+        45,
+        40
+      ],
+      "9": [
+        8,
+        32,
+        60
+      ],
+      "11": [
+        5,
+        25,
+        70
+      ]
+    }
   }
 }
