@@ -1189,9 +1189,9 @@ Year,LeagueName,RosterID,Team,Basis
 2025,NCAA MOUNTAIN WEST,11,UNLV,assumed = today's name (no rename known)
 2025,NCAA PAC 12,2,USC,assumed = today's name (no rename known)
 2025,NCAA BIG EAST & CO.,10,USF,assumed = today's name (no rename known)
-2025,NCAA PIONEER,11,Georgetown,Chris 2026-10-08: UT Martin became Georgetown in 2025
+2025,NCAA PIONEER,11,UT Martin,"owner renamed to Georgetown in 2025; rejected - duplicates Ivy r5 (Chris 2026-10-08: no duplicate names, keep previous)"
 2025,NCAA PAC 12,11,Utah,assumed = today's name (no rename known)
-2025,NCAA MOUNTAIN WEST,5,San Jose State,Chris 2026-10-08: Utah State became San Jose State in 2025
+2025,NCAA MOUNTAIN WEST,5,Utah State,"owner renamed to San Jose State in 2025; rejected - duplicates Wild r7 (Chris 2026-10-08: no duplicate names, keep previous)"
 2025,NCAA SUN BELT,2,UTEP,assumed = today's name (no rename known)
 2025,NCAA SUN BELT,12,UTSA,assumed = today's name (no rename known)
 2025,NCAA SEC,9,Vanderbilt,assumed = today's name (no rename known)
