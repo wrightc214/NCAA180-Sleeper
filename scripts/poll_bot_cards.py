@@ -41,6 +41,7 @@ CSS = """
 .card td.tm small{display:block;font-weight:500;opacity:.9;font-size:10px;color:inherit;margin:0}
 .card td.b{font:700 11px var(--num);text-align:center;border-radius:3px;min-width:24px;color:#111}
 .card td.b.drop{text-decoration:line-through;opacity:.55}
+.card th img.bi{display:block;width:30px;height:30px;object-fit:contain;margin:0 auto 2px}
 .card td.sp,.card td.sc{font:600 11px var(--num);text-align:right;padding:3px 3px}
 .card h2{font-size:18px}
 .card .note{font-size:11px}
@@ -72,7 +73,10 @@ def load():
 
 def card(title, sub, rows, cfg, ranks, n, col, drop, show_lg=True):
     meta = cfg["bots"]
-    head = "".join(f'<th title="{e(m["name"])}">{e(m.get("short", m["name"]))}</th>' for m in meta)
+    def icon(m):
+        p = f"assets/bots/{m['id']}.png"
+        return f'<img class="bi" src="../{p}" alt="">' if os.path.exists(p) else ""
+    head = "".join(f'<th title="{e(m["name"])}">{icon(m)}{e(m.get("short", m["name"]))}</th>' for m in meta)
     body = []
     for r in rows.itertuples():
         k = (r.LeagueID, r.RosterID)
