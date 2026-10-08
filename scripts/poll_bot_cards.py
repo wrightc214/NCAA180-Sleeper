@@ -34,7 +34,7 @@ CSS = """
 .card table{border-collapse:separate;border-spacing:0 3px;width:100%}
 .card th{font:600 9px var(--num);color:var(--mute);text-align:center;padding:2px 1px;letter-spacing:0}
 .card td{vertical-align:middle;border:none;padding:3px 1px}
-.card td.rk{font:700 13px var(--num);text-align:right;width:26px;color:var(--ink)}
+.card td.rk{font:700 12px var(--num);text-align:center;width:28px;color:#111 !important;border-radius:3px}
 .card td.lg{width:22px;padding:1px}
 .card td.lg img{width:22px;height:22px;object-fit:contain;display:block}
 .card td.tm{padding:4px 7px;border-radius:5px;font-weight:700;font-size:13px;line-height:1.15;max-width:150px}
@@ -87,7 +87,7 @@ def card(title, sub, rows, cfg, ranks, n, col, drop, show_lg=True):
         rec = f"{int(float(r.Wins or 0))}-{int(float(r.Losses or 0))}" + (f"-{int(float(r.Ties))}" if float(r.Ties or 0) else "")
         spread = (max(ok) - min(ok)) if ok else ""
         body.append(
-            f'<tr><td class="rk">{int(r.Rank)}</td><td class="lg">{logo(r.Team)}</td>'
+            f'<tr><td class="rk" style="background:{shade(int(r.Rank), n)}">{int(r.Rank)}</td><td class="lg">{logo(r.Team)}</td>'
             f'<td class="tm" style="background:{bg};color:{fg}">{e(r.Team)}<small>{rec}{(" · " + e(r.League)) if show_lg else ""}</small></td>'
             f'{cells}<td class="sp">{spread}</td><td class="sc">{float(r.Score):+.2f}</td></tr>')
     return (f'<section class="card"><h2>{e(title)} <small>{e(sub)}</small></h2>'
