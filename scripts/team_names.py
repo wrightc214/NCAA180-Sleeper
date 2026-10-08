@@ -13,6 +13,9 @@ Display rules (Chris, 2026-10-07):
   - Colors for a former name with no palette row fall back to the slot's current colors;
     retired slots with no current team (e.g. 2019 American, 2020 Southland) use `default`.
 
+No duplicate names (Chris, 2026-10-08): a school name may appear on only one slot per season.
+A rename that would duplicate another slot's name is rejected and the slot keeps its previous name.
+
 Fixing a name: edit one row in TeamNames_Historic.csv (or Teams.csv for the current season).
 Rollover: append the finished season's Teams.csv names to TeamNames_Historic.csv.
 Check: python scripts/team_names.py --check
@@ -123,6 +126,11 @@ def check():
         if len(d):
             problems += 1
             print(f"{y}: same name on two slots {d['Team'].tolist()}")
+    c = _current()
+    d = c[c["Team"].map(norm).duplicated(keep=False)]
+    if len(d):
+        problems += 1
+        print(f"current (Teams.csv): same name on two slots {d['Team'].tolist()}")
     nocol = sorted({t for t in h["Team"] if not colors_row(t)})
     print(f"{len(nocol)} names with no colors (backlog): {', '.join(nocol)}")
     return problems

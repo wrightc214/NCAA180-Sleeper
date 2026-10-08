@@ -176,6 +176,6 @@ Year,SourceDate,LeagueID,LeagueName,RosterID,Team,Rank,ListedAs,Note
 2021,2021-09-06,652821876346810368,NCAA BIG 10,10,Illinois,178,Illinois,Chris file 9/6/21; method unknown (likely roster value)
 2021,2021-09-06,652822508415823872,NCAA WILD,6,Eastern Michigan,179,Eastern Michigan,Chris file 9/6/21; method unknown (likely roster value)
 2021,2021-09-06,652821876346810368,NCAA BIG 10,12,Michigan,180,Michigan,Chris file 9/6/21; method unknown (likely roster value)
-2021,2021-09-06,,,,,9,Dixie State,UNRESOLVED: slot unknown
-2021,2021-09-06,,,,,92,Team 11 - CUSA,UNRESOLVED: slot unknown
-2021,2021-09-06,,,,,147,Team 4 - CUSA,UNRESOLVED: slot unknown
+2021,2021-09-06,652822152327815168,NCAA HISTORICALLY BLACK,10,Jackson State,9,Dixie State,waldobryan (2020 Dixie State co-owner) managed it 7/2021; bb7661KING from 11/2021
+2021,2021-09-06,652822788075229184,NCAA USA,11,Louisiana,92,Team 11 - CUSA,open team in Sept 2021 (default name)
+2021,2021-09-06,652822788075229184,NCAA USA,9,Texas State,147,Team 4 - CUSA,open team in Sept 2021; by elimination (medium confidence)
