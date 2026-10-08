@@ -8,22 +8,22 @@ Season,Event,Round,RoundName,Week,Bowl,TeamA,SeedA,TeamB,SeedB,ScoreA,ScoreB,Win
 2019,CCG,1,Conference Championship,12,PAC 12,Washington,,Utah,,139.36,118.12,Washington,scores from Sleeper week-12 matchup (history backfill)
 2019,CCG,1,Conference Championship,12,SEC,Kentucky,,Auburn,,143.92,138.78,Kentucky,Sleeper wk12: 2019 'Kentucky' was roster slot 10 (today South Carolina's slot) and beat Auburn 143.92-138.78
 2019,CCG,1,Conference Championship,12,Sun Belt,Memphis,,Louisiana Tech,,162.64,135.82,Memphis,scores from Sleeper week-12 matchup (history backfill)
-2019,CCG,1,Conference Championship,12,Wild,Citadel,,Wichita State,,141.64,111.36,Citadel,Sleeper wk12 shows Citadel beat Wichita State (Chris's CCG list said North Dakota State) - verify
-2019,Playoff,1,Sweet 16,,,Washington,1,Maryland,16,,,Maryland,2019: Chris not yet in league; verify
-2019,Playoff,1,Sweet 16,,,Northwestern,8,Clemson,9,,,Northwestern,2019: Chris not yet in league; verify
-2019,Playoff,1,Sweet 16,,,Memphis,4,Virginia Tech,13,,,Virginia Tech,2019: Chris not yet in league; verify
-2019,Playoff,1,Sweet 16,,,Texas Tech,5,Georgia Tech,12,,,Georgia Tech,2019: Chris not yet in league; verify
-2019,Playoff,1,Sweet 16,,,Bucknell,2,Washington State,15,,,Bucknell,2019: Chris not yet in league; verify
-2019,Playoff,1,Sweet 16,,,New Mexico,7,Kentucky,10,,,Kentucky,2019: Chris not yet in league; verify
-2019,Playoff,1,Sweet 16,,,Army,3,Kansas State,14,,,Army,2019: Chris not yet in league; verify
-2019,Playoff,1,Sweet 16,,,Citadel,6,Ohio,11,,,Citadel,2019: Chris not yet in league; verify
-2019,Playoff,2,Elite 8,,Sugar Bowl,Maryland,,Northwestern,,,,Maryland,2019: Chris not yet in league; verify
-2019,Playoff,2,Elite 8,,Peach Bowl,Virginia Tech,,Georgia Tech,,,,Virginia Tech,2019: Chris not yet in league; verify
-2019,Playoff,2,Elite 8,,Orange Bowl,Bucknell,,Kentucky,,,,Kentucky,2019: Chris not yet in league; verify
-2019,Playoff,2,Elite 8,,Cotton Bowl,Army,,Citadel,,,,Army,2019: Chris not yet in league; verify
-2019,Playoff,3,Final Four,,Fiesta Bowl,Maryland,,Virginia Tech,,,,Maryland,2019: Chris not yet in league; verify
-2019,Playoff,3,Final Four,,Rose Bowl,Kentucky,,Army,,,,Army,2019: Chris not yet in league; verify
-2019,Playoff,4,National Championship,,,Maryland,,Army,,,,Army,2019: Chris not yet in league; verify
+2019,CCG,1,Conference Championship,12,Wild,Citadel,,Wichita State,,141.64,111.36,Citadel,"scores from Sleeper week-12 matchup; Wichita State runner-up confirmed by 2020 draft order (picks 11-12 Wichita State, Citadel)"
+2019,Playoff,1,Sweet 16,13,,Washington,1,Maryland,16,111.64,128.86,Maryland,scores from Sleeper (teams resolved via 2020 draft-order names); matchups confirmed by 2019 GroupMe LM posts
+2019,Playoff,1,Sweet 16,13,,Northwestern,8,Clemson,9,157.92,111.46,Northwestern,scores from Sleeper (teams resolved via 2020 draft-order names); matchups confirmed by 2019 GroupMe LM posts
+2019,Playoff,1,Sweet 16,13,,Memphis,4,Virginia Tech,13,96.74,156.04,Virginia Tech,scores from Sleeper (teams resolved via 2020 draft-order names); matchups confirmed by 2019 GroupMe LM posts
+2019,Playoff,1,Sweet 16,13,,Texas Tech,5,Georgia Tech,12,134.56,167.02,Georgia Tech,scores from Sleeper (teams resolved via 2020 draft-order names); matchups confirmed by 2019 GroupMe LM posts
+2019,Playoff,1,Sweet 16,13,,Bucknell,2,Washington State,15,171.56,142.4,Bucknell,scores from Sleeper (teams resolved via 2020 draft-order names); matchups confirmed by 2019 GroupMe LM posts
+2019,Playoff,1,Sweet 16,13,,New Mexico,7,Kentucky,10,114.4,115.72,Kentucky,scores from Sleeper (teams resolved via 2020 draft-order names); matchups confirmed by 2019 GroupMe LM posts
+2019,Playoff,1,Sweet 16,13,,Army,3,Kansas State,14,150.38,123.7,Army,scores from Sleeper (teams resolved via 2020 draft-order names); matchups confirmed by 2019 GroupMe LM posts
+2019,Playoff,1,Sweet 16,13,,Citadel,6,Ohio,11,153.2,136.62,Citadel,scores from Sleeper (teams resolved via 2020 draft-order names); matchups confirmed by 2019 GroupMe LM posts
+2019,Playoff,2,Elite 8,14,Sugar Bowl,Maryland,,Northwestern,,229.64,119.5,Maryland,scores from Sleeper (teams resolved via 2020 draft-order names); matchups confirmed by 2019 GroupMe LM posts
+2019,Playoff,2,Elite 8,14,Peach Bowl,Virginia Tech,,Georgia Tech,,168.86,135.4,Virginia Tech,scores from Sleeper (teams resolved via 2020 draft-order names); matchups confirmed by 2019 GroupMe LM posts
+2019,Playoff,2,Elite 8,14,Orange Bowl,Bucknell,,Kentucky,,162.68,189.54,Kentucky,scores from Sleeper (teams resolved via 2020 draft-order names); matchups confirmed by 2019 GroupMe LM posts
+2019,Playoff,2,Elite 8,14,Cotton Bowl,Army,,Citadel,,178.54,120.48,Army,scores from Sleeper (teams resolved via 2020 draft-order names); matchups confirmed by 2019 GroupMe LM posts
+2019,Playoff,3,Final Four,15,Fiesta Bowl,Maryland,,Virginia Tech,,139.58,137.08,Maryland,scores from Sleeper (teams resolved via 2020 draft-order names); matchups confirmed by 2019 GroupMe LM posts
+2019,Playoff,3,Final Four,15,Rose Bowl,Kentucky,,Army,,169.62,193.96,Army,scores from Sleeper (teams resolved via 2020 draft-order names); matchups confirmed by 2019 GroupMe LM posts
+2019,Playoff,4,National Championship,16,,Maryland,,Army,,152.86,197.68,Army,scores from Sleeper (teams resolved via 2020 draft-order names); matchups confirmed by 2019 GroupMe LM posts
 2019,Bowl,1,Bowl,13,Armed Forces Bowl,UNLV,,Western Michigan,,145,139.44,UNLV,winner/runner-up from Chris's bowl lists (2026-10-07); week and scores from Sleeper (hand sheet used as a check)
 2019,Bowl,1,Bowl,13,Belk Bowl,San Diego State,,Colgate,,152.88,89.4,San Diego State,winner/runner-up from Chris's bowl lists (2026-10-07); week and scores from Sleeper (hand sheet used as a check)
 2019,Bowl,1,Bowl,14,Music City Bowl,Miami (OH),,Penn,,180.8,157.5,Miami (OH),winner/runner-up from Chris's bowl lists (2026-10-07); week and scores from Sleeper (hand sheet used as a check)
@@ -87,7 +87,7 @@ Season,Event,Round,RoundName,Week,Bowl,TeamA,SeedA,TeamB,SeedB,ScoreA,ScoreB,Win
 2020,Bowl,1,Bowl,14,Belk Bowl,Furman,,Rhode Island,,134.46,107.76,Furman,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
 2020,Bowl,1,Bowl,15,Music City Bowl,Yale,,Sam Houston State,,153.54,139.52,Yale,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
 2020,Bowl,1,Bowl,14,Alamo Bowl,Arizona,,Texas,,163.26,116.2,Arizona,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
-2020,Bowl,1,Bowl,14,Las Vegas Bowl,Fresno State,,Washington,,187.92,151.22,Fresno State,matchups from Chris's 2020 bowl score sheet; scores from Sleeper; Chris's winner list says Air Force over Washington - verify
+2020,Bowl,1,Bowl,14,Las Vegas Bowl,Fresno State,,Washington,,187.92,151.22,Fresno State,"matchups from Chris's 2020 bowl score sheet; scores from Sleeper; Fresno State in 2020 = Mountain West roster 4 (today Air Force), so it matches Chris's winner list"
 2020,Bowl,1,Bowl,15,Outback Bowl,Kansas State,,Washington State,,182.54,83.9,Kansas State,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
 2020,Bowl,1,Bowl,15,Holiday Bowl,North Dakota State,,Tennessee,,172.86,155.54,North Dakota State,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
 2020,Bowl,1,Bowl,14,Independence Bowl,UNC Charlotte,,Wofford,,153.5,101.76,UNC Charlotte,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
@@ -111,7 +111,7 @@ Season,Event,Round,RoundName,Week,Bowl,TeamA,SeedA,TeamB,SeedB,ScoreA,ScoreB,Win
 2020,Bowl,1,Bowl,14,EA Sports Bowl,Pittsburgh,,Alabama,,117.82,111.3,Pittsburgh,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
 2020,Bowl,1,Bowl,14,Ice Bowl,Central Arkansas,,Howard,,153.48,130.66,Central Arkansas,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
 2020,Bowl,1,Bowl,14,Boca Raton Bowl,Arkansas State,,San Jose State,,139.02,124.32,Arkansas State,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
-2020,Bowl,1,Bowl,14,Xbox Bowl,Texas State,,Columbia,,132.54,110.7,Texas State,matchups from Chris's 2020 bowl score sheet; scores from Sleeper; Chris's winner list says South Alabama over Columbia - verify
+2020,Bowl,1,Bowl,14,Xbox Bowl,Texas State,,Columbia,,132.54,110.7,Texas State,"matchups from Chris's 2020 bowl score sheet; scores from Sleeper; Chris's winner list said South Alabama, but South Alabama (USA r11) was in the playoff; Sleeper confirms Texas State 132.54"
 2020,Bowl,1,Bowl,14,PlayStation Bowl,Mississippi State,,Oregon State,,128,68.8,Mississippi State,matchups from Chris's 2020 bowl score sheet; scores from Sleeper
 2020,NIT,1,Group Stage 1,13,Group 1,McNeese State | Florida International | Alcorn State | Western Kentucky | UCONN,,,,106.86 | 126.9 | 68 | 112.3 | 143.54,,Florida International | UCONN,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07); scores from Sleeper"
 2020,NIT,1,Group Stage 1,13,Group 2,Missouri | Cornell | Dayton | Butler | Eastern Michigan,,,,76.54 | 153 | 75.9 | 109.26 | 140.48,,Cornell | Eastern Michigan,"5-team group, top 2 advance; from Chris's 2020 NIT bracket PDF (2026-10-07); scores from Sleeper"
