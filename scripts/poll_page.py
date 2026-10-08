@@ -125,20 +125,12 @@ def bot_grid(cfg, bots, poll, col, ptype):
             f'<tbody>{"".join(rows)}</tbody></table></div><p class="note">{legend}</p></section>')
 
 
-def page(cfg, poll, bots, archive, col, year, week, ptype, prev_ranked):
-    pcfg = pc.poll_cfg(cfg, ptype)
-    label, size = pcfg.get("label", ptype), int(pcfg["size"])
+
+def poll_section(poll, col, prev_ranked, label, pct, link=None):
+    """The ranked table (team color bands) + others receiving votes + dropped out, as one <section>.
+    Shared by the poll page and the weekly awards report."""
     ranked = poll[poll["Status"] == "Ranked"]
     orv = poll[poll["Status"] == "ORV"]
-    nbots = int(float(poll["BotsUsed"].iloc[0] or 0))
-    human = int(float(poll["HumanBallots"].iloc[0] or 0))
-
-    zmode = cfg.get("consensus", {}).get("method") == "zscore" and not human
-    final = ptype == "Final"
-
-    def pct(x):
-        return f"{float(x):+.2f}" if zmode else f"{float(x):.3f}".lstrip("0")
-
     first = not prev_ranked and poll["PrevRank"].replace("", None).isna().all()
     def band(team):  # team color band: team name through score (rank, movement, logo stay outside)
         bg, fg = col.get(team, ("#14213a", "#ffffff"))
@@ -155,6 +147,51 @@ def page(cfg, poll, bots, archive, col, year, week, ptype, prev_ranked):
     dropped = [t for k, t in prev_ranked.items() if k not in now_keys]
     dropped_html = ", ".join(e(t) for t in dropped) or "None"
 
+    more = f' <a href="{link}">Full poll</a>' if link else ""
+    return (f'<section id="poll"><h2>{e(label)} <small>Score (first-place votes)</small></h2>'
+            f'<div class="tbl"><table><thead><tr><th class="r">Rk</th><th></th><th></th><th>Team</th><th class="r">Score</th><th></th></tr></thead>'
+            f'<tbody>{rows}</tbody></table></div>'
+            f'<p class="orv"><b>Others receiving votes:</b> {orv_html}</p>'
+            + ("" if first else f'<p class="orv"><b>Dropped out:</b> {dropped_html}</p>') + f'{more}</section>')
+
+
+def weekly_section(week):
+    """(css, html) of the Top 25 poll for results through `week` (latest season), or None."""
+    if not os.path.exists(pc.POLL_SEASON):
+        return None
+    cfg = pc.config()
+    p = pd.read_csv(pc.POLL_SEASON, dtype=str).fillna("")
+    year = str(p["Year"].astype(int).max())
+    p = p[(p["Year"] == year) & (p["PollType"] == "Top25")]
+    poll = p[p["ThroughWeek"] == str(week)].copy()
+    if poll.empty:
+        return None
+    poll["_r"] = poll["Rank"].astype(int)
+    poll = poll.sort_values(["_r", "Team"])
+    prevp = p[p["ThroughWeek"] == str(int(week) - 1)]
+    prev = {(r.LeagueID, r.RosterID): r.Team for r in prevp[prevp["Status"] == "Ranked"].itertuples()}
+    human = int(float(poll["HumanBallots"].iloc[0] or 0))
+    zmode = cfg.get("consensus", {}).get("method") == "zscore" and not human
+    pct = (lambda x: f"{float(x):+.2f}") if zmode else (lambda x: f"{float(x):.3f}".lstrip("0"))
+    label = pc.poll_cfg(cfg, "Top25").get("label", "Top 25")
+    return CSS, poll_section(poll, colors(), prev, label, pct, link="poll.html")
+
+def page(cfg, poll, bots, archive, col, year, week, ptype, prev_ranked):
+    pcfg = pc.poll_cfg(cfg, ptype)
+    label, size = pcfg.get("label", ptype), int(pcfg["size"])
+    ranked = poll[poll["Status"] == "Ranked"]
+    orv = poll[poll["Status"] == "ORV"]
+    nbots = int(float(poll["BotsUsed"].iloc[0] or 0))
+    human = int(float(poll["HumanBallots"].iloc[0] or 0))
+
+    zmode = cfg.get("consensus", {}).get("method") == "zscore" and not human
+    final = ptype == "Final"
+
+    def pct(x):
+        return f"{float(x):+.2f}" if zmode else f"{float(x):.3f}".lstrip("0")
+
+    first = not prev_ranked and poll["PrevRank"].replace("", None).isna().all()
+    poll_html = poll_section(poll, col, prev_ranked, label, pct)
     games = ranked_games(cfg, year, week, poll)
     if len(games) and not final:
         g = "".join(
@@ -189,11 +226,7 @@ def page(cfg, poll, bots, archive, col, year, week, ptype, prev_ranked):
 <header><div><div class="eyebrow">{eyebrow}</div>
 <h1>NCAA 180 <em>{e(label)}</em></h1></div>
 <div class="kpis"><div class="kpi"><b>{nbots}</b><span>Computer bots</span></div>{kpi_h}</div></header>
-<section id="poll"><h2>{e(label)} <small>Score (first-place votes)</small></h2>
-<div class="tbl"><table><thead><tr><th class="r">Rk</th><th></th><th></th><th>Team</th><th class="r">Score</th><th></th></tr></thead>
-<tbody>{rows}</tbody></table></div>
-<p class="orv"><b>Others receiving votes:</b> {orv_html}</p>
-{"" if first else f'<p class="orv"><b>Dropped out:</b> {dropped_html}</p>'}</section>
+{poll_html}
 {games_html}
 {bot_grid(cfg, bots, poll, col, ptype)}
 <section><h2>Archive <small>{year}</small></h2><div class="archive">{arch}</div>

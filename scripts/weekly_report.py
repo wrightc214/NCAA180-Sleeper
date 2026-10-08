@@ -318,7 +318,19 @@ def render(d, weeks, colors, tpl, updated, lcolors, ranks=None):
     cur = ' aria-current="page"'
     nav = nav_html(W, weeks)
 
-    out = tpl
+    top32 = """<section><h2>Playoff Rank: Top 32 <small>Wins, then points</small></h2>
+    <div class="tbl"><table><thead><tr><th class="r">#</th><th>{{PREVHDR}}</th><th>Team</th><th class="r">W-L</th><th class="r">PF</th><th class="r" title="Wins minus expected wins">Luck</th></tr></thead><tbody>{{ROWS}}</tbody></table></div>
+    <p class="note">{{MOVENOTE}}Ranked across all 180 teams by wins, then total points. This is not the NCAA 180 poll.</p>
+  </section>"""
+    ranksec = top32
+    try:  # the NCAA 180 Top 25 poll replaces the Playoff Rank table once a poll exists for this week
+        import poll_page
+        ps = poll_page.weekly_section(W)
+        if ps:
+            ranksec = f"<style>{ps[0]}</style>" + ps[1]
+    except Exception as ex:  # fall back to Playoff Rank, never break the report
+        print(f"Poll section unavailable ({ex}); using Playoff Rank.")
+    out = tpl.replace("{{RANKSEC}}", ranksec)
     for k, v in {
         "WEEK": str(W), "PREVHDR": f"Wk {W - 1}" if W > 1 else "Wk",
         "MOVENOTE": (f"Movement is change in overall standings rank from Week {W - 1}. " if W > 1 else "")

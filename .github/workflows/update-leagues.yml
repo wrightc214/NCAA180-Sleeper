@@ -93,10 +93,10 @@ jobs:
           run lineup_streaks        lineup_streaks.py        all
           run player_values         player_values.py         all
           run draft_picks           draft_picks.py           all
-          run weekly_report         weekly_report.py         all
           run roster_map            roster_map.py            all
           run poll                poll_aggregate.py        all
           run poll_page           poll_page.py             all
+          run weekly_report         weekly_report.py         all
           run standings_page        standings_page.py        all
 
           # One-time - delete after use

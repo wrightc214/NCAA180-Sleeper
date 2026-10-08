@@ -78,10 +78,7 @@ footer{font-size:12px;color:var(--mute)}
 </header>
 <section><h2>Week {{WEEK}} awards <small>One winner across all 180</small></h2><div class="awards" style="--cols:{{AWCOLS}}">{{AW}}</div></section>
 <div class="grid">
-  <section><h2>Playoff Rank: Top 32 <small>Wins, then points</small></h2>
-    <div class="tbl"><table><thead><tr><th class="r">#</th><th>{{PREVHDR}}</th><th>Team</th><th class="r">W-L</th><th class="r">PF</th><th class="r" title="Wins minus expected wins">Luck</th></tr></thead><tbody>{{ROWS}}</tbody></table></div>
-    <p class="note">{{MOVENOTE}}Ranked across all 180 teams by wins, then total points. This is not the NCAA 180 poll.</p>
-  </section>
+  {{RANKSEC}}
   <div class="col">
     <section><h2>Top scores <small>Week {{WEEK}}</small></h2><ol class="list">{{TS}}</ol></section>
     <section><h2>Conference average <small>Pts per team</small></h2><ul class="lgs">{{LG}}</ul><p class="note">Bars start at 115 points.</p></section>
