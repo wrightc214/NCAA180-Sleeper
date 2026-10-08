@@ -52,7 +52,21 @@ Season,Event,Round,RoundName,Week,Bowl,TeamA,SeedA,TeamB,SeedB,ScoreA,ScoreB,Win
 2019,Bowl,1,Bowl,13,Boca Raton Bowl,Cincinnati,,Oregon State,,136.42,135,Cincinnati,winner/runner-up from Chris's bowl lists (2026-10-07); week and scores from Sleeper (hand sheet used as a check)
 2019,Bowl,1,Bowl,13,Xbox Bowl,USC,,Montana,,151.28,123.8,USC,winner/runner-up from Chris's bowl lists (2026-10-07); week and scores from Sleeper (hand sheet used as a check)
 2019,Bowl,1,Bowl,13,PlayStation Bowl,NC State,,Boise State,,159.42,142.5,NC State,winner/runner-up from Chris's bowl lists (2026-10-07); week and scores from Sleeper (hand sheet used as a check)
-2019,NIT,5,Final,,,Vanderbilt,,,,,,Vanderbilt,"champion only, from draft-order sheet (matches summary)"
+2019,NIT,1,Group Stage,13,Group 1,UTSA,,,,163.16,,UTSA,group winner only - other members unknown (bracket image lost); 62-team NIT field in 8 groups; 2019 GroupMe LM posts (Ben Kline); scores from Sleeper
+2019,NIT,1,Group Stage,13,Group 2,Pittsburgh,,,,184.96,,Pittsburgh,group winner only - other members unknown (bracket image lost); 62-team NIT field in 8 groups; 2019 GroupMe LM posts (Ben Kline); scores from Sleeper
+2019,NIT,1,Group Stage,13,Group 3,UConn,,,,139.94,,UConn,group winner only - other members unknown (bracket image lost); 62-team NIT field in 8 groups; 2019 GroupMe LM posts (Ben Kline); scores from Sleeper
+2019,NIT,1,Group Stage,13,Group 4,Utah State,,,,162.34,,Utah State,group winner only - other members unknown (bracket image lost); 62-team NIT field in 8 groups; 2019 GroupMe LM posts (Ben Kline); scores from Sleeper
+2019,NIT,1,Group Stage,13,Group 5,Arizona,,,,184.22,,Arizona,group winner only - other members unknown (bracket image lost); 62-team NIT field in 8 groups; 2019 GroupMe LM posts (Ben Kline); scores from Sleeper
+2019,NIT,1,Group Stage,13,Group 6,Rutgers,,,,145.2,,Rutgers,group winner only - other members unknown (bracket image lost); 62-team NIT field in 8 groups; 2019 GroupMe LM posts (Ben Kline); scores from Sleeper
+2019,NIT,1,Group Stage,13,Group 7,UCF | Iowa State,,,,143.66 | 143.64,,UCF,UCF beat Iowa State by 0.02 (LM post); other members unknown; 2019 GroupMe LM posts (Ben Kline); scores from Sleeper
+2019,NIT,1,Group Stage,13,Group 8,Vanderbilt,,,,140.3,,Vanderbilt,group winner only - other members unknown (bracket image lost); 62-team NIT field in 8 groups; 2019 GroupMe LM posts (Ben Kline); scores from Sleeper
+2019,NIT,2,Elite 8,14,,UTSA,,Pittsburgh,,153.36,100.22,UTSA,pairing inferred from the LM's list order; consistent with Sleeper scores; 2019 GroupMe LM posts (Ben Kline); scores from Sleeper
+2019,NIT,2,Elite 8,14,,Utah State,,UConn,,161.92,108.38,Utah State,pairing inferred from the LM's list order; consistent with Sleeper scores; 2019 GroupMe LM posts (Ben Kline); scores from Sleeper
+2019,NIT,2,Elite 8,14,,Arizona,,Rutgers,,146.3,121.4,Arizona,pairing inferred from the LM's list order; consistent with Sleeper scores; 2019 GroupMe LM posts (Ben Kline); scores from Sleeper
+2019,NIT,2,Elite 8,14,,Vanderbilt,,UCF,,137.4,99.36,Vanderbilt,2019 GroupMe LM posts (Ben Kline); scores from Sleeper
+2019,NIT,3,Final Four,15,,Utah State,,UTSA,,153.0,143.88,Utah State,2019 GroupMe LM posts (Ben Kline); scores from Sleeper
+2019,NIT,3,Final Four,15,,Vanderbilt,,Arizona,,171.84,137.42,Vanderbilt,2019 GroupMe LM posts (Ben Kline); scores from Sleeper
+2019,NIT,4,Final,16,,Vanderbilt,,Utah State,,131.46,105.74,Vanderbilt,prize: first pick of round 4 in the 2020 conference draft; 2019 GroupMe LM posts (Ben Kline); scores from Sleeper
 2020,CCG,1,Conference Championship,12,ACC,Clemson,,Virginia Tech,,152.14,124.08,Clemson,winner/runner-up from Chris's CCG history list; scores from Sleeper
 2020,CCG,1,Conference Championship,12,Big 10,Michigan,,Wisconsin,,157.28,137.8,Michigan,winner/runner-up from Chris's CCG history list; scores from Sleeper
 2020,CCG,1,Conference Championship,12,Big 12,West Virginia,,Oklahoma,,131.1,127.78,West Virginia,winner/runner-up from Chris's CCG history list; scores from Sleeper
