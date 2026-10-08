@@ -60,8 +60,8 @@ def key(df):
 
 @bot("record")
 def b_record(r, extra):
-    g = r.groupby(["LeagueID", "RosterID"]).agg(W=("Wv", "sum"), PF=("PointsFor", "sum"))
-    return g["W"] * 1e5 + g["PF"]  # wins first, points break ties (PF < 1e5)
+    g = r.groupby(["LeagueID", "RosterID"]).agg(W=("Wv", "sum"), PF=("PointsOfficial", "sum"))
+    return g["W"] * 1e5 + g["PF"]  # wins first, official points break ties = the league's real playoff rank
 
 
 @bot("allplay")
@@ -125,7 +125,7 @@ def b_efficiency(r, extra):
     if mx is None or mx.empty:
         return None
     mx = mx[mx["Week"].astype(int) <= r["Week"].max()]
-    pf = r.groupby(["LeagueID", "RosterID"])["PointsFor"].sum()
+    pf = r.groupby(["LeagueID", "RosterID"])["PointsOfficial"].sum()  # lineup calls were made under game-time scoring
     mp = mx.groupby(["LeagueID", "RosterID"])["MaxPoints"].sum()
     return (pf / mp).dropna()
 
@@ -189,8 +189,8 @@ def b_professor(r, extra):
         for a, b, o in zip(wk["LeagueID"], wk["RosterID"], wk["OpponentRosterID"]):
             if (a, o) in top and (a, b) in qwins.index:
                 qwins[(a, b)] += 1
-    g = r.groupby(["LeagueID", "RosterID"]).agg(W=("Wv", "mean"), PF=("PointsFor", "sum"))
-    g["k"] = g["W"] * 1e5 + g["PF"]
+    g = r.groupby(["LeagueID", "RosterID"]).agg(W=("Wv", "mean"), PF=("PointsOfficial", "sum"))
+    g["k"] = g["W"] * 1e5 + g["PF"]  # the real conference standing (official tiebreak)
     g["lr"] = g.groupby(level="LeagueID")["k"].rank(ascending=False, method="min")
     g["n"] = g.groupby(level="LeagueID")["W"].transform("size")
     g["stand"] = (g["n"] - g["lr"]) / (g["n"] - 1).clip(lower=1)
@@ -208,14 +208,49 @@ def b_professor(r, extra):
     return wp * P + wq * Q.reindex(g.index) + wr * R
 
 
+PRIOR_FILES = ("data/PollPrior_Season.csv", "data/PollPrior_Historic.csv")
+
+
 def load_prior(year):
-    """{(LeagueID, RosterID): Prior} from data/PollPrior_Season.csv for that year, else {}."""
-    f = "data/PollPrior_Season.csv"
-    if not os.path.exists(f):
-        return {}
-    p = pd.read_csv(f, dtype=str)
-    p = p[p["Year"] == str(year)]
-    return {(a, b): float(v) for a, b, v in zip(p["LeagueID"], p["RosterID"], p["Prior"])}
+    """{(LeagueID, RosterID): Prior} for that year (Season file, else Historic), else {}."""
+    for f in PRIOR_FILES:
+        if os.path.exists(f):
+            p = pd.read_csv(f, dtype=str)
+            p = p[(p["Year"] == str(year)) & p["Prior"].notna()]
+            if len(p):
+                return {(a, b): float(v) for a, b, v in zip(p["LeagueID"], p["RosterID"], p["Prior"])}
+    return {}
+
+
+# ---------------------------------------------------------------- missing data (Chris 2026-10-08)
+def bridge(by_week, week):
+    """Fill a weekly input that is missing for `week` (or for some teams that week).
+    by_week = {week: {key: value}}. Per team: actual if present; else straight line between
+    the nearest weeks before and after; else the nearest week on either side (carried).
+    A live run never has later weeks, so it carries the last known value forward; a rebuild
+    of past weeks can carry the first known value back. Returns ({key: value}, {key: source})."""
+    weeks = sorted(w for w, d in by_week.items() if d)
+    if not weeks:
+        return {}, {}
+    keys = set().union(*(by_week[w].keys() for w in weeks))
+    vals, src = {}, {}
+    for k in keys:
+        have = [w for w in weeks if by_week[w].get(k) is not None]
+        if not have:
+            continue
+        if week in have:
+            vals[k], src[k] = by_week[week][k], "actual"
+            continue
+        lo = [w for w in have if w < week]
+        hi = [w for w in have if w > week]
+        if lo and hi:
+            a, b = lo[-1], hi[0]
+            va, vb = by_week[a][k], by_week[b][k]
+            vals[k], src[k] = va + (vb - va) * (week - a) / (b - a), "interpolated"
+        else:
+            w = lo[-1] if lo else hi[0]
+            vals[k], src[k] = by_week[w][k], "carried"
+    return vals, src
 
 
 # ---------------------------------------------------------------- ranking
@@ -307,10 +342,12 @@ def current_extra(year, through_week):
         extra["maxpts"] = mx
     if os.path.exists("data/RosterValues_Season.csv"):
         rv = pd.read_csv("data/RosterValues_Season.csv", dtype=str)
-        rv = rv[(rv["Year"] == str(year)) & (rv["Week"].astype(int) <= int(through_week))]
-        if len(rv):
-            rv = rv[rv["Week"].astype(int) == rv["Week"].astype(int).max()]
-            extra["redraft"] = {(a, b): float(v) for a, b, v in zip(rv["LeagueID"], rv["RosterID"], rv["LineupRedraft"])}
+        rv = rv[(rv["Year"] == str(year)) & rv["LineupRedraft"].notna()]
+        by_week = {int(w): {(a, b): float(v) for a, b, v in zip(g["LeagueID"], g["RosterID"], g["LineupRedraft"])}
+                   for w, g in rv.groupby("Week")}
+        vals, src = bridge(by_week, int(through_week))
+        if vals:
+            extra["redraft"], extra["redraft_src"] = vals, src
     extra["prior"] = load_prior(year)
     return extra
 
@@ -347,16 +384,24 @@ def history_extra(year, through_week, slots=None):
         extra["maxpts"] = mx
     ps = os.path.join(BACKFILL, f"ProjStarters_{year}.csv.gz")
     if os.path.exists(ps):
-        p = pd.read_csv(ps, dtype=str)
-        p = p[p["Week"].astype(int) == int(through_week) + 1]
-        if len(p):
-            s = p.assign(v=p["ProjPts"].astype(float)).groupby(["LeagueID", "RosterID"])["v"].sum()
-            extra["redraft"] = s.to_dict()
+        if ("proj", year) not in _CACHE:
+            p = pd.read_csv(ps, dtype=str)
+            p["v"] = p["ProjPts"].astype(float)
+            _CACHE[("proj", year)] = {int(w): g.groupby(["LeagueID", "RosterID"])["v"].sum().to_dict()
+                                      for w, g in p.groupby("Week")}
+        vals, src = bridge(_CACHE[("proj", year)], int(through_week) + 1)
+        if vals:
+            extra["redraft"], extra["redraft_src"] = vals, src
+    extra["prior"] = load_prior(year)
     return extra
 
 
+_CACHE = {}
+
+
 def league_slots(year):
-    lg = pd.read_csv("data/LeagueIDs_AllYears.csv", dtype=str)
+    import poll_common as pc
+    lg = pc.leagues_all()
     lg = lg[lg["Year"] == str(year)]
     return {r.LeagueID: [s for s in r.RosterPositions.split(",") if s not in ("BN", "IR", "TAXI")]
             for r in lg.itertuples() if isinstance(r.RosterPositions, str)}
@@ -368,6 +413,9 @@ def league_slots(year):
 # Normalized games table: LeagueID, RosterID, Week, Event (CCG/Playoff/Bowl/NIT), PlayoffRound
 # (1..5 for Playoff, else 0), Res, PF, Opp (list of (LeagueID, RosterID)).
 
+GAME_COLS = ["LeagueID", "RosterID", "Week", "Event", "PlayoffRound", "Res", "PF", "PFOff", "Group", "Opp"]
+# Event PlayoffThird = a third-place game (2020): counts as a game; winner gets bump.PlayoffThird (= bowl).
+# Group = more than two teams in the game (NIT groups, 2020 playoff round 1): result = share outscored.
 ALIASES = "data/TeamAliases_Historic.csv"  # OldName, LeagueName, RosterID, FirstYear, LastYear
 # Only years backed by evidence (score match). Idaho = MW roster 7 verified 2022-2025; Fresno State from 2026.
 
@@ -377,12 +425,13 @@ def name_lookup(year):
     import poll_common as pc
     t = pc.teams(year)
     by = {r.Key: (r.LeagueID, r.RosterID) for r in t.itertuples()}
+    by.update({pc.full_key(r.Team): (r.LeagueID, r.RosterID) for r in t.itertuples()})
     if os.path.exists(ALIASES):
         ids = pc.league_ids(year)
         a = pd.read_csv(ALIASES, dtype=str, encoding="utf-8-sig")
         for r in a.itertuples():
             if int(r.FirstYear) <= int(year) <= int(r.LastYear) and r.LeagueName.upper() in ids:
-                by[pc.norm(r.OldName)] = (ids[r.LeagueName.upper()], r.RosterID)
+                by.setdefault(pc.norm(r.OldName), (ids[r.LeagueName.upper()], r.RosterID))
     return by
 
 
@@ -396,6 +445,7 @@ def postseason_historic(year):
     by = name_lookup(year)
     m = pc.matchups(year)
     own_pts = {(a, b, int(w)): float(x) for a, b, w, x in zip(m["LeagueID"], m["RosterID"], m["Week"], m["PointsFor"])}
+    own_off = {(a, b, int(w)): float(x) for a, b, w, x in zip(m["LeagueID"], m["RosterID"], m["Week"], m["PointsOfficial"])}
     rows, miss, unscored, mismatch = [], set(), [], []
     for r in p.itertuples():
         wk = int(r.Week) if isinstance(r.Week, str) and r.Week.strip() else 12 + int(r.Round)
@@ -404,16 +454,25 @@ def postseason_historic(year):
             teams.append(r.TeamB.strip())
         if len(teams) < 2:
             continue  # single-team row (no game)
-        keys = [by.get(pc.norm(x)) for x in teams]
+        keys = [pc.find(by, x) for x in teams]
         try:
             pts = [float(x) for x in str(r.ScoreA).split("|")]
             if isinstance(r.ScoreB, str) and r.ScoreB.strip():
                 pts.append(float(r.ScoreB))
         except ValueError:
             pts = []
+        # official (game-time) points where standard scoring restated them; else = standard
+        off = list(pts)
+        oa, ob = getattr(r, "OfficialScoreA", None), getattr(r, "OfficialScoreB", None)
+        if isinstance(oa, str) and oa.strip():
+            xs = [x.strip() for x in oa.split("|")]
+            off[:len(xs)] = [float(x) if x else p for x, p in zip(xs, off)]
+        if isinstance(ob, str) and ob.strip() and len(off) == len(teams):
+            off[-1] = float(ob)
         if len(pts) != len(teams):
             # Scores not recorded: each team's own points that week are real in Sleeper.
             pts = [own_pts.get((k[0], k[1], wk)) if k else None for k in keys]
+            off = [own_off.get((k[0], k[1], wk)) if k else None for k in keys]
             if any(x is None for x in pts):
                 unscored.append(f"{r.Event} wk{wk} {' v '.join(teams)}")
                 continue
@@ -427,14 +486,17 @@ def postseason_historic(year):
                 continue
             others = [j for j in range(len(teams)) if j != i]
             res = sum((pts[i] > pts[j]) + 0.5 * (pts[i] == pts[j]) for j in others) / len(others)
-            rows.append({"LeagueID": k[0], "RosterID": k[1], "Week": wk, "Event": r.Event,
-                         "PlayoffRound": int(r.Round) if r.Event == "Playoff" else 0,
-                         "Res": res, "PF": pts[i], "Opp": [keys[j] for j in others if keys[j]]})
+            third = r.Event == "Playoff" and "third" in str(r.RoundName).lower()
+            rows.append({"LeagueID": k[0], "RosterID": k[1], "Week": wk,
+                         "Event": "PlayoffThird" if third else r.Event,
+                         "PlayoffRound": int(r.Round) if r.Event == "Playoff" and not third else 0,
+                         "Res": res, "PF": pts[i], "PFOff": off[i] if off[i] is not None else pts[i],
+                         "Group": len(teams) > 2, "Opp": [keys[j] for j in others if keys[j]]})
     if unscored:
         print(f"WARNING {year}: {len(unscored)} postseason game(s) with no score anywhere, skipped: {unscored[:5]}")
     if mismatch:
         print(f"WARNING {year}: recorded winner disagrees with Sleeper points: {mismatch}")
-    return pd.DataFrame(rows, columns=["LeagueID", "RosterID", "Week", "Event", "PlayoffRound", "Res", "PF", "Opp"]), miss
+    return pd.DataFrame(rows, columns=GAME_COLS), miss
 
 
 def postseason_season(year):
@@ -448,7 +510,7 @@ def postseason_season(year):
     """
     import poll_common as pc
     path = "data/Postseason_Season.csv"
-    cols = ["LeagueID", "RosterID", "Week", "Event", "PlayoffRound", "Res", "PF", "Opp"]
+    cols = GAME_COLS
     if not os.path.exists(path) or os.path.getsize(path) < 10:
         return pd.DataFrame(columns=cols)
     p = pd.read_csv(path, dtype=str).fillna("")
@@ -467,7 +529,7 @@ def postseason_season(year):
             continue
         rows.append({"LeagueID": r.LeagueID, "RosterID": r.RosterID, "Week": int(r.Week), "Event": r.Round,
                      "PlayoffRound": int(getattr(r, "PlayoffRound", 0) or 0) if r.Round == "Playoff" else 0,
-                     "Res": res, "PF": me, "Opp": keys})
+                     "Res": res, "PF": me, "PFOff": me, "Group": len(opp_p) > 1, "Opp": keys})
     return pd.DataFrame(rows, columns=cols)
 
 
@@ -478,11 +540,12 @@ def final_ranks(cfg, m, extra, keys, games):
     rk, used = bot_ranks(cfg, m, last, extra, keys)
     reg = base(m, last, last)
     ap = reg.groupby(["LeagueID", "RosterID"])["AP"].mean()
-    rr = reg.groupby(["LeagueID", "RosterID"]).agg(W=("Wv", "sum"), N=("Wv", "size"), PF=("PointsFor", "sum"))
+    rr = reg.groupby(["LeagueID", "RosterID"]).agg(W=("Wv", "sum"), N=("Wv", "size"), PF=("PointsFor", "sum"),
+                                                   PFO=("PointsOfficial", "sum"))
     ro = reg.assign(o=[ap.get((a, b)) for a, b in zip(reg["LeagueID"], reg["OpponentRosterID"])]) \
         .groupby(["LeagueID", "RosterID"])["o"].agg(["sum", "count"])
     g = games.copy()
-    gp = g.groupby(["LeagueID", "RosterID"]).agg(W=("Res", "sum"), N=("Res", "size"), PF=("PF", "sum"))
+    gp = g.groupby(["LeagueID", "RosterID"]).agg(W=("Res", "sum"), N=("Res", "size"), PF=("PF", "sum"), PFO=("PFOff", "sum"))
     g["o"] = g["Opp"].map(lambda ks: sum(ap.get(k, 0.5) for k in ks) / len(ks) if ks else None)
     go = g.dropna(subset=["o"]).groupby(["LeagueID", "RosterID"])["o"].agg(["sum", "count"])
     mx = extra.get("maxpts", pd.DataFrame(columns=["LeagueID", "RosterID", "Week", "MaxPoints"]))
@@ -501,10 +564,11 @@ def final_ranks(cfg, m, extra, keys, games):
             continue
         W, N = rr.loc[k, "W"] + get(gp, k, "W"), rr.loc[k, "N"] + get(gp, k, "N")
         PF = rr.loc[k, "PF"] + get(gp, k, "PF")
+        PFO = rr.loc[k, "PFO"] + get(gp, k, "PFO")
         osum, ocnt = ro.loc[k, "sum"] + get(go, k, "sum"), ro.loc[k, "count"] + get(go, k, "count")
         mxt = mx_reg.get(k, 0) + mx_post.get(k, 0)
-        vals[k] = {"record": W / N + PF * 1e-9, "resume": 0.6 * W / N + 0.4 * osum / ocnt + PF * 1e-12,
-                   "efficiency": PF / mxt if mxt else None}
+        vals[k] = {"record": W / N + PFO * 1e-9, "resume": 0.6 * W / N + 0.4 * osum / ocnt + PF * 1e-12,
+                   "efficiency": PFO / mxt if mxt else None}
     for b in ("record", "resume", "efficiency"):
         if b in used:
             rk[b + "_val"] = [vals.get(k, {}).get(b) for k in zip(rk["LeagueID"], rk["RosterID"])]
@@ -518,11 +582,17 @@ def final_bumps(cfg, games):
     fc = cfg["polls"]["Final"]
     bump = fc.get("bump", {})
     sched = bump.get("Playoff", [])
+    # Rounds count back from the final, so a shorter bracket (2019: 4 rounds) gives the title
+    # game the title bump and drops the earliest rounds' bumps (config bump.align = "final").
+    top = int(games.loc[games["Event"] == "Playoff", "PlayoffRound"].max() or 0) if len(games) else 0
+    shift = len(sched) - top if bump.get("align", "final") == "final" else 0
     out = {}
     for r in games.itertuples():
         k = (r.LeagueID, r.RosterID)
         if r.Event == "Playoff":
-            b = sched[r.PlayoffRound - 1] if r.Res == 1.0 and 0 < r.PlayoffRound <= len(sched) else 0.0
+            i = r.PlayoffRound + shift
+            b = sched[i - 1] if 0 < i <= len(sched) else 0.0
+            b = b * float(r.Res) if r.Group else (b if r.Res == 1.0 else 0.0)  # groups: x share outscored
         else:
             b = float(bump.get(r.Event, 0.0)) * float(r.Res)
         out[k] = out.get(k, 0.0) + b

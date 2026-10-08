@@ -1,5 +1,5 @@
 """
-poll_aggregate.py -- build the poll: 7 computer bots (scripts/poll_bots.py) combined
+poll_aggregate.py -- build the poll: the computer bots (scripts/poll_bots.py) combined
 BCS-style, plus panel ballots as a second component once human_component is enabled.
 
 BCS math (config/poll.json):
@@ -80,10 +80,11 @@ def human_component(cfg, ballots, size, pool_keys):
     return pts, fpv, ballots["VoterID"].nunique()
 
 
-def build(cfg, year, week, ptype, ballots, stamp, extra=None, pool="auto", games=None):
-    """extra/pool/games default to the live season's inputs; the history backfill passes its own."""
+def build(cfg, year, week, ptype, ballots, stamp, extra=None, pool="auto", games=None, size=None):
+    """extra/pool/games default to the live season's inputs; the history backfill passes its own.
+    size overrides the configured poll size (e.g. a 16-team Seeding field in 2019)."""
     pcfg = pc.poll_cfg(cfg, ptype)
-    size = int(pcfg["size"])
+    size = int(size or pcfg["size"])
     if pool == "auto":
         pool = pc.playoff_pool(year) if pcfg.get("pool") == "playoff_field" else None
     m = pc.matchups(year)
@@ -97,7 +98,7 @@ def build(cfg, year, week, ptype, ballots, stamp, extra=None, pool="auto", games
             games = pb.postseason_season(year)
         rk, used = pb.final_ranks(cfg, m, extra, keys, games)
     else:
-        pts_thru = 12 if (ptype == "Seeding" and cfg.get("seeding", {}).get("include_week12_points")) else None
+        pts_thru = last + 1 if (ptype == "Seeding" and cfg.get("seeding", {}).get("include_week12_points")) else None
         rk, used = pb.bot_ranks(cfg, m, week, extra, keys, points_through=pts_thru)
     if not used:
         raise SystemExit("No bot has data for this week.")
@@ -148,7 +149,10 @@ def build(cfg, year, week, ptype, ballots, stamp, extra=None, pool="auto", games
     bots = pd.concat([pd.DataFrame({"Year": year, "ThroughWeek": week, "Bot": b, "BotName": names[b],
                                     "Rank": rk[b], "Team": [tn.get(k, "") for k in zip(rk["LeagueID"], rk["RosterID"])],
                                     "LeagueID": rk["LeagueID"], "RosterID": rk["RosterID"],
-                                    "Value": rk[b + "_val"].astype(float).round(4)}) for b in used], ignore_index=True)
+                                    "Value": rk[b + "_val"].astype(float).round(4),
+                                    "ValueSource": [extra.get(b + "_src", {}).get(k, "actual")
+                                                    for k in zip(rk["LeagueID"], rk["RosterID"])]}) for b in used],
+                     ignore_index=True)
     return poll, allr, bots, used, nh
 
 

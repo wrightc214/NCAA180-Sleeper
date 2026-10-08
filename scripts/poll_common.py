@@ -4,7 +4,12 @@ poll_common.py -- shared pieces of the poll engine (imported, not run).
 Settings: config/poll.json. Nothing league-specific is hardcoded here.
 
 Team identity is the roster slot: (Year, LeagueID, RosterID). Team is the slot's display
-name for that season (Teams.csv for the current season).
+name for that season (TeamNames_Historic.csv for past seasons, Teams.csv for the current one).
+
+History sources come from config/history.json (league_ids, matchups, standard_scores), so
+seasons kept outside the main files (data/backfill/ for 2019-2020) are read the same way.
+Points: PointsFor = standard scoring where restated (ScoresStandard_Historic.csv), the
+official number kept as PointsOfficial. Outcomes (W/L) are always official.
 
 Week terms used everywhere:
   ThroughWeek    last week of results the voters saw
@@ -44,10 +49,12 @@ POLL_COLS = ["Year", "PollType", "ThroughWeek", "AppliesToWeek", "Rank", "Tied",
              "Score", "ComputerPct", "HumanPct", "HumanPoints", "FirstPlaceVotes",
              "BotAvgRank", "BotHigh", "BotLow", "BotsUsed", "HumanBallots",
              "PrevRank", "Move", "Wins", "Losses", "Ties", "PF", "PublishedAt"]
-BOT_COLS = ["Year", "ThroughWeek", "Bot", "BotName", "Rank", "Team", "LeagueID", "RosterID", "Value"]
+BOT_COLS = ["Year", "ThroughWeek", "Bot", "BotName", "Rank", "Team", "LeagueID", "RosterID", "Value", "ValueSource"]
+# ValueSource: actual | interpolated (between the nearest weeks with data) | carried (nearest
+# week with data, before or after) -- see poll_bots.bridge
 BOTS_SEASON = "data/PollBots_Season.csv"
 BOTS_HISTORIC = "data/PollBots_Historic.csv"
-CONSENSUS = "BotConsensus"  # PollType of the full 180-team bot ranking kept for history
+CONSENSUS = "BotConsensus"  # PollType of the full bot ranking of every team, kept for history
 WEEKDAYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 
 
@@ -123,42 +130,87 @@ def norm(s):
     return re.sub(r"[^a-z0-9]+", "", s)
 
 
+def full_key(s):
+    """Like norm() but keeps a parenthesized qualifier: 'Miami (OH)' -> 'miamioh'."""
+    s = unicodedata.normalize("NFKD", str(s)).encode("ascii", "ignore").decode().lower().replace("&", " and ")
+    return re.sub(r"[^a-z0-9]+", "", s)
+
+
+def find(by, name):
+    """Look a typed/recorded name up in a {key: value} map built with both key styles."""
+    return by.get(full_key(name), by.get(norm(name)))
+
+
 def league_short():
     t = pd.read_csv(SHORT, dtype=str, encoding="utf-8-sig")
     return {r["Full Name"].strip().upper(): r["Short Name"].strip() for _, r in t.iterrows()}
 
 
+def history_cfg():
+    p = "config/history.json"
+    return json.load(open(p, encoding="utf-8")) if os.path.exists(p) else {}
+
+
+def leagues_all():
+    """Every season's leagues: Year, LeagueID, LeagueName, RosterPositions (history files first)."""
+    paths = history_cfg().get("league_ids", [LEAGUE_IDS])
+    cols = ["Year", "LeagueID", "LeagueName", "RosterPositions"]
+    frames = [pd.read_csv(p, dtype=str) for p in paths if os.path.exists(p)]
+    lg = pd.concat([f.reindex(columns=cols) for f in frames], ignore_index=True)
+    lg["LeagueName"] = lg["LeagueName"].str.strip()
+    return lg.drop_duplicates(["Year", "LeagueID"], keep="last")
+
+
+def seasons():
+    return sorted(int(y) for y in leagues_all()["Year"].unique())
+
+
 def league_ids(year):
-    lg = pd.read_csv(LEAGUE_IDS, dtype=str)
+    lg = leagues_all()
     lg = lg[lg["Year"] == str(year)]
     return {r.LeagueName.strip().upper(): r.LeagueID for r in lg.itertuples()}
 
 
 def teams(year):
     """Slot table for `year`: Team, LeagueName, League (short), LeagueID, RosterID, Key.
-    Slot names come from Teams.csv (current-season names)."""
-    t = pd.read_csv(TEAMS, dtype=str, encoding="utf-8-sig").rename(
-        columns={"League": "LeagueName", "Roster ID": "RosterID"})
+    Names are that season's (team_names.names: TeamNames_Historic.csv, else Teams.csv)."""
+    import team_names
+    t = team_names.names(year).copy()
     t["Team"] = t["Team"].str.strip()
+    t["LeagueName"] = t["LeagueName"].str.strip()
     ids, short = league_ids(year), league_short()
-    t["LeagueID"] = t["LeagueName"].str.strip().str.upper().map(ids)
-    t["League"] = t["LeagueName"].str.strip().str.upper().map(short).fillna(t["LeagueName"])
+    t["LeagueID"] = t["LeagueName"].str.upper().map(ids)
+    t["League"] = t["LeagueName"].str.upper().map(short).fillna(t["LeagueName"])
     t["Key"] = t["Team"].map(norm)
+    clash = t["Key"].duplicated(keep=False)  # e.g. Miami vs Miami (OH): keep the qualifier
+    t.loc[clash, "Key"] = t.loc[clash, "Team"].map(lambda x: re.sub(r"[^a-z0-9]+", "", str(x).lower().replace("&", "and")))
     dup = t[t["Key"].duplicated(keep=False)]
     if len(dup):
-        raise SystemExit(f"Team names collide after normalizing: {sorted(dup['Team'])}")
+        raise SystemExit(f"{year}: team names collide after normalizing: {sorted(dup['Team'])}")
     return t[["Team", "LeagueName", "League", "LeagueID", "RosterID", "Key"]]
 
 
 # ---------------------------------------------------------------- standings / computer ballot
 def matchups(year):
-    """Regular-season matchup rows for `year` from Season or Historic."""
-    frames = [pd.read_csv(p, dtype=str) for p in (MATCHUPS_SEASON, MATCHUPS_HISTORIC) if os.path.exists(p)]
+    """Matchup rows for `year` (Season file, then history sources). PointsFor = standard
+    scoring where restated; PointsOfficial = Sleeper's number. Outcome stays official."""
+    hc = history_cfg()
+    paths = [MATCHUPS_SEASON] + hc.get("matchups", [MATCHUPS_HISTORIC])
+    frames = [pd.read_csv(p, dtype=str) for p in paths if os.path.exists(p)]
     m = pd.concat(frames, ignore_index=True)
     m = m[m["Year"] == str(year)].copy()
     m["Week"] = m["Week"].astype(int)
     m["PointsFor"] = m["PointsFor"].astype(float)
-    return m.drop_duplicates(["LeagueID", "Week", "RosterID"], keep="first")
+    m = m.drop_duplicates(["LeagueID", "Week", "RosterID"], keep="first")
+    m["PointsOfficial"] = m["PointsFor"]
+    sp = hc.get("standard_scores")
+    if sp and os.path.exists(sp):
+        s = pd.read_csv(sp, dtype=str)
+        s = s[s["Year"] == str(year)]
+        if len(s):
+            std = {(a, int(w), b): float(v) for a, w, b, v in zip(s["LeagueID"], s["Week"], s["RosterID"], s["PointsStandard"])}
+            m["PointsFor"] = [std.get((a, w, b), p) for a, w, b, p in zip(m["LeagueID"], m["Week"], m["RosterID"], m["PointsFor"])]
+    return m
 
 
 def standings_through(cfg, m, through_week):
@@ -168,6 +220,7 @@ def standings_through(cfg, m, through_week):
     r["W"] = (r["Outcome"] == "Win").astype(int)
     r["L"] = (r["Outcome"] == "Loss").astype(int)
     r["T"] = (r["Outcome"] == "Tie").astype(int)
+    r["LeagueName"] = r["LeagueName"].str.strip()
     s = r.groupby(["LeagueID", "LeagueName", "RosterID"], as_index=False).agg(
         Wins=("W", "sum"), Losses=("L", "sum"), Ties=("T", "sum"), PF=("PointsFor", "sum"))
     s["WinVal"] = s["Wins"] + 0.5 * s["Ties"]

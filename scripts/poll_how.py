@@ -29,7 +29,8 @@ ul.rules li{margin:4px 0}
 """
 
 LABELS = {  # display labels for Professor's config keys
-    "psv": "Preseason starter value", "last_final": "Last season's final rank",
+    "psv": "Preseason starter value (redraft value of the best lineup)", "last_final": "Last season's final rank",
+    "wk1_proj": "Week-1 projected starter points", "dynasty": "Preseason dynasty team value",
     "allplay": "All-play win % vs all teams, weekly", "ppg": "Points per game",
     "consistency": "Weeks above the all-team weekly median",
     "win_pct": "Win %", "quality_wins": "Wins over opponents in the top half of Quality that week",
@@ -50,17 +51,20 @@ def professor_html(p):
     wrows = "".join(f"<tr><td>{'Preseason' if int(k) == 0 else 'Week ' + k}</td>"
                     + "".join(f"<td>{v}%</td>" for v in w[k]) + "</tr>" for k in wk)
     return (block("Prior", p.get("prior", {}))
-            + "<p class='note'>Frozen before week 1 (last value snapshot before the season); never refreshed in-season. "
-              "Last season's final rank = the final poll, or the standings if there was no poll.</p>"
+            + "<p class='note'>Set once at the start of the season and never refreshed. "
+              "Last season's final rank = the final poll, or the standings if there was no poll. "
+              "A team missing an input (no preseason values that year, a new league) gets the other inputs' weights scaled up to 100%.</p>"
             + block("Quality", p.get("quality", {})) + block("Resume", p.get("resume", {}))
             + f"<p><b>Block weights by games played</b> (straight line between rows)</p>"
               f"<table class='w'><tr><th></th><th>Prior</th><th>Quality</th><th>Resume</th></tr>{wrows}</table>"
-            + "<p class='note'>Every measure is a percentile rank across all teams. Not used: lineup efficiency, "
+            + "<p class='note'>Every measure is a percentile rank across all teams that season. Not used: lineup efficiency, "
               "max points, points against, week-to-week spread.</p>")
 
 
 def main():
     cfg = pc.config()
+    year = max(pc.seasons())
+    nteams = len(pc.teams(year))
     bots = [b for b in cfg["bots"] if b.get("enabled", True)]
     nm = {b["id"]: b["name"] for b in cfg["bots"]}
     top = pc.poll_cfg(cfg, "Top25")
@@ -75,7 +79,7 @@ def main():
         cards.append(f"<div class='bot' id='{e(b['id'])}'><h3>{e(b['name'])}<small>{e(b.get('short', ''))}</small></h3>"
                      f"<p class='voice'>“{e(b.get('voice', ''))}”</p>"
                      f"<p><b>Measures:</b> {e(b.get('blurb', ''))}</p>"
-                     f"<p><b>Inputs:</b> {e(b.get('how', ''))}</p>{extra}</div>")
+                     f"<p><b>Inputs:</b> {e(b.get('how', '').replace('{teams}', str(nteams)))}</p>{extra}</div>")
 
     post = ", ".join(nm[i] for i in ("record", "resume", "efficiency") if i in nm)
     frozen = ", ".join(b["name"] for b in bots if b["id"] not in ("record", "resume", "efficiency"))
@@ -90,7 +94,9 @@ def main():
         f"<b>Top {size}</b> = the {size} highest Scores. Ties: Score, then average bot rank, then Scoreboard.",
         "<b>First-place votes</b> = how many bots rank the team #1.",
         f"<b>Others receiving votes</b> = outside the top {size} but in at least one counted bot's top {size}.",
-        "<b>Bots sit out</b> a week when their data doesn't exist yet (e.g. no value snapshot); the page shows how many counted.",
+        "<b>Missing data is bridged, not left blank.</b> A bot missing a week's input uses a straight line between the "
+        "nearest weeks with data, or the nearest week's value when there is only one side; those ballots are marked * on the poll page. "
+        "A bot with no data at all for a season sits out (shown –) and the other bots carry the poll.",
     ]
     if fin:
         rules.append(f"<b>Final poll</b> (after the postseason): postseason games count as extra games for {e(post)}; "

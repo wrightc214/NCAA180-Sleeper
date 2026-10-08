@@ -1,0 +1,43 @@
+name: Week-1 Projection (Professor prior)
+
+# Pulls week-1 projected starter points (scripts/week1_projection.py), rebuilds the
+# Professor prior (scripts/poll_prior.py) and commits both. Runs once per season after
+# week-1 lineups lock (rollover checklist), or on demand.
+on:
+  workflow_dispatch:
+    inputs:
+      year:
+        description: 'Season (blank = current)'
+        required: false
+  # Until this workflow is on main it can't be dispatched; a push to the poll-engine branch
+  # that changes it or the script starts it there.
+  push:
+    branches: [poll-engine]
+    paths: [scripts/week1_projection.py, .github/workflows/week1-projection.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  pull:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install pandas requests
+      - name: Week-1 projections + prior
+        run: |
+          ARGS=""
+          [ -n "${{ github.event.inputs.year }}" ] && ARGS="--year ${{ github.event.inputs.year }}"
+          python scripts/week1_projection.py $ARGS
+          python scripts/poll_prior.py $ARGS
+      - name: Commit
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/TeamProjectionsWk1_Historic.csv data/PollPrior_Season.csv data/PollPrior_Historic.csv 2>/dev/null || true
+          if git diff --cached --quiet; then echo "Nothing to commit"; exit 0; fi
+          git commit -m "Week-1 projections + Professor prior"
+          for i in 1 2 3; do git pull --rebase -q origin ${GITHUB_REF_NAME} && git push origin HEAD:${GITHUB_REF_NAME} && break; sleep 5; done

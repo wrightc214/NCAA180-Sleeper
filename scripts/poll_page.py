@@ -78,12 +78,15 @@ def bot_grid(cfg, bots, poll, col, ptype):
     ranked = poll[poll["Status"] == "Ranked"]
     if bots.empty or ranked.empty:
         return ""
-    meta = [b for b in cfg["bots"] if b["id"] in set(bots["Bot"])]
+    meta = [b for b in cfg["bots"] if b.get("enabled", True)]  # every bot; one with no data shows –
     keys = list(zip(ranked["LeagueID"], ranked["RosterID"]))
     if pc.poll_cfg(cfg, ptype).get("pool") == "playoff_field":  # ranks inside the field
         bots = bots[[k in set(keys) for k in zip(bots["LeagueID"], bots["RosterID"])]].copy()
         bots["Rank"] = bots.groupby("Bot")["Rank"].rank(method="min").astype(int).astype(str)
     br = {(r.Bot, r.LeagueID, r.RosterID): int(r.Rank) for r in bots.itertuples()}
+    vs = bots["ValueSource"] if "ValueSource" in bots.columns else pd.Series("", index=bots.index)
+    filled = {(b, a, r) for b, a, r, v in zip(bots["Bot"], bots["LeagueID"], bots["RosterID"], vs.fillna(""))
+              if v not in ("", "actual", "nan")}
     drop = bool(cfg.get("consensus", {}).get("drop_high_low", True)) and len(meta) >= 3
     head = "".join(f'<th class="r" title="{e(b["name"])}: {e(b.get("blurb", ""))}">{e(b.get("short", b["name"]))}</th>' for b in meta)
     rows = []
@@ -93,9 +96,13 @@ def bot_grid(cfg, bots, poll, col, ptype):
         hi_i = vals.index(min(ok)) if drop and ok else -1
         lo_i = len(vals) - 1 - vals[::-1].index(max(ok)) if drop and ok else -1
         cells = "".join(
-            f'<td class="n{" drop" if i in (hi_i, lo_i) else ""}">{v if v is not None else "–"}</td>' for i, v in enumerate(vals))
+            f'<td class="n{" drop" if i in (hi_i, lo_i) else ""}">{v if v is not None else "–"}'
+            f'{"*" if (b["id"],) + k in filled else ""}</td>' for i, (v, b) in enumerate(zip(vals, meta)))
         rows.append(f'<tr><td class="rk">{int(r.Rank)}</td><td class="tm">{pill(r.Team, col)}</td>{cells}</tr>')
     legend = " · ".join(f'<b>{e(b.get("short", ""))}</b> {e(b["name"])}: {e(b.get("blurb", ""))}' for b in meta)
+    marks = (" * = input bridged from the nearest weeks with data." if filled else "") + \
+        (" – = no data for this bot." if any(b["id"] not in set(bots["Bot"]) for b in meta) else "")
+    legend += marks
     return (f'<section id="bots"><h2>Bot ballots <small>Struck = dropped (best and worst) · <a href="poll-how.html">how each bot works</a></small></h2>'
             f'<div class="tbl"><table><thead><tr><th class="r">Rk</th><th>Team</th>{head}</tr></thead>'
             f'<tbody>{"".join(rows)}</tbody></table></div><p class="note">{legend}</p></section>')
