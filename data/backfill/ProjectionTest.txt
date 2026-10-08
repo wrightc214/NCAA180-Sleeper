@@ -1,0 +1,52 @@
+2026 wk1 feed=new: 3306 players
+  Arizona            computed  102.30  app   102.3  diff 0.0
+  USC                computed  134.02  app  134.02  diff 0.0
+  Oregon State       computed  123.90  app   123.9  diff 0.0
+  Washington State   computed  153.64  app  153.64  diff 0.0
+  Stanford           computed  139.05  app  139.05  diff 0.0
+  Washington         computed  126.36  app  126.36  diff 0.0
+  Arizona State      computed  163.89  app  163.89  diff 0.0
+  Colorado           computed  141.05  app  141.05  diff 0.0
+  Oregon             computed  100.89  app       -  diff -
+  California         computed   84.56  app       -  diff -
+  Utah               computed  137.83  app  137.83  diff 0.0
+  UCLA               computed  151.88  app  151.88  diff 0.0
+2026 wk1 feed=v1: 9422 players
+  Arizona            computed  102.30  app   102.3  diff 0.0
+  USC                computed  134.02  app  134.02  diff 0.0
+  Oregon State       computed  123.90  app   123.9  diff 0.0
+  Washington State   computed  153.64  app  153.64  diff 0.0
+  Stanford           computed  139.05  app  139.05  diff 0.0
+  Washington         computed  126.36  app  126.36  diff 0.0
+  Arizona State      computed  163.89  app  163.89  diff 0.0
+  Colorado           computed  141.05  app  141.05  diff 0.0
+  Oregon             computed  100.89  app       -  diff -
+  California         computed   84.56  app       -  diff -
+  Utah               computed  137.83  app  137.83  diff 0.0
+  UCLA               computed  151.88  app  151.88  diff 0.0
+2020 wk6 feed=new: 3302 players
+  Arizona            computed  129.78  app  129.78  diff 0.0
+  USC                computed  130.73  app  130.73  diff 0.0
+  Oregon State       computed  138.75  app  138.75  diff 0.0
+  Washington State   computed  137.85  app  137.85  diff 0.0
+  Stanford           computed  103.78  app  103.78  diff 0.0
+  Washington         computed  162.19  app       -  diff -
+  Arizona State      computed  107.91  app  107.91  diff 0.0
+  Colorado           computed  134.05  app  134.05  diff 0.0
+  Oregon             computed   97.86  app   97.86  diff 0.0
+  California         computed  163.29  app       -  diff -
+  Utah               computed  175.53  app  175.53  diff 0.0
+  UCLA               computed  135.07  app  135.07  diff 0.0
+2020 wk6 feed=v1: 9418 players
+  Arizona            computed  129.78  app  129.78  diff 0.0
+  USC                computed  130.73  app  130.73  diff 0.0
+  Oregon State       computed  138.75  app  138.75  diff 0.0
+  Washington State   computed  137.85  app  137.85  diff 0.0
+  Stanford           computed  103.78  app  103.78  diff 0.0
+  Washington         computed  162.19  app       -  diff -
+  Arizona State      computed  107.91  app  107.91  diff 0.0
+  Colorado           computed  134.05  app  134.05  diff 0.0
+  Oregon             computed   97.86  app   97.86  diff 0.0
+  California         computed  163.29  app       -  diff -
+  Utah               computed  175.53  app  175.53  diff 0.0
+  UCLA               computed  135.07  app  135.07  diff 0.0

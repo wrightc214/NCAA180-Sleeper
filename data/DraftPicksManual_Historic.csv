@@ -1,0 +1,204 @@
+Year,LeagueName,LeagueID,Round,PickInRound,OverallPick,PickType,Team,RosterID,Player,PlayerID,Position,RosteredBySlot,Check,Source
+2020,NCAA WILD,519112491566792704,1,1,1,Regular,Central Arkansas,9,Clyde Edwards-Helaire,6820,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,1,2,2,Regular,Central Michigan,4,Jonathan Taylor,6813,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,1,3,3,Regular,Old Dominion,10,J.K. Dobbins,6806,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,1,4,4,Regular,South Dakota,11,Cam Akers,6938,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,1,5,5,Regular,James Madison,2,D'Andre Swift,6790,RB,False,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,1,6,6,Regular,Old Dominion,10,CeeDee Lamb,6786,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,1,7,7,Regular,UNC Charlotte,12,Jerry Jeudy,6783,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,1,8,8,Regular,Old Dominion,10,Tee Higgins,6801,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,1,9,9,Regular,Central Michigan,4,Justin Jefferson,6794,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,1,10,10,Regular,San Jose State,7,Henry Ruggs,6789,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,1,11,11,Regular,Montana,1,Jalen Reagor,6798,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,1,12,12,Regular,Citadel,8,Antonio Gibson,6945,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,2,1,13,Regular,Central Arkansas,9,Denzel Mims,6849,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,2,2,14,Regular,North Dakota State,3,Michael Pittman,6819,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,2,3,15,Regular,North Dakota State,3,Zack Moss,6845,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,2,4,16,Regular,South Dakota,11,Brandon Aiyuk,6803,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,2,5,17,Regular,James Madison,2,Josh Kelley,7045,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,2,6,18,Regular,Old Dominion,10,Laviska Shenault,6814,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,2,7,19,Regular,North Dakota State,3,AJ Dillon,6828,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,2,8,20,Regular,Old Dominion,10,Joe Burrow,6770,QB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,2,9,21,Regular,Eastern Michigan,6,Bryan Edwards,6870,WR,False,first added by roster 2 on 2020-09-12,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,2,10,22,Regular,Wichita State,5,Tua Tagovailoa,6768,QB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,2,11,23,Regular,San Jose State,7,Lynn Bowden Jr,6909,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,2,12,24,Regular,San Jose State,7,Justin Herbert,6797,QB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,3,1,25,Bowl winner bonus,UNC Charlotte,12,Chase Claypool,6886,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,3,2,26,Bowl winner bonus,Eastern Michigan,6,Devin Asiasi,6956,TE,False,first added by roster 5 on 2020-09-15,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,3,3,27,Bowl winner bonus,Wichita State,5,Devin Duvernay,6847,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,3,4,28,Regular,Central Arkansas,9,Anthony McFarland,6878,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,3,5,29,Regular,Central Michigan,4,Van Jefferson,6853,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,3,6,30,Regular,Central Michigan,4,Darrynton Evans,7064,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,3,7,31,Regular,Old Dominion,10,Quintez Cephus,6895,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,3,8,32,Regular,James Madison,2,Jordan Love,6804,QB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,3,9,33,Regular,Old Dominion,10,John Hightower,7086,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,3,10,34,Regular,Central Michigan,4,Cole Kmet,6826,TE,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,3,11,35,Regular,San Jose State,7,Jalen Hurts,6904,QB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,3,12,36,Regular,Wichita State,5,James Robinson,6955,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,3,13,37,Regular,Citadel,8,Harrison Bryant,6850,TE,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,3,14,38,Regular,Wichita State,5,DeeJay Dallas,6931,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,3,15,39,Regular,Eastern Michigan,6,Dalton Keene,7082,TE,False,no add found,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,4,1,40,Regular,Central Arkansas,9,James Proche,6957,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,4,2,41,Regular,Central Michigan,4,KJ Hamler,6805,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,4,3,42,Regular,Central Michigan,4,Lamical Perine,6908,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,4,4,43,Regular,Montana,1,Antonio Gandy-Golden,6906,TE,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,4,5,44,Regular,James Madison,2,Brycen Hopkins,6926,TE,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,4,6,45,Regular,Old Dominion,10,Joe Reed,6913,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,4,7,46,Regular,Montana,1,Jacob Eason,6823,QB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,4,8,47,Regular,UNC Charlotte,12,Tyler Johnson,6960,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,4,9,48,Regular,Eastern Michigan,6,KJ Hill,6866,WR,False,first added by roster 3 on 2020-09-29,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,4,10,49,Regular,Montana,1,Gabriel Davis,6943,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,4,11,50,Regular,Wichita State,5,Ke'Shawn Vaughn,6885,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA WILD,519112491566792704,4,12,51,Regular,San Jose State,7,Eno Benjamin,6951,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,1,1,1,Regular,Michigan,12,Clyde Edwards-Helaire,6820,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,1,2,2,Regular,Minnesota,7,Jerry Jeudy,6783,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,1,3,3,Regular,Minnesota,7,Jonathan Taylor,6813,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,1,4,4,Regular,Wisconsin,6,D'Andre Swift,6790,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,1,5,5,Regular,Penn State,5,J.K. Dobbins,6806,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,1,6,6,Regular,Minnesota,7,Henry Ruggs III,6789,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,1,7,7,Regular,Northwestern,3,Cam Akers,6938,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,1,8,8,Regular,Michigan State,4,CeeDee Lamb,6786,WR,False,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,1,9,9,Regular,Minnesota,7,Joe Burrow,6770,QB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,1,10,10,Regular,Wisconsin,6,Tua Tagovailoa,6768,QB,True,first added by roster 7 on 2020-01-15,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,1,11,11,Regular,Iowa,11,Denzel Mims,6849,WR,False,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,1,12,12,Regular,Penn State,5,Brandon Aiyuk,6803,WR,False,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,2,1,13,Regular,Nebraska,2,Justin Jefferson,6794,WR,False,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,2,2,14,Regular,Indiana,8,Laviska Shenault Jr.,6814,WR,False,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,2,3,15,Regular,Purdue,1,Jalen Reagor,6798,WR,False,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,2,4,16,Regular,Ohio State,9,Devin Asiasi,6956,TE,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,2,5,17,Regular,Penn State,5,Tee Higgins,6801,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,2,6,18,Regular,Iowa,11,Ke'Shawn Vaughn,6885,RB,False,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,2,7,19,Regular,Purdue,1,Chase Claypool,6886,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,2,8,20,Regular,Minnesota,7,Michael Pittman Jr,6819,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,2,9,21,Regular,Nebraska,2,Antonio Gibson,6945,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,2,10,22,Regular,Iowa,11,KJ Hamler,6805,WR,False,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,2,11,23,Regular,Wisconsin,6,AJ Dillon,6828,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,2,12,24,Regular,Wisconsin,6,Darrynton Evans,7064,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,3,1,25,Bowl winner bonus,Nebraska,2,Justin Herbert,6797,QB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,3,2,26,Bowl winner bonus,Purdue,1,Cole Kmet,6826,TE,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,3,3,27,Bowl winner bonus,Michigan State,4,Devin Duvernay,6847,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,3,4,28,Regular,Penn State,5,Jalen Hurts,6904,QB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,3,5,29,Regular,Michigan State,4,Zack Moss,6845,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,3,6,30,Regular,Indiana,8,KJ Hill,6866,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,3,7,31,Regular,Ohio State,9,Josiah Deguara,7050,TE,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,3,8,32,Regular,Penn State,5,Bryan Edwards,6870,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,3,9,33,Regular,Iowa,11,Tyler Johnson,6960,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,3,10,34,Regular,Ohio State,9,Lamical Perine,6908,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,3,11,35,Regular,Iowa,11,Quintez Cephus,6895,WR,False,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,3,12,36,Regular,Michigan,12,Jordan Love,6804,QB,False,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,3,13,37,Regular,Michigan State,4,Jake Fromm,6822,QB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,3,14,38,Regular,Michigan State,4,Antonio Gandy-Golden,6906,TE,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,3,15,39,Regular,Purdue,1,Adam Trautman,6869,TE,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,4,1,40,Regular,Illinois,10,Thaddeus Moss,6919,TE,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,4,2,41,Regular,Northwestern,3,Jacob Eason,6823,QB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,4,3,42,Regular,Purdue,1,Eno Benjamin,6951,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,4,4,43,Regular,Ohio State,9,Anthony McFarland,6878,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,4,5,44,Regular,Penn State,5,Joshua Kelley,7045,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,4,6,45,Regular,Michigan State,4,Brycen Hopkins,6926,TE,False,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,4,7,46,Regular,Nebraska,2,Van Jefferson,6853,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,4,8,47,Regular,Minnesota,7,DeeJay Dallas,6931,RB,False,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,4,9,48,Regular,Purdue,1,Lynn Bowden Jr,6909,WR,False,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,4,10,49,Regular,Illinois,10,Donovan Peoples-Jones,6824,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,4,11,50,Regular,Minnesota,7,Albert Okwuegbunam,6843,TE,False,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA BIG 10,519114104323002368,4,12,51,Regular,Penn State,5,Collin Johnson,6857,WR,False,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,1,1,1,Regular,Michigan,12,Najee Harris,7528,RB,False,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,1,2,2,Regular,Illinois,10,Javonte Williams,7588,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,1,3,3,Regular,Minnesota,7,Ja'Marr Chase,7564,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,1,4,4,Regular,Minnesota,7,DeVonta Smith,7525,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,1,5,5,Regular,Penn State,5,Kyle Pitts,7553,TE,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,1,6,6,Regular,Indiana,8,Travis Etienne,7543,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,1,7,7,Regular,Indiana,8,Jaylen Waddle,7526,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,1,8,8,Regular,Illinois,10,Rashod Bateman,7571,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,1,9,9,Regular,Illinois,10,Rondale Moore,7601,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,1,10,10,Regular,Penn State,5,Trevor Lawrence,7523,QB,False,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,1,11,11,Regular,Minnesota,7,Elijah Moore,7596,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,1,12,12,Regular,Illinois,10,Michael Carter,7607,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,2,1,13,Regular,Penn State,5,Kadarius Toney,7606,WR,False,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,2,2,14,Regular,Nebraska,2,Terrace Marshall,7565,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,2,3,15,Regular,Minnesota,7,Amon-Ra St. Brown,7547,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,2,4,16,Regular,Ohio State,9,Tylan Wallace,7595,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,2,5,17,Regular,Illinois,10,Justin Fields,7591,QB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,2,6,18,Regular,Iowa,11,Kenneth Gainwell,7567,RB,False,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,2,7,19,Regular,Penn State,5,Trey Lance,7610,QB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,2,8,20,Regular,Penn State,5,Trey Sermon,7593,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,2,9,21,Regular,Minnesota,7,Pat Freiermuth,7600,TE,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,2,10,22,Regular,Michigan State,4,Mac Jones,7527,QB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,2,11,23,Regular,Wisconsin,6,Nico Collins,7569,WR,False,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,2,12,24,Regular,Nebraska,2,Amari Rodgers,7540,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,3,1,25,Bowl winner bonus,Illinois,10,Zach Wilson,7538,QB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,3,2,26,Bowl winner bonus,Penn State,5,Dyami Brown,7587,WR,True,first added by roster 3 on 2021-05-04,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,3,3,27,Regular,Illinois,10,Brevin Jordan,7568,TE,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,3,4,28,Regular,Penn State,5,Chuba Hubbard,7594,RB,False,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,3,5,29,Regular,Iowa,11,Josh Palmer,7670,WR,False,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,3,6,30,Regular,Ohio State,9,Jermar Jefferson,7599,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,3,7,31,Regular,Wisconsin,6,Hunter Long,7535,TE,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,3,8,32,Regular,Ohio State,9,Elijah Mitchell,7561,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,3,9,33,Regular,Illinois,10,D'Wayne Eskridge,7612,WR,False,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,3,10,34,Regular,Ohio State,9,Rhamondre Stevenson,7611,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,3,11,35,Regular,Michigan State,4,Tutu Atwell,7562,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,3,12,36,Regular,Ohio State,9,Kyle Trask,7605,QB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,3,13,37,Regular,Michigan,12,Tamorrion Terry,7604,WR,False,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,3,14,38,Regular,Illinois,10,Javian Hawkins,7563,RB,False,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,4,1,39,Regular,Illinois,10,Dez Fitzpatrick,7729,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,4,2,40,Regular,Iowa,11,Anthony Schwartz,7533,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,4,3,41,Regular,Wisconsin,6,Evan McPherson,7839,K,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,4,4,42,Regular,Ohio State,9,Seth Williams,7534,WR,False,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,4,5,43,Regular,Penn State,5,Cornell Powell,7541,WR,False,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,4,6,44,Regular,Illinois,10,Jaelon Darden,7713,WR,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,4,7,45,Regular,Penn State,5,Tommy Tremble,7694,TE,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,4,8,46,Regular,Ohio State,9,Kylin Hill,7572,RB,True,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,4,9,47,Regular,Minnesota,7,Sage Surratt,7576,TE,False,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,4,10,48,Regular,Michigan State,4,,,,False,,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,4,11,49,Regular,Illinois,10,,,,False,,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2021,NCAA BIG 10,652821876346810368,4,12,50,Regular,Penn State,5,,,,False,,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,1,1,1,Regular,Arizona State,7,D'Andre Swift,6790,RB,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,1,2,2,Regular,Colorado,8,Jonathan Taylor,6813,RB,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,1,3,3,Regular,Arizona State,7,CeeDee Lamb,6786,WR,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,1,4,4,Regular,Arizona State,7,Joe Burrow,6770,QB,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,1,5,5,Regular,Arizona State,7,Henry Ruggs III,6789,WR,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,1,6,6,Regular,Washington,6,Tua Tagovailoa,6768,QB,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,1,7,7,Regular,Oregon State,3,Jerry Jeudy,6783,WR,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,1,8,8,Regular,USC,2,J.K. Dobbins,6806,RB,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,1,9,9,Regular,Oregon State,3,Laviska Shenault Jr.,6814,WR,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,1,10,10,Regular,Arizona State,7,Jalen Reagor,6798,WR,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,1,11,11,Regular,UCLA,12,Justin Herbert,6797,QB,,first added by roster 8 on 2020-03-25,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,1,12,12,Regular,USC,2,Tee Higgins,6801,WR,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,2,1,13,Regular,Utah,11,Clyde Edwards-Helaire,6820,RB,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,2,2,14,Regular,Colorado,8,Cole Kmet,6826,TE,,first added by roster 10 on 2020-08-03,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,2,3,15,Regular,Arizona,1,Justin Jefferson,6794,WR,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,2,4,16,Regular,USC,2,Michael Pittman Jr.,6819,WR,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,2,5,17,Regular,Arizona State,7,Zack Moss,6845,RB,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,2,6,18,Regular,Oregon State,3,Jordan Love,6804,QB,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,2,7,19,Regular,Oregon State,3,Thaddeus Moss,6919,TE,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,2,8,20,Regular,USC,2,Ke'Shawn Vaughn,6885,RB,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,2,9,21,Regular,USC,2,Jalen Hurts,6904,QB,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,2,10,22,Regular,Oregon State,3,Cam Akers,6938,RB,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,2,11,23,Regular,Arizona State,7,Denzel Mims,6849,WR,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,2,12,24,Regular,Arizona State,7,Bryan Edwards,6870,WR,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,3,1,25,Bowl winner bonus,Stanford,5,Antonio Gibson,6945,RB,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,3,2,26,Bowl winner bonus,USC,2,KJ Hamler,6805,WR,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,3,3,27,Bowl winner bonus,California,10,AJ Dillon,6828,RB,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,3,4,28,Regular,Arizona,1,Chase Claypool,6886,WR,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,3,5,29,Regular,Colorado,8,Andrew Jacas,,,,player name uncertain on sheet,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,3,6,30,Regular,Arizona State,7,Lamical Perine,6908,RB,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,3,7,31,Regular,USC,2,Hunter Bryant,6846,TE,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,3,8,32,Regular,UCLA,12,Eno Benjamin,6951,RB,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,3,9,33,Regular,Washington,6,Brandon Aiyuk,6803,WR,,first added by roster 9 on 2020-04-25,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,3,10,34,Regular,Washington,6,Devin Duvernay,6847,WR,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,3,11,35,Regular,USC,2,Brycen Hopkins,6926,TE,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,3,12,36,Regular,Washington,6,KJ Hill,6866,WR,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,3,13,37,Regular,Stanford,5,DeeJay Dallas,6931,RB,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,3,14,38,Regular,Washington,6,Adam Trautman,6869,TE,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,3,15,39,Regular,Stanford,5,Isaiah Hodgins,6920,WR,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,4,1,40,Regular,UCLA,12,Donovan Peoples-Jones,6824,WR,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,4,2,41,Regular,Colorado,8,KJ Maye,,,,player name uncertain on sheet,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,4,3,42,Regular,Washington State,4,Jake Fromm,6822,QB,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,4,4,43,Regular,UCLA,12,Darius Anderson,7038,RB,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,4,5,44,Regular,UCLA,12,Cole McDonald,6954,QB,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,4,6,45,Regular,Stanford,5,Van Jefferson,6853,WR,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,4,7,46,Regular,Oregon State,3,Jacob Eason,6823,QB,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,4,8,47,Regular,Oregon State,3,Collin Johnson,6857,WR,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,4,9,48,Regular,Washington State,4,Harrison Bryant,6850,TE,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,4,10,49,Regular,Washington State,4,Antonio Gandy-Golden,6906,TE,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,4,11,50,Regular,Utah,11,Tyler Johnson,6960,WR,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts
+2020,NCAA PAC 12,519108145819570176,4,12,51,Regular,Washington State,4,Levante Bellamy,6959,RB,,ok,Chris's draft sheets (2026-10-07); Sleeper has no pick records for 2020-2021 rookie drafts

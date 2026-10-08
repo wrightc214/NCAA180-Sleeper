@@ -1,0 +1,9 @@
+{
+  "last_regular_week": 11,
+  "scoring_stats": "data/backfill/ScoringStats_2020_2025.csv.gz",
+  "scoring_settings": "data/backfill/ScoringSettings_History.csv",
+  "starter_scores": ["data/backfill/Scores_2019_2020.csv", "data/Scores_Historic.csv"],
+  "matchups": ["data/backfill/Matchups_2019_2020.csv", "data/Matchups_Historic.csv"],
+  "standings": ["data/backfill/Standings_2019_2020.csv", "data/Standings_Historic.csv"],
+  "restated_keys": ["pass_int", "pts_allow", "yds_allow", "xpmiss"]
+}
