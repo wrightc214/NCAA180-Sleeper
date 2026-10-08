@@ -32,7 +32,8 @@ jobs:
           ARGS=""
           [ -n "${{ github.event.inputs.year }}" ] && ARGS="--year ${{ github.event.inputs.year }}"
           python scripts/week1_projection.py $ARGS
-          python scripts/poll_prior.py $ARGS
+          # Professor prior, once the poll engine is on this branch
+          if [ -f scripts/poll_prior.py ]; then python scripts/poll_prior.py $ARGS; fi
       - name: Commit
         run: |
           git config --local user.name "github-actions[bot]"

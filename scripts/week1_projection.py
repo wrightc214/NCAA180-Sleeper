@@ -7,20 +7,19 @@ starters x that league's scoring settings).
 
 Writes/replaces the season's rows in data/TeamProjectionsWk1_Historic.csv:
   Year, LeagueID, LeagueName, Week, RosterID, ProjectedPts
-Then rebuild the prior: python scripts/poll_prior.py
+Then rebuild the Professor prior (poll engine): python scripts/poll_prior.py
+Steps for every season: docs/preseason-data-capture.md
   python scripts/week1_projection.py [--year Y]     (default: current season)
 CWD must be repo root.
 """
 import argparse
 import os
-import sys
 import time
 
 import pandas as pd
 import requests
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import poll_common as pc  # noqa: E402
+LEAGUES = "data/LeagueIDs_AllYears.csv"
 
 BASE = "https://api.sleeper.app/v1"
 OUT = "data/TeamProjectionsWk1_Historic.csv"
@@ -47,12 +46,12 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--year", type=int)
     a = ap.parse_args()
-    year = a.year or max(pc.seasons())
+    lg = pd.read_csv(LEAGUES, dtype=str)
+    year = a.year or int(lg["Year"].astype(int).max())
     week = 1
     proj = get(f"/projections/nfl/regular/{year}/{week}") or {}
     if not proj:
         raise SystemExit(f"No projections for {year} week {week} yet.")
-    lg = pc.leagues_all()
     lg = lg[lg["Year"] == str(year)]
     rows = []
     for r in lg.itertuples():
@@ -63,6 +62,8 @@ def main():
                       for p in (m.get("starters") or []))
             rows.append({"Year": year, "LeagueID": r.LeagueID, "LeagueName": r.LeagueName, "Week": week,
                          "RosterID": m.get("roster_id"), "ProjectedPts": round(tot, 2)})
+    if not rows:
+        raise SystemExit(f"No week-{week} lineups found for {year}.")
     new = pd.DataFrame(rows)
     old = pd.read_csv(OUT, dtype=str) if os.path.exists(OUT) else pd.DataFrame(columns=new.columns)
     old = old[old["Year"] != str(year)]
