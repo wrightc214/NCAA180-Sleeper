@@ -93,14 +93,16 @@ def main():
     problems = []
     if not imgs:
         problems.append("Poll image missing")
-    if not cfg.get("publish", {}).get("post_to_league", False):
-        problems.append("Preview only: publish.post_to_league is false in config/poll.json")
+    env = os.environ.get("POLL_POST_TO_LEAGUE", "").strip().lower()
+    to_league = (env == "true") if env in ("true", "false") else bool(cfg.get("publish", {}).get("post_to_league", False))
+    if not to_league:
+        problems.append("Preview only: repo variable POLL_POST_TO_LEAGUE is not true (config/poll.json publish.post_to_league is the fallback)")
 
     if problems:
         send(private, "⚠️ **NCAA 180 poll post held** — nothing went to the league.\n"
              + "\n".join(f"• {p}" for p in problems)
              + (f"\nRun log: {run_url}" if run_url else "")
-             + "\nTo release: set publish.post_to_league to true, then rerun the Poll workflow with `force` and `post` checked."
+             + "\nTo release: set repo variable POLL_POST_TO_LEAGUE = true, then rerun the Poll workflow with `force` and `post` checked."
              + "\n\n**Would have posted:**\n>>> " + msg, [contact] if contact else [], imgs)
         note("warning", "Poll post held: " + "; ".join(problems))
     else:

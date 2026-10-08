@@ -237,6 +237,7 @@ jobs:
           DISCORD_WEBHOOK_TEAM_STATS: ${{ secrets.DISCORD_WEBHOOK_TEAM_STATS }}
           DISCORD_WEBHOOK_LM_PRIVATE_DATA: ${{ secrets.DISCORD_WEBHOOK_LM_PRIVATE_DATA }}
           DISCORD_CONTACT_ID: ${{ vars.DISCORD_CONTACT_ID }}
+          POLL_POST_TO_LEAGUE: ${{ vars.POLL_POST_TO_LEAGUE }}
           POLL_TYPE: ${{ steps.pollchk.outputs.poll_type }}
           WEEK: ${{ steps.pollchk.outputs.week }}
           HUMAN_BALLOTS: ${{ steps.pollchk.outputs.human_ballots }}
