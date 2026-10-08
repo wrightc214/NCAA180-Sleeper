@@ -12,6 +12,8 @@ poll_prior.py -- the Professor bot's frozen preseason prior, one season at a tim
 
 Sources (paths in config/poll.json -> professor.sources):
   values       data/TeamValuesPreseason_Historic.csv  (Year, LeagueID, RosterID, PSV, DynastyValue)
+  psv_rank     data/PreseasonRank_Historic.csv: a preseason ranking used as PSV when a season
+               has no PSV values (2021); stored as -Rank so higher = better
   projections  week-1 team projections, first file that has the season:
                data/TeamProjectionsWk1_Historic.csv, data/backfill/TeamProjections_History.csv
   professor.exclude_value_years: seasons whose value capture is not preseason (2022 sheet was
@@ -88,6 +90,13 @@ def build(year, cfg):
             basis.append(f"values {os.path.basename(vf)} (PSV {len(psv)}, dynasty {len(dyn)})")
     elif str(year) in excl:
         basis.append(f"values excluded for {year} (not a preseason capture)")
+    rf = src.get("psv_rank")
+    if not psv and rf and os.path.exists(rf) and str(year) not in excl:
+        rk = pd.read_csv(rf, dtype=str)
+        rk = rk[(rk["Year"] == str(year)) & rk["LeagueID"].notna()]
+        if len(rk):  # a preseason starter ranking stands in for PSV values (lower rank = better)
+            psv = {(a_, b): -float(x) for a_, b, x in zip(rk["LeagueID"], rk["RosterID"], rk["Rank"])}
+            basis.append(f"PSV from preseason rank {os.path.basename(rf)} ({len(psv)} teams)")
     out["PSV"] = [psv.get(k) for k in keys]
     out["Dynasty"] = [dyn.get(k) for k in keys]
 

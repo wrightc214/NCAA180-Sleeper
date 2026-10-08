@@ -234,7 +234,9 @@
       "projections": [
         "data/TeamProjectionsWk1_Historic.csv",
         "data/backfill/TeamProjections_History.csv"
-      ]
+      ],
+      "psv_rank": "data/PreseasonRank_Historic.csv",
+      "_psv_rank": "Seasons with a preseason starter ranking instead of values (2021: Chris file 9/6/21). Used as the PSV input (rank 1 = best) when the season has no PSV values; unresolved slots get no PSV (renormalized)."
     },
     "exclude_value_years": [],
     "_exclude_value_years": "Seasons whose value capture is not preseason are listed here and ignored (weight renormalized). 2022 now uses the 9/13/22 sheet (after week 1, before week 2), so nothing is excluded."
