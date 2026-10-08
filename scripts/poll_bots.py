@@ -13,15 +13,18 @@ compare across the whole field.
   resume     0.6 x win% + 0.4 x opponents' all-play% (schedule strength that crosses leagues)
   ceiling    average best-possible lineup (MaxPoints) per game -- roster strength
   professor  blend that shifts with the season (config professor): a frozen preseason prior
-             (starter value + last season's final rank), quality (all-play, points per game,
+             (starter value, week-1 projection, dynasty value, last season's final rank), quality (all-play, points per game,
              consistency) and resume (win %, quality wins, conference standing); every measure
              is a percentile across all teams; block weights interpolate between anchor weeks
   redraft    market view of the starting lineup: FantasyCalc redraft value of the best
              legal lineup (roster map LineupRedraft). History has no FantasyCalc data, so
              backtests use Sleeper's projected lineup for the next week as a stand-in.
 
-A bot with no input for that week (e.g. ceiling before bench points exist) sits out;
-the consensus uses whatever bots have data and records BotsUsed.
+Missing inputs are bridged (bridge(): straight line between the nearest weeks with data, or
+the nearest week's value), flagged ValueSource in the bot file. A bot with no data at all for
+the season sits out; the consensus uses whatever bots have data and records BotsUsed.
+Points: PointsFor = standard scoring; PointsOfficial (game-time) for the Scoreboard and
+standings tiebreaks and Monday Morning QB. Outcomes are always official.
 
 Consensus (BCS computer component) within the pool (all teams, or the playoff field), per
 config consensus: each team's best and worst bot rank are dropped and the rest averaged

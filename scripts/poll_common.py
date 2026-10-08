@@ -199,6 +199,9 @@ def matchups(year):
     frames = [pd.read_csv(p, dtype=str) for p in paths if os.path.exists(p)]
     m = pd.concat(frames, ignore_index=True)
     m = m[m["Year"] == str(year)].copy()
+    for c in ("RosterID", "OpponentRosterID"):  # some pulls stored roster ids as '3.0'
+        if c in m.columns:
+            m[c] = m[c].str.replace(r"\.0$", "", regex=True)
     m["Week"] = m["Week"].astype(int)
     m["PointsFor"] = m["PointsFor"].astype(float)
     m = m.drop_duplicates(["LeagueID", "Week", "RosterID"], keep="first")

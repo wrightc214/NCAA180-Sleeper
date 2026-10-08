@@ -236,9 +236,7 @@
         "data/backfill/TeamProjections_History.csv"
       ]
     },
-    "exclude_value_years": [
-      2022
-    ],
-    "_exclude_value_years": "Value captures that are not preseason (2022 sheet = 10/25/22) are ignored; their weight is renormalized."
+    "exclude_value_years": [],
+    "_exclude_value_years": "Seasons whose value capture is not preseason are listed here and ignored (weight renormalized). 2022 now uses the 9/13/22 sheet (after week 1, before week 2), so nothing is excluded."
   }
 }
