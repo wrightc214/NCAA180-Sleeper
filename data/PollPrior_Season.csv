@@ -1,181 +1,181 @@
-Year,LeagueID,LeagueName,RosterID,PSV,LastFinalRank,PSVPct,LastFinalPct,Prior,Basis
-2026,1316899936696016896,NCAA BIG 10,7,53447,6,1.0,0.9721,0.9944,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774454493122560,NCAA WILD,1,48809,2,0.9888,0.9944,0.9899,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774880181399552,NCAA BIG 12,5,52880,7,0.9944,0.9665,0.9888,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774599196585984,NCAA MOUNTAIN WEST,1,48723,5,0.9832,0.9777,0.9821,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775106527006720,NCAA PAC 12,4,46647,4,0.9721,0.9832,0.9743,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775206619885568,NCAA BIG EAST & CO.,7,48006,15,0.9777,0.9218,0.9665,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1316899756005412864,NCAA BIG SKY,8,46577,9,0.9665,0.9553,0.9643,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774915392577536,NCAA ACC,12,45519,3,0.9553,0.9888,0.962,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774454493122560,NCAA WILD,10,46060,10,0.9609,0.9497,0.9587,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775106527006720,NCAA PAC 12,7,44617,1,0.9441,1.0,0.9553,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775170712444928,NCAA SEC,6,44675,12,0.9497,0.9385,0.9475,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1316899756005412864,NCAA BIG SKY,6,41419,13,0.933,0.933,0.933,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774544905510912,NCAA OHIO VALLEY,4,43092,19,0.9385,0.8994,0.9307,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1316899756005412864,NCAA BIG SKY,3,40768,11,0.9218,0.9441,0.9263,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1316899756005412864,NCAA BIG SKY,12,39089,18,0.9162,0.905,0.914,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774804222545920,NCAA PIONEER,8,37403,34,0.905,0.8156,0.8871,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774544905510912,NCAA OHIO VALLEY,11,37244,30,0.8994,0.838,0.8871,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775170712444928,NCAA SEC,10,37073,23,0.8883,0.8771,0.8861,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774804222545920,NCAA PIONEER,11,36598,21,0.8771,0.8883,0.8793,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774741488369664,NCAA IVY,11,37232,42,0.8939,0.7709,0.8693,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774741488369664,NCAA IVY,5,36464,20,0.8603,0.8939,0.867,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775106527006720,NCAA PAC 12,2,38835,59,0.9106,0.676,0.8637,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1316899936696016896,NCAA BIG 10,12,36499,39,0.8659,0.7877,0.8503,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774880181399552,NCAA BIG 12,4,35395,25,0.838,0.8659,0.8436,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775170712444928,NCAA SEC,4,35703,60,0.8436,0.6704,0.809,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775170712444928,NCAA SEC,2,33639,37,0.8101,0.7989,0.8079,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774804222545920,NCAA PIONEER,10,33270,31,0.7989,0.8324,0.8056,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1316899936696016896,NCAA BIG 10,2,33258,29,0.7933,0.8436,0.8034,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774544905510912,NCAA OHIO VALLEY,12,34560,53,0.8212,0.7095,0.7989,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775206619885568,NCAA BIG EAST & CO.,6,35134,62,0.8324,0.6592,0.7978,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774630620332032,NCAA HISTORICALLY BLACK,5,32510,14,0.7654,0.9274,0.7978,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1316899936696016896,NCAA BIG 10,11,33629,44,0.8045,0.7598,0.7956,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774630620332032,NCAA HISTORICALLY BLACK,4,36528,92,0.8715,0.4916,0.7955,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774630620332032,NCAA HISTORICALLY BLACK,8,33675,52,0.8156,0.7151,0.7955,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774915392577536,NCAA ACC,5,36951,109,0.8827,0.3966,0.7855,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774804222545920,NCAA PIONEER,3,32532,32,0.7709,0.8268,0.7821,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774599196585984,NCAA MOUNTAIN WEST,6,35995,98,0.8547,0.4581,0.7754,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774846710849536,NCAA SUN BELT,9,41363,153,0.9274,0.1508,0.7721,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774544905510912,NCAA OHIO VALLEY,2,31394,17,0.7151,0.9106,0.7542,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774880181399552,NCAA BIG 12,7,32483,54,0.7598,0.7039,0.7486,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774544905510912,NCAA OHIO VALLEY,1,32943,75,0.7877,0.5866,0.7475,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774846710849536,NCAA SUN BELT,8,32683,68,0.7765,0.6257,0.7463,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774630620332032,NCAA HISTORICALLY BLACK,1,32042,36,0.7263,0.8045,0.7419,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774915392577536,NCAA ACC,1,32349,61,0.7486,0.6648,0.7318,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774695346823168,NCAA USA,7,32851,99,0.7821,0.4525,0.7162,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774695346823168,NCAA USA,4,35975,151,0.8492,0.162,0.7118,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774695346823168,NCAA USA,3,29728,8,0.648,0.9609,0.7106,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774846710849536,NCAA SUN BELT,11,32186,81,0.743,0.5531,0.705,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774741488369664,NCAA IVY,4,29825,24,0.6536,0.8715,0.6972,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774695346823168,NCAA USA,6,30331,35,0.6648,0.8101,0.6939,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775170712444928,NCAA SEC,8,35060,152,0.8268,0.1564,0.6927,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775106527006720,NCAA PAC 12,12,30333,45,0.6704,0.7542,0.6872,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774630620332032,NCAA HISTORICALLY BLACK,3,31267,79,0.7095,0.5642,0.6804,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774695346823168,NCAA USA,1,31232,74,0.6983,0.5922,0.6771,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774741488369664,NCAA IVY,1,31247,89,0.7039,0.5084,0.6648,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774741488369664,NCAA IVY,12,29206,41,0.6369,0.7765,0.6648,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774915392577536,NCAA ACC,10,29042,33,0.6257,0.8212,0.6648,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774695346823168,NCAA USA,5,30908,76,0.6816,0.581,0.6615,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775206619885568,NCAA BIG EAST & CO.,5,30462,82,0.676,0.5475,0.6503,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774544905510912,NCAA OHIO VALLEY,7,32364,139,0.7542,0.2291,0.6492,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774846710849536,NCAA SUN BELT,7,28506,40,0.6089,0.7821,0.6435,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774846710849536,NCAA SUN BELT,6,28908,50,0.6201,0.7263,0.6413,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774695346823168,NCAA USA,10,32140,132,0.7318,0.2682,0.6391,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774846710849536,NCAA SUN BELT,1,30965,107,0.6872,0.4078,0.6313,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775206619885568,NCAA BIG EAST & CO.,4,27476,16,0.5587,0.9162,0.6302,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774695346823168,NCAA USA,8,28642,57,0.6145,0.6872,0.629,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774454493122560,NCAA WILD,2,28322,43,0.5922,0.7654,0.6268,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774846710849536,NCAA SUN BELT,2,30975,121,0.6927,0.3296,0.6201,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774630620332032,NCAA HISTORICALLY BLACK,7,31794,145,0.7207,0.1955,0.6157,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774454493122560,NCAA WILD,6,28377,58,0.5978,0.6816,0.6146,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774915392577536,NCAA ACC,3,29450,93,0.6425,0.486,0.6112,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1316899756005412864,NCAA BIG SKY,5,32165,164,0.7374,0.0894,0.6078,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774880181399552,NCAA BIG 12,8,27838,48,0.5698,0.7374,0.6033,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774741488369664,NCAA IVY,9,29081,101,0.6313,0.4413,0.5933,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774599196585984,NCAA MOUNTAIN WEST,3,27409,49,0.5503,0.7318,0.5866,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774880181399552,NCAA BIG 12,11,27658,66,0.5642,0.6369,0.5787,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1316899936696016896,NCAA BIG 10,10,28441,100,0.6034,0.4469,0.5721,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774599196585984,NCAA MOUNTAIN WEST,12,28199,88,0.5866,0.514,0.5721,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774915392577536,NCAA ACC,7,27409,64,0.5503,0.648,0.5698,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774804222545920,NCAA PIONEER,2,26744,51,0.5251,0.7207,0.5642,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775206619885568,NCAA BIG EAST & CO.,12,25729,28,0.4916,0.8492,0.5631,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775106527006720,NCAA PAC 12,8,29826,159,0.6592,0.1173,0.5508,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774741488369664,NCAA IVY,8,24702,46,0.4749,0.7486,0.5296,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774880181399552,NCAA BIG 12,9,26937,91,0.5363,0.4972,0.5285,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774454493122560,NCAA WILD,8,26665,84,0.5196,0.5363,0.5229,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774599196585984,NCAA MOUNTAIN WEST,10,24567,38,0.4469,0.7933,0.5162,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1316899936696016896,NCAA BIG 10,9,24122,26,0.4246,0.8603,0.5117,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1316899756005412864,NCAA BIG SKY,1,25994,83,0.5028,0.5419,0.5106,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774599196585984,NCAA MOUNTAIN WEST,8,27320,111,0.5419,0.3855,0.5106,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775206619885568,NCAA BIG EAST & CO.,1,25849,87,0.4972,0.5196,0.5017,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775206619885568,NCAA BIG EAST & CO.,9,27873,147,0.5754,0.1844,0.4972,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774804222545920,NCAA PIONEER,12,28128,154,0.581,0.1453,0.4939,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774454493122560,NCAA WILD,11,25149,86,0.486,0.5251,0.4938,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774741488369664,NCAA IVY,6,22740,27,0.3911,0.8547,0.4838,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774915392577536,NCAA ACC,6,24572,72,0.4525,0.6034,0.4827,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775170712444928,NCAA SEC,12,26223,125,0.514,0.3073,0.4727,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774599196585984,NCAA MOUNTAIN WEST,11,22341,22,0.3687,0.8827,0.4715,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774695346823168,NCAA USA,2,24010,55,0.4134,0.6983,0.4704,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774599196585984,NCAA MOUNTAIN WEST,7,26106,126,0.5084,0.3017,0.4671,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774630620332032,NCAA HISTORICALLY BLACK,12,24152,77,0.4302,0.5754,0.4592,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774599196585984,NCAA MOUNTAIN WEST,5,26902,150,0.5307,0.1676,0.4581,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774804222545920,NCAA PIONEER,6,24585,106,0.4581,0.4134,0.4492,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774599196585984,NCAA MOUNTAIN WEST,9,22478,63,0.3799,0.6536,0.4346,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775106527006720,NCAA PAC 12,6,25030,135,0.4804,0.2514,0.4346,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774804222545920,NCAA PIONEER,1,24694,133,0.4693,0.2626,0.428,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774544905510912,NCAA OHIO VALLEY,5,20782,47,0.3408,0.743,0.4212,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1316899936696016896,NCAA BIG 10,1,24633,144,0.4637,0.2011,0.4112,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774741488369664,NCAA IVY,3,24092,124,0.419,0.3128,0.3978,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775106527006720,NCAA PAC 12,5,23957,122,0.4078,0.324,0.391,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774846710849536,NCAA SUN BELT,5,24278,146,0.4358,0.1899,0.3866,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1316899756005412864,NCAA BIG SKY,7,20238,73,0.3184,0.5978,0.3743,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774846710849536,NCAA SUN BELT,3,22906,136,0.4022,0.2458,0.3709,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774630620332032,NCAA HISTORICALLY BLACK,9,24466,168,0.4413,0.067,0.3664,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1316899756005412864,NCAA BIG SKY,4,22141,115,0.3631,0.3631,0.3631,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774915392577536,NCAA ACC,11,19958,67,0.2961,0.6313,0.3631,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775206619885568,NCAA BIG EAST & CO.,10,21290,110,0.352,0.3911,0.3598,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774880181399552,NCAA BIG 12,3,20636,96,0.3296,0.4693,0.3575,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775170712444928,NCAA SEC,3,21424,117,0.3575,0.352,0.3564,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774915392577536,NCAA ACC,8,22668,140,0.3855,0.2235,0.3531,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774915392577536,NCAA ACC,4,22381,138,0.3743,0.2346,0.3464,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775106527006720,NCAA PAC 12,11,20570,105,0.324,0.419,0.343,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774880181399552,NCAA BIG 12,1,22875,158,0.3966,0.1229,0.3419,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775106527006720,NCAA PAC 12,3,19306,71,0.2737,0.6089,0.3407,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774804222545920,NCAA PIONEER,9,20161,102,0.3073,0.4358,0.333,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1316899936696016896,NCAA BIG 10,6,18756,65,0.2514,0.6425,0.3296,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774804222545920,NCAA PIONEER,7,19289,80,0.2682,0.5587,0.3263,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775206619885568,NCAA BIG EAST & CO.,3,20162,116,0.3128,0.3575,0.3217,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774544905510912,NCAA OHIO VALLEY,6,18845,78,0.257,0.5698,0.3196,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775206619885568,NCAA BIG EAST & CO.,8,19569,97,0.2793,0.4637,0.3162,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774454493122560,NCAA WILD,4,20689,148,0.3352,0.1788,0.3039,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774804222545920,NCAA PIONEER,4,19576,112,0.2849,0.3799,0.3039,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775170712444928,NCAA SEC,5,19826,118,0.2905,0.3464,0.3017,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774544905510912,NCAA OHIO VALLEY,8,20880,165,0.3464,0.0838,0.2939,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774454493122560,NCAA WILD,5,18721,103,0.2402,0.4302,0.2782,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774630620332032,NCAA HISTORICALLY BLACK,6,18861,120,0.2626,0.3352,0.2771,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774630620332032,NCAA HISTORICALLY BLACK,10,17898,69,0.1899,0.6201,0.2759,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774630620332032,NCAA HISTORICALLY BLACK,11,17422,70,0.1788,0.6145,0.2659,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775206619885568,NCAA BIG EAST & CO.,11,20018,167,0.3017,0.0726,0.2559,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774599196585984,NCAA MOUNTAIN WEST,2,17917,94,0.1955,0.4804,0.2525,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774880181399552,NCAA BIG 12,6,18211,128,0.2207,0.2905,0.2347,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1316899936696016896,NCAA BIG 10,5,18211,129,0.2207,0.2849,0.2335,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774880181399552,NCAA BIG 12,2,18609,141,0.2346,0.2179,0.2313,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775170712444928,NCAA SEC,11,16972,90,0.162,0.5028,0.2302,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774741488369664,NCAA IVY,7,18184,127,0.2123,0.2961,0.2291,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774915392577536,NCAA ACC,2,18118,123,0.2011,0.3184,0.2246,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774544905510912,NCAA OHIO VALLEY,10,17392,104,0.1732,0.4246,0.2235,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774846710849536,NCAA SUN BELT,12,16620,85,0.1453,0.5307,0.2224,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775106527006720,NCAA PAC 12,10,14302,56,0.0838,0.6927,0.2056,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774880181399552,NCAA BIG 12,12,17456,131,0.1844,0.2737,0.2023,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774454493122560,NCAA WILD,12,17241,119,0.1676,0.3408,0.2022,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774846710849536,NCAA SUN BELT,10,18731,179,0.2458,0.0056,0.1978,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774695346823168,NCAA USA,9,15254,95,0.1285,0.4749,0.1978,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775170712444928,NCAA SEC,7,18367,173,0.2291,0.0391,0.1911,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774454493122560,NCAA WILD,9,18129,160,0.2067,0.1117,0.1877,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1316899756005412864,NCAA BIG SKY,2,14842,108,0.1006,0.4022,0.1609,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1316899936696016896,NCAA BIG 10,4,15706,142,0.1397,0.2123,0.1542,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774741488369664,NCAA IVY,2,16869,162,0.1508,0.1006,0.1408,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774454493122560,NCAA WILD,3,13698,113,0.0782,0.3743,0.1374,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774544905510912,NCAA OHIO VALLEY,3,15126,143,0.1173,0.2067,0.1352,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774695346823168,NCAA USA,12,16880,172,0.1564,0.0447,0.1341,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774544905510912,NCAA OHIO VALLEY,9,14487,137,0.0894,0.2402,0.1196,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774630620332032,NCAA HISTORICALLY BLACK,2,15627,177,0.1341,0.0168,0.1106,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774695346823168,NCAA USA,11,11273,114,0.0391,0.3687,0.105,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774454493122560,NCAA WILD,7,15085,166,0.1117,0.0782,0.105,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774880181399552,NCAA BIG 12,10,15231,180,0.1229,0.0,0.0983,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1316899936696016896,NCAA BIG 10,3,15020,170,0.1061,0.0559,0.0961,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1316899936696016896,NCAA BIG 10,8,12341,134,0.0559,0.257,0.0961,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775170712444928,NCAA SEC,1,13375,149,0.0726,0.1732,0.0927,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774915392577536,NCAA ACC,9,11670,130,0.0447,0.2793,0.0916,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774741488369664,NCAA IVY,10,14697,174,0.095,0.0335,0.0827,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775206619885568,NCAA BIG EAST & CO.,2,13357,156,0.067,0.1341,0.0804,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774804222545920,NCAA PIONEER,5,11801,155,0.0503,0.1397,0.0682,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775106527006720,NCAA PAC 12,1,12818,171,0.0615,0.0503,0.0593,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775170712444928,NCAA SEC,9,9295,157,0.0279,0.1285,0.048,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331775106527006720,NCAA PAC 12,9,7553,161,0.0168,0.1061,0.0347,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774846710849536,NCAA SUN BELT,4,11093,176,0.0335,0.0223,0.0313,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1331774599196585984,NCAA MOUNTAIN WEST,4,7701,169,0.0223,0.0615,0.0301,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1316899756005412864,NCAA BIG SKY,11,6023,163,0.0112,0.095,0.028,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1316899756005412864,NCAA BIG SKY,10,4583,178,0.0056,0.0112,0.0067,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
-2026,1316899756005412864,NCAA BIG SKY,9,4033,175,0.0,0.0279,0.0056,2026 stand-in: rosters 2026-09-11 (pre-week-1); FantasyCalc snapshot 2026-10-02 = earliest stored (no pre-week-1 value snapshot exists); final order 2025
+Year,LeagueID,LeagueName,RosterID,PSV,LastFinalRank,PSVPct,LastFinalPct,Prior,Basis,Dynasty,Wk1Proj,Wk1ProjPct,DynastyPct,LastFinalRankPct,Inputs
+2026,1316899756005412864,NCAA BIG SKY,1,,83,,,0.6769,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,142.03,0.7039,,0.5419,wk1_proj+last_final
+2026,1316899756005412864,NCAA BIG SKY,10,,178,,,0.0019,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,67.84,0.0,,0.0112,wk1_proj+last_final
+2026,1316899756005412864,NCAA BIG SKY,11,,163,,,0.0996,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,108.94,0.1006,,0.095,wk1_proj+last_final
+2026,1316899756005412864,NCAA BIG SKY,12,,18,,,0.933,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,156.73,0.9385,,0.905,wk1_proj+last_final
+2026,1316899756005412864,NCAA BIG SKY,2,,108,,,0.4115,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,129.72,0.4134,,0.4022,wk1_proj+last_final
+2026,1316899756005412864,NCAA BIG SKY,3,,11,,,0.9488,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,157.62,0.9497,,0.9441,wk1_proj+last_final
+2026,1316899756005412864,NCAA BIG SKY,4,,115,,,0.1769,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,112.95,0.1397,,0.3631,wk1_proj+last_final
+2026,1316899756005412864,NCAA BIG SKY,5,,164,,,0.1965,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,120.38,0.2179,,0.0894,wk1_proj+last_final
+2026,1316899756005412864,NCAA BIG SKY,6,,13,,,0.9004,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,153.07,0.8939,,0.933,wk1_proj+last_final
+2026,1316899756005412864,NCAA BIG SKY,7,,73,,,0.5698,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,135.56,0.5642,,0.5978,wk1_proj+last_final
+2026,1316899756005412864,NCAA BIG SKY,8,,9,,,0.9786,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,164.55,0.9832,,0.9553,wk1_proj+last_final
+2026,1316899756005412864,NCAA BIG SKY,9,,175,,,0.014,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,70.93,0.0112,,0.0279,wk1_proj+last_final
+2026,1316899936696016896,NCAA BIG 10,1,,144,,,0.527,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,136.92,0.5922,,0.2011,wk1_proj+last_final
+2026,1316899936696016896,NCAA BIG 10,10,,100,,,0.4516,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,131.0,0.4525,,0.4469,wk1_proj+last_final
+2026,1316899936696016896,NCAA BIG 10,11,,44,,,0.8203,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,148.2,0.8324,,0.7598,wk1_proj+last_final
+2026,1316899936696016896,NCAA BIG 10,12,,39,,,0.811,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,148.05,0.8156,,0.7877,wk1_proj+last_final
+2026,1316899936696016896,NCAA BIG 10,2,,29,,,0.8669,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,151.24,0.8715,,0.8436,wk1_proj+last_final
+2026,1316899936696016896,NCAA BIG 10,3,,170,,,0.0512,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,98.15,0.0503,,0.0559,wk1_proj+last_final
+2026,1316899936696016896,NCAA BIG 10,4,,142,,,0.1797,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,117.65,0.1732,,0.2123,wk1_proj+last_final
+2026,1316899936696016896,NCAA BIG 10,5,,129,,,0.3966,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,129.81,0.419,,0.2849,wk1_proj+last_final
+2026,1316899936696016896,NCAA BIG 10,6,,65,,,0.3771,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,127.03,0.324,,0.6425,wk1_proj+last_final
+2026,1316899936696016896,NCAA BIG 10,7,,6,,,0.986,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,165.67,0.9888,,0.9721,wk1_proj+last_final
+2026,1316899936696016896,NCAA BIG 10,8,,134,,,0.1639,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,113.81,0.1453,,0.257,wk1_proj+last_final
+2026,1316899936696016896,NCAA BIG 10,9,,26,,,0.3994,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,126.28,0.3073,,0.8603,wk1_proj+last_final
+2026,1331774454493122560,NCAA WILD,1,,2,,,0.9665,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,161.73,0.9609,,0.9944,wk1_proj+last_final
+2026,1331774454493122560,NCAA WILD,10,,10,,,0.987,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,166.94,0.9944,,0.9497,wk1_proj+last_final
+2026,1331774454493122560,NCAA WILD,11,,86,,,0.4088,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,128.94,0.3855,,0.5251,wk1_proj+last_final
+2026,1331774454493122560,NCAA WILD,12,,119,,,0.6015,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,139.34,0.6536,,0.3408,wk1_proj+last_final
+2026,1331774454493122560,NCAA WILD,2,,43,,,0.7421,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,143.42,0.7374,,0.7654,wk1_proj+last_final
+2026,1331774454493122560,NCAA WILD,3,,113,,,0.3696,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,128.32,0.3687,,0.3743,wk1_proj+last_final
+2026,1331774454493122560,NCAA WILD,4,,148,,,0.0438,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,80.73,0.0168,,0.1788,wk1_proj+last_final
+2026,1331774454493122560,NCAA WILD,5,,103,,,0.4628,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,131.7,0.4693,,0.4302,wk1_proj+last_final
+2026,1331774454493122560,NCAA WILD,6,,58,,,0.5093,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,131.74,0.4749,,0.6816,wk1_proj+last_final
+2026,1331774454493122560,NCAA WILD,7,,166,,,0.0922,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,107.17,0.095,,0.0782,wk1_proj+last_final
+2026,1331774454493122560,NCAA WILD,8,,84,,,0.4479,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,130.58,0.4302,,0.5363,wk1_proj+last_final
+2026,1331774454493122560,NCAA WILD,9,,160,,,0.0652,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,99.16,0.0559,,0.1117,wk1_proj+last_final
+2026,1331774544905510912,NCAA OHIO VALLEY,1,,75,,,0.3957,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,127.84,0.3575,,0.5866,wk1_proj+last_final
+2026,1331774544905510912,NCAA OHIO VALLEY,10,,104,,,0.4804,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,132.27,0.4916,,0.4246,wk1_proj+last_final
+2026,1331774544905510912,NCAA OHIO VALLEY,11,,30,,,0.8473,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,149.41,0.8492,,0.838,wk1_proj+last_final
+2026,1331774544905510912,NCAA OHIO VALLEY,12,,53,,,0.7677,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,145.4,0.7793,,0.7095,wk1_proj+last_final
+2026,1331774544905510912,NCAA OHIO VALLEY,2,,17,,,0.7244,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,140.51,0.6872,,0.9106,wk1_proj+last_final
+2026,1331774544905510912,NCAA OHIO VALLEY,3,,143,,,0.1089,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,107.06,0.0894,,0.2067,wk1_proj+last_final
+2026,1331774544905510912,NCAA OHIO VALLEY,4,,19,,,0.8901,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,153.01,0.8883,,0.8994,wk1_proj+last_final
+2026,1331774544905510912,NCAA OHIO VALLEY,5,,47,,,0.6825,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,139.89,0.6704,,0.743,wk1_proj+last_final
+2026,1331774544905510912,NCAA OHIO VALLEY,6,,78,,,0.3836,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,127.53,0.3464,,0.5698,wk1_proj+last_final
+2026,1331774544905510912,NCAA OHIO VALLEY,7,,139,,,0.5689,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,138.85,0.6369,,0.2291,wk1_proj+last_final
+2026,1331774544905510912,NCAA OHIO VALLEY,8,,165,,,0.1629,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,117.86,0.1788,,0.0838,wk1_proj+last_final
+2026,1331774544905510912,NCAA OHIO VALLEY,9,,137,,,0.2565,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,124.64,0.2598,,0.2402,wk1_proj+last_final
+2026,1331774599196585984,NCAA MOUNTAIN WEST,1,,5,,,0.9497,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,156.87,0.9441,,0.9777,wk1_proj+last_final
+2026,1331774599196585984,NCAA MOUNTAIN WEST,10,,38,,,0.5885,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,134.59,0.5475,,0.7933,wk1_proj+last_final
+2026,1331774599196585984,NCAA MOUNTAIN WEST,11,,22,,,0.6546,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,137.34,0.6089,,0.8827,wk1_proj+last_final
+2026,1331774599196585984,NCAA MOUNTAIN WEST,12,,88,,,0.7514,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,145.98,0.7989,,0.514,wk1_proj+last_final
+2026,1331774599196585984,NCAA MOUNTAIN WEST,2,,94,,,0.2896,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,124.42,0.2514,,0.4804,wk1_proj+last_final
+2026,1331774599196585984,NCAA MOUNTAIN WEST,3,,49,,,0.4944,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,130.99,0.4469,,0.7318,wk1_proj+last_final
+2026,1331774599196585984,NCAA MOUNTAIN WEST,4,,169,,,0.0149,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,70.01,0.0056,,0.0615,wk1_proj+last_final
+2026,1331774599196585984,NCAA MOUNTAIN WEST,5,,150,,,0.1583,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,116.15,0.1564,,0.1676,wk1_proj+last_final
+2026,1331774599196585984,NCAA MOUNTAIN WEST,6,,98,,,0.7747,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,148.29,0.838,,0.4581,wk1_proj+last_final
+2026,1331774599196585984,NCAA MOUNTAIN WEST,7,,126,,,0.3808,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,129.3,0.3966,,0.3017,wk1_proj+last_final
+2026,1331774599196585984,NCAA MOUNTAIN WEST,8,,111,,,0.6182,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,139.71,0.6648,,0.3855,wk1_proj+last_final
+2026,1331774599196585984,NCAA MOUNTAIN WEST,9,,63,,,0.7002,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,142.43,0.7095,,0.6536,wk1_proj+last_final
+2026,1331774630620332032,NCAA HISTORICALLY BLACK,1,,36,,,0.6834,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,139.45,0.6592,,0.8045,wk1_proj+last_final
+2026,1331774630620332032,NCAA HISTORICALLY BLACK,10,,69,,,0.3687,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,127.0,0.3184,,0.6201,wk1_proj+last_final
+2026,1331774630620332032,NCAA HISTORICALLY BLACK,11,,70,,,0.5773,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,135.81,0.5698,,0.6145,wk1_proj+last_final
+2026,1331774630620332032,NCAA HISTORICALLY BLACK,12,,77,,,0.5568,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,134.8,0.5531,,0.5754,wk1_proj+last_final
+2026,1331774630620332032,NCAA HISTORICALLY BLACK,2,,177,,,0.068,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,104.92,0.0782,,0.0168,wk1_proj+last_final
+2026,1331774630620332032,NCAA HISTORICALLY BLACK,3,,79,,,0.5829,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,136.51,0.5866,,0.5642,wk1_proj+last_final
+2026,1331774630620332032,NCAA HISTORICALLY BLACK,4,,92,,,0.4195,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,129.41,0.405,,0.4916,wk1_proj+last_final
+2026,1331774630620332032,NCAA HISTORICALLY BLACK,5,,14,,,0.8156,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,145.63,0.7933,,0.9274,wk1_proj+last_final
+2026,1331774630620332032,NCAA HISTORICALLY BLACK,6,,120,,,0.2723,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,124.64,0.2598,,0.3352,wk1_proj+last_final
+2026,1331774630620332032,NCAA HISTORICALLY BLACK,7,,145,,,0.2281,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,122.79,0.2346,,0.1955,wk1_proj+last_final
+2026,1331774630620332032,NCAA HISTORICALLY BLACK,8,,52,,,0.8687,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,153.15,0.8994,,0.7151,wk1_proj+last_final
+2026,1331774630620332032,NCAA HISTORICALLY BLACK,9,,168,,,0.2626,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,126.13,0.3017,,0.067,wk1_proj+last_final
+2026,1331774695346823168,NCAA USA,1,,74,,,0.7877,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,148.07,0.8268,,0.5922,wk1_proj+last_final
+2026,1331774695346823168,NCAA USA,10,,132,,,0.338,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,127.66,0.352,,0.2682,wk1_proj+last_final
+2026,1331774695346823168,NCAA USA,11,,114,,,0.2477,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,121.58,0.2235,,0.3687,wk1_proj+last_final
+2026,1331774695346823168,NCAA USA,12,,172,,,0.0307,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,89.04,0.0279,,0.0447,wk1_proj+last_final
+2026,1331774695346823168,NCAA USA,2,,55,,,0.6844,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,140.17,0.6816,,0.6983,wk1_proj+last_final
+2026,1331774695346823168,NCAA USA,3,,8,,,0.8305,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,146.77,0.8045,,0.9609,wk1_proj+last_final
+2026,1331774695346823168,NCAA USA,4,,151,,,0.5298,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,137.3,0.6034,,0.162,wk1_proj+last_final
+2026,1331774695346823168,NCAA USA,5,,76,,,0.7207,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,143.99,0.7486,,0.581,wk1_proj+last_final
+2026,1331774695346823168,NCAA USA,6,,35,,,0.6006,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,134.87,0.5587,,0.8101,wk1_proj+last_final
+2026,1331774695346823168,NCAA USA,7,,99,,,0.7318,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,145.49,0.7877,,0.4525,wk1_proj+last_final
+2026,1331774695346823168,NCAA USA,8,,57,,,0.5335,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,133.51,0.5028,,0.6872,wk1_proj+last_final
+2026,1331774695346823168,NCAA USA,9,,95,,,0.3119,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,125.09,0.2793,,0.4749,wk1_proj+last_final
+2026,1331774741488369664,NCAA IVY,1,,89,,,0.6899,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,142.99,0.7263,,0.5084,wk1_proj+last_final
+2026,1331774741488369664,NCAA IVY,10,,174,,,0.2477,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,125.94,0.2905,,0.0335,wk1_proj+last_final
+2026,1331774741488369664,NCAA IVY,11,,42,,,0.7663,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,144.98,0.7654,,0.7709,wk1_proj+last_final
+2026,1331774741488369664,NCAA IVY,12,,41,,,0.7486,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,143.49,0.743,,0.7765,wk1_proj+last_final
+2026,1331774741488369664,NCAA IVY,2,,162,,,0.1937,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,120.32,0.2123,,0.1006,wk1_proj+last_final
+2026,1331774741488369664,NCAA IVY,3,,124,,,0.4339,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,131.35,0.4581,,0.3128,wk1_proj+last_final
+2026,1331774741488369664,NCAA IVY,4,,24,,,0.5736,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,133.8,0.514,,0.8715,wk1_proj+last_final
+2026,1331774741488369664,NCAA IVY,5,,20,,,0.9125,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,154.55,0.9162,,0.8939,wk1_proj+last_final
+2026,1331774741488369664,NCAA IVY,6,,27,,,0.5102,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,130.93,0.4413,,0.8547,wk1_proj+last_final
+2026,1331774741488369664,NCAA IVY,7,,127,,,0.1564,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,111.89,0.1285,,0.2961,wk1_proj+last_final
+2026,1331774741488369664,NCAA IVY,8,,46,,,0.4413,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,128.88,0.3799,,0.7486,wk1_proj+last_final
+2026,1331774741488369664,NCAA IVY,9,,101,,,0.716,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,145.38,0.7709,,0.4413,wk1_proj+last_final
+2026,1331774804222545920,NCAA PIONEER,1,,133,,,0.3976,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,129.92,0.4246,,0.2626,wk1_proj+last_final
+2026,1331774804222545920,NCAA PIONEER,10,,31,,,0.6369,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,136.99,0.5978,,0.8324,wk1_proj+last_final
+2026,1331774804222545920,NCAA PIONEER,11,,21,,,0.9441,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,157.74,0.9553,,0.8883,wk1_proj+last_final
+2026,1331774804222545920,NCAA PIONEER,12,,154,,,0.1965,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,120.11,0.2067,,0.1453,wk1_proj+last_final
+2026,1331774804222545920,NCAA PIONEER,2,,51,,,0.6322,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,137.49,0.6145,,0.7207,wk1_proj+last_final
+2026,1331774804222545920,NCAA PIONEER,3,,32,,,0.6778,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,139.19,0.648,,0.8268,wk1_proj+last_final
+2026,1331774804222545920,NCAA PIONEER,4,,112,,,0.5009,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,134.09,0.5251,,0.3799,wk1_proj+last_final
+2026,1331774804222545920,NCAA PIONEER,5,,155,,,0.0512,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,94.28,0.0335,,0.1397,wk1_proj+last_final
+2026,1331774804222545920,NCAA PIONEER,6,,106,,,0.5531,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,135.97,0.581,,0.4134,wk1_proj+last_final
+2026,1331774804222545920,NCAA PIONEER,7,,80,,,0.2561,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,119.65,0.1955,,0.5587,wk1_proj+last_final
+2026,1331774804222545920,NCAA PIONEER,8,,34,,,0.8482,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,149.63,0.8547,,0.8156,wk1_proj+last_final
+2026,1331774804222545920,NCAA PIONEER,9,,102,,,0.5987,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,138.54,0.6313,,0.4358,wk1_proj+last_final
+2026,1331774846710849536,NCAA SUN BELT,1,,107,,,0.8361,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,155.23,0.9218,,0.4078,wk1_proj+last_final
+2026,1331774846710849536,NCAA SUN BELT,10,,179,,,0.0335,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,94.44,0.0391,,0.0056,wk1_proj+last_final
+2026,1331774846710849536,NCAA SUN BELT,11,,81,,,0.4972,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,132.21,0.486,,0.5531,wk1_proj+last_final
+2026,1331774846710849536,NCAA SUN BELT,12,,85,,,0.3166,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,124.99,0.2737,,0.5307,wk1_proj+last_final
+2026,1331774846710849536,NCAA SUN BELT,2,,121,,,0.1574,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,111.81,0.1229,,0.3296,wk1_proj+last_final
+2026,1331774846710849536,NCAA SUN BELT,3,,136,,,0.3156,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,127.04,0.3296,,0.2458,wk1_proj+last_final
+2026,1331774846710849536,NCAA SUN BELT,4,,176,,,0.1015,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,110.4,0.1173,,0.0223,wk1_proj+last_final
+2026,1331774846710849536,NCAA SUN BELT,5,,146,,,0.6415,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,143.4,0.7318,,0.1899,wk1_proj+last_final
+2026,1331774846710849536,NCAA SUN BELT,6,,50,,,0.5214,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,131.98,0.4804,,0.7263,wk1_proj+last_final
+2026,1331774846710849536,NCAA SUN BELT,7,,40,,,0.7263,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,142.73,0.7151,,0.7821,wk1_proj+last_final
+2026,1331774846710849536,NCAA SUN BELT,8,,68,,,0.8771,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,155.46,0.9274,,0.6257,wk1_proj+last_final
+2026,1331774846710849536,NCAA SUN BELT,9,,153,,,0.4767,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,134.5,0.5419,,0.1508,wk1_proj+last_final
+2026,1331774880181399552,NCAA BIG 12,1,,158,,,0.4674,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,134.25,0.5363,,0.1229,wk1_proj+last_final
+2026,1331774880181399552,NCAA BIG 12,10,,180,,,0.0512,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,100.53,0.0615,,0.0,wk1_proj+last_final
+2026,1331774880181399552,NCAA BIG 12,11,,66,,,0.7346,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,144.64,0.7542,,0.6369,wk1_proj+last_final
+2026,1331774880181399552,NCAA BIG 12,12,,131,,,0.3831,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,129.41,0.405,,0.2737,wk1_proj+last_final
+2026,1331774880181399552,NCAA BIG 12,2,,141,,,0.1061,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,106.63,0.0838,,0.2179,wk1_proj+last_final
+2026,1331774880181399552,NCAA BIG 12,3,,96,,,0.4926,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,133.19,0.4972,,0.4693,wk1_proj+last_final
+2026,1331774880181399552,NCAA BIG 12,4,,25,,,0.8799,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,152.76,0.8827,,0.8659,wk1_proj+last_final
+2026,1331774880181399552,NCAA BIG 12,5,,7,,,0.9944,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,169.89,1.0,,0.9665,wk1_proj+last_final
+2026,1331774880181399552,NCAA BIG 12,6,,128,,,0.1601,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,112.61,0.1341,,0.2905,wk1_proj+last_final
+2026,1331774880181399552,NCAA BIG 12,7,,54,,,0.8343,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,149.97,0.8603,,0.7039,wk1_proj+last_final
+2026,1331774880181399552,NCAA BIG 12,8,,48,,,0.4022,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,127.24,0.3352,,0.7374,wk1_proj+last_final
+2026,1331774880181399552,NCAA BIG 12,9,,91,,,0.2737,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,121.8,0.2291,,0.4972,wk1_proj+last_final
+2026,1331774915392577536,NCAA ACC,1,,61,,,0.7439,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,144.91,0.7598,,0.6648,wk1_proj+last_final
+2026,1331774915392577536,NCAA ACC,10,,33,,,0.8399,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,149.13,0.8436,,0.8212,wk1_proj+last_final
+2026,1331774915392577536,NCAA ACC,11,,67,,,0.4078,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,128.16,0.3631,,0.6313,wk1_proj+last_final
+2026,1331774915392577536,NCAA ACC,12,,3,,,0.9423,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,156.47,0.933,,0.9888,wk1_proj+last_final
+2026,1331774915392577536,NCAA ACC,2,,123,,,0.2998,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,126.11,0.2961,,0.3184,wk1_proj+last_final
+2026,1331774915392577536,NCAA ACC,3,,93,,,0.365,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,127.29,0.3408,,0.486,wk1_proj+last_final
+2026,1331774915392577536,NCAA ACC,4,,138,,,0.365,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,129.06,0.3911,,0.2346,wk1_proj+last_final
+2026,1331774915392577536,NCAA ACC,5,,109,,,0.6294,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,139.98,0.676,,0.3966,wk1_proj+last_final
+2026,1331774915392577536,NCAA ACC,6,,72,,,0.487,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,131.66,0.4637,,0.6034,wk1_proj+last_final
+2026,1331774915392577536,NCAA ACC,7,,64,,,0.8622,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,153.44,0.905,,0.648,wk1_proj+last_final
+2026,1331774915392577536,NCAA ACC,8,,140,,,0.6192,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,141.28,0.6983,,0.2235,wk1_proj+last_final
+2026,1331774915392577536,NCAA ACC,9,,130,,,0.1723,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,115.79,0.1508,,0.2793,wk1_proj+last_final
+2026,1331775106527006720,NCAA PAC 12,1,,171,,,0.0689,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,102.31,0.0726,,0.0503,wk1_proj+last_final
+2026,1331775106527006720,NCAA PAC 12,10,,56,,,0.1341,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,84.58,0.0223,,0.6927,wk1_proj+last_final
+2026,1331775106527006720,NCAA PAC 12,11,,105,,,0.5889,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,137.82,0.6229,,0.419,wk1_proj+last_final
+2026,1331775106527006720,NCAA PAC 12,12,,45,,,0.8566,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,151.89,0.8771,,0.7542,wk1_proj+last_final
+2026,1331775106527006720,NCAA PAC 12,2,,59,,,0.5456,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,134.02,0.5196,,0.676,wk1_proj+last_final
+2026,1331775106527006720,NCAA PAC 12,3,,71,,,0.3063,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,123.9,0.2458,,0.6089,wk1_proj+last_final
+2026,1331775106527006720,NCAA PAC 12,4,,4,,,0.9227,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,153.64,0.9106,,0.9832,wk1_proj+last_final
+2026,1331775106527006720,NCAA PAC 12,5,,122,,,0.5894,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,139.05,0.6425,,0.324,wk1_proj+last_final
+2026,1331775106527006720,NCAA PAC 12,6,,135,,,0.3026,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,126.36,0.3128,,0.2514,wk1_proj+last_final
+2026,1331775106527006720,NCAA PAC 12,7,,1,,,0.9814,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,163.89,0.9777,,1.0,wk1_proj+last_final
+2026,1331775106527006720,NCAA PAC 12,8,,159,,,0.5968,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,141.05,0.6927,,0.1173,wk1_proj+last_final
+2026,1331775106527006720,NCAA PAC 12,9,,161,,,0.0736,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,100.89,0.067,,0.1061,wk1_proj+last_final
+2026,1331775170712444928,NCAA SEC,1,,149,,,0.1825,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,118.12,0.1844,,0.1732,wk1_proj+last_final
+2026,1331775170712444928,NCAA SEC,10,,23,,,0.5093,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,130.6,0.4358,,0.8771,wk1_proj+last_final
+2026,1331775170712444928,NCAA SEC,11,,90,,,0.2421,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,119.3,0.1899,,0.5028,wk1_proj+last_final
+2026,1331775170712444928,NCAA SEC,12,,125,,,0.5703,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,137.82,0.6229,,0.3073,wk1_proj+last_final
+2026,1331775170712444928,NCAA SEC,2,,37,,,0.8082,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,147.13,0.8101,,0.7989,wk1_proj+last_final
+2026,1331775170712444928,NCAA SEC,3,,117,,,0.2263,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,119.78,0.2011,,0.352,wk1_proj+last_final
+2026,1331775170712444928,NCAA SEC,4,,60,,,0.7123,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,142.77,0.7207,,0.6704,wk1_proj+last_final
+2026,1331775170712444928,NCAA SEC,5,,118,,,0.1462,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,109.51,0.1061,,0.3464,wk1_proj+last_final
+2026,1331775170712444928,NCAA SEC,6,,12,,,0.9618,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,162.19,0.9665,,0.9385,wk1_proj+last_final
+2026,1331775170712444928,NCAA SEC,7,,173,,,0.2067,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,123.34,0.2402,,0.0391,wk1_proj+last_final
+2026,1331775170712444928,NCAA SEC,8,,152,,,0.6755,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,145.4,0.7793,,0.1564,wk1_proj+last_final
+2026,1331775170712444928,NCAA SEC,9,,157,,,0.1145,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,109.98,0.1117,,0.1285,wk1_proj+last_final
+2026,1331775206619885568,NCAA BIG EAST & CO.,1,,87,,,0.3985,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,128.41,0.3743,,0.5196,wk1_proj+last_final
+2026,1331775206619885568,NCAA BIG EAST & CO.,10,,110,,,0.2048,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,117.47,0.1676,,0.3911,wk1_proj+last_final
+2026,1331775206619885568,NCAA BIG EAST & CO.,11,,167,,,0.2495,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,125.64,0.2849,,0.0726,wk1_proj+last_final
+2026,1331775206619885568,NCAA BIG EAST & CO.,12,,28,,,0.5652,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,133.66,0.5084,,0.8492,wk1_proj+last_final
+2026,1331775206619885568,NCAA BIG EAST & CO.,2,,156,,,0.0596,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,94.72,0.0447,,0.1341,wk1_proj+last_final
+2026,1331775206619885568,NCAA BIG EAST & CO.,3,,116,,,0.1946,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,117.2,0.162,,0.3575,wk1_proj+last_final
+2026,1331775206619885568,NCAA BIG EAST & CO.,4,,16,,,0.8371,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,148.06,0.8212,,0.9162,wk1_proj+last_final
+2026,1331775206619885568,NCAA BIG EAST & CO.,5,,82,,,0.5335,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,134.12,0.5307,,0.5475,wk1_proj+last_final
+2026,1331775206619885568,NCAA BIG EAST & CO.,6,,62,,,0.8315,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,150.59,0.8659,,0.6592,wk1_proj+last_final
+2026,1331775206619885568,NCAA BIG EAST & CO.,7,,15,,,0.9637,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,162.27,0.9721,,0.9218,wk1_proj+last_final
+2026,1331775206619885568,NCAA BIG EAST & CO.,8,,97,,,0.3007,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,124.82,0.2682,,0.4637,wk1_proj+last_final
+2026,1331775206619885568,NCAA BIG EAST & CO.,9,,147,,,0.5102,week-1 projections TeamProjectionsWk1_Historic.csv; final order 2025,,135.96,0.5754,,0.1844,wk1_proj+last_final
