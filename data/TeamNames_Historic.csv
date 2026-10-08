@@ -562,7 +562,7 @@ Year,LeagueName,RosterID,Team,Basis
 2022,NCAA BIG 12,10,Kansas,assumed = today's name (no rename known)
 2022,NCAA BIG 12,7,Kansas State,assumed = today's name (no rename known)
 2022,NCAA OHIO VALLEY,3,Kennesaw State,assumed = today's name (no rename known)
-2022,NCAA SEC,8,Kentucky,unknown: swap happened in 2022 or 2023 - verify
+2022,NCAA SEC,8,South Carolina,Sleeper owner team names + Chris 9/13/22 sheet: swap was in 2023 (Chris 2026-10-08)
 2022,NCAA IVY,6,Lehigh,assumed = today's name (no rename known)
 2022,NCAA USA,11,Louisiana,assumed = today's name (no rename known)
 2022,NCAA USA,12,Louisiana Monroe,assumed = today's name (no rename known)
@@ -621,7 +621,7 @@ Year,LeagueName,RosterID,Team,Basis
 2022,NCAA WILD,7,San Jose State,assumed = today's name (no rename known)
 2022,NCAA PIONEER,6,SE Missouri State,assumed = today's name (no rename known)
 2022,NCAA USA,4,South Alabama,assumed = today's name (no rename known)
-2022,NCAA SEC,10,South Carolina,unknown: swap happened in 2022 or 2023 - verify
+2022,NCAA SEC,10,Kentucky,Sleeper owner team names + Chris 9/13/22 sheet: swap was in 2023 (Chris 2026-10-08)
 2022,NCAA WILD,11,South Dakota,assumed = today's name (no rename known)
 2022,NCAA BIG EAST & CO.,3,South Dakota State,assumed = today's name (no rename known)
 2022,NCAA HISTORICALLY BLACK,4,Southern,assumed = today's name (no rename known)
@@ -1189,9 +1189,9 @@ Year,LeagueName,RosterID,Team,Basis
 2025,NCAA MOUNTAIN WEST,11,UNLV,assumed = today's name (no rename known)
 2025,NCAA PAC 12,2,USC,assumed = today's name (no rename known)
 2025,NCAA BIG EAST & CO.,10,USF,assumed = today's name (no rename known)
-2025,NCAA PIONEER,11,UT Martin,assumed = today's name (no rename known)
+2025,NCAA PIONEER,11,Georgetown,Chris 2026-10-08: UT Martin became Georgetown in 2025
 2025,NCAA PAC 12,11,Utah,assumed = today's name (no rename known)
-2025,NCAA MOUNTAIN WEST,5,Utah State,assumed = today's name (no rename known)
+2025,NCAA MOUNTAIN WEST,5,San Jose State,Chris 2026-10-08: Utah State became San Jose State in 2025
 2025,NCAA SUN BELT,2,UTEP,assumed = today's name (no rename known)
 2025,NCAA SUN BELT,12,UTSA,assumed = today's name (no rename known)
 2025,NCAA SEC,9,Vanderbilt,assumed = today's name (no rename known)
