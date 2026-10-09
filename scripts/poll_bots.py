@@ -124,9 +124,9 @@ def b_median(r, extra):
 
 @bot("margin")
 def b_margin(r, extra):
-    """Hammer: per game, win = 1 + margin percentile among that week's winning margins (biggest
-    blowout 2.0, median win 1.5, narrowest ~1.0); loss = -(1 + percentile among that week's
-    losing margins); tie = 0. Season value = mean. Margins on game-time (official) scores so they
+    """Hammer (margin only, Chris 2026-10-08): per game, win = + margin percentile among that week's
+    winning margins (biggest blowout +1, median win +0.5, a squeaker ~0); loss = - the same among
+    that week's losing margins; tie = 0. Season value = mean. Margins on game-time (official) scores so they
     agree with the result that stands."""
     pts = "PointsOfficial" if "PointsOfficial" in r.columns else "PointsFor"
     t = r[["LeagueID", "RosterID", "OpponentRosterID", "Week", "Outcome", pts]].copy()
@@ -139,7 +139,7 @@ def b_margin(r, extra):
     for res, sign in (("Win", 1), ("Loss", -1)):
         x = t["Outcome"] == res
         p = t[x].groupby("Week")["M"].rank(pct=True, method="average")
-        t.loc[x, "s"] = sign * (1 + p)
+        t.loc[x, "s"] = sign * p
     g = t.groupby(["LeagueID", "RosterID"]).agg(S=("s", "mean"), PF=(pts, "sum"))
     return g["S"] + g["PF"] * 1e-9
 

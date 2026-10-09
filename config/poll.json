@@ -141,10 +141,10 @@
       "id": "margin",
       "name": "Hammer",
       "enabled": true,
-      "blurb": "Wins first, then how hard you won",
+      "blurb": "How hard you win (and lose), ranked against that week's games",
       "short": "HAM",
-      "voice": "Did you win? By how much?",
-      "how": "Each game: a win scores 1 + where its margin ranks among that week's winning margins (biggest blowout 2.0, median win 1.5, narrowest ~1.0); a loss scores -1 minus the same for that week's losing margins; a tie 0. Season value = the average. Any win beats any loss. Regular season only."
+      "voice": "Close wins don't impress me.",
+      "how": "Each game: a win scores where its margin ranks among that week's winning margins (biggest blowout +1, median win +0.5, a squeaker about 0); a loss scores minus the same for that week's losing margins; a tie 0. Season value = the average. Regular season only."
     },
     {
       "id": "efficiency",
