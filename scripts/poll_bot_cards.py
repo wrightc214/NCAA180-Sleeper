@@ -72,7 +72,7 @@ def load():
 
 
 def card(title, sub, rows, cfg, ranks, n, col, drop, show_lg=True):
-    meta = cfg["bots"]
+    meta = [m for m in cfg["bots"] if m.get("enabled", True)]
     def icon(m):
         p = f"assets/bots/{m['id']}.png"
         return f'<img class="bi" src="../{p}" alt="">' if os.path.exists(p) else ""
@@ -116,7 +116,7 @@ def build():
     secs = [card("Top 25 · bot ballots", sub, t25, cfg, ranks, n, col, drop)]
     for lg, g in sorted(c.groupby("League"), key=lambda x: x[0]):
         secs.append(card(f"{lg} · bot ballots", sub, g.sort_values("_r"), cfg, ranks, n, col, drop, show_lg=False))
-    legend = " · ".join(f'<b>{e(m.get("short", ""))}</b> {e(m["name"])}' for m in cfg["bots"])
+    legend = " · ".join(f'<b>{e(m.get("short", ""))}</b> {e(m["name"])}' for m in cfg["bots"] if m.get("enabled", True))
     doc = (page_head(f"NCAA 180 bot ballots wk {week}", CSS) +
            f'<div class="wrap"><header><h1>NCAA 180 <em>Bot ballots</em></h1></header>'
            + "".join(secs) + f'<p class="note">{legend}</p></div></body></html>')
