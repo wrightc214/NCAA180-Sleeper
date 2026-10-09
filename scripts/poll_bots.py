@@ -122,6 +122,28 @@ def b_median(r, extra):
     return g["PointsFor"].median() + g["PointsFor"].sum() * 1e-9
 
 
+@bot("margin")
+def b_margin(r, extra):
+    """Hammer (margin only, Chris 2026-10-08): per game, win = + margin percentile among that week's
+    winning margins (biggest blowout +1, median win +0.5, a squeaker ~0); loss = - the same among
+    that week's losing margins; tie = 0. Season value = mean. Margins on game-time (official) scores so they
+    agree with the result that stands."""
+    pts = "PointsOfficial" if "PointsOfficial" in r.columns else "PointsFor"
+    t = r[["LeagueID", "RosterID", "OpponentRosterID", "Week", "Outcome", pts]].copy()
+    t[pts] = t[pts].astype(float)
+    opp = t.rename(columns={"RosterID": "OpponentRosterID", "OpponentRosterID": "RosterID", pts: "PA"})
+    t = t.merge(opp[["LeagueID", "Week", "RosterID", "OpponentRosterID", "PA"]],
+                on=["LeagueID", "Week", "RosterID", "OpponentRosterID"], how="left")
+    t["M"] = (t[pts] - t["PA"]).abs()
+    t["s"] = 0.0
+    for res, sign in (("Win", 1), ("Loss", -1)):
+        x = t["Outcome"] == res
+        p = t[x].groupby("Week")["M"].rank(pct=True, method="average")
+        t.loc[x, "s"] = sign * p
+    g = t.groupby(["LeagueID", "RosterID"]).agg(S=("s", "mean"), PF=(pts, "sum"))
+    return g["S"] + g["PF"] * 1e-9
+
+
 @bot("efficiency")
 def b_efficiency(r, extra):
     mx = extra.get("maxpts")
@@ -257,7 +279,7 @@ def bridge(by_week, week):
 
 
 # ---------------------------------------------------------------- ranking
-RESULT_BOTS = {"record", "resume", "professor"}  # use win/loss; never see weeks past the regular season
+RESULT_BOTS = {"record", "resume", "professor", "margin"}  # use win/loss; never see weeks past the regular season
 
 
 def bot_ranks(cfg, m, through_week, extra=None, keys=None, points_through=None):

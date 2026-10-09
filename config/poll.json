@@ -138,9 +138,18 @@
       "how": "Average points per week of your best possible lineup from your own roster."
     },
     {
+      "id": "margin",
+      "name": "Hammer",
+      "enabled": true,
+      "blurb": "How hard you win (and lose), ranked against that week's games",
+      "short": "HAM",
+      "voice": "Close wins don't impress me.",
+      "how": "Each game: a win scores where its margin ranks among that week's winning margins (biggest blowout +1, median win +0.5, a squeaker about 0); a loss scores minus the same for that week's losing margins; a tie 0. Season value = the average. Regular season only."
+    },
+    {
       "id": "efficiency",
       "name": "Monday Morning QB",
-      "enabled": true,
+      "enabled": false,
       "blurb": "Points scored / best possible lineup",
       "short": "MMQB",
       "voice": "Second-guesses every start/sit decision.",

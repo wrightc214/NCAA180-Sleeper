@@ -171,6 +171,7 @@ jobs:
           python -m playwright install-deps chromium
           python -m playwright install --only-shell chromium
           python scripts/poll_png.py
+          python scripts/poll_bot_cards.py
 
       # Baseline pregame projection snapshot for the new week (game-day runs refresh it).
       - name: Baseline projection snapshot
@@ -243,6 +244,14 @@ jobs:
           HUMAN_BALLOTS: ${{ steps.pollchk.outputs.human_ballots }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: python scripts/poll_discord.py
+
+      # Bot ballots (every bot's rank, Top 25 card) -> lm-private-data. League cards stay in reports/poll-bots/ for sharing.
+      - name: Post bot ballots to LM channel
+        if: always() && steps.pollchk.outputs.published == 'true' && ((github.event_name == 'schedule') || (github.event.inputs.post == 'true'))
+        continue-on-error: true
+        env:
+          DISCORD_WEBHOOK_LM_PRIVATE_DATA: ${{ secrets.DISCORD_WEBHOOK_LM_PRIVATE_DATA }}
+        run: python scripts/poll_bot_cards.py --post
 
       # Weekly inactive-manager report -> private LM channel (alert webhook), same trigger as the post.
       - name: Inactivity report to LM channel
