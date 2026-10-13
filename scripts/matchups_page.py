@@ -211,7 +211,11 @@ def bar_colors(ta, tb, pal):
     if good:
         return good[0]
     # last resort: keep one team's Primary, the other team's most distinct color (may be neutral)
-    return max([(pa, y) for y, _ in B[1:]] + [(x, pb) for x, _ in A[1:]] + [(pa, pb)], key=lambda c: _dist(*c))
+    # (white is skipped: it vanishes against the white card)
+    import colorsys
+    light = lambda h: colorsys.rgb_to_hls(*(v / 255 for v in _rgb(h)))[1] > 0.94
+    cands = [(pa, y) for y, _ in B[1:] if not light(y)] + [(x, pb) for x, _ in A[1:] if not light(x)] + [(pa, pb)]
+    return max(cands, key=lambda c: _dist(*c))
 
 
 def palettes():
