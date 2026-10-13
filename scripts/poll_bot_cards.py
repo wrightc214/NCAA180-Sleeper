@@ -73,6 +73,17 @@ def load():
 
 def card(title, sub, rows, cfg, ranks, n, col, drop, show_lg=True):
     meta = [m for m in cfg["bots"] if m.get("enabled", True)]
+    # Color scale spans this card's COUNTED votes (each row minus its best and worst); dropped
+    # votes outside that range clip to full green/red. Numbers stay ranks out of all n teams.
+    counted = []
+    for r in rows.itertuples():
+        v = sorted(x for x in (ranks.get((m["id"], r.LeagueID, r.RosterID)) for m in meta) if x is not None)
+        counted += v[1:-1] if drop and len(v) >= 3 else v
+    c_lo, c_hi = (min(counted), max(counted)) if counted else (1, n)
+
+    def cell(v):
+        x = min(max(v, c_lo), c_hi)
+        return shade(1 + (x - c_lo) * (n - 1) / max(c_hi - c_lo, 1), n)
     def icon(m):
         p = f"assets/bots/{m['id']}.png"
         return f'<img class="bi" src="../{p}" alt="">' if os.path.exists(p) else ""
@@ -85,7 +96,7 @@ def card(title, sub, rows, cfg, ranks, n, col, drop, show_lg=True):
         hi = vals.index(min(ok)) if drop and len(ok) >= 3 else -1
         lo = len(vals) - 1 - vals[::-1].index(max(ok)) if drop and len(ok) >= 3 else -1
         cells = "".join(
-            (f'<td class="b{" drop" if i in (hi, lo) else ""}" style="background:{shade(v, n)}">{v}</td>'
+            (f'<td class="b{" drop" if i in (hi, lo) else ""}" style="background:{cell(v)}">{v}</td>'
              if v is not None else '<td class="b">–</td>') for i, v in enumerate(vals))
         bg, fg = col.get(r.Team, ("#14213a", "#ffffff"))
         rec = f"{int(float(r.Wins or 0))}-{int(float(r.Losses or 0))}" + (f"-{int(float(r.Ties))}" if float(r.Ties or 0) else "")
@@ -97,7 +108,7 @@ def card(title, sub, rows, cfg, ranks, n, col, drop, show_lg=True):
     return (f'<section class="card"><h2>{e(title)} <small>{e(sub)}</small></h2>'
             f'<div class="tbl"><table><thead><tr><th>Rk</th><th></th><th style="text-align:left">Team</th>{head}'
             f'<th>Sprd</th><th>Score</th></tr></thead><tbody>{"".join(body)}</tbody></table></div>'
-            f'<p class="note">Bot ranks are out of all {n} teams (green = top, red = bottom). Struck = dropped '
+            f'<p class="note">Bot ranks are out of all {n} teams. Colors span the counted votes on this card: green = {c_lo}, red = {c_hi}+. Struck = dropped '
             f'(each team\'s best and worst bot). Sprd = worst bot rank minus best.</p></section>')
 
 
