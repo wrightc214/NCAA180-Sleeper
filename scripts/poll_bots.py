@@ -605,7 +605,7 @@ def postseason_season(year):
 
 def final_ranks(cfg, m, extra, keys, games):
     """Bots for the final poll. Vegas, Bandwagon, Headliner, Bagman, Professor: frozen at the
-    regular season. Scoreboard, Bracketologist, Monday Morning QB: regular season + postseason games."""
+    regular season (SOR frozen by decision 2026-10-13). Scoreboard, Bracketologist, Monday Morning QB: regular season + postseason games."""
     last = int(cfg.get("last_regular_week", 11))
     rk, used = bot_ranks(cfg, m, last, extra, keys)
     reg = base(m, last, last)

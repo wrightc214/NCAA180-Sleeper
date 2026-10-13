@@ -48,7 +48,7 @@
         "PlayoffThird": 0.15
       },
       "final_four_rule": true,
-      "_note": "Same bots as the Top 25. Postseason games that needed a lineup (CCG, Playoff, Bowl, every NIT round) are extra games for Scoreboard (win %), Bracketologist (+ real opponents' regular-season all-play) and Monday Morning QB when enabled; all other bots stay at week 11. NIT group = one game, result = share of rivals outscored. Bumps are added to Score per win (standard deviations): playoff by round R1..Final, CCG/Bowl flat, NIT x share. One regular-season win is worth about +0.13 (max +0.165), so every CCG/Bowl/playoff win counts more; NIT is a deliberate exception (weak field, up to 5 games). final_four_rule: a semifinal/final winner is raised directly above the team it beat (backstop; never fired 2024-2025). Decided 2026-10-07.",
+      "_note": "Same bots as the Top 25. Postseason games that needed a lineup (CCG, Playoff, Bowl, every NIT round) are extra games for Scoreboard (win %), plus the retired Bracketologist/Monday Morning QB when enabled; all other bots (incl. SOR, frozen by decision 2026-10-13) stay at week 11. NIT group = one game, result = share of rivals outscored. Bumps are added to Score per win (standard deviations): playoff by round R1..Final, CCG/Bowl flat, NIT x share. One regular-season win is worth about +0.13 (max +0.165), so every CCG/Bowl/playoff win counts more; NIT is a deliberate exception (weak field, up to 5 games). final_four_rule: a semifinal/final winner is raised directly above the team it beat (backstop; never fired 2024-2025). Decided 2026-10-07.",
       "_bump_align": "'final': playoff bumps count back from the title game, so a shorter bracket (2019: 4 rounds) gives its title game the title bump. Group rounds (2020 playoff round 1) earn the round bump x share of group rivals outscored, like the NIT. PlayoffThird (2020 third-place game) counts as a game; the winner gets the bowl bump (Chris 2026-10-08)."
     }
   },
@@ -122,11 +122,21 @@
     {
       "id": "resume",
       "name": "Bracketologist",
-      "enabled": true,
+      "enabled": false,
       "blurb": "Win % plus how good your opponents are",
       "short": "BRKT",
       "voice": "Who you beat matters as much as how many.",
-      "how": "60% win % + 40% the average season all-play of the opponents you played. Final poll: postseason games and their opponents are added."
+      "how": "60% win % + 40% the average season all-play of the opponents you played. Final poll: postseason games and their opponents are added.",
+      "_retired": "Replaced by Strength of Record (sor) from the week-6 poll, 2026-10-13 (backtest: claude/poll-backtest-sor-2026-10-13.md)."
+    },
+    {
+      "id": "sor",
+      "name": "SOR",
+      "enabled": true,
+      "short": "SOR",
+      "blurb": "Strength of Record: how hard your record would be for a top-25 team to match",
+      "voice": "Anyone can win. Win where a contender would stumble.",
+      "how": "Benchmark = the top 25 teams by season all-play. Each game: the share of that week's benchmark scores that beat your opponent's score. Combined = the chance a benchmark team matches your record or better against your exact schedule; the lower, the better. Regular season only (frozen at week 11 for the Final poll)."
     },
     {
       "id": "ceiling",
