@@ -110,7 +110,7 @@ def build():
         rr = pd.read_csv(pc.RANKS_CURRENT, dtype=str)
         rk = {(r.LeagueID, r.RosterID): int(r.Rank) for r in rr.itertuples()}
     st = standings(season, wk)
-    form = season_form(season, wk)
+    ws = weekly_scores(season, wk)
 
     m = pc.matchups(season)
     m = m[m["Week"] == wk]
@@ -125,10 +125,11 @@ def build():
         p = win_pct(rows[a]["Best"], rows[b]["Best"])
         games.append({"Year": season, "Week": wk, "LeagueID": a[0], "League": rows[a]["League"],
                       "RosterID": a[1], "Team": teams.get(a, ""), "Rank": rk.get(a, ""), "Rec": st.get(a, ""),
-                      "Proj": rows[a]["Best"], "Form": form.get(a, ""), "CurLineup": rows[a]["Current"], "ZeroStarters": rows[a]["ZeroStarters"],
+                      "Proj": rows[a]["Best"], "CurLineup": rows[a]["Current"], "ZeroStarters": rows[a]["ZeroStarters"],
                       "OpponentRosterID": b[1], "OppTeam": teams.get(b, ""), "OppRank": rk.get(b, ""), "OppRec": st.get(b, ""),
-                      "OppProj": rows[b]["Best"], "OppForm": form.get(b, ""), "OppCurLineup": rows[b]["Current"], "OppZeroStarters": rows[b]["ZeroStarters"],
-                      "WinPct": round(p, 1), "Snapshot": stamp})
+                      "OppProj": rows[b]["Best"], "OppCurLineup": rows[b]["Current"], "OppZeroStarters": rows[b]["ZeroStarters"],
+                      "WinPct": round(p, 1), "Snapshot": stamp,
+                      "EveryWeek": "-".join(str(x) for x in every_week(ws.get(a, {}), ws.get(b, {}))).removesuffix("-0")})
     g = pd.DataFrame(games)
     g.to_csv(OUT_CSV, index=False)
     write_page(g, wk, stamp)
@@ -136,18 +137,27 @@ def build():
     return True
 
 
-def season_form(season, wk):
-    """Season form = the pregame sim's expected score: own average with one league-average week
-    mixed in (weekly_report.SIM_MEAN_SHRINK), regular-season weeks before `wk`. Shown for context."""
-    from weekly_report import SIM_MEAN_SHRINK
+def weekly_scores(season, wk):
+    """{(LeagueID, RosterID): {week: points}} for regular-season weeks before `wk`."""
     m = pc.matchups(season)
     m = m[(m["Week"] < wk) & m["Outcome"].isin(["Win", "Loss", "Tie"])]
-    if m.empty:
-        return {}
-    p = m["PointsFor"].astype(float)
-    lm = p.mean()
-    g = m.assign(P=p).groupby(["LeagueID", "RosterID"])["P"].agg(["sum", "count"])
-    return {k: round((r["sum"] + SIM_MEAN_SHRINK * lm) / (r["count"] + SIM_MEAN_SHRINK), 1) for k, r in g.iterrows()}
+    out = {}
+    for r in m.itertuples():
+        out.setdefault((r.LeagueID, r.RosterID), {})[int(r.Week)] = float(r.PointsFor)
+    return out
+
+
+def every_week(a, b):
+    """A's record vs B if they had played every week so far: compare the two scores week by week."""
+    w = l = t = 0
+    for k in sorted(set(a) & set(b)):
+        if a[k] > b[k]:
+            w += 1
+        elif a[k] < b[k]:
+            l += 1
+        else:
+            t += 1
+    return w, l, t
 
 
 def standings(season, wk):
@@ -176,6 +186,7 @@ ul.mu li.rvr{border-left:5px solid var(--gold,#c9a227)}
 .side .n{font:700 18px var(--num);text-align:right}
 .bar{display:flex;height:8px;border-radius:4px;overflow:hidden;margin:6px 0 2px;background:var(--line)}
 .bar i{display:block}
+.ew{font-size:12px;color:var(--mute);margin-top:3px}
 .meta{display:flex;justify-content:space-between;font:600 12px var(--num);color:var(--mute)}
 """
 
@@ -186,22 +197,23 @@ def write_page(g, wk, stamp):
     ranked = g[((g["Rank"] != "") | (g["OppRank"] != "")) & ~g.index.isin(rvr.index)]
     rest = g[~g.index.isin(rvr.index) & ~g.index.isin(ranked.index)]
 
-    def side(team, rank, rec, lg, projv, zero, cur, frm=""):
+    def side(team, rank, rec, lg, projv, zero, cur):
         bg, fg = col.get(team, ("#14213a", "#ffffff"))
         r = f"#{rank} " if rank != "" else ""
         return (f'<div class="side">{logo(team)}<div><span class="pt" style="background:{bg};color:{fg}">{e(r)}{e(team)}</span>'
-                f'<small>{e(rec)} · {e(lg)}' + (f' · season form {float(frm):.1f}' if frm != "" else "") +
-                f'</small></div><span class="n">{projv:.1f}</span></div>')
+                f'<small>{e(rec)} · {e(lg)}</small></div><span class="n">{projv:.1f}</span></div>')
 
     def item(r, cls=""):
         ca = col.get(r.Team, ("#14213a", "#fff"))[0]
         cb = col.get(r.OppTeam, ("#14213a", "#fff"))[0]
         p = float(r.WinPct)
         return (f'<li class="{cls}" data-lg="{e(r.League)}">'
-                + side(r.Team, r.Rank, r.Rec, r.League, r.Proj, int(r.ZeroStarters), r.CurLineup, r.Form)
-                + side(r.OppTeam, r.OppRank, r.OppRec, r.League, r.OppProj, int(r.OppZeroStarters), r.OppCurLineup, r.OppForm)
+                + side(r.Team, r.Rank, r.Rec, r.League, r.Proj, int(r.ZeroStarters), r.CurLineup)
+                + side(r.OppTeam, r.OppRank, r.OppRec, r.League, r.OppProj, int(r.OppZeroStarters), r.OppCurLineup)
                 + f'<div class="bar"><i style="width:{p:.1f}%;background:{ca}"></i><i style="width:{100 - p:.1f}%;background:{cb}"></i></div>'
-                + f'<div class="meta"><span>{e(r.Team)} {label(p)}</span><span>{e(r.OppTeam)} {label(100 - p)}</span></div></li>')
+                + f'<div class="meta"><span>{e(r.Team)} {label(p)}</span><span>{e(r.OppTeam)} {label(100 - p)}</span></div>'
+                + (f'<div class="ew">If they\'d played every week: {e(r.Team)} {e(r.EveryWeek)}</div>' if r.EveryWeek not in ("", "0-0") else "")
+                + '</li>')
 
     def sec(title, d, note="", cls=""):
         if d.empty:
@@ -233,7 +245,7 @@ def write_page(g, wk, stamp):
 {sec("Ranked vs ranked", rvr, cls="rvr")}
 {sec("Ranked teams in action", ranked)}
 {sec("All other games", rest.sort_values(["League", "Team"]))}
-<p class="note"><b>Big number = lineup projection:</b> each roster's best projected lineup (Sleeper projections, each league's scoring), not necessarily the lineup the manager starts. <b>Season form</b> = the team's average score this season, nudged toward the league average (context only). Win chance uses the lineup projection and assumes each team scores within about ±{SPREAD:.0f} points of its projection (backtest 2021–2025: picks the winner 73% of the time). Projections as of {e(when)}; updated each Tuesday. <a href="../{OUT_CSV}">Raw CSV</a></p>
+<p class="note"><b>Big number = lineup projection:</b> each roster's best projected lineup (Sleeper projections, each league's scoring), not necessarily the lineup the manager starts. <b>If they'd played every week</b> = each team's weekly scores compared head to head for every week so far. Win chance uses the lineup projection and assumes each team scores within about ±{SPREAD:.0f} points of its projection (backtest 2021–2025: picks the winner 73% of the time). Projections as of {e(when)}; updated each Tuesday. <a href="../{OUT_CSV}">Raw CSV</a></p>
 </div>
 <script>
 document.getElementById('lg').addEventListener('change', function () {{
