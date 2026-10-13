@@ -90,12 +90,27 @@ def fname(ptype, week):
     return f"poll-{ptype.lower()}-wk{int(week):02d}.html"
 
 
+def ballot_bots(cfg, bots):
+    """Bots to show for one week's ballots: every bot that actually voted that week (retired ones
+    included, so published polls keep their columns), plus enabled bots with no data (shown –)
+    unless the week is before the bot's `since` ("YYYY-W" = first ThroughWeek it votes)."""
+    present = set(bots["Bot"]) if len(bots) else set()
+    yw = (int(bots["Year"].iloc[0]), int(bots["ThroughWeek"].iloc[0])) if len(bots) else None
+
+    def started(b):
+        if not b.get("since") or yw is None:
+            return True
+        y, w = (int(x) for x in str(b["since"]).split("-"))
+        return yw >= (y, w)
+    return [b for b in cfg["bots"] if b["id"] in present or (b.get("enabled", True) and started(b))]
+
+
 def bot_grid(cfg, bots, poll, col, ptype):
     """Each ranked team's rank on every bot; the dropped best/worst are struck through."""
     ranked = poll[poll["Status"] == "Ranked"]
     if bots.empty or ranked.empty:
         return ""
-    meta = [b for b in cfg["bots"] if b.get("enabled", True)]  # every bot; one with no data shows –
+    meta = ballot_bots(cfg, bots)
     keys = list(zip(ranked["LeagueID"], ranked["RosterID"]))
     if pc.poll_cfg(cfg, ptype).get("pool") == "playoff_field":  # ranks inside the field
         bots = bots[[k in set(keys) for k in zip(bots["LeagueID"], bots["RosterID"])]].copy()

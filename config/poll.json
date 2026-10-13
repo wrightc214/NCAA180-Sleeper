@@ -136,7 +136,8 @@
       "short": "SOR",
       "blurb": "Strength of Record: how hard your record would be for a top-25 team to match",
       "voice": "Anyone can win. Win where a contender would stumble.",
-      "how": "Benchmark = the top 25 teams by season all-play. Each game: the share of that week's benchmark scores that beat your opponent's score. Combined = the chance a benchmark team matches your record or better against your exact schedule; the lower, the better. Regular season only (frozen at week 11 for the Final poll)."
+      "how": "Benchmark = the top 25 teams by season all-play. Each game: the share of that week's benchmark scores that beat your opponent's score. Combined = the chance a benchmark team matches your record or better against your exact schedule; the lower, the better. Regular season only (frozen at week 11 for the Final poll).",
+      "since": "2026-6"
     },
     {
       "id": "ceiling",
