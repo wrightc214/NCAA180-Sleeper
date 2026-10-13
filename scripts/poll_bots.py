@@ -34,6 +34,8 @@ BotAvgRank, then the Standings bot. TopVotes = counted bots ranking the team in 
 """
 import os
 
+import numpy as np
+
 import pandas as pd
 
 BOT_FUNCS = {}
@@ -142,6 +144,49 @@ def b_margin(r, extra):
         t.loc[x, "s"] = sign * p
     g = t.groupby(["LeagueID", "RosterID"]).agg(S=("s", "mean"), PF=(pts, "sum"))
     return g["S"] + g["PF"] * 1e-9
+
+
+SOR_TOP = 25  # Strength of Record benchmark: top N teams by season all-play (Chris 2026-10-13)
+
+
+def sor_table(r, top=SOR_TOP):
+    """Strength of Record per team from base() rows. Benchmark = the top `top` teams by season
+    all-play to date. Per game p = share of that week's benchmark scores that beat your opponent's
+    score (ties half); Prob = chance a benchmark team matches your record or better vs your exact
+    opponents (Poisson-binomial). Lower Prob = more impressive. Columns: Prob, AvgP, W."""
+    pts = r["PointsFor"].astype(float)
+    t = r.assign(PF=pts)
+    opp = t[["LeagueID", "Week", "RosterID", "PF"]].rename(columns={"RosterID": "OpponentRosterID", "PF": "Opp"})
+    t = t.merge(opp, on=["LeagueID", "Week", "OpponentRosterID"], how="left")
+    ap = t.groupby(["LeagueID", "RosterID"])["AP"].sum().sort_values(ascending=False)
+    bench_keys = set(ap.index[:top])
+    bench = {w: g["PF"].to_numpy() for w, g in
+             t[[k in bench_keys for k in zip(t["LeagueID"], t["RosterID"])]].groupby("Week")}
+    t["P"] = [((bench[w] > o).sum() + 0.5 * (bench[w] == o).sum()) / len(bench[w]) for w, o in zip(t["Week"], t["Opp"])]
+    rows = {}
+    for k, g in t.groupby(["LeagueID", "RosterID"]):
+        d = np.zeros(len(g) + 1)
+        d[0] = 1.0
+        for p in g["P"]:
+            d[1:] = d[1:] * (1 - p) + d[:-1] * p
+            d[0] *= 1 - p
+        w = g["Wv"].sum()
+        rows[k] = (float(d[int(np.ceil(w - 1e-9)):].sum()), float(g["P"].mean()), float(w))
+    out = pd.DataFrame.from_dict(rows, orient="index", columns=["Prob", "AvgP", "W"])
+    out.index = pd.MultiIndex.from_tuples(out.index, names=["LeagueID", "RosterID"])
+    return out
+
+
+@bot("sor")
+def b_sor(r, extra):
+    s = sor_table(r)
+    return (1 - s["Prob"]) + s["W"] * 1e-6 - s["AvgP"] * 1e-9
+
+
+@bot("sor_log")
+def b_sor_log(r, extra):
+    s = sor_table(r)
+    return -np.log10(s["Prob"].clip(lower=1e-6)) + s["W"] * 1e-6 - s["AvgP"] * 1e-9
 
 
 @bot("efficiency")
@@ -279,7 +324,7 @@ def bridge(by_week, week):
 
 
 # ---------------------------------------------------------------- ranking
-RESULT_BOTS = {"record", "resume", "professor", "margin"}  # use win/loss; never see weeks past the regular season
+RESULT_BOTS = {"record", "resume", "professor", "margin", "sor", "sor_log"}  # use win/loss; never see weeks past the regular season
 
 
 def bot_ranks(cfg, m, through_week, extra=None, keys=None, points_through=None):

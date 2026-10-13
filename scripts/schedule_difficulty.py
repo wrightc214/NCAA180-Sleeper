@@ -23,15 +23,15 @@ import argparse
 import os
 import sys
 
-import numpy as np
 import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import poll_bots as pb  # noqa: E402
 import poll_common as pc  # noqa: E402
 
 OUT_SEASON = "data/ScheduleDifficulty_Season.csv"
 OUT_HISTORIC = "data/ScheduleDifficulty_Historic.csv"
-SOR_TOP = 25  # benchmark = top N teams by season all-play (ESPN uses an average top-25 team)
+SOR_TOP = pb.SOR_TOP  # benchmark = top N teams by season all-play; defined once in poll_bots
 COLS = ["Year", "ThroughWeek", "Rank", "Tied", "Team", "LeagueID", "LeagueName", "League", "RosterID",
         "AvgTeamW", "AvgTeamL", "AvgTeamT", "AvgOppPts", "AvgOppVsMedian", "ActualW", "ActualL", "ActualT",
         "SORRank", "SORTied", "SORProb", "SORAvgWinProb", "SORBenchmark"]
@@ -51,27 +51,13 @@ def season(year, last_regular):
     m["AL"] = (m["Median"] < m["OppPts"]).astype(int)
     m["AT"] = (m["Median"] == m["OppPts"]).astype(int)
     m["Diff"] = m["OppPts"] - m["Median"]
-    # Strength of Record: benchmark = top SOR_TOP teams by season all-play to date
-    m["AP"] = m.groupby("Week")["PointsFor"].transform(lambda p: (p.rank() - 1) / max(len(p) - 1, 1))
-    ap = m.groupby(["LeagueID", "RosterID"])["AP"].sum().sort_values(ascending=False)
-    top = set(ap.index[:SOR_TOP])
-    bench = {w: g["PointsFor"].to_numpy() for w, g in
-             m[[k in top for k in zip(m["LeagueID"], m["RosterID"])]].groupby("Week")}
-    m["P"] = [((bench[w] > o).sum() + 0.5 * (bench[w] == o).sum()) / len(bench[w]) for w, o in zip(m["Week"], m["OppPts"])]
     g = m.groupby(["LeagueID", "LeagueName", "RosterID"]).agg(
         AvgTeamW=("AW", "sum"), AvgTeamL=("AL", "sum"), AvgTeamT=("AT", "sum"),
         AvgOppPts=("OppPts", "mean"), AvgOppVsMedian=("Diff", "mean"),
         ActualW=("Outcome", lambda s: (s == "Win").sum()), ActualL=("Outcome", lambda s: (s == "Loss").sum()),
         ActualT=("Outcome", lambda s: (s == "Tie").sum())).reset_index()
-    sor = {}
-    for k, t in m.groupby(["LeagueID", "RosterID"]):
-        d = np.zeros(len(t) + 1)
-        d[0] = 1.0
-        for p in t["P"]:  # distribution of a benchmark team's wins vs this schedule
-            d[1:] = d[1:] * (1 - p) + d[:-1] * p
-            d[0] *= 1 - p
-        w = (t["Outcome"] == "Win").sum() + 0.5 * (t["Outcome"] == "Tie").sum()
-        sor[k] = (d[int(np.ceil(w - 1e-9)):].sum(), t["P"].mean())
+    st = pb.sor_table(pb.base(pc.matchups(year), last_regular, last_regular))  # same SOR as the poll bot
+    sor = {k: (r.Prob, r.AvgP) for k, r in zip(st.index, st.itertuples())}
     g["SORProb"] = [round(sor[k][0], 4) for k in zip(g["LeagueID"], g["RosterID"])]
     g["SORAvgWinProb"] = [round(sor[k][1], 3) for k in zip(g["LeagueID"], g["RosterID"])]
     g["SORBenchmark"] = f"top {SOR_TOP} by all-play"
