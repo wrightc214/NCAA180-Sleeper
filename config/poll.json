@@ -127,7 +127,7 @@
       "short": "BRKT",
       "voice": "Who you beat matters as much as how many.",
       "how": "60% win % + 40% the average season all-play of the opponents you played. Final poll: postseason games and their opponents are added.",
-      "_retired": "Replaced by Strength of Record (sor) from the week-6 poll, 2026-10-13 (backtest: claude/poll-backtest-sor-2026-10-13.md)."
+      "_retired": "Replaced by Strength of Record (sor) 2026-10-13; all history (2019-2026 wk 5) rebuilt with SOR the same day (backtest: claude/poll-backtest-sor-2026-10-13.md)."
     },
     {
       "id": "sor",
@@ -136,8 +136,7 @@
       "short": "SOR",
       "blurb": "Strength of Record: how hard your record would be for a top-25 team to match",
       "voice": "Anyone can win. Win where a contender would stumble.",
-      "how": "Benchmark = the top 25 teams by season all-play. Each game: the share of that week's benchmark scores that beat your opponent's score. Combined = the chance a benchmark team matches your record or better against your exact schedule; the lower, the better. Regular season only (frozen at week 11 for the Final poll).",
-      "since": "2026-6"
+      "how": "Benchmark = the top 25 teams by season all-play. Each game: the share of that week's benchmark scores that beat your opponent's score. Combined = the chance a benchmark team matches your record or better against your exact schedule; the lower, the better. Regular season only (frozen at week 11 for the Final poll)."
     },
     {
       "id": "ceiling",
