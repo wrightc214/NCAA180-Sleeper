@@ -36,7 +36,7 @@ import math
 import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from site_common import nav_html  # noqa: E402
+from site_common import nav_html, week_archive_html  # noqa: E402
 from poll_common import ranks_for_week  # noqa: E402
 from week_status import completed_weeks as finished_weeks  # noqa: E402
 
@@ -356,7 +356,7 @@ def render(d, weeks, colors, tpl, updated, lcolors, ranks=None):
         "WEEK": str(W), "PREVHDR": f"Wk {W - 1}" if W > 1 else "Wk",
         "MOVENOTE": (f"Movement is change in overall standings rank from Week {W - 1}. " if W > 1 else "")
         + "Luck is wins minus expected wins (share of all 179 other teams outscored each week). ",
-        "UPDATED": updated, "NAV": nav,
+        "UPDATED": updated, "NAV": nav, "ARCHIVE": week_archive_html(W, weeks),
         "AVG": f'{d["avg"]:.2f}', "MED": f'{d["median"]:.2f}',
         "UND": str(d["unbeaten"]), "WL": str(d["winless"]),
         "AW": "".join(cards), "AWCOLS": str(award_cols(len(cards))), "ROWS": rows, "TS": ts, "LG": lg, "PL": pl,

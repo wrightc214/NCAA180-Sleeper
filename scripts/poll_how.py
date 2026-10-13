@@ -119,7 +119,7 @@ def main():
 <header><div><div class="eyebrow">NCAA 180 poll</div><h1>How it <em>works</em></h1></div>
 <div class="kpis"><div class="kpi"><b>{len(bots)}</b><span>Computer bots</span></div></div></header>
 <section><h2>The poll</h2><ul class="rules">{''.join(f'<li>{r}</li>' for r in rules)}</ul>
-<p class="note"><a href="poll.html">Latest poll</a></p></section>
+<p class="note"><a href="poll.html">Latest poll</a> · <a href="poll-bots.html">Bot ballots</a></p></section>
 <section><h2>The bots</h2><div class="bots">{''.join(cards)}</div></section>
 </div></body></html>
 """

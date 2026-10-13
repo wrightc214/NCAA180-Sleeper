@@ -63,10 +63,12 @@ footer{font-size:12px;color:var(--mute)}
 .ls{margin-top:auto;padding-top:14px;height:98px;display:flex;align-items:flex-end;justify-content:center}
 .ls img{max-height:84px;max-width:100%;object-fit:contain}
 .weeks{display:flex;flex-wrap:wrap;gap:6px;font:600 13px var(--num)}.weeks a{color:var(--mute);text-decoration:none;padding:2px 8px;border:1px solid var(--line);border-radius:3px}.weeks a[aria-current]{color:var(--panel);background:var(--ink);border-color:var(--ink)}
+.weeks.sub{font-size:12px;margin-top:8px;align-items:center}.weeks.sub span{color:var(--mute);margin-right:2px}.weeks.sub a{padding:1px 7px}
 </style>
 </head><body>
 <div class="wrap">
-<nav class="weeks" aria-label="Weeks">{{NAV}}</nav>
+<nav class="weeks" aria-label="Pages">{{NAV}}</nav>
+{{ARCHIVE}}
 <header>
   <div><div class="eyebrow">15 conferences · 180 teams · 2026 regular season</div><h1>NCAA 180 <em>Week {{WEEK}}</em></h1></div>
   <div class="kpis">

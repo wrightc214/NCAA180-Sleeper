@@ -1,7 +1,8 @@
 """
 site_common.py -- pieces shared by every page under reports/ (imported, not run).
 
-nav_html(current)   the tab bar: one tab per built week, then Roster Map, Standings, and Poll
+nav_html(current)   the tab bar: Weekly Awards (latest week), Roster Map, Standings, Poll;
+                    week_archive_html(week) lists every week on the awards page
                     (once reports/poll.html exists).
                     `current` is an int week, "map", "standings", or "poll".
 page_head(title)    <head> with the same fonts + stylesheet as the weekly report
@@ -27,16 +28,28 @@ def built_weeks():
 
 
 def nav_html(current, weeks=None):
+    """Main tabs: Weekly Awards (latest week; older weeks via week_archive_html on that page),
+    Roster Map, Standings, Poll. Poll sub-pages (how it works, bot ballots) highlight Poll."""
     weeks = built_weeks() if weeks is None else weeks
     cur = ' aria-current="page"'
-    links = [f'<a href="week-{w:02d}.html"{cur if current == w else ""}>Wk {w}</a>' for w in weeks]
+    links = []
+    if weeks:
+        links.append(f'<a href="week-{max(weeks):02d}.html"{cur if isinstance(current, int) else ""}>Weekly Awards</a>')
     links.append(f'<a href="roster-map.html"{cur if current == "map" else ""}>Roster Map</a>')
     links.append(f'<a href="standings.html"{cur if current == "standings" else ""}>Standings</a>')
-    if current == "poll" or os.path.exists(os.path.join(OUT_DIR, "poll.html")):
-        links.append(f'<a href="poll.html"{cur if current == "poll" else ""}>Poll</a>')
-    if current == "poll-how" or os.path.exists(os.path.join(OUT_DIR, "poll-how.html")):
-        links.append(f'<a href="poll-how.html"{cur if current == "poll-how" else ""}>How it works</a>')
+    if current in ("poll", "poll-how", "poll-bots") or os.path.exists(os.path.join(OUT_DIR, "poll.html")):
+        links.append(f'<a href="poll.html"{cur if current in ("poll", "poll-how", "poll-bots") else ""}>Poll</a>')
     return "".join(links)
+
+
+def week_archive_html(current, weeks=None):
+    """Second row on the weekly awards page: every built week, current one highlighted."""
+    weeks = built_weeks() if weeks is None else weeks
+    if len(weeks) < 2:
+        return ""
+    cur = ' aria-current="page"'
+    links = "".join(f'<a href="week-{w:02d}.html"{cur if current == w else ""}>Wk {w}</a>' for w in weeks)
+    return f'<nav class="weeks sub" aria-label="Weekly archive"><span>Archive</span>{links}</nav>'
 
 
 def page_head(title, extra_css=""):

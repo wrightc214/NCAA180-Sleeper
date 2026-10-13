@@ -241,6 +241,7 @@ def page(cfg, poll, bots, archive, col, year, week, ptype, prev_ranked):
 <header><div><div class="eyebrow">{eyebrow}</div>
 <h1>NCAA 180 <em>{e(label)}</em></h1></div>
 <div class="kpis"><div class="kpi"><b>{nbots}</b><span>Computer bots</span></div>{kpi_h}</div></header>
+<nav class="weeks sub" aria-label="Poll pages"><a href="poll-how.html">How the poll works</a><a href="poll-bots.html">Bot ballots</a></nav>
 {poll_html}
 {games_html}
 {bot_grid(cfg, bots, poll, col, ptype)}
