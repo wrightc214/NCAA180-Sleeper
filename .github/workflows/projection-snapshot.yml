@@ -1,8 +1,10 @@
 name: Pregame projection snapshot
 
-# Captures every rostered player's projection + lineup status shortly before each NFL kickoff
-# window (past projections can't be fetched later). Times are UTC and chosen to land before
-# kickoff in both EDT and EST. The script skips quietly when no game kicks off within 8h.
+# Manual snapshot of every rostered player's projection + lineup status.
+# Game-day schedule retired 2026-10-13 (Chris): GitHub's scheduled runs were late or skipped,
+# and Sleeper's feed serves each player's kickoff-time projection after the games anyway.
+# The weekly run still takes the Tuesday baseline (upcoming week + weekly scoring check).
+# Real-time lineups for the live scoreboard will need their own fetch when that launches.
 on:
   workflow_dispatch:
     inputs:
@@ -14,15 +16,6 @@ on:
         description: 'Send the Discord alert if league scoring settings differ'
         type: boolean
         default: true
-  schedule:
-    - cron: '30 22 * * THU'          # before Thursday night
-    - cron: '0 16 * * SAT'           # late-season Saturday games
-    - cron: '30 19 * * SAT'
-    - cron: '30 12 * * SUN'          # before international morning games
-    - cron: '0 16 * * SUN'           # before 1pm ET games (best lineup read)
-    - cron: '30 19 * * SUN'          # before late afternoon games
-    - cron: '30 23 * * SUN'          # before Sunday night
-    - cron: '30 22 * * MON'          # before Monday night
 
 concurrency:
   group: projection-snapshot

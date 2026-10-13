@@ -173,7 +173,7 @@ jobs:
           python scripts/poll_png.py
           python scripts/poll_bot_cards.py
 
-      # Baseline pregame projection snapshot for the new week (game-day runs refresh it).
+      # Baseline pregame projection snapshot for the new week + weekly scoring check (game-day runs retired 2026-10-13).
       - name: Baseline projection snapshot
         if: always() && (github.event_name == 'schedule' || github.event.inputs.script_to_run == 'all')
         continue-on-error: true
