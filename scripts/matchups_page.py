@@ -172,21 +172,62 @@ def every_week_label(ta, tb, rec):
     return {"EveryWeekLeader": ta if w > l else tb, "EveryWeek": f"{max(w, l)}-{min(w, l)}{tail}"}
 
 
-def bar_colors(ta, tb, prim):
-    """Plain color blocks use Primary. If the two Primaries are too alike to tell apart, the
-    second team switches to its Secondary (then back to Primary if that is no better)."""
-    def rgb(h):
-        h = h.lstrip("#")
-        return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4)) if len(h) == 6 else (20, 33, 58)
+def _rgb(h):
+    h = str(h).lstrip("#")
+    return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4)) if len(h) == 6 else (20, 33, 58)
 
-    def dist(x, y):  # weighted RGB distance (rough perceptual)
-        (r1, g1, b1), (r2, g2, b2) = rgb(x), rgb(y)
-        rm = (r1 + r2) / 2
-        return ((2 + rm / 256) * (r1 - r2) ** 2 + 4 * (g1 - g2) ** 2 + (2 + (255 - rm) / 256) * (b1 - b2) ** 2) ** 0.5
-    a, b = prim.get(ta, ("#14213a", "#ffffff")), prim.get(tb, ("#14213a", "#ffffff"))
-    if dist(a[0], b[0]) >= BAR_MIN_DIST:
-        return a[0], b[0]
-    return a[0], (b[1] if dist(a[0], b[1]) > dist(a[0], b[0]) else b[0])
+
+def _dist(x, y):  # weighted RGB distance (rough perceptual)
+    (r1, g1, b1), (r2, g2, b2) = _rgb(x), _rgb(y)
+    rm = (r1 + r2) / 2
+    return ((2 + rm / 256) * (r1 - r2) ** 2 + 4 * (g1 - g2) ** 2 + (2 + (255 - rm) / 256) * (b1 - b2) ** 2) ** 0.5
+
+
+def _neutral(h, role=""):
+    import colorsys
+    r, g, b = (v / 255 for v in _rgb(h))
+    _, l, s_ = colorsys.rgb_to_hls(r, g, b)
+    return role == "Neutral" or s_ < 0.15 or l < 0.08 or l > 0.94
+
+
+def bar_colors(ta, tb, pal):
+    """Win-bar colors. Plain color blocks use Primary. If the two Primaries are too alike, the
+    second team moves down its own palette (Secondary, then accents), skipping neutrals; if none
+    works, the first team does the same; then any pair of the two palettes. Neutrals (white/
+    black/gray) only as a last resort: one team keeps its Primary, the other takes its most distinct color."""
+    A = pal.get(ta) or [("#14213a", "Primary")]
+    B = pal.get(tb) or [("#14213a", "Primary")]
+    pa, pb = A[0][0], B[0][0]
+    if _dist(pa, pb) >= BAR_MIN_DIST:
+        return pa, pb
+    for h, role in B[1:]:
+        if not _neutral(h, role) and _dist(pa, h) >= BAR_MIN_DIST:
+            return pa, h
+    for h, role in A[1:]:
+        if not _neutral(h, role) and _dist(h, pb) >= BAR_MIN_DIST:
+            return h, pb
+    pairs = [(x, y) for x, rx in A for y, ry in B if not _neutral(x, rx) and not _neutral(y, ry)]
+    good = [c for c in pairs if _dist(*c) >= BAR_MIN_DIST]
+    if good:
+        return good[0]
+    # last resort: keep one team's Primary, the other team's most distinct color (may be neutral)
+    return max([(pa, y) for y, _ in B[1:]] + [(x, pb) for x, _ in A[1:]] + [(pa, pb)], key=lambda c: _dist(*c))
+
+
+def palettes():
+    """{team: [(hex, role), ...]} in palette order, Primary first."""
+    out = {}
+    pf = "data/Colors - Palette.csv"
+    if os.path.exists(pf):
+        p = pd.read_csv(pf, dtype=str, encoding="utf-8-sig").fillna("")
+        p = p[p["Type"] == "Team"].assign(o=lambda d: pd.to_numeric(d["Order"], errors="coerce")).sort_values(["Name", "o"])
+        for n, g in p.groupby("Name"):
+            out[n] = [(h, r) for h, r in zip(g["Hex"], g["Role"]) if h]
+    tc = pd.read_csv("data/Colors - Teams.csv", dtype=str, encoding="utf-8-sig").fillna("")
+    for r in tc.itertuples():  # teams file is the authority for Primary/Secondary
+        rest = [x for x in out.get(r.Team, []) if x[0].upper() not in (r.Primary.upper(), r.Secondary.upper())]
+        out[r.Team] = [(r.Primary or "#14213a", "Primary")] + ([(r.Secondary, "Secondary")] if r.Secondary else []) + rest
+    return out
 
 
 def standings(season, wk):
@@ -222,8 +263,7 @@ ul.mu li.rvr{border-left:5px solid var(--gold,#c9a227)}
 
 def write_page(g, wk, stamp):
     col = colors()
-    tc = pd.read_csv("data/Colors - Teams.csv", dtype=str, encoding="utf-8-sig").fillna("")
-    prim = {r.Team: (r.Primary or "#14213a", r.Secondary or "#ffffff") for r in tc.itertuples()}
+    prim = palettes()
     g = g.fillna({"EveryWeekLeader": "", "EveryWeek": ""})
     rvr = g[(g["Rank"] != "") & (g["OppRank"] != "")]
     ranked = g[((g["Rank"] != "") | (g["OppRank"] != "")) & ~g.index.isin(rvr.index)]
