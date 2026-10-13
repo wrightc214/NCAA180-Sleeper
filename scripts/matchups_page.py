@@ -33,6 +33,7 @@ from site_common import nav_html, page_head  # noqa: E402
 
 OUT = "reports/matchups.html"
 OUT_CSV = "data/MatchupProjections_Current.csv"
+BAR_MIN_DIST = 120  # below this the two win-bar colors read as the same; switch one to Secondary
 SPREAD = 24.0  # per-team sd around the projection (points); re-fit from history each season
 LEAGUES = "data/LeagueIDs_AllYears.csv"
 DEFAULT_SLOTS = ["QB", "RB", "RB", "WR", "WR", "WR", "TE", "FLEX", "FLEX", "K", "DEF"]
@@ -129,7 +130,7 @@ def build():
                       "OpponentRosterID": b[1], "OppTeam": teams.get(b, ""), "OppRank": rk.get(b, ""), "OppRec": st.get(b, ""),
                       "OppProj": rows[b]["Best"], "OppCurLineup": rows[b]["Current"], "OppZeroStarters": rows[b]["ZeroStarters"],
                       "WinPct": round(p, 1), "Snapshot": stamp,
-                      "EveryWeek": "-".join(str(x) for x in every_week(ws.get(a, {}), ws.get(b, {}))).removesuffix("-0")})
+                      **every_week_label(teams.get(a, ""), teams.get(b, ""), every_week(ws.get(a, {}), ws.get(b, {})))})
     g = pd.DataFrame(games)
     g.to_csv(OUT_CSV, index=False)
     write_page(g, wk, stamp)
@@ -158,6 +159,34 @@ def every_week(a, b):
         else:
             t += 1
     return w, l, t
+
+
+def every_week_label(ta, tb, rec):
+    """Listed from the side of the team with more weekly wins; even records say 'split'."""
+    w, l, t = rec
+    if w + l + t == 0:
+        return {"EveryWeekLeader": "", "EveryWeek": ""}
+    tail = f"-{t}" if t else ""
+    if w == l:
+        return {"EveryWeekLeader": "", "EveryWeek": f"split {w}-{l}{tail}"}
+    return {"EveryWeekLeader": ta if w > l else tb, "EveryWeek": f"{max(w, l)}-{min(w, l)}{tail}"}
+
+
+def bar_colors(ta, tb, prim):
+    """Plain color blocks use Primary. If the two Primaries are too alike to tell apart, the
+    second team switches to its Secondary (then back to Primary if that is no better)."""
+    def rgb(h):
+        h = h.lstrip("#")
+        return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4)) if len(h) == 6 else (20, 33, 58)
+
+    def dist(x, y):  # weighted RGB distance (rough perceptual)
+        (r1, g1, b1), (r2, g2, b2) = rgb(x), rgb(y)
+        rm = (r1 + r2) / 2
+        return ((2 + rm / 256) * (r1 - r2) ** 2 + 4 * (g1 - g2) ** 2 + (2 + (255 - rm) / 256) * (b1 - b2) ** 2) ** 0.5
+    a, b = prim.get(ta, ("#14213a", "#ffffff")), prim.get(tb, ("#14213a", "#ffffff"))
+    if dist(a[0], b[0]) >= BAR_MIN_DIST:
+        return a[0], b[0]
+    return a[0], (b[1] if dist(a[0], b[1]) > dist(a[0], b[0]) else b[0])
 
 
 def standings(season, wk):
@@ -193,6 +222,9 @@ ul.mu li.rvr{border-left:5px solid var(--gold,#c9a227)}
 
 def write_page(g, wk, stamp):
     col = colors()
+    tc = pd.read_csv("data/Colors - Teams.csv", dtype=str, encoding="utf-8-sig").fillna("")
+    prim = {r.Team: (r.Primary or "#14213a", r.Secondary or "#ffffff") for r in tc.itertuples()}
+    g = g.fillna({"EveryWeekLeader": "", "EveryWeek": ""})
     rvr = g[(g["Rank"] != "") & (g["OppRank"] != "")]
     ranked = g[((g["Rank"] != "") | (g["OppRank"] != "")) & ~g.index.isin(rvr.index)]
     rest = g[~g.index.isin(rvr.index) & ~g.index.isin(ranked.index)]
@@ -204,15 +236,14 @@ def write_page(g, wk, stamp):
                 f'<small>{e(rec)} · {e(lg)}</small></div><span class="n">{projv:.1f}</span></div>')
 
     def item(r, cls=""):
-        ca = col.get(r.Team, ("#14213a", "#fff"))[0]
-        cb = col.get(r.OppTeam, ("#14213a", "#fff"))[0]
+        ca, cb = bar_colors(r.Team, r.OppTeam, prim)
         p = float(r.WinPct)
         return (f'<li class="{cls}" data-lg="{e(r.League)}">'
                 + side(r.Team, r.Rank, r.Rec, r.League, r.Proj, int(r.ZeroStarters), r.CurLineup)
                 + side(r.OppTeam, r.OppRank, r.OppRec, r.League, r.OppProj, int(r.OppZeroStarters), r.OppCurLineup)
                 + f'<div class="bar"><i style="width:{p:.1f}%;background:{ca}"></i><i style="width:{100 - p:.1f}%;background:{cb}"></i></div>'
                 + f'<div class="meta"><span>{e(r.Team)} {label(p)}</span><span>{e(r.OppTeam)} {label(100 - p)}</span></div>'
-                + (f'<div class="ew">If they\'d played every week: {e(r.Team)} {e(r.EveryWeek)}</div>' if r.EveryWeek not in ("", "0-0") else "")
+                + (f'<div class="ew">If they\'d played every week: {e(((r.EveryWeekLeader + " ") if r.EveryWeekLeader else ""))}{e(r.EveryWeek)}</div>' if r.EveryWeek else "")
                 + '</li>')
 
     def sec(title, d, note="", cls=""):
