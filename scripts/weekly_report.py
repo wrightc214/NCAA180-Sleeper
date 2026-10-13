@@ -53,7 +53,10 @@ LAST_REGULAR_WEEK = 11
 LEAGUE_COLORS = "data/Colors - Leagues.csv"
 N_LEAGUES = 15
 UPSET_FIRST_WEEK = 5  # earlier weeks have too few games for a meaningful pregame estimate
-SIM_MIN_GAMES = 3  # below this, a team's own std dev is replaced by the league-wide one
+# Pregame sim (Chris's Excel method, refined 2026-10-13 by backtest on 4,859 games 2021-2026):
+SIM_MEAN_SHRINK = 1  # each team's mean includes this many league-average games (pulls early hot/cold starts in)
+SIM_SD_SHRINK = 4    # each team's spread blends in this many games at the league-wide spread
+# Scores use Student-t odds (df = games of both teams - 2 + SIM_SD_SHRINK): fatter tails with fewer games.
 
 LEAGUE_DISPLAY = {
     "NCAA BIG EAST & CO.": "Big East", "NCAA SEC": "SEC", "NCAA PAC 12": "Pac 12",
@@ -111,28 +114,46 @@ def game(r):
             "Opp": r.OppTeam, "PA": round(r.PA, 2), "Margin": round(r.P - r.PA, 2)}
 
 
+def win_prob(a, b, league_mean, league_sd):
+    """Pregame P(A beats B) from each team's prior scores (Series of points). Chris's sim, refined:
+    mean = (n x own mean + SIM_MEAN_SHRINK x league mean) / (n + SIM_MEAN_SHRINK);
+    sd^2 = ((n-1) x own var + SIM_SD_SHRINK x league var) / (n - 1 + SIM_SD_SHRINK), widened by
+    (1 + 1/n) for the uncertainty in the mean itself; P = Student-t CDF of the mean gap over the
+    combined sd. Backtest (2021-2026 weeks 2-11): underdogs the old normal/own-sd model gave ~1%
+    actually won ~13%; this version's buckets land within a few points of what happened."""
+    from scipy.stats import t as student_t
+
+    def est(x):
+        n = len(x)
+        mu = (n * x.mean() + SIM_MEAN_SHRINK * league_mean) / (n + SIM_MEAN_SHRINK)
+        var = (max(n - 1, 0) * (x.var() if n > 1 else 0.0) + SIM_SD_SHRINK * league_sd ** 2) / (max(n - 1, 0) + SIM_SD_SHRINK)
+        return mu, var * (1 + 1 / n), n
+    (ma, va, na), (mb, vb, nb) = est(a), est(b)
+    return float(student_t.cdf((ma - mb) / math.sqrt(va + vb), max(na + nb - 2, 0) + SIM_SD_SHRINK))
+
+
+def pct_label(p):
+    """Win chance for display; never 0% or 100%."""
+    return "<1%" if p < 1 else (">99%" if p > 99 else f"{p:.0f}%")
+
+
 def upset(m, W):
-    """Biggest Upset: the winner with the lowest pregame win probability.
-    Pregame model (the commissioner's sim): each team's score ~ Normal(mean, sd) of its
-    regular-season scores BEFORE week W; P(A beats B) = Phi((muA - muB) / sqrt(sdA^2 + sdB^2)).
-    Teams with fewer than SIM_MIN_GAMES prior games use the league-wide sd. None for week 1."""
+    """Biggest Upset: the winner with the lowest pregame win probability (win_prob, from
+    regular-season scores BEFORE week W). None before UPSET_FIRST_WEEK."""
     if W < UPSET_FIRST_WEEK:
         return None
     prior = m[m["Week"].isin([w for w in finished_weeks(m["Year"].iloc[0]) if w < W])]
     if prior.empty:
         return None
-    pooled = prior["P"].std()
-    st = prior.groupby(["LeagueID", "RosterID"])["P"].agg(["mean", "std", "count"])
-    st["sd"] = st["std"].where(st["count"] >= SIM_MIN_GAMES, pooled)
+    lm, lsd = prior["P"].mean(), prior["P"].std()
+    by = {k: g["P"] for k, g in prior.groupby(["LeagueID", "RosterID"])}
     w = m[(m["Week"] == W) & (m["Outcome"] == "Win")]
     best = None
     for r in w.itertuples():
-        a = st.loc[(r.LeagueID, r.RosterID)] if (r.LeagueID, r.RosterID) in st.index else None
-        b = st.loc[(r.LeagueID, r.OpponentRosterID)] if (r.LeagueID, r.OpponentRosterID) in st.index else None
+        a, b = by.get((r.LeagueID, r.RosterID)), by.get((r.LeagueID, r.OpponentRosterID))
         if a is None or b is None:
             continue
-        z = (a["mean"] - b["mean"]) / math.sqrt(a["sd"] ** 2 + b["sd"] ** 2)
-        p = 0.5 * (1 + math.erf(z / math.sqrt(2)))
+        p = win_prob(a, b, lm, lsd)
         if best is None or p < best[0]:
             best = (p, r)
     if best is None:
@@ -280,7 +301,7 @@ def render(d, weeks, colors, tpl, updated, lcolors, ranks=None):
                           f'{c["P"]:.2f} of a possible {c["Max"]:.2f}; beat {e(c["Opp"])} by {c["Margin"]:.2f}'))
     if "upset" in a:
         u = a["upset"]
-        cards.append(card("Biggest upset", u, f'{u["WinPct"]:.0f}%', "pregame win chance",
+        cards.append(card("Biggest upset", u, pct_label(u["WinPct"]), "pregame win chance",
                           f'Beat {e(u["Opp"])} {u["P"]:.2f}–{u["PA"]:.2f}'))
     if "ybs" in a:
         y = a["ybs"]
