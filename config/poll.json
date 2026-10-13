@@ -48,7 +48,7 @@
         "PlayoffThird": 0.15
       },
       "final_four_rule": true,
-      "_note": "Same bots as the Top 25. Postseason games that needed a lineup (CCG, Playoff, Bowl, every NIT round) are extra games for Scoreboard (win %), Bracketologist (+ real opponents' regular-season all-play) and Monday Morning QB; Vegas, Bandwagon, Headliner, Bagman and Professor stay at week 11. NIT group = one game, result = share of rivals outscored. Bumps are added to Score per win (standard deviations): playoff by round R1..Final, CCG/Bowl flat, NIT x share. One regular-season win is worth about +0.13 (max +0.165), so every CCG/Bowl/playoff win counts more; NIT is a deliberate exception (weak field, up to 5 games). final_four_rule: a semifinal/final winner is raised directly above the team it beat (backstop; never fired 2024-2025). Decided 2026-10-07.",
+      "_note": "Same bots as the Top 25. Postseason games that needed a lineup (CCG, Playoff, Bowl, every NIT round) are extra games for Scoreboard (win %), Bracketologist (+ real opponents' regular-season all-play) and Monday Morning QB when enabled; all other bots stay at week 11. NIT group = one game, result = share of rivals outscored. Bumps are added to Score per win (standard deviations): playoff by round R1..Final, CCG/Bowl flat, NIT x share. One regular-season win is worth about +0.13 (max +0.165), so every CCG/Bowl/playoff win counts more; NIT is a deliberate exception (weak field, up to 5 games). final_four_rule: a semifinal/final winner is raised directly above the team it beat (backstop; never fired 2024-2025). Decided 2026-10-07.",
       "_bump_align": "'final': playoff bumps count back from the title game, so a shorter bracket (2019: 4 rounds) gives its title game the title bump. Group rounds (2020 playoff round 1) earn the round bump x share of group rivals outscored, like the NIT. PlayoffThird (2020 third-place game) counts as a game; the winner gets the bowl bump (Chris 2026-10-08)."
     }
   },
@@ -99,7 +99,7 @@
       "blurb": "Exactly the playoff rank: wins, then points for",
       "short": "SCB",
       "voice": "I only care about the standings.",
-      "how": "Wins (ties = half), then official total points as the tiebreaker - the league's real playoff rank. Regular season only."
+      "how": "Wins (ties = half), then official total points as the tiebreaker - the league's real playoff order. Final poll: postseason games are added as extra games."
     },
     {
       "id": "allplay",
@@ -108,7 +108,7 @@
       "blurb": "Expected wins vs. every other team, every week",
       "short": "VEG",
       "voice": "Strip out the schedule luck and tell me who is actually good.",
-      "how": "Each week, the share of all {teams} teams you outscored. Summed over the season; points for breaks ties."
+      "how": "Each week, the share of all {teams} teams you outscored (not just your opponent). Summed over the regular season; points for breaks ties."
     },
     {
       "id": "form",
@@ -117,16 +117,16 @@
       "blurb": "All-play over the last 3 weeks, weighted 3:2:1",
       "short": "BAND",
       "voice": "Whoever is hot right now.",
-      "how": "All-play share over the last 3 weeks, weighted 3:2:1 (most recent heaviest)."
+      "how": "All-play share for the last 3 weeks, weighted 3:2:1 (most recent heaviest); season all-play breaks ties."
     },
     {
       "id": "resume",
       "name": "Bracketologist",
       "enabled": true,
-      "blurb": "Win % plus opponents' all-play strength",
+      "blurb": "Win % plus how good your opponents are",
       "short": "BRKT",
       "voice": "Who you beat matters as much as how many.",
-      "how": "60% win % + 40% average all-play strength of the opponents you played. Weeks 1-11 only."
+      "how": "60% win % + 40% the average season all-play of the opponents you played. Final poll: postseason games and their opponents are added."
     },
     {
       "id": "ceiling",
@@ -135,7 +135,7 @@
       "blurb": "Best possible lineup per game",
       "short": "HEAD",
       "voice": "Star power: the most points this roster could have put up.",
-      "how": "Average points per week of your best possible lineup from your own roster."
+      "how": "Average weekly points of the best legal lineup from your own roster (what you could have scored)."
     },
     {
       "id": "margin",

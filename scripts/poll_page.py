@@ -197,7 +197,7 @@ def page(cfg, poll, bots, archive, col, year, week, ptype, prev_ranked):
         g = "".join(
             f'<li class="{"rvr" if str(r.RankedVsRanked) == "True" else ""}">{pill(r.Team, col, r.Rank)}'
             f'<span class="vs">VS</span>{pill(r.OppTeam, col, r.OppRank if str(r.OppRank) not in ("", "nan") else None)}'
-            f'<small>{e(str(r.LeagueName))}</small></li>' for r in games.itertuples())
+            f'<small>{e(str(r.League))}</small></li>' for r in games.itertuples())
         games_html = (f'<section><h2>Ranked games <small>Week {week + 1}</small></h2><ul class="games">{g}</ul>'
                       f'<p class="note">Gold bar: ranked vs. ranked.</p></section>')
     else:
@@ -207,7 +207,7 @@ def page(cfg, poll, bots, archive, col, year, week, ptype, prev_ranked):
         (f'<b>{e(a_label)} wk {w}</b>' if (t == ptype and w == week) else f'<a href="{fname(t, w)}">{e(a_label)} wk {w}</a>')
         for t, w, a_label in archive)
     kpi_h = f'<div class="kpi"><b>{human}</b><span>Panel ballots</span></div>' if human else ""
-    nm = {b["id"]: b["name"] for b in cfg["bots"]}
+    nm = {b["id"]: b["name"] for b in cfg["bots"] if b.get("enabled", True)}
     post_names = ", ".join(nm[i] for i in ("record", "resume", "efficiency") if i in nm)
     method = (f"Each of the {nbots} bots rates every team; ratings are put on one scale (standard deviations from the "
               "average team). For each team the best and worst bot are dropped (BCS style) and the rest averaged = Score. "

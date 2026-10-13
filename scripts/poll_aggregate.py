@@ -194,7 +194,7 @@ def ranked_games(cfg, year, week, poll_df):
     """Regular-season games in AppliesToWeek involving a ranked team (Sleeper pairings are
     fictional after the regular season, so nothing is written for postseason weeks)."""
     cols = ["Year", "Week", "LeagueID", "LeagueName", "RosterID", "Team", "Rank",
-            "OpponentRosterID", "OppTeam", "OppRank", "RankedVsRanked"]
+            "OpponentRosterID", "OppTeam", "OppRank", "RankedVsRanked", "League"]
     wk = week + 1
     if wk > int(cfg.get("last_regular_week", 11)):
         return pd.DataFrame(columns=cols)
@@ -202,6 +202,7 @@ def ranked_games(cfg, year, week, poll_df):
     m = m[m["Week"] == wk]
     rk = {(r.LeagueID, r.RosterID): (int(r.Rank), r.Team) for r in poll_df[poll_df["Status"] == "Ranked"].itertuples()}
     teams = {(r.LeagueID, r.RosterID): r.Team for r in pc.teams(year).itertuples()}
+    short = pc.league_short()
     rows, done = [], set()
     for r in m.itertuples():
         a, b = (r.LeagueID, r.RosterID), (r.LeagueID, r.OpponentRosterID)
@@ -213,7 +214,8 @@ def ranked_games(cfg, year, week, poll_df):
         rows.append({"Year": year, "Week": wk, "LeagueID": a[0], "LeagueName": r.LeagueName,
                      "RosterID": a[1], "Team": teams.get(a, ""), "Rank": rk[a][0],
                      "OpponentRosterID": b[1], "OppTeam": teams.get(b, ""),
-                     "OppRank": rk[b][0] if b in rk else "", "RankedVsRanked": b in rk})
+                     "OppRank": rk[b][0] if b in rk else "", "RankedVsRanked": b in rk,
+                     "League": short.get(str(r.LeagueName).strip().upper(), r.LeagueName)})
     return pd.DataFrame(rows, columns=cols).sort_values(["RankedVsRanked", "Rank"], ascending=[False, True])
 
 

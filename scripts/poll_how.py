@@ -18,7 +18,8 @@ e = html.escape
 CSS = """
 .bots{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
 .bot{border:1px solid var(--line,#ccc);border-radius:6px;padding:12px 14px}
-.bot h3{margin:0 0 2px;font-size:18px}.bot h3 small{color:var(--mute);font-weight:400;margin-left:6px}
+.bot h3{margin:0 0 2px;font-size:18px;display:flex;align-items:center;gap:10px}.bot h3 small{color:var(--mute);font-weight:400}
+.bot .ico{width:52px;height:52px;flex:none;border-radius:10px;background:#eef1f5;padding:5px;box-sizing:border-box;object-fit:contain}
 .bot .voice{font-style:italic;color:var(--mute);margin:0 0 8px}
 .bot p{margin:4px 0}
 table.w{border-collapse:collapse;margin:6px 0 10px;width:100%;min-width:0;table-layout:auto}
@@ -66,7 +67,7 @@ def main():
     year = max(pc.seasons())
     nteams = len(pc.teams(year))
     bots = [b for b in cfg["bots"] if b.get("enabled", True)]
-    nm = {b["id"]: b["name"] for b in cfg["bots"]}
+    nm = {b["id"]: b["name"] for b in bots}
     top = pc.poll_cfg(cfg, "Top25")
     size = int(top.get("size", 25))
     fin = cfg["polls"].get("Final", {})
@@ -76,10 +77,12 @@ def main():
     cards = []
     for b in bots:
         extra = professor_html(cfg.get("professor", {})) if b["id"] == "professor" else ""
-        cards.append(f"<div class='bot' id='{e(b['id'])}'><h3>{e(b['name'])}<small>{e(b.get('short', ''))}</small></h3>"
+        ico = f"assets/bots/{b['id']}.png"
+        img = f"<img class='ico' src='../{ico}' alt=''>" if os.path.exists(ico) else ""
+        cards.append(f"<div class='bot' id='{e(b['id'])}'><h3>{img}<span>{e(b['name'])} <small>{e(b.get('short', ''))}</small></span></h3>"
                      f"<p class='voice'>“{e(b.get('voice', ''))}”</p>"
                      f"<p><b>Measures:</b> {e(b.get('blurb', ''))}</p>"
-                     f"<p><b>Inputs:</b> {e(b.get('how', '').replace('{teams}', str(nteams)))}</p>{extra}</div>")
+                     f"<p><b>How:</b> {e(b.get('how', '').replace('{teams}', str(nteams)))}</p>{extra}</div>")
 
     post = ", ".join(nm[i] for i in ("record", "resume", "efficiency") if i in nm)
     frozen = ", ".join(b["name"] for b in bots if b["id"] not in ("record", "resume", "efficiency"))
