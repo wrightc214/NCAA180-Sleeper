@@ -37,6 +37,8 @@ def nav_html(current, weeks=None):
         links.append(f'<a href="week-{max(weeks):02d}.html"{cur if isinstance(current, int) else ""}>Weekly Awards</a>')
     links.append(f'<a href="roster-map.html"{cur if current == "map" else ""}>Roster Map</a>')
     links.append(f'<a href="standings.html"{cur if current == "standings" else ""}>Standings</a>')
+    if current == "matchups" or os.path.exists(os.path.join(OUT_DIR, "matchups.html")):
+        links.append(f'<a href="matchups.html"{cur if current == "matchups" else ""}>Matchups</a>')
     if current in ("poll", "poll-how", "poll-bots") or os.path.exists(os.path.join(OUT_DIR, "poll.html")):
         links.append(f'<a href="poll.html"{cur if current in ("poll", "poll-how", "poll-bots") else ""}>Poll</a>')
     return "".join(links)

@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       script_to_run:
-        description: 'Script to run (league_ids, rosters, users, rosterhistory, matchups, scores, max_points, weekly_awards, players, transactions, drafts, standings, orphans, lineup_streaks, player_values, draft_picks, weekly_report, roster_map, poll, poll_page, standings_page, conference_championships, playoff_field, bowls, nit, patch_orphans, all). Postseason scripts are manual only - not in all.'
+        description: 'Script to run (league_ids, rosters, users, rosterhistory, matchups, scores, max_points, weekly_awards, players, transactions, drafts, standings, orphans, lineup_streaks, player_values, draft_picks, weekly_report, roster_map, poll, poll_page, matchups_page, standings_page, conference_championships, playoff_field, bowls, nit, patch_orphans, all). Postseason scripts are manual only - not in all.'
         required: true
         default: 'all'
       post:
@@ -183,6 +183,12 @@ jobs:
           SCORING_ALERT: ${{ vars.SCORING_ALERT_ENABLED == 'true' && '1' || '0' }}
           DISCORD_WEBHOOK_LM_PRIVATE_DATA: ${{ secrets.DISCORD_WEBHOOK_LM_PRIVATE_DATA }}
         run: python scripts/projection_snapshot.py
+
+      # Matchups page for the upcoming week, from the baseline snapshot just taken.
+      - name: Matchups page
+        if: always() && (github.event_name == 'schedule' || github.event.inputs.script_to_run == 'all' || github.event.inputs.script_to_run == 'matchups_page')
+        continue-on-error: true
+        run: python scripts/matchups_page.py
 
       # Mark the Sleeper week done only after a clean full run, so a failed run retries.
       - name: Render orphan card
