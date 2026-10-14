@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       script_to_run:
-        description: 'Script to run (league_ids, rosters, users, rosterhistory, matchups, scores, max_points, weekly_awards, players, transactions, drafts, standings, orphans, lineup_streaks, player_values, draft_picks, weekly_report, roster_map, poll, poll_page, matchups_page, gametime_projections, standings_page, conference_championships, playoff_field, bowls, nit, patch_orphans, all). Postseason scripts are manual only - not in all.'
+        description: 'Script to run (league_ids, rosters, users, rosterhistory, matchups, scores, max_points, weekly_awards, players, transactions, drafts, standings, orphans, lineup_streaks, player_values, draft_picks, weekly_report, roster_map, poll, poll_page, matchups_page, gametime_projections, manager_lineups, standings_page, conference_championships, playoff_field, bowls, nit, patch_orphans, all). Postseason scripts are manual only - not in all.'
         required: true
         default: 'all'
       post:
@@ -87,6 +87,9 @@ jobs:
           run drafts                league_drafts.py         all
           run scores                score_details.py         all
           run max_points            max_points.py            all
+          # Game-time (kickoff) projections for completed weeks: awards + manager stats. Separate files;
+          # never touches the pregame baseline. Must run before weekly_report and manager_lineups.
+          run gametime_projections  gametime_projections.py  all
           run weekly_awards         weekly_awards.py         all
           run standings             standings.py             all
           run orphans               orphans.py               all
@@ -97,6 +100,7 @@ jobs:
           run poll                poll_aggregate.py        all
           run poll_page           poll_page.py             all
           run weekly_report         weekly_report.py         all
+          run manager_lineups       manager_lineups.py       all
           run standings_page        standings_page.py        all
 
           # One-time - delete after use
@@ -183,14 +187,6 @@ jobs:
           SCORING_ALERT: ${{ vars.SCORING_ALERT_ENABLED == 'true' && '1' || '0' }}
           DISCORD_WEBHOOK_LM_PRIVATE_DATA: ${{ secrets.DISCORD_WEBHOOK_LM_PRIVATE_DATA }}
         run: python scripts/projection_snapshot.py
-
-      # Game-time projections for every completed week not yet recorded (awards + manager stats).
-      # Separate files (data/projections/<season>/gametime/, TeamProjectionsGametime_Season.csv);
-      # never touches the pregame baseline.
-      - name: Game-time projections (completed weeks)
-        if: always() && (github.event_name == 'schedule' || github.event.inputs.script_to_run == 'all' || github.event.inputs.script_to_run == 'gametime_projections')
-        continue-on-error: true
-        run: python scripts/gametime_projections.py
 
       # Matchups page for the upcoming week, from the week's FIRST (baseline) snapshot; pregame odds
       # also appended once to MatchupProjections_Historic.csv (never rewritten).

@@ -62,6 +62,24 @@ def best_lineup(players, slots):
     return round(total, 2)
 
 
+def lineup_pick(values, positions, slots, worst=False):
+    """Indices of the players filling `slots`: the highest total (worst=False) or the lowest
+    (worst=True, the worst legal lineup). Same greedy order as best_lineup (most restrictive slot
+    first), optimal for nested slot types like these. A slot no eligible player can fill stays empty."""
+    order = sorted(range(len(values)), key=lambda i: values[i] if worst else -values[i])
+    used, picked = set(), []
+    for slot in sorted(slots, key=lambda s: len(ELIGIBLE.get(s, ()))):
+        ok = ELIGIBLE.get(slot)
+        if ok is None:
+            continue
+        for i in order:
+            if i not in used and positions[i] in ok:
+                used.add(i)
+                picked.append(i)
+                break
+    return picked
+
+
 def load_slots():
     slots = {}
     try:

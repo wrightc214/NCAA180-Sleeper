@@ -16,7 +16,10 @@ per position.
 Awards: High Score, Biggest Blowout, Closest Game, Bad Beat (highest score in a loss),
 Lucky Win (lowest score in a win), Low Score, You Beat Yourself (losers only whose best
 lineup beat the opponent's actual score; biggest MaxPoints - PointsFor; needs
-data/MaxPoints_Season.csv, skipped with a warning if missing).
+data/MaxPoints_Season.csv, skipped with a warning if missing), Exceeding Expectations (most
+points above the GAME-TIME projection of the lineup actually started, from
+data/TeamProjectionsGametime_Season.csv; orphans excluded; skipped for weeks not yet pulled).
+Within one week every team faces the same projection feed, so the raw margin ranks fairly.
 
 Logos: award cards use assets/logos/teams/<Team>.png when it exists, else the color bar.
 Lists always use color bars (logos are unreadable at that size).
@@ -43,6 +46,7 @@ from week_status import completed_weeks as finished_weeks  # noqa: E402
 MATCHUPS = "data/Matchups_Season.csv"
 SCORES = "data/Scores_Season.csv"
 MAXPTS = "data/MaxPoints_Season.csv"
+GAMETIME = "data/TeamProjectionsGametime_Season.csv"
 TEAMS = "data/Teams.csv"
 COLORS = "data/Colors - Teams.csv"
 PLAYERS = "data/Players.csv"
@@ -162,7 +166,7 @@ def upset(m, W):
     return {**game(r), "WinPct": round(p * 100, 1)}
 
 
-def week_data(m, sc, mx, pos_map, W):
+def week_data(m, sc, mx, pos_map, W, gp=None):
     w = m[m["Week"] == W].copy()
     d = {"week": W, "avg": round(w["P"].mean(), 2), "median": round(w["P"].median(), 2)}
 
@@ -216,6 +220,14 @@ def week_data(m, sc, mx, pos_map, W):
     up = upset(m, W)
     if up:
         aw["upset"] = up
+    if gp is not None:
+        x = w.merge(gp[gp["Week"] == W][["LeagueID", "RosterID", "ProjStarters"]],
+                    on=["LeagueID", "RosterID"], how="inner")
+        x = x[(x["OwnerID"] != "Orphan") & (x["ProjStarters"] > 0)].copy()
+        if not x.empty:
+            x["Over"] = x["P"] - x["ProjStarters"]
+            r = x.nlargest(1, "Over").iloc[0]
+            aw["exceed"] = {**game(r), "Proj": round(r.ProjStarters, 2), "Over": round(r.Over, 2)}
     d["awards"] = aw
 
     st = sc[(sc["wk"] == W) & sc["st"]].copy()
@@ -303,6 +315,10 @@ def render(d, weeks, colors, tpl, updated, lcolors, ranks=None):
         u = a["upset"]
         cards.append(card("Biggest upset", u, pct_label(u["WinPct"]), "pregame win chance",
                           f'Beat {e(u["Opp"])} {u["P"]:.2f}–{u["PA"]:.2f}'))
+    if "exceed" in a:
+        x = a["exceed"]
+        cards.append(card("Exceeding expectations", x, f'+{x["Over"]:.2f}', "pts over projection",
+                          f'Scored {x["P"]:.2f}, projected {x["Proj"]:.2f} at kickoff'))
     if "ybs" in a:
         y = a["ybs"]
         cards.append(card("You beat yourself", y, f'{y["Left"]:.2f}', "pts left",
@@ -387,6 +403,13 @@ def main():
         if pid not in pos_map and isinstance(p, str):
             pos_map[pid] = p
 
+    gp = None
+    if os.path.exists(GAMETIME):
+        gp = pd.read_csv(GAMETIME, dtype={"LeagueID": str, "RosterID": str})
+        gp = gp[gp["Year"].astype(str) == str(m["Year"].iloc[0])]
+        gp["Week"] = gp["Week"].astype(int)
+    else:
+        print(f"WARNING: {GAMETIME} missing; 'Exceeding Expectations' award skipped")
     mx = None
     if os.path.exists(MAXPTS):
         mx = pd.read_csv(MAXPTS, dtype=str)
@@ -412,7 +435,7 @@ def main():
     for W in weeks:
         if only and W != only:
             continue
-        d = week_data(m, sc, mx, pos_map, W)
+        d = week_data(m, sc, mx, pos_map, W, gp)
         page = render(d, weeks, colors, tpl, updated, lcolors, ranks_for_week(m["Year"].iloc[0], W))
         with open(os.path.join(OUT_DIR, f"week-{W:02d}.html"), "w", encoding="utf-8") as f:
             f.write(page)
