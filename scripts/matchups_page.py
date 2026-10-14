@@ -2,8 +2,14 @@
 matchups_page.py -- reports/matchups.html: the upcoming week's games with projected scores and
 pregame win chance, plus data/MatchupProjections_Current.csv.
 
+PREGAME = the week's Tuesday BASELINE snapshot (the FIRST snapshot file for that week). A later
+manual snapshot never changes the posted odds (Chris, 2026-10-14). Each week's rows are also
+appended ONCE to data/MatchupProjections_Historic.csv, which is never rewritten; that file is
+the record of pregame expectations for predictive measures. Game-time projections for awards and
+manager stats live separately (gametime_projections.py).
+
 Projected score = each roster's BEST projected lineup: every rostered player's Sleeper projection
-(latest snapshot in data/projections/<season>/ for that week, scored with that league's own
+(baseline snapshot in data/projections/<season>/ for that week, scored with that league's own
 scoring_settings), placed into the league's lineup slots with max_points.best_lineup. It ignores
 who is actually in the lineup, so it is the roster's ceiling-by-projection, not the manager's call.
 
@@ -14,6 +20,9 @@ same floor as the weekly report: never 0% or 100%.
 
 Also flags each team's CURRENT Sleeper lineup: starters projected 0 (empty slot, bye, out).
 Regular season only (postseason Sleeper pairings are fictional). CWD must be repo root.
+
+  python scripts/matchups_page.py              upcoming week: page + _Current + _Historic
+  python scripts/matchups_page.py --week 5     past week: _Historic only (Rank left blank)
 """
 import glob
 import html
@@ -33,6 +42,7 @@ from site_common import nav_html, page_head  # noqa: E402
 
 OUT = "reports/matchups.html"
 OUT_CSV = "data/MatchupProjections_Current.csv"
+OUT_HIST = "data/MatchupProjections_Historic.csv"
 BAR_MIN_DIST = 120  # below this the two win-bar colors read as the same; switch one to Secondary
 SPREAD = 24.0  # per-team sd around the projection (points); re-fit from history each season
 LEAGUES = "data/LeagueIDs_AllYears.csv"
@@ -40,13 +50,37 @@ DEFAULT_SLOTS = ["QB", "RB", "RB", "WR", "WR", "WR", "TE", "FLEX", "FLEX", "K", 
 e = html.escape
 
 
-def latest_snapshot(season):
+def baseline_snapshot(season, wk=None):
+    """(week, proj file, lineups file) for the week's FIRST snapshot (the Tuesday baseline).
+    wk=None -> the newest week that has any snapshot. Timestamped names sort chronologically."""
     files = sorted(glob.glob(f"data/projections/{season}/wk*_proj.csv"))
     if not files:
         return None
-    wk = max(int(re.search(r"wk(\d+)_", f).group(1)) for f in files)
-    proj = sorted(f for f in files if f"/wk{wk:02d}_" in f)[-1]
+    if wk is None:
+        wk = max(int(re.search(r"wk(\d+)_", os.path.basename(f)).group(1)) for f in files)
+    week_files = sorted(f for f in files if os.path.basename(f).startswith(f"wk{wk:02d}_"))
+    if not week_files:
+        return None
+    proj = week_files[0]
     return wk, proj, proj.replace("_proj.csv", "_lineups.csv")
+
+
+def append_historic(g):
+    """Append this week's rows to the historic file unless that (Year, Week) is already there.
+    Never rewrites existing rows: the first pregame odds recorded for a week are final."""
+    if g.empty:
+        return False
+    yr, wk = int(g["Year"].iloc[0]), int(g["Week"].iloc[0])
+    if os.path.exists(OUT_HIST):
+        h = pd.read_csv(OUT_HIST, dtype=str)
+        if ((h["Year"].astype(int) == yr) & (h["Week"].astype(int) == wk)).any():
+            print(f"{OUT_HIST}: {yr} week {wk} already recorded; left unchanged")
+            return False
+        g.to_csv(OUT_HIST, mode="a", header=False, index=False, columns=list(h.columns))
+    else:
+        g.to_csv(OUT_HIST, index=False)
+    print(f"{OUT_HIST}: appended {yr} week {wk} ({len(g)} games)")
+    return True
 
 
 def slots_by_league(season):
@@ -73,11 +107,12 @@ def label(p):
     return "<1%" if p < 1 else (">99%" if p > 99 else f"{p:.0f}%")
 
 
-def build():
+def build(week=None):
+    """week=None: upcoming week (page + _Current + _Historic). week=N: past week, _Historic only."""
     season = max(pc.seasons())
-    snap = latest_snapshot(season)
+    snap = baseline_snapshot(season, week)
     if snap is None:
-        print("No projection snapshot; nothing to build.")
+        print(f"No projection snapshot{f' for week {week}' if week else ''}; nothing to build.")
         return False
     wk, proj_f, line_f = snap
     if wk > int(pc.config().get("last_regular_week", 11)):
@@ -85,6 +120,11 @@ def build():
         return False
     proj = pd.read_csv(proj_f, dtype={"PlayerID": str})
     stamp = str(proj["SnapshotUTC"].iloc[0]) if "SnapshotUTC" in proj.columns else ""
+    started = proj["GameState"].isin(["in", "post"]).sum() if "GameState" in proj.columns else 0
+    if started:  # not pregame (e.g. 2026 wk4's only snapshot was Sunday night): never record it
+        print(f"Week {wk} snapshot {stamp} has {started} players whose games had started; not a pregame "
+              f"baseline, nothing written.")
+        return False
     stats = {r.PlayerID: json.loads(r.Stats) if isinstance(r.Stats, str) and r.Stats else {} for r in proj.itertuples()}
     pos = {r.PlayerID: POS_ALIAS.get(str(r.Position), str(r.Position)) for r in proj.itertuples()}
     scoring = json.load(open(f"data/projections/{season}/scoring.json"))
@@ -107,7 +147,7 @@ def build():
                                           "League": short.get(r.LeagueName.strip().upper(), r.LeagueName)}
 
     rk = {}
-    if os.path.exists(pc.RANKS_CURRENT):
+    if week is None and os.path.exists(pc.RANKS_CURRENT):  # current poll only fits the upcoming week
         rr = pd.read_csv(pc.RANKS_CURRENT, dtype=str)
         rk = {(r.LeagueID, r.RosterID): int(r.Rank) for r in rr.itertuples()}
     st = standings(season, wk)
@@ -132,6 +172,9 @@ def build():
                       "WinPct": round(p, 1), "Snapshot": stamp,
                       **every_week_label(teams.get(a, ""), teams.get(b, ""), every_week(ws.get(a, {}), ws.get(b, {})))})
     g = pd.DataFrame(games)
+    append_historic(g)
+    if week is not None:
+        return True
     g.to_csv(OUT_CSV, index=False)
     write_page(g, wk, stamp)
     print(f"Wrote {OUT} and {OUT_CSV}: week {wk}, {len(g)} games (snapshot {stamp})")
@@ -339,4 +382,7 @@ document.getElementById('lg').addEventListener('change', function () {{
 
 
 if __name__ == "__main__":
-    build()
+    if "--week" in sys.argv:
+        build(int(sys.argv[sys.argv.index("--week") + 1]))
+    else:
+        build()

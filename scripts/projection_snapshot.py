@@ -1,7 +1,10 @@
 """
 projection_snapshot.py -- capture PREGAME expectations before kickoffs (raw data for the
-Exceeding Expectations award, pregame projections, and later analysis). Past projections
-cannot be fetched after the fact, so this runs on a schedule around kickoff windows.
+Exceeding Expectations award, pregame projections, and later analysis). The weekly Tuesday run
+takes the BASELINE for the upcoming week: the pregame expectation used for predictive measures
+(matchups_page.py uses the week's FIRST snapshot, so a later manual run never changes it).
+Game-day scheduled runs were retired 2026-10-13; kickoff-time projections for completed weeks
+come from gametime_projections.py instead (separate files).
 
 Each run writes two NEW files (never rewritten, so git growth stays small):
   data/projections/<season>/wk<WW>_<stamp>Z_lineups.csv  one row per roster (180):
