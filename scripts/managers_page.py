@@ -203,7 +203,9 @@ def build():
     s["Legend"], s["Finish"] = pts, fin
     s = pd.concat([s, pd.DataFrame(flags)], axis=1)
     s["Team"] = [tn.season_name(y, l, r) or "" for y, l, r in zip(s.Year, s.LeagueName, s.RosterID)]
-    s["League"] = s["LeagueName"].str.replace("NCAA ", "", regex=False).str.title().str.replace("& Co.", "& Co.")
+    import poll_common as pc
+    short = pc.league_short()
+    s["League"] = [short.get(n.upper(), n) for n in s["LeagueName"]]
 
     ls = pd.read_csv(LINEUP_SEASON, dtype={"OwnerID": str}) if os.path.exists(LINEUP_SEASON) else pd.DataFrame()
     if len(ls):
