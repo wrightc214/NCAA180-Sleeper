@@ -258,7 +258,8 @@ td,th{white-space:nowrap}
 #t tbody tr.m{cursor:pointer}
 #t tbody tr.m:hover{background:var(--line)}
 #t tbody tr.m td:first-child{color:inherit;font-weight:inherit}
-#t td.mg b{display:block}
+#t td.mg b{display:inline}
+#t td.mg .tr{font-size:13px;margin-left:3px;letter-spacing:1px;cursor:help}
 .pt{display:inline-block;padding:2px 8px;border-radius:3px;font-weight:700;font-size:12px;line-height:1.3}
 tr.x td{background:var(--panel);white-space:normal;padding:6px 10px 12px}
 table.sx{width:100%;border-collapse:collapse;font-size:13px}
@@ -277,11 +278,19 @@ def write_page(mg, seasons, year):
         return f'<span class="pt" style="background:{bg};color:{fg}">{e(name)}</span>'
 
     lines = defaultdict(list)
+    title_years = seasons[seasons["Title"] == 1].groupby("OwnerID")["Year"].apply(lambda y: sorted(int(v) for v in y)).to_dict()
+
+    def trophies(oid):
+        yrs = title_years.get(oid, [])
+        if not yrs:
+            return ""
+        label = "National champion " + ", ".join(str(y) for y in yrs)
+        return f' <span class="tr" title="{label}" aria-label="{label}">{"🏆" * len(yrs)}</span>'
     for r in seasons.sort_values("Year", ascending=False).itertuples():
         rec = f"{r.Wn}-{r.L}" + (f"-{r.T}" if r.T else "")
         ls = "" if pd.isna(r.LineupSkill) else f"{r.LineupSkill:.3f}"
         lines[r.OwnerID].append([int(r.Year), pill(r.Team) if r.Team else "", e(r.League), rec,
-                                 f"{r.Legend:g}", e(r.Finish) + (" (in progress)" if r.Year == year else ""), ls])
+                                 f"{r.Legend:g}", ("🏆 " if r.Title else "") + e(r.Finish) + (" (in progress)" if r.Year == year else ""), ls])
 
     def fmt(v, d, pct=False):
         if v is None or pd.isna(v):
@@ -293,7 +302,7 @@ def write_page(mg, seasons, year):
     # (header, numeric?, sort direction on first click, value(row) -> (display, sort key))
     cols = [
         ("#", True, -1, None),
-        ("Manager", False, 1, lambda r: (f"<b>{e(r.Manager)}</b>", r.Manager.lower())),
+        ("Manager", False, 1, lambda r: (f"<b>{e(r.Manager)}</b>{trophies(r.OwnerID)}", r.Manager.lower())),
         ("Legend", True, -1, lambda r: (f"{r.Legend:g}", float(r.Legend))),
         ("Current team", False, 1, lambda r: (pill(r.Team) if r.Team else "", (r.Team or "").lower())),
         ("Seasons", True, -1, lambda r: (str(int(r.Seasons)), int(r.Seasons))),
