@@ -19,6 +19,10 @@ for c in ("OfficialScoreA", "OfficialScoreB"):
         p[c] = ""
 fmt = lambda v: repr(round(v, 2)).rstrip("0").rstrip(".")
 changed, odd, flips = 0, [], []
+no_week = p[(p["Week"] == "") & (p["ScoreA"] != "")]
+if len(no_week):  # such rows keep hand-entered scores; every postseason score must come from Sleeper
+    print(f"WARNING: {len(no_week)} postseason rows have no Week, so their scores were NOT taken from Sleeper:")
+    print(no_week[["Season", "Event", "RoundName", "TeamA", "TeamB"]].head(20).to_string(index=False))
 for i, r in p.iterrows():
     if not r.Week or not r.ScoreA:
         continue

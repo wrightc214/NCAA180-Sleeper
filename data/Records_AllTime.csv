@@ -1,8 +1,8 @@
 Category,Rank,Value,Year,Team,Owner,League,Detail,Dagger,Live,Section,List
-Champion,2025,168.00–112.00,2025,Arizona State,wrightc214,PAC 12,Runner-up Montana (LanceBoneau),False,False,Champions,National champions
-Champion,2024,199.00–141.00,2024,Washington State,chzhead412,PAC 12,Runner-up Minnesota (linkoftime1),False,False,Champions,National champions
+Champion,2025,168.32–112.08,2025,Arizona State,wrightc214,PAC 12,Runner-up Montana (LanceBoneau),False,False,Champions,National champions
+Champion,2024,199.20–141.48,2024,Washington State,chzhead412,PAC 12,Runner-up Minnesota (linkoftime1),False,False,Champions,National champions
 Champion,2023,169.46–143.92,2023,LSU,TheLegoBatman,SEC,Runner-up Utah (seniormeow),False,False,Champions,National champions
-Champion,2022,193.10–177.80,2022,Charleston Southern,leathershoe4,Ohio Valley,Runner-up Clemson (dilbennett),False,False,Champions,National champions
+Champion,2022,193.08–175.78,2022,Charleston Southern,leathershoe4,Ohio Valley,Runner-up Clemson (dilbennett),False,False,Champions,National champions
 Champion,2021,174.36–174.30,2021,Youngstown State,mssullivan2022,Big Sky,Runner-up Oklahoma (rchau56),False,False,Champions,National champions
 Champion,2020,194.42–112.20,2020,Campbell,CrownMeKing,Pioneer,Runner-up Virginia Tech (landonh12),False,False,Champions,National champions
 Champion,2019,197.68–152.86,2019,Army,Claser,Big East,Runner-up Maryland (UrTrash),False,False,Champions,National champions
@@ -27,7 +27,7 @@ Highest score,4,240.06,2020,Harvard,Matthew12,Ivy,Beat Lehigh 240.06–169.02 ·
 Highest score,5,239.34,2023,Florida Atlantic,Botro,CUSA,Beat Arkansas State 239.34–101.28 · Week 4,False,False,Single game,Highest score
 Highest score,6,238.50,2021,Iowa,SpinachAssasin,Big 10,Beat Minnesota 238.50–94.88 · Week 2,False,False,Single game,Highest score
 Highest score,7,238.40,2026,Georgetown,ccassidy,Ivy,Beat Yale 238.40–116.48 · Week 4,False,True,Single game,Highest score
-Highest score,8,238.30,2024,Washington State,chzhead412,PAC 12,Beat UCLA 238.30–149.00 · Final Four,False,False,Single game,Highest score
+Highest score,8,238.34,2024,Washington State,chzhead412,PAC 12,Beat UCLA 238.34–148.98 · Final Four,False,False,Single game,Highest score
 Highest score,9,238.14,2023,Old Dominion,olddominion2020,Wild,Beat James Madison 238.14–132.48 · Week 5,False,False,Single game,Highest score
 Highest score,10,237.00,2022,Clemson,dilbennett,ACC,Beat Virginia 237.00–106.48 · Week 8,False,False,Single game,Highest score
 Lowest score,1,9.80,2024,Dayton,Ortizz,Pioneer,Lost to SE Missouri State 9.80–142.54 · Week 11,False,False,Single game,Lowest score (regular season)
@@ -60,16 +60,16 @@ Closest games,7,0.06,2021,Youngstown State,mssullivan2022,Big Sky,Beat Oklahoma 
 Closest games,8,0.06,2025,Mississippi Valley State,StrikerS091,HBCU,Beat Grambling State 127.52–127.46 · Week 5,False,False,Single game,Closest games
 Closest games,9,0.08,2026,Eastern Washington,Elestial,Big Sky,Beat Montana State 141.62–141.54 · Week 5,False,True,Single game,Closest games
 Closest games,10,0.08,2024,Yale,TheBear1973,Ivy,Beat Princeton 138.56–138.48 · Week 9,False,False,Single game,Closest games
-Highest losing score,1,209.60,2024,Old Dominion,olddominion2020,Big 10,Lost to Minnesota 209.60–219.20 · Sweet 16,False,False,Single game,Highest losing score
+Highest losing score,1,209.56,2024,Old Dominion,olddominion2020,Big 10,Lost to Minnesota 209.56–219.18 · Sweet 16,False,False,Single game,Highest losing score
 Highest losing score,2,207.52,2023,Richmond,fballfreek80,Big Sky,Lost to Villanova 207.52–214.74 · Week 2,False,False,Single game,Highest losing score
-Highest losing score,3,205.30,2024,Syracuse,CodeKhaos,Big 10,Lost to Minnesota 205.30–219.10 · Elite 8,False,False,Single game,Highest losing score
+Highest losing score,3,205.30,2024,Syracuse,CodeKhaos,Big 10,Lost to Minnesota 205.30–219.08 · Elite 8,False,False,Single game,Highest losing score
 Highest losing score,4,193.20,2020,Vanderbilt,gregorybly,SEC,Lost to Ole Miss 193.20–195.78 · SEC CCG,False,False,Single game,Highest losing score
 Highest losing score,5,187.64,2023,UTEP,CRicks3,Sun Belt,Lost to Temple 187.64–188.90 · Week 4,False,False,Single game,Highest losing score
 Highest losing score,6,187.26,2023,Indiana,eseromo760,Big 10,Lost to Minnesota 187.26–204.06 · Big 10 CCG,False,False,Single game,Highest losing score
 Highest losing score,7,186.80,2021,Tulane,Prestongee17,Sun Belt,Lost to Memphis 186.80–187.46 · Week 6,False,False,Single game,Highest losing score
-Highest losing score,8,185.60,2021,Penn State,jreilly,Pioneer,Lost to Davidson 185.60–187.06 · First Round,False,False,Single game,Highest losing score
-Highest losing score,9,185.60,2025,Old Dominion,olddominion2020,PAC 12,Lost to Arizona State 185.60–193.70 · Elite 8,False,False,Single game,Highest losing score
-Highest losing score,10,184.70,2022,Memphis,yoboihawks,ACC,Lost to Clemson 184.70–201.20 · Final Four,False,False,Single game,Highest losing score
+Highest losing score,8,185.62,2025,Old Dominion,olddominion2020,PAC 12,Lost to Arizona State 185.62–193.70 · Elite 8,False,False,Single game,Highest losing score
+Highest losing score,9,185.60,2021,Penn State,jreilly,Pioneer,Lost to Davidson 185.60–187.06 · First Round,False,False,Single game,Highest losing score
+Highest losing score,10,184.66,2022,Memphis,yoboihawks,ACC,Lost to Clemson 184.66–201.18 · Final Four,False,False,Single game,Highest losing score
 Lowest winning score,1,44.48,2025,Rice,lucchityler,Sun Belt,Beat UAB 44.48–43.76 · Week 6,False,False,Single game,Lowest winning score
 Lowest winning score,2,48.00,2025,Northern Iowa,thejockytype,Big Sky,Beat Weber State 48.00–47.32 · Week 11,False,False,Single game,Lowest winning score
 Lowest winning score,3,56.60,2022,Alabama,devbovino,SEC,Beat South Carolina 56.60–48.10 · Week 11,False,False,Single game,Lowest winning score
@@ -80,8 +80,8 @@ Lowest winning score,7,62.28,2024,San Jose State,lumosityfan,Wild,Beat UNC Charl
 Lowest winning score,8,63.22,2022,Michigan State,SausageKing27,Big 10,Beat Northwestern 63.22–45.96 · Week 9,False,False,Single game,Lowest winning score
 Lowest winning score,9,67.12,2021,Wichita State,FareedB,Wild,Beat Eastern Michigan 67.12–62.64 · Week 7,False,False,Single game,Lowest winning score
 Lowest winning score,10,67.70,2023,UNC Charlotte,DBGiants,Wild,Beat San Jose State 67.70–62.74 · Week 10,False,False,Single game,Lowest winning score
-Highest combined score,1,428.80,2024,Minnesota,linkoftime1,Big 10,Beat Old Dominion 219.20–209.60 · Sweet 16,False,False,Single game,Highest combined score
-Highest combined score,2,424.40,2024,Minnesota,linkoftime1,Big 10,Beat Syracuse 219.10–205.30 · Elite 8,False,False,Single game,Highest combined score
+Highest combined score,1,428.74,2024,Minnesota,linkoftime1,Big 10,Beat Old Dominion 219.18–209.56 · Sweet 16,False,False,Single game,Highest combined score
+Highest combined score,2,424.38,2024,Minnesota,linkoftime1,Big 10,Beat Syracuse 219.08–205.30 · Elite 8,False,False,Single game,Highest combined score
 Highest combined score,3,422.26,2023,Villanova,PapaCrowther,Big Sky,Beat Richmond 214.74–207.52 · Week 2,False,False,Single game,Highest combined score
 Highest combined score,4,409.08,2020,Harvard,Matthew12,Ivy,Beat Lehigh 240.06–169.02 · Third Place,False,False,Single game,Highest combined score
 Highest combined score,5,399.74,2021,Texas A&M,deadheadshane,Big 12,Beat West Virginia 236.88–162.86 · Week 5,False,False,Single game,Highest combined score
@@ -107,16 +107,16 @@ Most wins in a season,10,14-3,2024,Washington State,chzhead412,PAC 12,Regular se
 Highest score eliminated,1,185.60,2021,Penn State,jreilly,Big 10,First Round,False,False,Playoffs,Highest score eliminated · First round / group stage
 Highest score eliminated,2,178.92,2021,Clemson,dilbennett,ACC,First Round,False,False,Playoffs,Highest score eliminated · First round / group stage
 Highest score eliminated,3,177.60,2020,Ole Miss,ryankenn,SEC,Group Stage,False,False,Playoffs,Highest score eliminated · First round / group stage
-Highest score eliminated,1,209.60,2024,Old Dominion,olddominion2020,Wild,Sweet 16,False,False,Playoffs,Highest score eliminated · Sweet 16
+Highest score eliminated,1,209.56,2024,Old Dominion,olddominion2020,Wild,Sweet 16,False,False,Playoffs,Highest score eliminated · Sweet 16
 Highest score eliminated,2,173.18,2021,Virginia Tech,landonh12,ACC,Sweet 16,False,False,Playoffs,Highest score eliminated · Sweet 16
-Highest score eliminated,3,169.90,2024,Temple,Piglet10,Sun Belt,Sweet 16,False,False,Playoffs,Highest score eliminated · Sweet 16
+Highest score eliminated,3,169.86,2024,Temple,Piglet10,Sun Belt,Sweet 16,False,False,Playoffs,Highest score eliminated · Sweet 16
 Highest score eliminated,1,205.30,2024,Syracuse,CodeKhaos,Big East,Elite 8,False,False,Playoffs,Highest score eliminated · Elite 8
-Highest score eliminated,2,185.60,2025,Old Dominion,olddominion2020,Wild,Elite 8,False,False,Playoffs,Highest score eliminated · Elite 8
+Highest score eliminated,2,185.62,2025,Old Dominion,olddominion2020,Wild,Elite 8,False,False,Playoffs,Highest score eliminated · Elite 8
 Highest score eliminated,3,178.60,2020,Hampton,dakistrash,HBCU,Elite 8,False,False,Playoffs,Highest score eliminated · Elite 8
-Highest score eliminated,1,184.70,2022,Memphis,yoboihawks,Sun Belt,Final Four,False,False,Playoffs,Highest score eliminated · Final Four
-Highest score eliminated,2,173.60,2024,Montana State,Elwayluva7,Big Sky,Final Four,False,False,Playoffs,Highest score eliminated · Final Four
+Highest score eliminated,1,184.66,2022,Memphis,yoboihawks,Sun Belt,Final Four,False,False,Playoffs,Highest score eliminated · Final Four
+Highest score eliminated,2,173.58,2024,Montana State,Elwayluva7,Big Sky,Final Four,False,False,Playoffs,Highest score eliminated · Final Four
 Highest score eliminated,3,169.62,2019,Kentucky,Jasonkuz,SEC,Final Four,False,False,Playoffs,Highest score eliminated · Final Four
-Highest score eliminated,1,177.80,2022,Clemson,dilbennett,ACC,National Championship,False,False,Playoffs,Highest score eliminated · Title game
+Highest score eliminated,1,175.78,2022,Clemson,dilbennett,ACC,National Championship,False,False,Playoffs,Highest score eliminated · Title game
 Highest score eliminated,2,174.30,2021,Oklahoma,rchau56,Big 12,National Championship,False,False,Playoffs,Highest score eliminated · Title game
 Highest score eliminated,3,152.86,2019,Maryland,UrTrash,Big East,National Championship,False,False,Playoffs,Highest score eliminated · Title game
 Cinderella,1,#32 seed,2023,Indiana,eseromo760,Big 10,Reached the Elite 8,False,False,Playoffs,Cinderella · Reached the Elite 8
