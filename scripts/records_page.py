@@ -352,12 +352,15 @@ def build():
             top_v = tot["V"].iloc[0]
             near = tot[tot["V"] == top_v]
             u = key if not (key == "titles" and top_v == 1) else "title"
+            hover = ""
             if len(near) > 3:
                 who = f"{len(near)} managers with {top_v:g} {u}"
+                hover = "|".join(f"{latest_name.get(o, o)} ({t})" for o, t in
+                                 sorted(zip(near.index, near["Team"]), key=lambda x: str(latest_name.get(x[0], x[0])).lower()))
             else:
                 who = ", ".join(f"{latest_name.get(o, o)} ({t})" for o, t in zip(near.index, near["Team"])) + f", {top_v:g} {u}"
-            miles.append(entry("Milestone", f"{mark} {unit}", f"{mark:g} {unit}", "", "", "Nobody yet", "",
-                               f"Nearest: {who}", live=True))
+            miles.append(dict(entry("Milestone", f"{mark} {unit}", f"{mark:g} {unit}", "", "", "Nobody yet", "",
+                                    f"Nearest: {who}", live=True), Hover=hover))
             break
     sections.append(("milestones", "First to the mark", [("Milestones", miles)]))
 
@@ -437,6 +440,12 @@ CSS = """
 .pt{display:inline-block;padding:1px 7px;border-radius:3px;font-weight:700;font-size:12px;line-height:1.35;margin-right:4px}
 .live{font:700 10px var(--num);letter-spacing:.06em;color:var(--accent);margin-left:4px}
 .card li.m{grid-template-columns:110px 1fr}
+.tip{position:relative;text-decoration:underline dotted;cursor:help;outline:none}
+.tipbox{display:none;position:absolute;left:0;top:1.5em;z-index:5;min-width:220px;max-width:80vw;padding:6px 9px;
+  background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:4px;box-shadow:0 4px 14px rgba(0,0,0,.18);
+  font-size:12px;line-height:1.5}
+.tipbox span{display:block;white-space:nowrap}
+.tip:hover .tipbox,.tip:focus .tipbox,.tip:focus-within .tipbox{display:block}
 .card li.m .v{text-align:left;font-size:13px}
 """
 
@@ -455,8 +464,15 @@ def write_page(sections, year):
         dag = " †" if r["Dagger"] else ""
         if r["Category"] == "Milestone":
             who = e(r["Owner"]) if r["Owner"] else "–"
+            det = e(r["Detail"])
+            hv = r.get("Hover") or ""
+            if hv:  # big tie: the count opens the full list on hover / tap
+                names = "".join(f"<span>{e(x)}</span>" for x in hv.split("|"))
+                cnt = det.split(": ", 1)[1].split(" managers", 1)[0]
+                det = det.replace(f"{cnt} managers", f'<span class="tip" tabindex="0">{cnt} managers'
+                                                     f'<span class="tipbox" role="tooltip">{names}</span></span>', 1)
             return (f'<li class="m"><span class="v">{e(str(r["Value"]))}</span><span class="w">{pill(r["Team"])}<b>{who}</b>'
-                    f'<small>{e(r["Detail"])}</small></span></li>')
+                    f'<small>{det}</small></span></li>')
         yr = f'{r["Year"]} · ' if r["Year"] != "" and not str(r["Category"]).startswith(("Champion", "Titles")) else ""
         lg = f' · {e(r["League"])}' if r["League"] else ""
         k = r["Rank"] if r["Category"] != "Champion" else ""
