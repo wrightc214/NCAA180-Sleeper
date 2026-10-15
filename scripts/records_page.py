@@ -41,8 +41,15 @@ FLAGS = "data/ScoringFlags_Historic.csv"
 TOP = 10
 e = html.escape
 ROUND_NAME = {1: "First round / group stage", 2: "Sweet 16", 3: "Elite 8", 4: "Final Four", 5: "Title game"}
-MILESTONES = {"Career wins": [25, 50, 75, 100], "Playoff appearances": [3, 5, 7], "National titles": [1, 2, 3],
-              "Legend points": [100, 150, 200]}
+# (first mark, step): every reached mark is listed, then only the next one (as "Nobody yet").
+MILESTONES = {"wins": (25, 25), "playoff trips": (3, 2), "titles": (1, 1), "Legend points": (100, 50)}
+
+
+def marks(first, step):
+    v = first
+    while True:
+        yield v
+        v += step
 
 
 _SHORT = {}
@@ -126,7 +133,8 @@ def postseason(owner_last, year):
                 lg, own, orph = post_owner(owner_last, y, t)
                 team_rows.append({"Year": y, "Team": t, "League": lg, "Owner": own, "Orphan": orph, "Event": r.Event,
                                   "Step": step, "Round": r.RoundName, "Pts": s, "Won": won,
-                                  "Seed": r.SeedA if t == ta[0] else r.SeedB, "Stage": stage})
+                                  "Seed": r.SeedA if t == ta[0] else r.SeedB, "Stage": stage,
+                                  "Opp": o, "OppPts": sb if t == ta[0] else sa, "Group": False})
             w, l = (ta[0], tb[0]) if ta[0] in winners else (tb[0], ta[0])
             lw, ow, orw = post_owner(owner_last, y, w)
             ll, ol, orl = post_owner(owner_last, y, l)
@@ -137,11 +145,14 @@ def postseason(owner_last, year):
         else:  # group: everyone listed in TeamA with scores in ScoreA
             sc = [float(x) if x else None for x in mp.split(r.ScoreA)] if isinstance(r.ScoreA, str) else []
             seeds = mp.split(r.SeedA)
+            adv = [(t, sc[i]) for i, t in enumerate(ta) if t in winners and i < len(sc) and sc[i] is not None]
             for i, t in enumerate(ta):
                 lg, own, orph = post_owner(owner_last, y, t)
                 team_rows.append({"Year": y, "Team": t, "League": lg, "Owner": own, "Orphan": orph, "Event": r.Event,
                                   "Step": step, "Round": r.RoundName, "Pts": sc[i] if i < len(sc) else None,
-                                  "Won": t in winners, "Seed": seeds[i] if i < len(seeds) else "", "Stage": stage})
+                                  "Won": t in winners, "Seed": seeds[i] if i < len(seeds) else "", "Stage": stage,
+                                  "Opp": " & ".join(a for a, _ in adv), "OppPts": max((v for _, v in adv), default=None),
+                                  "Group": True})
     return pd.DataFrame(games), pd.DataFrame(team_rows)
 
 
@@ -151,8 +162,15 @@ def entry(cat, rank, value, year, team, owner, league, detail, dagger=False, liv
 
 
 def top(df, cat, sort, asc, fn, n=TOP):
+    """Top n by `sort`; equal values list oldest first (Year, then Week)."""
+    keys = list(sort)
+    asc = list(asc) if isinstance(asc, (list, tuple)) else [asc] * len(keys)
+    for k in ("Year", "Week"):
+        if k in df.columns and k not in keys:
+            keys.append(k)
+            asc.append(True)
     out = []
-    for i, r in enumerate(df.sort_values(sort, ascending=asc).head(n).itertuples(), 1):
+    for i, r in enumerate(df.sort_values(keys, ascending=asc, kind="mergesort").head(n).itertuples(), 1):
         out.append(fn(cat, i, r))
     return out
 
@@ -203,22 +221,33 @@ def build():
         l = g[~g["Won"]].iloc[0]
         champs.append(entry("Champion", y, f"{w.Pts:.2f}–{l.Pts:.2f}", y, w.Team, w.Owner, w.League,
                             f"Runner-up {l.Team} ({l.Owner or 'Orphan'})"))
-    champs.sort(key=lambda r: -r["Year"])
-    mgr = pd.read_csv(mp.OUT_MGR, dtype={"OwnerID": str}) if os.path.exists(mp.OUT_MGR) else pd.DataFrame()
-    title_mgr = []
-    if len(mgr):
-        t = mgr[mgr["Titles"] > 0].sort_values(["Titles", "Legend"], ascending=False)
-        title_mgr = [entry("Titles by manager", i, int(r.Titles), "", r.Team, r.Manager, "", f"{int(r.FinalFours)} Final Fours · "
-                           f"{int(r.Playoffs)} playoff trips") for i, r in enumerate(t.itertuples(), 1)]
-    prog = defaultdict(list)
+    champs.sort(key=lambda r: r["Year"])
+    by_mgr, by_prog = defaultdict(list), defaultdict(list)
     for c in champs:
-        s = tn.slot(c["Year"], c["Team"])
-        cur = tn.current_name(*s) if s else c["Team"]
-        prog[cur or c["Team"]].append(c["Year"])
-    title_prog = [entry("Titles by program", i, len(v), "", k, "", "", ", ".join(str(x) for x in sorted(v)))
-                  for i, (k, v) in enumerate(sorted(prog.items(), key=lambda kv: (-len(kv[1]), min(kv[1]))), 1)]
-    sections.insert(0, ("champions", "Champions", [("National champions", champs), ("Titles by manager", title_mgr),
-                                                     ("Titles by program (current name)", title_prog)]))
+        sl = tn.slot(c["Year"], c["Team"])
+        cur = (tn.current_name(*sl) if sl else None) or c["Team"]
+        by_mgr[c["Owner"]].append((c["Year"], cur))
+        by_prog[cur].append((c["Year"], c["Owner"]))
+    lists = [("National champions", champs)]
+    if max((len(v) for v in by_mgr.values()), default=0) >= 2 or max((len(v) for v in by_prog.values()), default=0) >= 2:
+        same = all(len({p for _, p in v}) == 1 for v in by_mgr.values()) and \
+            all(len({o for _, o in v}) == 1 for v in by_prog.values())
+
+        def ranked(d, cat, who_is_owner):
+            items = sorted(d.items(), key=lambda kv: (-len(kv[1]), min(y for y, _ in kv[1])))
+            out = []
+            for i, (k, v) in enumerate(items, 1):
+                yrs = ", ".join(str(y) for y, _ in sorted(v))
+                others = sorted({x for _, x in v})
+                team, owner = ("|".join(others), k) if who_is_owner else (k, " & ".join(others))
+                out.append(entry(cat, i, len(v), min(y for y, _ in v), team, owner, "", yrs))
+            return out
+        if same:
+            lists.append(("Most national titles", ranked(by_mgr, "Titles", True)))
+        else:
+            lists += [("Titles by manager", ranked(by_mgr, "Titles by manager", True)),
+                      ("Titles by program (current name)", ranked(by_prog, "Titles by program", False))]
+    sections.insert(0, ("champions", "Champions", lists))
 
     # ---- seasons (completed seasons only)
     regs = m[(m["Year"] < year) & ~m["Orphan"]]
@@ -260,10 +289,17 @@ def build():
     po = pt[(pt["Event"] == "Playoff") & pt["Step"].notna() & pt["Pts"].notna()].copy()
     po["Step"] = po["Step"].astype(int)
     elim = []
+
+    def elim_detail(r):
+        if not r.Opp:
+            return r.Round
+        if r.Group:
+            return f"Out in the {r.Round.lower()}: {r.Opp} advanced ({r.OppPts:.2f})"
+        return f"Lost to {r.Opp} {r.Pts:.2f}–{r.OppPts:.2f} · {r.Round}"
     for step in range(1, 6):
         d = po[(po["Step"] == step) & ~po["Won"] & ~po["Orphan"]]
         elim.append((f"Highest score eliminated · {ROUND_NAME[step]}", top(d, "Highest score eliminated", ["Pts"], False,
-                    lambda c, i, r: entry(c, i, f"{r.Pts:.2f}", r.Year, r.Team, r.Owner, r.League, f"{r.Round}"), 3)))
+                    lambda c, i, r: entry(c, i, f"{r.Pts:.2f}", r.Year, r.Team, r.Owner, r.League, elim_detail(r)), 3)))
     seeds = {}
     for r in po[po["Year"] >= 2022].itertuples():
         if str(r.Seed).strip().isdigit():
@@ -274,52 +310,55 @@ def build():
     reach["Seed"] = [seeds.get((y, t)) for y, t in zip(reach["Year"], reach["Team"])]
     reach = reach[reach["Seed"].notna()]
     cin = []
-    for step, label in ((3, "Reached the Elite 8"), (4, "Reached the Final Four"), (5, "Reached the title game"), (6, "Won it all")):
+    for step, label in ((3, "Reached the Elite 8"), (4, "Reached the Final Four"), (5, "Reached the title game"), (6, "National Champion")):
         d = reach[[((y, t) in champs_set) if step == 6 else s >= step for y, t, s in zip(reach.Year, reach.Team, reach.Step)]]
         cin.append((f"Cinderella · {label}", top(d, "Cinderella", ["Seed", "Year"], [False, True], lambda c, i, r: entry(
             c, i, f"#{int(r.Seed)} seed", r.Year, r.Team, r.Owner, r.League, label), 3)))
     sections.append(("playoffs", "Playoffs", elim + cin))
 
-    # ---- milestones (first manager to each mark), from managers_page season data
-    ms = pd.read_csv(mp.OUT_SEASONS, dtype={"OwnerID": str}) if os.path.exists(mp.OUT_SEASONS) else pd.DataFrame()
+    # ---- milestones: first manager to each mark; only the next unreached mark is shown
+    ms = pd.read_csv(mp.OUT_SEASONS, dtype={"OwnerID": str, "RosterID": str}) if os.path.exists(mp.OUT_SEASONS) else pd.DataFrame()
     miles = []
+    wk = m[~m["Orphan"]].sort_values(["Year", "Week"])
+    wk = wk.assign(V=(wk["Outcome"] == "Win").astype(float))
+    wk["When"] = [f"Week {int(w)}, {int(y)}" for y, w in zip(wk["Year"], wk["Week"])]
+    wk["Team"] = [name(y, l, r) for y, l, r in zip(wk["Year"], wk["LeagueName"], wk["RosterID"])]
+    latest_name = wk.groupby("OwnerID")["OwnerName"].last()
+    series = {"wins": wk}
     if len(ms):
-        ms = ms.sort_values("Year")
-        ms["Playoff"] = ms["Finish"].fillna("").str.contains("Playoffs|Sweet 16|Elite 8|Final Four|Title game|National champion")
-        ms["TitleN"] = ms["Finish"].fillna("").str.contains("National champion").astype(int)
-        # wins by week (ties and in-season order matter for the first to reach a mark)
-        wk = m[~m["Orphan"]].sort_values(["Year", "Week"])
-        wk = wk.assign(Wn=(wk["Outcome"] == "Win").astype(int))
-        wk["Cum"] = wk.groupby("OwnerID")["Wn"].cumsum()
-        latest = wk.groupby("OwnerID")["OwnerName"].last()
-        for mark in MILESTONES["Career wins"]:
-            hit = wk[wk["Cum"] >= mark].groupby("OwnerID").head(1).sort_values(["Year", "Week"])
+        ms = ms.sort_values("Year").copy()
+        fin = ms["Finish"].fillna("")
+        ms["When"] = ms["Year"].astype(int).astype(str)
+        ms["Week"] = 99
+        for key, v in (("playoff trips", fin.str.contains("Playoffs|Sweet 16|Elite 8|Final Four|Title game|National champion")),
+                       ("titles", fin.str.contains("National champion")), ("Legend points", ms["Legend"])):
+            series[key] = ms.assign(V=v.astype(float))
+    for key, d in series.items():
+        d = d.copy()
+        d["Cum"] = d.groupby("OwnerID")["V"].cumsum()
+        first, step = MILESTONES[key]
+        for mark in marks(first, step):
+            unit = "title" if (key == "titles" and mark == 1) else key
+            hit = d[d["Cum"] >= mark].groupby("OwnerID").head(1).sort_values(["Year", "Week"])
             if len(hit):
-                first = hit.iloc[0]
-                same = hit[(hit.Year == first.Year) & (hit.Week == first.Week)]
-                who = " & ".join(latest[o] for o in same["OwnerID"])
-                miles.append(entry("Milestone", f"{mark} wins", f"{mark} wins", int(first.Year), "", who, "",
-                                   f"Week {int(first.Week)}, {int(first.Year)} · {len(hit)} manager(s) there now"))
+                f0 = hit.iloc[0]
+                same = hit[(hit["Year"] == f0.Year) & (hit["Week"] == f0.Week)]
+                miles.append(entry("Milestone", f"{mark} {unit}", f"{mark:g} {unit}", int(f0.Year), "|".join(same["Team"]),
+                                   " & ".join(latest_name.get(o, n) for o, n in zip(same["OwnerID"], same["OwnerName"]
+                                                                                    if "OwnerName" in same else same["Manager"])),
+                                   "", f"{f0.When} · {len(hit)} manager{'s' if len(hit) != 1 else ''} there now"))
+                continue
+            tot = d.groupby("OwnerID").agg(V=("Cum", "max"), Team=("Team", "last")).sort_values("V", ascending=False)
+            top_v = tot["V"].iloc[0]
+            near = tot[tot["V"] == top_v]
+            u = key if not (key == "titles" and top_v == 1) else "title"
+            if len(near) > 3:
+                who = f"{len(near)} managers with {top_v:g} {u}"
             else:
-                best = wk.groupby("OwnerID")["Cum"].max().sort_values(ascending=False)
-                miles.append(entry("Milestone", f"{mark} wins", f"{mark} wins", "", "", latest[best.index[0]], "",
-                                   f"Not reached yet · closest: {int(best.iloc[0])}", live=True))
-        for label, col in (("Playoff appearances", "Playoff"), ("National titles", "TitleN"), ("Legend points", "Legend")):
-            cum = ms.assign(V=ms[col].astype(float)).groupby("OwnerID")["V"].cumsum()
-            ms["_c"] = cum
-            for mark in MILESTONES[label]:
-                hit = ms[ms["_c"] >= mark].groupby("OwnerID").head(1).sort_values("Year")
-                unit = {"Playoff appearances": "playoff trips", "National titles": "titles" if mark > 1 else "title",
-                        "Legend points": "Legend points"}[label]
-                if len(hit):
-                    y0 = hit["Year"].iloc[0]
-                    who = " & ".join(sorted(hit[hit.Year == y0]["Manager"]))
-                    miles.append(entry("Milestone", f"{mark} {unit}", f"{mark} {unit}", int(y0), "", who, "",
-                                       f"{int(y0)} · {len(hit)} manager(s) there now"))
-                else:
-                    best = ms.groupby("OwnerID").agg(M=("Manager", "last"), V=("_c", "max")).sort_values("V", ascending=False).iloc[0]
-                    miles.append(entry("Milestone", f"{mark} {unit}", f"{mark} {unit}", "", "", best.M, "",
-                                       f"Not reached yet · closest: {best.V:g}", live=True))
+                who = ", ".join(f"{latest_name.get(o, o)} ({t})" for o, t in zip(near.index, near["Team"])) + f", {top_v:g} {u}"
+            miles.append(entry("Milestone", f"{mark} {unit}", f"{mark:g} {unit}", "", "", "Nobody yet", "",
+                               f"Nearest: {who}", live=True))
+            break
     sections.append(("milestones", "First to the mark", [("Milestones", miles)]))
 
     # ---- lineups & streaks
@@ -336,9 +375,11 @@ def build():
         f"Week {r.Week}: started {r.Actual:.2f}, best possible {r.Best:.2f}", live=r.Year == year))
     lss = pd.read_csv(ml.OUT_SEASON, dtype={"OwnerID": str})
     lss = lss[(lss["Year"] < year) & (lss["Games"] >= 9) & (lss["OwnerID"] != "Orphan")]
+    lw["Team"] = [name(y, l, r) for y, l, r in zip(lw["Year"], lw["LeagueName"], lw["RosterID"])]
+    season_teams = lw.groupby(["Year", "OwnerID"])["Team"].apply(lambda t: "|".join(dict.fromkeys(t))).to_dict()
     bestls = top(lss, "Best Lineup Skill season", ["LineupSkill"], False, lambda c, i, r: entry(
-        c, i, f"{r.LineupSkill:.3f}".lstrip("0"), r.Year, "", r.OwnerName, "", f"{int(r.Games)} games · "
-        f"{r.PtsLeftPerGame:.2f} left on bench per game"))
+        c, i, f"{r.LineupSkill:.3f}".lstrip("0"), r.Year, season_teams.get((r.Year, r.OwnerID), ""), r.OwnerName, "",
+        f"{int(r.Games)} games · {r.PtsLeftPerGame:.2f} left on bench per game"))
     # streaks: per manager, regular season in order, across seasons
     st = m[~m["Orphan"]].sort_values(["Year", "Week"])
     runs = []
@@ -355,11 +396,19 @@ def build():
         if cur_t in ("Win", "Loss"):
             runs.append((oid, cur_t, cur_n, start, res[-1][1:], (res[-1][1], res[-1][2]) == (year, int(st[st.Year == year]["Week"].max()))))
     rn = pd.DataFrame(runs, columns=["OwnerID", "Type", "N", "Start", "End", "Active"])
+    rn["Year"], rn["Week"] = [s0[0] for s0 in rn["Start"]], [s0[1] for s0 in rn["Start"]]
+    st = st.assign(Team=[name(y, l, r) for y, l, r in zip(st["Year"], st["LeagueName"], st["RosterID"])])
+
+    def run_teams(r):
+        g = st[st["OwnerID"] == r.OwnerID]
+        k = list(zip(g["Year"], g["Week"]))
+        a, b = (r.Start[0], r.Start[1]), (r.End[0], r.End[1])
+        return "|".join(dict.fromkeys(t for kk, t in zip(k, g["Team"]) if a <= kk <= b))
     names_latest = st.groupby("OwnerID")["OwnerName"].last()
     strk = []
     for t, label in (("Win", "Longest winning streak"), ("Loss", "Longest losing streak")):
         strk.append((label, top(rn[rn["Type"] == t], label, ["N"], False, lambda c, i, r: entry(
-            c, i, f"{r.N} games", r.Start[0], "", names_latest[r.OwnerID], "",
+            c, i, f"{r.N} games", r.Start[0], run_teams(r), names_latest[r.OwnerID], "",
             f"Week {r.Start[1]}, {r.Start[0]} → week {r.End[1]}, {r.End[0]}" + (" · active" if r.Active else ""),
             live=r.Active))))
     sections.append(("lineups", "Lineups & streaks", [("Best Lineup Skill season (9+ games)", bestls),
@@ -393,20 +442,22 @@ CSS = """
 
 
 def write_page(sections, year):
-    def pill(team, y):
-        if not team:
-            return ""
-        bg, fg = mp.chip(team)
-        return f'<span class="pt" style="background:{bg};color:{fg}">{e(team)}</span>'
+    def pill(team, y=None):
+        out = ""
+        for t in str(team or "").split("|"):  # "A|B" = more than one team (listed oldest first)
+            if t:
+                bg, fg = mp.chip(t)
+                out += f'<span class="pt" style="background:{bg};color:{fg}">{e(t)}</span>'
+        return out
 
     def li(r):
         tag = f'<span class="live">{year}</span>' if r["Live"] and r["Year"] == year else ""
         dag = " †" if r["Dagger"] else ""
         if r["Category"] == "Milestone":
             who = e(r["Owner"]) if r["Owner"] else "–"
-            return (f'<li class="m"><span class="v">{e(str(r["Value"]))}</span><span class="w"><b>{who}</b>'
+            return (f'<li class="m"><span class="v">{e(str(r["Value"]))}</span><span class="w">{pill(r["Team"])}<b>{who}</b>'
                     f'<small>{e(r["Detail"])}</small></span></li>')
-        yr = f'{r["Year"]} · ' if r["Year"] != "" and r["Category"] not in ("Champion",) else ""
+        yr = f'{r["Year"]} · ' if r["Year"] != "" and not str(r["Category"]).startswith(("Champion", "Titles")) else ""
         lg = f' · {e(r["League"])}' if r["League"] else ""
         k = r["Rank"] if r["Category"] != "Champion" else ""
         head = f'{pill(r["Team"], r["Year"])}<b>{e(r["Owner"] or "")}</b>{tag}' if r["Team"] else f'<b>{e(r["Owner"])}</b>{tag}'

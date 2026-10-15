@@ -1,25 +1,11 @@
 Category,Rank,Value,Year,Team,Owner,League,Detail,Dagger,Live,Section,List
-Champion,2025,168.32–112.08,2025,Arizona State,wrightc214,PAC 12,Runner-up Montana (LanceBoneau),False,False,Champions,National champions
-Champion,2024,199.20–141.48,2024,Washington State,chzhead412,PAC 12,Runner-up Minnesota (linkoftime1),False,False,Champions,National champions
-Champion,2023,169.46–143.92,2023,LSU,TheLegoBatman,SEC,Runner-up Utah (seniormeow),False,False,Champions,National champions
-Champion,2022,193.08–175.78,2022,Charleston Southern,leathershoe4,Ohio Valley,Runner-up Clemson (dilbennett),False,False,Champions,National champions
-Champion,2021,174.36–174.30,2021,Youngstown State,mssullivan2022,Big Sky,Runner-up Oklahoma (rchau56),False,False,Champions,National champions
-Champion,2020,194.42–112.20,2020,Campbell,CrownMeKing,Pioneer,Runner-up Virginia Tech (landonh12),False,False,Champions,National champions
 Champion,2019,197.68–152.86,2019,Army,Claser,Big East,Runner-up Maryland (UrTrash),False,False,Champions,National champions
-Titles by manager,1,1,,Army,Claser,,1 Final Fours · 4 playoff trips,False,False,Champions,Titles by manager
-Titles by manager,2,1,,Washington State,chzhead412,,2 Final Fours · 3 playoff trips,False,False,Champions,Titles by manager
-Titles by manager,3,1,,Arizona State,wrightc214,,1 Final Fours · 3 playoff trips,False,False,Champions,Titles by manager
-Titles by manager,4,1,,Youngstown State,mssullivan2022,,1 Final Fours · 2 playoff trips,False,False,Champions,Titles by manager
-Titles by manager,5,1,,Campbell,CrownMeKing,,1 Final Fours · 3 playoff trips,False,False,Champions,Titles by manager
-Titles by manager,6,1,,Charleston Southern,leathershoe4,,2 Final Fours · 2 playoff trips,False,False,Champions,Titles by manager
-Titles by manager,7,1,,LSU,errand,,1 Final Fours · 2 playoff trips,False,False,Champions,Titles by manager
-Titles by program,1,1,,Army,,,2019,False,False,Champions,Titles by program (current name)
-Titles by program,2,1,,Campbell,,,2020,False,False,Champions,Titles by program (current name)
-Titles by program,3,1,,Youngstown State,,,2021,False,False,Champions,Titles by program (current name)
-Titles by program,4,1,,Charleston Southern,,,2022,False,False,Champions,Titles by program (current name)
-Titles by program,5,1,,LSU,,,2023,False,False,Champions,Titles by program (current name)
-Titles by program,6,1,,Washington State,,,2024,False,False,Champions,Titles by program (current name)
-Titles by program,7,1,,Arizona State,,,2025,False,False,Champions,Titles by program (current name)
+Champion,2020,194.42–112.20,2020,Campbell,CrownMeKing,Pioneer,Runner-up Virginia Tech (landonh12),False,False,Champions,National champions
+Champion,2021,174.36–174.30,2021,Youngstown State,mssullivan2022,Big Sky,Runner-up Oklahoma (rchau56),False,False,Champions,National champions
+Champion,2022,193.08–175.78,2022,Charleston Southern,leathershoe4,Ohio Valley,Runner-up Clemson (dilbennett),False,False,Champions,National champions
+Champion,2023,169.46–143.92,2023,LSU,TheLegoBatman,SEC,Runner-up Utah (seniormeow),False,False,Champions,National champions
+Champion,2024,199.20–141.48,2024,Washington State,chzhead412,PAC 12,Runner-up Minnesota (linkoftime1),False,False,Champions,National champions
+Champion,2025,168.32–112.08,2025,Arizona State,wrightc214,PAC 12,Runner-up Montana (LanceBoneau),False,False,Champions,National champions
 Highest score,1,253.72,2026,Minnesota,linkoftime1,Big 10,Beat Iowa 253.72–118.78 · Week 2,False,True,Single game,Highest score
 Highest score,2,243.04,2025,Minnesota,linkoftime1,Big 10,Beat Michigan 243.04–102.22 · Week 7,False,False,Single game,Highest score
 Highest score,3,242.60,2021,Virginia Tech,landonh12,ACC,Beat Georgia Tech 242.60–134.38 · Week 5,False,False,Single game,Highest score
@@ -104,21 +90,21 @@ Most wins in a season,7,14-2,2019,Army,Claser,Big East,Regular season 9-2 · Nat
 Most wins in a season,8,14-3,2025,Montana,LanceBoneau,Wild,Regular season 9-2,False,False,Season (2019–2025),Most wins in a season
 Most wins in a season,9,14-3,2022,Clemson,dilbennett,ACC,Regular season 9-2,False,False,Season (2019–2025),Most wins in a season
 Most wins in a season,10,14-3,2024,Washington State,chzhead412,PAC 12,Regular season 9-2 · National champion,False,False,Season (2019–2025),Most wins in a season
-Highest score eliminated,1,185.60,2021,Penn State,jreilly,Big 10,First Round,False,False,Playoffs,Highest score eliminated · First round / group stage
-Highest score eliminated,2,178.92,2021,Clemson,dilbennett,ACC,First Round,False,False,Playoffs,Highest score eliminated · First round / group stage
-Highest score eliminated,3,177.60,2020,Ole Miss,ryankenn,SEC,Group Stage,False,False,Playoffs,Highest score eliminated · First round / group stage
-Highest score eliminated,1,209.56,2024,Old Dominion,olddominion2020,Wild,Sweet 16,False,False,Playoffs,Highest score eliminated · Sweet 16
-Highest score eliminated,2,173.18,2021,Virginia Tech,landonh12,ACC,Sweet 16,False,False,Playoffs,Highest score eliminated · Sweet 16
-Highest score eliminated,3,169.86,2024,Temple,Piglet10,Sun Belt,Sweet 16,False,False,Playoffs,Highest score eliminated · Sweet 16
-Highest score eliminated,1,205.30,2024,Syracuse,CodeKhaos,Big East,Elite 8,False,False,Playoffs,Highest score eliminated · Elite 8
-Highest score eliminated,2,185.62,2025,Old Dominion,olddominion2020,Wild,Elite 8,False,False,Playoffs,Highest score eliminated · Elite 8
-Highest score eliminated,3,178.60,2020,Hampton,dakistrash,HBCU,Elite 8,False,False,Playoffs,Highest score eliminated · Elite 8
-Highest score eliminated,1,184.66,2022,Memphis,yoboihawks,Sun Belt,Final Four,False,False,Playoffs,Highest score eliminated · Final Four
-Highest score eliminated,2,173.58,2024,Montana State,Elwayluva7,Big Sky,Final Four,False,False,Playoffs,Highest score eliminated · Final Four
-Highest score eliminated,3,169.62,2019,Kentucky,Jasonkuz,SEC,Final Four,False,False,Playoffs,Highest score eliminated · Final Four
-Highest score eliminated,1,175.78,2022,Clemson,dilbennett,ACC,National Championship,False,False,Playoffs,Highest score eliminated · Title game
-Highest score eliminated,2,174.30,2021,Oklahoma,rchau56,Big 12,National Championship,False,False,Playoffs,Highest score eliminated · Title game
-Highest score eliminated,3,152.86,2019,Maryland,UrTrash,Big East,National Championship,False,False,Playoffs,Highest score eliminated · Title game
+Highest score eliminated,1,185.60,2021,Penn State,jreilly,Big 10,Lost to Davidson 185.60–187.06 · First Round,False,False,Playoffs,Highest score eliminated · First round / group stage
+Highest score eliminated,2,178.92,2021,Clemson,dilbennett,ACC,Lost to Yale 178.92–198.52 · First Round,False,False,Playoffs,Highest score eliminated · First round / group stage
+Highest score eliminated,3,177.60,2020,Ole Miss,ryankenn,SEC,Out in the group stage: Lehigh advanced (204.72),False,False,Playoffs,Highest score eliminated · First round / group stage
+Highest score eliminated,1,209.56,2024,Old Dominion,olddominion2020,Wild,Lost to Minnesota 209.56–219.18 · Sweet 16,False,False,Playoffs,Highest score eliminated · Sweet 16
+Highest score eliminated,2,173.18,2021,Virginia Tech,landonh12,ACC,Lost to Oklahoma 173.18–223.92 · Sweet 16,False,False,Playoffs,Highest score eliminated · Sweet 16
+Highest score eliminated,3,169.86,2024,Temple,Piglet10,Sun Belt,Lost to Syracuse 169.86–186.22 · Sweet 16,False,False,Playoffs,Highest score eliminated · Sweet 16
+Highest score eliminated,1,205.30,2024,Syracuse,CodeKhaos,Big East,Lost to Minnesota 205.30–219.08 · Elite 8,False,False,Playoffs,Highest score eliminated · Elite 8
+Highest score eliminated,2,185.62,2025,Old Dominion,olddominion2020,Wild,Lost to Arizona State 185.62–193.70 · Elite 8,False,False,Playoffs,Highest score eliminated · Elite 8
+Highest score eliminated,3,178.60,2020,Hampton,dakistrash,HBCU,Lost to Campbell 178.60–201.22 · Elite 8,False,False,Playoffs,Highest score eliminated · Elite 8
+Highest score eliminated,1,184.66,2022,Memphis,yoboihawks,Sun Belt,Lost to Clemson 184.66–201.18 · Final Four,False,False,Playoffs,Highest score eliminated · Final Four
+Highest score eliminated,2,173.58,2024,Montana State,Elwayluva7,Big Sky,Lost to Minnesota 173.58–188.56 · Final Four,False,False,Playoffs,Highest score eliminated · Final Four
+Highest score eliminated,3,169.62,2019,Kentucky,Jasonkuz,SEC,Lost to Army 169.62–193.96 · Final Four,False,False,Playoffs,Highest score eliminated · Final Four
+Highest score eliminated,1,175.78,2022,Clemson,dilbennett,ACC,Lost to Charleston Southern 175.78–193.08 · National Championship,False,False,Playoffs,Highest score eliminated · Title game
+Highest score eliminated,2,174.30,2021,Oklahoma,rchau56,Big 12,Lost to Youngstown State 174.30–174.36 · National Championship,False,False,Playoffs,Highest score eliminated · Title game
+Highest score eliminated,3,152.86,2019,Maryland,UrTrash,Big East,Lost to Army 152.86–197.68 · National Championship,False,False,Playoffs,Highest score eliminated · Title game
 Cinderella,1,#32 seed,2023,Indiana,eseromo760,Big 10,Reached the Elite 8,False,False,Playoffs,Cinderella · Reached the Elite 8
 Cinderella,2,#30 seed,2023,Georgia Southern,alphabeasttt,Sun Belt,Reached the Elite 8,False,False,Playoffs,Cinderella · Reached the Elite 8
 Cinderella,3,#29 seed,2022,Memphis,yoboihawks,Sun Belt,Reached the Elite 8,False,False,Playoffs,Cinderella · Reached the Elite 8
@@ -128,32 +114,30 @@ Cinderella,3,#26 seed,2022,Charleston Southern,leathershoe4,Ohio Valley,Reached 
 Cinderella,1,#26 seed,2022,Charleston Southern,leathershoe4,Ohio Valley,Reached the title game,False,False,Playoffs,Cinderella · Reached the title game
 Cinderella,2,#20 seed,2024,Minnesota,linkoftime1,Big 10,Reached the title game,False,False,Playoffs,Cinderella · Reached the title game
 Cinderella,3,#18 seed,2023,LSU,TheLegoBatman,SEC,Reached the title game,False,False,Playoffs,Cinderella · Reached the title game
-Cinderella,1,#26 seed,2022,Charleston Southern,leathershoe4,Ohio Valley,Won it all,False,False,Playoffs,Cinderella · Won it all
-Cinderella,2,#18 seed,2023,LSU,TheLegoBatman,SEC,Won it all,False,False,Playoffs,Cinderella · Won it all
-Cinderella,3,#15 seed,2024,Washington State,chzhead412,PAC 12,Won it all,False,False,Playoffs,Cinderella · Won it all
-Milestone,25 wins,25 wins,2021,,landonh12 & laxbro000,,"Week 9, 2021 · 120 manager(s) there now",False,False,First to the mark,Milestones
-Milestone,50 wins,50 wins,2024,,CodeKhaos,,"Week 8, 2024 · 15 manager(s) there now",False,False,First to the mark,Milestones
-Milestone,75 wins,75 wins,,,CodeKhaos,,Not reached yet · closest: 66,False,True,First to the mark,Milestones
-Milestone,100 wins,100 wins,,,CodeKhaos,,Not reached yet · closest: 66,False,True,First to the mark,Milestones
-Milestone,3 playoff trips,3 playoff trips,2021,,landonh12,,2021 · 25 manager(s) there now,False,False,First to the mark,Milestones
-Milestone,5 playoff trips,5 playoff trips,2024,,dilbennett,,2024 · 2 manager(s) there now,False,False,First to the mark,Milestones
-Milestone,7 playoff trips,7 playoff trips,,,dilbennett,,Not reached yet · closest: 6,False,True,First to the mark,Milestones
-Milestone,1 title,1 title,2019,,Claser,,2019 · 7 manager(s) there now,False,False,First to the mark,Milestones
-Milestone,2 titles,2 titles,,,leathershoe4,,Not reached yet · closest: 1,False,True,First to the mark,Milestones
-Milestone,3 titles,3 titles,,,leathershoe4,,Not reached yet · closest: 1,False,True,First to the mark,Milestones
-Milestone,100 Legend points,100 Legend points,2022,,Claser,,2022 · 15 manager(s) there now,False,False,First to the mark,Milestones
-Milestone,150 Legend points,150 Legend points,2025,,dilbennett,,2025 · 1 manager(s) there now,False,False,First to the mark,Milestones
-Milestone,200 Legend points,200 Legend points,,,dilbennett,,Not reached yet · closest: 178,False,True,First to the mark,Milestones
-Best Lineup Skill season,1,.853,2021,,rchau56,,11 games · 21.58 left on bench per game,False,False,Lineups & streaks,Best Lineup Skill season (9+ games)
-Best Lineup Skill season,2,.850,2019,,BDAVIS309,,11 games · 21.42 left on bench per game,False,False,Lineups & streaks,Best Lineup Skill season (9+ games)
-Best Lineup Skill season,3,.850,2020,,laxbro000,,11 games · 22.66 left on bench per game,False,False,Lineups & streaks,Best Lineup Skill season (9+ games)
-Best Lineup Skill season,4,.849,2025,,linkoftime1,,11 games · 21.38 left on bench per game,False,False,Lineups & streaks,Best Lineup Skill season (9+ games)
-Best Lineup Skill season,5,.848,2021,,csmith1222,,11 games · 16.47 left on bench per game,False,False,Lineups & streaks,Best Lineup Skill season (9+ games)
-Best Lineup Skill season,6,.846,2023,,bb7661KING,,11 games · 17.86 left on bench per game,False,False,Lineups & streaks,Best Lineup Skill season (9+ games)
-Best Lineup Skill season,7,.839,2021,,landonh12,,11 games · 24.80 left on bench per game,False,False,Lineups & streaks,Best Lineup Skill season (9+ games)
-Best Lineup Skill season,8,.836,2023,,TheDrapFather,,11 games · 21.85 left on bench per game,False,False,Lineups & streaks,Best Lineup Skill season (9+ games)
-Best Lineup Skill season,9,.833,2022,,LMarkiewicz04,,11 games · 22.79 left on bench per game,False,False,Lineups & streaks,Best Lineup Skill season (9+ games)
-Best Lineup Skill season,10,.832,2022,,wrightc214,,11 games · 24.32 left on bench per game,False,False,Lineups & streaks,Best Lineup Skill season (9+ games)
+Cinderella,1,#26 seed,2022,Charleston Southern,leathershoe4,Ohio Valley,National Champion,False,False,Playoffs,Cinderella · National Champion
+Cinderella,2,#18 seed,2023,LSU,TheLegoBatman,SEC,National Champion,False,False,Playoffs,Cinderella · National Champion
+Cinderella,3,#15 seed,2024,Washington State,chzhead412,PAC 12,National Champion,False,False,Playoffs,Cinderella · National Champion
+Milestone,25 wins,25 wins,2021,Virginia Tech|Wisconsin,landonh12 & laxbro000,,"Week 9, 2021 · 120 managers there now",False,False,First to the mark,Milestones
+Milestone,50 wins,50 wins,2024,Syracuse,CodeKhaos,,"Week 8, 2024 · 15 managers there now",False,False,First to the mark,Milestones
+Milestone,75 wins,75 wins,,,Nobody yet,,"Nearest: CodeKhaos (Syracuse), 66 wins",False,True,First to the mark,Milestones
+Milestone,3 playoff trips,3 playoff trips,2021,Virginia Tech,landonh12,,2021 · 25 managers there now,False,False,First to the mark,Milestones
+Milestone,5 playoff trips,5 playoff trips,2024,Clemson,dilbennett,,2024 · 2 managers there now,False,False,First to the mark,Milestones
+Milestone,7 playoff trips,7 playoff trips,,,Nobody yet,,"Nearest: dilbennett (Clemson), 6 playoff trips",False,True,First to the mark,Milestones
+Milestone,1 title,1 title,2019,Army,Claser,,2019 · 7 managers there now,False,False,First to the mark,Milestones
+Milestone,2 titles,2 titles,,,Nobody yet,,Nearest: 7 managers with 1 title,False,True,First to the mark,Milestones
+Milestone,100 Legend points,100 Legend points,2022,Army,Claser,,2022 · 15 managers there now,False,False,First to the mark,Milestones
+Milestone,150 Legend points,150 Legend points,2025,Clemson,dilbennett,,2025 · 1 manager there now,False,False,First to the mark,Milestones
+Milestone,200 Legend points,200 Legend points,,,Nobody yet,,"Nearest: dilbennett (Clemson), 178 Legend points",False,True,First to the mark,Milestones
+Best Lineup Skill season,1,.853,2021,Oklahoma,rchau56,,11 games · 21.58 left on bench per game,False,False,Lineups & streaks,Best Lineup Skill season (9+ games)
+Best Lineup Skill season,2,.850,2019,Georgia Tech,BDAVIS309,,11 games · 21.42 left on bench per game,False,False,Lineups & streaks,Best Lineup Skill season (9+ games)
+Best Lineup Skill season,3,.850,2020,Wisconsin,laxbro000,,11 games · 22.66 left on bench per game,False,False,Lineups & streaks,Best Lineup Skill season (9+ games)
+Best Lineup Skill season,4,.849,2025,Minnesota,linkoftime1,,11 games · 21.38 left on bench per game,False,False,Lineups & streaks,Best Lineup Skill season (9+ games)
+Best Lineup Skill season,5,.848,2021,Southern,csmith1222,,11 games · 16.47 left on bench per game,False,False,Lineups & streaks,Best Lineup Skill season (9+ games)
+Best Lineup Skill season,6,.846,2023,Jackson State,bb7661KING,,11 games · 17.86 left on bench per game,False,False,Lineups & streaks,Best Lineup Skill season (9+ games)
+Best Lineup Skill season,7,.839,2021,Virginia Tech,landonh12,,11 games · 24.80 left on bench per game,False,False,Lineups & streaks,Best Lineup Skill season (9+ games)
+Best Lineup Skill season,8,.836,2023,UT Martin,TheDrapFather,,11 games · 21.85 left on bench per game,False,False,Lineups & streaks,Best Lineup Skill season (9+ games)
+Best Lineup Skill season,9,.833,2022,ETSU,LMarkiewicz04,,11 games · 22.79 left on bench per game,False,False,Lineups & streaks,Best Lineup Skill season (9+ games)
+Best Lineup Skill season,10,.832,2022,Arizona State,wrightc214,,11 games · 24.32 left on bench per game,False,False,Lineups & streaks,Best Lineup Skill season (9+ games)
 Most points left on the bench in a loss,1,155.70,2025,UAB,Fr3shBC11,Sun Belt,"Week 8: started 23.12, best possible 178.82",False,False,Lineups & streaks,Most points left on the bench in a loss
 Most points left on the bench in a loss,2,144.78,2025,UAB,Fr3shBC11,Sun Belt,"Week 9: started 11.12, best possible 155.90",False,False,Lineups & streaks,Most points left on the bench in a loss
 Most points left on the bench in a loss,3,133.30,2024,Iowa,Schuflakka,Big 10,"Week 5: started 83.36, best possible 216.66",False,False,Lineups & streaks,Most points left on the bench in a loss
@@ -164,23 +148,23 @@ Most points left on the bench in a loss,7,123.16,2020,Florida A&M,tpearson2222,H
 Most points left on the bench in a loss,8,122.60,2021,Georgia Southern,ericdas12,Sun Belt,"Week 11: started 48.28, best possible 170.88",False,False,Lineups & streaks,Most points left on the bench in a loss
 Most points left on the bench in a loss,9,122.54,2025,UAB,Fr3shBC11,Sun Belt,"Week 6: started 43.76, best possible 166.30",False,False,Lineups & streaks,Most points left on the bench in a loss
 Most points left on the bench in a loss,10,121.74,2019,Arizona,kfitch630,PAC 12,"Week 7: started 107.32, best possible 229.06",False,False,Lineups & streaks,Most points left on the bench in a loss
-Longest winning streak,1,23 games,2023,,dilbennett,,"Week 2, 2023 → week 2, 2025",False,False,Lineups & streaks,Longest winning streak
-Longest winning streak,2,20 games,2022,,CodeKhaos,,"Week 8, 2022 → week 5, 2024",False,False,Lineups & streaks,Longest winning streak
-Longest winning streak,3,18 games,2024,,robertlouis7,,"Week 8, 2024 → week 3, 2026",False,False,Lineups & streaks,Longest winning streak
-Longest winning streak,4,16 games,2023,,mssullivan2022,,"Week 8, 2023 → week 1, 2025",False,False,Lineups & streaks,Longest winning streak
-Longest winning streak,5,15 games,2019,,laxbro000,,"Week 9, 2019 → week 1, 2021",False,False,Lineups & streaks,Longest winning streak
-Longest winning streak,6,14 games,2022,,4thdownTD,,"Week 8, 2022 → week 10, 2023",False,False,Lineups & streaks,Longest winning streak
-Longest winning streak,7,14 games,2020,,willsingle05,,"Week 11, 2020 → week 2, 2022",False,False,Lineups & streaks,Longest winning streak
-Longest winning streak,8,13 games,2025,,vinceA762,,"Week 4, 2025 → week 5, 2026 · active",False,True,Lineups & streaks,Longest winning streak
-Longest winning streak,9,13 games,2022,,CanadaGoose0505,,"Week 1, 2022 → week 2, 2023",False,False,Lineups & streaks,Longest winning streak
-Longest winning streak,10,12 games,2025,,olddominion2020,,"Week 4, 2025 → week 4, 2026",False,False,Lineups & streaks,Longest winning streak
-Longest losing streak,1,26 games,2024,,nshox2,,"Week 2, 2024 → week 5, 2026 · active",False,True,Lineups & streaks,Longest losing streak
-Longest losing streak,2,21 games,2020,,ThomasHarris,,"Week 1, 2020 → week 10, 2021",False,False,Lineups & streaks,Longest losing streak
-Longest losing streak,3,20 games,2024,,Ianiners,,"Week 4, 2024 → week 1, 2026",False,False,Lineups & streaks,Longest losing streak
-Longest losing streak,4,17 games,2020,,richardson98,,"Week 1, 2020 → week 6, 2021",False,False,Lineups & streaks,Longest losing streak
-Longest losing streak,5,17 games,2024,,Ortizz,,"Week 1, 2024 → week 6, 2025",False,False,Lineups & streaks,Longest losing streak
-Longest losing streak,6,15 games,2024,,FalconsRULE7,,"Week 11, 2024 → week 3, 2026",False,False,Lineups & streaks,Longest losing streak
-Longest losing streak,7,15 games,2023,,tpearson2222,,"Week 7, 2023 → week 10, 2024",False,False,Lineups & streaks,Longest losing streak
-Longest losing streak,8,15 games,2024,,BroncoZzz,,"Week 9, 2024 → week 1, 2026",False,False,Lineups & streaks,Longest losing streak
-Longest losing streak,9,14 games,2023,,SleazeMcNair,,"Week 1, 2023 → week 3, 2024",False,False,Lineups & streaks,Longest losing streak
-Longest losing streak,10,13 games,2023,,devbovino,,"Week 11, 2023 → week 1, 2025",False,False,Lineups & streaks,Longest losing streak
+Longest winning streak,1,23 games,2023,Clemson,dilbennett,,"Week 2, 2023 → week 2, 2025",False,False,Lineups & streaks,Longest winning streak
+Longest winning streak,2,20 games,2022,Syracuse,CodeKhaos,,"Week 8, 2022 → week 5, 2024",False,False,Lineups & streaks,Longest winning streak
+Longest winning streak,3,18 games,2024,Baylor,robertlouis7,,"Week 8, 2024 → week 3, 2026",False,False,Lineups & streaks,Longest winning streak
+Longest winning streak,4,16 games,2023,Youngstown State,mssullivan2022,,"Week 8, 2023 → week 1, 2025",False,False,Lineups & streaks,Longest winning streak
+Longest winning streak,5,15 games,2019,Wisconsin,laxbro000,,"Week 9, 2019 → week 1, 2021",False,False,Lineups & streaks,Longest winning streak
+Longest winning streak,6,14 games,2020,Davidson,willsingle05,,"Week 11, 2020 → week 2, 2022",False,False,Lineups & streaks,Longest winning streak
+Longest winning streak,7,14 games,2022,North Dakota State,4thdownTD,,"Week 8, 2022 → week 10, 2023",False,False,Lineups & streaks,Longest winning streak
+Longest winning streak,8,13 games,2022,Purdue,CanadaGoose0505,,"Week 1, 2022 → week 2, 2023",False,False,Lineups & streaks,Longest winning streak
+Longest winning streak,9,13 games,2025,Pittsburgh,vinceA762,,"Week 4, 2025 → week 5, 2026 · active",False,True,Lineups & streaks,Longest winning streak
+Longest winning streak,10,12 games,2024,Wofford,MattJB87,,"Week 1, 2024 → week 1, 2025",False,False,Lineups & streaks,Longest winning streak
+Longest losing streak,1,26 games,2024,Arizona,nshox2,,"Week 2, 2024 → week 5, 2026 · active",False,True,Lineups & streaks,Longest losing streak
+Longest losing streak,2,21 games,2020,Eastern Michigan,ThomasHarris,,"Week 1, 2020 → week 10, 2021",False,False,Lineups & streaks,Longest losing streak
+Longest losing streak,3,20 games,2024,Navy,Ianiners,,"Week 4, 2024 → week 1, 2026",False,False,Lineups & streaks,Longest losing streak
+Longest losing streak,4,17 games,2020,Illinois,richardson98,,"Week 1, 2020 → week 6, 2021",False,False,Lineups & streaks,Longest losing streak
+Longest losing streak,5,17 games,2024,Dayton,Ortizz,,"Week 1, 2024 → week 6, 2025",False,False,Lineups & streaks,Longest losing streak
+Longest losing streak,6,15 games,2023,Florida A&M,tpearson2222,,"Week 7, 2023 → week 10, 2024",False,False,Lineups & streaks,Longest losing streak
+Longest losing streak,7,15 games,2024,Louisiana Monroe,BroncoZzz,,"Week 9, 2024 → week 1, 2026",False,False,Lineups & streaks,Longest losing streak
+Longest losing streak,8,15 games,2024,Kansas,FalconsRULE7,,"Week 11, 2024 → week 3, 2026",False,False,Lineups & streaks,Longest losing streak
+Longest losing streak,9,14 games,2023,Utah State,SleazeMcNair,,"Week 1, 2023 → week 3, 2024",False,False,Lineups & streaks,Longest losing streak
+Longest losing streak,10,13 games,2023,USC,KamaraGOAT41,,"Week 8, 2023 → week 9, 2024",False,False,Lineups & streaks,Longest losing streak
