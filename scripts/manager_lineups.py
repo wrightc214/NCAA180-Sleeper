@@ -52,7 +52,7 @@ WEEKS_SEASON = "data/LineupWeeks_Season.csv"
 OUT_SEASON = "data/ManagerLineup_Season.csv"
 OUT_CAREER = "data/ManagerLineup_Career.csv"
 LAST_REGULAR_WEEK = 11
-CAREER_MIN_GAMES = 22  # two full regular seasons
+CAREER_MIN_GAMES = 20  # career leaderboard minimum (Chris, 2026-10-15: a round number)
 ALL_POS = set().union(*ELIGIBLE.values())
 
 
@@ -196,8 +196,10 @@ def season_weeks(year, current):
                 sc = scoring[r.LeagueID]
                 actual_by = dict(zip(g["PlayerID"], g["Points"]))
                 ap_pos = [pos_of(p, cur_pos) for p in roster]
-                keep = [i for i, ps in enumerate(ap_pos) if ps in ALL_POS]
-                proj = [sum(float(stats.get(roster[i], {}).get(k, 0) or 0) * w for k, w in sc.items()) for i in keep]
+                # exact projection ties (to the cent, as Sleeper shows them) break by player id, so the
+                # autopilot pick is deterministic rather than decided by floating-point noise
+                keep = sorted((i for i, ps in enumerate(ap_pos) if ps in ALL_POS), key=lambda i: roster[i])
+                proj = [round(sum(float(stats.get(roster[i], {}).get(k, 0) or 0) * w for k, w in sc.items()), 2) for i in keep]
                 pick = lineup_pick(proj, [ap_pos[i] for i in keep], sl)
                 auto = round(sum(actual_by.get(roster[keep[i]], 0.0) for i in pick), 2)
                 row["Autopilot"], row["BeatProj"] = auto, round(actual - auto, 2)

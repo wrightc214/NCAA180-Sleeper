@@ -1,17 +1,14 @@
 name: Announce page
 
-# Daily check + manual. Posts a "new page" graphic + short link to the league channel (team-stats),
+# Manual only (run when Chris says). Posts a "new page" graphic + short link to the league channel (team-stats),
 # once per page (data/Announcements.json). Run after Chris approves the card.
 on:
-  schedule:
-    - cron: '47 15 * * *'   # daily ~11:47 ET: posts the next approved, due entry (one per day)
   workflow_dispatch:
     inputs:
       page:
-        description: "Page to announce ('due' = next approved queue entry)"
+        description: 'Page to announce'
         type: choice
-        options: [due, managers, records, matchups]
-        default: due
+        options: [managers, records, matchups]
         required: true
       force:
         description: 'Post again even if this page was already announced'
@@ -39,13 +36,8 @@ jobs:
         env:
           DISCORD_WEBHOOK_TEAM_STATS: ${{ secrets.DISCORD_WEBHOOK_TEAM_STATS }}
           FORCE: ${{ github.event.inputs.force == 'true' && '1' || '0' }}
-          PAGE: ${{ github.event.inputs.page || 'due' }}
-        run: |
-          if [ "$PAGE" = "due" ]; then
-            python scripts/announce_cards.py due
-          else
-            python scripts/announce_cards.py render "$PAGE" && python scripts/announce_cards.py post "$PAGE"
-          fi
+          PAGE: ${{ github.event.inputs.page }}
+        run: python scripts/announce_cards.py render "$PAGE" && python scripts/announce_cards.py post "$PAGE"
       - name: Record announcement
         if: success()
         run: |

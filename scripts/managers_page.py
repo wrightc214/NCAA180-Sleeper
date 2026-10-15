@@ -20,7 +20,7 @@ regular season. Historic seasons are stamped with the season's final owner (a mi
 is credited to the successor). Orphan weeks/seasons excluded. Scores: one standard scoring system for
 2019-2025 (ScoresStandard_Historic, decision 2026-10-08), official Sleeper scores for the current
 season. Postseason outcomes stand as played. Lineup columns come from ManagerLineup_Career.csv.
-Qualified = at least 22 regular-season games (two full seasons). CWD must be repo root.
+Qualified = at least 20 regular-season games (ml.CAREER_MIN_GAMES). CWD must be repo root.
 """
 import html
 import json

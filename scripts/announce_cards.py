@@ -4,12 +4,10 @@ announce_cards.py -- one-time "new page" announcement graphics for Discord (team
   python scripts/announce_cards.py render [managers|records|matchups|all] -> reports/announce/<page>.png
   python scripts/announce_cards.py post <page>     -> posts that PNG + message (short link in the text,
                                                       not on the card) to DISCORD_WEBHOOK_TEAM_STATS
-  python scripts/announce_cards.py due             -> posts the next approved, due entry of
-                                                      config/announce_queue.json (one per day = spaced out)
 
 Numbers come from the live data files (Managers_AllTime.csv, Records_AllTime.csv), so the card
 matches the page on the day it posts. Links come from config/short_links.json (Chris's short links).
-Posting is manual (Announce page workflow) and happens once per page: data/Announcements.json
+Posting is manual (Announce page workflow, run when Chris says so) and happens once per page: data/Announcements.json
 records what went out; FORCE=1 reposts. Needs Playwright for `render`. CWD must be repo root.
 """
 import html
@@ -85,7 +83,7 @@ def managers_html():
     best_wp = q.sort_values(["WinPct", "Games"], ascending=False).iloc[0]
     best_ls = q.sort_values("LineupSkill", ascending=False).iloc[0]
     tiles = "".join([
-        tile("Managers tracked", f"{len(m)}", f"{len(q)} with 22+ games (two full seasons) qualify for the leaderboard"),
+        tile("Managers tracked", f"{len(m)}", f"{len(q)} with {mp.MIN_GAMES}+ games qualify for the leaderboard"),
         tile("Best win %", f"{best_wp.WinPct:.3f}".lstrip("0"),
              f"<b>{e(best_wp.Manager)}</b>{pill(best_wp.Team)} · {int(best_wp.Wins)}-{int(best_wp.Losses)}"),
         tile("Best Lineup Skill", f"{best_ls.LineupSkill:.3f}".lstrip("0"),
@@ -181,8 +179,8 @@ def matchups_html():
     return f"""<div class="card">
 <div class="eyebrow">New on the NCAA 180 site</div>
 <h1>Weekly <em>Matchups</em></h1>
-<p class="lede">All {len(g)} games every week: each roster's best projected lineup (Sleeper projections, your league's
-scoring), the pregame win chance, and how the two teams would stand if they'd played each other every week so far.
+<p class="lede">All {len(g)} games every week: each roster's best projected lineup from Sleeper's projections, the pregame
+win chance, and how the two teams would stand if they'd played each other every week so far.
 Set each Tuesday; the odds don't move once posted.</p>
 <div class="tiles">{tiles}</div>
 <div class="foot"><span>Week {wk} is up now · find your game</span></div>
@@ -236,22 +234,6 @@ def post(which):
     print(f"::notice::Announced {which} in team-stats")
 
 
-QUEUE = "config/announce_queue.json"
-
-
-def due(_=None):
-    """Post the first approved queue entry whose date has come and that hasn't posted. One per run."""
-    from zoneinfo import ZoneInfo
-    today = datetime.now(ZoneInfo("America/New_York")).date().isoformat()
-    state = json.load(open(STATE)) if os.path.exists(STATE) else {}
-    for q in json.load(open(QUEUE))["queue"]:
-        if q.get("approved") and q.get("post_on") and q["post_on"] <= today and q["page"] not in state:
-            render(q["page"])
-            post(q["page"])
-            return
-    print("::notice::No approved announcement due today")
-
-
 if __name__ == "__main__":
     cmd, which = (sys.argv[1:3] + ["all"])[:2] if len(sys.argv) > 1 else ("render", "all")
-    {"render": render, "post": post, "due": due}[cmd](which)
+    {"render": render, "post": post}[cmd](which)
