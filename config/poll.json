@@ -87,7 +87,7 @@
     "consecutive_misses": 2
   },
   "publish": {
-    "page_url": "https://wrightc214.github.io/NCAA180-Sleeper/reports/poll.html",
+    "page_url": "https://ncaa180.short.gy/top25",
     "post_to_league": false,
     "_post_to_league": "false = the league post goes to lm-private-data as a preview only. Flip to true when ready."
   },

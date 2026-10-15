@@ -386,19 +386,34 @@ def build():
     # streaks: per manager, regular season in order, across seasons
     st = m[~m["Orphan"]].sort_values(["Year", "Week"])
     runs = []
+    def ender(r, kind):
+        """The game that ended a streak: who did it and the score."""
+        opp = name(r.Year, r.LeagueName, r.OpponentRosterID) or r.OpponentName
+        own = r.OpponentName if isinstance(r.OpponentName, str) and r.OpponentName != "Orphan" else ""
+        who = f"{opp} ({own})" if own else opp
+        how = "Tied" if r.Outcome == "Tie" else ("Beaten by" if kind == "Win" else "Ended by beating")
+        return f"{how} {who} {r.PF:.2f}–{r.PA2:.2f}, week {int(r.Week)} {int(r.Year)}"
+    st = st.merge(st[["Year", "LeagueID", "Week", "RosterID", "PF"]].rename(
+        columns={"RosterID": "OpponentRosterID", "PF": "PA2"}), on=["Year", "LeagueID", "Week", "OpponentRosterID"], how="left")
+    st["PA2"] = st["PA2"].fillna(st["PointsAgainst"].astype(float))
+    st = st.sort_values(["Year", "Week"])
+    last_week = int(st[st.Year == year]["Week"].max()) if (st.Year == year).any() else None
     for oid, g in st.groupby("OwnerID"):
         cur_t, cur_n, start = None, 0, None
-        res = list(zip(g["Outcome"], g["Year"], g["Week"]))
-        for i, (o, y, w) in enumerate(res):
-            if o == cur_t:
+        rows_ = list(g.itertuples())
+        for i, r in enumerate(rows_):
+            if r.Outcome == cur_t:
                 cur_n += 1
             else:
                 if cur_t in ("Win", "Loss"):
-                    runs.append((oid, cur_t, cur_n, start, res[i - 1][1:], False))
-                cur_t, cur_n, start = o, 1, (y, w)
+                    prev = rows_[i - 1]
+                    runs.append((oid, cur_t, cur_n, start, (prev.Year, prev.Week), False, ender(r, cur_t)))
+                cur_t, cur_n, start = r.Outcome, 1, (r.Year, r.Week)
         if cur_t in ("Win", "Loss"):
-            runs.append((oid, cur_t, cur_n, start, res[-1][1:], (res[-1][1], res[-1][2]) == (year, int(st[st.Year == year]["Week"].max()))))
-    rn = pd.DataFrame(runs, columns=["OwnerID", "Type", "N", "Start", "End", "Active"])
+            lr = rows_[-1]
+            active = (lr.Year, int(lr.Week)) == (year, last_week)
+            runs.append((oid, cur_t, cur_n, start, (lr.Year, lr.Week), active, "" if active else "Ended when the manager left"))
+    rn = pd.DataFrame(runs, columns=["OwnerID", "Type", "N", "Start", "End", "Active", "EndedBy"])
     rn["Year"], rn["Week"] = [s0[0] for s0 in rn["Start"]], [s0[1] for s0 in rn["Start"]]
     st = st.assign(Team=[name(y, l, r) for y, l, r in zip(st["Year"], st["LeagueName"], st["RosterID"])])
 
@@ -412,7 +427,7 @@ def build():
     for t, label in (("Win", "Longest winning streak"), ("Loss", "Longest losing streak")):
         strk.append((label, top(rn[rn["Type"] == t], label, ["N"], False, lambda c, i, r: entry(
             c, i, f"{r.N} games", r.Start[0], run_teams(r), names_latest[r.OwnerID], "",
-            f"Week {r.Start[1]}, {r.Start[0]} → week {r.End[1]}, {r.End[0]}" + (" · active" if r.Active else ""),
+            f"Week {r.Start[1]}, {r.Start[0]} → week {r.End[1]}, {r.End[0]}" + (" · active" if r.Active else f" · {r.EndedBy}"),
             live=r.Active))))
     sections.append(("lineups", "Lineups & streaks", [("Best Lineup Skill season (9+ games)", bestls),
                                                       ("Most points left on the bench in a loss", left)] + strk))

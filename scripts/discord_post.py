@@ -28,7 +28,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from site_common import built_weeks  # noqa: E402
 
 PNG = "reports/latest.png"
-SHORT_LINK = "https://ncaa180.short.gy/home"
+SHORT_LINK = json.load(open("config/short_links.json"))["home"]  # Chris's short links
 MAX_BYTES = 9_500_000  # stay under Discord's smallest upload limit
 PARTS = "reports/discord/*.png"  # one image per report section (legible on phones); max 10 per message
 
