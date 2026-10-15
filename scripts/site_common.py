@@ -29,7 +29,7 @@ def built_weeks():
 
 def nav_html(current, weeks=None):
     """Main tabs: Weekly Awards (latest week; older weeks via week_archive_html on that page),
-    Roster Map, Standings, Poll. Poll sub-pages (how it works, bot ballots) highlight Poll."""
+    Roster Map, Standings, Matchups, Poll, Managers. Poll sub-pages (how it works, bot ballots) highlight Poll."""
     weeks = built_weeks() if weeks is None else weeks
     cur = ' aria-current="page"'
     links = []
@@ -41,6 +41,8 @@ def nav_html(current, weeks=None):
         links.append(f'<a href="matchups.html"{cur if current == "matchups" else ""}>Matchups</a>')
     if current in ("poll", "poll-how", "poll-bots") or os.path.exists(os.path.join(OUT_DIR, "poll.html")):
         links.append(f'<a href="poll.html"{cur if current in ("poll", "poll-how", "poll-bots") else ""}>Poll</a>')
+    if current == "managers" or os.path.exists(os.path.join(OUT_DIR, "managers.html")):
+        links.append(f'<a href="managers.html"{cur if current == "managers" else ""}>Managers</a>')
     return "".join(links)
 
 

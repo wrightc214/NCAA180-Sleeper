@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       script_to_run:
-        description: 'Script to run (league_ids, rosters, users, rosterhistory, matchups, scores, max_points, weekly_awards, players, transactions, drafts, standings, orphans, lineup_streaks, player_values, draft_picks, weekly_report, roster_map, poll, poll_page, matchups_page, gametime_projections, manager_lineups, standings_page, conference_championships, playoff_field, bowls, nit, patch_orphans, all). Postseason scripts are manual only - not in all.'
+        description: 'Script to run (league_ids, rosters, users, rosterhistory, matchups, scores, max_points, weekly_awards, players, transactions, drafts, standings, orphans, lineup_streaks, player_values, draft_picks, weekly_report, roster_map, poll, poll_page, matchups_page, gametime_projections, manager_lineups, managers_page, standings_page, conference_championships, playoff_field, bowls, nit, patch_orphans, all). Postseason scripts are manual only - not in all.'
         required: true
         default: 'all'
       post:
@@ -101,6 +101,7 @@ jobs:
           run poll_page           poll_page.py             all
           run weekly_report         weekly_report.py         all
           run manager_lineups       manager_lineups.py       all
+          run managers_page         managers_page.py         all
           run standings_page        standings_page.py        all
 
           # One-time - delete after use
