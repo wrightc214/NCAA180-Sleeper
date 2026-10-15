@@ -49,6 +49,13 @@ h1{margin:4px 0 6px;font-size:64px;line-height:1}
 .board li b{font-size:16px}
 .pt{display:inline-block;padding:2px 8px;border-radius:3px;font-weight:700;font-size:12px;line-height:1.3;margin:0 2px 0 6px}
 .tile .d .pt:first-child{margin-left:0}
+.tl{display:flex;align-items:center;gap:8px;margin:3px 0;font-size:15px}
+.tl .pt{margin-left:0;font-size:13px}
+.tl .rc{color:var(--mute);font:600 14px var(--num)}
+.tl .pj{margin-left:auto;font:700 16px var(--num)}
+.gm{margin-top:6px;padding-top:6px;border-top:1px solid var(--line);font-size:14px;color:var(--mute);line-height:1.5}
+.gm span{display:block}
+.gm b{color:var(--ink)}
 .foot{display:flex;justify-content:space-between;align-items:center;margin-top:18px;font-size:16px}
 .foot .link{font:800 22px var(--num);color:var(--accent)}
 """
@@ -147,43 +154,55 @@ def pct(p):
 
 
 def matchups_html():
-    g = pd.read_csv("data/MatchupProjections_Current.csv")
+    g = pd.read_csv("data/MatchupProjections_Current.csv").reset_index(drop=True)
     wk = int(g["Week"].iloc[0])
+    g["W"] = g["Rec"].str.split("-").str[0].astype(float)
+    g["OW"] = g["OppRec"].str.split("-").str[0].astype(float)
+    g["Hi"] = g[["Proj", "OppProj"]].max(axis=1)
+    used = set()
 
-    def side(team, proj, rank):
+    def pick(idx):
+        for i in idx:
+            if i not in used:
+                used.add(i)
+                return g.loc[i]
+        return None
+
+    def team_line(team, rec, proj, rank):
         rk = f"#{int(rank)} " if pd.notna(rank) else ""
-        return f"{pill(team, rk + team)} {proj:.2f}"
+        return f'<div class="tl">{pill(team, rk + team)}<span class="rc">{e(str(rec))}</span><span class="pj">{proj:.2f}</span></div>'
 
-    close = g.iloc[(g["WinPct"] - 50).abs().argsort().iloc[0]]
-    fav = g.sort_values("WinPct", ascending=False).iloc[0]
-    hi = g.assign(M=g[["Proj", "OppProj"]].max(axis=1)).sort_values("M", ascending=False).iloc[0]
-    hi_team, hi_p = (hi.Team, hi.Proj) if hi.Proj >= hi.OppProj else (hi.OppTeam, hi.OppProj)
+    def game(r):
+        ew = ""
+        if isinstance(r.EveryWeek, str) and r.EveryWeek:
+            ew = (f"{e(r.EveryWeekLeader)} {e(r.EveryWeek)}" if isinstance(r.EveryWeekLeader, str) and r.EveryWeekLeader
+                  else e(r.EveryWeek))
+        return (team_line(r.Team, r.Rec, r.Proj, r.Rank) + team_line(r.OppTeam, r.OppRec, r.OppProj, r.OppRank)
+                + f'<div class="gm"><span>Win chance: <b>{e(r.Team)} {pct(r.WinPct)}</b></span>'
+                + (f'<span>Every week: <b>{ew}</b></span>' if ew else "") + "</div>")
+
+    tiles = []
+    r = pick(g.iloc[(g["WinPct"] - 50).abs().argsort()].index)
+    tiles.append(tile("Coin flip", pct(r.WinPct), game(r)))
     ranked = g[g["Rank"].notna() & g["OppRank"].notna()]
     if len(ranked):
-        rg = ranked.sort_values(["OppRank"]).iloc[0]
-        top = tile("Ranked vs ranked", f"#{int(rg.Rank)} v #{int(rg.OppRank)}",
-                   f"{side(rg.Team, rg.Proj, rg.Rank)} vs {side(rg.OppTeam, rg.OppProj, rg.OppRank)}<br>"
-                   f"{e(rg.Team)} {pct(rg.WinPct)} to win")
-    else:
-        top = tile("Highest projection", f"{hi_p:.2f}", f"{pill(hi_team)} · best projected lineup this week")
-    tiles = "".join([
-        tile("Coin flip of the week", pct(close.WinPct),
-             f"{side(close.Team, close.Proj, close.Rank)} vs {side(close.OppTeam, close.OppProj, close.OppRank)}"
-             + (f"<br>If they'd played every week: {e(close.EveryWeekLeader)} {e(close.EveryWeek)}"
-                if isinstance(close.EveryWeekLeader, str) and close.EveryWeekLeader else
-                (f"<br>If they'd played every week: {e(close.EveryWeek)}" if isinstance(close.EveryWeek, str) else ""))),
-        top,
-        tile("Biggest favorite", pct(fav.WinPct),
-             f"{side(fav.Team, fav.Proj, fav.Rank)} vs {side(fav.OppTeam, fav.OppProj, fav.OppRank)}"),
-    ])
+        r = pick(ranked.assign(S=ranked["Rank"] + ranked["OppRank"]).sort_values("S").index)
+        tiles.append(tile("Ranked vs ranked", f"#{int(min(r.Rank, r.OppRank))} v #{int(max(r.Rank, r.OppRank))}", game(r)))
+    r = pick(g.assign(S=g["W"] + g["OW"]).sort_values(["S", "WinPct"], ascending=[False, True]).index)
+    tiles.append(tile("Best records", f"{e(r.Rec)} v {e(r.OppRec)}", game(r)))
+    hist = g[g["EveryWeekLeader"].notna() & (g["EveryWeekLeader"] == g["OppTeam"])].sort_values("WinPct", ascending=False)
+    r = pick(hist.index)
+    if r is not None:
+        tiles.append(tile("History says upset", e(r.OppTeam), game(r)))
+    r = pick(g.sort_values("WinPct", ascending=False).index)
+    tiles.append(tile("Biggest favorite", pct(r.WinPct), game(r)))
+    r = pick(g.sort_values("Hi", ascending=False).index)
+    tiles.append(tile("Top projection", f"{r.Hi:.2f}", game(r)))
     return f"""<div class="card">
 <div class="eyebrow">New on the NCAA 180 site</div>
 <h1>Weekly <em>Matchups</em></h1>
-<p class="lede">All {len(g)} games every week: each roster's best projected lineup from Sleeper's projections, the pregame
-win chance, and how the two teams would stand if they'd played each other every week so far.
-Set each Tuesday; the odds don't move once posted.</p>
-<div class="tiles">{tiles}</div>
-<div class="foot"><span>Week {wk} is up now · find your game</span></div>
+<p class="lede">Week {wk} · all {len(g)} games · projected lineup, win chance, every-week head-to-head</p>
+<div class="tiles">{"".join(tiles)}</div>
 </div>"""
 
 
