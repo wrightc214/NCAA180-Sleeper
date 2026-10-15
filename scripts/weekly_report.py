@@ -9,7 +9,7 @@ Writes (repo root is the Pages site):
 
 Template: templates/weekly_report.html ({{PLACEHOLDER}} substitution, no extra libraries).
 
-Sections: header KPIs, 7 awards (owner shown), Playoff Rank top 32 (wins then points,
+Sections: header KPIs, awards (owner shown; up to 10), Playoff Rank top 32 (wins then points,
 ties = 0.5 win, movement vs prior week), top 10 scores, conference average, top starter
 per position.
 
