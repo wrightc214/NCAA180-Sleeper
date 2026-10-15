@@ -14,6 +14,10 @@ on:
         description: 'Post again even if this page was already announced'
         type: boolean
         default: false
+      dry_run:
+        description: 'Render only (test); do not post to Discord'
+        type: boolean
+        default: false
 
 concurrency:
   group: announce
@@ -37,9 +41,19 @@ jobs:
           DISCORD_WEBHOOK_TEAM_STATS: ${{ secrets.DISCORD_WEBHOOK_TEAM_STATS }}
           FORCE: ${{ github.event.inputs.force == 'true' && '1' || '0' }}
           PAGE: ${{ github.event.inputs.page }}
-        run: python scripts/announce_cards.py render "$PAGE" && python scripts/announce_cards.py post "$PAGE"
+          DRY_RUN: ${{ github.event.inputs.dry_run == 'true' && '1' || '0' }}
+        run: |
+          python scripts/announce_cards.py render "$PAGE"
+          if [ "$DRY_RUN" = "1" ]; then echo "::notice::Dry run: rendered $PAGE, nothing posted"; exit 0; fi
+          python scripts/announce_cards.py post "$PAGE"
+      - name: Keep the rendered card (dry run) for review
+        if: github.event.inputs.dry_run == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: announce-card
+          path: reports/announce/*.png
       - name: Record announcement
-        if: success()
+        if: success() && github.event.inputs.dry_run != 'true'
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
