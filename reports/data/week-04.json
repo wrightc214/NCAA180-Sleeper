@@ -557,6 +557,17 @@
    "Margin": 121.92,
    "Max": 241.4,
    "Eff": 0.9876
+  },
+  "exceed": {
+   "Team": "Georgetown",
+   "Lg": "Ivy",
+   "Owner": "ccassidy",
+   "P": 238.4,
+   "Opp": "Yale",
+   "PA": 116.48,
+   "Margin": 121.92,
+   "Proj": 154.49,
+   "Over": 83.91
   }
  },
  "players": [

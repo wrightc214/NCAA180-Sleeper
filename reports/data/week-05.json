@@ -567,6 +567,17 @@
    "PA": 97.3,
    "Margin": 87.3,
    "WinPct": 6.4
+  },
+  "exceed": {
+   "Team": "UNLV",
+   "Lg": "Mountain West",
+   "Owner": "bdub3",
+   "P": 221.18,
+   "Opp": "Hawaii",
+   "PA": 167.8,
+   "Margin": 53.38,
+   "Proj": 145.06,
+   "Over": 76.12
   }
  },
  "players": [

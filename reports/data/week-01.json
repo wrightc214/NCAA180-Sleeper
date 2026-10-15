@@ -557,6 +557,17 @@
    "Margin": 9.44,
    "Max": 143.5,
    "Eff": 0.977
+  },
+  "exceed": {
+   "Team": "Mississippi Valley State",
+   "Lg": "HBCU",
+   "Owner": "StrikerS091",
+   "P": 184.76,
+   "Opp": "Southern",
+   "PA": 149.76,
+   "Margin": 35.0,
+   "Proj": 122.79,
+   "Over": 61.97
   }
  },
  "players": [

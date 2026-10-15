@@ -557,6 +557,17 @@
    "Margin": 102.42,
    "Max": 176.98,
    "Eff": 0.9802
+  },
+  "exceed": {
+   "Team": "Minnesota",
+   "Lg": "Big 10",
+   "Owner": "linkoftime1",
+   "P": 253.72,
+   "Opp": "Iowa",
+   "PA": 118.78,
+   "Margin": 134.94,
+   "Proj": 164.24,
+   "Over": 89.48
   }
  },
  "players": [

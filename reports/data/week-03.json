@@ -557,6 +557,17 @@
    "Margin": 31.84,
    "Max": 154.6,
    "Eff": 0.9664
+  },
+  "exceed": {
+   "Team": "South Alabama",
+   "Lg": "CUSA",
+   "Owner": "GRIDIRONGANG81",
+   "P": 205.38,
+   "Opp": "Louisiana",
+   "PA": 77.94,
+   "Margin": 127.44,
+   "Proj": 151.03,
+   "Over": 54.35
   }
  },
  "players": [
