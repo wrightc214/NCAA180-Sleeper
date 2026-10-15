@@ -148,6 +148,7 @@ def shoot():
         b = p.chromium.launch()
         pg = b.new_page(viewport={"width": 600, "height": 900}, device_scale_factor=2, color_scheme="light")
         pg.goto("file://" + os.path.abspath(OUT_HTML), wait_until="networkidle")
+        pg.add_style_tag(content=".totop{display:none!important}")  # never in a screenshot
         pg.evaluate("document.fonts.ready")
         for i, s in enumerate(pg.query_selector_all("section.card")):
             t = s.query_selector("h2").inner_text().split("\n")[0].split("·")[0]

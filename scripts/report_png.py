@@ -24,6 +24,7 @@ with sync_playwright() as p:
     b = p.chromium.launch()
     pg = b.new_page(viewport={"width": 1200, "height": 800}, device_scale_factor=2, color_scheme="light")
     pg.goto("file://" + SRC, wait_until="networkidle")
+    pg.add_style_tag(content=".totop{display:none!important}")  # never in a screenshot
     pg.evaluate("document.fonts.ready")
     pg.screenshot(path=OUT, full_page=True)
 

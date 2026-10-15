@@ -1,14 +1,17 @@
 name: Announce page
 
-# Manual only. Posts a "new page" graphic + short link to the league channel (team-stats),
+# Daily check + manual. Posts a "new page" graphic + short link to the league channel (team-stats),
 # once per page (data/Announcements.json). Run after Chris approves the card.
 on:
+  schedule:
+    - cron: '47 15 * * *'   # daily ~11:47 ET: posts the next approved, due entry (one per day)
   workflow_dispatch:
     inputs:
       page:
-        description: 'Page to announce'
+        description: "Page to announce ('due' = next approved queue entry)"
         type: choice
-        options: [managers, records]
+        options: [due, managers, records, matchups]
+        default: due
         required: true
       force:
         description: 'Post again even if this page was already announced'
@@ -32,13 +35,17 @@ jobs:
           pip install -r requirements.txt requests playwright
           python -m playwright install-deps chromium
           python -m playwright install --only-shell chromium
-      - name: Render card from today's data
-        run: python scripts/announce_cards.py render ${{ github.event.inputs.page }}
-      - name: Post to team-stats
+      - name: Render (named page) and post to team-stats
         env:
           DISCORD_WEBHOOK_TEAM_STATS: ${{ secrets.DISCORD_WEBHOOK_TEAM_STATS }}
           FORCE: ${{ github.event.inputs.force == 'true' && '1' || '0' }}
-        run: python scripts/announce_cards.py post ${{ github.event.inputs.page }}
+          PAGE: ${{ github.event.inputs.page || 'due' }}
+        run: |
+          if [ "$PAGE" = "due" ]; then
+            python scripts/announce_cards.py due
+          else
+            python scripts/announce_cards.py render "$PAGE" && python scripts/announce_cards.py post "$PAGE"
+          fi
       - name: Record announcement
         if: success()
         run: |
@@ -46,5 +53,5 @@ jobs:
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/Announcements.json reports/announce || true
           if git diff --cached --quiet; then exit 0; fi
-          git commit -m "Announced ${{ github.event.inputs.page }} page"
+          git commit -m "Announcement posted"
           for i in 1 2 3; do git pull --rebase -q && git push && break; sleep 5; done

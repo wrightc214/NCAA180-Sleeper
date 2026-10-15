@@ -158,7 +158,7 @@ def build_html(cards):
 {rank_html}<div class="body"><h3>Key players</h3><ul>{players}</ul>
 <h3>Top draft picks <small>({c['n_picks']} owned)</small></h3><ul>{picks}</ul></div></div>""")
     n = len(cards)
-    return (page_head("NCAA 180 · Open Teams", css)
+    return (page_head("NCAA 180 · Open Teams", css, totop=False)
             + f"""<div class="wrap"><header><div><div class="eyebrow">Dynasty · now recruiting</div>
 <h1>NCAA 180 <em>Open Teams</em></h1></div><div class="kpi"><b>{n}</b><span>team{'s' if n != 1 else ''} available</span></div></header>
 <div class="grid" style="--cols:{min(max(n, 1), 3)}">{''.join(parts) or '<p>No open teams right now.</p>'}</div>

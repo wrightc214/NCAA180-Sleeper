@@ -1,0 +1,20 @@
+{
+  "_note": "New-page announcements, posted to team-stats by the 'Announce page' workflow (daily check). An entry posts on or after post_on (ET date) only when approved is true; at most one per day, so posts are spaced out. Posted dates land in data/Announcements.json.",
+  "queue": [
+    {
+      "page": "managers",
+      "post_on": "",
+      "approved": false
+    },
+    {
+      "page": "records",
+      "post_on": "",
+      "approved": false
+    },
+    {
+      "page": "matchups",
+      "post_on": "",
+      "approved": false
+    }
+  ]
+}

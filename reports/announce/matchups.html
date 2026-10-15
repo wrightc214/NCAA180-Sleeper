@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NCAA 180 matchups</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Barlow:wght@400;600;700&family=Barlow+Condensed:wght@500;600&display=swap">
+<style>
+/* Layout: stadium-scoreboard header, then a two-column stat sheet (poll left, week detail right) that stacks on phones */
+:root{--bg:#eef1f5;--panel:#ffffff;--ink:#14213a;--mute:#5d6a80;--line:#d5dbe5;--accent:#c8102e;--gold:#b8860b;--up:#1d7a43;--dn:#b3261e;
+--disp:"Big Shoulders Display",Impact,"Arial Narrow",sans-serif;--body:"Barlow",system-ui,sans-serif;--num:"Barlow Condensed","Arial Narrow",sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1526;--panel:#16213a;--ink:#e8edf6;--mute:#9aa7bd;--line:#2a3756;--accent:#ff5468;--gold:#e0b44a;--up:#4fc785;--dn:#ff7b72;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0d1526;--panel:#16213a;--ink:#e8edf6;--mute:#9aa7bd;--line:#2a3756;--accent:#ff5468;--gold:#e0b44a;--up:#4fc785;--dn:#ff7b72;color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.4}
+.wrap{max-width:1100px;margin:0 auto;padding-inline:16px;padding-block:24px 40px;display:grid;gap:20px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;border-bottom:4px solid var(--accent);padding-bottom:12px}
+.eyebrow{font:600 13px/1 var(--num);letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+h1{font:900 clamp(40px,8vw,72px)/.9 var(--disp);margin:6px 0 0;letter-spacing:.01em;text-transform:uppercase;text-wrap:balance}
+h1 em{font-style:normal;color:var(--accent)}
+.kpis{display:flex;gap:22px;flex-wrap:wrap}
+.kpi b{display:block;font:600 30px/1 var(--num);font-variant-numeric:tabular-nums}
+.kpi span{font:600 11px/1.2 var(--num);letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+h2{font:700 24px/1 var(--disp);text-transform:uppercase;letter-spacing:.03em;margin:0 0 10px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+h2 small{font:500 12px var(--num);letter-spacing:.1em;color:var(--mute)}
+section{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px;min-width:0}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
+.col{display:grid;gap:20px;min-width:0}
+@media (max-width:820px){.grid{grid-template-columns:1fr}}
+.n{font-family:var(--num);font-variant-numeric:tabular-nums}
+.chip{display:inline-block;width:10px;height:22px;border-radius:2px;flex:none;margin-right:8px;vertical-align:middle;box-shadow:inset 0 0 0 1px rgba(127,127,127,.35)}
+small{color:var(--mute);font-weight:400}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{white-space:nowrap;font:600 11px var(--num);letter-spacing:.12em;text-transform:uppercase;color:var(--mute);text-align:left;padding:4px 6px;border-bottom:2px solid var(--ink)}
+th.r,td.n{text-align:right}
+td{padding:5px 6px;border-bottom:1px solid var(--line);white-space:nowrap}
+td.tm{display:flex;align-items:center;gap:0}
+@media (max-width:640px){table{font-size:13px}td.tm{flex-wrap:wrap;white-space:normal}td.tm b{flex:1;min-width:0}td.tm small{flex-basis:100%;margin-left:18px!important;font-size:11px!important}td,th{padding:5px 3px}td.mv{width:26px;font-size:12px}th{letter-spacing:.06em}}
+td.tm b{font-weight:700}td.tm small{margin-left:8px;font-size:12px}
+td.mv{text-align:center;width:34px;font:600 13px var(--num)}
+.up{color:var(--up)}.dn{color:var(--dn)}.eq{color:var(--mute)}
+tr:nth-child(-n+4) td:first-child{color:var(--accent);font-weight:600}
+.awards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.aw{background:var(--panel);padding:10px 12px;display:flex;flex-direction:column;gap:3px;text-align:center;align-items:center}
+.aw:last-child:nth-child(odd){grid-column:1/-1}
+@media (min-width:1000px){.awards{grid-template-columns:repeat(var(--cols),minmax(0,1fr))}.aw:last-child:nth-child(odd){grid-column:auto}}
+.al{font:600 11px var(--num);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.av{font-size:28px;font-weight:600;line-height:1}.av small{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin-top:3px}
+.at{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;font-size:14px}.at small{margin-left:6px}
+.ao{font-size:12px;color:var(--mute)}
+.an{font-size:12px;color:var(--mute)}
+ol,ul{list-style:none;margin:0;padding:0}
+.list li{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line)}
+.list li:last-child{border-bottom:0}
+.list .rk{width:20px;color:var(--mute)}
+.nm{flex:1;min-width:0;display:grid}.nm small{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.v{font-size:20px;font-weight:600}
+.pos{font:600 12px var(--num);letter-spacing:.08em;width:38px;text-align:center;padding:3px 0;border:1px solid var(--ink);border-radius:3px}
+.lgs li{display:grid;grid-template-columns:104px 1fr 44px;align-items:center;gap:8px;padding:3px 0;font-size:14px}
+.bar{height:12px;background:var(--bg);border-radius:2px;overflow:hidden}.bar i{display:block;height:100%;background:var(--gold)}
+.lgs .n{text-align:right}
+.note{font-size:12px;color:var(--mute);margin:8px 0 0}
+footer{font-size:12px;color:var(--mute)}
+.logo{width:56px;height:56px;object-fit:contain;flex:none;display:block;margin:4px 0 2px}
+.ls{margin-top:auto;padding-top:14px;height:98px;display:flex;align-items:flex-end;justify-content:center}
+.ls img{max-height:84px;max-width:100%;object-fit:contain}
+.weeks{display:flex;flex-wrap:wrap;gap:6px;font:600 13px var(--num)}.weeks a{color:var(--mute);text-decoration:none;padding:2px 8px;border:1px solid var(--line);border-radius:3px}.weeks a[aria-current]{color:var(--panel);background:var(--ink);border-color:var(--ink)}
+.weeks.sub{font-size:12px;margin-top:8px;align-items:center}.weeks.sub span{color:var(--mute);margin-right:2px}.weeks.sub a{padding:1px 7px}
+.totop{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:50;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--ink);color:var(--bg);font:700 18px/1 var(--num);text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);opacity:.85}
+.totop:hover,.totop:focus-visible{opacity:1}
+.totop[hidden]{display:none}
+@media print{.totop{display:none}}
+</style>
+<style>
+body{background:var(--bg)}
+.card{width:1000px;padding:34px 38px 26px;background:var(--bg)}
+.eyebrow{font:700 14px var(--num);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+h1{margin:4px 0 6px;font-size:64px;line-height:1}
+.lede{font-size:19px;color:var(--mute);margin:0 0 20px;max-width:880px}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 0 18px}
+.tile{border:1px solid var(--line);border-radius:8px;padding:14px 16px;background:var(--panel)}
+.tile .k{font:700 12px var(--num);letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.tile .v{font:800 34px var(--num);line-height:1.1;margin:4px 0 4px}
+.tile .d{font-size:14px;line-height:1.35}
+.board{border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:10px 16px 6px}
+.board h2{margin:2px 0 6px;font:700 13px var(--num);letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.board ol{list-style:none;margin:0;padding:0;columns:2;column-gap:28px}
+.board li{display:grid;grid-template-columns:26px 1fr auto;align-items:center;gap:8px;padding:6px 0;border-top:1px solid var(--line);break-inside:avoid}
+.board li .r{font:700 15px var(--num);color:var(--mute)}
+.board li .n{font:800 20px var(--num)}
+.board li b{font-size:16px}
+.pt{display:inline-block;padding:2px 8px;border-radius:3px;font-weight:700;font-size:12px;line-height:1.3;margin:0 2px 0 6px}
+.tile .d .pt:first-child{margin-left:0}
+.foot{display:flex;justify-content:space-between;align-items:center;margin-top:18px;font-size:16px}
+.foot .link{font:800 22px var(--num);color:var(--accent)}
+</style>
+</head><body><div class="card">
+<div class="eyebrow">New on the NCAA 180 site</div>
+<h1>Weekly <em>Matchups</em></h1>
+<p class="lede">All 90 games every week: each roster's best projected lineup (Sleeper projections, your league's
+scoring), the pregame win chance, and how the two teams would stand if they'd played each other every week so far.
+Set each Tuesday; the odds don't move once posted.</p>
+<div class="tiles"><div class="tile"><div class="k">Coin flip of the week</div><div class="v">50%</div><div class="d"><span class="pt" style="background:#841617;color:#FDF9D8">Oklahoma</span> 125.29 vs <span class="pt" style="background:#4d1979;color:#FFFFFF">TCU</span> 125.25<br>If they'd played every week: TCU 3-2</div></div><div class="tile"><div class="k">Ranked vs ranked</div><div class="v">#15 v #2</div><div class="d"><span class="pt" style="background:#154734;color:#FFFFFF">#15 Portland State</span> 179.37 vs <span class="pt" style="background:#115740;color:#F0B323">#2 William &amp; Mary</span> 141.29<br>Portland State 87% to win</div></div><div class="tile"><div class="k">Biggest favorite</div><div class="v">>99%</div><div class="d"><span class="pt" style="background:#FF5F05;color:#13294B">Illinois</span> 149.86 vs <span class="pt" style="background:#990000;color:#EEEDEB">Indiana</span> 68.05</div></div></div>
+<div class="foot"><span>Week 6 is up now · find your game</span></div>
+</div></body></html>

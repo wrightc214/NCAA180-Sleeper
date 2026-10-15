@@ -65,6 +65,10 @@ footer{font-size:12px;color:var(--mute)}
 .ls img{max-height:84px;max-width:100%;object-fit:contain}
 .weeks{display:flex;flex-wrap:wrap;gap:6px;font:600 13px var(--num)}.weeks a{color:var(--mute);text-decoration:none;padding:2px 8px;border:1px solid var(--line);border-radius:3px}.weeks a[aria-current]{color:var(--panel);background:var(--ink);border-color:var(--ink)}
 .weeks.sub{font-size:12px;margin-top:8px;align-items:center}.weeks.sub span{color:var(--mute);margin-right:2px}.weeks.sub a{padding:1px 7px}
+.totop{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:50;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--ink);color:var(--bg);font:700 18px/1 var(--num);text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);opacity:.85}
+.totop:hover,.totop:focus-visible{opacity:1}
+.totop[hidden]{display:none}
+@media print{.totop{display:none}}
 </style>
 <style>
 body{background:var(--bg)}
@@ -94,5 +98,5 @@ h1{margin:4px 0 6px;font-size:64px;line-height:1}
 <p class="lede">Every real game since 2019: champions, single-game records, perfect seasons, playoff heartbreaks,
 Cinderella runs and streaks. <b>Race to 75 wins:</b> nobody yet · nearest: CodeKhaos (Syracuse), 66 wins. First to 50 wins: <b>CodeKhaos</b> (2024).</p>
 <div class="tiles"><div class="tile"><div class="k">Highest score</div><div class="v">253.72</div><div class="d"><b>linkoftime1</b><span class="pt" style="background:#7a0019;color:#ffcc33">Minnesota</span> · 2026</div></div><div class="tile"><div class="k">Biggest blowout</div><div class="v">+181.74</div><div class="d"><b>olddominion2020</b><span class="pt" style="background:#003057;color:#98C5EA">Old Dominion</span> · 2023</div></div><div class="tile"><div class="k">Longest win streak</div><div class="v">23 games</div><div class="d"><b>dilbennett</b><span class="pt" style="background:#F56600;color:#2E1A47">Clemson</span><br>Beaten by FSU (Yarby) 144.74–155.52, week 3 2025</div></div><div class="tile"><div class="k">Perfect seasons</div><div class="v">4</div><div class="d">Teams that went 12-0 (11-0 + conference title) · none won the national title</div></div><div class="tile"><div class="k">Cinderella champion</div><div class="v">#26 seed</div><div class="d"><b>leathershoe4</b><span class="pt" style="background:#002855;color:#A8996E">Charleston Southern</span> · 2022 national champion</div></div><div class="tile"><div class="k">Highest score eliminated</div><div class="v">209.56</div><div class="d"><b>olddominion2020</b><span class="pt" style="background:#003057;color:#98C5EA">Old Dominion</span> · 2024<br>Lost to Minnesota 209.56–219.18 · Sweet 16</div></div></div>
-<div class="foot"><span>Single-game records update live with this season's games</span><span class="link">ncaa180.short.gy/records</span></div>
+<div class="foot"><span>Single-game records update live with this season's games</span></div>
 </div></body></html>

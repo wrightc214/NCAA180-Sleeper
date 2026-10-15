@@ -1,9 +1,11 @@
 """
 announce_cards.py -- one-time "new page" announcement graphics for Discord (team-stats).
 
-  python scripts/announce_cards.py render [managers|records|all]  -> reports/announce/<page>.png
-  python scripts/announce_cards.py post <page>                    -> posts that PNG + short link
-                                                                     to DISCORD_WEBHOOK_TEAM_STATS
+  python scripts/announce_cards.py render [managers|records|matchups|all] -> reports/announce/<page>.png
+  python scripts/announce_cards.py post <page>     -> posts that PNG + message (short link in the text,
+                                                      not on the card) to DISCORD_WEBHOOK_TEAM_STATS
+  python scripts/announce_cards.py due             -> posts the next approved, due entry of
+                                                      config/announce_queue.json (one per day = spaced out)
 
 Numbers come from the live data files (Managers_AllTime.csv, Records_AllTime.csv), so the card
 matches the page on the day it posts. Links come from config/short_links.json (Chris's short links).
@@ -47,17 +49,18 @@ h1{margin:4px 0 6px;font-size:64px;line-height:1}
 .board li .r{font:700 15px var(--num);color:var(--mute)}
 .board li .n{font:800 20px var(--num)}
 .board li b{font-size:16px}
-.pt{display:inline-block;padding:2px 8px;border-radius:3px;font-weight:700;font-size:12px;line-height:1.3;margin-left:6px}
+.pt{display:inline-block;padding:2px 8px;border-radius:3px;font-weight:700;font-size:12px;line-height:1.3;margin:0 2px 0 6px}
+.tile .d .pt:first-child{margin-left:0}
 .foot{display:flex;justify-content:space-between;align-items:center;margin-top:18px;font-size:16px}
 .foot .link{font:800 22px var(--num);color:var(--accent)}
 """
 
 
-def pill(team):
+def pill(team, label=None):
     if not team:
         return ""
     bg, fg = mp.chip(team)
-    return f'<span class="pt" style="background:{bg};color:{fg}">{e(team)}</span>'
+    return f'<span class="pt" style="background:{bg};color:{fg}">{e(label or team)}</span>'
 
 
 def tile(k, v, d):
@@ -96,7 +99,7 @@ def managers_html():
 runs, with a big bonus for a national title. {len(champs)} national titles, {n_ch} different champions 🏆.</p>
 <div class="tiles">{tiles}</div>
 <div class="board"><h2>Legend Score · top 10</h2><ol>{"".join(lis)}</ol></div>
-<div class="foot"><span>Find your name, your seasons and your Lineup Skill</span><span class="link">{e(LINKS["managers"].replace("https://", ""))}</span></div>
+<div class="foot"><span>Find your name, your seasons and your Lineup Skill on the new Managers page</span></div>
 </div>"""
 
 
@@ -137,15 +140,62 @@ def records_html():
 <p class="lede">Every real game since 2019: champions, single-game records, perfect seasons, playoff heartbreaks,
 Cinderella runs and streaks. {race}</p>
 <div class="tiles">{"".join(tiles)}</div>
-<div class="foot"><span>Single-game records update live with this season's games</span><span class="link">{e(LINKS["records"].replace("https://", ""))}</span></div>
+<div class="foot"><span>Single-game records update live with this season's games</span></div>
 </div>"""
 
 
-BUILD = {"managers": managers_html, "records": records_html}
+def pct(p):
+    return "<1%" if p < 1 else (">99%" if p > 99 else f"{p:.0f}%")
+
+
+def matchups_html():
+    g = pd.read_csv("data/MatchupProjections_Current.csv")
+    wk = int(g["Week"].iloc[0])
+
+    def side(team, proj, rank):
+        rk = f"#{int(rank)} " if pd.notna(rank) else ""
+        return f"{pill(team, rk + team)} {proj:.2f}"
+
+    close = g.iloc[(g["WinPct"] - 50).abs().argsort().iloc[0]]
+    fav = g.sort_values("WinPct", ascending=False).iloc[0]
+    hi = g.assign(M=g[["Proj", "OppProj"]].max(axis=1)).sort_values("M", ascending=False).iloc[0]
+    hi_team, hi_p = (hi.Team, hi.Proj) if hi.Proj >= hi.OppProj else (hi.OppTeam, hi.OppProj)
+    ranked = g[g["Rank"].notna() & g["OppRank"].notna()]
+    if len(ranked):
+        rg = ranked.sort_values(["OppRank"]).iloc[0]
+        top = tile("Ranked vs ranked", f"#{int(rg.Rank)} v #{int(rg.OppRank)}",
+                   f"{side(rg.Team, rg.Proj, rg.Rank)} vs {side(rg.OppTeam, rg.OppProj, rg.OppRank)}<br>"
+                   f"{e(rg.Team)} {pct(rg.WinPct)} to win")
+    else:
+        top = tile("Highest projection", f"{hi_p:.2f}", f"{pill(hi_team)} · best projected lineup this week")
+    tiles = "".join([
+        tile("Coin flip of the week", pct(close.WinPct),
+             f"{side(close.Team, close.Proj, close.Rank)} vs {side(close.OppTeam, close.OppProj, close.OppRank)}"
+             + (f"<br>If they'd played every week: {e(close.EveryWeekLeader)} {e(close.EveryWeek)}"
+                if isinstance(close.EveryWeekLeader, str) and close.EveryWeekLeader else
+                (f"<br>If they'd played every week: {e(close.EveryWeek)}" if isinstance(close.EveryWeek, str) else ""))),
+        top,
+        tile("Biggest favorite", pct(fav.WinPct),
+             f"{side(fav.Team, fav.Proj, fav.Rank)} vs {side(fav.OppTeam, fav.OppProj, fav.OppRank)}"),
+    ])
+    return f"""<div class="card">
+<div class="eyebrow">New on the NCAA 180 site</div>
+<h1>Weekly <em>Matchups</em></h1>
+<p class="lede">All {len(g)} games every week: each roster's best projected lineup (Sleeper projections, your league's
+scoring), the pregame win chance, and how the two teams would stand if they'd played each other every week so far.
+Set each Tuesday; the odds don't move once posted.</p>
+<div class="tiles">{tiles}</div>
+<div class="foot"><span>Week {wk} is up now · find your game</span></div>
+</div>"""
+
+
+BUILD = {"managers": managers_html, "records": records_html, "matchups": matchups_html}
 TEXT = {"managers": ("**New: All-Time Managers** 🏆\nEvery NCAA 180 manager since 2019, ranked by Legend Score. "
                      "Find your seasons, record and Lineup Skill: {link}"),
         "records": ("**New: All-Time Records** 📈\nChampions, single-game records, perfect seasons, Cinderella runs "
-                    "and streaks: {link}")}
+                    "and streaks: {link}"),
+        "matchups": ("**New: Weekly Matchups** 🏈\nEvery game this week with projected lineups, pregame win chance and "
+                     "the every-week head-to-head: {link}")}
 
 
 def render(which):
@@ -157,7 +207,7 @@ def render(which):
         pg = b.new_page(viewport={"width": 1076, "height": 900}, device_scale_factor=2, color_scheme="light")
         for k in pages:
             path = os.path.join(OUT_DIR, f"{k}.html")
-            open(path, "w", encoding="utf-8").write(page_head(f"NCAA 180 {k}", CSS) + BUILD[k]() + "</body></html>")
+            open(path, "w", encoding="utf-8").write(page_head(f"NCAA 180 {k}", CSS, totop=False) + BUILD[k]() + "</body></html>")
             pg.goto("file://" + os.path.abspath(path), wait_until="networkidle")
             pg.evaluate("document.fonts.ready")
             pg.locator(".card").screenshot(path=os.path.join(OUT_DIR, f"{k}.png"))
@@ -186,6 +236,22 @@ def post(which):
     print(f"::notice::Announced {which} in team-stats")
 
 
+QUEUE = "config/announce_queue.json"
+
+
+def due(_=None):
+    """Post the first approved queue entry whose date has come and that hasn't posted. One per run."""
+    from zoneinfo import ZoneInfo
+    today = datetime.now(ZoneInfo("America/New_York")).date().isoformat()
+    state = json.load(open(STATE)) if os.path.exists(STATE) else {}
+    for q in json.load(open(QUEUE))["queue"]:
+        if q.get("approved") and q.get("post_on") and q["post_on"] <= today and q["page"] not in state:
+            render(q["page"])
+            post(q["page"])
+            return
+    print("::notice::No approved announcement due today")
+
+
 if __name__ == "__main__":
     cmd, which = (sys.argv[1:3] + ["all"])[:2] if len(sys.argv) > 1 else ("render", "all")
-    {"render": render, "post": post}[cmd](which)
+    {"render": render, "post": post, "due": due}[cmd](which)

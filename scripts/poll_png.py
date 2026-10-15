@@ -20,6 +20,7 @@ with sync_playwright() as p:
     b = p.chromium.launch()
     pg = b.new_page(viewport={"width": WIDTH, "height": 900}, device_scale_factor=2, color_scheme="light")
     pg.goto("file://" + SRC, wait_until="networkidle")
+    pg.add_style_tag(content=".totop{display:none!important}")  # never in a screenshot
     pg.evaluate("document.fonts.ready")
     made = []
     sec = pg.query_selector("section#poll")

@@ -58,14 +58,24 @@ def week_archive_html(current, weeks=None):
     return f'<nav class="weeks sub" aria-label="Weekly archive"><span>Archive</span>{links}</nav>'
 
 
-def page_head(title, extra_css=""):
+# Back-to-top button (Chris, 2026-10-14): fixed bottom-right, appears only after scrolling about a screen,
+# small so it doesn't sit over content for long; hidden when printing. Styles live in the template's <style>.
+TOTOP = ('<a href="#" class="totop" aria-label="Back to top" hidden>&#8593;</a>'
+         '<script>(function(){var b=document.currentScript.previousElementSibling;'
+         'function f(){b.hidden=window.scrollY<window.innerHeight*0.9;}'
+         'window.addEventListener("scroll",f,{passive:true});window.addEventListener("load",f);'
+         'b.addEventListener("click",function(ev){ev.preventDefault();var r=window.matchMedia("(prefers-reduced-motion: reduce)").matches;'
+         'window.scrollTo({top:0,behavior:r?"auto":"smooth"});});})();</script>')
+
+
+def page_head(title, extra_css="", totop=True):
     tpl = open(TEMPLATE, encoding="utf-8").read()
     style = re.search(r"<style>.*?</style>", tpl, re.S).group(0)
     fonts = re.findall(r"<link [^>]*>", tpl)
     return ("<!doctype html>\n<html lang=\"en\"><head><meta charset=\"utf-8\">"
             "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n"
             f"<title>{html.escape(title)}</title>\n" + "\n".join(fonts) + "\n" + style +
-            (f"\n<style>{extra_css}</style>" if extra_css else "") + "\n</head><body>")
+            (f"\n<style>{extra_css}</style>" if extra_css else "") + "\n</head><body>" + (TOTOP if totop else ""))
 
 
 # ---- Team colors: standing rule for every graphic -------------------------------------
