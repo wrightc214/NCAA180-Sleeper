@@ -56,6 +56,11 @@ h1{margin:4px 0 6px;font-size:64px;line-height:1}
 .gm{margin-top:6px;padding-top:6px;border-top:1px solid var(--line);font-size:14px;color:var(--mute);line-height:1.5}
 .gm span{display:block}
 .gm b{color:var(--ink)}
+.tile.wide{grid-column:span 2}
+.ml{display:flex;align-items:center;gap:8px;margin:5px 0;font-size:14px;flex-wrap:wrap}
+.ml .pt{margin-left:0;font-size:12px}
+.ml .mk{font:800 14px var(--num);min-width:118px}
+.ml span{color:var(--mute)}
 .foot{display:flex;justify-content:space-between;align-items:center;margin-top:18px;font-size:16px}
 .foot .link{font:800 22px var(--num);color:var(--accent)}
 """
@@ -111,41 +116,55 @@ runs, with a big bonus for a national title. {len(champs)} national titles, {n_c
 def records_html():
     r = pd.read_csv("data/Records_AllTime.csv")
 
-    def who(x):
-        return f"<b>{e(str(x.Owner))}</b>{pill(x.Team) if isinstance(x.Team, str) else ''}"
+    def pills(team):
+        return "".join(pill(t) for t in str(team).split("|") if t and t != "nan")
 
-    hi, bl, ws = rec(r, "Highest score"), rec(r, "Biggest blowout"), rec(r, "Longest winning streak")
-    per = r[r["List"] == "Perfect seasons (12-0)"]
-    per_titles = per["Detail"].fillna("").str.contains("National champion").sum()
+    def who(x):
+        return f"<b>{e(str(x.Owner))}</b>{pills(x.Team) if isinstance(x.Team, str) else ''}"
+
+    def game(x):  # "Beat Iowa 253.72–118.78 · Week 2" -> keep as is, plus the year
+        return f"{e(str(x.Detail))}, {int(x.Year)}"
+
+    hi, bl = rec(r, "Highest score"), rec(r, "Biggest blowout")
+    ws_list = r[r["List"] == "Longest winning streak"]
+    ws = ws_list.iloc[0]
+    act = ws_list[ws_list["Live"] == True]  # noqa: E712
+    ls = rec(r, "Longest losing streak")
+    per = r[r["List"] == "Perfect seasons (12-0)"].sort_values("Year")
     cin = rec(r, "Cinderella · National Champion")
-    el = r[r["List"].str.startswith("Highest score eliminated")].sort_values("Value", key=lambda v: v.astype(float),
-                                                                                ascending=False).iloc[0]
-    miles = r[r["List"] == "Milestones"]
-    nxt = miles[miles["Owner"] == "Nobody yet"]
-    nxt_w = nxt[nxt["Value"].str.contains("wins")]
-    first = miles[(miles["Owner"] != "Nobody yet") & miles["Value"].str.contains("wins")].iloc[-1]
+    miles = r[(r["List"] == "Milestones") & (r["Owner"] != "Nobody yet")]
+
+    def span(x):
+        return e(str(x.Detail).split(" · ")[0])
+
+    def ended(x):
+        d = str(x.Detail).split(" · ")
+        return e(d[-1]) if len(d) > 1 else ""
+
+    per_html = "".join(f'<div class="ml">{pill(t.Team)}<span>{e(str(t.Owner))} · {int(t.Year)}</span></div>'
+                       for t in per.itertuples())
+    mile_html = "".join(f'<div class="ml"><span class="mk">{e(str(m.Value))}</span>{pills(m.Team)}'
+                        f'<b>{e(str(m.Owner))}</b><span>{e(str(m.Detail).split(" · ")[0])}</span></div>'
+                        for m in miles.itertuples())
     tiles = [
-        tile("Highest score", f"{float(hi.Value):.2f}", f"{who(hi)} · {int(hi.Year)}"),
-        tile("Biggest blowout", e(bl.Value), f"{who(bl)} · {int(bl.Year)}"),
-        tile("Longest win streak", e(ws.Value), f"{who(ws)}<br>{e(ws.Detail.split(' · ')[-1])}"),
-        tile("Perfect seasons", f"{len(per)}", f"Teams that went 12-0 (11-0 + conference title) · "
-                                               f"{'none' if per_titles == 0 else per_titles} won the national title"),
-        tile("Cinderella champion", e(str(cin.Value)) if cin is not None else "–",
-             f"{who(cin)} · {int(cin.Year)} national champion" if cin is not None else ""),
-        tile("Highest score eliminated", f"{float(el.Value):.2f}", f"{who(el)} · {int(el.Year)}<br>{e(el.Detail)}"),
+        tile("Highest score", f"{float(hi.Value):.2f}", f"{who(hi)}<br>{game(hi)}"),
+        tile("Biggest blowout", e(bl.Value), f"{who(bl)}<br>{game(bl)}"),
+        tile("Perfect seasons · 12-0", f"{len(per)}", per_html),
+        tile("Longest win streak", e(ws.Value), f"{who(ws)}<br>{span(ws)}<br>{ended(ws)}"),
     ]
-    race = ""
-    if len(nxt_w):
-        x = nxt_w.iloc[0]
-        race = (f"<b>Race to {e(x.Value)}:</b> nobody yet · {e(x.Detail.replace('Nearest: ', 'nearest: '))}. "
-                f"First to {e(first.Value)}: <b>{e(str(first.Owner))}</b> ({int(first.Year)}).")
+    if len(act):
+        a = act.iloc[0]
+        tiles.append(tile("Longest active win streak", e(a.Value), f"{who(a)}<br>{span(a)} · still going"))
+    tiles.append(tile("Longest losing streak", e(ls.Value),
+                      f"{who(ls)}<br>{span(ls)}" + (" · still going" if ls.Live else f"<br>{ended(ls)}")))
+    if cin is not None:
+        tiles.append(tile("Cinderella champion", e(str(cin.Value)), f"{who(cin)}<br>{int(cin.Year)} national champion"))
+    tiles.append(f'<div class="tile wide"><div class="k">First to the mark</div>{mile_html}</div>')
     return f"""<div class="card">
 <div class="eyebrow">New on the NCAA 180 site</div>
 <h1>All-Time <em>Records</em></h1>
-<p class="lede">Every real game since 2019: champions, single-game records, perfect seasons, playoff heartbreaks,
-Cinderella runs and streaks. {race}</p>
+<p class="lede">Every real game since 2019 · champions, single games, seasons, playoffs, streaks</p>
 <div class="tiles">{"".join(tiles)}</div>
-<div class="foot"><span>Single-game records update live with this season's games</span></div>
 </div>"""
 
 
