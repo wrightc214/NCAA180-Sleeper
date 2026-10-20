@@ -27,3 +27,10 @@ Year,Week,Award,Team,League,Opponent,Value,ValueLabel
 2026,5,HighestScore,FlynnD,NCAA IVY,ccassidy,223.86,points
 2026,5,LowestScore,kfitch3p,NCAA BIG 10,EthanH,45.6,points
 2026,5,LuckyWin,JEANTY,NCAA BIG EAST & CO.,MacATac,84.74,points (won anyway)
+2026,6,BadBeat,MyFingerPoints,NCAA PIONEER,CrownMeKing,146.34,points (lost anyway)
+2026,6,BenchTragedy,Orphan,NCAA USA,Botro,242.52,bench points left on the bench
+2026,6,BiggestBlowout,Orphan,NCAA USA,Botro,100.5,point margin
+2026,6,ClosestGame,PapaCrowther,NCAA BIG SKY,mgrant55,0.2,point margin
+2026,6,HighestScore,wrightc214,NCAA PAC 12,samggannon,185.26,points
+2026,6,LowestScore,B41Pakman,NCAA HISTORICALLY BLACK,Pookieboom,23.3,points
+2026,6,LuckyWin,Neilsondug,NCAA SEC,devbovino,52.06,points (won anyway)

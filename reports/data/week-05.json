@@ -1,7 +1,7 @@
 {
  "week": 5,
- "avg": 130.44,
- "median": 129.96,
+ "avg": 130.47,
+ "median": 130.08,
  "unbeaten": 12,
  "winless": 15,
  "top32": [
@@ -322,7 +322,7 @@
    "Owner": "errand",
    "Rec": "4-1",
    "Pts": 741.36,
-   "Luck": 0.55,
+   "Luck": 0.56,
    "Move": -1
   }
  ],
@@ -414,18 +414,18 @@
    "Owner": "EthanH",
    "P": 191.74,
    "Opp": "Northwestern",
-   "PA": 45.6,
-   "Margin": 146.14
+   "PA": 46.6,
+   "Margin": 145.14
   }
  ],
  "leagues": [
   {
    "Lg": "Ivy",
-   "Avg": 139.09
+   "Avg": 139.18
   },
   {
    "Lg": "Wild",
-   "Avg": 136.06
+   "Avg": 136.14
   },
   {
    "Lg": "Mountain West",
@@ -437,11 +437,11 @@
   },
   {
    "Lg": "Sun Belt",
-   "Avg": 133.47
+   "Avg": 133.56
   },
   {
    "Lg": "Big Sky",
-   "Avg": 132.73
+   "Avg": 132.81
   },
   {
    "Lg": "ACC",
@@ -449,7 +449,7 @@
   },
   {
    "Lg": "Ohio Valley",
-   "Avg": 130.21
+   "Avg": 130.29
   },
   {
    "Lg": "CUSA",
@@ -468,12 +468,12 @@
    "Avg": 125.31
   },
   {
-   "Lg": "Pac 12",
-   "Avg": 124.91
+   "Lg": "Big 10",
+   "Avg": 124.95
   },
   {
-   "Lg": "Big 10",
-   "Avg": 124.87
+   "Lg": "Pac 12",
+   "Avg": 124.91
   },
   {
    "Lg": "Big 12",
@@ -496,8 +496,8 @@
    "Owner": "EthanH",
    "P": 191.74,
    "Opp": "Northwestern",
-   "PA": 45.6,
-   "Margin": 146.14
+   "PA": 46.6,
+   "Margin": 145.14
   },
   "closest": {
    "Team": "Eastern Washington",
@@ -530,10 +530,10 @@
    "Team": "Northwestern",
    "Lg": "Big 10",
    "Owner": "kfitch3p",
-   "P": 45.6,
+   "P": 46.6,
    "Opp": "Nebraska",
    "PA": 191.74,
-   "Margin": -146.14
+   "Margin": -145.14
   },
   "ybs": {
    "Team": "Utah",

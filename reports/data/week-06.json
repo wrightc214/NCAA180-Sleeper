@@ -1,0 +1,627 @@
+{
+ "week": 6,
+ "avg": 113.68,
+ "median": 115.05,
+ "unbeaten": 9,
+ "winless": 11,
+ "top32": [
+  {
+   "Rank": 1,
+   "Team": "Washington State",
+   "Lg": "Pac 12",
+   "Owner": "chzhead412",
+   "Rec": "6-0",
+   "Pts": 1002.76,
+   "Luck": 0.68,
+   "Move": 2
+  },
+  {
+   "Rank": 2,
+   "Team": "Middle Tennessee State",
+   "Lg": "CUSA",
+   "Owner": "arandrea",
+   "Rec": "6-0",
+   "Pts": 1000.62,
+   "Luck": 0.87,
+   "Move": 0
+  },
+  {
+   "Rank": 3,
+   "Team": "Colorado",
+   "Lg": "Pac 12",
+   "Owner": "keppin",
+   "Rec": "6-0",
+   "Pts": 979.4,
+   "Luck": 1.19,
+   "Move": 4
+  },
+  {
+   "Rank": 4,
+   "Team": "Kansas State",
+   "Lg": "Big 12",
+   "Owner": "Frankeen",
+   "Rec": "6-0",
+   "Pts": 975.94,
+   "Luck": 0.9,
+   "Move": 0
+  },
+  {
+   "Rank": 5,
+   "Team": "Dartmouth",
+   "Lg": "Ivy",
+   "Owner": "jtheadrick98",
+   "Rec": "6-0",
+   "Pts": 961.54,
+   "Luck": 0.95,
+   "Move": 0
+  },
+  {
+   "Rank": 6,
+   "Team": "Kentucky",
+   "Lg": "SEC",
+   "Owner": "Stumpy44",
+   "Rec": "6-0",
+   "Pts": 938.12,
+   "Luck": 1.46,
+   "Move": 2
+  },
+  {
+   "Rank": 7,
+   "Team": "Campbell",
+   "Lg": "Pioneer",
+   "Owner": "CrownMeKing",
+   "Rec": "6-0",
+   "Pts": 931.64,
+   "Luck": 1.55,
+   "Move": 2
+  },
+  {
+   "Rank": 8,
+   "Team": "BYU",
+   "Lg": "Mountain West",
+   "Owner": "KlondikeBar",
+   "Rec": "6-0",
+   "Pts": 923.66,
+   "Luck": 1.54,
+   "Move": 2
+  },
+  {
+   "Rank": 9,
+   "Team": "Youngstown State",
+   "Lg": "Big Sky",
+   "Owner": "mssullivan2022",
+   "Rec": "6-0",
+   "Pts": 913.16,
+   "Luck": 1.55,
+   "Move": -3
+  },
+  {
+   "Rank": 10,
+   "Team": "Hawaii",
+   "Lg": "Mountain West",
+   "Owner": "RicochetRay",
+   "Rec": "5-1",
+   "Pts": 1041.66,
+   "Luck": -0.25,
+   "Move": 3
+  },
+  {
+   "Rank": 11,
+   "Team": "Baylor",
+   "Lg": "Big 12",
+   "Owner": "robertlouis7",
+   "Rec": "5-1",
+   "Pts": 994.4,
+   "Luck": -0.12,
+   "Move": 4
+  },
+  {
+   "Rank": 12,
+   "Team": "Arizona State",
+   "Lg": "Pac 12",
+   "Owner": "wrightc214",
+   "Rec": "5-1",
+   "Pts": 992.84,
+   "Luck": 0.22,
+   "Move": 5
+  },
+  {
+   "Rank": 13,
+   "Team": "William & Mary",
+   "Lg": "Big Sky",
+   "Owner": "Beastchewy15",
+   "Rec": "5-1",
+   "Pts": 975.46,
+   "Luck": 0.05,
+   "Move": -12
+  },
+  {
+   "Rank": 14,
+   "Team": "North Carolina A&T",
+   "Lg": "HBCU",
+   "Owner": "PhantomXX",
+   "Rec": "5-1",
+   "Pts": 938.94,
+   "Luck": 0.3,
+   "Move": 8
+  },
+  {
+   "Rank": 15,
+   "Team": "Brown",
+   "Lg": "Ivy",
+   "Owner": "FlynnD",
+   "Rec": "5-1",
+   "Pts": 931.26,
+   "Luck": 0.78,
+   "Move": 10
+  },
+  {
+   "Rank": 16,
+   "Team": "Clemson",
+   "Lg": "ACC",
+   "Owner": "dilbennett",
+   "Rec": "5-1",
+   "Pts": 927.74,
+   "Luck": 0.75,
+   "Move": 3
+  },
+  {
+   "Rank": 17,
+   "Team": "Iowa",
+   "Lg": "Big 10",
+   "Owner": "Schuflakka",
+   "Rec": "5-1",
+   "Pts": 926.92,
+   "Luck": 0.42,
+   "Move": 3
+  },
+  {
+   "Rank": 18,
+   "Team": "Southern Miss",
+   "Lg": "Sun Belt",
+   "Owner": "denvermanning",
+   "Rec": "5-1",
+   "Pts": 915.6,
+   "Luck": 0.35,
+   "Move": 3
+  },
+  {
+   "Rank": 19,
+   "Team": "FSU",
+   "Lg": "ACC",
+   "Owner": "Yarby",
+   "Rec": "5-1",
+   "Pts": 908.76,
+   "Luck": 0.35,
+   "Move": 8
+  },
+  {
+   "Rank": 20,
+   "Team": "Old Dominion",
+   "Lg": "Wild",
+   "Owner": "olddominion2020",
+   "Rec": "5-1",
+   "Pts": 906.66,
+   "Luck": 0.84,
+   "Move": 4
+  },
+  {
+   "Rank": 21,
+   "Team": "Georgia State",
+   "Lg": "CUSA",
+   "Owner": "JustTouchdown1221",
+   "Rec": "5-1",
+   "Pts": 900.22,
+   "Luck": 0.44,
+   "Move": 10
+  },
+  {
+   "Rank": 22,
+   "Team": "UT Martin",
+   "Lg": "Pioneer",
+   "Owner": "FatPat1251",
+   "Rec": "5-1",
+   "Pts": 882.78,
+   "Luck": 0.66,
+   "Move": 6
+  },
+  {
+   "Rank": 23,
+   "Team": "Tulsa",
+   "Lg": "Sun Belt",
+   "Owner": "Raidersforte",
+   "Rec": "5-1",
+   "Pts": 869.12,
+   "Luck": 0.75,
+   "Move": 13
+  },
+  {
+   "Rank": 24,
+   "Team": "LSU",
+   "Lg": "SEC",
+   "Owner": "errand",
+   "Rec": "5-1",
+   "Pts": 864.26,
+   "Luck": 0.97,
+   "Move": 8
+  },
+  {
+   "Rank": 25,
+   "Team": "West Virginia",
+   "Lg": "Big 12",
+   "Owner": "alicho",
+   "Rec": "5-1",
+   "Pts": 858.6,
+   "Luck": 0.9,
+   "Move": 4
+  },
+  {
+   "Rank": 26,
+   "Team": "UNLV",
+   "Lg": "Mountain West",
+   "Owner": "bdub3",
+   "Rec": "5-1",
+   "Pts": 855.02,
+   "Luck": 1.5,
+   "Move": 7
+  },
+  {
+   "Rank": 27,
+   "Team": "Georgia Tech",
+   "Lg": "ACC",
+   "Owner": "spendawg",
+   "Rec": "5-1",
+   "Pts": 845.3,
+   "Luck": 0.99,
+   "Move": 7
+  },
+  {
+   "Rank": 28,
+   "Team": "South Carolina",
+   "Lg": "SEC",
+   "Owner": "Orphan",
+   "Rec": "5-1",
+   "Pts": 800.0,
+   "Luck": 1.7,
+   "Move": 10
+  },
+  {
+   "Rank": 29,
+   "Team": "Purdue",
+   "Lg": "Big 10",
+   "Owner": "Mo00",
+   "Rec": "5-1",
+   "Pts": 795.78,
+   "Luck": 1.6,
+   "Move": -18
+  },
+  {
+   "Rank": 30,
+   "Team": "Cornell",
+   "Lg": "Ivy",
+   "Owner": "cobrapanther99",
+   "Rec": "5-1",
+   "Pts": 795.2,
+   "Luck": 1.55,
+   "Move": 10
+  },
+  {
+   "Rank": 31,
+   "Team": "Missouri",
+   "Lg": "Big 12",
+   "Owner": "DavidJimm",
+   "Rec": "5-1",
+   "Pts": 795.1,
+   "Luck": 1.84,
+   "Move": 11
+  },
+  {
+   "Rank": 32,
+   "Team": "Pittsburgh",
+   "Lg": "Big East",
+   "Owner": "vinceA762",
+   "Rec": "5-1",
+   "Pts": 793.44,
+   "Luck": 1.57,
+   "Move": -20
+  }
+ ],
+ "top_scores": [
+  {
+   "Team": "Arizona State",
+   "Lg": "Pac 12",
+   "Owner": "wrightc214",
+   "P": 185.26,
+   "Opp": "Washington",
+   "PA": 92.62,
+   "Margin": 92.64
+  },
+  {
+   "Team": "Nebraska",
+   "Lg": "Big 10",
+   "Owner": "EthanH",
+   "P": 174.86,
+   "Opp": "Penn State",
+   "PA": 140.9,
+   "Margin": 33.96
+  },
+  {
+   "Team": "Washington State",
+   "Lg": "Pac 12",
+   "Owner": "chzhead412",
+   "P": 170.54,
+   "Opp": "Utah",
+   "PA": 105.76,
+   "Margin": 64.78
+  },
+  {
+   "Team": "Montana State",
+   "Lg": "Big Sky",
+   "Owner": "Elwayluva7",
+   "P": 170.44,
+   "Opp": "Stony Brook",
+   "PA": 136.56,
+   "Margin": 33.88
+  },
+  {
+   "Team": "Brown",
+   "Lg": "Ivy",
+   "Owner": "FlynnD",
+   "P": 170.0,
+   "Opp": "Colgate",
+   "PA": 127.14,
+   "Margin": 42.86
+  },
+  {
+   "Team": "Colorado",
+   "Lg": "Pac 12",
+   "Owner": "keppin",
+   "P": 169.2,
+   "Opp": "Oregon State",
+   "PA": 104.94,
+   "Margin": 64.26
+  },
+  {
+   "Team": "North Carolina A&T",
+   "Lg": "HBCU",
+   "Owner": "PhantomXX",
+   "P": 158.7,
+   "Opp": "Mississippi Valley State",
+   "PA": 87.2,
+   "Margin": 71.5
+  },
+  {
+   "Team": "BYU",
+   "Lg": "Mountain West",
+   "Owner": "KlondikeBar",
+   "P": 157.68,
+   "Opp": "Wyoming",
+   "PA": 128.78,
+   "Margin": 28.9
+  },
+  {
+   "Team": "Army",
+   "Lg": "Big East",
+   "Owner": "Claser",
+   "P": 157.24,
+   "Opp": "UCF",
+   "PA": 137.26,
+   "Margin": 19.98
+  },
+  {
+   "Team": "Kansas State",
+   "Lg": "Big 12",
+   "Owner": "Frankeen",
+   "P": 157.06,
+   "Opp": "Texas",
+   "PA": 123.48,
+   "Margin": 33.58
+  }
+ ],
+ "leagues": [
+  {
+   "Lg": "ACC",
+   "Avg": 123.6
+  },
+  {
+   "Lg": "Mountain West",
+   "Avg": 120.7
+  },
+  {
+   "Lg": "Pac 12",
+   "Avg": 119.88
+  },
+  {
+   "Lg": "Ohio Valley",
+   "Avg": 117.94
+  },
+  {
+   "Lg": "Wild",
+   "Avg": 117.81
+  },
+  {
+   "Lg": "Big East",
+   "Avg": 117.66
+  },
+  {
+   "Lg": "Pioneer",
+   "Avg": 115.04
+  },
+  {
+   "Lg": "Big Sky",
+   "Avg": 114.97
+  },
+  {
+   "Lg": "CUSA",
+   "Avg": 114.76
+  },
+  {
+   "Lg": "Big 10",
+   "Avg": 113.92
+  },
+  {
+   "Lg": "Big 12",
+   "Avg": 113.47
+  },
+  {
+   "Lg": "Ivy",
+   "Avg": 111.22
+  },
+  {
+   "Lg": "HBCU",
+   "Avg": 103.51
+  },
+  {
+   "Lg": "Sun Belt",
+   "Avg": 102.62
+  },
+  {
+   "Lg": "SEC",
+   "Avg": 98.07
+  }
+ ],
+ "awards": {
+  "high": {
+   "Team": "Arizona State",
+   "Lg": "Pac 12",
+   "Owner": "wrightc214",
+   "P": 185.26,
+   "Opp": "Washington",
+   "PA": 92.62,
+   "Margin": 92.64
+  },
+  "blowout": {
+   "Team": "Florida Atlantic",
+   "Lg": "CUSA",
+   "Owner": "Botro",
+   "P": 151.1,
+   "Opp": "North Texas",
+   "PA": 50.6,
+   "Margin": 100.5
+  },
+  "closest": {
+   "Team": "Villanova",
+   "Lg": "Big Sky",
+   "Owner": "PapaCrowther",
+   "P": 117.8,
+   "Opp": "Maine",
+   "PA": 117.6,
+   "Margin": 0.2
+  },
+  "badbeat": {
+   "Team": "Murray State",
+   "Lg": "Pioneer",
+   "Owner": "MyFingerPoints",
+   "P": 146.34,
+   "Opp": "Campbell",
+   "PA": 149.3,
+   "Margin": -2.96
+  },
+  "lucky": {
+   "Team": "Vanderbilt",
+   "Lg": "SEC",
+   "Owner": "Neilsondug",
+   "P": 52.06,
+   "Opp": "Alabama",
+   "PA": 29.38,
+   "Margin": 22.68
+  },
+  "low": {
+   "Team": "Alabama A&M",
+   "Lg": "HBCU",
+   "Owner": "B41Pakman",
+   "P": 23.3,
+   "Opp": "Bethune - Cookman",
+   "PA": 120.16,
+   "Margin": -96.86
+  },
+  "ybs": {
+   "Team": "Alabama",
+   "Lg": "SEC",
+   "Owner": "devbovino",
+   "P": 29.38,
+   "Opp": "Vanderbilt",
+   "PA": 52.06,
+   "Margin": -22.68,
+   "Max": 184.06,
+   "Left": 154.68,
+   "Count": 53
+  },
+  "coach": {
+   "Team": "Citadel",
+   "Lg": "Wild",
+   "Owner": "lmkl",
+   "P": 113.12,
+   "Opp": "South Dakota",
+   "PA": 104.6,
+   "Margin": 8.52,
+   "Max": 116.72,
+   "Eff": 0.9692
+  },
+  "upset": {
+   "Team": "Maryland",
+   "Lg": "Big East",
+   "Owner": "hurlken",
+   "P": 123.34,
+   "Opp": "Pittsburgh",
+   "PA": 111.1,
+   "Margin": 12.24,
+   "WinPct": 24.7
+  },
+  "exceed": {
+   "Team": "Georgia",
+   "Lg": "SEC",
+   "Owner": "kodakjack",
+   "P": 131.0,
+   "Opp": "Auburn",
+   "PA": 94.18,
+   "Margin": 36.82,
+   "Proj": 87.53,
+   "Over": 43.47
+  }
+ },
+ "players": [
+  {
+   "Pos": "QB",
+   "Name": "Trevor Lawrence",
+   "NFL": "JAX",
+   "Pts": 27.34,
+   "Started": 11
+  },
+  {
+   "Pos": "RB",
+   "Name": "Christian McCaffrey",
+   "NFL": "SF",
+   "Pts": 29.7,
+   "Started": 15
+  },
+  {
+   "Pos": "WR",
+   "Name": "Malik Nabers",
+   "NFL": "NYG",
+   "Pts": 28.5,
+   "Started": 13
+  },
+  {
+   "Pos": "TE",
+   "Name": "Isaiah Likely",
+   "NFL": "NYG",
+   "Pts": 23.9,
+   "Started": 14
+  },
+  {
+   "Pos": "K",
+   "Name": "Chad Ryland",
+   "NFL": "ARI",
+   "Pts": 19.0,
+   "Started": 4
+  },
+  {
+   "Pos": "DEF",
+   "Name": "Tennessee Titans",
+   "NFL": "TEN",
+   "Pts": 21.0,
+   "Started": 1
+  }
+ ]
+}
