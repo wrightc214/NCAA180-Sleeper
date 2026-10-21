@@ -297,6 +297,8 @@ ul.mu{list-style:none;margin:0;padding:0;display:grid;gap:8px}
 ul.mu li{border:1px solid var(--line);border-radius:6px;padding:8px 10px;background:var(--panel)}
 ul.mu li.rvr{border-left:5px solid var(--gold,#c9a227)}
 .side{display:grid;grid-template-columns:30px 1fr auto;align-items:center;gap:8px;margin:2px 0}
+.scoreboard-link{display:inline-block;margin-top:8px;font-weight:700;font-size:13px}
+.logo-cell{width:30px;min-height:28px;display:block}
 .side img{width:28px;height:28px;object-fit:contain}
 .side .pt{display:inline-block;padding:3px 9px;border-radius:3px;font-weight:700;line-height:1.25;max-width:100%}
 .side small{display:block;color:var(--mute);font-size:12px;margin-top:2px}
@@ -319,7 +321,7 @@ def write_page(g, wk, stamp):
     def side(team, rank, rec, lg, projv, zero, cur):
         bg, fg = col.get(team, ("#14213a", "#ffffff"))
         r = f"#{rank} " if rank != "" else ""
-        return (f'<div class="side">{logo(team)}<div><span class="pt" style="background:{bg};color:{fg}">{e(r)}{e(team)}</span>'
+        return (f'<div class="side"><span class="logo-cell">{logo(team)}</span><div><span class="pt" style="background:{bg};color:{fg}">{e(r)}{e(team)}</span>'
                 f'<small>{e(rec)} · {e(lg)}</small></div><span class="n">{projv:.1f}</span></div>')
 
     def item(r, cls=""):
@@ -331,7 +333,7 @@ def write_page(g, wk, stamp):
                 + f'<div class="bar"><i style="width:{p:.1f}%;background:{ca}"></i><i style="width:{100 - p:.1f}%;background:{cb}"></i></div>'
                 + f'<div class="meta"><span>{e(r.Team)} {label(p)}</span><span>{e(r.OppTeam)} {label(100 - p)}</span></div>'
                 + (f'<div class="ew">If they\'d played every week: {e(((r.EveryWeekLeader + " ") if r.EveryWeekLeader else ""))}{e(r.EveryWeek)}</div>' if r.EveryWeek else "")
-                + '</li>')
+                + f'<a class="scoreboard-link" href="scoreboard.html?season={int(r.Year)}&amp;league={e(r.LeagueID)}&amp;week={int(r.Week)}&amp;roster={e(r.RosterID)}">Open scoreboard →</a></li>')
 
     def sec(title, d, note="", cls=""):
         if d.empty:

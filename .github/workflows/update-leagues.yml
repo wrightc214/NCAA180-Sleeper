@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       script_to_run:
-        description: 'Script to run (league_ids, rosters, users, rosterhistory, matchups, scores, max_points, weekly_awards, players, transactions, drafts, standings, orphans, lineup_streaks, player_values, draft_picks, weekly_report, roster_map, poll, poll_page, matchups_page, gametime_projections, manager_lineups, managers_page, records_page, standings_page, conference_championships, playoff_field, bowls, nit, patch_orphans, all). Postseason scripts are manual only - not in all.'
+        description: 'Script to run (league_ids, rosters, users, rosterhistory, matchups, scores, max_points, weekly_awards, players, transactions, drafts, standings, orphans, lineup_streaks, player_values, draft_picks, weekly_report, roster_map, poll, poll_page, matchups_page, gametime_projections, manager_lineups, managers_page, records_page, standings_page, scoreboard, conference_championships, playoff_field, bowls, nit, patch_orphans, all). Postseason scripts are manual only - not in all.'
         required: true
         default: 'all'
       post:
@@ -197,7 +197,12 @@ jobs:
         continue-on-error: true
         run: python scripts/matchups_page.py
 
-      # Mark the Sleeper week done only after a clean full run, so a failed run retries.
+      # Static scoreboard shell and compact inputs; live requests never create commits.
+      - name: Build scoreboard data
+        if: always() && (github.event_name == 'schedule' || github.event.inputs.script_to_run == 'all' || github.event.inputs.script_to_run == 'scoreboard')
+        run: |
+          python scripts/scoreboard_data.py || { echo "scoreboard" >> /tmp/failed_scripts.txt; exit 1; }
+
       - name: Render orphan card
         if: always() && steps.orphan.outputs.render == 'true'
         continue-on-error: true
@@ -206,6 +211,7 @@ jobs:
           python -m playwright install --only-shell chromium
           python scripts/orphan_card.py render
 
+      # Mark the Sleeper week done only after a clean full run, so a failed run retries.
       - name: Mark week processed
         if: always()
         run: |
@@ -224,6 +230,7 @@ jobs:
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/*.csv
           git add data/OrphanCard_Current.json 2>/dev/null || true
+          git add data/scoreboard 2>/dev/null || true
           git add data/projections 2>/dev/null || true; git add data/ScoringCheck_Current.json 2>/dev/null || true
           git add reports/ || true
           git commit -m "Auto-update CSVs" || echo "No changes to commit"
