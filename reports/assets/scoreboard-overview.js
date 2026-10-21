@@ -9,7 +9,7 @@
   let cfg,index,metadata,baseline,colors,season,week,generation=0,controller,timer,busy=false,failures=0,metadataAt=0;
   const settings=new Map(),cards=new Map();
   $('game').hidden=true;$('overview-help').hidden=false;$('board').classList.add('conference-grid');
-  document.querySelector('h1').textContent='Scoreboard';
+  const title=()=>{document.querySelector('h1').innerHTML=`${esc(cfg.brand||'')} <em>Week ${week} Scoreboard</em>`;};
   async function get(url,signal){
     const abort=new AbortController(),cancel=()=>abort.abort();
     signal?.addEventListener('abort',cancel,{once:true});
@@ -79,7 +79,7 @@
   }
   async function select(){
     generation++;const turn=generation;controller?.abort();controller=new AbortController();clearTimeout(timer);busy=false;failures=0;
-    const newWeek=Number($('week').value);if(newWeek!==week)cards.clear();week=newWeek;
+    const newWeek=Number($('week').value);if(newWeek!==week)cards.clear();week=newWeek;title();
     $('updated').textContent='Loading games…';$('board').setAttribute('aria-busy','true');$('refresh').disabled=true;
     const url=new URL(location.href);url.search=new URLSearchParams({season,week,...($('league').value?{league:$('league').value}:{})});history.replaceState(null,'',url);
     paint(Object.keys(index.leagues).filter(id=>!$('league').value||id===$('league').value).sort((a,b)=>index.leagues[a].name.localeCompare(index.leagues[b].name)));
@@ -89,7 +89,7 @@
   try{
     cfg=await get('../config/league.json');index=await get(`${cfg.data.scoreboard}/index.json`);season=Number(params.get('season')||index.season);
     if(season!==index.season)throw Error('Only the active season is available');
-    week=Number(params.get('week')||index.week);if(!index.weeks.includes(week)||week>=cfg.schedule.ccg_week)throw Error('No supported regular-season baseline for this week');
+    week=Number(params.get('week')||index.week);if(!index.weeks.includes(week)||week>=cfg.schedule.ccg_week)throw Error('No supported regular-season baseline for this week');title();
     [metadata,colors]=await Promise.all([get(`${cfg.data.scoreboard}/${season}/players.json`),get(`${cfg.data.scoreboard}/leagues.json`)]);metadataAt=Date.now();
     options($('week'),index.weeks.filter(w=>w<cfg.schedule.ccg_week).map(w=>[w,`Week ${w}`]),week);
     options($('league'),[['','All conferences'],...Object.entries(index.leagues).sort((a,b)=>a[1].name.localeCompare(b[1].name)).map(([id,l])=>[id,colors[id]?.label||l.name])],index.leagues[params.get('league')]?params.get('league'):'');

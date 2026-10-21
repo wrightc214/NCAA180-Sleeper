@@ -4,6 +4,7 @@
   const route=new URLSearchParams(location.search);
   if(!route.has('game')&&!route.has('roster')&&route.get('view')!=='game')return;
   document.getElementById('overview-back').hidden=false;
+  document.body.classList.add('game-view');
 
   const C=window.ScoreboardCore, $=id=>document.getElementById(id);
   const escape=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

@@ -154,10 +154,11 @@ def write_page(cfg):
         label = {"HISTORICALLY BLACK": "HBCU", "USA": "CUSA", "BIG EAST & CO.": "BIG EAST"}.get(label, label)
         themes[lid] = {"background": bg, "text": fg, "label": label}
     dump("data/scoreboard/leagues.json", themes)
+    # Header matches the rest of the site: nav, eyebrow, big two-tone title, accent rule; banner below it.
     body = f'''<div class="wrap gwrap">
-<div class="validation" role="note"><strong>⚠ Validation phase</strong> Questions or inaccuracies? <b>Ping {contact} on Discord</b> with the matchup.</div>
 <nav class="weeks" aria-label="Pages">''' + nav_html("scoreboard") + f'''</nav>
-<header class="sbh"><div class="eyebrow">{brand} · standard scoring</div><h1>Live <em>scoreboard</em></h1></header>
+<header class="sbh"><div><div class="eyebrow">{len(index["leagues"])} conferences · live scores · standard scoring</div><h1>{brand} <em>Scoreboard</em></h1></div></header>
+<div class="validation" role="note"><strong>⚠ Validation phase</strong> Questions or inaccuracies? <b>Ping {contact} on Discord</b> with the matchup.</div>
 <a id="overview-back" class="overview-back" href="scoreboard.html" hidden>← All games</a>
 <form id="chooser" class="tools pick"><select id="league" aria-label="League"></select><select id="week" aria-label="Week"></select>
 <select id="game" aria-label="Game"></select></form>
