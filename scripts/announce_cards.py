@@ -241,6 +241,12 @@ def scoreboard_shot(browser, out_png):
     msgs = []
     pg.on("console", lambda m: msgs.append(m.text) if m.type == "error" else None)
     pg.on("pageerror", lambda ex: msgs.append(str(ex)))
+    # ESPN rejects headless Chrome on CI runners (fine for real visitors); fetch the clock feed server-side instead.
+    def espn(route):
+        r = requests.get(route.request.url, timeout=30)
+        route.fulfill(status=r.status_code, body=r.content, headers={"content-type": "application/json",
+                                                                     "access-control-allow-origin": "*"})
+    pg.route("https://site.api.espn.com/**", espn)
     pg.goto(f"{SITE}scoreboard.html?league={g['league']}&week={g['week']}&roster={g['roster']}")
     try:
         pg.wait_for_function("document.getElementById('updated').textContent.startsWith('Updated')", timeout=60000)
