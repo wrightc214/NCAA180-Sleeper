@@ -1052,10 +1052,10 @@ NCAA USA,League,1,#003865,CUSA Blue (PMS 2955 C),Primary,https://www.brandcolorc
 NCAA USA,League,2,#A6192E,CUSA Red (PMS 187 C),Secondary,https://www.brandcolorcode.com/conference-usa
 NCAA USA,League,3,#75787B,Gray (Cool Gray 9),Neutral,https://www.brandcolorcode.com/conference-usa
 NCAA USA,League,4,#BBBCBC,Light Gray (Cool Gray 4),Neutral,https://www.brandcolorcode.com/conference-usa
-NCAA HISTORICALLY BLACK,League,1,#E01821,SWAC Red (PMS 485 C),Primary,https://www.brandcolorcode.com/southwestern-athletic-conference-swac
-NCAA HISTORICALLY BLACK,League,2,#B0B0B0,Gray (Cool Gray 5 C),Secondary,https://www.brandcolorcode.com/southwestern-athletic-conference-swac
-NCAA HISTORICALLY BLACK,League,4,#000000,Black (Black 6 C),Neutral,https://www.brandcolorcode.com/southwestern-athletic-conference-swac
-NCAA HISTORICALLY BLACK,League,3,#FFFFFF,White,Neutral,"Official color per Chris (league data manager), 2026-10-21"
+NCAA HISTORICALLY BLACK,League,1,#5D141E,Maroon,Primary,"Sampled from the league logo (assets/logos/Leagues/HBCU.png), Chris 2026-10-21"
+NCAA HISTORICALLY BLACK,League,2,#C19239,Gold,Secondary,"Sampled from the league logo (assets/logos/Leagues/HBCU.png), Chris 2026-10-21"
+NCAA HISTORICALLY BLACK,League,3,#000000,Black,Accent,"Logo star; SWAC black (8 of 12 teams are SWAC), Chris 2026-10-21"
+NCAA HISTORICALLY BLACK,League,4,#FFFFFF,White,Neutral,"Official color per Chris (league data manager), 2026-10-21"
 NCAA Ivy,League,1,#026937,Ivy Green,Primary,https://www.brandcolorcode.com/ivy-league
 NCAA Ivy,League,2,#FFFFFF,White,Neutral,https://www.brandcolorcode.com/ivy-league
 NCAA Mountain West,League,1,#4F2D7F,MW Purple (PMS 268 C),Primary,https://www.brandcolorcode.com/mountain-west-conference
