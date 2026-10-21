@@ -56,7 +56,12 @@ class BrowserTests(unittest.TestCase):
                                 else:d={'scoring_settings':fixture['scoring']}
                                 route.fulfill(content_type='application/json',body=json.dumps(d))
                             page.route('https://api.sleeper.app/**',route_api)
-                            page.route('https://site.api.espn.com/**',lambda r:r.fulfill(content_type='application/json',body=json.dumps(espn)))
+                            def route_espn(route):
+                                from urllib.parse import urlparse, parse_qs
+                                data=copy.deepcopy(espn)
+                                data['week']['number']=int(parse_qs(urlparse(route.request.url).query)['week'][0])
+                                route.fulfill(content_type='application/json',body=json.dumps(data))
+                            page.route('https://site.api.espn.com/**',route_espn)
                             page.route('https://fonts.googleapis.com/**',lambda r:r.abort())
                             page.route('https://fonts.gstatic.com/**',lambda r:r.abort())
                             page.goto(f'http://127.0.0.1:{server.server_port}/reports/scoreboard.html?league=1316899756005412864&week=6&roster=6')
@@ -78,6 +83,15 @@ class BrowserTests(unittest.TestCase):
                             page.select_option('#game',index=1)
                             page.wait_for_function("document.getElementById('updated').textContent.startsWith('Updated')")
                             self.assertNotEqual(page.locator('.big').all_text_contents(),old) if phase!='pre' else None
+                            # League and week changes reload the games without submitting a form.
+                            page.select_option('#week', '5')
+                            page.wait_for_function("document.getElementById('week').disabled === false && document.getElementById('game').options.length === 6")
+                            self.assertEqual(page.locator('#game').input_value(), str(rosters[0]['matchup_id']))
+                            other=page.locator('#league option').evaluate_all("els => els.map(e=>e.value).find(v=>v!=='1316899756005412864')")
+                            page.select_option('#league', other)
+                            page.wait_for_function("document.getElementById('league').disabled === false && document.getElementById('game').options.length === 6")
+                            self.assertNotEqual(page.locator('#game option').all_text_contents(), options)
+                            self.assertEqual(page.locator('a[aria-current="page"]').inner_text(), 'Scoreboard')
                             self.assertEqual(errors,[])
                             if os.environ.get('SCOREBOARD_SCREENSHOTS'):
                                 dest=Path(os.environ['SCOREBOARD_SCREENSHOTS']);dest.mkdir(parents=True,exist_ok=True)
