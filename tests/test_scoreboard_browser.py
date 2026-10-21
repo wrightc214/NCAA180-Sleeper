@@ -50,7 +50,7 @@ class BrowserTests(unittest.TestCase):
                                     if state['fail']:route.fulfill(status=429,headers={'Retry-After':'60'},body='{}');return
                                     d=rosters
                                 elif '/stats/' in u:d={} if phase=='pre' else fixture['stats']
-                                elif u.endswith('/players/nfl'):d=players
+                                elif u.endswith('/players/nfl'):raise AssertionError('browser must not request the full player feed')
                                 elif u.endswith('/users'):d=[{'user_id':'u'+str(r['roster_id']),'display_name':'Manager '+str(r['roster_id'])} for r in rosters]
                                 elif u.endswith('/rosters'):d=[{'roster_id':r['roster_id'],'owner_id':'u'+str(r['roster_id'])} for r in rosters]
                                 else:d={'scoring_settings':fixture['scoring']}
@@ -63,12 +63,15 @@ class BrowserTests(unittest.TestCase):
                             page.wait_for_function("document.getElementById('updated').textContent.startsWith('Updated')")
                             self.assertEqual(page.locator('.big').count(),2)
                             self.assertFalse(page.evaluate('document.documentElement.scrollWidth > innerWidth'))
-                            self.assertIn('VALIDATION PHASE',page.locator('.validation').inner_text())
+                            self.assertIn('VALIDATION PHASE',page.locator('.validation').inner_text().upper())
                             if phase=='in':
                                 self.assertIn('30 seconds',page.locator('#updated').inner_text())
                                 self.assertGreater(page.locator('.ps.on').count(),0)
                             elif phase=='pre':self.assertIn('NEXT KICKOFF',page.locator('.mid').inner_text())
-                            else:self.assertIn('FINAL',page.locator('.mid').inner_text())
+                            else:
+                                self.assertIn('FINAL',page.locator('.mid').inner_text())
+                                self.assertIn('FINAL',page.locator('.fin').inner_text().upper())
+                                self.assertNotIn('min left',page.locator('.top').inner_text())
                             old=page.locator('.big').all_text_contents();state['fail']=True;page.locator('#refresh').click()
                             page.wait_for_function("document.getElementById('updated').textContent.startsWith('STALE')")
                             self.assertEqual(page.locator('.big').all_text_contents(),old)
