@@ -8,7 +8,7 @@ on:
       page:
         description: 'Page to announce'
         type: choice
-        options: [managers, records, matchups]
+        options: [managers, records, matchups, scoreboard]
         required: true
       force:
         description: 'Post again even if this page was already announced'
