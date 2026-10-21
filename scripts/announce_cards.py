@@ -64,6 +64,8 @@ h1{margin:4px 0 6px;font-size:64px;line-height:1}
 .foot{display:flex;justify-content:space-between;align-items:center;margin-top:18px;font-size:16px}
 .foot .link{font:800 22px var(--num);color:var(--accent)}
 .shot{display:block;width:100%;border:1px solid var(--line);border-radius:8px}
+.ovr{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;align-items:start;margin:0 0 18px}.ovr img{display:block;width:100%}
+.sub{font:700 13px var(--num);letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin:0 0 8px}
 """
 
 
@@ -229,7 +231,7 @@ def matchups_html():
 # Scoreboard card = a screenshot of the real game page (served locally, live Sleeper/ESPN data at render time).
 # Game chosen by Chris for the launch post: week 7 Top 25 matchup, #2 Hawaii vs #10 BYU (Mountain West).
 SCOREBOARD_GAME = {"league": "1331774599196585984", "week": 7, "roster": 1}
-SHOT_ROWS = 6  # starter rows kept in the screenshot
+SHOT_ROWS = 4  # starter rows kept in the screenshot
 
 
 SITE = "https://wrightc214.github.io/NCAA180-Sleeper/reports/"  # real origin: ESPN refuses cross-origin calls from localhost
@@ -241,12 +243,7 @@ def scoreboard_shot(browser, out_png):
     msgs = []
     pg.on("console", lambda m: msgs.append(m.text) if m.type == "error" else None)
     pg.on("pageerror", lambda ex: msgs.append(str(ex)))
-    # ESPN rejects headless Chrome on CI runners (fine for real visitors); fetch the clock feed server-side instead.
-    def espn(route):
-        r = requests.get(route.request.url, timeout=30)
-        route.fulfill(status=r.status_code, body=r.content, headers={"content-type": "application/json",
-                                                                     "access-control-allow-origin": "*"})
-    pg.route("https://site.api.espn.com/**", espn)
+    pg.route("https://site.api.espn.com/**", espn_route)
     pg.goto(f"{SITE}scoreboard.html?league={g['league']}&week={g['week']}&roster={g['roster']}")
     try:
         pg.wait_for_function("document.getElementById('updated').textContent.startsWith('Updated')", timeout=60000)
@@ -264,11 +261,41 @@ def scoreboard_shot(browser, out_png):
     pg.close()
 
 
+OVERVIEW_LEAGUES = ["NCAA SEC", "NCAA MOUNTAIN WEST", "NCAA BIG 10"]  # three conference blocks from the all-games page
+
+
+def espn_route(route):
+    # ESPN rejects headless Chrome on CI runners (fine for real visitors); fetch the clock feed server-side instead.
+    r = requests.get(route.request.url, timeout=30)
+    route.fulfill(status=r.status_code, body=r.content, headers={"content-type": "application/json",
+                                                                 "access-control-allow-origin": "*"})
+
+
+def overview_shot(browser, out_dir):
+    """Screenshot three conference blocks from the all-games scoreboard."""
+    pg = browser.new_page(viewport={"width": 1200, "height": 1600}, device_scale_factor=2, color_scheme="light")
+    pg.route("https://site.api.espn.com/**", espn_route)
+    pg.goto(f"{SITE}scoreboard.html?week={SCOREBOARD_GAME['week']}")
+    try:
+        pg.wait_for_function("document.getElementById('updated').textContent.startsWith('Updated')", timeout=90000)
+    except Exception:
+        status = pg.evaluate("document.getElementById('updated').textContent")
+        print(f"::error::Scoreboard overview did not load: {status}")
+        raise
+    pg.evaluate("document.fonts.ready")
+    for i, name in enumerate(OVERVIEW_LEAGUES):
+        pg.locator(f'section.conference[aria-label="{name}"]').screenshot(path=os.path.join(out_dir, f"scoreboard-ov{i}.png"))
+    pg.close()
+
+
 def scoreboard_html():
-    return """<div class="card">
+    blocks = "".join(f'<img src="scoreboard-ov{i}.png" alt="">' for i in range(len(OVERVIEW_LEAGUES)))
+    return f"""<div class="card">
 <div class="eyebrow">New on the NCAA 180 site</div>
 <h1>Live <em>Scoreboard</em></h1>
-<p class="lede">Every game, player by player · live score, live win chance, minutes left · open any game from Matchups</p>
+<p class="lede">All 90 games live on one page, then tap any game for the player-by-player view</p>
+<div class="ovr">{blocks}</div>
+<div class="sub">Inside a game · live score, live win chance, minutes left</div>
 <img class="shot" src="scoreboard-shot.png" alt="">
 </div>"""
 
@@ -280,8 +307,8 @@ TEXT = {"managers": ("**New: All-Time Managers** 🏆\nEvery NCAA 180 manager si
                     "and streaks: {link}"),
         "matchups": ("**New: Weekly Matchups** 🏈\nEvery game this week with projected lineups, pregame win chance and "
                      "the every-week head-to-head: {link}"),
-        "scoreboard": ("**New: Live Scoreboard** 📺\nEvery game, player by player: live score, live win chance and minutes left. "
-                       "Open it from any Matchups card or here: {link}\n"
+        "scoreboard": ("**New: Live Scoreboard** 📺\nAll 90 games on one page, live. Tap any game for player-by-player scores, "
+                       "live win chance and minutes left: {link}\n"
                        "It's in a validation phase. If a score looks off, ping @Wrightc214 with the matchup.")}
 
 
@@ -294,6 +321,7 @@ def render(which):
         pg = b.new_page(viewport={"width": 1076, "height": 900}, device_scale_factor=2, color_scheme="light")
         for k in pages:
             if k == "scoreboard":
+                overview_shot(b, OUT_DIR)
                 scoreboard_shot(b, os.path.join(OUT_DIR, "scoreboard-shot.png"))
             path = os.path.join(OUT_DIR, f"{k}.html")
             open(path, "w", encoding="utf-8").write(page_head(f"NCAA 180 {k}", CSS, totop=False) + BUILD[k]() + "</body></html>")
