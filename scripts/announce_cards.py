@@ -342,9 +342,11 @@ def post(which):
         print(f"::notice::{which} was already announced on {state[which]}; nothing posted (FORCE=1 to repost)")
         return
     png = os.path.join(OUT_DIR, f"{which}.png")
-    # Real Discord mention (<@id>) so the name is clickable; allowed_mentions parse [] keeps it from pinging.
-    uid = json.load(open("config/league.json"))["contact"]["discord_user_id"]
-    payload = {"content": TEXT[which].format(link=LINKS[which], contact=f"<@{uid}>"), "allowed_mentions": {"parse": []}}
+    # Real Discord mention (<@id>): clickable, and it pings Chris so he knows the post went out (Chris, 2026-10-21).
+    # Only his ID is allowed to ping; @everyone/roles stay blocked.
+    uid = str(json.load(open("config/league.json"))["contact"]["discord_user_id"])
+    payload = {"content": TEXT[which].format(link=LINKS[which], contact=f"<@{uid}>"),
+               "allowed_mentions": {"parse": [], "users": [uid]}}
     r = requests.post(hook + "?wait=true", data={"payload_json": json.dumps(payload)},
                       files={"files[0]": (f"ncaa180-{which}.png", open(png, "rb"), "image/png")}, timeout=60)
     if r.status_code >= 300:
