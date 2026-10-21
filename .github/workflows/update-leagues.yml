@@ -50,11 +50,6 @@ jobs:
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      # Crop empty canvas around newly uploaded team logos (no-op for already-trimmed files).
-      - name: Trim team logos
-        continue-on-error: true
-        run: python scripts/logo_trim.py
-
       - name: Run selected script(s)
         run: |
           # Default to 'all' if no manual input was provided
@@ -236,7 +231,6 @@ jobs:
           git add data/*.csv
           git add data/OrphanCard_Current.json 2>/dev/null || true
           git add data/scoreboard 2>/dev/null || true
-          git add assets/logos/teams 2>/dev/null || true
           git add data/projections 2>/dev/null || true; git add data/ScoringCheck_Current.json 2>/dev/null || true
           git add reports/ || true
           git commit -m "Auto-update CSVs" || echo "No changes to commit"

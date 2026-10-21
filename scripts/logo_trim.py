@@ -4,8 +4,8 @@ Many logos sit on a wide 500x281 canvas; a tall logo (e.g. Sparky) fills only th
 and pages that fit the canvas into a square box shrink the logo with the empty sides.
 This crops each PNG to its visible pixels (alpha > 8) plus a small even margin.
 
-Idempotent: files already within the target margin are left untouched, so it is safe to
-run every week; new uploads get trimmed automatically. Originals remain in git history.
+Idempotent: files already within the target margin are left untouched. Run manually after
+uploading logos (Actions > "Trim team logos"). Originals remain in git history.
 
 Usage: python scripts/logo_trim.py [folder ...]   (default: assets/logos/teams)
 """
