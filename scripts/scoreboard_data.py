@@ -134,27 +134,56 @@ def build(offline=False):
     dump("data/scoreboard/index.json", {"season": year, "week": week, "weeks": available, "leagues": leagues,
          "standard_scoring": standard, "metadata_source": "repository reference" if offline else "Sleeper full player feed",
          "built_at": dt.datetime.now(dt.timezone.utc).isoformat()})
+    write_page(cfg)
+    print(f"Scoreboard: {len(leagues)} leagues, {len(players)} players, baselines {available}; default {year}/{week}")
+
+
+def write_page(cfg):
+    """Static shell only. Everything game-specific is fetched by the page."""
+    brand = html.escape(cfg.get("brand", ""))
+    contact = "@" + html.escape(cfg["contact"]["username"])
     css = Path("reports/assets/scoreboard.css").read_text()
-    body = '''<div class="wrap gwrap">
-<div class="validation" role="note"><strong>⚠ SCOREBOARD VALIDATION PHASE</strong>
-<p>Questions or inaccuracies? <b>Ping @Wrightc214 on Discord</b> with the matchup and what looks wrong.</p></div>
-<nav class="weeks" aria-label="Pages">''' + nav_html("matchups") + '''</nav>
-<header><div><div class="eyebrow">NCAA 180 · standard scoring</div><h1>Live <em>scoreboard</em></h1></div></header>
-<form id="chooser" class="tools"><label>League <select id="league"></select></label><label>Week <select id="week"></select></label>
-<label>Game <select id="game"></select></label><button type="submit">Open game</button></form>
+    body = f'''<div class="wrap gwrap">
+<div class="validation" role="note"><strong>⚠ Validation phase</strong> Questions or inaccuracies? <b>Ping {contact} on Discord</b> with the matchup.</div>
+<nav class="weeks" aria-label="Pages">''' + nav_html("matchups") + f'''</nav>
+<header class="sbh"><div class="eyebrow">{brand} · standard scoring</div><h1>Live <em>scoreboard</em></h1></header>
+<form id="chooser" class="tools pick"><select id="league" aria-label="League"></select><select id="week" aria-label="Week"></select>
+<select id="game" aria-label="Game"></select></form>
 <div class="tools"><button id="refresh" type="button">↻ Refresh</button><span id="updated" role="status">Loading…</span></div>
 <p id="error" role="alert" hidden></p><div id="board" aria-busy="true"></div>
 <p class="note">Scores retain Sleeper points and apply the standard-rule correction. † appears only when a scoring-rule difference changes a team’s score.
 Records currently follow the published standings. Live odds and minutes remaining are estimates, not official results.
 Tuesday pregame expectations stay frozen. Live projection = points so far + player projection × share of game remaining.
-Questions? Ping @Wrightc214 on Discord.</p></div>
+Questions? Ping {contact} on Discord.</p></div>
 <script src="assets/scoreboard-core.js"></script><script src="assets/scoreboard.js" defer></script></body></html>'''
-    body = body.replace("@Wrightc214", "@" + html.escape(cfg["contact"]["username"]))
-    Path("reports/scoreboard.html").write_text(page_head("NCAA 180 Scoreboard", css) + body, encoding="utf-8")
-    print(f"Scoreboard: {len(leagues)} leagues, {len(players)} players, baselines {available}; default {year}/{week}")
+    Path("reports/scoreboard.html").write_text(page_head(f"{brand} Scoreboard", css) + body, encoding="utf-8")
+
+
+def refresh_players():
+    """Game-day refresh: one Sleeper player call server-side, so browsers never download it."""
+    os.chdir(ROOT)
+    import requests
+    cfg = json.loads(Path("config/league.json").read_text())
+    season = json.loads(Path("data/scoreboard/index.json").read_text())["season"]
+    r = requests.get(cfg["api"]["sleeper"] + "/players/nfl", timeout=60)
+    r.raise_for_status()
+    full = r.json()
+    if not isinstance(full, dict) or len(full) < 100:
+        raise ValueError("Incomplete player metadata; existing players.json preserved")
+    dump(f"data/scoreboard/{season}/players.json", player_map(full))
+    print(f"Scoreboard players refreshed for {season}")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--offline", action="store_true")
-    build(parser.parse_args().offline)
+    parser.add_argument("--players-only", action="store_true", help="refresh player statuses only (game days)")
+    parser.add_argument("--page-only", action="store_true", help="rewrite reports/scoreboard.html only")
+    a = parser.parse_args()
+    if a.players_only:
+        refresh_players()
+    elif a.page_only:
+        os.chdir(ROOT)
+        write_page(json.loads(Path("config/league.json").read_text()))
+    else:
+        build(a.offline)

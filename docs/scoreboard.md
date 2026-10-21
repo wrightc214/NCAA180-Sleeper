@@ -27,10 +27,13 @@ metadata, so use the default online build before release. Each week file also ke
 snapshot NFL team information for past-week game clocks. Baseline odds remain the
 original published expectations, even if a later scoring/settings decision changes.
 
-At runtime the browser fetches one league's matchups, roster owners, users, scoring,
-weekly player stats and ESPN clocks. Full player metadata refreshes at most once per
-15 minutes per page session (the feed is large); it falls back visibly to the saved
-map. Live data requests never write to GitHub or Discord.
+At runtime the browser fetches one league's matchups, weekly player stats and ESPN
+clocks on each refresh; league scoring, users and roster owners load once per
+league/week selection. The browser never downloads Sleeper's full player feed:
+`.github/workflows/scoreboard-players.yml` refreshes the saved player file
+(`--players-only`, one server-side call) before each game window, and the page
+re-reads that small file at most every 15 minutes. Live data requests never write
+to GitHub or Discord. `--page-only` rewrites the static page shell.
 
 Refresh: five minutes while starters are playing; 30 seconds only during Sunday-
 night/Monday-night Q4 or OT. Hidden tabs pause/abort requests. HTTP errors back off;
@@ -48,8 +51,9 @@ A team-only adjustment is separately displayed. † appears only when this corre
 changes a team total; Sleeper's total is displayed alongside.
 
 A raw-stat/league-total discrepancy shows a warning rather than silently removing
-commissioner adjustments or replacing the app score. Missing statistics for a player
-with nonzero app points block that refresh. Player points use standard corrections;
+commissioner adjustments or replacing the app score. A player with Sleeper points but
+no stat line yet shows Sleeper's points without the correction, with a warning; the
+rest of the board keeps updating. Player points use standard corrections;
 manager records remain from the published standings and are labeled accordingly.
 This feature does not restate season standings, poll results or draft orders.
 
