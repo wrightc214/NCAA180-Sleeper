@@ -2,3 +2,4 @@ pandas
 numpy
 sleeper-wrapper
 scipy
+Pillow
