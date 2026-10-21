@@ -146,13 +146,16 @@ def write_page(cfg):
     league_colors = {r["League"].strip().upper(): r for r in rows("data/Colors - Leagues.csv")}
     index = json.loads(Path("data/scoreboard/index.json").read_text())
     themes = {}
+    logos = {Path(f).stem.lower(): Path(f).name for f in glob.glob("assets/logos/Leagues/*.png")}
     for lid, league in index["leagues"].items():
         name = league["name"]
         c = league_colors.get(name.upper(), {})
         bg, fg = team_colors(c.get("Primary"), c.get("Secondary"), c.get("Background"), c.get("Text"), name=c.get("League", name))
         label = name.removeprefix("NCAA ")
         label = {"HISTORICALLY BLACK": "HBCU", "USA": "CUSA", "BIG EAST & CO.": "BIG EAST"}.get(label, label)
-        themes[lid] = {"background": bg, "text": fg, "label": label}
+        logo = logos.get(label.lower(), "")
+        themes[lid] = {"background": bg, "text": fg, "label": label,
+                       "logo": f"../assets/logos/Leagues/{logo}" if logo else ""}
     dump("data/scoreboard/leagues.json", themes)
     # Header matches the rest of the site: nav, eyebrow, big two-tone title, accent rule; banner below it.
     body = f'''<div class="wrap gwrap">
