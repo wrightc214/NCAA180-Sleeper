@@ -73,19 +73,26 @@
     return right?b+a:a+b;
   }
   function paired(a,b,slots,color=true) {return slots.map((s,i)=>`<div class="pr">${cell(a[i],false,color)}<div class="sb s-${escape(s)}">${escape(s)}</div>${cell(b[i],true,color)}</div>`).join('');}
-  function header(r,model,right,final=false) {
+  function header(r,model,right,final=false,pregame=false) {
     const t=team(r.roster_id),odds=baseline.odds.find(o=>o.LeagueID===leagueId && [o.RosterID,o.OpponentRosterID].includes(String(r.roster_id)));
-    const record=odds?(odds.RosterID===String(r.roster_id)?odds.Rec:odds.OppRec):'';
+    const mine=odds&&odds.RosterID===String(r.roster_id),record=odds?(mine?odds.Rec:odds.OppRec):'',rank=odds?(mine?odds.Rank:odds.OppRank):'';
     const changed=Math.abs(model.actual-model.official)>.011;
-    return `<div class="tm${right?' r':''}">${t.logo?`<img class="logo" src="${escape(t.logo)}" alt="" onerror="this.hidden=true">`:''}<div><span class="pt" style="background:${escape(t.background)};color:${escape(t.text)}">${escape(t.name)}</span><small>${escape(r.ownerName||'Unassigned')} ${record?`· ${escape(record)}`:''}</small></div><div class="sc"><div class="big">${money(model.actual)}${changed?'†':''}</div>${final?'':`<small>live proj ${model.projected.toFixed(1)} · ${Math.round(model.minutes)} min left</small>`}${Math.abs(model.adjustment)>.01?`<small>Includes ${model.adjustment>0?'+':''}${money(model.adjustment)} team adjustment</small>`:''}${changed?`<small>† Sleeper shows ${money(model.official)}</small>`:''}</div></div>`;
+    return `<div class="tm${right?' r':''}">${t.logo?`<img class="logo" src="${escape(t.logo)}" alt="" onerror="this.hidden=true">`:''}<div><span class="pt" style="background:${escape(t.background)};color:${escape(t.text)}">${rank?`#${escape(rank)} `:''}${escape(t.name)}</span><small>${escape(r.ownerName||'Unassigned')} ${record?`· ${escape(record)}`:''}</small></div><div class="sc"><div class="big">${money(model.actual)}${changed?'†':''}</div>${final?'':`<small>${pregame?'proj':'live proj'} ${model.projected.toFixed(1)} · ${Math.round(model.minutes)} min left</small>`}${Math.abs(model.adjustment)>.01?`<small>Includes ${model.adjustment>0?'+':''}${money(model.adjustment)} team adjustment</small>`:''}${changed?`<small>† Sleeper shows ${money(model.official)}</small>`:''}</div></div>`;
   }
   function oddsBar(a,b,p,pre=false,label='LIVE WIN CHANCE · ESTIMATE') {
     const ca=team(a.roster_id),cb=team(b.roster_id);
     // Similar primaries: switch the right side to its official Secondary.
     const rgb=h=>String(h||'').replace('#','').match(/../g)?.map(x=>parseInt(x,16))||[0,0,0];
     const ar=rgb(ca.primary),br=rgb(cb.primary),distance=Math.sqrt(ar.reduce((s,x,i)=>s+(x-br[i])**2,0));
-    const colorB=distance<120?cb.secondary:cb.primary;
-    return `<div class="olab"><span>${escape(ca.name)} ${escape(pct(p))}</span><span>${label}</span><span>${escape(cb.name)} ${escape(pct(100-p))}</span></div><div class="bar${pre?' pre':''}" role="img" aria-label="${escape(label)}: ${escape(ca.name)} ${escape(pct(p))}"><span style="width:${p}%;background:${escape(ca.primary)}"></span><span style="flex:1;background:${escape(colorB)}"></span></div>`;
+    // Similar primaries: use a Secondary that is neither near-white nor close to the other side's color.
+    const far=(x,y)=>{const p=rgb(x),q=rgb(y);return Math.sqrt(p.reduce((s,v,i)=>s+(v-q[i])**2,0))>=120;};
+    let colorA=ca.primary,colorB=cb.primary;
+    if(distance<120){
+      if(far(cb.secondary,'#ffffff')&&far(cb.secondary,ca.primary))colorB=cb.secondary;
+      else if(far(ca.secondary,'#ffffff')&&far(ca.secondary,cb.primary))colorA=ca.secondary;
+    }
+    const right=p<1||p>99?pct(100-p):`${100-Math.round(p)}%`;
+    return `<div class="olab"><span>${escape(ca.name)} ${escape(pct(p))}</span><span>${label}</span><span>${escape(cb.name)} ${escape(right)}</span></div><div class="bar${pre?' pre':''}" role="img" aria-label="${escape(label)}: ${escape(ca.name)} ${escape(pct(p))}"><span style="width:${p}%;background:${escape(colorA)}"></span><span style="flex:1;background:${escape(colorB)}"></span></div>`;
   }
   function render(stats,games) {
     const config={...cfg,standard_scoring:baseline.scoring},models=[],playerSets=[];
@@ -119,7 +126,7 @@
     const [a,b]=models,center=title(games,models),isFinal=center.includes('FINAL'),pregame=models.every(m=>m.starters.every(p=>['pre','bye','out'].includes(p.phase)));
     const slots=index.leagues[leagueId].slots;
     const benches=chosen.map((r,i)=>C.benchPlayers(r,playerSets[i],models[i].starters,slots,cfg,pregame));
-    let html=`<div class="eyebrow">${escape(index.leagues[leagueId].name)} · ${season} · Week ${week}</div><div class="top">${header(chosen[0],a,false,isFinal)}<div class="mid">${center}</div>${header(chosen[1],b,true,isFinal)}</div><div class="odds">`;
+    let html=`<div class="eyebrow">${escape(index.leagues[leagueId].name)} · ${season} · Week ${week}</div><div class="top">${header(chosen[0],a,false,isFinal,pregame)}<div class="mid">${center}</div>${header(chosen[1],b,true,isFinal,pregame)}</div><div class="odds">`;
     const missing=models.some(m=>m.starters.some(p=>p.missingProjection||p.phase==='unknown'));
     if(isFinal) {
       const m=C.round(Math.abs(a.actual-b.actual)),w=a.actual>b.actual?chosen[0]:chosen[1];

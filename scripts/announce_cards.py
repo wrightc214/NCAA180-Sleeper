@@ -1,7 +1,7 @@
 """
 announce_cards.py -- one-time "new page" announcement graphics for Discord (team-stats).
 
-  python scripts/announce_cards.py render [managers|records|matchups|all] -> reports/announce/<page>.png
+  python scripts/announce_cards.py render [managers|records|matchups|scoreboard|all] -> reports/announce/<page>.png
   python scripts/announce_cards.py post <page>     -> posts that PNG + message (short link in the text,
                                                       not on the card) to DISCORD_WEBHOOK_TEAM_STATS
 
@@ -63,6 +63,7 @@ h1{margin:4px 0 6px;font-size:64px;line-height:1}
 .ml span{color:var(--mute)}
 .foot{display:flex;justify-content:space-between;align-items:center;margin-top:18px;font-size:16px}
 .foot .link{font:800 22px var(--num);color:var(--accent)}
+.shot{display:block;width:100%;border:1px solid var(--line);border-radius:8px}
 """
 
 
@@ -225,13 +226,63 @@ def matchups_html():
 </div>"""
 
 
-BUILD = {"managers": managers_html, "records": records_html, "matchups": matchups_html}
+# Scoreboard card = a screenshot of the real game page (served locally, live Sleeper/ESPN data at render time).
+# Game chosen by Chris for the launch post: week 7 Top 25 matchup, #2 Hawaii vs #10 BYU (Mountain West).
+SCOREBOARD_GAME = {"league": "1331774599196585984", "week": 7, "roster": 1}
+SHOT_ROWS = 6  # starter rows kept in the screenshot
+
+
+SITE = "https://wrightc214.github.io/NCAA180-Sleeper/reports/"  # real origin: ESPN refuses cross-origin calls from localhost
+
+
+def scoreboard_shot(browser, out_png):
+    g = SCOREBOARD_GAME
+    pg = browser.new_page(viewport={"width": 900, "height": 1400}, device_scale_factor=2, color_scheme="light")
+    msgs = []
+    pg.on("console", lambda m: msgs.append(m.text) if m.type == "error" else None)
+    pg.on("pageerror", lambda ex: msgs.append(str(ex)))
+    # ESPN rejects headless Chrome on CI runners (fine for real visitors); fetch the clock feed server-side instead.
+    def espn(route):
+        r = requests.get(route.request.url, timeout=30)
+        route.fulfill(status=r.status_code, body=r.content, headers={"content-type": "application/json",
+                                                                     "access-control-allow-origin": "*"})
+    pg.route("https://site.api.espn.com/**", espn)
+    pg.goto(f"{SITE}scoreboard.html?league={g['league']}&week={g['week']}&roster={g['roster']}")
+    try:
+        pg.wait_for_function("document.getElementById('updated').textContent.startsWith('Updated')", timeout=60000)
+    except Exception:
+        info = pg.evaluate("[document.getElementById('updated').textContent, document.getElementById('error').textContent]")
+        print(f"::error::Scoreboard did not load: {info} {msgs[:5]}")
+        raise
+    pg.evaluate("document.fonts.ready")
+    top = pg.locator("#board .eyebrow").bounding_box()["y"]
+    rows = pg.locator(".board .pr")
+    last = rows.nth(min(SHOT_ROWS, rows.count()) - 1).bounding_box()
+    box = pg.locator(".top").bounding_box()
+    pg.screenshot(path=out_png, clip={"x": box["x"] - 2, "y": top - 4, "width": box["width"] + 4,
+                                      "height": last["y"] + last["height"] - top + 8})
+    pg.close()
+
+
+def scoreboard_html():
+    return """<div class="card">
+<div class="eyebrow">New on the NCAA 180 site</div>
+<h1>Live <em>Scoreboard</em></h1>
+<p class="lede">Every game, player by player · live score, live win chance, minutes left · open any game from Matchups</p>
+<img class="shot" src="scoreboard-shot.png" alt="">
+</div>"""
+
+
+BUILD = {"managers": managers_html, "records": records_html, "matchups": matchups_html, "scoreboard": scoreboard_html}
 TEXT = {"managers": ("**New: All-Time Managers** 🏆\nEvery NCAA 180 manager since 2019, ranked by Legend Score. "
                      "Find your seasons, record and Lineup Skill: {link}"),
         "records": ("**New: All-Time Records** 📈\nChampions, single-game records, perfect seasons, Cinderella runs "
                     "and streaks: {link}"),
         "matchups": ("**New: Weekly Matchups** 🏈\nEvery game this week with projected lineups, pregame win chance and "
-                     "the every-week head-to-head: {link}")}
+                     "the every-week head-to-head: {link}"),
+        "scoreboard": ("**New: Live Scoreboard** 📺\nEvery game, player by player: live score, live win chance and minutes left. "
+                       "Open it from any Matchups card or here: {link}\n"
+                       "It's in a validation phase. If a score looks off, ping @Wrightc214 with the matchup.")}
 
 
 def render(which):
@@ -242,6 +293,8 @@ def render(which):
         b = p.chromium.launch()
         pg = b.new_page(viewport={"width": 1076, "height": 900}, device_scale_factor=2, color_scheme="light")
         for k in pages:
+            if k == "scoreboard":
+                scoreboard_shot(b, os.path.join(OUT_DIR, "scoreboard-shot.png"))
             path = os.path.join(OUT_DIR, f"{k}.html")
             open(path, "w", encoding="utf-8").write(page_head(f"NCAA 180 {k}", CSS, totop=False) + BUILD[k]() + "</body></html>")
             pg.goto("file://" + os.path.abspath(path), wait_until="networkidle")
