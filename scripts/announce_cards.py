@@ -232,37 +232,30 @@ SCOREBOARD_GAME = {"league": "1331774599196585984", "week": 7, "roster": 1}
 SHOT_ROWS = 6  # starter rows kept in the screenshot
 
 
+SITE = "https://wrightc214.github.io/NCAA180-Sleeper/reports/"  # real origin: ESPN refuses cross-origin calls from localhost
+
+
 def scoreboard_shot(browser, out_png):
-    import functools
-    import http.server
-    import threading
-    handler = functools.partial(http.server.SimpleHTTPRequestHandler, directory=os.getcwd())
-    handler.log_message = lambda *a: None
-    srv = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
-    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    g = SCOREBOARD_GAME
+    pg = browser.new_page(viewport={"width": 900, "height": 1400}, device_scale_factor=2, color_scheme="light")
+    msgs = []
+    pg.on("console", lambda m: msgs.append(m.text) if m.type == "error" else None)
+    pg.on("pageerror", lambda ex: msgs.append(str(ex)))
+    pg.goto(f"{SITE}scoreboard.html?league={g['league']}&week={g['week']}&roster={g['roster']}")
     try:
-        g = SCOREBOARD_GAME
-        pg = browser.new_page(viewport={"width": 900, "height": 1400}, device_scale_factor=2, color_scheme="light")
-        pg.goto(f"http://127.0.0.1:{srv.server_port}/reports/scoreboard.html?league={g['league']}&week={g['week']}&roster={g['roster']}")
-        msgs = []
-        pg.on("console", lambda m: msgs.append(m.text) if m.type == "error" else None)
-        pg.on("pageerror", lambda ex: msgs.append(str(ex)))
-        try:
-            pg.wait_for_function("document.getElementById('updated').textContent.startsWith('Updated')", timeout=60000)
-        except Exception:
-            info = pg.evaluate("[document.getElementById('updated').textContent, document.getElementById('error').textContent]")
-            print(f"::error::Scoreboard did not load: {info} {msgs[:5]}")
-            raise
-        pg.evaluate("document.fonts.ready")
-        top = pg.locator("#board .eyebrow").bounding_box()["y"]
-        rows = pg.locator(".board .pr")
-        last = rows.nth(min(SHOT_ROWS, rows.count()) - 1).bounding_box()
-        box = pg.locator(".top").bounding_box()
-        pg.screenshot(path=out_png, clip={"x": box["x"] - 2, "y": top - 4, "width": box["width"] + 4,
-                                          "height": last["y"] + last["height"] - top + 8})
-        pg.close()
-    finally:
-        srv.shutdown()
+        pg.wait_for_function("document.getElementById('updated').textContent.startsWith('Updated')", timeout=60000)
+    except Exception:
+        info = pg.evaluate("[document.getElementById('updated').textContent, document.getElementById('error').textContent]")
+        print(f"::error::Scoreboard did not load: {info} {msgs[:5]}")
+        raise
+    pg.evaluate("document.fonts.ready")
+    top = pg.locator("#board .eyebrow").bounding_box()["y"]
+    rows = pg.locator(".board .pr")
+    last = rows.nth(min(SHOT_ROWS, rows.count()) - 1).bounding_box()
+    box = pg.locator(".top").bounding_box()
+    pg.screenshot(path=out_png, clip={"x": box["x"] - 2, "y": top - 4, "width": box["width"] + 4,
+                                      "height": last["y"] + last["height"] - top + 8})
+    pg.close()
 
 
 def scoreboard_html():
