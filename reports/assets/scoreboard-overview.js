@@ -9,7 +9,7 @@
   let cfg,index,metadata,baseline,colors,season,week,generation=0,controller,timer,busy=false,failures=0,metadataAt=0;
   const settings=new Map(),cards=new Map();
   $('game').hidden=true;$('overview-help').hidden=false;$('board').classList.add('conference-grid');
-  document.querySelector('h1').textContent='Scoreboard';
+  const title=()=>{document.querySelector('h1').innerHTML=`${esc(cfg.brand||'')} <em>Week ${week} Scoreboard</em>`;};
   async function get(url,signal){
     const abort=new AbortController(),cancel=()=>abort.abort();
     signal?.addEventListener('abort',cancel,{once:true});
@@ -46,7 +46,7 @@
       const next=s.next?new Date(s.next.kickoff).toLocaleString('en-US',{timeZone:'America/New_York',weekday:'short',hour:'numeric',minute:'2-digit'}):'';
       html+=`<a class="mini-match" href="${esc(href)}" aria-label="${esc(league.teams[String(match[0].roster_id)]?.name)} versus ${esc(league.teams[String(match[1].roster_id)]?.name)} — player details"><div class="match-meta"><span class="match-status${s.active?' is-live':''}">${s.active?'● ':''}${esc(s.status)}${!s.started&&next?` · ${esc(next)} ET`:''}</span><span>${esc(s.oddsLabel)}</span></div>${row(match[0],s.models[0],p,s.final,s.models[0].actual>s.models[1].actual)}${row(match[1],s.models[1],p===null?null:100-p,s.final,s.models[1].actual>s.models[0].actual)}</a>`;
     }
-    return {html:`<h2 style="background:${esc(theme.background||'#14213a')};color:${esc(theme.text||'#fff')}">${esc(theme.label||league.name)}</h2>${html}${warning?'<p class="conference-note">Some stats, projections or statuses are unavailable; estimates may be incomplete.</p>':''}`,allFinal};
+    return {html:`<h2 class="${theme.logo?'has-logo':''}" style="background:${esc(theme.background||'#14213a')};color:${esc(theme.text||'#fff')}">${theme.logo?`<span class="lgtag"><img src="${esc(theme.logo)}" alt="${esc(theme.label||league.name)}" onerror="this.parentElement.replaceWith(this.alt)"></span>`:esc(theme.label||league.name)}</h2>${html}${warning?'<p class="conference-note">Some stats, projections or statuses are unavailable; estimates may be incomplete.</p>':''}`,allFinal};
   }
   function paint(ids){$('board').innerHTML=ids.map(id=>{const c=cards.get(id);return `<section class="conference" aria-label="${esc(index.leagues[id].name)}">${c?.html||`<h2>${esc(index.leagues[id].name)}</h2><p class="conference-note">Loading games…</p>`}${c?.error?`<p class="conference-error" role="status">${esc(c.error)}${c.updated?` · last updated ${c.updated.toLocaleTimeString()}`:''}</p>`:''}</section>`;}).join('');}
   async function refresh(){
@@ -79,7 +79,7 @@
   }
   async function select(){
     generation++;const turn=generation;controller?.abort();controller=new AbortController();clearTimeout(timer);busy=false;failures=0;
-    const newWeek=Number($('week').value);if(newWeek!==week)cards.clear();week=newWeek;
+    const newWeek=Number($('week').value);if(newWeek!==week)cards.clear();week=newWeek;title();
     $('updated').textContent='Loading games…';$('board').setAttribute('aria-busy','true');$('refresh').disabled=true;
     const url=new URL(location.href);url.search=new URLSearchParams({season,week,...($('league').value?{league:$('league').value}:{})});history.replaceState(null,'',url);
     paint(Object.keys(index.leagues).filter(id=>!$('league').value||id===$('league').value).sort((a,b)=>index.leagues[a].name.localeCompare(index.leagues[b].name)));
@@ -89,7 +89,7 @@
   try{
     cfg=await get('../config/league.json');index=await get(`${cfg.data.scoreboard}/index.json`);season=Number(params.get('season')||index.season);
     if(season!==index.season)throw Error('Only the active season is available');
-    week=Number(params.get('week')||index.week);if(!index.weeks.includes(week)||week>=cfg.schedule.ccg_week)throw Error('No supported regular-season baseline for this week');
+    week=Number(params.get('week')||index.week);if(!index.weeks.includes(week)||week>=cfg.schedule.ccg_week)throw Error('No supported regular-season baseline for this week');title();
     [metadata,colors]=await Promise.all([get(`${cfg.data.scoreboard}/${season}/players.json`),get(`${cfg.data.scoreboard}/leagues.json`)]);metadataAt=Date.now();
     options($('week'),index.weeks.filter(w=>w<cfg.schedule.ccg_week).map(w=>[w,`Week ${w}`]),week);
     options($('league'),[['','All conferences'],...Object.entries(index.leagues).sort((a,b)=>a[1].name.localeCompare(b[1].name)).map(([id,l])=>[id,colors[id]?.label||l.name])],index.leagues[params.get('league')]?params.get('league'):'');

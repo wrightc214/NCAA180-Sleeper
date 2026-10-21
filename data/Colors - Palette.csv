@@ -1033,6 +1033,7 @@ NIT,League,1,#563B87,"Purple (current value, unverified)",Primary,https://www.ni
 NIT,League,2,#E0902F,"Orange (current value, unverified)",Secondary,https://www.nit.com/
 NCAA ACC,League,1,#013CA6,ACC Blue (PMS 293 C),Primary,https://www.brandcolorcode.com/atlantic-coast-conference
 NCAA ACC,League,2,#A5A9AB,Silver (PMS 10077 C),Secondary,https://www.brandcolorcode.com/atlantic-coast-conference
+NCAA ACC,League,3,#FFFFFF,White,Neutral,"Official color per Chris (league data manager), 2026-10-21"
 NCAA American,League,1,#002D62,"Navy (theamerican.org site theme color, 2025 rebrand)",Primary,https://theamerican.org/news/2025/7/20/about-american-conference-launches-modernized-brand-identity-ahead-of-football-media-days.aspx
 NCAA American,League,2,#EE2231,"Red (PMS 485 C, 2020-21 AAC guide)",Secondary,https://theamerican.org/news/2025/7/20/about-american-conference-launches-modernized-brand-identity-ahead-of-football-media-days.aspx
 NCAA American,League,3,#041E41,"Navy (PMS 282 C, 2020-21 AAC guide)",Accent,https://theamerican.org/news/2025/7/20/about-american-conference-launches-modernized-brand-identity-ahead-of-football-media-days.aspx
@@ -1051,9 +1052,10 @@ NCAA USA,League,1,#003865,CUSA Blue (PMS 2955 C),Primary,https://www.brandcolorc
 NCAA USA,League,2,#A6192E,CUSA Red (PMS 187 C),Secondary,https://www.brandcolorcode.com/conference-usa
 NCAA USA,League,3,#75787B,Gray (Cool Gray 9),Neutral,https://www.brandcolorcode.com/conference-usa
 NCAA USA,League,4,#BBBCBC,Light Gray (Cool Gray 4),Neutral,https://www.brandcolorcode.com/conference-usa
-NCAA HISTORICALLY BLACK,League,1,#E01821,SWAC Red (PMS 485 C),Primary,https://www.brandcolorcode.com/southwestern-athletic-conference-swac
-NCAA HISTORICALLY BLACK,League,2,#B0B0B0,Gray (Cool Gray 5 C),Secondary,https://www.brandcolorcode.com/southwestern-athletic-conference-swac
-NCAA HISTORICALLY BLACK,League,3,#000000,Black (Black 6 C),Neutral,https://www.brandcolorcode.com/southwestern-athletic-conference-swac
+NCAA HISTORICALLY BLACK,League,1,#5D141E,Maroon,Primary,"Sampled from the league logo (assets/logos/Leagues/HBCU.png), Chris 2026-10-21"
+NCAA HISTORICALLY BLACK,League,2,#C19239,Gold,Secondary,"Sampled from the league logo (assets/logos/Leagues/HBCU.png), Chris 2026-10-21"
+NCAA HISTORICALLY BLACK,League,3,#000000,Black,Accent,"Logo star; SWAC black (8 of 12 teams are SWAC), Chris 2026-10-21"
+NCAA HISTORICALLY BLACK,League,4,#FFFFFF,White,Neutral,"Official color per Chris (league data manager), 2026-10-21"
 NCAA Ivy,League,1,#026937,Ivy Green,Primary,https://www.brandcolorcode.com/ivy-league
 NCAA Ivy,League,2,#FFFFFF,White,Neutral,https://www.brandcolorcode.com/ivy-league
 NCAA Mountain West,League,1,#4F2D7F,MW Purple (PMS 268 C),Primary,https://www.brandcolorcode.com/mountain-west-conference
@@ -1063,8 +1065,9 @@ NCAA Ohio Valley,League,2,#D1AD85,OVC Gold (PMS 874 C),Secondary,https://www.bra
 NCAA PAC 12,League,1,#092346,Pac-12 Blue (pre-2026),Primary,https://pac-12.com/news/2026/4/27/general-pac-12-unveils-new-primary-mark-as-the-foundation-of-the-new-leagues-brand-identity.aspx
 NCAA PAC 12,League,2,#FFFFFF,White,Neutral,https://pac-12.com/news/2026/4/27/general-pac-12-unveils-new-primary-mark-as-the-foundation-of-the-new-leagues-brand-identity.aspx
 NCAA PAC 12,League,3,#000000,Black (2026 primary mark),Neutral,https://pac-12.com/news/2026/4/27/general-pac-12-unveils-new-primary-mark-as-the-foundation-of-the-new-leagues-brand-identity.aspx
-NCAA Pioneer,League,1,#9B745B,"Brown (current value, unverified)",Primary,https://pioneer-football.org/
+NCAA Pioneer,League,1,#95694F,Brown,Primary,"Sampled from the league logo (assets/logos/Leagues/Pioneer.png), 2026-10-21"
 NCAA Pioneer,League,2,#DCDEE2,"Light Gray (current value, unverified)",Secondary,https://pioneer-football.org/
+NCAA Pioneer,League,3,#FFFFFF,White,Neutral,"Official color per Chris (league data manager), 2026-10-21"
 NCAA SEC,League,1,#002D72,SEC Blue (PMS 288),Primary,https://a.espncdn.com/sec/media/2020/SEC%20Style%20Guide.pdf
 NCAA SEC,League,2,#FED141,SEC Gold (PMS 122),Secondary,https://a.espncdn.com/sec/media/2020/SEC%20Style%20Guide.pdf
 NCAA SEC,League,3,#D29F13,"Gold, beveled logos only (PMS 131)",Accent,https://a.espncdn.com/sec/media/2020/SEC%20Style%20Guide.pdf
