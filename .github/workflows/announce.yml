@@ -52,6 +52,14 @@ jobs:
         with:
           name: announce-card
           path: reports/announce/*.png
+      - name: Commit preview to branch (dry run, non-main only)
+        if: github.event.inputs.dry_run == 'true' && github.ref != 'refs/heads/main'
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f reports/announce/*.png
+          git commit -m "Announce preview (dry run)" || exit 0
+          git push
       - name: Record announcement
         if: success() && github.event.inputs.dry_run != 'true'
         run: |
