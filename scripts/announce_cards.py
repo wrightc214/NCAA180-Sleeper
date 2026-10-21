@@ -244,7 +244,15 @@ def scoreboard_shot(browser, out_png):
         g = SCOREBOARD_GAME
         pg = browser.new_page(viewport={"width": 900, "height": 1400}, device_scale_factor=2, color_scheme="light")
         pg.goto(f"http://127.0.0.1:{srv.server_port}/reports/scoreboard.html?league={g['league']}&week={g['week']}&roster={g['roster']}")
-        pg.wait_for_function("document.getElementById('updated').textContent.startsWith('Updated')", timeout=60000)
+        msgs = []
+        pg.on("console", lambda m: msgs.append(m.text) if m.type == "error" else None)
+        pg.on("pageerror", lambda ex: msgs.append(str(ex)))
+        try:
+            pg.wait_for_function("document.getElementById('updated').textContent.startsWith('Updated')", timeout=60000)
+        except Exception:
+            info = pg.evaluate("[document.getElementById('updated').textContent, document.getElementById('error').textContent]")
+            print(f"::error::Scoreboard did not load: {info} {msgs[:5]}")
+            raise
         pg.evaluate("document.fonts.ready")
         top = pg.locator("#board .eyebrow").bounding_box()["y"]
         rows = pg.locator(".board .pr")
