@@ -96,3 +96,35 @@ post is needed for local checks.
 Merge/publishing requires Chris's approval. Rollback: revert the scoreboard commit;
 existing data/poll/standings behavior is unchanged. Public Pages will serve the new
 page after the branch is merged and deployed; a branch URL is source, not a live page.
+
+## Conference overview
+
+The bare `scoreboard.html` URL is now the conference overview: a responsive grid
+of every league's matchups, using the repository's league colors and team identities.
+Week and conference selectors update immediately. Clicking a matchup opens the same
+static page with `game` in its URL, preserving the existing player-detail view and
+Matchups links. The return link restores the overview's week/conference filter.
+`--page-only` also writes `data/scoreboard/leagues.json` from the league palette file.
+The shared navigation now includes Scoreboard on existing and future report pages.
+
+The overview fetches NFL stats and ESPN clocks once per refresh, then processes
+league matchup/scoring requests with at most four league workers. Scoring settings
+are cached for the page session. No full Sleeper player feed is requested. It uses
+the existing core player/team scoring and uncertainty calculations. Final cards show
+frozen Tuesday odds for the exact roster pairing, not the final 100/0 probability;
+unstarted games also show Tuesday odds. Started, unfinished games show live estimates.
+Unknown statuses or incomplete live stat lines suppress the affected live estimate.
+A dash means odds are unavailable. Scores marked † have the existing standard-rule
+correction; open the game for the underlying Sleeper totals.
+
+Overview refresh is five minutes until the selected matchups are final, including
+between game windows. Hidden tabs abort and resume on visibility. Selection changes
+abort obsolete requests. A failed league retains its prior scores with its own STALE
+label/timestamp; a shared NFL-feed failure marks every visible conference stale.
+Failures retry with bounded backoff. There are no new workflows or Discord messages.
+Postseason pairing support remains separate work; this view serves supported regular
+season weeks only. Revert the overview commit to restore the prior single-game entry.
+
+Additional checks: `node --test tests/scoreboard*.test.js`; browser opt-in also runs
+`test_scoreboard_overview_browser.py` for the full grid, shared-fetch counts, mobile,
+league/week filters, final/live labels, partial failure and overview/game return links.

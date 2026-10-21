@@ -1,6 +1,10 @@
 /* One static page; URL selects league/week/game. No credentials or Discord calls. */
 (async function() {
   'use strict';
+  const route=new URLSearchParams(location.search);
+  if(!route.has('game')&&!route.has('roster')&&route.get('view')!=='game')return;
+  document.getElementById('overview-back').hidden=false;
+
   const C=window.ScoreboardCore, $=id=>document.getElementById(id);
   const escape=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const money=x=>Number(x).toFixed(2), pct=x=>x<1?'<1%':x>99?'>99%':`${Math.round(x)}%`;
@@ -142,6 +146,7 @@
   async function refresh() {
     if(busy)return;
     busy=true;clearTimeout(timer);$('refresh').disabled=true;
+    for(const id of ['league','week','game'])$(id).disabled=true;
     abort=new AbortController();
     try {
       const base=cfg.api.sleeper;
@@ -172,7 +177,9 @@
       failures=0;lastGood=new Date();
       $('updated').textContent=`Updated ${lastGood.toLocaleTimeString()} · ${live?`auto-refresh ${crunch?'30 seconds':'5 minutes'}`:'manual refresh while no starters are live'}`;
       $('error').hidden=!warnings.length;$('error').textContent=warnings.join(' ');
-      const url=new URL(location.href);url.search=new URLSearchParams({season:String(season),league:leagueId,week:String(week),game:selected}).toString();history.replaceState(null,'',url);
+      const url=new URL(location.href);url.search=new URLSearchParams({season:String(season),league:leagueId,week:String(week),game:selected,...(route.has('overview')?{overview:route.get('overview')}:{})}).toString();history.replaceState(null,'',url);
+      const filter=route.get('overview')||leagueId;
+      $('overview-back').href='scoreboard.html?'+new URLSearchParams({season,week,...(filter==='all'?{}:{league:filter})});
       if(live)schedule(crunch?cfg.refresh.crunch_ms:cfg.refresh.normal_ms);
     } catch(e) {
       if(e.name==='AbortError' && document.hidden)return;
@@ -181,14 +188,19 @@
       $('error').textContent=`${e.message||'Unable to refresh.'} ${lastGood?`Last successful update: ${lastGood.toLocaleTimeString()}.`:'No live scores have loaded yet.'} Use Refresh to retry. Ping @${cfg.contact.username} on Discord if this persists.`;
       $('updated').textContent=lastGood?`STALE · last good update ${lastGood.toLocaleTimeString()}`:'Live data unavailable';
       schedule(Math.min(cfg.refresh.max_backoff_ms,Math.max(e.retry||0,60000*2**Math.min(failures-1,5))));
-    } finally {busy=false;$('refresh').disabled=false;$('board').setAttribute('aria-busy','false');if(resumeNeeded&&!document.hidden){resumeNeeded=false;schedule(0);}}
+    } finally {busy=false;for(const id of ['league','week','game'])$(id).disabled=false;$('refresh').disabled=false;$('board').setAttribute('aria-busy','false');if(resumeNeeded&&!document.hidden){resumeNeeded=false;schedule(0);}}
   }
   async function select() {
     clearTimeout(timer);lastGood=null;$('board').innerHTML='';$('board').setAttribute('aria-busy','true');
     leagueId=$('league').value;week=Number($('week').value);chosen=[];leagueInfo=null;
-    baseline=await get(`${cfg.data.scoreboard}/${season}/week-${String(week).padStart(2,'0')}.json`);
-    $('game').replaceChildren();
-    await refresh();
+    for(const id of ['league','week','game','refresh'])$(id).disabled=true;
+    $('updated').textContent='Loading game…';
+    try {
+      baseline=await get(`${cfg.data.scoreboard}/${season}/week-${String(week).padStart(2,'0')}.json`);
+      $('game').replaceChildren();
+      await refresh();
+      params.delete('game');params.delete('roster');
+    } finally {for(const id of ['league','week','game','refresh'])$(id).disabled=false;}
   }
   try {
     cfg=await get('../config/league.json');index=await get(`${cfg.data.scoreboard}/index.json`);season=Number(params.get('season')||index.season);

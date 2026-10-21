@@ -142,20 +142,33 @@ def write_page(cfg):
     """Static shell only. Everything game-specific is fetched by the page."""
     brand = html.escape(cfg.get("brand", ""))
     contact = "@" + html.escape(cfg["contact"]["username"])
-    css = Path("reports/assets/scoreboard.css").read_text()
+    css = Path("reports/assets/scoreboard.css").read_text() + Path("reports/assets/scoreboard-overview.css").read_text()
+    league_colors = {r["League"].strip().upper(): r for r in rows("data/Colors - Leagues.csv")}
+    index = json.loads(Path("data/scoreboard/index.json").read_text())
+    themes = {}
+    for lid, league in index["leagues"].items():
+        name = league["name"]
+        c = league_colors.get(name.upper(), {})
+        bg, fg = team_colors(c.get("Primary"), c.get("Secondary"), c.get("Background"), c.get("Text"), name=c.get("League", name))
+        label = name.removeprefix("NCAA ")
+        label = {"HISTORICALLY BLACK": "HBCU", "USA": "CUSA", "BIG EAST & CO.": "BIG EAST"}.get(label, label)
+        themes[lid] = {"background": bg, "text": fg, "label": label}
+    dump("data/scoreboard/leagues.json", themes)
     body = f'''<div class="wrap gwrap">
 <div class="validation" role="note"><strong>⚠ Validation phase</strong> Questions or inaccuracies? <b>Ping {contact} on Discord</b> with the matchup.</div>
-<nav class="weeks" aria-label="Pages">''' + nav_html("matchups") + f'''</nav>
+<nav class="weeks" aria-label="Pages">''' + nav_html("scoreboard") + f'''</nav>
 <header class="sbh"><div class="eyebrow">{brand} · standard scoring</div><h1>Live <em>scoreboard</em></h1></header>
+<a id="overview-back" class="overview-back" href="scoreboard.html" hidden>← All games</a>
 <form id="chooser" class="tools pick"><select id="league" aria-label="League"></select><select id="week" aria-label="Week"></select>
 <select id="game" aria-label="Game"></select></form>
 <div class="tools"><button id="refresh" type="button">↻ Refresh</button><span id="updated" role="status">Loading…</span></div>
+<p id="overview-help" class="note" hidden>Select a game for player details. Final games show Tuesday’s pregame win chance; live games show an estimate. — means odds unavailable.</p>
 <p id="error" role="alert" hidden></p><div id="board" aria-busy="true"></div>
 <p class="note">Scores retain Sleeper points and apply the standard-rule correction. † appears only when a scoring-rule difference changes a team’s score.
 Records currently follow the published standings. Live odds and minutes remaining are estimates, not official results.
 Tuesday pregame expectations stay frozen. Live projection = points so far + player projection × share of game remaining.
 Questions? Ping {contact} on Discord.</p></div>
-<script src="assets/scoreboard-core.js"></script><script src="assets/scoreboard.js" defer></script></body></html>'''
+<script src="assets/scoreboard-core.js"></script><script src="assets/scoreboard-overview-model.js"></script><script src="assets/scoreboard-overview.js" defer></script><script src="assets/scoreboard.js" defer></script></body></html>'''
     Path("reports/scoreboard.html").write_text(page_head(f"{brand} Scoreboard", css) + body, encoding="utf-8")
 
 
