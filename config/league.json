@@ -1,0 +1,84 @@
+{
+  "brand": "NCAA 180",
+  "contact": {
+    "username": "Wrightc214",
+    "discord_user_id": "233001719573905408"
+  },
+  "eligibility": {
+    "QB": [
+      "QB"
+    ],
+    "RB": [
+      "RB",
+      "FB"
+    ],
+    "WR": [
+      "WR"
+    ],
+    "TE": [
+      "TE"
+    ],
+    "FLEX": [
+      "RB",
+      "FB",
+      "WR",
+      "TE"
+    ],
+    "WRRB_FLEX": [
+      "RB",
+      "FB",
+      "WR"
+    ],
+    "REC_FLEX": [
+      "WR",
+      "TE"
+    ],
+    "SUPER_FLEX": [
+      "QB",
+      "RB",
+      "FB",
+      "WR",
+      "TE"
+    ],
+    "K": [
+      "K"
+    ],
+    "DEF": [
+      "DEF"
+    ]
+  },
+  "position_sd": {
+    "QB": 8,
+    "RB": 7.4,
+    "WR": 7.6,
+    "TE": 6.5,
+    "K": 4.5,
+    "DEF": 6.5
+  },
+  "spread": 24,
+  "bench_near_points": 2,
+  "refresh": {
+    "normal_ms": 300000,
+    "crunch_ms": 30000,
+    "max_backoff_ms": 1800000
+  },
+  "api": {
+    "sleeper": "https://api.sleeper.app/v1",
+    "espn": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard"
+  },
+  "data": {
+    "scoreboard": "../data/scoreboard"
+  },
+  "scoring": {
+    "source": "season majority; explicit overrides below",
+    "overrides": {
+      "yds_allow_550p": -7,
+      "xpmiss": 0
+    }
+  },
+  "schedule": {
+    "last_regular_week": 11,
+    "ccg_week": 12,
+    "postseason_start_week": 13
+  }
+}

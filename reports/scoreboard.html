@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NCAA 180 Scoreboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Barlow:wght@400;600;700&family=Barlow+Condensed:wght@500;600&display=swap">
+<style>
+/* Layout: stadium-scoreboard header, then a two-column stat sheet (poll left, week detail right) that stacks on phones */
+:root{--bg:#eef1f5;--panel:#ffffff;--ink:#14213a;--mute:#5d6a80;--line:#d5dbe5;--accent:#c8102e;--gold:#b8860b;--up:#1d7a43;--dn:#b3261e;
+--disp:"Big Shoulders Display",Impact,"Arial Narrow",sans-serif;--body:"Barlow",system-ui,sans-serif;--num:"Barlow Condensed","Arial Narrow",sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1526;--panel:#16213a;--ink:#e8edf6;--mute:#9aa7bd;--line:#2a3756;--accent:#ff5468;--gold:#e0b44a;--up:#4fc785;--dn:#ff7b72;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0d1526;--panel:#16213a;--ink:#e8edf6;--mute:#9aa7bd;--line:#2a3756;--accent:#ff5468;--gold:#e0b44a;--up:#4fc785;--dn:#ff7b72;color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.4}
+.wrap{max-width:1100px;margin:0 auto;padding-inline:16px;padding-block:24px 40px;display:grid;gap:20px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;border-bottom:4px solid var(--accent);padding-bottom:12px}
+.eyebrow{font:600 13px/1 var(--num);letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+h1{font:900 clamp(40px,8vw,72px)/.9 var(--disp);margin:6px 0 0;letter-spacing:.01em;text-transform:uppercase;text-wrap:balance}
+h1 em{font-style:normal;color:var(--accent)}
+.kpis{display:flex;gap:22px;flex-wrap:wrap}
+.kpi b{display:block;font:600 30px/1 var(--num);font-variant-numeric:tabular-nums}
+.kpi span{font:600 11px/1.2 var(--num);letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+h2{font:700 24px/1 var(--disp);text-transform:uppercase;letter-spacing:.03em;margin:0 0 10px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+h2 small{font:500 12px var(--num);letter-spacing:.1em;color:var(--mute)}
+section{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px;min-width:0}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
+.col{display:grid;gap:20px;min-width:0}
+@media (max-width:820px){.grid{grid-template-columns:1fr}}
+.n{font-family:var(--num);font-variant-numeric:tabular-nums}
+.chip{display:inline-block;width:10px;height:22px;border-radius:2px;flex:none;margin-right:8px;vertical-align:middle;box-shadow:inset 0 0 0 1px rgba(127,127,127,.35)}
+small{color:var(--mute);font-weight:400}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{white-space:nowrap;font:600 11px var(--num);letter-spacing:.12em;text-transform:uppercase;color:var(--mute);text-align:left;padding:4px 6px;border-bottom:2px solid var(--ink)}
+th.r,td.n{text-align:right}
+td{padding:5px 6px;border-bottom:1px solid var(--line);white-space:nowrap}
+td.tm{display:flex;align-items:center;gap:0}
+@media (max-width:640px){table{font-size:13px}td.tm{flex-wrap:wrap;white-space:normal}td.tm b{flex:1;min-width:0}td.tm small{flex-basis:100%;margin-left:18px!important;font-size:11px!important}td,th{padding:5px 3px}td.mv{width:26px;font-size:12px}th{letter-spacing:.06em}}
+td.tm b{font-weight:700}td.tm small{margin-left:8px;font-size:12px}
+td.mv{text-align:center;width:34px;font:600 13px var(--num)}
+.up{color:var(--up)}.dn{color:var(--dn)}.eq{color:var(--mute)}
+tr:nth-child(-n+4) td:first-child{color:var(--accent);font-weight:600}
+.awards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.aw{background:var(--panel);padding:10px 12px;display:flex;flex-direction:column;gap:3px;text-align:center;align-items:center}
+.aw:last-child:nth-child(odd){grid-column:1/-1}
+@media (min-width:1000px){.awards{grid-template-columns:repeat(var(--cols),minmax(0,1fr))}.aw:last-child:nth-child(odd){grid-column:auto}}
+.al{font:600 11px var(--num);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.av{font-size:28px;font-weight:600;line-height:1}.av small{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin-top:3px}
+.at{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;font-size:14px}.at small{margin-left:6px}
+.ao{font-size:12px;color:var(--mute)}
+.an{font-size:12px;color:var(--mute)}
+ol,ul{list-style:none;margin:0;padding:0}
+.list li{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line)}
+.list li:last-child{border-bottom:0}
+.list .rk{width:20px;color:var(--mute)}
+.nm{flex:1;min-width:0;display:grid}.nm small{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.v{font-size:20px;font-weight:600}
+.pos{font:600 12px var(--num);letter-spacing:.08em;width:38px;text-align:center;padding:3px 0;border:1px solid var(--ink);border-radius:3px}
+.lgs li{display:grid;grid-template-columns:104px 1fr 44px;align-items:center;gap:8px;padding:3px 0;font-size:14px}
+.bar{height:12px;background:var(--bg);border-radius:2px;overflow:hidden}.bar i{display:block;height:100%;background:var(--gold)}
+.lgs .n{text-align:right}
+.note{font-size:12px;color:var(--mute);margin:8px 0 0}
+footer{font-size:12px;color:var(--mute)}
+.logo{width:56px;height:56px;object-fit:contain;flex:none;display:block;margin:4px 0 2px}
+.ls{margin-top:auto;padding-top:14px;height:98px;display:flex;align-items:flex-end;justify-content:center}
+.ls img{max-height:84px;max-width:100%;object-fit:contain}
+.weeks{display:flex;flex-wrap:wrap;gap:6px;font:600 13px var(--num)}.weeks a{color:var(--mute);text-decoration:none;padding:2px 8px;border:1px solid var(--line);border-radius:3px}.weeks a[aria-current]{color:var(--panel);background:var(--ink);border-color:var(--ink)}
+.weeks.sub{font-size:12px;margin-top:8px;align-items:center}.weeks.sub span{color:var(--mute);margin-right:2px}.weeks.sub a{padding:1px 7px}
+.totop{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:50;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--ink);color:var(--bg);font:700 18px/1 var(--num);text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);opacity:.85}
+.totop:hover,.totop:focus-visible{opacity:1}
+.totop[hidden]{display:none}
+@media print{.totop{display:none}}
+</style>
+<style>.gwrap{max-width:1100px}.validation{border:3px solid #9d3009;background:#fff0d7;color:#522000;padding:18px 22px;border-radius:10px;margin:16px 0 18px}.validation strong{font:900 clamp(21px,4vw,30px)/1.2 var(--num);display:block}.validation p{font-size:18px;line-height:1.5;margin:8px 0 0}.tools{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:12px 0}.tools label{display:flex;gap:6px;align-items:center;font-size:13px}.tools select,.tools button{font:600 14px var(--num);padding:9px;border:1px solid var(--line);border-radius:5px;background:var(--panel);color:var(--ink);max-width:100%}.tools button{cursor:pointer}.tools #updated{font-size:13px;color:var(--mute)}#error{padding:14px;background:#fff0d7;color:#722a00;border:1px solid #aa6d15;border-radius:5px}.top{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px}.tm{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.tm.r{flex-direction:row-reverse;text-align:right}.tm small{display:block;color:var(--mute);font-size:12px;margin-top:5px}.logo{width:48px;height:48px;object-fit:contain}.pt{display:inline-block;padding:3px 9px;border-radius:3px;font-size:15px;font-weight:800}.tm .sc{flex-basis:100%}.big{font:800 42px/1.2 var(--num)}.mr{font:700 12px var(--num)}.mid{text-align:center;max-width:170px;font:700 12px var(--num);line-height:1.6}.pill{color:#fff;background:#b3261e;padding:4px 8px;border-radius:4px;display:inline-block;font-weight:800}.odds{margin-top:12px;border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:12px 16px}.olab{display:flex;justify-content:space-between;gap:8px;font:700 12px var(--num);color:var(--mute);margin:8px 0 4px}.bar{display:flex;height:10px;border-radius:5px;overflow:hidden;background:var(--line)}.bar.pre{height:6px;opacity:.55}.board{margin-top:12px;padding:10px 14px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}.board h2{font:800 13px var(--num);text-transform:uppercase;letter-spacing:.08em;margin:14px 0 6px}.pr{display:grid;grid-template-columns:minmax(0,1fr) auto 42px auto minmax(0,1fr);gap:8px;align-items:center;padding:9px 0;border-top:1px solid var(--line)}.pc{min-width:0}.pc.r{text-align:right}.pc b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pc small{display:block;color:var(--mute);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ps{font:800 17px var(--num);min-width:56px;text-align:center}.ps.on{font-size:19px;font-weight:900}.sb{font:800 11px var(--num);border-radius:5px;padding:6px 0;text-align:center;color:#14213a;background:var(--line)}.s-QB{background:#f4a6b6}.s-RB{background:#9ee6c9}.s-WR{background:#9cc9f2}.s-TE{background:#f6c58f}.s-FLEX{background:linear-gradient(90deg,#9ee6c9,#9cc9f2,#f6c58f)}.s-K{background:#c9b8f2}.s-DEF{background:#e8a88c}.lv{color:#fff;background:#b3261e;border-radius:2px;padding:1px 3px;font:700 10px var(--num)}.dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#fff;margin-right:3px;animation:pulse 1.4s infinite}.bz{display:flex;justify-content:space-between;gap:14px;border-top:1px solid var(--line);padding-top:9px;font-size:12px;color:var(--mute)}.empty{padding:30px 12px;text-align:center;color:var(--mute)}@keyframes pulse{50%{opacity:.25}}@media(prefers-reduced-motion:reduce){.dot{animation:none}}@media(max-width:700px){.validation{padding:14px}.validation p{font-size:16px}.top{gap:5px;padding:12px 8px}.tm,.tm.r{flex-direction:column;align-items:center;text-align:center;gap:5px}.logo{width:38px;height:38px}.pt{font-size:12px;padding:2px 5px}.big{font-size:32px}.mid{font-size:10px;max-width:100px}.tm small{font-size:10px}.pr{grid-template-columns:minmax(0,1fr) auto 32px auto minmax(0,1fr);gap:4px}.pc b{font-size:12px}.pc small{font-size:10px}.ps{font-size:13px;min-width:36px}.ps.on{font-size:15px}.sb{font-size:9px}.clk{display:none}.board{padding:8px}.olab{font-size:10px}.tools label{max-width:100%}.tools select{min-width:0}.tools{gap:8px}}
+</style>
+</head><body><a href="#" class="totop" aria-label="Back to top" hidden>&#8593;</a><script>(function(){var b=document.currentScript.previousElementSibling;function f(){b.hidden=window.scrollY<window.innerHeight*0.9;}window.addEventListener("scroll",f,{passive:true});window.addEventListener("load",f);b.addEventListener("click",function(ev){ev.preventDefault();var r=window.matchMedia("(prefers-reduced-motion: reduce)").matches;window.scrollTo({top:0,behavior:r?"auto":"smooth"});});})();</script><div class="wrap gwrap">
+<div class="validation" role="note"><strong>⚠ SCOREBOARD VALIDATION PHASE</strong>
+<p>Questions or inaccuracies? <b>Ping @Wrightc214 on Discord</b> with the matchup and what looks wrong.</p></div>
+<nav class="weeks" aria-label="Pages"><a href="week-06.html">Weekly Awards</a><a href="roster-map.html">Roster Map</a><a href="standings.html">Standings</a><a href="matchups.html" aria-current="page">Matchups</a><a href="poll.html">Poll</a><a href="managers.html">Managers</a><a href="records.html">Records</a></nav>
+<header><div><div class="eyebrow">NCAA 180 · standard scoring</div><h1>Live <em>scoreboard</em></h1></div></header>
+<form id="chooser" class="tools"><label>League <select id="league"></select></label><label>Week <select id="week"></select></label>
+<label>Game <select id="game"></select></label><button type="submit">Open game</button></form>
+<div class="tools"><button id="refresh" type="button">↻ Refresh</button><span id="updated" role="status">Loading…</span></div>
+<p id="error" role="alert" hidden></p><div id="board" aria-busy="true"></div>
+<p class="note">Scores retain Sleeper points and apply the standard-rule correction. † appears only when a scoring-rule difference changes a team’s score.
+Records currently follow the published standings. Live odds and minutes remaining are estimates, not official results.
+Tuesday pregame expectations stay frozen. Live projection = points so far + player projection × share of game remaining.
+Questions? Ping @Wrightc214 on Discord.</p></div>
+<script src="assets/scoreboard-core.js"></script><script src="assets/scoreboard.js" defer></script></body></html>
