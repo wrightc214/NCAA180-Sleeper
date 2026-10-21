@@ -138,10 +138,10 @@ def build(offline=False):
     body = '''<div class="wrap gwrap">
 <div class="validation" role="note"><strong>⚠ SCOREBOARD VALIDATION PHASE</strong>
 <p>Questions or inaccuracies? <b>Ping @Wrightc214 on Discord</b> with the matchup and what looks wrong.</p></div>
-<nav class="weeks" aria-label="Pages">''' + nav_html("matchups") + '''</nav>
+<nav class="weeks" aria-label="Pages">''' + nav_html("scoreboard") + '''</nav>
 <header><div><div class="eyebrow">NCAA 180 · standard scoring</div><h1>Live <em>scoreboard</em></h1></div></header>
 <form id="chooser" class="tools"><label>League <select id="league"></select></label><label>Week <select id="week"></select></label>
-<label>Game <select id="game"></select></label><button type="submit">Open game</button></form>
+<label>Game <select id="game"></select></label></form>
 <div class="tools"><button id="refresh" type="button">↻ Refresh</button><span id="updated" role="status">Loading…</span></div>
 <p id="error" role="alert" hidden></p><div id="board" aria-busy="true"></div>
 <p class="note">Scores retain Sleeper points and apply the standard-rule correction. † appears only when a scoring-rule difference changes a team’s score.

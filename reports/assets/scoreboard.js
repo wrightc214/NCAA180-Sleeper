@@ -140,6 +140,7 @@
   async function refresh() {
     if(busy)return;
     busy=true;clearTimeout(timer);$('refresh').disabled=true;
+    for(const id of ['league','week','game']) $(id).disabled=true;
     abort=new AbortController();
     try {
       const base=cfg.api.sleeper;
@@ -180,14 +181,20 @@
       $('error').textContent=`${e.message||'Unable to refresh.'} ${lastGood?`Last successful update: ${lastGood.toLocaleTimeString()}.`:'No live scores have loaded yet.'} Use Refresh to retry. Ping @${cfg.contact.username} on Discord if this persists.`;
       $('updated').textContent=lastGood?`STALE · last good update ${lastGood.toLocaleTimeString()}`:'Live data unavailable';
       schedule(Math.min(cfg.refresh.max_backoff_ms,Math.max(e.retry||0,60000*2**Math.min(failures-1,5))));
-    } finally {busy=false;$('refresh').disabled=false;$('board').setAttribute('aria-busy','false');if(resumeNeeded&&!document.hidden){resumeNeeded=false;schedule(0);}}
+    } finally {busy=false;for(const id of ['league','week','game']) $(id).disabled=false;$('refresh').disabled=false;$('board').setAttribute('aria-busy','false');if(resumeNeeded&&!document.hidden){resumeNeeded=false;schedule(0);}}
   }
   async function select() {
     clearTimeout(timer);lastGood=null;$('board').innerHTML='';$('board').setAttribute('aria-busy','true');
     leagueId=$('league').value;week=Number($('week').value);chosen=[];
-    baseline=await get(`${cfg.data.scoreboard}/${season}/week-${String(week).padStart(2,'0')}.json`);
+    for(const id of ['league','week','game']) $(id).disabled=true;
+    $('refresh').disabled=true;
+    $('updated').textContent='Loading games…';
     $('game').replaceChildren();
-    await refresh();
+    try {
+      baseline=await get(`${cfg.data.scoreboard}/${season}/week-${String(week).padStart(2,'0')}.json`);
+      await refresh();
+    } finally {for(const id of ['league','week','game']) $(id).disabled=false;$('refresh').disabled=false;}
+    params.delete('game');params.delete('roster');
   }
   try {
     cfg=await get('../config/league.json');index=await get(`${cfg.data.scoreboard}/index.json`);season=Number(params.get('season')||index.season);
@@ -200,6 +207,7 @@
     setOptions($('league'),Object.entries(index.leagues).map(([id,v])=>[id,v.name]),leagueId);
     setOptions($('week'),index.weeks.map(w=>[w,`Week ${w}`]),week);
     $('chooser').addEventListener('submit',e=>{e.preventDefault();if(!busy)select().catch(showError);});
+    for(const id of ['league','week']) $(id).addEventListener('change',()=>{if(!busy)select().catch(showError);});
     $('game').addEventListener('change',()=>{if(!busy)refresh();});
     $('refresh').addEventListener('click',()=>refresh());
     document.addEventListener('visibilitychange',()=>{clearTimeout(timer);if(document.hidden)abort?.abort();else if(!busy)refresh();else resumeNeeded=true;});
