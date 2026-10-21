@@ -309,7 +309,7 @@ TEXT = {"managers": ("**New: All-Time Managers** 🏆\nEvery NCAA 180 manager si
                      "the every-week head-to-head: {link}"),
         "scoreboard": ("**New: Live Scoreboard** 📺\nAll 90 games on one page, live. Tap any game for player-by-player scores, "
                        "live win chance and minutes left: {link}\n"
-                       "It's in a validation phase. If a score looks off, ping @Wrightc214 with the matchup.")}
+                       "It's in a validation phase. If a score looks off, ping {contact} with the matchup.")}
 
 
 def render(which):
@@ -342,7 +342,9 @@ def post(which):
         print(f"::notice::{which} was already announced on {state[which]}; nothing posted (FORCE=1 to repost)")
         return
     png = os.path.join(OUT_DIR, f"{which}.png")
-    payload = {"content": TEXT[which].format(link=LINKS[which]), "allowed_mentions": {"parse": []}}
+    # Real Discord mention (<@id>) so the name is clickable; allowed_mentions parse [] keeps it from pinging.
+    uid = json.load(open("config/league.json"))["contact"]["discord_user_id"]
+    payload = {"content": TEXT[which].format(link=LINKS[which], contact=f"<@{uid}>"), "allowed_mentions": {"parse": []}}
     r = requests.post(hook + "?wait=true", data={"payload_json": json.dumps(payload)},
                       files={"files[0]": (f"ncaa180-{which}.png", open(png, "rb"), "image/png")}, timeout=60)
     if r.status_code >= 300:
