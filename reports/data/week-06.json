@@ -1,6 +1,6 @@
 {
  "week": 6,
- "avg": 113.68,
+ "avg": 113.7,
  "median": 115.05,
  "unbeaten": 9,
  "winless": 11,
@@ -142,7 +142,7 @@
    "Owner": "PhantomXX",
    "Rec": "5-1",
    "Pts": 938.94,
-   "Luck": 0.3,
+   "Luck": 0.31,
    "Move": 8
   },
   {
@@ -152,7 +152,7 @@
    "Owner": "FlynnD",
    "Rec": "5-1",
    "Pts": 931.26,
-   "Luck": 0.78,
+   "Luck": 0.79,
    "Move": 10
   },
   {
@@ -192,7 +192,7 @@
    "Owner": "Yarby",
    "Rec": "5-1",
    "Pts": 908.76,
-   "Luck": 0.35,
+   "Luck": 0.36,
    "Move": 8
   },
   {
@@ -202,7 +202,7 @@
    "Owner": "olddominion2020",
    "Rec": "5-1",
    "Pts": 906.66,
-   "Luck": 0.84,
+   "Luck": 0.85,
    "Move": 4
   },
   {
@@ -212,7 +212,7 @@
    "Owner": "JustTouchdown1221",
    "Rec": "5-1",
    "Pts": 900.22,
-   "Luck": 0.44,
+   "Luck": 0.45,
    "Move": 10
   },
   {
@@ -242,7 +242,7 @@
    "Owner": "errand",
    "Rec": "5-1",
    "Pts": 864.26,
-   "Luck": 0.97,
+   "Luck": 0.98,
    "Move": 8
   },
   {
@@ -252,7 +252,7 @@
    "Owner": "alicho",
    "Rec": "5-1",
    "Pts": 858.6,
-   "Luck": 0.9,
+   "Luck": 0.91,
    "Move": 4
   },
   {
@@ -282,7 +282,7 @@
    "Owner": "Orphan",
    "Rec": "5-1",
    "Pts": 800.0,
-   "Luck": 1.7,
+   "Luck": 1.71,
    "Move": 10
   },
   {
@@ -322,7 +322,7 @@
    "Owner": "vinceA762",
    "Rec": "5-1",
    "Pts": 793.44,
-   "Luck": 1.57,
+   "Luck": 1.58,
    "Move": -20
   }
  ],
@@ -414,8 +414,8 @@
    "Owner": "Frankeen",
    "P": 157.06,
    "Opp": "Texas",
-   "PA": 123.48,
-   "Margin": 33.58
+   "PA": 124.48,
+   "Margin": 32.58
   }
  ],
  "leagues": [
@@ -457,19 +457,19 @@
   },
   {
    "Lg": "Big 10",
-   "Avg": 113.92
+   "Avg": 114.0
   },
   {
    "Lg": "Big 12",
-   "Avg": 113.47
+   "Avg": 113.56
   },
   {
    "Lg": "Ivy",
-   "Avg": 111.22
+   "Avg": 111.25
   },
   {
    "Lg": "HBCU",
-   "Avg": 103.51
+   "Avg": 103.59
   },
   {
    "Lg": "Sun Belt",
@@ -477,7 +477,7 @@
   },
   {
    "Lg": "SEC",
-   "Avg": 98.07
+   "Avg": 98.16
   }
  ],
  "awards": {
@@ -532,8 +532,8 @@
    "Owner": "B41Pakman",
    "P": 23.3,
    "Opp": "Bethune - Cookman",
-   "PA": 120.16,
-   "Margin": -96.86
+   "PA": 121.16,
+   "Margin": -97.86
   },
   "ybs": {
    "Team": "Alabama",

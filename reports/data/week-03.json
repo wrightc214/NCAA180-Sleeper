@@ -1,7 +1,7 @@
 {
  "week": 3,
- "avg": 128.61,
- "median": 127.6,
+ "avg": 128.74,
+ "median": 127.81,
  "unbeaten": 31,
  "winless": 33,
  "top32": [
@@ -152,7 +152,7 @@
    "Owner": "Yarby",
    "Rec": "3-0",
    "Pts": 465.24,
-   "Luck": 0.63,
+   "Luck": 0.64,
    "Move": -1
   },
   {
@@ -162,7 +162,7 @@
    "Owner": "Orphan",
    "Rec": "3-0",
    "Pts": 457.5,
-   "Luck": 0.79,
+   "Luck": 0.8,
    "Move": 2
   },
   {
@@ -192,7 +192,7 @@
    "Owner": "olddominion2020",
    "Rec": "3-0",
    "Pts": 442.74,
-   "Luck": 1.12,
+   "Luck": 1.13,
    "Move": -3
   },
   {
@@ -222,7 +222,7 @@
    "Owner": "vinceA762",
    "Rec": "3-0",
    "Pts": 431.32,
-   "Luck": 0.86,
+   "Luck": 0.87,
    "Move": 5
   },
   {
@@ -272,7 +272,7 @@
    "Owner": "YikesOnBikes",
    "Rec": "3-0",
    "Pts": 407.1,
-   "Luck": 1.16,
+   "Luck": 1.17,
    "Move": 9
   },
   {
@@ -282,7 +282,7 @@
    "Owner": "alecgagnon2001",
    "Rec": "3-0",
    "Pts": 400.94,
-   "Luck": 1.23,
+   "Luck": 1.24,
    "Move": 13
   },
   {
@@ -292,7 +292,7 @@
    "Owner": "Stumpy44",
    "Rec": "3-0",
    "Pts": 397.2,
-   "Luck": 1.3,
+   "Luck": 1.31,
    "Move": 17
   },
   {
@@ -424,16 +424,16 @@
    "Avg": 135.76
   },
   {
+   "Lg": "Ivy",
+   "Avg": 133.59
+  },
+  {
    "Lg": "ACC",
    "Avg": 132.86
   },
   {
    "Lg": "Pioneer",
    "Avg": 131.83
-  },
-  {
-   "Lg": "Ivy",
-   "Avg": 131.65
   },
   {
    "Lg": "CUSA",
