@@ -27,7 +27,11 @@ import pandas as pd
 import _postseason_common as ps
 import team_names as tn
 
-STAGE1, STAGE2 = "Group Stage 1", "Group Stage 2"
+_NIT = ps.config()[1]["nit"]
+# Display names (Chris, 2026-10-28): Opening Groups -> Qualifier Groups. History rows keep the names used then.
+STAGE1, STAGE2 = _NIT["group_stage_1"]["name"], _NIT["group_stage_2"]["name"]
+HISTORY_NAMES = {STAGE1: set(_NIT["group_stage_1"]["history_names"]) | {STAGE1},
+                 STAGE2: set(_NIT["group_stage_2"]["history_names"]) | {STAGE2}}
 
 
 def group_sizes(n, groups):
@@ -106,7 +110,7 @@ def stage_winners(rows):
 
 def history_groups(year, stage, team):
     h = pd.read_csv("data/Postseason_Historic.csv", dtype=str, keep_default_na=False)
-    h = h[(h["Season"] == str(year)) & (h["Event"] == "NIT") & (h["RoundName"] == stage)].sort_values("Bowl")
+    h = h[(h["Season"] == str(year)) & (h["Event"] == "NIT") & h["RoundName"].isin(HISTORY_NAMES[stage])].sort_values("Bowl")
     lg = pd.read_csv(ps.LEAGUES, dtype=str)
     lid = dict(zip(lg[lg["Year"] == str(year)]["LeagueName"].str.strip(), lg[lg["Year"] == str(year)]["LeagueID"]))
     groups = []

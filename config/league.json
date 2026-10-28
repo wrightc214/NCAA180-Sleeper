@@ -381,11 +381,19 @@
     "nit": {
       "review_before_publish": true,
       "group_stage_1": {
+        "name": "Opening Groups",
+        "history_names": [
+          "Group Stage 1"
+        ],
         "week": 13,
         "groups": 24,
         "min_size": 3
       },
       "group_stage_2": {
+        "name": "Qualifier Groups",
+        "history_names": [
+          "Group Stage 2"
+        ],
         "week": 14,
         "groups": 8,
         "size": 3
@@ -398,6 +406,67 @@
         ],
         "first_week": 15
       }
+    },
+    "display": {
+      "_note": "Display names only; history files keep the names used at the time (Chris, 2026-10-28).",
+      "week_labels": {
+        "regular": [
+          "Week {n}",
+          "Wk {n}"
+        ],
+        "ccg": [
+          "CCG Week",
+          "CCG"
+        ],
+        "post": [
+          "Postseason Week {n}",
+          "Post {n}"
+        ],
+        "hide_weeks": [
+          18
+        ]
+      },
+      "bowl_tiers": [
+        "Opening Bowls",
+        "Showcase Bowls",
+        "Marquee Bowls",
+        "Prestige Bowls"
+      ],
+      "_bowl_tiers_note": "Lowest to highest; each season counts back from its last bowl week (last = Prestige).",
+      "playoff_only_rounds": [
+        "Elite 8",
+        "Final Four",
+        "National Championship"
+      ],
+      "round_renames": {
+        "NIT": {
+          "2019": {
+            "Group Stage": "Opening Groups",
+            "Elite 8": "Quarterfinal",
+            "Final Four": "Semifinal"
+          },
+          "2021": {
+            "Pod Stage": "Opening Groups",
+            "Group Stage": "Qualifier Groups"
+          },
+          "*": {
+            "Group Stage 1": "Opening Groups",
+            "Group Stage 2": "Qualifier Groups"
+          }
+        },
+        "Playoff": {
+          "*": {
+            "Third Place": "Third Place Game"
+          }
+        }
+      },
+      "event_prefix": {
+        "Playoff": "Playoff",
+        "NIT": "NIT",
+        "CCG": "",
+        "Bowl": ""
+      },
+      "_prefix_note": "Playoff rounds show without a prefix unless the same week has an NIT round of the same name; NIT rounds always prefixed."
     }
   },
   "draft": {
