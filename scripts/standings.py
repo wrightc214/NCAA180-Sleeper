@@ -27,29 +27,14 @@ import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from week_status import completed_weeks as finished_weeks  # noqa: E402
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 MATCHUPS_FILE = "data/Matchups_Season.csv"
 TEAMS_FILE = "data/Teams.csv"
 OUTPUT_FILE = "data/OverallStandings_Season.csv"
-LAST_REGULAR_WEEK = 11
+LAST_REGULAR_WEEK = lcfg.last_regular_week()
 
-LEAGUE_DISPLAY = {
-    "NCAA BIG EAST & CO.": "Big East",
-    "NCAA SEC": "SEC",
-    "NCAA PAC 12": "Pac 12",
-    "NCAA ACC": "ACC",
-    "NCAA BIG 12": "Big 12",
-    "NCAA SUN BELT": "Sun Belt",
-    "NCAA PIONEER": "Pioneer",
-    "NCAA IVY": "Ivy",
-    "NCAA USA": "CUSA",
-    "NCAA HISTORICALLY BLACK": "HBCU",
-    "NCAA MOUNTAIN WEST": "Mountain West",
-    "NCAA OHIO VALLEY": "Ohio Valley",
-    "NCAA WILD": "Wild",
-    "NCAA BIG 10": "Big 10",
-    "NCAA BIG SKY": "Big Sky",
-}
+LEAGUE_DISPLAY = lcfg.league_display()  # data/LeagueShortNames.csv + config display overrides
 
 
 def main():

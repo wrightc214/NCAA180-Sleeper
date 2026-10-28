@@ -34,6 +34,7 @@ import pandas as pd
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from site_common import nav_html, page_head  # noqa: E402
 from week_status import completed_weeks as finished_weeks  # noqa: E402
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 ROSTERS = "data/Rosters_Current.csv"
 VALUES = "data/PlayerValues_Current.csv"
@@ -48,19 +49,11 @@ OUT_CSV = "data/RosterValues_Season.csv"
 OUT_HTML = "reports/roster-map.html"
 LOGO_DIR = "assets/logos/teams"
 FADE_GAMES = 6
-LAST_REGULAR_WEEK = 11
+LAST_REGULAR_WEEK = lcfg.last_regular_week()
 DEFAULT_SLOTS = ["QB", "RB", "RB", "WR", "WR", "WR", "TE", "FLEX", "FLEX"]
-ELIGIBLE = {"QB": {"QB"}, "RB": {"RB"}, "WR": {"WR"}, "TE": {"TE"},
-            "FLEX": {"RB", "WR", "TE"}, "WRRB_FLEX": {"RB", "WR"},
-            "REC_FLEX": {"WR", "TE"}, "SUPER_FLEX": {"QB", "RB", "WR", "TE"}}
-LEAGUE_DISPLAY = {
-    "NCAA BIG EAST & CO.": "Big East", "NCAA SEC": "SEC", "NCAA PAC 12": "Pac 12",
-    "NCAA ACC": "ACC", "NCAA BIG 12": "Big 12", "NCAA SUN BELT": "Sun Belt",
-    "NCAA PIONEER": "Pioneer", "NCAA IVY": "Ivy", "NCAA USA": "CUSA",
-    "NCAA HISTORICALLY BLACK": "HBCU", "NCAA MOUNTAIN WEST": "Mountain West",
-    "NCAA OHIO VALLEY": "Ohio Valley", "NCAA WILD": "Wild", "NCAA BIG 10": "Big 10",
-    "NCAA BIG SKY": "Big Sky",
-}
+# Offense only (player values): K/DEF slots are ignored; FB is mapped to RB. Shared slot rules: config/league.json.
+ELIGIBLE = {k: v - {"FB"} for k, v in lcfg.eligibility().items() if k not in ("K", "DEF")}  # FB scored as RB
+LEAGUE_DISPLAY = lcfg.league_display()  # data/LeagueShortNames.csv + config display overrides
 
 
 def best_lineup(players, slots):
@@ -283,8 +276,8 @@ def main():
                       "logo": f"../{LOGO_DIR}/{r.Team}.png" if logo else None})
     payload = {"teams": teams, "colors": colors, "tcolors": team_colors, "week": week, "w": round(w, 2),
                "leagues": sorted(set(t["Lg"]))}
-    page = page_head("NCAA 180 Roster Map", MAP_CSS) + MAP_BODY.replace(
-        "{{NAV}}", nav_html("map")).replace("{{WEEK}}", str(week)).replace(
+    page = page_head(f"{lcfg.brand()} Roster Map", MAP_CSS) + MAP_BODY.replace(
+        "{{NAV}}", nav_html("map")).replace("{{BRAND}}", lcfg.brand()).replace("{{WEEK}}", str(week)).replace(
         "{{WPCT}}", f"{round(w * 100)}").replace(
         "{{DATA}}", json.dumps(payload).replace("</", "<\\/"))
     os.makedirs("reports", exist_ok=True)
@@ -340,7 +333,7 @@ MAP_BODY = """
   <div class="chartwrap"><svg class="map" id="map" viewBox="0 0 800 560" role="img" aria-label="Scatter of dynasty value against contender score"></svg></div>
   <p class="note">Right = more total dynasty value (FantasyCalc: whole roster plus future rookie picks). Up = stronger contender:
   a blend of the best lineup's redraft value and actual points per game. Results count {{WPCT}}% this week
-  and take over fully by week 6. Dashed lines are the NCAA 180 medians. Tap a corner label to zoom into that quadrant, or the dotted center box
+  and take over fully by week 6. Dashed lines are the {{BRAND}} medians. Tap a corner label to zoom into that quadrant, or the dotted center box
   (the middle half on both axes) to zoom into the middle of the pack. From week 6, next year's picks from clearly bad or good teams get an early/late bump.</p>
 </section>
 <section id="card" aria-live="polite"><p class="hint">Hover or tap a team to see its numbers.</p></section>

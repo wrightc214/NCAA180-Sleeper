@@ -42,6 +42,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from site_common import nav_html, week_archive_html  # noqa: E402
 from poll_common import ranks_for_week  # noqa: E402
 from week_status import completed_weeks as finished_weeks  # noqa: E402
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 MATCHUPS = "data/Matchups_Season.csv"
 SCORES = "data/Scores_Season.csv"
@@ -53,7 +54,7 @@ PLAYERS = "data/Players.csv"
 TEMPLATE = "templates/weekly_report.html"
 OUT_DIR = "reports"
 LOGO_DIR = "assets/logos/teams"
-LAST_REGULAR_WEEK = 11
+LAST_REGULAR_WEEK = lcfg.last_regular_week()
 LEAGUE_COLORS = "data/Colors - Leagues.csv"
 N_LEAGUES = 15
 UPSET_FIRST_WEEK = 5  # earlier weeks have too few games for a meaningful pregame estimate
@@ -62,14 +63,7 @@ SIM_MEAN_SHRINK = 1  # each team's mean includes this many league-average games 
 SIM_SD_SHRINK = 4    # each team's spread blends in this many games at the league-wide spread
 # Scores use Student-t odds (df = games of both teams - 2 + SIM_SD_SHRINK): fatter tails with fewer games.
 
-LEAGUE_DISPLAY = {
-    "NCAA BIG EAST & CO.": "Big East", "NCAA SEC": "SEC", "NCAA PAC 12": "Pac 12",
-    "NCAA ACC": "ACC", "NCAA BIG 12": "Big 12", "NCAA SUN BELT": "Sun Belt",
-    "NCAA PIONEER": "Pioneer", "NCAA IVY": "Ivy", "NCAA USA": "CUSA",
-    "NCAA HISTORICALLY BLACK": "HBCU", "NCAA MOUNTAIN WEST": "Mountain West",
-    "NCAA OHIO VALLEY": "Ohio Valley", "NCAA WILD": "Wild", "NCAA BIG 10": "Big 10",
-    "NCAA BIG SKY": "Big Sky",
-}
+LEAGUE_DISPLAY = lcfg.league_display()  # data/LeagueShortNames.csv + config display overrides
 POSITIONS = ["QB", "RB", "WR", "TE", "K", "DEF"]
 e = html.escape
 
@@ -357,7 +351,7 @@ def render(d, weeks, colors, tpl, updated, lcolors, ranks=None):
 
     top32 = """<section><h2>Playoff Rank: Top 32 <small>Wins, then points</small></h2>
     <div class="tbl"><table><thead><tr><th class="r">#</th><th>{{PREVHDR}}</th><th>Team</th><th class="r">W-L</th><th class="r">PF</th><th class="r" title="Wins minus expected wins">Luck</th></tr></thead><tbody>{{ROWS}}</tbody></table></div>
-    <p class="note">{{MOVENOTE}}Ranked across all 180 teams by wins, then total points. This is not the NCAA 180 poll.</p>
+    <p class="note">{{MOVENOTE}}Ranked across all 180 teams by wins, then total points. This is not the {{BRAND}} poll.</p>
   </section>"""
     ranksec = top32
     try:  # the NCAA 180 Top 25 poll replaces the Playoff Rank table once a poll exists for this week
@@ -372,7 +366,7 @@ def render(d, weeks, colors, tpl, updated, lcolors, ranks=None):
         "WEEK": str(W), "PREVHDR": f"Wk {W - 1}" if W > 1 else "Wk",
         "MOVENOTE": (f"Movement is change in overall standings rank from Week {W - 1}. " if W > 1 else "")
         + "Luck is wins minus expected wins (share of all 179 other teams outscored each week). ",
-        "UPDATED": updated, "NAV": nav, "ARCHIVE": week_archive_html(W, weeks),
+        "UPDATED": updated, "NAV": nav, "BRAND": lcfg.brand(), "ARCHIVE": week_archive_html(W, weeks),
         "AVG": f'{d["avg"]:.2f}', "MED": f'{d["median"]:.2f}',
         "UND": str(d["unbeaten"]), "WL": str(d["winless"]),
         "AW": "".join(cards), "AWCOLS": str(award_cols(len(cards))), "ROWS": rows, "TS": ts, "LG": lg, "PL": pl,

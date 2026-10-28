@@ -26,6 +26,7 @@ import requests
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from site_common import built_weeks  # noqa: E402
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 PNG = "reports/latest.png"
 SHORT_LINK = json.load(open("config/short_links.json"))["home"]  # Chris's short links
@@ -43,7 +44,7 @@ def images():
 
 def message(week, contact):
     ask = f"<@{contact}>" if contact else "the data manager"
-    return (f"**NCAA 180 · Week {week} Awards** 🏆\n"
+    return (f"**{lcfg.brand()} · Week {week} Awards** 🏆\n"
             f"Full report, standings and roster map: {SHORT_LINK}\n"
             f"Questions? Ask {ask}.")
 
@@ -115,7 +116,7 @@ def main():
         note("notice", f"Posted week {week} to the league channel.")
         return
 
-    alert = ("⚠️ **NCAA 180 weekly post held** — nothing went to the league.\n"
+    alert = (f"⚠️ **{lcfg.brand()} weekly post held** — nothing went to the league.\n"
              + "\n".join(f"• {p}" for p in problems)
              + (f"\nRun log: {run_url}" if run_url else "")
              + "\nTo release after fixing: run the workflow manually with `post` checked."

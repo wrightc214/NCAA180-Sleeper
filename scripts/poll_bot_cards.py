@@ -24,6 +24,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import poll_common as pc  # noqa: E402
 from poll_page import colors, logo  # noqa: E402
 from site_common import nav_html, page_head  # noqa: E402
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 OUT_HTML = "reports/poll-bots.html"
 OUT_DIR = "reports/poll-bots"
@@ -128,9 +129,9 @@ def build():
     for lg, g in sorted(c.groupby("League"), key=lambda x: x[0]):
         secs.append(card(f"{lg} · bot ballots", sub, g.sort_values("_r"), cfg, ranks, n, col, drop, show_lg=False))
     legend = " · ".join(f'<b>{e(m.get("short", ""))}</b> {e(m["name"])}' for m in cfg["bots"] if m.get("enabled", True))
-    doc = (page_head(f"NCAA 180 bot ballots wk {week}", CSS) +
+    doc = (page_head(f"{lcfg.brand()} bot ballots wk {week}", CSS) +
            f'<div class="wrap"><nav class="weeks" aria-label="Pages">{nav_html("poll-bots")}</nav>'
-           f'<header><h1>NCAA 180 <em>Bot ballots</em></h1></header>'
+           f'<header><h1>{lcfg.brand()} <em>Bot ballots</em></h1></header>'
            f'<nav class="weeks sub" aria-label="Poll pages"><a href="poll.html">Latest poll</a><a href="poll-how.html">How the poll works</a></nav>'
            + "".join(secs) + f'<p class="note">{legend}</p></div></body></html>')
     with open(OUT_HTML, "w", encoding="utf-8") as f:

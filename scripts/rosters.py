@@ -1,12 +1,12 @@
 import pandas as pd
 from sleeper_wrapper import League
-from datetime import datetime
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 # --- Load league IDs ---
 league_df = pd.read_csv("data/LeagueIDs_AllYears.csv")
 
 # --- Detect current year (or hardcode if needed) ---
-current_year = datetime.now().year
+current_year = lcfg.season()
 
 # --- Filter to current year only ---
 current_leagues = league_df[league_df['Year'] == current_year]

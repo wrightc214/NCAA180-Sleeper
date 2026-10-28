@@ -6,8 +6,9 @@ import time
 
 import pandas as pd
 import requests
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
-KEEP = ("pass_int", "pts_allow", "yds_allow", "xpmiss")
+KEEP = tuple(lcfg.cfg()["scoring"]["restated_keys"])
 S = requests.Session()
 S.headers.update({"User-Agent": "NCAA180-Sleeper/1.0"})
 rows = []
@@ -16,7 +17,7 @@ for year in range(2020, 2026):
         d = None
         for i in range(3):
             try:
-                d = S.get(f"https://api.sleeper.app/v1/stats/nfl/regular/{year}/{week}", timeout=60).json()
+                d = S.get(f"{lcfg.sleeper()}/stats/nfl/regular/{year}/{week}", timeout=60).json()
                 break
             except Exception as e:
                 print(year, week, e)

@@ -29,7 +29,7 @@ from pathlib import Path
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import league_config as lc  # noqa: E402
+import league_config as lcfg  # noqa: E402
 
 OUT_SCORES = "data/ScoresStandard_Season.csv"
 OUT_FLAGS = "data/ScoringFlags_Season.csv"
@@ -63,10 +63,10 @@ def normalized_stats(raw):
 
 def deltas(scoring):
     """{league_id: {stat: standard - league}} for leagues that differ."""
-    std = lc.standard_settings(scoring)
+    std = lcfg.standard_settings(scoring)
     out = {}
     for lid, s in scoring.items():
-        n = lc.normalized(s)
+        n = lcfg.normalized(s)
         d = {k: round(std.get(k, 0) - n.get(k, 0), 6) for k in set(std) | set(n)}
         d = {k: v for k, v in d.items() if abs(v) > 1e-9}
         if d:
@@ -100,7 +100,7 @@ def league_scoring(year, league_ids, offline):
     if not offline:
         for lid in league_ids:
             try:
-                scoring[lid] = get(f"{lc.sleeper()}/league/{lid}")["scoring_settings"]
+                scoring[lid] = get(f"{lcfg.sleeper()}/league/{lid}")["scoring_settings"]
             except Exception as e:  # saved copy (weekly snapshot) is the fallback
                 print(f"::warning::scoring settings for {lid} not fetched ({e}); using saved copy")
     missing = set(league_ids) - set(scoring)
@@ -117,7 +117,7 @@ def week_stats(year, week, players, keys, refresh, offline):
         if cached is None:
             raise SystemExit(f"No cached stat lines for {year} week {week} (offline)")
         return cached
-    feed = stats_map(get(f"{lc.sleeper()}/stats/nfl/regular/{year}/{week}"))
+    feed = stats_map(get(f"{lcfg.sleeper()}/stats/nfl/regular/{year}/{week}"))
     if len(feed) < 100:
         raise SystemExit(f"Stat feed for week {week} looks incomplete ({len(feed)} players); nothing written")
     slim = {}
@@ -216,12 +216,12 @@ def alert(flags, year):
     if not new:
         print(f"Standard scoring: {len(keys)} winner change(s) this season, none new")
         return
-    disp = lc.league_display()
-    uid = lc.cfg()["contact"]["discord_user_id"]
+    disp = lcfg.league_display()
+    uid = lcfg.cfg()["contact"]["discord_user_id"]
     lines = [f"• **{disp.get(r.LeagueName, r.LeagueName)} wk {r.Week}**: {r.Team} vs {r.Opponent} — "
              f"Sleeper {r.Official.split(' ', 1)[1]} ({r.Opponent} wins) · Standard {r.Standard.split(' ', 1)[1]} ({r.Team} wins)"
              f"{' · rule: ' + r.Rules if r.Rules else ''}" for _, r in new]
-    msg = (f"<@{uid}> 🚨 **STANDARD SCORING CHANGED A RESULT — {lc.brand()} {year}** 🚨\n" + "\n".join(lines)
+    msg = (f"<@{uid}> 🚨 **STANDARD SCORING CHANGED A RESULT — {lcfg.brand()} {year}** 🚨\n" + "\n".join(lines)
            + "\nResult is decided on standard scoring (Sleeper's score differs).")[:1990]
     hook = os.environ.get("DISCORD_WEBHOOK_LM_PRIVATE_DATA", "").strip()
     enabled = os.environ.get("STANDARD_ALERT", "1") != "0"
@@ -240,9 +240,9 @@ def main():
     ap.add_argument("--offline", action="store_true", help="cached stat lines and saved scoring only")
     ap.add_argument("--year", type=int, help="default: current season")
     a = ap.parse_args()
-    os.chdir(lc.ROOT)
-    year = a.year or lc.season()
-    if year < int(lc.cfg()["postseason"]["standard_scoring_from"]):
+    os.chdir(lcfg.ROOT)
+    year = a.year or lcfg.season()
+    if year < int(lcfg.cfg()["postseason"]["standard_scoring_from"]):
         raise SystemExit(f"{year} is history; use standard_scores.py")
     m, scores, detail = build(year, a.offline)
     scores.to_csv(OUT_SCORES, index=False)

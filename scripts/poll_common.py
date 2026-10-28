@@ -27,6 +27,7 @@ import sys
 import unicodedata
 
 import pandas as pd
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -61,7 +62,9 @@ WEEKDAYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", 
 # ---------------------------------------------------------------- config
 def config():
     with open(CONFIG, encoding="utf-8") as f:
-        return json.load(f)
+        cfg = json.load(f)
+    cfg["last_regular_week"] = lcfg.last_regular_week()  # season length lives in config/league.json
+    return cfg
 
 
 def poll_cfg(cfg, poll_type):

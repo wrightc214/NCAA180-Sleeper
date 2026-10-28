@@ -20,8 +20,9 @@ import time
 
 import pandas as pd
 import requests
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
-BASE = "https://api.sleeper.app/v1"
+BASE = lcfg.sleeper()
 OUT = "data/backfill"
 S = requests.Session()
 S.headers.update({"User-Agent": "NCAA180-Sleeper/1.0"})
@@ -110,7 +111,7 @@ def projection_test(lg):
         ms = get(f"/league/{lid}/matchups/{week}") or []
         feeds = {
             "new": lambda: {str(x.get("player_id")): x.get("stats") or {} for x in
-                            (get(f"https://api.sleeper.app/projections/nfl/{season}/{week}",
+                            (get(f"{lcfg.sleeper_root()}/projections/nfl/{season}/{week}",
                                  [("season_type", "regular")] + [("position[]", p) for p in
                                                                  ["QB", "RB", "WR", "TE", "K", "DEF"]]) or [])},
             "v1": lambda: {str(k): v or {} for k, v in

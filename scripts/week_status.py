@@ -18,8 +18,9 @@ import os
 
 import pandas as pd
 import requests
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
-STATE_URL = "https://api.sleeper.app/v1/state/nfl"
+STATE_URL = lcfg.sleeper() + "/state/nfl"
 CACHE = "data/NFLState.json"
 MATCHUPS = "data/Matchups_Season.csv"
 MAX_WEEK = 18

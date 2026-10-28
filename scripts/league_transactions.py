@@ -18,13 +18,14 @@ Who did it (added 2026-10-08):
 import pandas as pd
 from sleeper_wrapper import League
 import time
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 league_df = pd.read_csv("data/LeagueIDs_AllYears.csv")
 league_df = league_df[league_df["Year"] == league_df["Year"].max()]
 
 all_transactions = []
 
-OBSERVER_IDS = [731808894699028480]
+OBSERVER_IDS = [int(x) for x in lcfg.observer_ids()]
 
 for idx, row in league_df.iterrows():
     league_id = row['LeagueID']

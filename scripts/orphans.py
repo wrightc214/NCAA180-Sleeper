@@ -35,6 +35,7 @@ import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from week_status import current_week as cw  # noqa: E402
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 HIST = "data/Matchups_Historic.csv"
 SEASON = "data/Matchups_Season.csv"
@@ -43,14 +44,7 @@ OUT = "data/Orphans.csv"
 LASTSEEN = "data/RosterOwners_LastSeen.csv"
 ORPHAN = "Orphan"
 
-LEAGUE_DISPLAY = {
-    "NCAA BIG EAST & CO.": "Big East", "NCAA SEC": "SEC", "NCAA PAC 12": "Pac 12",
-    "NCAA ACC": "ACC", "NCAA BIG 12": "Big 12", "NCAA SUN BELT": "Sun Belt",
-    "NCAA PIONEER": "Pioneer", "NCAA IVY": "Ivy", "NCAA USA": "CUSA",
-    "NCAA HISTORICALLY BLACK": "HBCU", "NCAA MOUNTAIN WEST": "Mountain West",
-    "NCAA OHIO VALLEY": "Ohio Valley", "NCAA WILD": "Wild", "NCAA BIG 10": "Big 10",
-    "NCAA BIG SKY": "Big Sky",
-}
+LEAGUE_DISPLAY = lcfg.league_display()  # data/LeagueShortNames.csv + config display overrides
 COLS = ["Team", "League", "LeagueName", "RosterID", "PreviousOwnerID", "PreviousOwnerName",
         "OrphanedYear", "OrphanedWeek", "Status", "FilledYear", "FilledWeek",
         "NewOwnerID", "NewOwnerName"]

@@ -15,8 +15,9 @@ import time
 
 import pandas as pd
 import requests
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
-BASE = "https://api.sleeper.app/v1"
+BASE = lcfg.sleeper()
 OUT = "data/backfill"
 S = requests.Session()
 S.headers.update({"User-Agent": "NCAA180-Sleeper/1.0"})

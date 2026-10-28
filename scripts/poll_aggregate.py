@@ -36,6 +36,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import poll_common as pc  # noqa: E402
 import poll_bots as pb  # noqa: E402
 from poll_ingest import target  # noqa: E402
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 
 def already(year, ptype, week):
@@ -221,7 +222,7 @@ def ranked_games(cfg, year, week, poll_df):
 
 def flags(cfg, year, week, ptype, ballots, poll_df, size, m, teams):
     """Private notes about panel ballots (only when ballots exist); markdown text."""
-    out = [f"**NCAA 180 poll — private ballot notes** ({ptype}, {year} through week {week})"]
+    out = [f"**{lcfg.brand()} poll — private ballot notes** ({ptype}, {year} through week {week})"]
     v = pc.voters()
     counted = set(ballots["VoterID"])
     out.append(f"Panel ballots counted: {len(counted)} of {len(v)} active voters.")

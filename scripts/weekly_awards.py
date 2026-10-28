@@ -1,5 +1,5 @@
 import pandas as pd
-import datetime
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 # Combined cross-league weekly awards (NCAA180-wide superlatives).
 # Each of the 15 individual leagues already gets its own recap via Sleeper,
@@ -11,8 +11,7 @@ import datetime
 # get backfilled later, that becomes WeeklyAwards_Historic.csv following
 # the same Historic/Season/Week split as the rest of the pipeline.
 
-today = datetime.date.today()
-CURRENT_YEAR = today.year - 1 if today.month < 3 else today.year
+CURRENT_YEAR = lcfg.season()  # Jan-Feb = last season (config season.rollover_month)
 
 INPUT_PATH = "data/Matchups_Week.csv"
 SCORES_PATH = "data/Scores_Week.csv"

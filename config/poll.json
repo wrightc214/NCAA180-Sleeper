@@ -1,7 +1,6 @@
 {
   "_about": "Poll engine settings (scripts/poll_*.py). League-specific values live here, not in code. Times are local to `timezone`.",
   "timezone": "America/New_York",
-  "last_regular_week": 11,
   "polls": {
     "Top25": {
       "label": "Top 25",

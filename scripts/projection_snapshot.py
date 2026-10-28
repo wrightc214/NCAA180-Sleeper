@@ -31,12 +31,13 @@ import sys
 
 import pandas as pd
 import requests
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 UA = {"User-Agent": "NCAA180-Sleeper/1.0"}
-SLEEPER = "https://api.sleeper.app/v1"
-ESPN = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard"
+SLEEPER = lcfg.sleeper()
+ESPN = lcfg.espn()
 POS = ["QB", "RB", "WR", "TE", "K", "DEF"]
 WINDOW_HOURS = 8
 ESPN_ALIAS = {"WSH": "WAS", "LA": "LAR", "JAC": "JAX"}  # ESPN abbr -> Sleeper abbr
@@ -80,7 +81,7 @@ def projections(season, week):
     """player_id -> stats dict. Tries the current feed, then the older v1 path."""
     try:
         params = [("season_type", "regular")] + [("position[]", p) for p in POS]
-        d = get(f"https://api.sleeper.app/projections/nfl/{season}/{week}", params=params)
+        d = get(f"{lcfg.sleeper_root()}/projections/nfl/{season}/{week}", params=params)
         out = {str(x.get("player_id")): (x.get("stats") or {}) for x in d if x.get("player_id")}
         if out:
             return out

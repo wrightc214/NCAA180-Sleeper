@@ -21,13 +21,13 @@ import os
 import sys
 
 import pandas as pd
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 DEFAULT_SLOTS = ["QB", "RB", "RB", "WR", "WR", "WR", "TE", "FLEX", "FLEX"]
-ELIGIBLE = {"QB": {"QB"}, "RB": {"RB"}, "WR": {"WR"}, "TE": {"TE"},
-            "FLEX": {"RB", "WR", "TE"}, "WRRB_FLEX": {"RB", "WR"},
-            "REC_FLEX": {"WR", "TE"}, "SUPER_FLEX": {"QB", "RB", "WR", "TE"}}
+# Offense only (player values): K/DEF slots are ignored; FB is mapped to RB. Shared slot rules: config/league.json.
+ELIGIBLE = {k: v - {"FB"} for k, v in lcfg.eligibility().items() if k not in ("K", "DEF")}  # FB scored as RB
 ALERT = (0.60, 4000)
 CHECK = (0.75, 2500)
 

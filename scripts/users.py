@@ -1,13 +1,12 @@
 import pandas as pd
 from sleeper_wrapper import League, User
-import datetime
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
-user_id = 731808894699028480
+user_id = int(lcfg.lookup_user_id())
 
-today = datetime.date.today()
-CURRENT_YEAR = today.year - 1 if today.month < 3 else today.year
+CURRENT_YEAR = lcfg.season()  # Jan-Feb = last season (config season.rollover_month)
 
-OBSERVER_IDS = {"731808894699028480"}
+OBSERVER_IDS = lcfg.observer_ids()
 LINKOFTIME_ID = "460518714907815936"
 LINKOFTIME_REAL_LEAGUE = "NCAA BIG 10"
 

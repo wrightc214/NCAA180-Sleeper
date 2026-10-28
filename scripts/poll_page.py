@@ -18,6 +18,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import poll_common as pc  # noqa: E402
 from site_common import nav_html, page_head, team_colors  # noqa: E402
 from poll_aggregate import ranked_games  # noqa: E402
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 COLORS = "data/Colors - Teams.csv"
 OUT_DIR = "reports"
@@ -239,7 +240,7 @@ def page(cfg, poll, bots, archive, col, year, week, ptype, prev_ranked):
 <div class="wrap">
 <nav class="weeks" aria-label="Pages">{nav_html("poll")}</nav>
 <header><div><div class="eyebrow">{eyebrow}</div>
-<h1>NCAA 180 <em>{e(label)}</em></h1></div>
+<h1>{lcfg.brand()} <em>{e(label)}</em></h1></div>
 <div class="kpis"><div class="kpi"><b>{nbots}</b><span>Computer bots</span></div>{kpi_h}</div></header>
 <nav class="weeks sub" aria-label="Poll pages"><a href="poll-how.html">How the poll works</a><a href="poll-bots.html">Bot ballots</a></nav>
 {poll_html}
@@ -249,7 +250,7 @@ def page(cfg, poll, bots, archive, col, year, week, ptype, prev_ranked):
 <p class="note">{e(method)} <a href="poll-how.html">How it works</a> · <a href="../data/Poll_Season.csv">Raw CSV</a> · <a href="../data/PollBots_Season.csv">Bot ballots CSV</a></p></section>
 </div></body></html>
 """
-    return page_head(f"NCAA 180 {label}", CSS) + body
+    return page_head(f"{lcfg.brand()} {label}", CSS) + body
 
 
 def main():

@@ -3,8 +3,9 @@
 Writes data/backfill/PlayerPositions_All.csv."""
 import pandas as pd
 import requests
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
-d = requests.get("https://api.sleeper.app/v1/players/nfl", timeout=120,
+d = requests.get(lcfg.sleeper() + "/players/nfl", timeout=120,
                  headers={"User-Agent": "NCAA180-Sleeper/1.0"}).json()
 rows = [{"PlayerID": k, "Name": v.get("full_name") or f"{v.get('first_name', '')} {v.get('last_name', '')}".strip(),
          "Position": v.get("position"), "FantasyPositions": "|".join(v.get("fantasy_positions") or []),
