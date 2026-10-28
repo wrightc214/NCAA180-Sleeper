@@ -428,7 +428,7 @@ def build():
         return f"{how} {who} {r.PF:.2f}–{r.PA2:.2f}, week {int(r.Week)} {int(r.Year)}"
 
     def managers(seg):
-        """One manager: the name. Several: 'Jones (8), Smith (4)', top 2 then '+N more' (Chris, 2026-10-27)."""
+        """One manager: the name. Several: 'Jones (8), Smith (4)'; up to 3 names, 4+ = top 2 then '+N more' (Chris)."""
         cnt = {}
         for r in seg:
             if not r.Orphan:
@@ -438,8 +438,9 @@ def build():
         if len(cnt) == 1:
             return next(iter(cnt))
         order = sorted(cnt.items(), key=lambda kv: -kv[1])  # stable: equal counts keep who held the team first
-        out = ", ".join(f"{k} ({v})" for k, v in order[:2])
-        return out + (f" +{len(order) - 2} more" if len(order) > 2 else "")
+        shown = order if len(order) <= 3 else order[:2]
+        out = ", ".join(f"{k} ({v})" for k, v in shown)
+        return out + (f" +{len(order) - 2} more" if len(order) > 3 else "")
 
     runs = []
     for k, g in st.groupby("K", sort=False):
@@ -564,7 +565,7 @@ as played, and † marks a game whose standard score would have flipped it. Sing
 count head-to-head postseason wins, with advancing from a group as one win. Cinderella uses seeds, recorded from 2022
 on. Streaks and First to the Mark wins/losses belong to the team (league + roster spot), not the manager: weeks 1–11 only
 (conference championships are postseason), carried across seasons, orphaned stretches included, a tie ends either
-streak; several managers show as games each, e.g. Jones (8), Smith (4). Legend points stay per manager. Team names
+streak; several managers show as games each, e.g. Jones (8), Smith (4) (up to three; then two and "+N more"). Legend points stay per manager. Team names
 are as of that season.
 <a href="../{OUT_CSV}">Raw CSV</a></p></section>
 </div>
