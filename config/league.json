@@ -16,11 +16,8 @@
     "rollover_month": 3
   },
   "league_names": {
-    "_note": "Short names come from data/LeagueShortNames.csv; display overrides keep page labels unchanged.",
-    "file": "data/LeagueShortNames.csv",
-    "display_overrides": {
-      "PAC 12": "Pac 12"
-    }
+    "_note": "Short names come from data/LeagueShortNames.csv (official conference styling, e.g. Big Ten, Pac-12).",
+    "file": "data/LeagueShortNames.csv"
   },
   "eligibility": {
     "QB": [
@@ -196,7 +193,7 @@
           "week": 15,
           "type": "conf_pair",
           "leagues": [
-            "PAC 12",
+            "Pac-12",
             "Big 12"
           ]
         },
@@ -224,7 +221,7 @@
           "type": "conf_pair",
           "leagues": [
             "SEC",
-            "Big 10"
+            "Big Ten"
           ]
         },
         {
@@ -288,7 +285,7 @@
           "type": "favored_conf_pair",
           "leagues": [
             "Mountain West",
-            "PAC 12"
+            "Pac-12"
           ]
         },
         {

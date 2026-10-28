@@ -1,11 +1,11 @@
 Season,Event,Round,RoundName,Week,Bowl,TeamA,SeedA,TeamB,SeedB,ScoreA,ScoreB,Winner,Notes,OfficialScoreA,OfficialScoreB
 2019,CCG,1,Conference Championship,12,ACC,Clemson,,Georgia Tech,,134.32,93.6,Clemson,scores from Sleeper week-12 matchup (history backfill),,
-2019,CCG,1,Conference Championship,12,Big 10,Northwestern,,Michigan State,,174.96,163.22,Northwestern,scores from Sleeper week-12 matchup (history backfill),,
+2019,CCG,1,Conference Championship,12,Big Ten,Northwestern,,Michigan State,,174.96,163.22,Northwestern,scores from Sleeper week-12 matchup (history backfill),,
 2019,CCG,1,Conference Championship,12,Big 12,Texas Tech,,Kansas State,,131.24,111.88,Texas Tech,scores from Sleeper week-12 matchup (history backfill),,
 2019,CCG,1,Conference Championship,12,Big East,Army,,Notre Dame,,119.96,93.5,Army,scores from Sleeper week-12 matchup (history backfill),,
 2019,CCG,1,Conference Championship,12,Ivy,Bucknell,,Harvard,,200.8,77.18,Bucknell,scores from Sleeper week-12 matchup (history backfill),,
 2019,CCG,1,Conference Championship,12,Mountain West,New Mexico,,Nevada,,112.2,74.54,New Mexico,scores from Sleeper week-12 matchup (history backfill),,
-2019,CCG,1,Conference Championship,12,PAC 12,Washington,,Utah,,139.36,118.12,Washington,scores from Sleeper week-12 matchup (history backfill),,
+2019,CCG,1,Conference Championship,12,Pac-12,Washington,,Utah,,139.36,118.12,Washington,scores from Sleeper week-12 matchup (history backfill),,
 2019,CCG,1,Conference Championship,12,SEC,Kentucky,,Auburn,,143.92,138.78,Kentucky,Sleeper wk12: 2019 'Kentucky' was roster slot 10 (today South Carolina's slot) and beat Auburn 143.92-138.78,,
 2019,CCG,1,Conference Championship,12,Sun Belt,Memphis,,Louisiana Tech,,162.64,135.82,Memphis,scores from Sleeper week-12 matchup (history backfill),,
 2019,CCG,1,Conference Championship,12,Wild,Citadel,,Wichita State,,141.64,111.36,Citadel,"scores from Sleeper week-12 matchup; Wichita State runner-up confirmed by 2020 draft order (picks 11-12 Wichita State, Citadel)",,
@@ -68,7 +68,7 @@ Season,Event,Round,RoundName,Week,Bowl,TeamA,SeedA,TeamB,SeedB,ScoreA,ScoreB,Win
 2019,NIT,3,Final Four,15,,Vanderbilt,,Arizona,,171.84,137.42,Vanderbilt,2019 GroupMe LM posts (Ben Kline); scores from Sleeper,,
 2019,NIT,4,Final,16,,Vanderbilt,,Utah State,,131.46,105.74,Vanderbilt,prize: first pick of round 4 in the 2020 conference draft; 2019 GroupMe LM posts (Ben Kline); scores from Sleeper,,
 2020,CCG,1,Conference Championship,12,ACC,Clemson,,Virginia Tech,,152.14,124.08,Clemson,winner/runner-up from Chris's CCG history list; scores from Sleeper,,
-2020,CCG,1,Conference Championship,12,Big 10,Michigan,,Wisconsin,,157.28,137.8,Michigan,winner/runner-up from Chris's CCG history list; scores from Sleeper,,
+2020,CCG,1,Conference Championship,12,Big Ten,Michigan,,Wisconsin,,157.28,137.8,Michigan,winner/runner-up from Chris's CCG history list; scores from Sleeper,,
 2020,CCG,1,Conference Championship,12,Big 12,West Virginia,,Oklahoma,,131.1,127.78,West Virginia,winner/runner-up from Chris's CCG history list; scores from Sleeper,,
 2020,CCG,1,Conference Championship,12,Big East,UCF,,Syracuse,,158.2,108.6,UCF,winner/runner-up from Chris's CCG history list; scores from Sleeper,,
 2020,CCG,1,Conference Championship,12,Big Sky,Villanova,,Maine,,222.08,144.6,Villanova,winner/runner-up from Chris's CCG history list; scores from Sleeper,220.08,146.6
@@ -76,7 +76,7 @@ Season,Event,Round,RoundName,Week,Bowl,TeamA,SeedA,TeamB,SeedB,ScoreA,ScoreB,Win
 2020,CCG,1,Conference Championship,12,HBCU,Mississippi Valley State,,Hampton,,198.12,157.58,Mississippi Valley State,winner/runner-up from Chris's CCG history list; scores from Sleeper,,155.58
 2020,CCG,1,Conference Championship,12,Ivy,Penn,,Lehigh,,195.22,172.98,Penn,winner/runner-up from Chris's CCG history list; scores from Sleeper,,
 2020,CCG,1,Conference Championship,12,Mountain West,Utah State,,Nevada,,199.68,163.28,Utah State,winner/runner-up from Chris's CCG history list; scores from Sleeper,,
-2020,CCG,1,Conference Championship,12,PAC 12,Utah,,California,,208.92,147.88,Utah,winner/runner-up from Chris's CCG history list; scores from Sleeper,,
+2020,CCG,1,Conference Championship,12,Pac-12,Utah,,California,,208.92,147.88,Utah,winner/runner-up from Chris's CCG history list; scores from Sleeper,,
 2020,CCG,1,Conference Championship,12,Pioneer,SE Missouri State,,Campbell,,186,150,SE Missouri State,winner/runner-up from Chris's CCG history list; scores from Sleeper,,151
 2020,CCG,1,Conference Championship,12,SEC,Ole Miss,,Vanderbilt,,195.78,193.2,Ole Miss,winner/runner-up from Chris's CCG history list; scores from Sleeper,,
 2020,CCG,1,Conference Championship,12,Sun Belt,Rice,,Tulane,,172.8,137.66,Rice,winner/runner-up from Chris's CCG history list; scores from Sleeper,,
@@ -155,7 +155,7 @@ Season,Event,Round,RoundName,Week,Bowl,TeamA,SeedA,TeamB,SeedB,ScoreA,ScoreB,Win
 2020,NIT,4,Semifinal,15,Semifinal 2,Virginia | South Dakota | Boston College | Incarnate Word,,,,99.2 | 116.84 | 88.5 | 104.84,,South Dakota,"4-team group, top score advances; from Chris's 2020 NIT bracket PDF (2026-10-07); scores from Sleeper",99.2 | 116.84 | 88.5 | 103.84,
 2020,NIT,5,Final,16,,South Dakota,,USC,,156.9,137.58,South Dakota,from Chris's 2020 NIT bracket PDF (2026-10-07); scores from Sleeper,,
 2021,CCG,1,Conference Championship,12,ACC,Virginia Tech,,Clemson,,129.38,128.34,Virginia Tech,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list,,
-2021,CCG,1,Conference Championship,12,Big 10,Wisconsin,,Penn State,,145.6,133.34,Wisconsin,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list,,
+2021,CCG,1,Conference Championship,12,Big Ten,Wisconsin,,Penn State,,145.6,133.34,Wisconsin,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list,,
 2021,CCG,1,Conference Championship,12,Big 12,Baylor,,Oklahoma,,156.22,147.8,Baylor,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list,,
 2021,CCG,1,Conference Championship,12,Big East,South Dakota State,,Rutgers,,137.2,127.48,South Dakota State,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list,,
 2021,CCG,1,Conference Championship,12,Big Sky,Youngstown State,,Stony Brook,,119.16,113.84,Youngstown State,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list,120.16,115.84
@@ -164,7 +164,7 @@ Season,Event,Round,RoundName,Week,Bowl,TeamA,SeedA,TeamB,SeedB,ScoreA,ScoreB,Win
 2021,CCG,1,Conference Championship,12,Ivy,Yale,,Harvard,,129.5,124.08,Yale,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list,,
 2021,CCG,1,Conference Championship,12,Mountain West,Colorado State,,Utah State,,125.4,105.74,Colorado State,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list,,
 2021,CCG,1,Conference Championship,12,Ohio Valley,North Alabama,,Kennesaw State,,168.2,161.52,North Alabama,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list,172.2,165.52
-2021,CCG,1,Conference Championship,12,PAC 12,Washington,,Arizona State,,123.52,122.4,Washington,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list,,
+2021,CCG,1,Conference Championship,12,Pac-12,Washington,,Arizona State,,123.52,122.4,Washington,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list,,
 2021,CCG,1,Conference Championship,12,Pioneer,SE Missouri State,,Davidson,,127.12,92.96,SE Missouri State,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list,131.12,95.96
 2021,CCG,1,Conference Championship,12,SEC,Vanderbilt,,Ole Miss,,127.66,70.42,Vanderbilt,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list,,
 2021,CCG,1,Conference Championship,12,Sun Belt,UTEP,,UAB,,127.8,111.48,UTEP,scores from Sleeper week-12 matchup (Matchups_Historic); winner/runner-up per Chris's list,,
@@ -276,7 +276,7 @@ Season,Event,Round,RoundName,Week,Bowl,TeamA,SeedA,TeamB,SeedB,ScoreA,ScoreB,Win
 2021,NIT,4,Semifinal,16,SF 2,Tuskegee,,Stanford,,215.1,114.04,Tuskegee,game; Chris's 2021 NIT bracket PDF (2026-10-07); scores from Sleeper,216.1,
 2021,NIT,5,Final,17,,Eastern Kentucky,,Tuskegee,,179.54,113.14,Eastern Kentucky,game; Chris's 2021 NIT bracket PDF (2026-10-07); scores from Sleeper,178.54,115.14
 2022,CCG,1,Conference Championship,12,ACC,Clemson,,North Carolina,,173.74,157.56,Clemson,pulled from Sleeper by Chris 2026-10-06,175.74,
-2022,CCG,1,Conference Championship,12,Big 10,Purdue,,Iowa,,179.96,156.36,Purdue,pulled from Sleeper by Chris 2026-10-06,,
+2022,CCG,1,Conference Championship,12,Big Ten,Purdue,,Iowa,,179.96,156.36,Purdue,pulled from Sleeper by Chris 2026-10-06,,
 2022,CCG,1,Conference Championship,12,Big 12,Texas,,Iowa State,,178,133.56,Texas,pulled from Sleeper by Chris 2026-10-06,179,134.56
 2022,CCG,1,Conference Championship,12,Big East,Coastal Carolina,,Army,,117.8,135.7,Army,pulled from Sleeper by Chris 2026-10-06,,
 2022,CCG,1,Conference Championship,12,Big Sky,Portland State,,Richmond,,118.06,128.12,Richmond,pulled from Sleeper by Chris 2026-10-06,119.06,126.12
@@ -284,7 +284,7 @@ Season,Event,Round,RoundName,Week,Bowl,TeamA,SeedA,TeamB,SeedB,ScoreA,ScoreB,Win
 2022,CCG,1,Conference Championship,12,Ivy,Brown,,Cornell,,158.76,156,Brown,pulled from Sleeper by Chris 2026-10-06,,
 2022,CCG,1,Conference Championship,12,Mountain West,Hawaii,,Air Force,,205.96,143.2,Hawaii,pulled from Sleeper by Chris 2026-10-06,,
 2022,CCG,1,Conference Championship,12,Ohio Valley,Monmouth,,ETSU,,163.52,165.8,ETSU,pulled from Sleeper by Chris 2026-10-06,161.52,166.8
-2022,CCG,1,Conference Championship,12,PAC 12,California,,Arizona State,,181.22,180.6,California,pulled from Sleeper by Chris 2026-10-06,,
+2022,CCG,1,Conference Championship,12,Pac-12,California,,Arizona State,,181.22,180.6,California,pulled from Sleeper by Chris 2026-10-06,,
 2022,CCG,1,Conference Championship,12,Pioneer,Tennessee State,,Wofford,,130.32,162.2,Wofford,pulled from Sleeper by Chris 2026-10-06,132.32,167.2
 2022,CCG,1,Conference Championship,12,SEC,Vanderbilt,,Ole Miss,,112.02,130.24,Ole Miss,corrected by Chris 2026-10-05 (summary sheet had 146.62-131.74 Vanderbilt),,
 2022,CCG,1,Conference Championship,12,Sun Belt,Tulane,,Memphis,,129.54,158.26,Memphis,pulled from Sleeper by Chris 2026-10-06,,
@@ -399,8 +399,8 @@ Season,Event,Round,RoundName,Week,Bowl,TeamA,SeedA,TeamB,SeedB,ScoreA,ScoreB,Win
 2023,CCG,1,Conference Championship,12,SEC,Kentucky,,Mississippi State,13,134.62,159.28,Mississippi State,"regular-season records Kentucky 8-3, Mississippi State 9-2; seed cols = national rank",,
 2023,CCG,1,Conference Championship,12,Big 12,Baylor,,Iowa State,16,199.26,128.66,Baylor,"regular-season records Baylor 7-4, Iowa State 9-2; seed cols = national rank",,
 2023,CCG,1,Conference Championship,12,ACC,Clemson,3,Virginia Tech,,197.12,159.32,Clemson,"regular-season records Clemson 10-1, Virginia Tech 6-5; seed cols = national rank",,
-2023,CCG,1,Conference Championship,12,PAC 12,California,,Arizona State,2,177.26,157.12,California,"regular-season records California 7-4, Arizona State 10-1; seed cols = national rank",,
-2023,CCG,1,Conference Championship,12,Big 10,Indiana,,Minnesota,5,187.26,204.06,Minnesota,"regular-season records Indiana 8-3, Minnesota 10-1; seed cols = national rank",,
+2023,CCG,1,Conference Championship,12,Pac-12,California,,Arizona State,2,177.26,157.12,California,"regular-season records California 7-4, Arizona State 10-1; seed cols = national rank",,
+2023,CCG,1,Conference Championship,12,Big Ten,Indiana,,Minnesota,5,187.26,204.06,Minnesota,"regular-season records Indiana 8-3, Minnesota 10-1; seed cols = national rank",,
 2023,Playoff,1,First Round,13,,Syracuse,1,Indiana,32,170.12,170.62,Indiana,,,
 2023,Playoff,1,First Round,13,,Iowa State,16,Kennesaw State,17,160.88,184.36,Kennesaw State,,,
 2023,Playoff,1,First Round,13,,Arizona State,9,Campbell,24,185.42,118.6,Arizona State,,,
@@ -515,8 +515,8 @@ Season,Event,Round,RoundName,Week,Bowl,TeamA,SeedA,TeamB,SeedB,ScoreA,ScoreB,Win
 2024,CCG,1,Conference Championship,12,SEC,Florida,20,LSU,,190.86,144.16,Florida,"regular-season records Florida 10-1, LSU 7-4; seed cols = national rank",,
 2024,CCG,1,Conference Championship,12,Big 12,Baylor,17,Oklahoma State,23,119.3,168.32,Oklahoma State,"regular-season records Baylor 8-3, Oklahoma State 9-2; seed cols = national rank",,
 2024,CCG,1,Conference Championship,12,ACC,Clemson,1,North Carolina,,183.56,149.76,Clemson,"regular-season records Clemson 11-0, North Carolina 7-4; seed cols = national rank",,
-2024,CCG,1,Conference Championship,12,PAC 12,Washington State,12,UCLA,6,101.48,153.2,UCLA,"regular-season records Washington State 9-2, UCLA 10-1; seed cols = national rank",,
-2024,CCG,1,Conference Championship,12,Big 10,Ohio State,,Minnesota,22,160.96,132.08,Ohio State,"regular-season records Ohio State 9-2, Minnesota 8-3; seed cols = national rank",,
+2024,CCG,1,Conference Championship,12,Pac-12,Washington State,12,UCLA,6,101.48,153.2,UCLA,"regular-season records Washington State 9-2, UCLA 10-1; seed cols = national rank",,
+2024,CCG,1,Conference Championship,12,Big Ten,Ohio State,,Minnesota,22,160.96,132.08,Ohio State,"regular-season records Ohio State 9-2, Minnesota 8-3; seed cols = national rank",,
 2024,Playoff,1,First Round,13,,Clemson,1,Jackson State,32,142.64,153.24,Jackson State,,,
 2024,Playoff,1,First Round,13,,Florida International,16,Purdue,17,146.98,161.7,Purdue,,,
 2024,Playoff,1,First Round,13,,Montana State,9,Colgate,24,192.98,127.38,Montana State,,190.98,
@@ -630,8 +630,8 @@ Season,Event,Round,RoundName,Week,Bowl,TeamA,SeedA,TeamB,SeedB,ScoreA,ScoreB,Win
 2025,CCG,1,Conference Championship,12,SEC,South Carolina,17,Mississippi State,10,122.98,156.96,Mississippi State,"regular-season records South Carolina 9-2, Mississippi State 9-2; seed cols = national rank",,
 2025,CCG,1,Conference Championship,12,Big 12,Baylor,1,Kansas State,,142.28,161.06,Kansas State,"regular-season records Baylor 11-0, Kansas State 6-5; seed cols = national rank",,
 2025,CCG,1,Conference Championship,12,ACC,Clemson,2,Duke,20,221.88,151.46,Clemson,"regular-season records Clemson 10-1, Duke 9-2; seed cols = national rank",,
-2025,CCG,1,Conference Championship,12,PAC 12,Washington State,23,UCLA,14,160.34,100.64,Washington State,"regular-season records Washington State 8-3, UCLA 9-2; seed cols = national rank",,
-2025,CCG,1,Conference Championship,12,Big 10,Ohio State,,Minnesota,6,105.58,172.92,Minnesota,"regular-season records Ohio State 7-4, Minnesota 9-2; seed cols = national rank",,
+2025,CCG,1,Conference Championship,12,Pac-12,Washington State,23,UCLA,14,160.34,100.64,Washington State,"regular-season records Washington State 8-3, UCLA 9-2; seed cols = national rank",,
+2025,CCG,1,Conference Championship,12,Big Ten,Ohio State,,Minnesota,6,105.58,172.92,Minnesota,"regular-season records Ohio State 7-4, Minnesota 9-2; seed cols = national rank",,
 2025,Playoff,1,First Round,13,,Baylor,1,Nevada,32,189.94,95.38,Baylor,,,
 2025,Playoff,1,First Round,13,,UCLA,16,Washington State,17,134.04,174.66,Washington State,,,
 2025,Playoff,1,First Round,13,,Pittsburgh,9,Alcorn State,24,138.68,152.1,Alcorn State,,,

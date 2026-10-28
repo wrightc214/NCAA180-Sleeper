@@ -9,12 +9,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import league_config as lcfg  # noqa: E402
 import standard_scores_season as sss  # noqa: E402
 
-OLD_DISPLAY = {
-    "NCAA BIG EAST & CO.": "Big East", "NCAA SEC": "SEC", "NCAA PAC 12": "Pac 12",
+DISPLAY = {
+    "NCAA BIG EAST & CO.": "Big East", "NCAA SEC": "SEC", "NCAA PAC 12": "Pac-12",
     "NCAA ACC": "ACC", "NCAA BIG 12": "Big 12", "NCAA SUN BELT": "Sun Belt",
     "NCAA PIONEER": "Pioneer", "NCAA IVY": "Ivy", "NCAA USA": "CUSA",
     "NCAA HISTORICALLY BLACK": "HBCU", "NCAA MOUNTAIN WEST": "Mountain West",
-    "NCAA OHIO VALLEY": "Ohio Valley", "NCAA WILD": "Wild", "NCAA BIG 10": "Big 10",
+    "NCAA OHIO VALLEY": "Ohio Valley", "NCAA WILD": "Wild", "NCAA BIG 10": "Big Ten",
     "NCAA BIG SKY": "Big Sky",
 }
 
@@ -35,7 +35,7 @@ class SharedSettings(unittest.TestCase):
                          {"win": 1, "unbeaten": 5, "division": 3, "conference": 5, "bowl": 2, "nit_champ": 4, "nit_runner": 2,
                           "playoff": 5, "s16": 3, "e8": 4, "f4": 6, "final": 8, "title": 25})
         self.assertEqual(tuple(lcfg.cfg()["scoring"]["restated_keys"]), ("pass_int", "pts_allow", "yds_allow", "xpmiss"))
-        self.assertEqual(lcfg.league_display(), OLD_DISPLAY)
+        self.assertEqual(lcfg.league_display(), DISPLAY)
 
     def test_season_rollover(self):
         self.assertEqual(lcfg.season(dt.date(2026, 10, 28)), 2026)

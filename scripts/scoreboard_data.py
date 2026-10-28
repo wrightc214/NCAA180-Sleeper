@@ -15,7 +15,7 @@ import os
 from pathlib import Path
 
 from site_common import page_head, nav_html, team_colors
-from league_config import normalized, standard_settings  # noqa: F401 (normalized re-exported for tests)
+from league_config import league_display, normalized, standard_settings  # noqa: F401 (normalized re-exported for tests)
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -138,8 +138,7 @@ def write_page(cfg):
         name = league["name"]
         c = league_colors.get(name.upper(), {})
         bg, fg = team_colors(c.get("Primary"), c.get("Secondary"), c.get("Background"), c.get("Text"), name=c.get("League", name))
-        label = name.removeprefix("NCAA ")
-        label = {"HISTORICALLY BLACK": "HBCU", "USA": "CUSA", "BIG EAST & CO.": "BIG EAST"}.get(label, label)
+        label = league_display().get(name.strip(), name.removeprefix("NCAA ")).upper()  # short name (LeagueShortNames.csv)
         logo = logos.get(label.lower(), "")
         themes[lid] = {"background": bg, "text": fg, "label": label,
                        "logo": f"../assets/logos/Leagues/{logo}" if logo else ""}
