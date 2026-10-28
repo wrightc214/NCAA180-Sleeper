@@ -345,13 +345,13 @@
         },
         {
           "name": "Camellia Bowl",
-          "week": null,
+          "week": 14,
           "type": "random",
           "exclude_state": "AL"
         },
         {
           "name": "TBA Bowl",
-          "week": null,
+          "week": 13,
           "type": "random"
         }
       ]
