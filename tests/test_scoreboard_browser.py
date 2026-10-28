@@ -60,7 +60,7 @@ class BrowserTests(unittest.TestCase):
                             page.route('https://fonts.googleapis.com/**',lambda r:r.abort())
                             page.route('https://fonts.gstatic.com/**',lambda r:r.abort())
                             page.goto(f'http://127.0.0.1:{server.server_port}/reports/scoreboard.html?league=1316899756005412864&week=6&roster=6')
-                            page.wait_for_function("document.getElementById('updated').textContent.startsWith('Updated')")
+                            page.wait_for_function("document.getElementById('updated')?.textContent.startsWith('Updated')")
                             self.assertEqual(page.locator('.big').count(),2)
                             self.assertFalse(page.evaluate('document.documentElement.scrollWidth > innerWidth'))
                             self.assertIn('VALIDATION PHASE',page.locator('.validation').inner_text().upper())
@@ -73,13 +73,13 @@ class BrowserTests(unittest.TestCase):
                                 self.assertIn('FINAL',page.locator('.fin').inner_text().upper())
                                 self.assertNotIn('min left',page.locator('.top').inner_text())
                             old=page.locator('.big').all_text_contents();state['fail']=True;page.locator('#refresh').click()
-                            page.wait_for_function("document.getElementById('updated').textContent.startsWith('STALE')")
+                            page.wait_for_function("document.getElementById('updated')?.textContent.startsWith('STALE')")
                             self.assertEqual(page.locator('.big').all_text_contents(),old)
                             self.assertTrue(page.locator('#error').is_visible());state['fail']=False
                             options=page.locator('#game option').all_text_contents()
                             self.assertEqual(len(options),6)
                             page.select_option('#game',index=1)
-                            page.wait_for_function("document.getElementById('updated').textContent.startsWith('Updated')")
+                            page.wait_for_function("document.getElementById('updated')?.textContent.startsWith('Updated')")
                             self.assertNotEqual(page.locator('.big').all_text_contents(),old) if phase!='pre' else None
                             self.assertEqual(errors,[])
                             if os.environ.get('SCOREBOARD_SCREENSHOTS'):

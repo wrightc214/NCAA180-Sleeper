@@ -7,6 +7,8 @@
   const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const pct=p=>p===null?'—':p<1?'<1%':p>99?'>99%':`${Math.round(p)}%`;
   let cfg,index,metadata,baseline,colors,season,week,generation=0,controller,timer,busy=false,failures=0,metadataAt=0;
+  // Only reload on becoming visible if work was interrupted while hidden or data is over a minute old (avoids a duplicate load).
+  let pausedHidden=false,loadedAt=Date.now();
   const settings=new Map(),cards=new Map();
   $('game').hidden=true;$('overview-help').hidden=false;$('board').classList.add('conference-grid');
   const title=()=>{document.querySelector('h1').innerHTML=`${esc(cfg.brand||'')} <em>Week ${week} Scoreboard</em>`;};
@@ -70,6 +72,7 @@
       if(turn!==generation||signal.aborted)return;
       failures=failed?failures+1:0;
       const times=ids.map(id=>cards.get(id)?.updated).filter(Boolean);
+      loadedAt=Date.now();
       $('updated').textContent=failed?`${ids.length-failed} of ${ids.length} conferences refreshed · see warnings`:`Updated ${new Date().toLocaleTimeString()} · refreshes every 5 minutes until final`;
       $('error').hidden=!failed;$('error').textContent=failed?'Some conferences could not refresh. Last successful scores are retained where available.':'';
       if(failed||ids.some(id=>!cards.get(id)?.allFinal))schedule(failed?Math.min(cfg.refresh.max_backoff_ms,60000*2**Math.min(failures,5)):cfg.refresh.normal_ms);
@@ -95,7 +98,7 @@
     options($('league'),[['','All conferences'],...Object.entries(index.leagues).sort((a,b)=>a[1].name.localeCompare(b[1].name)).map(([id,l])=>[id,colors[id]?.label||l.name])],index.leagues[params.get('league')]?params.get('league'):'');
     $('chooser').addEventListener('submit',e=>e.preventDefault());for(const id of ['league','week'])$(id).addEventListener('change',select);
     $('refresh').addEventListener('click',select);
-    document.addEventListener('visibilitychange',()=>{clearTimeout(timer);if(document.hidden){generation++;controller?.abort();busy=false;}else select();});
+    document.addEventListener('visibilitychange',()=>{clearTimeout(timer);if(document.hidden){if(busy||timer)pausedHidden=true;generation++;controller?.abort();busy=false;}else if(pausedHidden||Date.now()-loadedAt>60000){pausedHidden=false;select();}});
     await select();
   }catch(e){$('error').hidden=false;$('error').textContent=e.message;$('updated').textContent='Unable to load scoreboard';}
 })();
