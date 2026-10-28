@@ -84,10 +84,9 @@ def main():
     _, field_path, _ = ps.paths(argparse.Namespace(data_dir=d))
     _, cfg = ps.config()
     hb = h[h["Event"] == "Bowl"]
-    pool, notes = B.build_pool(y, field_path, {**cfg["bowls"], "table": cfg["bowls"]["table"][:len(hb)]})
-    check(f"bowl pool ({len(hb)} bowls) matches history", {t["Team"] for t in pool} == set(hb["TeamA"]) | set(hb["TeamB"]))
-    table = cfg["bowls"]["table"]
-    pool32, _ = B.build_pool(y, field_path, cfg["bowls"])
+    pool32, notes, table = B.build_pool(y, field_path, cfg["bowls"])
+    check(f"bowl count ({len(table)}) and pool match history", len(table) == len(hb) and {t["Team"] for t in pool32} == set(hb["TeamA"]) | set(hb["TeamB"]))
+    check("bowls used play in the same weeks as history", sorted(str(b["week"]) for b in table) == sorted(hb["Week"]))
     ok_all = True
     for k in range(200):
         gms, unfilled, left = B.draw(pool32, table, random.Random(k))

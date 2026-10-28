@@ -26,6 +26,9 @@ import _postseason_common as ps
 
 
 def build_pool(year, field_path, cfg):
+    """Pool + the bowls to use. Count is flexible (Chris, 2026-10-27): every non-playoff team with
+    min_wins+ gets a bowl; if that's an odd number, the best bump_wins team (PointsFor) is pulled
+    up -- at most max_bumps. Bowls are used from the top of the table; the rest are dropped."""
     st = ps.standings(year)
     field = pd.read_csv(field_path, dtype=str)
     field = field[field["Year"].astype(str) == str(year)]
@@ -33,18 +36,29 @@ def build_pool(year, field_path, cfg):
         sys.exit("FATAL: playoff field missing or unresolved -- run playoff_field.py first")
     in_field = set(zip(field["LeagueID"], field["RosterID"]))
     non = st[[(l, r) not in in_field for l, r in zip(st["LeagueID"], st["RosterID"])]]
-    slots = 2 * len(cfg["table"])
     pool = ps.rank(non[non["Wins"] >= cfg["min_wins"]])
     notes = []
-    if len(pool) < slots:
-        bump = ps.rank(non[non["Wins"] == cfg["bump_wins"]]).head(slots - len(pool))
+    if len(pool) % 2:
+        bump = ps.rank(non[non["Wins"] == cfg["bump_wins"]]).head(int(cfg.get("max_bumps", 1)))
         if len(bump):
-            notes.append(f"{len(bump)} {cfg['bump_wins']}-win team(s) bumped up: " + ", ".join(bump["Team"]))
+            notes.append(f"{len(bump)} {cfg['bump_wins']}-win team(s) pulled up to make the count even: " + ", ".join(bump["Team"]))
         pool = ps.rank(pd.concat([pool, bump]))
+    slots = 2 * len(cfg["table"])
     if len(pool) > slots:
-        notes.append(f"{len(pool) - slots} surplus team(s) fall to the NIT: " + ", ".join(pool.iloc[slots:]["Team"]))
+        notes.append(f"{len(pool) - slots} eligible team(s) beyond the {len(cfg['table'])} bowls fall to the NIT: "
+                     + ", ".join(pool.iloc[slots:]["Team"]))
         pool = pool.head(slots)
-    return pool.to_dict("records"), notes
+    if len(pool) % 2:
+        notes.append(f"odd pool ({len(pool)}) -- the lowest-ranked team goes to the NIT: {pool.iloc[-1]['Team']}")
+        pool = pool.head(len(pool) - 1)
+    table = cfg["table"][:len(pool) // 2]
+    dropped = [b["name"] for b in cfg["table"][len(table):]]
+    if dropped:
+        notes.append(f"{len(table)} bowls used; dropped (lowest priority): {', '.join(dropped)}")
+    no_week = [b["name"] for b in table if not b.get("week")]
+    if no_week:
+        notes.append(f"WARNING: bowl(s) in use with no week set: {', '.join(no_week)}")
+    return pool.to_dict("records"), notes, table
 
 
 def _draw_once(pool, table, rng):
@@ -197,8 +211,8 @@ def main():
 
     prev = ps.read_season(draft)["DrawSeed"].iloc[0] if os.path.exists(draft) else None
     seed = int(prev) + 1 if prev else ps.draw_seed(year, "bowls")
-    pool, notes = build_pool(year, field_path, cfg)
-    games, unfilled, left = draw(pool, cfg["table"], random.Random(seed))
+    pool, notes, table = build_pool(year, field_path, cfg)
+    games, unfilled, left = draw(pool, table, random.Random(seed))
     rows = rows_for(year, games, seed)
     os.makedirs(draft_dir, exist_ok=True)
     pd.DataFrame(rows, columns=ps.COLUMNS).to_csv(draft, index=False)

@@ -111,8 +111,10 @@
       ]
     },
     "bowls": {
+      "_note": "Bowl count is flexible: enough bowls (top of the table first) for every non-playoff team with min_wins+, plus at most max_bumps team(s) with bump_wins to make the count even. Lowest-priority bowls (bottom of the table) are dropped when fewer are needed.",
       "min_wins": 6,
       "bump_wins": 5,
+      "max_bumps": 1,
       "review_before_publish": true,
       "table": [
         {
