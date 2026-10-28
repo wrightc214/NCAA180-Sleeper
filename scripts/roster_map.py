@@ -35,6 +35,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from site_common import nav_html, page_head  # noqa: E402
 from week_status import completed_weeks as finished_weeks  # noqa: E402
 import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
+import standard_results  # noqa: E402 (standard-scoring scores/results)
 
 ROSTERS = "data/Rosters_Current.csv"
 VALUES = "data/PlayerValues_Current.csv"
@@ -196,7 +197,7 @@ def main():
                                                         slots.get(lid, DEFAULT_SLOTS)))})
     t = pd.DataFrame(rows)
 
-    m = pd.read_csv(MATCHUPS, dtype=str)
+    m = standard_results.apply(pd.read_csv(MATCHUPS, dtype=str))  # standard scores; 2026+ results on them
     m["Week"] = m["Week"].astype(int)
     m["P"] = m["PointsFor"].astype(float)
     reg = m[m["Week"].isin([w for w in finished_weeks(year) if w <= LAST_REGULAR_WEEK])]

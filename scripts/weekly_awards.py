@@ -1,5 +1,6 @@
 import pandas as pd
 import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
+import standard_results  # noqa: E402 (standard-scoring scores/results)
 
 # Combined cross-league weekly awards (NCAA180-wide superlatives).
 # Each of the 15 individual leagues already gets its own recap via Sleeper,
@@ -17,7 +18,7 @@ INPUT_PATH = "data/Matchups_Week.csv"
 SCORES_PATH = "data/Scores_Week.csv"
 OUTPUT_PATH = "data/WeeklyAwards_Season.csv"
 
-df = pd.read_csv(INPUT_PATH, dtype=str)
+df = standard_results.apply(pd.read_csv(INPUT_PATH, dtype=str))  # standard scores; 2026+ results on them
 df["PointsFor"] = df["PointsFor"].astype(float)
 df["PointsAgainst"] = df["PointsAgainst"].astype(float)
 df["Week"] = df["Week"].astype(int)

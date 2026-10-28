@@ -9,7 +9,7 @@ name for that season (TeamNames_Historic.csv for past seasons, Teams.csv for the
 History sources come from config/history.json (league_ids, matchups, standard_scores), so
 seasons kept outside the main files (data/backfill/ for 2019-2020) are read the same way.
 Points: PointsFor = standard scoring where restated (ScoresStandard_Historic.csv), the
-official number kept as PointsOfficial. Outcomes (W/L) are always official.
+official number kept as PointsOfficial. Outcomes (W/L): standard from 2026, official before.
 
 Week terms used everywhere:
   ThroughWeek    last week of results the voters saw
@@ -28,6 +28,7 @@ import unicodedata
 
 import pandas as pd
 import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
+import standard_results  # noqa: E402 (standard-scoring scores/results)
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -196,7 +197,8 @@ def teams(year):
 # ---------------------------------------------------------------- standings / computer ballot
 def matchups(year):
     """Matchup rows for `year` (Season file, then history sources). PointsFor = standard
-    scoring where restated; PointsOfficial = Sleeper's number. Outcome stays official."""
+    scoring where restated; PointsOfficial = Sleeper's number. Outcome is decided on standard
+    points from config postseason.standard_scoring_from (2026); earlier seasons keep the official one."""
     hc = history_cfg()
     paths = [MATCHUPS_SEASON] + hc.get("matchups", [MATCHUPS_HISTORIC])
     frames = [pd.read_csv(p, dtype=str) for p in paths if os.path.exists(p)]
@@ -208,15 +210,7 @@ def matchups(year):
     m["Week"] = m["Week"].astype(int)
     m["PointsFor"] = m["PointsFor"].astype(float)
     m = m.drop_duplicates(["LeagueID", "Week", "RosterID"], keep="first")
-    m["PointsOfficial"] = m["PointsFor"]
-    sp = hc.get("standard_scores")
-    if sp and os.path.exists(sp):
-        s = pd.read_csv(sp, dtype=str)
-        s = s[s["Year"] == str(year)]
-        if len(s):
-            std = {(a, int(w), b): float(v) for a, w, b, v in zip(s["LeagueID"], s["Week"], s["RosterID"], s["PointsStandard"])}
-            m["PointsFor"] = [std.get((a, w, b), p) for a, w, b, p in zip(m["LeagueID"], m["Week"], m["RosterID"], m["PointsFor"])]
-    return m
+    return standard_results.apply(m)  # standard points; PointsOfficial keeps Sleeper's
 
 
 def standings_through(cfg, m, through_week):

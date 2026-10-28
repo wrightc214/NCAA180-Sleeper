@@ -65,9 +65,14 @@ def names(year):
 
 
 def season_name(year, league, roster_id):
-    n = names(year)
-    r = n[(n["LeagueName"] == str(league).strip()) & (n["RosterID"] == str(roster_id))]
-    return r["Team"].iloc[0] if len(r) else None
+    key = ("sn", str(year))
+    if key not in _cache:  # first match per (league, roster), same as filtering names(year)
+        n = names(year)
+        lookup = {}
+        for lg, rid, team in zip(n["LeagueName"], n["RosterID"], n["Team"]):
+            lookup.setdefault((lg, rid), team)
+        _cache[key] = lookup
+    return _cache[key].get((str(league).strip(), str(roster_id)))
 
 
 def current_name(league, roster_id):

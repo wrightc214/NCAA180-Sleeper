@@ -35,12 +35,12 @@ import manager_lineups as ml  # noqa: E402
 import team_names as tn  # noqa: E402
 from site_common import nav_html, page_head, team_colors  # noqa: E402
 import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
+import standard_results  # noqa: E402 (standard-scoring scores/results)
 
 OUT = "reports/managers.html"
 OUT_MGR = "data/Managers_AllTime.csv"
 OUT_SEASONS = "data/ManagerSeasons_AllTime.csv"
 POST = "data/Postseason_Historic.csv"
-STANDARD = "data/ScoresStandard_Historic.csv"
 LINEUP = "data/ManagerLineup_Career.csv"
 LINEUP_SEASON = "data/ManagerLineup_Season.csv"
 MIN_GAMES = ml.CAREER_MIN_GAMES
@@ -61,12 +61,8 @@ def regular_season(current_year):
     m = pd.concat(frames, ignore_index=True)
     m["LeagueName"] = m["LeagueName"].str.strip()
     m["Year"] = m["Year"].astype(int)
+    m = standard_results.apply(m)  # standard points every season; 2026+ results decided on them
     m["PF"] = m["PointsFor"].astype(float)
-    if os.path.exists(STANDARD):
-        s = pd.read_csv(STANDARD, dtype={"LeagueID": str, "RosterID": str})
-        s = s.rename(columns={"PointsStandard": "Std"})[["Year", "LeagueID", "Week", "RosterID", "Std"]]
-        m = m.merge(s, on=["Year", "LeagueID", "Week", "RosterID"], how="left")
-        m["PF"] = m["Std"].fillna(m["PF"])
     # all-play: share of every other team outscored that week (ties half)
     r = m.groupby(["Year", "Week"])["PF"].rank(method="average")
     n = m.groupby(["Year", "Week"])["PF"].transform("size")

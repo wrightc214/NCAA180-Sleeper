@@ -43,6 +43,7 @@ from site_common import nav_html, week_archive_html  # noqa: E402
 from poll_common import ranks_for_week  # noqa: E402
 from week_status import completed_weeks as finished_weeks  # noqa: E402
 import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
+import standard_results  # noqa: E402 (standard-scoring scores/results)
 
 MATCHUPS = "data/Matchups_Season.csv"
 SCORES = "data/Scores_Season.csv"
@@ -70,7 +71,7 @@ e = html.escape
 
 # ---------------------------------------------------------------- data
 def load():
-    m = pd.read_csv(MATCHUPS, dtype=str)
+    m = standard_results.apply(pd.read_csv(MATCHUPS, dtype=str))  # standard scores; 2026+ results on them
     m["Week"] = m["Week"].astype(int)
     m["P"] = m["PointsFor"].astype(float)
     m["PA"] = m["PointsAgainst"].astype(float)

@@ -28,6 +28,7 @@ import pandas as pd
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from week_status import completed_weeks as finished_weeks  # noqa: E402
 import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
+import standard_results  # noqa: E402 (standard-scoring scores/results)
 
 MATCHUPS_FILE = "data/Matchups_Season.csv"
 TEAMS_FILE = "data/Teams.csv"
@@ -38,7 +39,7 @@ LEAGUE_DISPLAY = lcfg.league_display()  # friendly names: data/LeagueShortNames.
 
 
 def main():
-    m = pd.read_csv(MATCHUPS_FILE, dtype=str)
+    m = standard_results.apply(pd.read_csv(MATCHUPS_FILE, dtype=str))  # standard scores; 2026+ results on them
     m["Week"] = m["Week"].astype(int)
     m["PointsFor"] = m["PointsFor"].astype(float)
 
