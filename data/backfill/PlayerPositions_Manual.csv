@@ -1,0 +1,4 @@
+PlayerID,Name,Position,FantasyPositions,Team,Note
+0,Empty slot,,,,Lineup slot left empty (Sleeper id 0)
+OAK,Oakland Raiders,DEF,DEF,OAK,Raiders DEF before the 2020 move to Las Vegas (Sleeper id OAK in 2019)
+UNKNOWN,Unknown player,,,,Default entry: shown for any player id not found in this file or Sleeper's player list
