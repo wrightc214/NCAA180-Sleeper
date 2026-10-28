@@ -42,7 +42,7 @@ TOP = 10
 e = html.escape
 ROUND_NAME = {1: "First round / group stage", 2: "Sweet 16", 3: "Elite 8", 4: "Final Four", 5: "Title game"}
 # (first mark, step): every reached mark is listed, then only the next one (as "Nobody yet").
-MILESTONES = {"wins": (25, 25), "playoff trips": (3, 2), "titles": (1, 1), "Legend points": (100, 50)}
+MILESTONES = {"wins": (25, 25), "losses": (25, 25), "playoff trips": (3, 2), "titles": (1, 1), "Legend points": (100, 50)}
 
 
 def marks(first, step):
@@ -73,6 +73,20 @@ def load():
         f = f[f["Type"] == "Game"]
         flags = {(int(r.Year), r.LeagueName.strip(), int(r.Week), str(r.RosterID)) for r in f.itertuples()}
     return year, m, owner_last, flags
+
+
+def adjudicate(m, from_year=2026):
+    """Regular-season rows with the opponent's points (PA2) and Res: from 2026 results are decided on the
+    standard-scoring points (Chris, 2026-10-15); earlier seasons keep Sleeper's official outcome."""
+    a = m.copy()
+    a["RosterID"], a["OpponentRosterID"] = a["RosterID"].astype(str), a["OpponentRosterID"].astype(str)
+    o = a[["Year", "LeagueID", "Week", "RosterID", "PF"]].rename(columns={"RosterID": "OpponentRosterID", "PF": "PA2"})
+    a = a.merge(o, on=["Year", "LeagueID", "Week", "OpponentRosterID"], how="left")
+    a["PA2"] = a["PA2"].fillna(pd.to_numeric(a["PointsAgainst"], errors="coerce"))
+    a["Res"] = a["Outcome"]
+    cur = (a["Year"] >= from_year) & a["Outcome"].notna() & a["PA2"].notna()
+    a.loc[cur, "Res"] = ["Win" if x > y else "Loss" if x < y else "Tie" for x, y in zip(a.loc[cur, "PF"], a.loc[cur, "PA2"])]
+    return a[a["Res"].isin(["Win", "Loss", "Tie"])]
 
 
 def name(year, league, rid):
@@ -177,6 +191,7 @@ def top(df, cat, sort, asc, fn, n=TOP):
 
 def build():
     year, m, owner_last, flags = load()
+    adj = adjudicate(m)
     reg = regular_games(m, flags)
     pg, pt = postseason(owner_last, year)
     games = pd.concat([reg, pg], ignore_index=True)
@@ -316,49 +331,62 @@ def build():
             c, i, f"#{int(r.Seed)} seed", r.Year, r.Team, r.Owner, r.League, label), 3)))
     sections.append(("playoffs", "Playoffs", elim + cin))
 
-    # ---- milestones: first manager to each mark; only the next unreached mark is shown
+    # ---- milestones: first TEAM (league + roster slot) to each mark; Legend points = first manager.
+    # Only the next unreached mark is shown. Wins/losses: regular season (weeks 1-11), adjudicated results.
     ms = pd.read_csv(mp.OUT_SEASONS, dtype={"OwnerID": str, "RosterID": str}) if os.path.exists(mp.OUT_SEASONS) else pd.DataFrame()
     miles = []
-    wk = m[~m["Orphan"]].sort_values(["Year", "Week"])
-    wk = wk.assign(V=(wk["Outcome"] == "Win").astype(float))
-    wk["When"] = [f"Week {int(w)}, {int(y)}" for y, w in zip(wk["Year"], wk["Week"])]
-    wk["Team"] = [name(y, l, r) for y, l, r in zip(wk["Year"], wk["LeagueName"], wk["RosterID"])]
-    latest_name = wk.groupby("OwnerID")["OwnerName"].last()
-    series = {"wins": wk}
+    tm = adj.sort_values(["Year", "Week"]).copy()
+    tm["K"] = tm["LeagueName"] + "|" + tm["RosterID"]
+    tm["When"] = [f"Week {int(w)}, {int(y)}" for y, w in zip(tm["Year"], tm["Week"])]
+    tm["Team"] = [name(y, l, r) for y, l, r in zip(tm["Year"], tm["LeagueName"], tm["RosterID"])]
+    tm["Who"] = [("Orphan" if o else n) for o, n in zip(tm["Orphan"], tm["OwnerName"])]
+    series = {"wins": (tm.assign(V=(tm["Res"] == "Win").astype(float)), "team"),
+              "losses": (tm.assign(V=(tm["Res"] == "Loss").astype(float)), "team")}
     if len(ms):
         ms = ms.sort_values("Year").copy()
         fin = ms["Finish"].fillna("")
         ms["When"] = ms["Year"].astype(int).astype(str)
         ms["Week"] = 99
+        ms["Who"] = ms["Manager"]
+        team_k = ms["LeagueName"].str.strip() + "|" + ms["RosterID"].astype(str)
         for key, v in (("playoff trips", fin.str.contains("Playoffs|Sweet 16|Elite 8|Final Four|Title game|National champion")),
-                       ("titles", fin.str.contains("National champion")), ("Legend points", ms["Legend"])):
-            series[key] = ms.assign(V=v.astype(float))
-    for key, d in series.items():
+                       ("titles", fin.str.contains("National champion"))):
+            d = ms.assign(K=team_k, V=v.astype(float))
+            # a team with two managers in one season has two rows: count the season once
+            d = d.sort_values(["Year", "V"]).groupby(["K", "Year"], as_index=False).last().sort_values("Year")
+            series[key] = (d, "team")
+        series["Legend points"] = (ms.assign(K=ms["OwnerID"], V=ms["Legend"]), "manager")
+    for key in MILESTONES:
+        if key not in series:
+            continue
+        d, kind = series[key]
         d = d.copy()
-        d["Cum"] = d.groupby("OwnerID")["V"].cumsum()
+        d["Cum"] = d.groupby("K")["V"].cumsum()
+        last_team = d.groupby("K")["Team"].last()
+        last_who = d.groupby("K")["Who"].last()
+        label = (lambda k: f"{last_team[k]} ({last_who[k]})") if kind == "team" else (lambda k: f"{last_who[k]} ({last_team[k]})")
+        noun = "team" if kind == "team" else "manager"
         first, step = MILESTONES[key]
         for mark in marks(first, step):
             unit = "title" if (key == "titles" and mark == 1) else key
-            hit = d[d["Cum"] >= mark].groupby("OwnerID").head(1).sort_values(["Year", "Week"])
+            hit = d[d["Cum"] >= mark].groupby("K").head(1).sort_values(["Year", "Week"])
             if len(hit):
                 f0 = hit.iloc[0]
                 same = hit[(hit["Year"] == f0.Year) & (hit["Week"] == f0.Week)]
+                who = " & ".join(same["Who"]) if kind == "team" else " & ".join(last_who[k] for k in same["K"])
                 miles.append(entry("Milestone", f"{mark} {unit}", f"{mark:g} {unit}", int(f0.Year), "|".join(same["Team"]),
-                                   " & ".join(latest_name.get(o, n) for o, n in zip(same["OwnerID"], same["OwnerName"]
-                                                                                    if "OwnerName" in same else same["Manager"])),
-                                   "", f"{f0.When} · {len(hit)} manager{'s' if len(hit) != 1 else ''} there now"))
+                                   who, "", f"{f0.When} · {len(hit)} {noun}{'s' if len(hit) != 1 else ''} there now"))
                 continue
-            tot = d.groupby("OwnerID").agg(V=("Cum", "max"), Team=("Team", "last")).sort_values("V", ascending=False)
-            top_v = tot["V"].iloc[0]
-            near = tot[tot["V"] == top_v]
+            tot = d.groupby("K")["Cum"].max().sort_values(ascending=False)
+            top_v = tot.iloc[0]
+            near = list(tot[tot == top_v].index)
             u = key if not (key == "titles" and top_v == 1) else "title"
             hover = ""
             if len(near) > 3:
-                who = f"{len(near)} managers with {top_v:g} {u}"
-                hover = "|".join(f"{latest_name.get(o, o)} ({t})" for o, t in
-                                 sorted(zip(near.index, near["Team"]), key=lambda x: str(latest_name.get(x[0], x[0])).lower()))
+                who = f"{len(near)} {noun}s with {top_v:g} {u}"
+                hover = "|".join(sorted((label(k) for k in near), key=str.lower))
             else:
-                who = ", ".join(f"{latest_name.get(o, o)} ({t})" for o, t in zip(near.index, near["Team"])) + f", {top_v:g} {u}"
+                who = ", ".join(label(k) for k in near) + f", {top_v:g} {u}"
             miles.append(dict(entry("Milestone", f"{mark} {unit}", f"{mark:g} {unit}", "", "", "Nobody yet", "",
                                     f"Nearest: {who}", live=True), Hover=hover))
             break
@@ -383,52 +411,68 @@ def build():
     bestls = top(lss, "Best Lineup Skill season", ["LineupSkill"], False, lambda c, i, r: entry(
         c, i, f"{r.LineupSkill:.3f}".lstrip("0"), r.Year, season_teams.get((r.Year, r.OwnerID), ""), r.OwnerName, "",
         f"{int(r.Games)} games · {r.PtsLeftPerGame:.2f} left on bench per game"))
-    # streaks: per manager, regular season in order, across seasons
-    st = m[~m["Orphan"]].sort_values(["Year", "Week"])
-    runs = []
+    # streaks: per TEAM (league + roster slot), regular season weeks 1-11 only (CCG is postseason), carried
+    # across seasons; adjudicated results (2026+); orphan games count for the team. A tie ends either streak.
+    st = adj.sort_values(["Year", "Week"]).copy()
+    st["K"] = st["LeagueName"] + "|" + st["RosterID"]
+    st["Team"] = [name(y, l, r) for y, l, r in zip(st["Year"], st["LeagueName"], st["RosterID"])]
+    last_week = int(st[st.Year == year]["Week"].max()) if (st.Year == year).any() else None
+    current = set(st.loc[st.Year == year, "K"])
+
     def ender(r, kind):
         """The game that ended a streak: who did it and the score."""
         opp = name(r.Year, r.LeagueName, r.OpponentRosterID) or r.OpponentName
         own = r.OpponentName if isinstance(r.OpponentName, str) and r.OpponentName != "Orphan" else ""
         who = f"{opp} ({own})" if own else opp
-        how = "Tied" if r.Outcome == "Tie" else ("Beaten by" if kind == "Win" else "Ended by beating")
+        how = "Tied" if r.Res == "Tie" else ("Beaten by" if kind == "Win" else "Ended by beating")
         return f"{how} {who} {r.PF:.2f}–{r.PA2:.2f}, week {int(r.Week)} {int(r.Year)}"
-    st = st.merge(st[["Year", "LeagueID", "Week", "RosterID", "PF"]].rename(
-        columns={"RosterID": "OpponentRosterID", "PF": "PA2"}), on=["Year", "LeagueID", "Week", "OpponentRosterID"], how="left")
-    st["PA2"] = st["PA2"].fillna(st["PointsAgainst"].astype(float))
-    st = st.sort_values(["Year", "Week"])
-    last_week = int(st[st.Year == year]["Week"].max()) if (st.Year == year).any() else None
-    for oid, g in st.groupby("OwnerID"):
-        cur_t, cur_n, start = None, 0, None
-        rows_ = list(g.itertuples())
-        for i, r in enumerate(rows_):
-            if r.Outcome == cur_t:
-                cur_n += 1
-            else:
-                if cur_t in ("Win", "Loss"):
-                    prev = rows_[i - 1]
-                    runs.append((oid, cur_t, cur_n, start, (prev.Year, prev.Week), False, ender(r, cur_t)))
-                cur_t, cur_n, start = r.Outcome, 1, (r.Year, r.Week)
-        if cur_t in ("Win", "Loss"):
-            lr = rows_[-1]
-            active = (lr.Year, int(lr.Week)) == (year, last_week)
-            runs.append((oid, cur_t, cur_n, start, (lr.Year, lr.Week), active, "" if active else "Ended when the manager left"))
-    rn = pd.DataFrame(runs, columns=["OwnerID", "Type", "N", "Start", "End", "Active", "EndedBy"])
-    rn["Year"], rn["Week"] = [s0[0] for s0 in rn["Start"]], [s0[1] for s0 in rn["Start"]]
-    st = st.assign(Team=[name(y, l, r) for y, l, r in zip(st["Year"], st["LeagueName"], st["RosterID"])])
 
-    def run_teams(r):
-        g = st[st["OwnerID"] == r.OwnerID]
-        k = list(zip(g["Year"], g["Week"]))
-        a, b = (r.Start[0], r.Start[1]), (r.End[0], r.End[1])
-        return "|".join(dict.fromkeys(t for kk, t in zip(k, g["Team"]) if a <= kk <= b))
-    names_latest = st.groupby("OwnerID")["OwnerName"].last()
+    def managers(seg):
+        """One manager: the name. Several: 'Jones (8), Smith (4)'; up to 3 names, 4+ = top 2 then '+N more' (Chris)."""
+        cnt = {}
+        for r in seg:
+            if not r.Orphan:
+                cnt[r.OwnerName] = cnt.get(r.OwnerName, 0) + 1
+        if not cnt:
+            return "Orphan"
+        if len(cnt) == 1:
+            return next(iter(cnt))
+        order = sorted(cnt.items(), key=lambda kv: -kv[1])  # stable: equal counts keep who held the team first
+        shown = order if len(order) <= 3 else order[:2]
+        out = ", ".join(f"{k} ({v})" for k, v in shown)
+        return out + (f" +{len(order) - 2} more" if len(order) > 3 else "")
+
+    runs = []
+    for k, g in st.groupby("K", sort=False):
+        rows_ = list(g.itertuples())
+        cur_t, seg = None, []
+        for r in rows_:
+            if r.Res == cur_t:
+                seg.append(r)
+                continue
+            if cur_t in ("Win", "Loss"):
+                runs.append((k, cur_t, seg, False, ender(r, cur_t)))
+            cur_t, seg = r.Res, [r]
+        if cur_t in ("Win", "Loss"):
+            lr = seg[-1]
+            active = (lr.Year, int(lr.Week)) == (year, last_week)
+            why = "" if active else ("League retired" if k not in current else "Ended")
+            runs.append((k, cur_t, seg, active, why))
+    rn = pd.DataFrame([{"K": k, "Type": t, "N": len(seg), "Year": seg[0].Year, "Week": int(seg[0].Week),
+                        "EndYear": seg[-1].Year, "EndWeek": int(seg[-1].Week), "Active": act, "EndedBy": why,
+                        "League": seg[0].LeagueName, "Teams": "|".join(dict.fromkeys(r.Team for r in seg)),
+                        "Mgrs": managers(seg)} for k, t, seg, act, why in runs])
     strk = []
     for t, label in (("Win", "Longest winning streak"), ("Loss", "Longest losing streak")):
         strk.append((label, top(rn[rn["Type"] == t], label, ["N"], False, lambda c, i, r: entry(
-            c, i, f"{r.N} games", r.Start[0], run_teams(r), names_latest[r.OwnerID], "",
-            f"Week {r.Start[1]}, {r.Start[0]} → week {r.End[1]}, {r.End[0]}" + (" · active" if r.Active else f" · {r.EndedBy}"),
+            c, i, f"{r.N} games", r.Year, r.Teams, r.Mgrs, r.League,
+            f"Week {r.Week} → week {r.EndWeek}, {r.EndYear}" + (" · active" if r.Active else f" · {r.EndedBy}"),
             live=r.Active))))
+    act = rn[rn["Active"] & (rn["N"] >= 5)].assign(TeamSort=lambda x: x["Teams"].str.lower())
+    strk.insert(0, ("Active streaks (5+ games)", top(act, "Active streak", ["N", "Year", "Week", "League", "TeamSort"],
+                                                      [False, True, True, True, True], lambda c, i, r: entry(
+        c, i, f"{r.Type[0]}{r.N}", r.Year, r.Teams.split("|")[-1], r.Mgrs, r.League,
+        f"{'Won' if r.Type == 'Win' else 'Lost'} {r.N} straight since week {r.Week}", live=True))))
     sections.append(("lineups", "Lineups & streaks", [("Best Lineup Skill season (9+ games)", bestls),
                                                       ("Most points left on the bench in a loss", left)] + strk))
 
@@ -462,6 +506,7 @@ CSS = """
 .tipbox span{display:block;white-space:nowrap}
 .tip:hover .tipbox,.tip:focus .tipbox,.tip:focus-within .tipbox{display:block}
 .card li.m .v{text-align:left;font-size:13px}
+.card .v.up{color:var(--up)}.card .v.dn{color:var(--dn)}
 """
 
 
@@ -494,8 +539,11 @@ def write_page(sections, year):
         head = f'{pill(r["Team"], r["Year"])}<b>{e(r["Owner"] or "")}</b>{tag}' if r["Team"] else f'<b>{e(r["Owner"])}</b>{tag}'
         if r["Category"] == "Champion":
             head = f'<span class="k">{r["Year"]}</span> ' + head
+        vcls = ""
+        if r["Category"] == "Active streak":  # W/L badge colour
+            vcls = " up" if str(r["Value"]).startswith("W") else " dn"
         return (f'<li><span class="k">{k}</span><span class="w">{head}<small>{yr}{e(r["Detail"])}{lg}</small></span>'
-                f'<span class="v">{e(str(r["Value"]))}{dag}</span></li>')
+                f'<span class="v{vcls}">{e(str(r["Value"]))}{dag}</span></li>')
 
     jump = "".join(f'<a href="#{sid}">{e(t)}</a>' for sid, t, _ in sections)
     secs = []
@@ -515,7 +563,10 @@ orphaned (caretaker or vacant) team are left out. 2019–{year - 1} scores use o
 as played, and † marks a game whose standard score would have flipped it. Single-game records include {year} so far
 (marked); season records cover completed seasons. Perfect season = 11-0 plus the conference title. Season win totals
 count head-to-head postseason wins, with advancing from a group as one win. Cinderella uses seeds, recorded from 2022
-on. Streaks run across seasons, regular season only. Team names are as of that season.
+on. Streaks and First to the Mark wins/losses belong to the team (league + roster spot), not the manager: weeks 1–11 only
+(conference championships are postseason), carried across seasons, orphaned stretches included, a tie ends either
+streak; several managers show as games each, e.g. Jones (8), Smith (4) (up to three; then two and "+N more"). Legend points stay per manager. Team names
+are as of that season.
 <a href="../{OUT_CSV}">Raw CSV</a></p></section>
 </div>
 </body></html>
