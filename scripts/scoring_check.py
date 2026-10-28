@@ -63,7 +63,7 @@ LABELS = {
     "yds_allow_450_499": "DEF 450-499 yds allowed", "yds_allow_500_549": "DEF 500-549 yds allowed",
     "yds_allow_550p": "DEF 550+ yds allowed",
 }
-LEAGUE_SHORT = lcfg.league_display()  # data/LeagueShortNames.csv + config display overrides
+LEAGUE_SHORT = lcfg.league_display()  # friendly names: data/LeagueShortNames.csv
 
 
 def _norm(d):

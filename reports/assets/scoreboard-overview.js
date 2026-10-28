@@ -50,10 +50,11 @@
     }
     return {html:`<h2 class="${theme.logo?'has-logo':''}" style="background:${esc(theme.background||'#14213a')};color:${esc(theme.text||'#fff')}">${theme.logo?`<span class="lgtag"><img src="${esc(theme.logo)}" alt="${esc(theme.label||league.name)}" onerror="this.parentElement.replaceWith(this.alt)"></span>`:esc(theme.label||league.name)}</h2>${html}${warning?'<p class="conference-note">Some stats, projections or statuses are unavailable; estimates may be incomplete.</p>':''}`,allFinal};
   }
-  function paint(ids){$('board').innerHTML=ids.map(id=>{const c=cards.get(id);return `<section class="conference" aria-label="${esc(index.leagues[id].name)}">${c?.html||`<h2>${esc(index.leagues[id].name)}</h2><p class="conference-note">Loading games…</p>`}${c?.error?`<p class="conference-error" role="status">${esc(c.error)}${c.updated?` · last updated ${c.updated.toLocaleTimeString()}`:''}</p>`:''}</section>`;}).join('');}
+  const lname=id=>index.leagues[id].label||index.leagues[id].name;
+  function paint(ids){$('board').innerHTML=ids.map(id=>{const c=cards.get(id);return `<section class="conference" aria-label="${esc(lname(id))}">${c?.html||`<h2>${esc(index.leagues[id].name)}</h2><p class="conference-note">Loading games…</p>`}${c?.error?`<p class="conference-error" role="status">${esc(c.error)}${c.updated?` · last updated ${c.updated.toLocaleTimeString()}`:''}</p>`:''}</section>`;}).join('');}
   async function refresh(){
     if(busy||document.hidden)return;busy=true;clearTimeout(timer);$('refresh').disabled=true;
-    const turn=generation,signal=controller.signal,ids=Object.keys(index.leagues).filter(id=>!$('league').value||id===$('league').value).sort((a,b)=>index.leagues[a].name.localeCompare(index.leagues[b].name));
+    const turn=generation,signal=controller.signal,ids=Object.keys(index.leagues).filter(id=>!$('league').value||id===$('league').value).sort((a,b)=>lname(a).localeCompare(lname(b)));
     try{
       const [clock,feed]=await Promise.all([get(`${cfg.api.espn}?dates=${season}&week=${week}&seasontype=2`,signal),get(`${cfg.api.sleeper}/stats/nfl/regular/${season}/${week}`,signal)]);
       if(turn!==generation)return;
@@ -85,7 +86,7 @@
     const newWeek=Number($('week').value);if(newWeek!==week)cards.clear();week=newWeek;title();
     $('updated').textContent='Loading games…';$('board').setAttribute('aria-busy','true');$('refresh').disabled=true;
     const url=new URL(location.href);url.search=new URLSearchParams({season,week,...($('league').value?{league:$('league').value}:{})});history.replaceState(null,'',url);
-    paint(Object.keys(index.leagues).filter(id=>!$('league').value||id===$('league').value).sort((a,b)=>index.leagues[a].name.localeCompare(index.leagues[b].name)));
+    paint(Object.keys(index.leagues).filter(id=>!$('league').value||id===$('league').value).sort((a,b)=>lname(a).localeCompare(lname(b))));
     try{const b=await get(`${cfg.data.scoreboard}/${season}/week-${String(week).padStart(2,'0')}.json`,controller.signal);if(turn!==generation)return;baseline=b;await refresh();}
     catch(e){if(turn!==generation)return;$('error').hidden=false;$('error').textContent=`Unable to load this week's pregame data: ${e.message}`;$('updated').textContent='Unable to load games';$('refresh').disabled=false;}
   }
@@ -95,7 +96,7 @@
     week=Number(params.get('week')||index.week);if(!index.weeks.includes(week)||week>=cfg.schedule.ccg_week)throw Error('No supported regular-season baseline for this week');title();
     [metadata,colors]=await Promise.all([get(`${cfg.data.scoreboard}/${season}/players.json`),get(`${cfg.data.scoreboard}/leagues.json`)]);metadataAt=Date.now();
     options($('week'),index.weeks.filter(w=>w<cfg.schedule.ccg_week).map(w=>[w,`Week ${w}`]),week);
-    options($('league'),[['','All conferences'],...Object.entries(index.leagues).sort((a,b)=>a[1].name.localeCompare(b[1].name)).map(([id,l])=>[id,colors[id]?.label||l.name])],index.leagues[params.get('league')]?params.get('league'):'');
+    options($('league'),[['','All conferences'],...Object.entries(index.leagues).sort((a,b)=>lname(a[0]).localeCompare(lname(b[0]))).map(([id,l])=>[id,colors[id]?.label||l.label||l.name])],index.leagues[params.get('league')]?params.get('league'):'');
     $('chooser').addEventListener('submit',e=>e.preventDefault());for(const id of ['league','week'])$(id).addEventListener('change',select);
     $('refresh').addEventListener('click',select);
     document.addEventListener('visibilitychange',()=>{clearTimeout(timer);if(document.hidden){if(busy||timer)pausedHidden=true;generation++;controller?.abort();busy=false;}else if(pausedHidden||Date.now()-loadedAt>60000){pausedHidden=false;select();}});

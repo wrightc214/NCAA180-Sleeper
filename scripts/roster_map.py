@@ -53,7 +53,7 @@ LAST_REGULAR_WEEK = lcfg.last_regular_week()
 DEFAULT_SLOTS = ["QB", "RB", "RB", "WR", "WR", "WR", "TE", "FLEX", "FLEX"]
 # Offense only (player values): K/DEF slots are ignored; FB is mapped to RB. Shared slot rules: config/league.json.
 ELIGIBLE = {k: v - {"FB"} for k, v in lcfg.eligibility().items() if k not in ("K", "DEF")}  # FB scored as RB
-LEAGUE_DISPLAY = lcfg.league_display()  # data/LeagueShortNames.csv + config display overrides
+LEAGUE_DISPLAY = lcfg.league_display()  # friendly names: data/LeagueShortNames.csv
 
 
 def best_lineup(players, slots):

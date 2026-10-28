@@ -63,7 +63,7 @@ SIM_MEAN_SHRINK = 1  # each team's mean includes this many league-average games 
 SIM_SD_SHRINK = 4    # each team's spread blends in this many games at the league-wide spread
 # Scores use Student-t odds (df = games of both teams - 2 + SIM_SD_SHRINK): fatter tails with fewer games.
 
-LEAGUE_DISPLAY = lcfg.league_display()  # data/LeagueShortNames.csv + config display overrides
+LEAGUE_DISPLAY = lcfg.league_display()  # friendly names: data/LeagueShortNames.csv
 POSITIONS = ["QB", "RB", "WR", "TE", "K", "DEF"]
 e = html.escape
 

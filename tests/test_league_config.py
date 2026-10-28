@@ -15,7 +15,7 @@ DISPLAY = {
     "NCAA PIONEER": "Pioneer", "NCAA IVY": "Ivy", "NCAA USA": "CUSA",
     "NCAA HISTORICALLY BLACK": "HBCU", "NCAA MOUNTAIN WEST": "Mountain West",
     "NCAA OHIO VALLEY": "Ohio Valley", "NCAA WILD": "Wild", "NCAA BIG 10": "Big Ten",
-    "NCAA BIG SKY": "Big Sky",
+    "NCAA BIG SKY": "Big Sky", "NCAA AMERICAN": "American", "NCAA SOUTHLAND": "Southland",
 }
 
 
@@ -36,6 +36,15 @@ class SharedSettings(unittest.TestCase):
                           "playoff": 5, "s16": 3, "e8": 4, "f4": 6, "final": 8, "title": 25})
         self.assertEqual(tuple(lcfg.cfg()["scoring"]["restated_keys"]), ("pass_int", "pts_allow", "yds_allow", "xpmiss"))
         self.assertEqual(lcfg.league_display(), DISPLAY)
+
+    def test_every_league_has_a_friendly_name(self):
+        # Pages show friendly names only; every league that ever existed needs one.
+        import csv
+        names = set()
+        for f in ("data/backfill/LeagueIDs_2019_2020.csv", "data/LeagueIDs_AllYears.csv"):
+            with open(lcfg.ROOT / f, encoding="utf-8-sig", newline="") as fh:
+                names |= {r["LeagueName"].strip() for r in csv.DictReader(fh)}
+        self.assertEqual(sorted(names - set(lcfg.league_display())), [])
 
     def test_season_rollover(self):
         self.assertEqual(lcfg.season(dt.date(2026, 10, 28)), 2026)

@@ -39,7 +39,7 @@ LIMIT = 1900  # Discord message cap is 2000 chars
 # 🟡 Watch rows are listed only while 🔴 Likely inactive is short enough to act on (Chris, 2026-10-06).
 # Hidden watches still go in the attached CSV. Override with repo variable LM_WATCH_MAX_INACTIVE.
 WATCH_MAX_INACTIVE = int(os.environ.get("LM_WATCH_MAX_INACTIVE") or 10)
-LEAGUE_SHORT = lcfg.league_display()  # data/LeagueShortNames.csv + config display overrides
+LEAGUE_SHORT = lcfg.league_display()  # friendly names: data/LeagueShortNames.csv
 ORPHAN_PNG = "reports/orphans.png"
 ORPHAN_STATE = "data/OrphanCard_Current.json"  # posted=false -> new graphic not yet delivered
 

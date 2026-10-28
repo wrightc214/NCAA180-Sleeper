@@ -74,7 +74,8 @@ def build(offline=False):
         full = get(cfg["api"]["sleeper"] + "/players/nfl")
         if not isinstance(full, dict) or len(full) < 100:
             raise ValueError("Incomplete player metadata; existing scoreboard data preserved")
-    leagues = {r["LeagueID"]: {"name": r["LeagueName"].strip(),
+    short = league_display()
+    leagues = {r["LeagueID"]: {"name": r["LeagueName"].strip(), "label": short.get(r["LeagueName"].strip(), r["LeagueName"].strip()),
                 "slots": [s for s in r["RosterPositions"].split(",") if s not in ("BN", "IR", "TAXI")]}
                for r in rows("data/LeagueIDs_AllYears.csv") if int(r["Year"]) == year}
     if not leagues or any(not v["slots"] for v in leagues.values()):

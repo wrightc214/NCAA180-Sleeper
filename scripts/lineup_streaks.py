@@ -30,7 +30,7 @@ TEAMS = "data/Teams.csv"
 OUT = "data/LineupStreaks_Season.csv"
 YEAR = str(lcfg.season())
 
-LEAGUE_DISPLAY = lcfg.league_display()  # data/LeagueShortNames.csv + config display overrides
+LEAGUE_DISPLAY = lcfg.league_display()  # friendly names: data/LeagueShortNames.csv
 
 
 def trailing_streak(sets_by_week):

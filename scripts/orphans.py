@@ -44,7 +44,7 @@ OUT = "data/Orphans.csv"
 LASTSEEN = "data/RosterOwners_LastSeen.csv"
 ORPHAN = "Orphan"
 
-LEAGUE_DISPLAY = lcfg.league_display()  # data/LeagueShortNames.csv + config display overrides
+LEAGUE_DISPLAY = lcfg.league_display()  # friendly names: data/LeagueShortNames.csv
 COLS = ["Team", "League", "LeagueName", "RosterID", "PreviousOwnerID", "PreviousOwnerName",
         "OrphanedYear", "OrphanedWeek", "Status", "FilledYear", "FilledWeek",
         "NewOwnerID", "NewOwnerName"]

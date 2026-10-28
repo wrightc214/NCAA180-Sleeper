@@ -34,7 +34,7 @@ TEAMS_FILE = "data/Teams.csv"
 OUTPUT_FILE = "data/OverallStandings_Season.csv"
 LAST_REGULAR_WEEK = lcfg.last_regular_week()
 
-LEAGUE_DISPLAY = lcfg.league_display()  # data/LeagueShortNames.csv + config display overrides
+LEAGUE_DISPLAY = lcfg.league_display()  # friendly names: data/LeagueShortNames.csv
 
 
 def main():
