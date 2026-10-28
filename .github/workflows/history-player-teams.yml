@@ -1,0 +1,35 @@
+name: History Player Teams (one-off)
+
+# One-off: NFL team per player-week 2019-2025 into data/backfill/ on this branch only, never main.
+on:
+  # A workflow only becomes dispatchable once it exists on main, so a push to this branch starts it
+  # (the bot's own result commit uses GITHUB_TOKEN and does not re-trigger).
+  push:
+    branches: [player-history-fixes]
+    paths: [scripts/history_player_teams.py, .github/workflows/history-player-teams.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  pull:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install pandas requests
+      - name: Pull player teams
+        run: python scripts/history_player_teams.py
+      - name: Commit to this branch
+        if: always()
+        run: |
+          if [ "${GITHUB_REF_NAME}" = "main" ]; then echo "::error::Refusing to commit backfill to main"; exit 1; fi
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/backfill || true
+          if git diff --cached --quiet; then echo "Nothing to commit"; exit 0; fi
+          git commit -m "History: NFL team per player-week 2019-2025"
+          for i in 1 2 3; do git pull --rebase -q origin ${GITHUB_REF_NAME} && git push origin HEAD:${GITHUB_REF_NAME} && break; sleep 5; done
