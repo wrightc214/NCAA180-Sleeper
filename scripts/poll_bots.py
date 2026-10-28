@@ -24,7 +24,7 @@ Missing inputs are bridged (bridge(): straight line between the nearest weeks wi
 the nearest week's value), flagged ValueSource in the bot file. A bot with no data at all for
 the season sits out; the consensus uses whatever bots have data and records BotsUsed.
 Points: PointsFor = standard scoring; PointsOfficial (game-time) for the Scoreboard and
-standings tiebreaks and Monday Morning QB. Outcomes are always official.
+standings tiebreaks and Monday Morning QB. Outcomes: standard from 2026, official before.
 
 Consensus (BCS computer component) within the pool (all teams, or the playoff field), per
 config consensus: each team's best and worst bot rank are dropped and the rest averaged

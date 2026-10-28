@@ -35,6 +35,7 @@ import manager_lineups as ml  # noqa: E402
 import team_names as tn  # noqa: E402
 from site_common import nav_html, page_head  # noqa: E402
 import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
+import standard_results  # noqa: E402 (standard-scoring scores/results)
 
 OUT = "reports/records.html"
 OUT_CSV = "data/Records_AllTime.csv"
@@ -76,9 +77,10 @@ def load():
     return year, m, owner_last, flags
 
 
-def adjudicate(m, from_year=2026):
+def adjudicate(m, from_year=None):
     """Regular-season rows with the opponent's points (PA2) and Res: from 2026 results are decided on the
     standard-scoring points (Chris, 2026-10-15); earlier seasons keep Sleeper's official outcome."""
+    from_year = from_year or standard_results.standard_from()
     a = m.copy()
     a["RosterID"], a["OpponentRosterID"] = a["RosterID"].astype(str), a["OpponentRosterID"].astype(str)
     o = a[["Year", "LeagueID", "Week", "RosterID", "PF"]].rename(columns={"RosterID": "OpponentRosterID", "PF": "PA2"})
