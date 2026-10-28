@@ -80,5 +80,302 @@
     "last_regular_week": 11,
     "ccg_week": 12,
     "postseason_start_week": 13
+  },
+  "postseason": {
+    "_note": "Postseason rules (Chris/commissioner). Weeks: CCG = schedule.ccg_week; playoff rounds start the week after.",
+    "standard_scoring_from": 2026,
+    "tiebreak": [
+      "Wins",
+      "PointsFor"
+    ],
+    "ccg": {
+      "divisions_per_league": 2
+    },
+    "playoff": {
+      "field_size": 32,
+      "auto_bids_per_league": 1,
+      "auto_bid_order": [
+        "ccg_winner",
+        "ccg_loser"
+      ],
+      "auto_bid_leagues": "all",
+      "seeding": "bots",
+      "manual_seeds_file": "data/PlayoffSeeds_Season.csv",
+      "first_week": 13,
+      "rounds": [
+        "First Round",
+        "Sweet 16",
+        "Elite 8",
+        "Final Four",
+        "National Championship"
+      ]
+    },
+    "bowls": {
+      "_note": "Bowl count is flexible: enough bowls (top of the table first) for every non-playoff team with min_wins+, plus at most max_bumps team(s) with bump_wins to make the count even. Lowest-priority bowls (bottom of the table) are dropped when fewer are needed.",
+      "min_wins": 6,
+      "bump_wins": 5,
+      "max_bumps": 1,
+      "review_before_publish": true,
+      "table": [
+        {
+          "name": "Tangerine Bowl",
+          "week": 16,
+          "type": "rank"
+        },
+        {
+          "name": "Liberty Bowl",
+          "week": 16,
+          "type": "rank"
+        },
+        {
+          "name": "Independence Bowl",
+          "week": 16,
+          "type": "rank"
+        },
+        {
+          "name": "New Orleans Bowl",
+          "week": 16,
+          "type": "rank"
+        },
+        {
+          "name": "Gator Bowl",
+          "week": 16,
+          "type": "rank"
+        },
+        {
+          "name": "Holiday Bowl",
+          "week": 16,
+          "type": "reserved_plus_league",
+          "league": "Wild"
+        },
+        {
+          "name": "Music City Bowl",
+          "week": 16,
+          "type": "conf_pair",
+          "leagues": [
+            "HBCU",
+            "Ivy"
+          ]
+        },
+        {
+          "name": "Alamo Bowl",
+          "week": 16,
+          "type": "conf_pair",
+          "leagues": [
+            "CUSA",
+            "Pioneer"
+          ]
+        },
+        {
+          "name": "Aloha Bowl",
+          "week": 15,
+          "type": "conf_pair",
+          "leagues": [
+            "PAC 12",
+            "Big 12"
+          ]
+        },
+        {
+          "name": "Citrus Bowl",
+          "week": 15,
+          "type": "conf_pair",
+          "leagues": [
+            "Mountain West",
+            "Sun Belt"
+          ]
+        },
+        {
+          "name": "Sun Bowl",
+          "week": 15,
+          "type": "conf_pair",
+          "leagues": [
+            "ACC",
+            "Big East"
+          ]
+        },
+        {
+          "name": "Gasparilla Bowl",
+          "week": 15,
+          "type": "conf_pair",
+          "leagues": [
+            "SEC",
+            "Big 10"
+          ]
+        },
+        {
+          "name": "Bahamas Bowl",
+          "week": 15,
+          "type": "conf_pair",
+          "leagues": [
+            "Big Sky",
+            "Ohio Valley"
+          ]
+        },
+        {
+          "name": "Military Bowl",
+          "week": 15,
+          "type": "favored_teams",
+          "teams": [
+            {
+              "league": "Big 12",
+              "roster": "4",
+              "name_note": "Texas A&M"
+            },
+            {
+              "league": "SEC",
+              "roster": "9",
+              "name_note": "Vanderbilt"
+            }
+          ]
+        },
+        {
+          "name": "Armed Forces Bowl",
+          "week": 15,
+          "type": "favored_teams",
+          "teams": [
+            {
+              "league": "Big East",
+              "roster": "8",
+              "name_note": "Army"
+            },
+            {
+              "league": "Mountain West",
+              "roster": "4",
+              "name_note": "Air Force"
+            }
+          ]
+        },
+        {
+          "name": "Poinsettia Bowl",
+          "week": 14,
+          "type": "favored_teams",
+          "teams": [
+            {
+              "league": "Big East",
+              "roster": "11",
+              "name_note": "Navy"
+            }
+          ]
+        },
+        {
+          "name": "Las Vegas Bowl",
+          "week": 15,
+          "type": "favored_conf_pair",
+          "leagues": [
+            "Mountain West",
+            "PAC 12"
+          ]
+        },
+        {
+          "name": "Texas Bowl",
+          "week": 14,
+          "type": "random",
+          "max_one_state": "TX"
+        },
+        {
+          "name": "Idaho Potato Bowl",
+          "week": 14,
+          "type": "random",
+          "exclude_state": "ID"
+        },
+        {
+          "name": "New Mexico Bowl",
+          "week": 14,
+          "type": "random",
+          "exclude_state": "NM"
+        },
+        {
+          "name": "Arizona Bowl",
+          "week": 14,
+          "type": "random",
+          "exclude_state": "AZ"
+        },
+        {
+          "name": "Brooklyn Bowl",
+          "week": 14,
+          "type": "random",
+          "exclude_region": "Northeast"
+        },
+        {
+          "name": "Miami Beach Bowl",
+          "week": 14,
+          "type": "random",
+          "exclude_state": "FL"
+        },
+        {
+          "name": "Fenway Bowl",
+          "week": 13,
+          "type": "random",
+          "exclude_region": "Northeast"
+        },
+        {
+          "name": "International Bowl",
+          "week": 13,
+          "type": "random"
+        },
+        {
+          "name": "Birmingham Bowl",
+          "week": 13,
+          "type": "random",
+          "exclude_state": "AL"
+        },
+        {
+          "name": "Pinstripe Bowl",
+          "week": 13,
+          "type": "random",
+          "exclude_region": "Northeast"
+        },
+        {
+          "name": "Boca Raton Bowl",
+          "week": 13,
+          "type": "random",
+          "exclude_state": "FL"
+        },
+        {
+          "name": "Cure Bowl",
+          "week": 13,
+          "type": "random",
+          "exclude_state": "FL"
+        },
+        {
+          "name": "LA Bowl",
+          "week": 13,
+          "type": "random",
+          "exclude_region": "SoCal"
+        },
+        {
+          "name": "Camellia Bowl",
+          "week": 14,
+          "type": "random",
+          "exclude_state": "AL"
+        },
+        {
+          "name": "TBA Bowl",
+          "week": 13,
+          "type": "random"
+        }
+      ]
+    },
+    "nit": {
+      "review_before_publish": true,
+      "group_stage_1": {
+        "week": 13,
+        "groups": 24,
+        "min_size": 3
+      },
+      "group_stage_2": {
+        "week": 14,
+        "groups": 8,
+        "size": 3
+      },
+      "bracket": {
+        "rounds": [
+          "Quarterfinal",
+          "Semifinal",
+          "Final"
+        ],
+        "first_week": 15
+      }
+    }
   }
 }
