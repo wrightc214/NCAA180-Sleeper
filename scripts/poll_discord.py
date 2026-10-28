@@ -24,6 +24,7 @@ import requests
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import poll_common as pc  # noqa: E402
 from discord_post import note, valid  # noqa: E402
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 IMAGES = "reports/discord-poll/*.png"
 LIMIT = 1900  # Discord message cap is 2000 chars
@@ -63,7 +64,7 @@ def headline(cfg, ptype, week, human):
     url = cfg.get("publish", {}).get("page_url", "")
     nb = int(float(top.get("BotsUsed") or 0))
     voters = f"{nb} bots" + (f" + {human} panel ballot{'s' if human != 1 else ''}" if human else "")
-    lines = [f"**NCAA 180 {label} · through week {week}** 📊",
+    lines = [f"**{lcfg.brand()} {label} · through week {week}** 📊",
              f"#1 {top['Team']} ({fpv} first-place vote{'s' if fpv != 1 else ''}) · {voters}"]
     if rvr:
         lines.append(f"{rvr} ranked-vs-ranked game{'s' if rvr != 1 else ''} in week {week + 1}")
@@ -99,7 +100,7 @@ def main():
         problems.append("Preview only: repo variable POLL_POST_TO_LEAGUE is not true (config/poll.json publish.post_to_league is the fallback)")
 
     if problems:
-        send(private, "⚠️ **NCAA 180 poll post held** — nothing went to the league.\n"
+        send(private, f"⚠️ **{lcfg.brand()} poll post held** — nothing went to the league.\n"
              + "\n".join(f"• {p}" for p in problems)
              + (f"\nRun log: {run_url}" if run_url else "")
              + "\nTo release: set repo variable POLL_POST_TO_LEAGUE = true, then rerun the Poll workflow with `force` and `post` checked."

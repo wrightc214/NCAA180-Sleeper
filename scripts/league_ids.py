@@ -4,11 +4,12 @@ import pandas as pd
 import datetime
 import os
 import time
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
-USER_ID = "731808894699028480"
-BASE = "https://api.sleeper.app/v1"
+USER_ID = lcfg.lookup_user_id()
+BASE = lcfg.sleeper()
 START_YEAR = 2020
-END_YEAR = datetime.datetime.now().year
+END_YEAR = datetime.datetime.now().year  # discovery: probe through the calendar year (new leagues appear before rollover)
 
 OUTPUT_DIR = "data"
 os.makedirs(OUTPUT_DIR, exist_ok=True)

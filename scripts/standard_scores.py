@@ -19,13 +19,14 @@ Rules (Chris, 2026-10-08):
   - Current season: official Sleeper scores; it is restated when it becomes history.
 
 Re-scoring uses Sleeper weekly stat lines for only the settings that differ between leagues
-(config/history.json -> restated_keys). A season whose leagues all match has Delta 0.
+(config/league.json -> scoring.restated_keys). A season whose leagues all match has Delta 0.
 Run: python scripts/standard_scores.py   (rerun after any history rebuild / rollover)
 """
 import collections
 import json
 
 import pandas as pd
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 CFG = json.load(open("config/history.json"))
 OUT_SCORES = "data/ScoresStandard_Historic.csv"
@@ -45,7 +46,7 @@ def settings_delta():
         maj = {k: collections.Counter(round(d.get(k, 0), 3) for d in L.values()).most_common(1)[0][0] for k in keys}
         for lid, d in L.items():
             dd = {k: maj[k] - round(d.get(k, 0), 3) for k in keys
-                  if k.startswith(tuple(CFG["restated_keys"])) and round(d.get(k, 0), 3) != maj[k]}
+                  if k.startswith(tuple(lcfg.cfg()["scoring"]["restated_keys"])) and round(d.get(k, 0), 3) != maj[k]}
             if dd:
                 out[(int(y), lid)] = dd
     return out
@@ -102,7 +103,7 @@ def main():
     flags = []
     import team_names as tn
     nm = lambda y, lg, r_: tn.season_name(int(y), lg, r_) or f"{lg} r{r_}"
-    lr = CFG["last_regular_week"]
+    lr = lcfg.last_regular_week()
     for r in m[(m.ResO != m.ResS) & (m.Week.astype(int) <= lr)].itertuples():
         flags.append(dict(Year=r.Year, LeagueName=r.LeagueName, Week=r.Week, RosterID=r.RosterID, Team=nm(r.Year, r.LeagueName, r.RosterID),
                           Opponent=nm(r.Year, r.LeagueName, r.OpponentRosterID), Type="Game",

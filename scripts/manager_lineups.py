@@ -44,6 +44,7 @@ import pandas as pd
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from max_points import DEFAULT_SLOTS, ELIGIBLE, POS_ALIAS, lineup_pick  # noqa: E402
 from week_status import completed_weeks  # noqa: E402
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 BACKFILL = "data/backfill"
 LEAGUES = "data/LeagueIDs_AllYears.csv"
@@ -51,8 +52,8 @@ WEEKS_HIST = "data/LineupWeeks_Historic.csv"
 WEEKS_SEASON = "data/LineupWeeks_Season.csv"
 OUT_SEASON = "data/ManagerLineup_Season.csv"
 OUT_CAREER = "data/ManagerLineup_Career.csv"
-LAST_REGULAR_WEEK = 11
-CAREER_MIN_GAMES = 20  # career leaderboard minimum (Chris, 2026-10-15: a round number)
+LAST_REGULAR_WEEK = lcfg.last_regular_week()
+CAREER_MIN_GAMES = lcfg.cfg()["managers"]["career_min_games"]  # career leaderboard minimum (Chris, 2026-10-15: a round number)
 ALL_POS = set().union(*ELIGIBLE.values())
 
 

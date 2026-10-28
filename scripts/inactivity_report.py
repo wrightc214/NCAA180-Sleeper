@@ -31,6 +31,7 @@ import requests
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from week_status import completed_weeks  # noqa: E402
 from tank_check import check_week  # noqa: E402
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 SRC = "data/LineupStreaks_Season.csv"
 MATCHUPS = "data/Matchups_Season.csv"
@@ -38,14 +39,7 @@ LIMIT = 1900  # Discord message cap is 2000 chars
 # 🟡 Watch rows are listed only while 🔴 Likely inactive is short enough to act on (Chris, 2026-10-06).
 # Hidden watches still go in the attached CSV. Override with repo variable LM_WATCH_MAX_INACTIVE.
 WATCH_MAX_INACTIVE = int(os.environ.get("LM_WATCH_MAX_INACTIVE") or 10)
-LEAGUE_SHORT = {
-    "NCAA BIG EAST & CO.": "Big East", "NCAA SEC": "SEC", "NCAA PAC 12": "Pac 12",
-    "NCAA ACC": "ACC", "NCAA BIG 12": "Big 12", "NCAA SUN BELT": "Sun Belt",
-    "NCAA PIONEER": "Pioneer", "NCAA IVY": "Ivy", "NCAA USA": "CUSA",
-    "NCAA HISTORICALLY BLACK": "HBCU", "NCAA MOUNTAIN WEST": "Mountain West",
-    "NCAA OHIO VALLEY": "Ohio Valley", "NCAA WILD": "Wild", "NCAA BIG 10": "Big 10",
-    "NCAA BIG SKY": "Big Sky",
-}
+LEAGUE_SHORT = lcfg.league_display()  # friendly names: data/LeagueShortNames.csv
 ORPHAN_PNG = "reports/orphans.png"
 ORPHAN_STATE = "data/OrphanCard_Current.json"  # posted=false -> new graphic not yet delivered
 

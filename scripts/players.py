@@ -1,8 +1,9 @@
 import requests
 import csv
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 # Define the URL for fetching NFL player data
-url = "https://api.sleeper.app/v1/players/nfl"
+url = lcfg.sleeper() + "/players/nfl"
 
 # Send a GET request to the API
 response = requests.get(url)

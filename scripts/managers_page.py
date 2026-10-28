@@ -34,6 +34,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import manager_lineups as ml  # noqa: E402
 import team_names as tn  # noqa: E402
 from site_common import nav_html, page_head, team_colors  # noqa: E402
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 OUT = "reports/managers.html"
 OUT_MGR = "data/Managers_AllTime.csv"
@@ -45,8 +46,7 @@ LINEUP_SEASON = "data/ManagerLineup_Season.csv"
 MIN_GAMES = ml.CAREER_MIN_GAMES
 e = html.escape
 
-POINTS = {"win": 1, "unbeaten": 5, "division": 3, "conference": 5, "bowl": 2, "nit_champ": 4, "nit_runner": 2,
-          "playoff": 5, "s16": 3, "e8": 4, "f4": 6, "final": 8, "title": 25}
+POINTS = lcfg.cfg()["managers"]["legend_points"]  # Legend Score weights
 LADDER = {"First Round": 1, "Group Stage": 1, "Sweet 16": 2, "Second Round": 2, "Elite 8": 3,
           "Final Four": 4, "National Championship": 5}
 FINISH = {5: "Title game", 4: "Final Four", 3: "Elite 8", 2: "Sweet 16", 1: "Playoffs"}
@@ -338,7 +338,7 @@ def write_page(mg, seasons, year):
     body = f"""
 <div class="wrap">
 <nav class="weeks" aria-label="Pages">{nav_html("managers")}</nav>
-<header><div><div class="eyebrow">Every NCAA 180 manager · 2019–{year}</div><h1>All-Time <em>Managers</em></h1></div></header>
+<header><div><div class="eyebrow">Every {lcfg.brand()} manager · 2019–{year}</div><h1>All-Time <em>Managers</em></h1></div></header>
 <section>
   <div class="tools">
     <input type="search" id="q" placeholder="Find a manager or team" aria-label="Find a manager or team">
@@ -357,7 +357,7 @@ def write_page(mg, seasons, year):
   2019 started at the Sweet 16, so every 2019 playoff team gets appearance + Sweet 16. 2020's group stage counts as the
   Sweet 16 step, earned as 3 × the share of group rivals outscored; group winners then reached the Elite 8.</p>
   <h2>Other columns</h2>
-  <p class="note"><b>All-play %</b>: share of every other team in NCAA 180 outscored each week.
+  <p class="note"><b>All-play %</b>: share of every other team in {lcfg.brand()} outscored each week.
   <b>Lineup Skill</b>: how close each lineup came to the best possible, from 0 (worst lineup you could have started)
   to 1 (best possible), pooled over every game; the worst lineup only counts players who actually scored.
   <b>Left on bench / g</b>: best possible lineup minus points started, per game.
@@ -402,7 +402,7 @@ render();
 """
     os.makedirs("reports", exist_ok=True)
     with open(OUT, "w", encoding="utf-8") as f:
-        f.write(page_head("NCAA 180 All-Time Managers", CSS) + body)
+        f.write(page_head(f"{lcfg.brand()} All-Time Managers", CSS) + body)
 
 
 if __name__ == "__main__":

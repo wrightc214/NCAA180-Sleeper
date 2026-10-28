@@ -19,11 +19,11 @@ CWD must be repo root.
 """
 import sys
 import os
-import datetime
 import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from week_status import completed_weeks as finished_weeks  # noqa: E402
+import league_config as lcfg  # noqa: E402
 
 SCORES_FILE = "data/Scores_Season.csv"
 MATCHUPS_FILE = "data/Matchups_Season.csv"
@@ -31,17 +31,12 @@ LEAGUES_FILE = "data/LeagueIDs_AllYears.csv"
 PLAYERS_FILE = "data/Players.csv"
 OUTPUT_FILE = "data/MaxPoints_Season.csv"
 
-YEAR = str(datetime.datetime.now().year)
+YEAR = str(lcfg.season())
 DEFAULT_SLOTS = ["QB", "RB", "RB", "WR", "WR", "WR", "TE", "FLEX", "FLEX", "K", "DEF"]
 
-ELIGIBLE = {
-    "QB": {"QB"}, "RB": {"RB"}, "WR": {"WR"}, "TE": {"TE"}, "K": {"K"}, "DEF": {"DEF"},
-    "FLEX": {"RB", "WR", "TE"},
-    "WRRB_FLEX": {"RB", "WR"},
-    "REC_FLEX": {"WR", "TE"},
-    "SUPER_FLEX": {"QB", "RB", "WR", "TE"},
-}
 POS_ALIAS = {"FB": "RB"}
+# Slot rules from config/league.json (shared with the scoreboard); FB is scored as RB here.
+ELIGIBLE = {slot: {p for p in pos if p not in POS_ALIAS} for slot, pos in lcfg.eligibility().items()}
 
 
 def best_lineup(players, slots):

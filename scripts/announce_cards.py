@@ -23,6 +23,7 @@ import requests
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import managers_page as mp  # noqa: E402
 from site_common import page_head  # noqa: E402
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 OUT_DIR = "reports/announce"
 STATE = "data/Announcements.json"
@@ -106,7 +107,7 @@ def managers_html():
     ])
     n_ch = champs["OwnerID"].nunique()
     return f"""<div class="card">
-<div class="eyebrow">New on the NCAA 180 site</div>
+<div class="eyebrow">New on the {lcfg.brand()} site</div>
 <h1>All-Time <em>Managers</em></h1>
 <p class="lede">Every manager since 2019, ranked by <b>Legend Score</b>: points for wins, conference titles and playoff
 runs, with a big bonus for a national title. {len(champs)} national titles, {n_ch} different champions 🏆.</p>
@@ -164,7 +165,7 @@ def records_html():
         tiles.append(tile("Cinderella champion", e(str(cin.Value)), f"{who(cin)}<br>{int(cin.Year)} national champion"))
     tiles.append(f'<div class="tile wide"><div class="k">First to the mark</div>{mile_html}</div>')
     return f"""<div class="card">
-<div class="eyebrow">New on the NCAA 180 site</div>
+<div class="eyebrow">New on the {lcfg.brand()} site</div>
 <h1>All-Time <em>Records</em></h1>
 <p class="lede">Every real game since 2019 · champions, single games, seasons, playoffs, streaks</p>
 <div class="tiles">{"".join(tiles)}</div>
@@ -221,7 +222,7 @@ def matchups_html():
     r = pick(g.sort_values("Hi", ascending=False).index)
     tiles.append(tile("Top projection", f"{r.Hi:.2f}", game(r)))
     return f"""<div class="card">
-<div class="eyebrow">New on the NCAA 180 site</div>
+<div class="eyebrow">New on the {lcfg.brand()} site</div>
 <h1>Weekly <em>Matchups</em></h1>
 <p class="lede">Week {wk} · all {len(g)} games · projected lineup, win chance, every-week head-to-head</p>
 <div class="tiles">{"".join(tiles)}</div>
@@ -291,7 +292,7 @@ def overview_shot(browser, out_dir):
 def scoreboard_html():
     blocks = "".join(f'<img src="scoreboard-ov{i}.png" alt="">' for i in range(len(OVERVIEW_LEAGUES)))
     return f"""<div class="card">
-<div class="eyebrow">New on the NCAA 180 site</div>
+<div class="eyebrow">New on the {lcfg.brand()} site</div>
 <h1>Live <em>Scoreboard</em></h1>
 <p class="lede">All 90 games live on one page, then tap any game for the player-by-player view</p>
 <div class="ovr">{blocks}</div>
@@ -324,7 +325,7 @@ def render(which):
                 overview_shot(b, OUT_DIR)
                 scoreboard_shot(b, os.path.join(OUT_DIR, "scoreboard-shot.png"))
             path = os.path.join(OUT_DIR, f"{k}.html")
-            open(path, "w", encoding="utf-8").write(page_head(f"NCAA 180 {k}", CSS, totop=False) + BUILD[k]() + "</body></html>")
+            open(path, "w", encoding="utf-8").write(page_head(f"{lcfg.brand()} {k}", CSS, totop=False) + BUILD[k]() + "</body></html>")
             pg.goto("file://" + os.path.abspath(path), wait_until="networkidle")
             pg.evaluate("document.fonts.ready")
             pg.locator(".card").screenshot(path=os.path.join(OUT_DIR, f"{k}.png"))

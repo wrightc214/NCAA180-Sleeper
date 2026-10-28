@@ -3,8 +3,9 @@ import sys
 import json
 from datetime import datetime
 import pytz
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
-URL = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard"
+URL = lcfg.espn()
 
 # ------------------------------------------------------------
 # Timezone-aware timestamp

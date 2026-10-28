@@ -1,14 +1,13 @@
 import pandas as pd
-import datetime
 import time
 from collections import defaultdict
 from sleeper_wrapper import League
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 # -------------------------
 # CURRENT YEAR (season rollover: Jan/Feb still counts as prior season)
 # -------------------------
-today = datetime.date.today()
-CURRENT_YEAR = today.year - 1 if today.month < 3 else today.year
+CURRENT_YEAR = lcfg.season()  # Jan-Feb = last season (config season.rollover_month)
 
 # Load league IDs, restricted to current year only
 league_df = pd.read_csv("data/LeagueIDs_AllYears.csv")
@@ -16,7 +15,7 @@ league_df = league_df[league_df["Year"] == CURRENT_YEAR]
 
 season_matchups = []
 
-OBSERVER_IDS = {"731808894699028480"}  # observer accounts never count as owners
+OBSERVER_IDS = lcfg.observer_ids()  # observer accounts never count as owners
 LINKOFTIME_ID = "460518714907815936"
 LINKOFTIME_REAL_LEAGUE = "NCAA BIG 10"
 

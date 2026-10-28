@@ -21,11 +21,12 @@ import time
 
 import pandas as pd
 import requests
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
-BASE = "https://api.sleeper.app/v1"
+BASE = lcfg.sleeper()
 LEAGUES = "data/LeagueIDs_AllYears.csv"
 OUT = "data/FuturePicks_Current.csv"
-WINDOW = 4  # NCAA 180 allows trading picks for the current season + 3 more (confirmed: 2029 tradable in 2026)
+WINDOW = lcfg.cfg()["draft"]["pick_trade_window"]  # NCAA 180 allows trading picks for the current season + 3 more (confirmed: 2029 tradable in 2026)
 
 s = requests.Session()
 s.headers.update({"User-Agent": "NCAA180-Sleeper/1.0"})

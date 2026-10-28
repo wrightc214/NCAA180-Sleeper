@@ -14,6 +14,7 @@ import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from site_common import nav_html, page_head  # noqa: E402
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 SRC = "data/OverallStandings_Season.csv"
 OUT = "reports/standings.html"
@@ -46,7 +47,7 @@ def main():
     body = f"""
 <div class="wrap">
 <nav class="weeks" aria-label="Pages">{nav_html("standings")}</nav>
-<header><div><div class="eyebrow">All 180 teams · regular season to date</div><h1>NCAA 180 <em>Standings</em></h1></div></header>
+<header><div><div class="eyebrow">All 180 teams · regular season to date</div><h1>{lcfg.brand()} <em>Standings</em></h1></div></header>
 <section>
   <div class="tools">
     <label>Conference <select id="lg"><option value="">All</option>{opts}</select></label>
@@ -75,7 +76,7 @@ render();
 """
     os.makedirs("reports", exist_ok=True)
     with open(OUT, "w", encoding="utf-8") as f:
-        f.write(page_head("NCAA 180 Standings", CSS) + body)
+        f.write(page_head(f"{lcfg.brand()} Standings", CSS) + body)
     print(f"Wrote {OUT}: {len(df)} teams")
 
 

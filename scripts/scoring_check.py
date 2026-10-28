@@ -23,6 +23,7 @@ import os
 import re
 
 import requests
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 STATE = "data/ScoringCheck_Current.json"
 
@@ -62,14 +63,7 @@ LABELS = {
     "yds_allow_450_499": "DEF 450-499 yds allowed", "yds_allow_500_549": "DEF 500-549 yds allowed",
     "yds_allow_550p": "DEF 550+ yds allowed",
 }
-LEAGUE_SHORT = {
-    "NCAA BIG EAST & CO.": "Big East", "NCAA SEC": "SEC", "NCAA PAC 12": "Pac 12",
-    "NCAA ACC": "ACC", "NCAA BIG 12": "Big 12", "NCAA SUN BELT": "Sun Belt",
-    "NCAA PIONEER": "Pioneer", "NCAA IVY": "Ivy", "NCAA USA": "CUSA",
-    "NCAA HISTORICALLY BLACK": "HBCU", "NCAA MOUNTAIN WEST": "Mountain West",
-    "NCAA OHIO VALLEY": "Ohio Valley", "NCAA WILD": "Wild", "NCAA BIG 10": "Big 10",
-    "NCAA BIG SKY": "Big Sky",
-}
+LEAGUE_SHORT = lcfg.league_display()  # friendly names: data/LeagueShortNames.csv
 
 
 def _norm(d):
@@ -137,9 +131,9 @@ def alert(problems, season):
         why = "alerts disabled" if not enabled else "unchanged since last run; next alert Tuesday"
         print(f"::warning::Scoring mismatch ({why}): {summary}")
         return
-    msg = ("@everyone 🚨 **SCORING SETTINGS ALERT — NCAA 180** 🚨\n"
+    msg = (f"@everyone 🚨 **SCORING SETTINGS ALERT — {lcfg.brand()}** 🚨\n"
            + ("Weekly reminder — still unresolved. " if weekly and not changed else "")
-           + "All 15 leagues must have identical scoring. Found:\n"
+           + "All leagues must have identical scoring. Found:\n"
            + "\n".join(f"• {p}" for p in problems)
            + f"\nSeason {season}. Fix in Sleeper league settings. "
              "Re-alerts every Tuesday until resolved, or immediately if anything changes.")[:1990]

@@ -131,7 +131,7 @@
     const [a,b]=models,center=title(games,models),isFinal=center.includes('FINAL'),pregame=models.every(m=>m.starters.every(p=>['pre','bye','out'].includes(p.phase)));
     const slots=index.leagues[leagueId].slots;
     const benches=chosen.map((r,i)=>C.benchPlayers(r,playerSets[i],models[i].starters,slots,cfg,pregame));
-    let html=`<div class="eyebrow">${escape(index.leagues[leagueId].name)} · ${season} · Week ${week}</div><div class="top">${header(chosen[0],a,false,isFinal,pregame)}<div class="mid">${center}</div>${header(chosen[1],b,true,isFinal,pregame)}</div><div class="odds">`;
+    let html=`<div class="eyebrow">${escape(index.leagues[leagueId].label||index.leagues[leagueId].name)} · ${season} · Week ${week}</div><div class="top">${header(chosen[0],a,false,isFinal,pregame)}<div class="mid">${center}</div>${header(chosen[1],b,true,isFinal,pregame)}</div><div class="odds">`;
     const missing=models.some(m=>m.starters.some(p=>p.missingProjection||p.phase==='unknown'));
     if(isFinal) {
       const m=C.round(Math.abs(a.actual-b.actual)),w=a.actual>b.actual?chosen[0]:chosen[1];
@@ -211,7 +211,7 @@
     if(!index.leagues[leagueId])throw new Error('Unknown league in scoreboard URL.');
     if(!index.weeks.includes(week))throw new Error('No frozen pregame data for this week.');
     if(week>=cfg.schedule.ccg_week)throw new Error('Postseason games must use real bracket pairings; Sleeper postseason pairings are not supported.');
-    setOptions($('league'),Object.entries(index.leagues).map(([id,v])=>[id,v.name]),leagueId);
+    setOptions($('league'),Object.entries(index.leagues).map(([id,v])=>[id,v.label||v.name]),leagueId);
     setOptions($('week'),index.weeks.map(w=>[w,`Week ${w}`]),week);
     $('chooser').addEventListener('submit',e=>e.preventDefault());
     for(const id of ['league','week'])$(id).addEventListener('change',()=>{if(!busy)select().catch(showError);});

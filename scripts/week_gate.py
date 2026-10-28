@@ -25,11 +25,12 @@ import sys
 
 import pandas as pd
 import requests
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
-STATE_URL = "https://api.sleeper.app/v1/state/nfl"
+STATE_URL = lcfg.sleeper() + "/state/nfl"
 FILE = "data/LastProcessedWeek.csv"
 LEAGUES = "data/LeagueIDs_AllYears.csv"
-LEAGUE_URL = "https://api.sleeper.app/v1/league/{}"
+LEAGUE_URL = lcfg.sleeper() + "/league/{}"
 READY_DEADLINE = (2, 12)  # (weekday Mon=0, UTC hour): from Wed 12:00 UTC run even if not all ready
 
 

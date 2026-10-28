@@ -39,12 +39,13 @@ import poll_common as pc  # noqa: E402
 from max_points import ELIGIBLE, POS_ALIAS, best_lineup  # noqa: E402
 from poll_page import colors, logo  # noqa: E402
 from site_common import nav_html, page_head  # noqa: E402
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 OUT = "reports/matchups.html"
 OUT_CSV = "data/MatchupProjections_Current.csv"
 OUT_HIST = "data/MatchupProjections_Historic.csv"
 BAR_MIN_DIST = 120  # below this the two win-bar colors read as the same; switch one to Secondary
-SPREAD = 24.0  # per-team sd around the projection (points); re-fit from history each season
+SPREAD = float(lcfg.cfg()["spread"])  # per-team sd around the projection (points); re-fit from history each season
 LEAGUES = "data/LeagueIDs_AllYears.csv"
 DEFAULT_SLOTS = ["QB", "RB", "RB", "WR", "WR", "WR", "TE", "FLEX", "FLEX", "K", "DEF"]
 e = html.escape
@@ -358,7 +359,7 @@ def write_page(g, wk, stamp):
 <div class="wrap">
 <nav class="weeks" aria-label="Pages">{nav_html("matchups")}</nav>
 <header><div><div class="eyebrow">15 conferences · 180 teams · regular season</div>
-<h1>NCAA 180 <em>Week {wk} matchups</em></h1></div>
+<h1>{lcfg.brand()} <em>Week {wk} matchups</em></h1></div>
 <div class="kpis"><div class="kpi"><b>{len(g)}</b><span>Games</span></div><div class="kpi"><b>{len(rvr)}</b><span>Ranked vs ranked</span></div></div></header>
 <section><div class="callouts">{calls}</div></section>
 <section class="tools"><label for="lg">League</label><select id="lg"><option value="">All leagues</option>{opts}</select></section>
@@ -380,7 +381,7 @@ document.getElementById('lg').addEventListener('change', function () {{
 </body></html>
 """
     with open(OUT, "w", encoding="utf-8") as f:
-        f.write(page_head(f"NCAA 180 Week {wk} Matchups", CSS) + body)
+        f.write(page_head(f"{lcfg.brand()} Week {wk} Matchups", CSS) + body)
 
 
 if __name__ == "__main__":

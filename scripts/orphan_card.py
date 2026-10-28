@@ -25,6 +25,7 @@ import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from site_common import page_head, team_colors  # noqa: E402
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 CARD_VERSION = 4
 STATE = "data/OrphanCard_Current.json"
@@ -158,9 +159,9 @@ def build_html(cards):
 {rank_html}<div class="body"><h3>Key players</h3><ul>{players}</ul>
 <h3>Top draft picks <small>({c['n_picks']} owned)</small></h3><ul>{picks}</ul></div></div>""")
     n = len(cards)
-    return (page_head("NCAA 180 · Open Teams", css, totop=False)
+    return (page_head(f"{lcfg.brand()} · Open Teams", css, totop=False)
             + f"""<div class="wrap"><header><div><div class="eyebrow">Dynasty · now recruiting</div>
-<h1>NCAA 180 <em>Open Teams</em></h1></div><div class="kpi"><b>{n}</b><span>team{'s' if n != 1 else ''} available</span></div></header>
+<h1>{lcfg.brand()} <em>Open Teams</em></h1></div><div class="kpi"><b>{n}</b><span>team{'s' if n != 1 else ''} available</span></div></header>
 <div class="grid" style="--cols:{min(max(n, 1), 3)}">{''.join(parts) or '<p>No open teams right now.</p>'}</div>
 <div class="asof">Values: FantasyCalc dynasty (players + picks) as of {datetime.date.today():%b %-d, %Y}</div></div></body></html>""")
 

@@ -1,11 +1,11 @@
 import pandas as pd
 import requests
-import datetime
 import os
 import sys
 import time
 import json
 import argparse
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 # -------------------------
 # CONFIG
@@ -22,7 +22,7 @@ PLAYERS_FILE = "data/Players.csv"
 # rate-limited or timed out, since a failed fetch just got skipped instead
 # of retried, and one bad week could throw off the "current week" pick for
 # every league at once.
-ESPN_SCOREBOARD_URL = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard"
+ESPN_SCOREBOARD_URL = lcfg.espn()
 
 # When live-refresh.yml runs, NFLgameStatus.py (an earlier step in the same
 # job, same runner) already hit ESPN and wrote this. Reuse it instead of
@@ -58,8 +58,7 @@ args = parser.parse_args()
 # -------------------------
 # DETERMINE CURRENT NFL YEAR (adjust for Jan/Feb rollover)
 # -------------------------
-today = datetime.date.today()
-CURRENT_YEAR = today.year - 1 if today.month < 3 else today.year
+CURRENT_YEAR = lcfg.season()  # Jan-Feb = last season (config season.rollover_month)
 print(f"Current NFL Year: {CURRENT_YEAR}")
 
 # -------------------------
@@ -161,7 +160,7 @@ def normalize_keys(df):
 # per player, from players_points.
 # -------------------------
 def fetch_matchups(league_id, week_num):
-    url = f"https://api.sleeper.app/v1/league/{league_id}/matchups/{week_num}"
+    url = f"{lcfg.sleeper()}/league/{league_id}/matchups/{week_num}"
     last_err = None
     for attempt in range(1, MAX_RETRIES + 1):
         try:

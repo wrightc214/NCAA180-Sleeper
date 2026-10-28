@@ -34,6 +34,7 @@ import managers_page as mp  # noqa: E402
 import manager_lineups as ml  # noqa: E402
 import team_names as tn  # noqa: E402
 from site_common import nav_html, page_head  # noqa: E402
+import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 OUT = "reports/records.html"
 OUT_CSV = "data/Records_AllTime.csv"
@@ -554,7 +555,7 @@ def write_page(sections, year):
     body = f"""
 <div class="wrap">
 <nav class="weeks" aria-label="Pages">{nav_html("records")}</nav>
-<header><div><div class="eyebrow">NCAA 180 · 2019–{year}</div><h1>All-Time <em>Records</em></h1></div></header>
+<header><div><div class="eyebrow">{lcfg.brand()} · 2019–{year}</div><h1>All-Time <em>Records</em></h1></div></header>
 <nav class="jump" aria-label="Sections">{jump}</nav>
 {"".join(secs)}
 <section><p class="note">Real games only: regular season plus the postseason (conference championships, bowls, NIT,
@@ -573,7 +574,7 @@ are as of that season.
 """
     os.makedirs("reports", exist_ok=True)
     with open(OUT, "w", encoding="utf-8") as f:
-        f.write(page_head("NCAA 180 All-Time Records", CSS) + body)
+        f.write(page_head(f"{lcfg.brand()} All-Time Records", CSS) + body)
 
 
 if __name__ == "__main__":
