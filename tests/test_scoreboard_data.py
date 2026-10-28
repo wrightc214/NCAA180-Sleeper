@@ -46,8 +46,19 @@ class ScoreboardTests(unittest.TestCase):
     def test_exports_are_immutable_on_rebuild(self):
         files=list(Path('data/scoreboard/2026').glob('week-*.json'))
         before={p:hashlib.sha256(p.read_bytes()).hexdigest() for p in files}
-        subprocess.run([sys.executable,'scripts/scoreboard_data.py','--offline'],check=True,capture_output=True)
-        self.assertEqual(before,{p:hashlib.sha256(p.read_bytes()).hexdigest() for p in files})
+        # The offline rebuild rewrites the live index/player map/page; snapshot everything it can touch and put it
+        # back afterwards so running the tests never changes published data.
+        touched=[p for p in Path('data/scoreboard').rglob('*') if p.is_file()]+[Path('reports/scoreboard.html')]
+        saved={p:p.read_bytes() for p in touched if p.exists()}
+        try:
+            subprocess.run([sys.executable,'scripts/scoreboard_data.py','--offline'],check=True,capture_output=True)
+            self.assertEqual(before,{p:hashlib.sha256(p.read_bytes()).hexdigest() for p in files})
+        finally:
+            for p in Path('data/scoreboard').rglob('*'):
+                if p.is_file() and p not in saved:
+                    p.unlink()
+            for p,b in saved.items():
+                p.write_bytes(b)
 
 
 if __name__=='__main__':unittest.main()
