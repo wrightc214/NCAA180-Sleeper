@@ -6,7 +6,6 @@ saved baseline and repository position reference for repeatable builds/tests.
 Frozen per-week files are created once. Live lineup/score/clock requests happen in-browser.
 """
 import argparse
-import collections
 import csv
 import datetime as dt
 import glob
@@ -16,6 +15,7 @@ import os
 from pathlib import Path
 
 from site_common import page_head, nav_html, team_colors
+from league_config import normalized, standard_settings  # noqa: F401 (normalized re-exported for tests)
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -31,19 +31,6 @@ def dump(path, data):
     temp = path.with_suffix(path.suffix + ".tmp")
     temp.write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":"), allow_nan=False) + "\n", encoding="utf-8")
     temp.replace(path)
-
-
-def normalized(settings):
-    return {k: round(float(v), 6) for k, v in settings.items() if isinstance(v, (int, float)) and v}
-
-
-def standard_settings(scoring, overrides):
-    # A whole majority ruleset, not a synthetic per-key combination of incompatible rules.
-    choices = collections.Counter(json.dumps(normalized(s), sort_keys=True) for s in scoring.values())
-    key, count = choices.most_common(1)[0]
-    if count <= len(scoring) / 2:
-        raise ValueError("No majority scoring ruleset; review standard settings before building")
-    return {**json.loads(key), **overrides}
 
 
 def player_map(full=None):
@@ -95,7 +82,7 @@ def build(offline=False):
     scoring = json.loads(Path(f"data/projections/{year}/scoring.json").read_text())
     if set(scoring) != set(leagues):
         raise ValueError("Scoring snapshot does not cover every league")
-    standard = standard_settings(scoring, cfg["scoring"]["overrides"])
+    standard = standard_settings(scoring)
     colors = {r["Team"]: r for r in rows("data/Colors - Teams.csv")}
     teams = {}
     for r in rows("data/Teams.csv"):

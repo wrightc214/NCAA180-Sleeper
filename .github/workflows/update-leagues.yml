@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       script_to_run:
-        description: 'Script to run (league_ids, rosters, users, rosterhistory, matchups, scores, max_points, weekly_awards, players, transactions, drafts, standings, orphans, lineup_streaks, player_values, draft_picks, weekly_report, roster_map, poll, poll_page, matchups_page, gametime_projections, manager_lineups, managers_page, records_page, standings_page, scoreboard, conference_championships, playoff_field, playoff_bracket, bowls, bowls_publish, bowls_redraw, nit, nit_publish, nit_redraw, patch_orphans, all). Postseason scripts are manual only - not in all.'
+        description: 'Script to run (league_ids, rosters, users, rosterhistory, matchups, scores, standard_scores, max_points, weekly_awards, players, transactions, drafts, standings, orphans, lineup_streaks, player_values, draft_picks, weekly_report, roster_map, poll, poll_page, matchups_page, gametime_projections, manager_lineups, managers_page, records_page, standings_page, scoreboard, conference_championships, playoff_field, playoff_bracket, bowls, bowls_publish, bowls_redraw, nit, nit_publish, nit_redraw, patch_orphans, all). Postseason scripts are manual only - not in all.'
         required: true
         default: 'all'
       post:
@@ -51,6 +51,9 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
       - name: Run selected script(s)
+        env:
+          # standard_scores: red alert to Chris when standard scoring changes a winner
+          DISCORD_WEBHOOK_LM_PRIVATE_DATA: ${{ secrets.DISCORD_WEBHOOK_LM_PRIVATE_DATA }}
         run: |
           # Default to 'all' if no manual input was provided
           SCRIPT_TO_RUN="${{ github.event.inputs.script_to_run }}"
@@ -86,6 +89,8 @@ jobs:
           run transactions          league_transactions.py   all
           run drafts                league_drafts.py         all
           run scores                score_details.py         all
+          # Standard (common-scheme) scores for the season; results from 2026 are decided on these.
+          run standard_scores       standard_scores_season.py all
           run max_points            max_points.py            all
           # Game-time (kickoff) projections for completed weeks: awards + manager stats. Separate files;
           # never touches the pregame baseline. Must run before weekly_report and manager_lineups.
@@ -237,6 +242,7 @@ jobs:
           git add data/OrphanCard_Current.json 2>/dev/null || true
           git add data/scoreboard 2>/dev/null || true
           git add data/postseason_drafts 2>/dev/null || true
+          git add data/standard data/StandardAlerts_Season.json 2>/dev/null || true
           git add data/projections 2>/dev/null || true; git add data/ScoringCheck_Current.json 2>/dev/null || true
           git add reports/ || true
           git commit -m "Auto-update CSVs" || echo "No changes to commit"
