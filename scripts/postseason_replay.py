@@ -106,12 +106,12 @@ def main():
     code, out = run("scripts/nit.py", "--year", str(y), "--from-history", "--data-dir", d)
     s = S()
     n, hn = s[s["Round"] == "NIT"], h[h["Event"] == "NIT"]
-    pool_h = {t for x in hn[hn["RoundName"] == N.STAGE1]["TeamA"] for t in x.split(" | ")}
+    pool_h = {t for x in hn[hn["RoundName"].isin(N.HISTORY_NAMES[N.STAGE1])]["TeamA"] for t in x.split(" | ")}
     check("NIT pool matches history", pool_h == set(n[n["Stage"] == N.STAGE1]["Team"]))
     for st in (N.STAGE1, N.STAGE2):
-        check(f"{st} winners match (real draw)", set(hn[hn["RoundName"] == st]["Winner"]) == set(n[(n["Stage"] == st) & (n["Outcome"] == "Win")]["Team"]))
+        check(f"{st} winners match (real draw)", set(hn[hn["RoundName"].isin(N.HISTORY_NAMES.get(st, {st}))]["Winner"]) == set(n[(n["Stage"] == st) & (n["Outcome"] == "Win")]["Team"]))
     for st in cfg["nit"]["bracket"]["rounds"]:
-        check(f"NIT {st}: pairings + winners match", games(n[n["Stage"] == st]) == hist_games(hn[hn["RoundName"] == st]))
+        check(f"NIT {st}: pairings + winners match", games(n[n["Stage"] == st]) == hist_games(hn[hn["RoundName"].isin(N.HISTORY_NAMES.get(st, {st}))]))
     team = {(r["LeagueID"], r["RosterID"]): r for r in ps.standings(y).to_dict("records")}
     pool_t = [t for t in team.values() if t["Team"] in pool_h]
     w1 = [team[(r.LeagueID, str(r.RosterID))] for r in n[(n["Stage"] == N.STAGE1) & (n["Outcome"] == "Win")].itertuples()]
@@ -135,7 +135,7 @@ def main():
                 spread_ok = False
     check("25 fresh NIT draws: 24 groups, sizes differ by at most 1, every team once; leagues spread "
           "(2 winners -> opposite halves, 4 -> one per QF pairing)", spread_ok)
-    print(f"  info  worst same-league pairs in a fresh draw: Group Stage 1 {worst1}, Group Stage 2 {worst2}")
+    print(f"  info  worst same-league pairs in a fresh draw: {N.STAGE1} {worst1}, {N.STAGE2} {worst2}")
 
     print("Seeding (info)")
     poll = "data/Poll_Season.csv" if y == ps.current_season() else "data/Poll_Historic.csv"
