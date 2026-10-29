@@ -1,6 +1,6 @@
 # Rivalries data (draft, 2026-10-28)
 
-Clean rivalry tables built from the research workbook (`notes/NCAA180_Rivalry_Fact_Tables.xlsx`) plus a validation pass against public lists. Keyed by **school name**, not league slot, so it works for any school (NCAA or NAIA), in the league or not.
+Clean rivalry tables built from the research workbook (`notes/NCAA180_Rivalry_Fact_Tables.xlsx`) plus a validation pass against public lists. Teams are identified by name, not by league slot. League schools use **our team names, exactly as in `data/Teams.csv`** (`FSU`, `Miami`, `UCONN`, `Citadel`…), so the tables join directly. Schools outside the league use their common NCAA name. This works for any school, NCAA or NAIA, in the league or not.
 
 ## Files
 | File | What |
@@ -8,10 +8,9 @@ Clean rivalry tables built from the research workbook (`notes/NCAA180_Rivalry_Fa
 | `football.csv` | One row per school pair (505). Name, trophy, multi-team series, first/last meeting, total meetings, certainty, sources, notes. |
 | `series.csv` | Multi-team trophies and series (Commander-in-Chief's, Florida Cup, Sgt. York, Big Three, Beanpot…). Pair rows point here through the `series` column. |
 | `other_sports.csv` | Supplemental non-football rivalries, for teams without a strong football rival (Chris's intent). |
-| `school_names.csv` | League team name → school name where they differ (`FSU` → `Florida State`, `Miami` → `Miami (FL)`, `UCONN` → `UConn`…). |
 
 ## Columns (football)
-- `team_a`, `team_b`: school names, alphabetical within the pair (one row per pair).
+- `team_a`, `team_b`: team names (our names for league schools), alphabetical within the pair (one row per pair).
 - `name`: the rivalry's actual name. **Blank when the series has none.** Plain "A–B" labels and descriptions ("former Big East rivalry") are not names.
 - `trophy`: the head-to-head trophy only. Multi-team trophies go in `series`.
 - `first_year`, `last_year`, `meetings`: real-life series history, kept **only as evidence that the rivalry exists** (Chris: never displayed, accuracy not critical). `numbers_through` says how current they are.
