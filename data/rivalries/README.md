@@ -14,7 +14,7 @@ Clean rivalry tables built from the research workbook (`notes/NCAA180_Rivalry_Fa
 - `team_a`, `team_b`: school names, alphabetical within the pair (one row per pair).
 - `name`: the rivalry's actual name. **Blank when the series has none.** Plain "A–B" labels and descriptions ("former Big East rivalry") are not names.
 - `trophy`: the head-to-head trophy only. Multi-team trophies go in `series`.
-- `first_year`, `last_year`, `meetings`: real-life series history. `numbers_through` says how current they are.
+- `first_year`, `last_year`, `meetings`: real-life series history, kept **only as evidence that the rivalry exists** (Chris: never displayed, accuracy not critical). `numbers_through` says how current they are.
 - `certainty`: confidence that the pairing is a real rivalry (scale below). `status` restates it as a word.
 - `sources`, `notes`: where each fact came from, and any conflicts.
 
@@ -52,13 +52,25 @@ The workbook's 2026 meetings are kept only when one of these confirms them. Many
 - **Multi-team trophies** (Commander-in-Chief's, Michigan MAC, Sgt. York) were attached to two-team pairs. They now live in `series.csv`.
 - **Added:**
   - 212 rivalries from the Wikipedia lists, including FCS, Division II and Division III.
-  - UConn–UCF "Civil ConFLiCT" and UConn–UMass (Chris's calls).
+  - UConn–UCF "Civil ConFLiCT" (UConn created it in 2014; trophy from 2015) and UConn–UMass (Southwick Jug trophy, 2024). Both were pushed by the schools themselves.
+  - Kennesaw State's old FCS rivals: Jacksonville State, Monmouth and Samford at 3, Charleston Southern at 2.
   - Charlotte–East Carolina.
   - Tulsa–Wichita State basketball, "Havoc in the Heartland".
 - **Confirmed from school or press sources:** the Rail, Battle of the Border (Austin Peay–Murray State), the East/West and North-South BBQ Bowls, the Lowcountry Boil Bowl, the 1919 Cup, the Legacy Series, the Train Bell Trophy and Battle of the Blue.
 
 ## Known gaps / next steps
-- League teams without a 4+ football rivalry: Belmont (no football), Wichita State (no football), Charlotte, Dayton, Kennesaw State, Mississippi Valley State, Monmouth, Northern Iowa and UT Martin. For these, `other_sports.csv` or Chris's own calls fill the gap.
+- **Weak football histories lean on other sports (Chris: over-index rather than under-index).** `other_sports.csv` adds basketball and other rivalries for:
+  - Belmont: Lipscomb and Middle Tennessee.
+  - Wichita State: Tulsa, Creighton and others.
+  - Northern Iowa: Drake and the Iowa Big Four.
+  - Kennesaw State: Georgia State and Jacksonville State.
+  - Mississippi Valley State: Jackson State and Delta State.
+  - UT Martin: Austin Peay.
+  - Monmouth: Saint Peter's and Rider.
+  - Charlotte: Davidson.
+  - Dayton: Xavier.
+
+  Rows scored 2 are unsourced leads.
 - HBCU classics beyond the ones listed here have no complete public table to check against, so they need a manual pass.
 - NAIA schools: none are listed yet. The structure is ready for them.
 - Wikipedia's counts lag a game or two in places. Treat `meetings` as approximate until a game-by-game source is wired in.
