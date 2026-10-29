@@ -27,7 +27,7 @@ California,Cal,current
 Campbell,Campbell,current
 Central Arkansas,UCA,current
 Central Michigan,CMU,current
-Charleston Southern,CSU,current
+Charleston Southern,CharSo,current
 Chattanooga,UTC,current
 Cincinnati,Cincy,former
 Citadel,Citadel,current
@@ -35,7 +35,7 @@ Clemson,Clemson,current
 Coastal Carolina,Coastal,current
 Colgate,Colgate,current
 Colorado,Colorado,current
-Colorado State,CSU Rams,current
+Colorado State,CSU,current
 Columbia,Columbia,current
 Cornell,Cornell,current
 Dartmouth,Dartmouth,current
@@ -95,7 +95,7 @@ Marshall,Marshall,current
 Maryland,Maryland,current
 McNeese State,McNeese,former
 Memphis,Memphis,current
-Miami,The U,current
+Miami,Miami,current
 Miami (OH),Miami OH,former
 Michigan,Michigan,current
 Michigan State,MSU,current
@@ -152,7 +152,7 @@ San Jose State,SJSU,current
 South Alabama,USA,current
 South Carolina,SC,current
 South Dakota,USD,current
-South Dakota State,SDSU Jacks,current
+South Dakota State,SoDak St,current
 Southeastern Louisiana,SLU,former
 Southern,Southern,current
 Southern Miss,USM,current
