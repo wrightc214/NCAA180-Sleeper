@@ -5,7 +5,7 @@ Clean rivalry tables built from the research workbook (`notes/NCAA180_Rivalry_Fa
 ## Files
 | File | What |
 |---|---|
-| `football.csv` | One row per school pair (527). Name, trophy, multi-team series, first/last meeting, total meetings, certainty, sources, notes. |
+| `football.csv` | One row per school pair (505). Name, trophy, multi-team series, first/last meeting, total meetings, certainty, sources, notes. |
 | `series.csv` | Multi-team trophies and series (Commander-in-Chief's, Florida Cup, Sgt. York, Big Three, Beanpot…). Pair rows point here through the `series` column. |
 | `other_sports.csv` | Supplemental non-football rivalries, for teams without a strong football rival (Chris's intent). |
 | `school_names.csv` | League team name → school name where they differ (`FSU` → `Florida State`, `Miami` → `Miami (FL)`, `UCONN` → `UConn`…). |
@@ -57,6 +57,24 @@ The workbook's 2026 meetings are kept only when one of these confirms them. Many
   - Charlotte–East Carolina.
   - Tulsa–Wichita State basketball, "Havoc in the Heartland".
 - **Confirmed from school or press sources:** the Rail, Battle of the Border (Austin Peay–Murray State), the East/West and North-South BBQ Bowls, the Lowcountry Boil Bowl, the 1919 Cup, the Legacy Series, the Train Bell Trophy and Battle of the Blue.
+
+## Row-by-row review (2026-10-28)
+Every workbook row that had no outside evidence (all of the 1s and 2s) was reviewed one at a time.
+- **Dropped 25 pairs with no rivalry behind them.** These were conference-mates or one-off matchups the workbook guessed at:
+  - Alabama–Florida State, Auburn–Florida State, Air Force–Wyoming, Arizona State–Utah, Boise State–TCU.
+  - Chattanooga–Furman, Delaware–William & Mary, East Carolina–UCF, Eastern Washington–Montana State, Florida Atlantic–South Florida.
+  - Georgia Southern–Troy, Hawaii–San Diego State, Houston–Texas A&M, Houston–Tulsa.
+  - Houston Christian–Incarnate Word, Houston Christian–Prairie View A&M.
+  - Iowa State–Oklahoma State, Kentucky–West Virginia, Louisiana–Tulane, Oklahoma–Texas Tech, Penn State–Texas Tech.
+  - San Diego State–UNLV, Troy–UAB, Tulsa–Wichita State (football; the basketball row stays), USC–Washington.
+- **Kept, and moved up to a confirmed rivalry or established series:**
+  - Boise State–Idaho, which has its own Wikipedia page and returns in 2031.
+  - Jacksonville State–Samford, which has its own Wikipedia page.
+  - Mississippi State–Southern Miss, which is renewing in 2030–31.
+  - Princeton–Rutgers, which played the first college football game.
+- **Kept as probable or possible, with a reason in `notes`:** Boston College–Syracuse, BYU–Boise State, James Madison–Richmond, North Dakota State–Northern Iowa, Iowa State–Northern Iowa, NC State–South Carolina, North Carolina A&T–Winston-Salem State and a few weaker neighbor pairs.
+- **Added:** the Battle of the Piney Woods (Sam Houston–Stephen F. Austin), which both public lists missed.
+- No candidates (certainty 1) remain.
 
 ## Known gaps / next steps
 - **Weak football histories lean on other sports (Chris: over-index rather than under-index).** `other_sports.csv` adds basketball and other rivalries for:
