@@ -113,7 +113,48 @@ for idx, row in league_df.iterrows():
 
         time.sleep(0.5)
 
-season_df = pd.DataFrame(season_matchups)
+def real_postseason_opponents(rows):
+    """Weeks after the regular season: Sleeper keeps sending its in-app schedule, which isn't
+    the league's postseason. Each team's opponent becomes its real game from
+    Postseason_Season.csv (CCG, playoff, bowl; may be another league), or blank when the team
+    has no game that week. NIT groups (3+ teams) have no single opponent: blank, with the
+    group result as the Outcome once final. PointsFor stays (Sleeper points for that week)."""
+    import os
+    lr = lcfg.last_regular_week()
+    games = {}
+    if os.path.exists("data/Postseason_Season.csv"):
+        ps = pd.read_csv("data/Postseason_Season.csv", dtype=str).fillna("")
+        for r in ps[ps["Year"] == str(CURRENT_YEAR)].itertuples():
+            if r.Week:
+                games[(r.LeagueID, r.RosterID, int(r.Week))] = r
+    names = {}  # LeagueName -> LeagueID, for cross-league opponents
+    by_slot = {}
+    for m in rows:
+        names[str(m["LeagueName"]).strip()] = m["LeagueID"]
+        by_slot[(str(m["LeagueID"]), str(m["RosterID"]), int(m["Week"]))] = m
+    for m in rows:
+        m["OpponentLeagueID"] = m["LeagueID"] if m["OpponentRosterID"] is not None else ""
+        if int(m["Week"]) <= lr:
+            continue
+        g = games.get((str(m["LeagueID"]), str(m["RosterID"]), int(m["Week"])))
+        opp = None
+        if g is not None and "|" not in g.OpponentRosterID and g.OpponentRosterID:
+            olid = names.get(g.OpponentLeague.strip(), g.LeagueID if not g.OpponentLeague else "")
+            opp = by_slot.get((str(olid), str(g.OpponentRosterID), int(m["Week"])))
+        if opp is not None:
+            m.update(OpponentLeagueID=opp["LeagueID"], OpponentRosterID=opp["RosterID"], OpponentName=opp["OwnerName"],
+                     PointsAgainst=opp["PointsFor"])
+            pf, pa = m["PointsFor"] or 0, opp["PointsFor"] or 0
+            m["Outcome"] = "" if pf == 0 and pa == 0 else ("Win" if pf > pa else "Loss" if pf < pa else "Tie")
+        else:
+            m.update(OpponentLeagueID="", OpponentRosterID=None, OpponentName="", PointsAgainst=None,
+                     Outcome=(g.Outcome if g is not None and g.Status == "Final" and g.Outcome in ("Win", "Loss", "Tie") else ""))
+    return rows
+
+
+season_df = pd.DataFrame(real_postseason_opponents(season_matchups))
+for c in ("RosterID", "OpponentRosterID"):  # blanks must not turn IDs into floats ("8.0")
+    season_df[c] = pd.to_numeric(season_df[c], errors="coerce").astype("Int64")
 season_df.to_csv("data/Matchups_Season.csv", index=False)
 print(f"Saved {len(season_df)} matchup rows to data/Matchups_Season.csv")
 

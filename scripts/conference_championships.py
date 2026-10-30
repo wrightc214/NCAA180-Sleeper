@@ -2,9 +2,9 @@
 conference_championships.py -- week-12 conference championship games (CCG).
 
 Each league's division winners (weeks 1..last_regular_week) meet in the CCG week.
-Division order (Chris, 2026-10-30, Sleeper default): win percentage (ties count half),
-then points for, then head-to-head among teams still exactly tied. A tie that survives all
-three is flagged, never guessed (exit 1). Results and points use standard scoring from 2026.
+Division order = the shared tiebreakers in config/league.json (tiebreakers.order; Sleeper
+default per Chris 2026-10-30: win %, points for, head-to-head). A title still tied after the
+last tiebreaker is flagged, never guessed (exit 1). Results and points use standard scoring from 2026.
 Winner = higher points that CCG week. Writes Round="CCG" rows to Postseason_Season.csv;
 reruns refresh scores.
 
@@ -19,30 +19,6 @@ import sys
 import pandas as pd
 
 import _postseason_common as ps
-
-
-def division_order(d, games):
-    """Rows of one division, best first: win %, points for, then head-to-head among exact ties.
-    Returns (ordered rows, tied_at_top) -- tied_at_top lists teams still tied for first."""
-    d = d.copy()
-    gp = d["Wins"] + d["Losses"] + d["Ties"]
-    d["Pct"] = ((d["Wins"] + 0.5 * d["Ties"]) / gp.where(gp > 0, 1)).round(6)
-    d = d.sort_values(["Pct", "PointsFor"], ascending=False, kind="mergesort").reset_index(drop=True)
-    top = d[(d["Pct"] == d.iloc[0]["Pct"]) & (d["PointsFor"] == d.iloc[0]["PointsFor"])]
-    if len(top) < 2:
-        return d, []
-    ids = set(top["RosterID"].astype(str))
-    lid = top.iloc[0]["LeagueID"]
-    h = games[(games["LeagueID"] == lid) & games["RosterID"].astype(str).isin(ids)
-              & games["OpponentRosterID"].astype(str).isin(ids)]
-    pts = {r: (h[h["RosterID"].astype(str) == r]["Res"] == "Win").sum()
-           + 0.5 * (h[h["RosterID"].astype(str) == r]["Res"] == "Tie").sum() for r in ids}
-    best = max(pts.values())
-    leaders = [r for r, v in pts.items() if v == best]
-    if len(leaders) > 1:
-        return d, list(top[top["RosterID"].astype(str).isin(leaders)]["Team"])
-    first = d[d["RosterID"].astype(str) == leaders[0]]
-    return pd.concat([first, d.drop(first.index)]).reset_index(drop=True), []
 
 
 def main():
@@ -69,15 +45,16 @@ def main():
     for (lid, lname), g in st.groupby(["LeagueID", "LeagueName"]):
         champs = []
         for div, d in g.groupby("Division"):
-            r, tied = division_order(d, games)
+            r, ties = ps.rank_ties(d, games)
+            tied = next((t for t in ties if r.iloc[0]["Team"] in t), [])
             if tied:
-                problems.append(f"{lname} / {div}: division title tied after head-to-head ({', '.join(tied)})")
+                problems.append(f"{lname} / {div}: division title still tied after every tiebreaker ({', '.join(tied)})")
                 continue
             champs.append(r.iloc[0].to_dict())
         if len(champs) != per:
             problems.append(f"{lname}: {len(champs)} division winner(s), expected {per} -- CCG not paired")
             continue
-        champs = ps.rank(pd.DataFrame(champs)).to_dict("records")  # better record listed first
+        champs = ps.rank(pd.DataFrame(champs), games).to_dict("records")  # better record listed first
         game = ps.game_rows(year, "CCG", week, f"{year}-CCG-{lid}", champs, stage=short.get(lname, lname))
         if any(r["Outcome"] == "Tie" for r in game):
             problems.append(f"{lname}: CCG ended in an exact tie -- resolve manually")

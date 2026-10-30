@@ -103,13 +103,17 @@
     "ccg_week": 12,
     "postseason_start_week": 13
   },
+  "tiebreakers": {
+    "_note": "Order used to rank teams everywhere they are compared: division titles (CCG), playoff at-large, bowl and NIT pools. Edit the list to change it. Keys: win_pct (ties count half), wins, points_for, head_to_head (record in games between the teams still tied, regular season only). Teams tied after the last key are flagged, never guessed. Chris, 2026-10-30: Sleeper default.",
+    "order": [
+      "win_pct",
+      "points_for",
+      "head_to_head"
+    ]
+  },
   "postseason": {
     "_note": "Postseason rules (Chris/commissioner). Weeks: CCG = schedule.ccg_week; playoff rounds start the week after.",
     "standard_scoring_from": 2026,
-    "tiebreak": [
-      "Wins",
-      "PointsFor"
-    ],
     "ccg": {
       "divisions_per_league": 2
     },

@@ -22,6 +22,7 @@ import zlib
 import pandas as pd
 
 import team_names as tn
+import tiebreak  # noqa: E402 (shared tiebreak order)
 
 CONFIG = "config/league.json"
 LEAGUES = "data/LeagueIDs_AllYears.csv"
@@ -177,8 +178,10 @@ def regular_games(year):
 def standings(year):
     """One row per team: regular season (weeks 1..last_regular_week) Wins/Losses/PointsFor,
     decided under this season's scoring mode; plus division, team name, owner, state/region."""
+    global _last_games
     year = int(year)
     reg = regular_games(year)
+    _last_games = reg
     owner = reg.sort_values("Week").groupby(["LeagueID", "RosterID"])["OwnerName"].last()
     g = reg.groupby(["LeagueID", "LeagueName", "RosterID"]).agg(
         Wins=("Res", lambda s: int((s == "Win").sum())), Losses=("Res", lambda s: int((s == "Loss").sum())),
@@ -198,9 +201,18 @@ def standings(year):
     return g
 
 
-def rank(df):
-    """Commissioner tiebreak: Wins, then PointsFor (no head-to-head)."""
-    return df.sort_values(["Wins", "PointsFor"], ascending=[False, False], kind="mergesort").reset_index(drop=True)
+_last_games = None  # regular-season rows from the latest standings() call (for head-to-head)
+
+
+def rank(df, games=None):
+    """Best first, by config/league.json -> tiebreakers.order (shared everywhere; see tiebreak.py).
+    Head-to-head uses `games`, else the regular season of the latest standings() call."""
+    return tiebreak.order(df, games if games is not None else _last_games)[0]
+
+
+def rank_ties(df, games=None):
+    """(ranked df, teams still tied after every tiebreaker)."""
+    return tiebreak.order(df, games if games is not None else _last_games)
 
 
 def draw_seed(year, label):

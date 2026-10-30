@@ -62,7 +62,12 @@ def apply(m):
         return std.get((int(y), l, int(w), r), fallback)
 
     a["PointsFor"] = [look(y, l, w, r, p) for y, l, w, r, p in zip(years, lids, weeks, rids, pf)]
-    a["PointsAgainst"] = [look(y, l, w, o, p) if o else p for y, l, w, o, p in zip(years, lids, weeks, opps, pa)]
+    # Postseason games can cross leagues: the opponent's league is OpponentLeagueID when present.
+    if "OpponentLeagueID" in a.columns:
+        olids = [str(o) if isinstance(o, str) and o and o != "nan" else l for o, l in zip(a["OpponentLeagueID"].astype(object).where(a["OpponentLeagueID"].notna(), ""), lids)]
+    else:
+        olids = list(lids)
+    a["PointsAgainst"] = [look(y, l, w, o, p) if o else p for y, l, w, o, p in zip(years, olids, weeks, opps, pa)]
 
     first = standard_from()
     cur = (years >= first).fillna(False) & a["Outcome"].isin(RESULTS) & a["PointsFor"].notna() & a["PointsAgainst"].notna()

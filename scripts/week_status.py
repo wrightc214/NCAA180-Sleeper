@@ -48,10 +48,12 @@ def _get_state():
 
 
 def _fallback(year):
-    print("WARNING: using fallback week detection (all matchup rows have an Outcome)")
+    print("WARNING: using fallback week detection (every matchup row has an Outcome or points)")
     m = pd.read_csv(MATCHUPS, dtype=str)
     m = m[m["Year"] == str(year)]
-    done = m.groupby(m["Week"].astype(int))["Outcome"].apply(lambda s: s.notna().all())
+    # From the CCG week on, teams without a real game have no Outcome, so points count too.
+    pts = pd.to_numeric(m["PointsFor"], errors="coerce").fillna(0)
+    done = (m["Outcome"].notna() | (pts > 0)).groupby(m["Week"].astype(int)).all()
     return sorted(int(w) for w, ok in done.items() if ok)
 
 
