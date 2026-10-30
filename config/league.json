@@ -103,13 +103,20 @@
     "ccg_week": 12,
     "postseason_start_week": 13
   },
+  "tiebreakers": {
+    "_note": "Order used to rank teams everywhere they are compared: division titles (CCG), playoff at-large, bowl and NIT pools. Matches Sleeper's default (support.sleeper.com, checked 2026-10-30): record, then points for, then points against, then coin toss. Keys: win_pct (ties count half), wins, points_for, points_against (higher ranks higher), head_to_head (games between the teams still tied), coin_toss (reproducible: fixed hash of season + team; every toss is printed in the run log). Teams tied after the last key are flagged.",
+    "order": [
+      "win_pct",
+      "points_for",
+      "points_against",
+      "coin_toss"
+    ]
+  },
   "postseason": {
     "_note": "Postseason rules (Chris/commissioner). Weeks: CCG = schedule.ccg_week; playoff rounds start the week after.",
     "standard_scoring_from": 2026,
-    "tiebreak": [
-      "Wins",
-      "PointsFor"
-    ],
+    "tied_game": "higher_seed",
+    "_tied_game_note": "A postseason game tied on points goes to the higher seed (Sleeper's rule); for games without seeds (CCG), the better-ranked team.",
     "ccg": {
       "divisions_per_league": 2
     },

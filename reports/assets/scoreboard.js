@@ -29,6 +29,8 @@
   }
   function team(rid) {return index.leagues[leagueId].teams[String(rid)] || {name:`Roster ${rid}`,background:'#fff',text:'#14213a',primary:'#14213a',secondary:'#888'};}
   function pairs(rs) {
+    // CCG week: the frozen baseline carries the real game; Sleeper's pairings are placeholders.
+    if(baseline.pairs){const by=new Map(rs.map(r=>[String(r.roster_id),r]));return baseline.pairs.filter(p=>String(p.LeagueID)===String(leagueId)).map(p=>[p.game,p.rosters.map(x=>by.get(String(x)))]).filter(([,g])=>g.every(Boolean));}
     const groups=new Map();
     for(const r of rs) {if(r.matchup_id===null||r.matchup_id===undefined)continue;const k=String(r.matchup_id);groups.set(k,[...(groups.get(k)||[]),r]);}
     return [...groups].filter(([,g])=>g.length===2);
@@ -131,7 +133,7 @@
     const [a,b]=models,center=title(games,models),isFinal=center.includes('FINAL'),pregame=models.every(m=>m.starters.every(p=>['pre','bye','out'].includes(p.phase)));
     const slots=index.leagues[leagueId].slots;
     const benches=chosen.map((r,i)=>C.benchPlayers(r,playerSets[i],models[i].starters,slots,cfg,pregame));
-    let html=`<div class="eyebrow">${escape(index.leagues[leagueId].label||index.leagues[leagueId].name)} · ${season} · Week ${week}</div><div class="top">${header(chosen[0],a,false,isFinal,pregame)}<div class="mid">${center}</div>${header(chosen[1],b,true,isFinal,pregame)}</div><div class="odds">`;
+    let html=`<div class="eyebrow">${escape(index.leagues[leagueId].label||index.leagues[leagueId].name)} · ${season} · ${baseline.pairs?'Conference Championship':`Week ${week}`}</div><div class="top">${header(chosen[0],a,false,isFinal,pregame)}<div class="mid">${center}</div>${header(chosen[1],b,true,isFinal,pregame)}</div><div class="odds">`;
     const missing=models.some(m=>m.starters.some(p=>p.missingProjection||p.phase==='unknown'));
     if(isFinal) {
       const m=C.round(Math.abs(a.actual-b.actual)),w=a.actual>b.actual?chosen[0]:chosen[1];
@@ -210,9 +212,9 @@
     leagueId=params.get('league')||Object.keys(index.leagues)[0];week=Number(params.get('week')||index.week);
     if(!index.leagues[leagueId])throw new Error('Unknown league in scoreboard URL.');
     if(!index.weeks.includes(week))throw new Error('No frozen pregame data for this week.');
-    if(week>=cfg.schedule.ccg_week)throw new Error('Postseason games must use real bracket pairings; Sleeper postseason pairings are not supported.');
+    if(week>cfg.schedule.ccg_week)throw new Error('Postseason games after the conference championships are not supported yet.');
     setOptions($('league'),Object.entries(index.leagues).map(([id,v])=>[id,v.label||v.name]),leagueId);
-    setOptions($('week'),index.weeks.map(w=>[w,`Week ${w}`]),week);
+    setOptions($('week'),index.weeks.filter(w=>w<=cfg.schedule.ccg_week).map(w=>[w,w===cfg.schedule.ccg_week?'CCG Week':`Week ${w}`]),week);
     $('chooser').addEventListener('submit',e=>e.preventDefault());
     for(const id of ['league','week'])$(id).addEventListener('change',()=>{if(!busy)select().catch(showError);});
     $('game').addEventListener('change',()=>{if(!busy)refresh();});

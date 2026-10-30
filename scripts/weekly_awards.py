@@ -56,10 +56,12 @@ if not played.empty:
 
     # Closest game / biggest blowout — dedupe matchup pairs (each game has two rows)
     played["Margin"] = (played["PointsFor"] - played["PointsAgainst"]).abs()
-    played["MatchupKey"] = played.apply(
-        lambda r: (str(r["LeagueID"]), tuple(sorted([str(r["RosterID"]), str(r["OpponentRosterID"])]))),
-        axis=1,
-    )
+    def matchup_key(r):  # postseason games can cross leagues (OpponentLeagueID)
+        olid = r.get("OpponentLeagueID")
+        olid = str(olid) if pd.notna(olid) and str(olid) not in ("", "nan") else str(r["LeagueID"])
+        return tuple(sorted([(str(r["LeagueID"]), str(r["RosterID"])), (olid, str(r["OpponentRosterID"]))]))
+
+    played["MatchupKey"] = played.apply(matchup_key, axis=1)
     unique_games = played.drop_duplicates(subset="MatchupKey")
 
     closest = unique_games.loc[unique_games["Margin"].idxmin()]

@@ -51,19 +51,22 @@ def main():
     n_at = int(pc["field_size"]) - len(keys)
     if n_at < 0:
         sys.exit(f"FATAL: {len(keys)} auto bids exceed field size {pc['field_size']}")
-    pool = ps.rank(st[[(l, r) not in keys for l, r in zip(st["LeagueID"], st["RosterID"])]])
+    pool, unresolved, _ = ps.rank_ties(st[[(l, r) not in keys for l, r in zip(st["LeagueID"], st["RosterID"])]])
     rows, complete = [], True
     for l, r, bid in auto:
         t = st[(st["LeagueID"] == l) & (st["RosterID"] == r)].iloc[0]
         rows.append({**t.to_dict(), "BidType": bid})
     if n_at:
-        cut = pool.iloc[n_at - 1]
-        same = pool[(pool["Wins"] == cut["Wins"]) & (pool["PointsFor"] == cut["PointsFor"])]
-        above = pool[(pool["Wins"] > cut["Wins"]) | ((pool["Wins"] == cut["Wins"]) & (pool["PointsFor"] > cut["PointsFor"]))]
-        if len(above) + len(same) > n_at:
+        # Shared tiebreakers (config tiebreakers.order). Only a tie that survives every key and
+        # straddles the cut line is left for a manual call.
+        names = list(pool["Team"])
+        cut_tie = next((t for t in unresolved if names.index(t[0]) < n_at <= names.index(t[-1])), None) if unresolved else None
+        if cut_tie:
             complete = False
-            print(f"WARNING: {len(same)} teams tied at {cut['Wins']} wins / {cut['PointsFor']} for the last "
-                  f"{n_at - len(above)} at-large spot(s): {', '.join(same['Team'])} -- resolve manually")
+            above = pool.iloc[:names.index(cut_tie[0])]
+            same = pool[pool["Team"].isin(cut_tie)]
+            print(f"WARNING: {len(same)} teams still tied after every tiebreaker for the last "
+                  f"{n_at - len(above)} at-large spot(s): {', '.join(cut_tie)} -- resolve manually")
             rows += [{**t, "BidType": "At-Large"} for t in above.to_dict("records")]
             rows += [{**t, "BidType": "Tied - Unresolved"} for t in same.to_dict("records")]
         else:
