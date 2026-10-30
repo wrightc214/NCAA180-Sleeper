@@ -108,6 +108,20 @@ def label(p):
     return "<1%" if p < 1 else (">99%" if p > 99 else f"{p:.0f}%")
 
 
+def ccg_pairs(season, wk):
+    """CCG week only: the conference championship games (written by conference_championships.py)
+    as matchup-like rows; None for any other postseason week or when pairings are missing."""
+    if wk != int(lcfg.cfg()["schedule"]["ccg_week"]) or not os.path.exists("data/Postseason_Season.csv"):
+        return None
+    ps = pd.read_csv("data/Postseason_Season.csv", dtype=str)
+    ps = ps[(ps["Round"] == "CCG") & (ps["Year"] == str(season)) & (ps["Week"] == str(wk))]
+    if ps.empty:
+        print(f"Week {wk}: no CCG pairings yet (run conference_championships.py first).")
+        return None
+    return pd.DataFrame({"LeagueID": ps["LeagueID"], "RosterID": ps["RosterID"],
+                         "OpponentRosterID": ps["OpponentRosterID"]})
+
+
 def build(week=None):
     """week=None: upcoming week (page + _Current + _Historic). week=N: past week, _Historic only."""
     season = max(pc.seasons())
@@ -116,9 +130,12 @@ def build(week=None):
         print(f"No projection snapshot{f' for week {week}' if week else ''}; nothing to build.")
         return False
     wk, proj_f, line_f = snap
+    ccg = None
     if wk > int(pc.config().get("last_regular_week", 11)):
-        print(f"Week {wk} is postseason; matchups page skipped (pairings are fictional).")
-        return False
+        ccg = ccg_pairs(season, wk)
+        if ccg is None:
+            print(f"Week {wk} is postseason; matchups page skipped (pairings are fictional).")
+            return False
     proj = pd.read_csv(proj_f, dtype={"PlayerID": str})
     stamp = str(proj["SnapshotUTC"].iloc[0]) if "SnapshotUTC" in proj.columns else ""
     started = proj["GameState"].isin(["in", "post"]).sum() if "GameState" in proj.columns else 0
@@ -156,6 +173,8 @@ def build(week=None):
 
     m = pc.matchups(season)
     m = m[m["Week"] == wk]
+    if ccg is not None:  # CCG week: the real games from Postseason_Season.csv, not Sleeper's placeholders
+        m = ccg
     games, done = [], set()
     for r in m.itertuples():
         a, b = (r.LeagueID, r.RosterID), (r.LeagueID, r.OpponentRosterID)

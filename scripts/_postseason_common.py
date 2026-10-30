@@ -150,9 +150,9 @@ def divisions(year):
     return {(r.LeagueName.strip(), r.RosterID): str(r.DivisionName).strip().upper() for r in s.itertuples()}
 
 
-def standings(year):
-    """One row per team: regular season (weeks 1..last_regular_week) Wins/Losses/PointsFor,
-    decided under this season's scoring mode; plus division, team name, owner, state/region."""
+def regular_games(year):
+    """Regular-season game rows (weeks 1..last_regular_week, completed only) with each side's
+    points (PF) and result (Res) decided under this season's scoring mode."""
     year = int(year)
     lr = last_regular_week()
     m = _matchups(year)
@@ -171,6 +171,14 @@ def standings(year):
                       ("Tie" if pa is not None else o) for pf, pa, o in zip(reg["PF"], reg["PA"], reg["Outcome"])]
     else:
         reg["PF"], reg["Res"] = reg["PointsFor"], reg["Outcome"]
+    return reg
+
+
+def standings(year):
+    """One row per team: regular season (weeks 1..last_regular_week) Wins/Losses/PointsFor,
+    decided under this season's scoring mode; plus division, team name, owner, state/region."""
+    year = int(year)
+    reg = regular_games(year)
     owner = reg.sort_values("Week").groupby(["LeagueID", "RosterID"])["OwnerName"].last()
     g = reg.groupby(["LeagueID", "LeagueName", "RosterID"]).agg(
         Wins=("Res", lambda s: int((s == "Win").sum())), Losses=("Res", lambda s: int((s == "Loss").sum())),
@@ -206,8 +214,8 @@ def game_rows(year, rnd, week, game_id, teams, stage="", bowl="", playoff_round=
     """Per-team rows for one game (2 teams) or group (3+ teams; top score advances).
     teams: list of dicts with LeagueID, LeagueName, RosterID, Team, OwnerName, Wins, PointsFor."""
     has_week = week is not None and str(week) != ""
-    pts = week_points(year, week) if has_week else {}
     done = has_week and int(week) in completed_weeks(year)
+    pts = week_points(year, week) if done else {}  # an unplayed week has no scores yet
     vals = [pts.get((t["LeagueID"], str(t["RosterID"]))) for t in teams]
     final = done and all(v is not None for v in vals)
     top = max(v[0] for v in vals) if final else None

@@ -11,7 +11,8 @@
   let pausedHidden=false,loadedAt=Date.now();
   const settings=new Map(),cards=new Map();
   $('game').hidden=true;$('overview-help').hidden=false;$('board').classList.add('conference-grid');
-  const title=()=>{document.querySelector('h1').innerHTML=`${esc(cfg.brand||'')} <em>Week ${week} Scoreboard</em>`;};
+  const wkName=w=>w===cfg.schedule.ccg_week?'CCG Week':`Week ${w}`;
+  const title=()=>{document.querySelector('h1').innerHTML=`${esc(cfg.brand||'')} <em>${week===cfg.schedule.ccg_week?'Conference Championships':`Week ${week} Scoreboard`}</em>`;};
   async function get(url,signal){
     const abort=new AbortController(),cancel=()=>abort.abort();
     signal?.addEventListener('abort',cancel,{once:true});
@@ -32,15 +33,17 @@
       for(const comp of ev.competitions||[])for(const side of comp.competitors||[]){const t=side.team?.abbreviation;games[({WSH:'WAS',LA:'LAR',JAC:'JAX'})[t]||t]=game;}
     }return games;
   }
-  function pairs(rs){const groups=new Map();for(const r of rs){if(r.matchup_id==null)continue;const k=String(r.matchup_id);groups.set(k,[...(groups.get(k)||[]),r]);}return [...groups].sort((a,b)=>Number(a[0])-Number(b[0]));}
+  // CCG week: Sleeper's pairings are placeholders; the frozen baseline carries the real games.
+  function pairs(rs,id){if(baseline.pairs){const by=new Map(rs.map(r=>[String(r.roster_id),r]));return baseline.pairs.filter(p=>String(p.LeagueID)===String(id)).map(p=>[p.game,p.rosters.map(x=>by.get(String(x)))]).filter(([,g])=>g.every(Boolean));}
+    const groups=new Map();for(const r of rs){if(r.matchup_id==null)continue;const k=String(r.matchup_id);groups.set(k,[...(groups.get(k)||[]),r]);}return [...groups].sort((a,b)=>Number(a[0])-Number(b[0]));}
   function row(r,model,probability,final,winner){
     const t=index.leagues[r.leagueId].teams[String(r.roster_id)]||{name:`Roster ${r.roster_id}`};
     const changed=Math.abs(model.actual-model.official)>.011;
     return `<div class="score-row${final&&winner?' winner':''}"><span class="team-icon" style="background:${esc(t.primary)}">${t.logo?`<img src="${esc(t.logo)}" alt="" onerror="this.hidden=true">`:''}</span><span class="school">${esc(t.name)}</span><span class="score" title="${changed?`Sleeper: ${model.official.toFixed(2)}`:'Standard score'}">${model.actual.toFixed(2)}${changed?'†':''}</span><span class="chance">${esc(pct(probability))}</span></div>`;
   }
   function block(id,rs,scoring,games,stats){
-    const league=index.leagues[id],theme=colors[id]||{},groups=pairs(rs);let html='';let allFinal=true,warning=false;
-    if(rs.length!==Object.keys(league.teams).length||groups.some(([,g])=>g.length!==2)||groups.length*2!==rs.length)throw Error('Incomplete matchup response');
+    const league=index.leagues[id],theme=colors[id]||{},groups=pairs(rs,id);let html='';let allFinal=true,warning=false;
+    if(rs.length!==Object.keys(league.teams).length||groups.some(([,g])=>g.length!==2)||(baseline.pairs?groups.length!==1:groups.length*2!==rs.length))throw Error('Incomplete matchup response');
     for(const [game,group]of groups){
       const match=group.map(r=>({...r,leagueId:id})),s=S.summarize(match,metadata,baseline,games,stats,scoring,cfg,week<index.week);
       allFinal&&=s.final;warning||=s.incomplete||s.unknown||(s.started&&!s.final&&s.missing);
@@ -93,9 +96,9 @@
   try{
     cfg=await get('../config/league.json');index=await get(`${cfg.data.scoreboard}/index.json`);season=Number(params.get('season')||index.season);
     if(season!==index.season)throw Error('Only the active season is available');
-    week=Number(params.get('week')||index.week);if(!index.weeks.includes(week)||week>=cfg.schedule.ccg_week)throw Error('No supported regular-season baseline for this week');title();
+    week=Number(params.get('week')||index.week);if(!index.weeks.includes(week)||week>cfg.schedule.ccg_week)throw Error('No supported baseline for this week');title();
     [metadata,colors]=await Promise.all([get(`${cfg.data.scoreboard}/${season}/players.json`),get(`${cfg.data.scoreboard}/leagues.json`)]);metadataAt=Date.now();
-    options($('week'),index.weeks.filter(w=>w<cfg.schedule.ccg_week).map(w=>[w,`Week ${w}`]),week);
+    options($('week'),index.weeks.filter(w=>w<=cfg.schedule.ccg_week).map(w=>[w,wkName(w)]),week);
     options($('league'),[['','All conferences'],...Object.entries(index.leagues).sort((a,b)=>lname(a[0]).localeCompare(lname(b[0]))).map(([id,l])=>[id,colors[id]?.label||l.label||l.name])],index.leagues[params.get('league')]?params.get('league'):'');
     $('chooser').addEventListener('submit',e=>e.preventDefault());for(const id of ['league','week'])$(id).addEventListener('change',select);
     $('refresh').addEventListener('click',select);

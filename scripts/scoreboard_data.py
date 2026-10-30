@@ -55,6 +55,28 @@ def player_map(full=None):
     return {k: v for k, v in result.items() if set(v["positions"]) & {"QB", "RB", "FB", "WR", "TE", "K", "DEF"}}
 
 
+def ccg_pairs(year, wk, odds, leagues):
+    """CCG week: exactly one game per league, and it must be the game conference_championships.py
+    wrote to Postseason_Season.csv. Otherwise nothing is frozen (frozen files never change)."""
+    games = {}
+    path = "data/Postseason_Season.csv"
+    for r in (rows(path) if Path(path).exists() else []):
+        if r["Round"] == "CCG" and str(r["Year"]) == str(year) and str(r["Week"]) == str(wk):
+            games.setdefault(r["LeagueID"], set()).add(r["RosterID"])
+    if len(games) != len(leagues) or any(len(g) != 2 for g in games.values()):
+        raise ValueError(f"CCG pairings incomplete ({len(games)} of {len(leagues)} leagues); "
+                         f"run conference_championships.py before freezing week {wk}")
+    pairs = []
+    for r in odds:
+        if {r["RosterID"], r["OpponentRosterID"]} != games.get(r["LeagueID"]):
+            raise ValueError(f"Week {wk} odds row {r['Team']} vs {r['OppTeam']} is not a CCG game")
+        pairs.append({"game": "ccg", "LeagueID": r["LeagueID"], "rosters": [r["RosterID"], r["OpponentRosterID"]],
+                      "label": "Conference Championship"})
+    if len(pairs) != len(leagues):
+        raise ValueError(f"Week {wk}: {len(pairs)} CCG odds rows for {len(leagues)} leagues")
+    return pairs
+
+
 def build(offline=False):
     os.chdir(ROOT)
     cfg = json.loads(Path("config/league.json").read_text())
@@ -110,12 +132,23 @@ def build(offline=False):
         if not target.exists():
             baseline = {r["PlayerID"]: json.loads(r["Stats"] or "{}") for r in projections}
             odds = [r for r in rows("data/MatchupProjections_Historic.csv") if int(r["Year"]) == year and int(r["Week"]) == wk]
-            if len(odds) != sum(len(l["teams"]) for l in leagues.values()) // 2:
+            extra = {}
+            if wk >= cfg["schedule"]["ccg_week"]:
+                # Sleeper's postseason pairings are placeholders; the matchups page pairs the real
+                # CCG games (from Postseason_Season.csv), so its frozen odds are the real games.
+                if wk != cfg["schedule"]["ccg_week"]:
+                    print(f"Week {wk}: postseason weeks after the CCG are not supported yet; not frozen")
+                    continue
+                extra = {"event": "CCG", "pairs": ccg_pairs(year, wk, odds, leagues)}
+            elif len(odds) != sum(len(l["teams"]) for l in leagues.values()) // 2:
                 raise ValueError(f"Incomplete frozen matchup odds for week {wk}")
             dump(target, {"season": year, "week": wk, "snapshot": projections[0]["SnapshotUTC"],
-                          "projections": baseline, "odds": odds, "scoring": standard,
+                          "projections": baseline, "odds": odds, "scoring": standard, **extra,
                           "player_info": {r["PlayerID"]: {"team": r.get("NFLTeam", ""), "position": r.get("Position", "")} for r in projections}})
         available.append(wk)
+    if week not in available and week > cfg["schedule"]["ccg_week"] and available:
+        print(f"Week {week} is past the CCG (not supported yet); scoreboard defaults to week {max(available)}")
+        week = max(available)
     if week not in available:
         raise ValueError(f"No valid pregame baseline for {year} week {week}; existing index preserved")
     dump(base / "players.json", players)
