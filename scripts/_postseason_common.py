@@ -168,25 +168,29 @@ def regular_games(year):
         reg["PF"] = [pts.get((a, b, w), p) for a, b, w, p in zip(reg["LeagueID"], reg["RosterID"], reg["Week"], reg["PointsFor"])]
         opp = dict(zip(zip(reg["LeagueID"], reg["RosterID"], reg["Week"]), reg["PF"]))
         reg["PA"] = [opp.get((a, b, w)) for a, b, w in zip(reg["LeagueID"], reg["OpponentRosterID"], reg["Week"])]
-        reg["Res"] = ["Win" if pa is not None and pf > pa else "Loss" if pa is not None and pf < pa else
-                      ("Tie" if pa is not None else o) for pf, pa, o in zip(reg["PF"], reg["PA"], reg["Outcome"])]
+        reg["PA"] = pd.to_numeric(reg["PA"], errors="coerce")
+        reg["Res"] = ["Win" if pd.notna(pa) and pf > pa else "Loss" if pd.notna(pa) and pf < pa else
+                      ("Tie" if pd.notna(pa) else o) for pf, pa, o in zip(reg["PF"], reg["PA"], reg["Outcome"])]
     else:
         reg["PF"], reg["Res"] = reg["PointsFor"], reg["Outcome"]
+        reg["PA"] = pd.to_numeric(reg["PointsAgainst"], errors="coerce")
     return reg
 
 
 def standings(year):
     """One row per team: regular season (weeks 1..last_regular_week) Wins/Losses/PointsFor,
     decided under this season's scoring mode; plus division, team name, owner, state/region."""
-    global _last_games
+    global _last_games, _last_year
     year = int(year)
     reg = regular_games(year)
-    _last_games = reg
+    _last_games, _last_year = reg, str(year)
     owner = reg.sort_values("Week").groupby(["LeagueID", "RosterID"])["OwnerName"].last()
     g = reg.groupby(["LeagueID", "LeagueName", "RosterID"]).agg(
         Wins=("Res", lambda s: int((s == "Win").sum())), Losses=("Res", lambda s: int((s == "Loss").sum())),
-        Ties=("Res", lambda s: int((s == "Tie").sum())), PointsFor=("PF", "sum")).reset_index()
+        Ties=("Res", lambda s: int((s == "Tie").sum())), PointsFor=("PF", "sum"),
+        PointsAgainst=("PA", "sum")).reset_index()
     g["PointsFor"] = g["PointsFor"].round(2)
+    g["PointsAgainst"] = g["PointsAgainst"].round(2)
     g["OwnerName"] = [owner.get((a, b), "") for a, b in zip(g["LeagueID"], g["RosterID"])]
     div = divisions(year)
     g["Division"] = [div.get((l, r)) for l, r in zip(g["LeagueName"], g["RosterID"])]
@@ -202,17 +206,22 @@ def standings(year):
 
 
 _last_games = None  # regular-season rows from the latest standings() call (for head-to-head)
+_last_year = ""     # season of that call (coin-toss label)
 
 
 def rank(df, games=None):
     """Best first, by config/league.json -> tiebreakers.order (shared everywhere; see tiebreak.py).
     Head-to-head uses `games`, else the regular season of the latest standings() call."""
-    return tiebreak.order(df, games if games is not None else _last_games)[0]
+    return rank_ties(df, games)[0]
 
 
 def rank_ties(df, games=None):
-    """(ranked df, teams still tied after every tiebreaker)."""
-    return tiebreak.order(df, games if games is not None else _last_games)
+    """(ranked df, teams still tied after every tiebreaker, groups split by coin toss).
+    Every coin toss is printed so the run log shows it."""
+    out, tied, tosses = tiebreak.order(df, games if games is not None else _last_games, label=_last_year)
+    for t in tosses:
+        print(f"NOTE: coin toss (reproducible) between {', '.join(t)}")
+    return out, tied, tosses
 
 
 def draw_seed(year, label):
@@ -221,6 +230,10 @@ def draw_seed(year, label):
 
 
 # ---------- results for a set of games ----------
+
+def cfg_postseason():
+    return config()[1]
+
 
 def game_rows(year, rnd, week, game_id, teams, stage="", bowl="", playoff_round="", seeds=None, draw=""):
     """Per-team rows for one game (2 teams) or group (3+ teams; top score advances).
@@ -232,11 +245,27 @@ def game_rows(year, rnd, week, game_id, teams, stage="", bowl="", playoff_round=
     final = done and all(v is not None for v in vals)
     top = max(v[0] for v in vals) if final else None
     n_top = sum(1 for v in vals if final and v[0] == top)
+    # Tied at the top: Sleeper gives a tied playoff game to the higher seed (config
+    # postseason.tied_game = "higher_seed"): lowest Seed, else the team listed first
+    # (callers list the better-ranked team first). Anything else leaves it a Tie to resolve.
+    winner_i = None
+    if final and n_top > 1 and cfg_postseason().get("tied_game") == "higher_seed":
+        tied = [i for i in range(len(teams)) if vals[i][0] == top]
+        sd = [(seeds or {}).get((teams[i]["LeagueID"], str(teams[i]["RosterID"]))) for i in tied]
+        if all(str(x).isdigit() for x in sd):
+            winner_i = tied[min(range(len(tied)), key=lambda k: int(sd[k]))]
+        else:
+            winner_i = tied[0]
+        print(f"NOTE: {game_id} tied at {top}; higher seed {teams[winner_i]['Team']} advances")
     rows = []
     for i, t in enumerate(teams):
         others = [j for j in range(len(teams)) if j != i]
         v = vals[i]
-        if final:
+        if final and winner_i is not None:
+            outcome = "Win" if i == winner_i else "Loss"
+            second = max(vals[j][0] for j in others)
+            margin = round(abs(v[0] - (second if i == winner_i else top)), 2)
+        elif final:
             outcome = "Tie" if (v[0] == top and n_top > 1) else ("Win" if v[0] == top else "Loss")
             second = max(vals[j][0] for j in others)
             margin = round(abs(v[0] - (second if v[0] == top else top)), 2)

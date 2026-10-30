@@ -2,9 +2,9 @@
 conference_championships.py -- week-12 conference championship games (CCG).
 
 Each league's division winners (weeks 1..last_regular_week) meet in the CCG week.
-Division order = the shared tiebreakers in config/league.json (tiebreakers.order; Sleeper
-default per Chris 2026-10-30: win %, points for, head-to-head). A title still tied after the
-last tiebreaker is flagged, never guessed (exit 1). Results and points use standard scoring from 2026.
+Division order = the shared tiebreakers in config/league.json (tiebreakers.order; Sleeper's
+default: win %, points for, points against, coin toss). A coin toss is printed in the run log;
+a title still tied after the last tiebreaker is flagged (exit 1). Results and points use standard scoring from 2026.
 Winner = higher points that CCG week. Writes Round="CCG" rows to Postseason_Season.csv;
 reruns refresh scores.
 
@@ -45,7 +45,7 @@ def main():
     for (lid, lname), g in st.groupby(["LeagueID", "LeagueName"]):
         champs = []
         for div, d in g.groupby("Division"):
-            r, ties = ps.rank_ties(d, games)
+            r, ties, _ = ps.rank_ties(d, games)
             tied = next((t for t in ties if r.iloc[0]["Team"] in t), [])
             if tied:
                 problems.append(f"{lname} / {div}: division title still tied after every tiebreaker ({', '.join(tied)})")
