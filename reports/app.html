@@ -103,7 +103,7 @@ summary .n{color:var(--mute);font-weight:400}
 <nav class="weeks" aria-label="Pages"><a href="week-07.html">Weekly Awards</a><a href="roster-map.html">Roster Map</a><a href="standings.html">Standings</a><a href="matchups.html">Matchups</a><a href="scoreboard.html">Scoreboard</a><a href="poll.html">Poll</a><a href="managers.html">Managers</a><a href="records.html">Records</a><a href="app.html" aria-current="page">App</a></nav>
 <main class="app">
   <div>
-    <h1>NCAA 180 app</h1>
+    <h1 id="title">NCAA 180 app</h1>
     <p class="lede">Get a notification when your teams' games are final. No account, no login.
     <span class="tester" id="tester" hidden>Tester phone</span></p>
   </div>
@@ -160,6 +160,37 @@ summary .n{color:var(--mute);font-weight:400}
   if (q.get("test") === "1") { state.test = true; save(); }
   if (q.get("test") === "0") { state.test = false; save(); }
   $("tester").hidden = !state.test;
+
+  // Hidden tester switch: tap the title 5 times within 3 seconds. Needed on iPhone, where the
+  // installed app keeps its own storage (a ?test=1 opened in Safari doesn't carry over) and has
+  // no address bar. If notifications are already on, the change is saved to the store right away.
+  var taps = [];
+  $("title").addEventListener("click", function () {
+    var now = Date.now();
+    taps = taps.filter(function (t) { return now - t < 3000; }).concat(now);
+    if (taps.length < 5) return;
+    taps = [];
+    state.test = !state.test; save();
+    $("tester").hidden = !state.test;
+    status(state.test ? "Tester mode on." : "Tester mode off.", "ok");
+    if (state.on && conf && conf.worker_url) resave();
+  });
+
+  async function resave() {
+    try {
+      var reg = await navigator.serviceWorker.getRegistration();
+      var sub = reg && await reg.pushManager.getSubscription();
+      if (!sub) return;
+      var r = await fetch(conf.worker_url + "/subscribe", {
+        method: "POST", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ subscription: sub.toJSON(), follows: state.follows || [], test: !!state.test })
+      });
+      if (!r.ok) throw new Error(r.status);
+      status((state.test ? "Tester mode on" : "Tester mode off") + " and saved. Notifications are on.", "ok");
+    } catch (err) {
+      status("Tester mode changed on this phone, but couldn't save it: " + err.message + ". Tap Save changes.", "warn");
+    }
+  }
 
   function load() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }

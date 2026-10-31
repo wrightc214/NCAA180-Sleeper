@@ -6,7 +6,8 @@ Static page; everything happens in the browser:
   - pick teams (by league), leagues, events -> "Turn on notifications" (the tap iOS requires)
   - saves follows to the push store (Cloudflare Worker, config/push.json -> worker_url)
   - "Stop notifications": unsubscribes this phone and deletes it from the store
-  - ?test=1 marks this phone as a tester (test pushes go only to testers); ?test=0 clears it
+  - ?test=1 marks this phone as a tester (test pushes go only to testers); ?test=0 clears it.
+    Tapping the page title 5 times also toggles it (the only way inside an installed iPhone app).
 Lists come from reports/data/push-teams.json (scripts/push_teams.py); live settings (Worker URL,
 public key) from config/push.json. CWD = repo root.
 """
@@ -49,7 +50,7 @@ BODY = """
 <nav class="weeks" aria-label="Pages">{nav}</nav>
 <main class="app">
   <div>
-    <h1>NCAA 180 app</h1>
+    <h1 id="title">NCAA 180 app</h1>
     <p class="lede">Get a notification when your teams' games are final. No account, no login.
     <span class="tester" id="tester" hidden>Tester phone</span></p>
   </div>
@@ -106,6 +107,37 @@ BODY = """
   if (q.get("test") === "1") { state.test = true; save(); }
   if (q.get("test") === "0") { state.test = false; save(); }
   $("tester").hidden = !state.test;
+
+  // Hidden tester switch: tap the title 5 times within 3 seconds. Needed on iPhone, where the
+  // installed app keeps its own storage (a ?test=1 opened in Safari doesn't carry over) and has
+  // no address bar. If notifications are already on, the change is saved to the store right away.
+  var taps = [];
+  $("title").addEventListener("click", function () {
+    var now = Date.now();
+    taps = taps.filter(function (t) { return now - t < 3000; }).concat(now);
+    if (taps.length < 5) return;
+    taps = [];
+    state.test = !state.test; save();
+    $("tester").hidden = !state.test;
+    status(state.test ? "Tester mode on." : "Tester mode off.", "ok");
+    if (state.on && conf && conf.worker_url) resave();
+  });
+
+  async function resave() {
+    try {
+      var reg = await navigator.serviceWorker.getRegistration();
+      var sub = reg && await reg.pushManager.getSubscription();
+      if (!sub) return;
+      var r = await fetch(conf.worker_url + "/subscribe", {
+        method: "POST", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ subscription: sub.toJSON(), follows: state.follows || [], test: !!state.test })
+      });
+      if (!r.ok) throw new Error(r.status);
+      status((state.test ? "Tester mode on" : "Tester mode off") + " and saved. Notifications are on.", "ok");
+    } catch (err) {
+      status("Tester mode changed on this phone, but couldn't save it: " + err.message + ". Tap Save changes.", "warn");
+    }
+  }
 
   function load() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
