@@ -73,7 +73,7 @@ Every workbook row that had no outside evidence (all of the 1s and 2s) was revie
   - Mississippi State–Southern Miss, which is renewing in 2030–31.
   - Princeton–Rutgers, which played the first college football game.
 - **Kept as probable or possible, with a reason in `notes`:** Boston College–Syracuse, BYU–Boise State, James Madison–Richmond, North Dakota State–Northern Iowa, Iowa State–Northern Iowa, NC State–South Carolina, North Carolina A&T–Winston-Salem State and a few weaker neighbor pairs.
-- **Added:** the Battle of the Piney Woods (Sam Houston–Stephen F. Austin), which both public lists missed.
+- **Added:** the Battle of the Piney Woods (Sam Houston State–Stephen F. Austin), which both public lists missed.
 - No candidates (certainty 1) remain.
 
 **Update (Chris, 2026-10-28):** rivalries that faded because the schools moved to different levels of play still count. 20 of the 25 dropped pairs were restored at certainty 2 with their peak-intensity scores. Alabama–FSU, Auburn–FSU, Oklahoma–Texas Tech, Penn State–Texas Tech and USC–Washington stay out.
