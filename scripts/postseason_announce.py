@@ -117,7 +117,7 @@ def result_announcements(season, year, smap, conf, league_cfg):
         if items:
             ccg_only = set(wk["Round"]) == {"CCG"}
             title = "Conference championships are final" if ccg_only else f"Week {week} postseason results"
-            out.append({"id": f"{year}-w{week}-results", "event": "results", "title": title, "url": "matchups.html",
+            out.append({"id": f"{year}-w{week}-results", "event": "results", "title": title, "url": "scoreboard.html",
                         "summary": "; ".join(parts), "items": _clean(items)})
         for rnd, its in champs:
             # The title game is announced once, as the champion push; its round's result followers
@@ -125,7 +125,7 @@ def result_announcements(season, year, smap, conf, league_cfg):
             w = its[0]["_winner"]
             title = f"🏆 National champion: {w['Team']}" if rnd == "Playoff" else f"Stagg Bowl champion: {w['Team']}"
             out.append({"id": f"{year}-{'champion' if rnd == 'Playoff' else 'stagg'}", "event": "champions",
-                        "also_events": [EVENT[rnd]], "champion": True, "title": title, "url": "matchups.html",
+                        "also_events": [EVENT[rnd]], "champion": True, "title": title, "url": "scoreboard.html",
                         "summary": "", "items": _clean(its)})
     return out
 

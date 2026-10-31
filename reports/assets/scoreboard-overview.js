@@ -10,9 +10,9 @@
   // Only reload on becoming visible if work was interrupted while hidden or data is over a minute old (avoids a duplicate load).
   let pausedHidden=false,loadedAt=Date.now();
   const settings=new Map(),cards=new Map();
-  $('game').hidden=true;$('overview-help').hidden=false;$('board').classList.add('conference-grid');
+  $('game').hidden=true;$('overview-help').hidden=false;
   const wkName=w=>w===cfg.schedule.ccg_week?'CCG Week':`Week ${w}`;
-  const title=()=>{document.querySelector('h1').innerHTML=`${esc(cfg.brand||'')} <em>${week===cfg.schedule.ccg_week?'Conference Championships':`Week ${week} Scoreboard`}</em>`;};
+  const title=()=>{document.querySelector('h1').innerHTML=`${esc(cfg.brand||'')} <em>${week===cfg.schedule.ccg_week?'Conference Championships':`Week ${week} Games`}</em>`;};
   async function get(url,signal){
     const abort=new AbortController(),cancel=()=>abort.abort();
     signal?.addEventListener('abort',cancel,{once:true});
@@ -23,38 +23,96 @@
   }
   function options(el,items,value){el.replaceChildren(...items.map(([v,t])=>{const o=document.createElement('option');o.value=v;o.textContent=t;return o;}));el.value=String(value);}
   function schedule(ms){clearTimeout(timer);if(!document.hidden)timer=setTimeout(()=>refresh(),ms);}
+  let kick={next:null,sunday:null};
   function nflGames(data){
     if(Number(data.season?.year)!==season||Number(data.week?.number)!==week||!data.events?.length)throw Error('NFL schedule does not match the selected week');
-    const games={};
+    const games={};kick={next:null,sunday:null};
     for(const ev of data.events){const st=ev.status||{},type=st.type||{};
       const game={state:type.state,period:Number(st.period||0),clock:st.displayClock||'',kickoff:ev.date,id:ev.id};
       if(type.state==='post'&&!type.completed)game.state='unknown';
       if(type.state==='in'&&!/^\d+:\d\d$/.test(game.clock))throw Error('Live NFL clock unavailable');
-      for(const comp of ev.competitions||[])for(const side of comp.competitors||[]){const t=side.team?.abbreviation;games[({WSH:'WAS',LA:'LAR',JAC:'JAX'})[t]||t]=game;}
+      const t=Date.parse(ev.date);
+      if(type.state==='pre'&&(kick.next===null||t<kick.next))kick.next=t;
+      // First Sunday kickoff of the week: the preview callouts stay up until then.
+      if(new Date(ev.date).toLocaleString('en-US',{timeZone:'America/New_York',weekday:'short'})==='Sun'&&(kick.sunday===null||t<kick.sunday))kick.sunday=t;
+      for(const comp of ev.competitions||[])for(const side of comp.competitors||[]){const a=side.team?.abbreviation;games[({WSH:'WAS',LA:'LAR',JAC:'JAX'})[a]||a]=game;}
     }return games;
   }
   // CCG week: Sleeper's pairings are placeholders; the frozen baseline carries the real games.
   function pairs(rs,id){if(baseline.pairs){const by=new Map(rs.map(r=>[String(r.roster_id),r]));return baseline.pairs.filter(p=>String(p.LeagueID)===String(id)).map(p=>[p.game,p.rosters.map(x=>by.get(String(x)))]).filter(([,g])=>g.every(Boolean));}
     const groups=new Map();for(const r of rs){if(r.matchup_id==null)continue;const k=String(r.matchup_id);groups.set(k,[...(groups.get(k)||[]),r]);}return [...groups].sort((a,b)=>Number(a[0])-Number(b[0]));}
-  function row(r,model,probability,final,winner){
+  // Tuesday odds row for a pair: records, poll ranks, every-week line.
+  function oddsRow(id,a,b){return baseline.odds.find(o=>String(o.LeagueID)===String(id)&&[String(o.RosterID),String(o.OpponentRosterID)].sort().join(',')===[String(a),String(b)].sort().join(','));}
+  function side(o,rid){if(!o)return {rec:'',rank:''};const mine=String(o.RosterID)===String(rid);return {rec:mine?o.Rec:o.OppRec,rank:mine?o.Rank:o.OppRank};}
+  const kickTxt=t=>new Date(t).toLocaleString('en-US',{timeZone:'America/New_York',weekday:'short',hour:'numeric',minute:'2-digit'})+' ET';
+  // One row: logo | team (+ record) | Score | Proj | Win %. Same columns in every state (Chris, 2026-10-30).
+  function row(r,model,proj,probability,s,winner,info){
     const t=index.leagues[r.leagueId].teams[String(r.roster_id)]||{name:`Roster ${r.roster_id}`};
     const changed=Math.abs(model.actual-model.official)>.011;
-    return `<div class="score-row${final&&winner?' winner':''}"><span class="team-icon" style="background:${esc(t.primary)}">${t.logo?`<img src="${esc(t.logo)}" alt="" onerror="this.hidden=true">`:''}</span><span class="school">${esc(t.name)}</span><span class="score" title="${changed?`Sleeper: ${model.official.toFixed(2)}`:'Standard score'}">${model.actual.toFixed(2)}${changed?'†':''}</span><span class="chance">${esc(pct(probability))}</span></div>`;
+    const score=model.played||s.final?`${model.actual.toFixed(2)}${changed?'†':''}`:'–';
+    return `<div class="score-row r3${s.final&&winner?' winner':''}"><span class="team-icon" style="background:${esc(t.primary)}">${t.logo?`<img src="${esc(t.logo)}" alt="" onerror="this.hidden=true">`:''}</span><span class="school">${info.rank?`<b class="rk">#${esc(info.rank)}</b> `:''}${esc(t.name)}${info.rec?`<small class="rec">${esc(info.rec)}</small>`:''}</span><span class="score${model.played||s.final?'':' dash'}" title="${changed?`Sleeper: ${model.official.toFixed(2)}`:'Standard score'}">${score}</span><span class="proj">${proj.toFixed(1)}</span><span class="chance">${esc(pct(probability))}</span></div>`;
+  }
+  function card(g){
+    const {id,game,match,s,o}=g,league=index.leagues[id];
+    const p=s.probability===null?null:Math.round(s.probability),href=`scoreboard.html?${new URLSearchParams({season,week,league:id,game,overview:$('league').value||'all'})}`;
+    const status=s.active?`● Live · ${s.active} playing`:s.final?'Final':s.started?'In progress':s.next?kickTxt(s.next.kickoff):s.status;
+    const pre=s.live&&s.pregame!=null?`<div class="ew">Pregame: ${esc(league.teams[String(match[0].roster_id)]?.name)} ${esc(pct(s.pregame))}</div>`:'';
+    const ew=!s.started&&o?.EveryWeek?`<div class="ew">If they'd played every week: ${esc(o.EveryWeekLeader?o.EveryWeekLeader+' ':'')}${esc(o.EveryWeek)}</div>`:'';
+    return `<a class="mini-match" href="${esc(href)}" aria-label="${esc(league.teams[String(match[0].roster_id)]?.name)} versus ${esc(league.teams[String(match[1].roster_id)]?.name)} — player details"><div class="hdr3"><span></span><span class="match-status${s.active?' is-live':''}">${esc(status)}</span><span>Score</span><span>${s.live?'Live proj':'Proj'}</span><span>${s.live?'Live %':'Pre %'}</span></div>${row(match[0],s.models[0],s.proj[0],p,s,s.models[0].actual>s.models[1].actual,side(o,match[0].roster_id))}${row(match[1],s.models[1],s.proj[1],p===null?null:100-p,s,s.models[1].actual>s.models[0].actual,side(o,match[1].roster_id))}${pre}${ew}</a>`;
   }
   function block(id,rs,scoring,games,stats){
-    const league=index.leagues[id],theme=colors[id]||{},groups=pairs(rs,id);let html='';let allFinal=true,warning=false;
+    const league=index.leagues[id],groups=pairs(rs,id);let allFinal=true,warning=false;
     if(rs.length!==Object.keys(league.teams).length||groups.some(([,g])=>g.length!==2)||(baseline.pairs?groups.length!==1:groups.length*2!==rs.length))throw Error('Incomplete matchup response');
+    const list=[];
     for(const [game,group]of groups){
       const match=group.map(r=>({...r,leagueId:id})),s=S.summarize(match,metadata,baseline,games,stats,scoring,cfg,week<index.week);
       allFinal&&=s.final;warning||=s.incomplete||s.unknown||(s.started&&!s.final&&s.missing);
-      const p=s.probability===null?null:Math.round(s.probability),href=`scoreboard.html?${new URLSearchParams({season,week,league:id,game,overview:$('league').value||'all'})}`;
-      const next=s.next?new Date(s.next.kickoff).toLocaleString('en-US',{timeZone:'America/New_York',weekday:'short',hour:'numeric',minute:'2-digit'}):'';
-      html+=`<a class="mini-match" href="${esc(href)}" aria-label="${esc(league.teams[String(match[0].roster_id)]?.name)} versus ${esc(league.teams[String(match[1].roster_id)]?.name)} — player details"><div class="match-meta"><span class="match-status${s.active?' is-live':''}">${s.active?'● ':''}${esc(s.status)}${!s.started&&next?` · ${esc(next)} ET`:''}</span><span>${esc(s.oddsLabel)}</span></div>${row(match[0],s.models[0],p,s.final,s.models[0].actual>s.models[1].actual)}${row(match[1],s.models[1],p===null?null:100-p,s.final,s.models[1].actual>s.models[0].actual)}</a>`;
+      list.push({id,game,match,s,o:oddsRow(id,match[0].roster_id,match[1].roster_id)});
     }
-    return {html:`<h2 class="${theme.logo?'has-logo':''}" style="background:${esc(theme.background||'#14213a')};color:${esc(theme.text||'#fff')}">${theme.logo?`<span class="lgtag"><img src="${esc(theme.logo)}" alt="${esc(theme.label||league.name)}" onerror="this.parentElement.replaceWith(this.alt)"></span>`:esc(theme.label||league.name)}</h2>${html}${warning?'<p class="conference-note">Some stats, projections or statuses are unavailable; estimates may be incomplete.</p>':''}`,allFinal};
+    return {games:list,allFinal,warning};
   }
   const lname=id=>index.leagues[id].label||index.leagues[id].name;
-  function paint(ids){$('board').innerHTML=ids.map(id=>{const c=cards.get(id);return `<section class="conference" aria-label="${esc(lname(id))}">${c?.html||`<h2>${esc(index.leagues[id].name)}</h2><p class="conference-note">Loading games…</p>`}${c?.error?`<p class="conference-error" role="status">${esc(c.error)}${c.updated?` · last updated ${c.updated.toLocaleTimeString()}`:''}</p>`:''}</section>`;}).join('');}
+  // Folded conferences are a per-viewer convenience (this browser only).
+  function folded(){try{return new Set(JSON.parse(localStorage.getItem('sb-folded')||'[]'));}catch(e){return new Set();}}
+  function setFolded(id,on){try{const f=folded();on?f.add(id):f.delete(id);localStorage.setItem('sb-folded',JSON.stringify([...f]));}catch(e){}}
+  function header(id,c){
+    const theme=colors[id]||{},league=index.leagues[id],g=c?.games||[];
+    const live=g.filter(x=>x.s.active).length,fin=g.filter(x=>x.s.final).length,under=g.filter(x=>x.s.started&&!x.s.final&&!x.s.active).length;
+    const sum=!c?'':live||fin||under?[live&&`${live} live`,under&&`${under} underway`,fin&&`${fin} final`].filter(Boolean).join(' · '):`${g.length} game${g.length===1?'':'s'}`;
+    return `<summary><h2 class="${theme.logo?'has-logo':''}" style="background:${esc(theme.background||'#14213a')};color:${esc(theme.text||'#fff')}">${theme.logo?`<span class="lgtag"><img src="${esc(theme.logo)}" alt="${esc(theme.label||league.name)}" onerror="this.parentElement.replaceWith(this.alt)"></span>`:esc(theme.label||league.name)}<span class="csum">${esc(sum)}</span></h2></summary>`;
+  }
+  function strip(all,ids){
+    if(!all.length)return '';
+    const live=all.reduce((a,g)=>a+g.s.active,0),started=all.filter(g=>g.s.started).length,fin=all.filter(g=>g.s.final).length;
+    let cls='pre',txt;
+    if(fin===all.length){cls='fin';txt=`<b>Final</b> All ${all.length} games final · pregame odds kept for reference`;}
+    else if(live){cls='live';txt=`<b>● Live</b> ${live} player${live===1?'':'s'} playing · refreshes every 5 minutes`;}
+    else if(started){txt=`<b>In progress</b> ${started} game${started===1?' has':'s have'} started${kick.next?` · next kickoff ${esc(kickTxt(kick.next))}`:''}`;}
+    else{txt=`<b>Preview</b> Tuesday projections${kick.next?` · first kickoff ${esc(kickTxt(kick.next))}`:''}`;}
+    return `<div class="wkstate wk-${cls}">${txt}</div>`;
+  }
+  function callouts(){
+    if(!baseline||baseline.pairs||!(kick.sunday===null||Date.now()<kick.sunday))return '';
+    const odds=baseline.odds.filter(o=>!$('league').value||String(o.LeagueID)===$('league').value);if(!odds.length)return '';
+    const gap=o=>Math.abs(Number(o.Proj)-Number(o.OppProj)),wp=o=>Number(o.WinPct);
+    const close=odds.reduce((a,o)=>gap(o)<gap(a)?o:a),blow=odds.reduce((a,o)=>gap(o)>gap(a)?o:a);
+    const rvr=odds.filter(o=>o.Rank&&o.OppRank).sort((a,b)=>(+a.Rank+ +a.OppRank)-(+b.Rank+ +b.OppRank))[0];
+    return `<div class="callouts">${rvr?`<div><b>Game of the week</b>#${esc(rvr.Rank)} ${esc(rvr.Team)} vs #${esc(rvr.OppRank)} ${esc(rvr.OppTeam)} · ${esc(pct(wp(rvr)))} / ${esc(pct(100-wp(rvr)))}</div>`:''}<div><b>Closest projected game</b>${esc(close.Team)} vs ${esc(close.OppTeam)} · ${gap(close).toFixed(1)} pts · ${esc(pct(wp(close)))}</div><div><b>Biggest mismatch</b>${esc(blow.Team)} over ${esc(blow.OppTeam)} by ${gap(blow).toFixed(1)} · ${esc(pct(wp(blow)))}</div></div>`;
+  }
+  function paint(ids){
+    const all=ids.flatMap(id=>cards.get(id)?.games||[]),f=folded(),one=!!$('league').value;
+    const rvr=all.filter(g=>g.o?.Rank&&g.o?.OppRank),ranked=all.filter(g=>(g.o?.Rank||g.o?.OppRank)&&!(g.o?.Rank&&g.o?.OppRank));
+    const feat=list=>`<div class="feat">${list.map(g=>`<section class="feat-card">${card(g)}</section>`).join('')}</div>`;
+    const open=(()=>{try{return localStorage.getItem('sb-ranked-open')==='1';}catch(e){return false;}})();
+    let html=strip(all,ids)+callouts();
+    if(rvr.length)html+=`<h3 class="sec">Ranked vs ranked <small>${rvr.length} game${rvr.length===1?'':'s'}</small></h3>${feat(rvr)}`;
+    if(ranked.length)html+=`<details class="sec-d" id="ranked-d"${open?' open':''}><summary><h3 class="sec">Ranked teams in action <small>${ranked.length} game${ranked.length===1?'':'s'}</small></h3></summary>${feat(ranked)}</details>`;
+    html+=`<h3 class="sec">${one?'Games':'By conference'}</h3><div class="conference-grid">`+ids.map(id=>{const c=cards.get(id);
+      return `<details class="conference" data-id="${esc(id)}"${one||!f.has(id)?' open':''} aria-label="${esc(lname(id))}">${header(id,c)}${c?.games?c.games.map(card).join(''):'<p class="conference-note">Loading games…</p>'}${c?.warning?'<p class="conference-note">Some stats, projections or statuses are unavailable; estimates may be incomplete.</p>':''}${c?.error?`<p class="conference-error" role="status">${esc(c.error)}${c.updated?` · last updated ${c.updated.toLocaleTimeString()}`:''}</p>`:''}</details>`;}).join('')+'</div>';
+    $('board').innerHTML=html;
+    for(const d of $('board').querySelectorAll('details.conference'))d.addEventListener('toggle',()=>{if(!one)setFolded(d.dataset.id,!d.open);});
+    $('ranked-d')?.addEventListener('toggle',e=>{try{localStorage.setItem('sb-ranked-open',e.target.open?'1':'0');}catch(x){}});
+  }
   async function refresh(){
     if(busy||document.hidden)return;busy=true;clearTimeout(timer);$('refresh').disabled=true;
     const turn=generation,signal=controller.signal,ids=Object.keys(index.leagues).filter(id=>!$('league').value||id===$('league').value).sort((a,b)=>lname(a).localeCompare(lname(b)));

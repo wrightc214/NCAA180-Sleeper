@@ -84,7 +84,8 @@
     const starters=(roster.starters||[]).map(id=>players[String(id)] || {id:'0',name:'Empty slot',positions:[],position:'',phase:'out',actual:0,baseline:0,projected:0,variance:0,minutes:0,official:0});
     const adjustment=num(roster.points)-starters.reduce((a,p)=>a+p.official,0);
     return {starters,adjustment:round(adjustment),actual:round(starters.reduce((a,p)=>a+p.actual,0)+adjustment),
-      projected:round(starters.reduce((a,p)=>a+p.projected,0)+adjustment),variance:starters.reduce((a,p)=>a+p.variance,0),
+      projected:round(starters.reduce((a,p)=>a+p.projected,0)+adjustment),pregame:round(starters.reduce((a,p)=>a+p.baseline,0)),
+      played:starters.some(p=>p.phase==='post'||p.phase==='in'||p.actual!==0),variance:starters.reduce((a,p)=>a+p.variance,0),
       minutes:starters.reduce((a,p)=>a+p.minutes,0),official:num(roster.points)};
   }
   function benchPlayers(roster, players, starters, slots, cfg, pregame) {

@@ -33,7 +33,7 @@ class BrowserTests(unittest.TestCase):
                 for width in (1150,400):
                     for phase in ('pre','in','post'):
                         with self.subTest(width=width,phase=phase):
-                            page=browser.new_page(viewport={'width':width,'height':1000});errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
+                            page=browser.new_page(viewport={'width':width,'height':1000});page.add_init_script("try{sessionStorage.setItem('ncaa180.push.snooze','1')}catch(e){}");errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
                             state={'fail':False}
                             rosters=copy.deepcopy(fixture['rosters'])
                             if phase=='pre':

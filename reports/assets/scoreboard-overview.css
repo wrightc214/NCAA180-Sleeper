@@ -1,2 +1,34 @@
 .conference-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:start}.gwrap:has(.conference-grid){max-width:1450px}.conference{padding:0;min-width:0;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}.conference h2{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0;padding:10px 12px;font:800 20px var(--num);background:#14213a;color:#fff}.conference h2 span{font:600 10px var(--sans,sans-serif);letter-spacing:.04em;text-transform:uppercase}.mini-match{display:block;padding:8px 12px 9px;border-top:1px solid var(--line);color:var(--ink);text-decoration:none}.mini-match:hover,.mini-match:focus-visible{background:color-mix(in srgb,var(--panel),var(--ink) 7%);outline:2px solid #38638b;outline-offset:-2px}.match-meta{display:flex;justify-content:space-between;gap:8px;font:600 10px var(--sans,sans-serif);text-transform:uppercase;letter-spacing:.04em;color:var(--mute);margin-bottom:4px}.match-status.is-live{color:#16743b;font-weight:800}.score-row{display:grid;grid-template-columns:24px minmax(0,1fr) 66px 46px;gap:6px;align-items:center;min-height:28px}.team-icon{display:flex;width:22px;height:22px;align-items:center;justify-content:center;border-radius:3px;overflow:hidden}.team-icon img{width:100%;height:100%;object-fit:contain;background:#fff}.school{font-size:14px;overflow-wrap:anywhere}.score,.chance{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--num);font-size:17px}.chance{font-size:14px;font-weight:500;color:var(--mute)}.winner .school,.winner .score{font-weight:800}.conference-note,.conference-error{padding:8px 12px;margin:0;font-size:12px}.conference-error{background:#fff0d7;color:#6f2a00;border-top:1px solid #dca665}.overview-back{font-weight:700;color:var(--ink)}[hidden]{display:none!important}@media(max-width:1100px){.conference-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:650px){.conference-grid{grid-template-columns:1fr;gap:14px}.school{font-size:15px}.score-row{min-height:30px}}.pick:has(#game[hidden]) #league{flex:1 1 240px}.pick:has(#game[hidden]) #week{flex:0 1 130px}
 .conference h2.has-logo{justify-content:center;padding:8px 12px}.lgtag{display:flex;align-items:center;background:#fff;border-radius:6px;padding:4px 14px}.lgtag img{display:block;height:32px;max-width:150px;object-fit:contain}
+/* Games page (Chris, 2026-10-30): Score | Proj | Win % in every state; status strip; preview callouts;
+   ranked sections; collapsible conferences. */
+.score-row.r3{grid-template-columns:22px minmax(0,1fr) 54px 50px 44px;gap:5px}
+.r3 .school{display:block;line-height:1.15;min-width:0}
+.r3 .school .rec{display:block;margin-top:1px;font-size:11px;color:var(--mute);font-weight:500}
+.r3 .school .rk{font-family:var(--num)}
+.r3 .score{font-size:16px;font-weight:700}.r3 .score.dash{color:var(--mute);font-weight:400}
+.r3 .proj{text-align:right;font:500 15px var(--num);color:var(--mute);font-variant-numeric:tabular-nums}
+.r3 .chance{font-size:13px}
+.hdr3{display:grid;grid-template-columns:22px minmax(0,1fr) 54px 50px 44px;gap:5px;font:600 10px var(--sans,sans-serif);text-transform:uppercase;letter-spacing:.04em;color:var(--mute);margin-bottom:4px}
+.hdr3 span:nth-child(n+3){text-align:right}
+.hdr3 .match-status{grid-column:1/3}.hdr3>span:first-child{display:none}
+.mini-match .ew{font-size:11px;color:var(--mute);margin-top:4px}
+.wkstate{border:1px solid var(--line);border-left:5px solid #7a5cff;border-radius:6px;padding:9px 12px;background:var(--panel);font-size:14px;margin:4px 0 14px}
+.wk-live{border-left-color:#16743b}.wk-live b:first-child{color:#16743b}.wk-fin{border-left-color:#555}
+.callouts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-bottom:14px}
+.callouts div{border:1px solid var(--line);border-radius:6px;padding:10px 12px;background:var(--panel);font-size:14px}
+.callouts b{display:block;font:700 11px var(--num);letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin-bottom:4px}
+h3.sec{font:800 15px var(--num);text-transform:uppercase;letter-spacing:.04em;margin:16px 0 8px}
+h3.sec small{font:600 12px var(--sans,sans-serif);color:var(--mute);text-transform:none;letter-spacing:0;margin-left:6px}
+.feat{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,440px));gap:12px}@media(max-width:650px){.feat{grid-template-columns:1fr}}
+.feat-card{padding:0;min-width:0;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}.feat-card .mini-match{border-top:0}
+details.sec-d>summary,details.conference>summary{list-style:none;cursor:pointer}
+details.sec-d>summary::-webkit-details-marker,details.conference>summary::-webkit-details-marker{display:none}
+details.sec-d>summary h3::before{content:"▸ "}details.sec-d[open]>summary h3::before{content:"▾ "}
+details.conference>summary h2{position:relative}
+details.conference>summary h2::after{content:"▾";position:absolute;right:12px;font-size:14px;opacity:.8}
+details.conference:not([open])>summary h2::after{content:"▸"}
+.conference h2 .csum{position:absolute;left:12px;font:600 11px var(--sans,sans-serif);text-transform:none;letter-spacing:0;opacity:.9}
+.conference h2.has-logo .csum{position:absolute}
+details.conference>summary:focus-visible{outline:2px solid #38638b;outline-offset:-2px}
+@media(max-width:400px){.score-row.r3,.hdr3{grid-template-columns:20px minmax(0,1fr) 50px 46px 38px}.r3 .school{font-size:14px}}

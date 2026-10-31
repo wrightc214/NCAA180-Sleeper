@@ -26,9 +26,12 @@
     const saved=baseline.odds.find(o=>String(o.LeagueID)===String(rosters[0].leagueId)&&
       [String(o.RosterID),String(o.OpponentRosterID)].sort().join(',')===rosters.map(r=>String(r.roster_id)).sort().join(','));
     const pregame=saved?(String(saved.RosterID)===String(rosters[0].roster_id)?Number(saved.WinPct):100-Number(saved.WinPct)):null;
-    return {models,final,active:active.length,next,unknown,incomplete,missing,started,
+    // Proj column (Chris, 2026-10-30, Sleeper-style): pregame until the game's starters play, then
+    // adjusted by known outcomes, back to the pregame value once the game is final.
+    const proj=models.map(m=>final||!started?m.pregame:m.projected);
+    return {models,final,active:active.length,next,unknown,incomplete,missing,started,proj,pregame,
       probability:unknown?null:final||!started?pregame:missing?null:C.probability(...models),
-      oddsLabel:final||!started?'Pregame %':'Live win %',
+      oddsLabel:final||!started?'Pregame %':'Live win %',live:!final&&started,
       status:unknown?'Status unavailable':final?'Final':active.length?'Live':started?'In progress':'Upcoming'};
   }
   return {summarize};
