@@ -180,7 +180,7 @@ def write_page(cfg):
     # Header matches the rest of the site: nav, eyebrow, big two-tone title, accent rule; banner below it.
     body = f'''<div class="wrap gwrap">
 <nav class="weeks" aria-label="Pages">''' + nav_html("scoreboard") + f'''</nav>
-<header class="sbh"><div><div class="eyebrow">{len(index["leagues"])} conferences · projections &amp; live scores · standard scoring</div><h1>{brand} <em>Scoreboard</em></h1></div></header>
+<header class="sbh"><div><div class="eyebrow">{len(index["leagues"])} conferences · projections &amp; live scores · standard scoring</div><h1>{brand} <em>Games</em></h1></div></header>
 <div class="validation" role="note"><strong>⚠ Validation phase</strong> Questions or inaccuracies? <b>Ping {contact} on Discord</b> with the matchup.</div>
 <a id="overview-back" class="overview-back" href="scoreboard.html" hidden>← All games</a>
 <form id="chooser" class="tools pick"><select id="league" aria-label="League"></select><select id="week" aria-label="Week"></select>
@@ -194,7 +194,7 @@ Records currently follow the published standings. Live odds and minutes remainin
 Tuesday pregame expectations stay frozen. Live projection = points so far + player projection × share of game remaining.
 Questions? Ping {contact} on Discord.</p></div>
 <script src="assets/scoreboard-core.js"></script><script src="assets/scoreboard-overview-model.js"></script><script src="assets/scoreboard-overview.js" defer></script><script src="assets/scoreboard.js" defer></script></body></html>'''
-    Path("reports/scoreboard.html").write_text(page_head(f"{brand} Scoreboard", css) + body, encoding="utf-8")
+    Path("reports/scoreboard.html").write_text(page_head(f"{brand} Games", css) + body, encoding="utf-8")
 
 
 def refresh_players():

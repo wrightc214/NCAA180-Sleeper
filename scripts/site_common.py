@@ -43,7 +43,7 @@ def nav_html(current, weeks=None):
     links.append(f'<a href="standings.html"{cur if current == "standings" else ""}>Standings</a>')
     # Matchups page retired 2026-10-30: the scoreboard is the one Games page all week.
     if current == "scoreboard" or os.path.exists(os.path.join(OUT_DIR, "scoreboard.html")):
-        links.append(f'<a href="scoreboard.html"{cur if current == "scoreboard" else ""}>Scoreboard</a>')
+        links.append(f'<a href="scoreboard.html"{cur if current == "scoreboard" else ""}>Games</a>')
     if current in ("poll", "poll-how", "poll-bots") or os.path.exists(os.path.join(OUT_DIR, "poll.html")):
         links.append(f'<a href="poll.html"{cur if current in ("poll", "poll-how", "poll-bots") else ""}>Poll</a>')
     if current == "managers" or os.path.exists(os.path.join(OUT_DIR, "managers.html")):

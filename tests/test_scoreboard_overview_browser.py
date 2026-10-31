@@ -65,7 +65,7 @@ class OverviewBrowserTests(unittest.TestCase):
                             self.assertEqual(page.locator('.conference .mini-match').count(),sum(len(l['teams']) for l in index['leagues'].values())//2)
                             self.assertEqual(state['stats'],1);self.assertEqual(state['espn'],1);self.assertEqual(state['players'],0)
                             self.assertFalse(page.evaluate('document.documentElement.scrollWidth > innerWidth'))
-                            self.assertEqual(page.locator('a[aria-current="page"]').inner_text(),'Scoreboard')
+                            self.assertEqual(page.locator('a[aria-current="page"]').inner_text(),'Games')
                             statuses=page.locator('.match-status').all_text_contents()
                             want=('Final',) if phase=='post' else ('Live',) if phase=='in' else ('Upcoming',' ET')  # pregame shows next kickoff time
                             self.assertTrue(all(any(k in s for k in want) for s in statuses),(phase,statuses[:4]))
