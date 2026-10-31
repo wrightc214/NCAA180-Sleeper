@@ -3,3 +3,4 @@ numpy
 sleeper-wrapper
 scipy
 Pillow
+pywebpush

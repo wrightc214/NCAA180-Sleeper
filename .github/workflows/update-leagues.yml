@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       script_to_run:
-        description: 'Script to run (league_ids, rosters, users, rosterhistory, matchups, scores, standard_scores, max_points, weekly_awards, players, transactions, drafts, standings, orphans, lineup_streaks, player_values, draft_picks, weekly_report, roster_map, poll, poll_page, matchups_page, gametime_projections, manager_lineups, managers_page, records_page, standings_page, postseason_export, scoreboard, conference_championships, playoff_field, playoff_bracket, bowls, bowls_publish, bowls_redraw, nit, nit_publish, nit_redraw, patch_orphans, all). Postseason scripts are manual only (except conference_championships, which runs in all).'
+        description: 'Script to run (league_ids, rosters, users, rosterhistory, matchups, scores, standard_scores, max_points, weekly_awards, players, transactions, drafts, standings, orphans, lineup_streaks, push_teams, app_page, push_announce, player_values, draft_picks, weekly_report, roster_map, poll, poll_page, matchups_page, gametime_projections, manager_lineups, managers_page, records_page, standings_page, postseason_export, scoreboard, conference_championships, playoff_field, playoff_bracket, bowls, bowls_publish, bowls_redraw, nit, nit_publish, nit_redraw, patch_orphans, all). Postseason scripts are manual only (except conference_championships, which runs in all).'
         required: true
         default: 'all'
       post:
@@ -54,6 +54,10 @@ jobs:
         env:
           # standard_scores: red alert to Chris when standard scoring changes a winner
           DISCORD_WEBHOOK_LM_PRIVATE_DATA: ${{ secrets.DISCORD_WEBHOOK_LM_PRIVATE_DATA }}
+          # push_announce: web push (todo-pwa.md); missing = push skipped, nothing fails
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+          PUSH_ADMIN_TOKEN: ${{ secrets.PUSH_ADMIN_TOKEN }}
+          DISCORD_WEBHOOK_TEAM_STATS: ${{ secrets.DISCORD_WEBHOOK_TEAM_STATS }}
         run: |
           # Default to 'all' if no manual input was provided
           SCRIPT_TO_RUN="${{ github.event.inputs.script_to_run }}"
@@ -113,6 +117,10 @@ jobs:
           # games (before the Matchups page / scoreboard freeze them) and refreshes their scores.
           run conference_championships conference_championships.py all
           run postseason_export     postseason_export.py     all
+          # App (todo-pwa.md): follow-picker lists, the setup page, then push for anything newly final.
+          run push_teams            push_teams.py            all
+          run app_page              app_page.py              all
+          run push_announce         postseason_announce.py   all
 
           # One-time - delete after use
           run patch_orphans          patch_orphans_historic.py
@@ -126,6 +134,14 @@ jobs:
           run nit                      nit.py
           run nit_publish              "nit.py --publish"
           run nit_redraw               "nit.py --redraw"
+          # A manual postseason run (field, bracket, published draws) also pushes anything it made
+          # final; the ledger (data/push) stops repeats.
+          case "$SCRIPT_TO_RUN" in
+              playoff_field|playoff_bracket|bowls|bowls_publish|nit|nit_publish)
+                  SAVED="$SCRIPT_TO_RUN"; SCRIPT_TO_RUN=push_announce
+                  run push_announce postseason_announce.py
+                  SCRIPT_TO_RUN="$SAVED" ;;
+          esac
 
           echo "$FAILED" > /tmp/failed_scripts.txt
 
@@ -248,6 +264,7 @@ jobs:
           git add data/standard 2>/dev/null || true  # separate lines: a missing file must not stop the others
           git add data/StandardAlerts_Season.json 2>/dev/null || true
           git add data/postseason 2>/dev/null || true
+          git add data/push 2>/dev/null || true  # push ledger: stops a result being announced twice
           git add data/projections 2>/dev/null || true; git add data/ScoringCheck_Current.json 2>/dev/null || true
           git add reports/ || true
           git commit -m "Auto-update CSVs" || echo "No changes to commit"

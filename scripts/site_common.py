@@ -5,7 +5,8 @@ nav_html(current)   the tab bar: Weekly Awards (latest week), Roster Map, Standi
                     week_archive_html(week) lists every week on the awards page
                     (once reports/poll.html exists).
                     `current` is an int week, "map", "standings", or "poll".
-page_head(title)    <head> with the same fonts + stylesheet as the weekly report
+page_head(title)    <head> with the same fonts + stylesheet as the weekly report, plus the app
+                    tags (manifest, home-screen icon, assets/app.js) copied from the template
                     (style block lifted from templates/weekly_report.html, so every page
                     stays visually identical without a second copy of the CSS).
 """
@@ -47,6 +48,8 @@ def nav_html(current, weeks=None):
         links.append(f'<a href="managers.html"{cur if current == "managers" else ""}>Managers</a>')
     if current == "records" or os.path.exists(os.path.join(OUT_DIR, "records.html")):
         links.append(f'<a href="records.html"{cur if current == "records" else ""}>Records</a>')
+    if current == "app" or os.path.exists(os.path.join(OUT_DIR, "app.html")):
+        links.append(f'<a href="app.html"{cur if current == "app" else ""}>App</a>')
     return "".join(links)
 
 
@@ -73,10 +76,11 @@ TOTOP = ('<a href="#" class="totop" aria-label="Back to top" hidden>&#8593;</a>'
 def page_head(title, extra_css="", totop=True):
     tpl = open(TEMPLATE, encoding="utf-8").read()
     style = re.search(r"<style>.*?</style>", tpl, re.S).group(0)
-    fonts = re.findall(r"<link [^>]*>", tpl)
+    fonts = re.findall(r"<link [^>]*>", tpl)  # fonts + the app's manifest / home-screen icon links
+    app = re.findall(r'<meta name="(?:theme-color|apple-mobile-web-app-[a-z-]+)"[^>]*>|<script src="assets/app\.js"[^>]*></script>', tpl)
     return ("<!doctype html>\n<html lang=\"en\"><head><meta charset=\"utf-8\">"
             "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n"
-            f"<title>{html.escape(title)}</title>\n" + "\n".join(fonts) + "\n" + style +
+            f"<title>{html.escape(title)}</title>\n" + "\n".join(fonts) + "\n" + "".join(app) + "\n" + style +
             (f"\n<style>{extra_css}</style>" if extra_css else "") + "\n</head><body>" + (TOTOP if totop else ""))
 
 

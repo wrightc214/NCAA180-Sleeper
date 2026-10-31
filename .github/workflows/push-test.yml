@@ -1,0 +1,32 @@
+name: Push test
+
+# Sends a test notification to tester phones only (phones that opened app.html?test=1).
+# Real members never get these. Needs secrets VAPID_PRIVATE_KEY + PUSH_ADMIN_TOKEN and
+# config/push.json -> worker_url.
+
+on:
+  workflow_dispatch:
+    inputs:
+      message:
+        description: "Text of the test notification"
+        default: "Test push from NCAA 180"
+      as_week:
+        description: "Instead, send a sample results push built from a past postseason (year, e.g. 2025); blank = plain test"
+        default: ""
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements.txt
+      - name: Send
+        env:
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+          PUSH_ADMIN_TOKEN: ${{ secrets.PUSH_ADMIN_TOKEN }}
+          MESSAGE: ${{ github.event.inputs.message }}
+          AS_WEEK: ${{ github.event.inputs.as_week }}
+        run: python scripts/push_test.py
