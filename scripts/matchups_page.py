@@ -322,7 +322,10 @@ ul.mu li.rvr{border-left:5px solid var(--gold,#c9a227)}
 .side img{width:28px;height:28px;object-fit:contain}
 .side .pt{display:inline-block;padding:3px 9px;border-radius:3px;font-weight:700;line-height:1.25;max-width:100%}
 .side small{display:block;color:var(--mute);font-size:12px;margin-top:2px}
-.side .n{font:700 18px var(--num);text-align:right}
+.side .n{font:700 18px var(--num);text-align:right;color:var(--mute)}
+.side .n .nl{display:block;font:700 10px var(--num);letter-spacing:.08em;margin:0}
+.proj-banner{border:1px solid var(--line);border-left:5px solid var(--accent,#c8102e);border-radius:6px;padding:10px 12px;background:var(--panel);font-size:14px}
+.proj-banner a{font-weight:700}
 .bar{display:flex;height:8px;border-radius:4px;overflow:hidden;margin:6px 0 2px;background:var(--line)}
 .bar i{display:block}
 .ew{font-size:12px;color:var(--mute);margin-top:3px}
@@ -342,7 +345,7 @@ def write_page(g, wk, stamp):
         bg, fg = col.get(team, ("#14213a", "#ffffff"))
         r = f"#{rank} " if rank != "" else ""
         return (f'<div class="side"><span class="logo-cell">{logo(team)}</span><div><span class="pt" style="background:{bg};color:{fg}">{e(r)}{e(team)}</span>'
-                f'<small>{e(rec)} · {e(lg)}</small></div><span class="n">{projv:.1f}</span></div>')
+                f'<small>{e(rec)} · {e(lg)}</small></div><span class="n"><small class="nl">PROJ</small>{projv:.1f}</span></div>')
 
     def item(r, cls=""):
         ca, cb = bar_colors(r.Team, r.OppTeam, prim)
@@ -353,7 +356,7 @@ def write_page(g, wk, stamp):
                 + f'<div class="bar"><i style="width:{p:.1f}%;background:{ca}"></i><i style="width:{100 - p:.1f}%;background:{cb}"></i></div>'
                 + f'<div class="meta"><span>{e(r.Team)} {label(p)}</span><span>{e(r.OppTeam)} {label(100 - p)}</span></div>'
                 + (f'<div class="ew">If they\'d played every week: {e(((r.EveryWeekLeader + " ") if r.EveryWeekLeader else ""))}{e(r.EveryWeek)}</div>' if r.EveryWeek else "")
-                + f'<a class="scoreboard-link" href="scoreboard.html?season={int(r.Year)}&amp;league={e(r.LeagueID)}&amp;week={int(r.Week)}&amp;roster={e(r.RosterID)}">Open scoreboard →</a></li>')
+                + f'<a class="scoreboard-link" href="scoreboard.html?season={int(r.Year)}&amp;league={e(r.LeagueID)}&amp;week={int(r.Week)}&amp;roster={e(r.RosterID)}">Live score &amp; lineups →</a></li>')
 
     def sec(title, d, note="", cls=""):
         if d.empty:
@@ -380,12 +383,13 @@ def write_page(g, wk, stamp):
 <header><div><div class="eyebrow">15 conferences · 180 teams · regular season</div>
 <h1>{lcfg.brand()} <em>Week {wk} matchups</em></h1></div>
 <div class="kpis"><div class="kpi"><b>{len(g)}</b><span>Games</span></div><div class="kpi"><b>{len(rvr)}</b><span>Ranked vs ranked</span></div></div></header>
+<section><div class="proj-banner"><b>These are Tuesday projections, not live scores.</b> Each number is a team's projected total from Tuesday and won't change during the week. <a href="scoreboard.html?week={wk}">Live scores for every game →</a></div></section>
 <section><div class="callouts">{calls}</div></section>
 <section class="tools"><label for="lg">League</label><select id="lg"><option value="">All leagues</option>{opts}</select></section>
 {sec("Ranked vs ranked", rvr, cls="rvr")}
 {sec("Ranked teams in action", ranked)}
 {sec("All other games", rest.sort_values(["League", "Team"]))}
-<p class="note"><b>Big number = lineup projection:</b> each roster's best projected lineup (Sleeper projections, each league's scoring), not necessarily the lineup the manager starts. <b>If they'd played every week</b> = each team's weekly scores compared head to head for every week so far. Win chance uses the lineup projection and assumes each team scores within about ±{SPREAD:.0f} points of its projection (backtest 2021–2025: picks the winner 73% of the time). Projections as of {e(when)}; updated each Tuesday. <a href="../{OUT_CSV}">Raw CSV</a></p>
+<p class="note"><b>PROJ = lineup projection:</b> each roster's best projected lineup (Sleeper projections, each league's scoring), not necessarily the lineup the manager starts. <b>If they'd played every week</b> = each team's weekly scores compared head to head for every week so far. Win chance uses the lineup projection and assumes each team scores within about ±{SPREAD:.0f} points of its projection (backtest 2021–2025: picks the winner 73% of the time). Projections as of {e(when)}; updated each Tuesday. <a href="../{OUT_CSV}">Raw CSV</a></p>
 </div>
 <script>
 document.getElementById('lg').addEventListener('change', function () {{
