@@ -50,7 +50,7 @@ BODY = """
 <nav class="weeks" aria-label="Pages">{nav}</nav>
 <main class="app">
   <div>
-    <h1 id="title">NCAA 180 app</h1>
+    <h1 id="title">Notifications</h1>
     <p class="lede">Get a notification when your teams' games are final. No account, no login.
     <span class="tester" id="tester" hidden>Tester phone</span></p>
   </div>
@@ -279,7 +279,7 @@ BODY = """
 
 
 def main():
-    page = page_head("NCAA 180 app: notifications", extra_css=CSS) + BODY.replace("{nav}", nav_html("app")) + "</body></html>\n"
+    page = page_head("NCAA 180: notification settings", extra_css=CSS) + BODY.replace("{nav}", nav_html("app")) + "</body></html>\n"
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     old = open(OUT, encoding="utf-8").read() if os.path.exists(OUT) else ""
     if old != page:

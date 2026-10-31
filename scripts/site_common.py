@@ -49,7 +49,7 @@ def nav_html(current, weeks=None):
     if current == "records" or os.path.exists(os.path.join(OUT_DIR, "records.html")):
         links.append(f'<a href="records.html"{cur if current == "records" else ""}>Records</a>')
     if current == "app" or os.path.exists(os.path.join(OUT_DIR, "app.html")):
-        links.append(f'<a href="app.html"{cur if current == "app" else ""}>App</a>')
+        links.append(f'<a href="app.html"{cur if current == "app" else ""}>Notifications</a>')
     return "".join(links)
 
 

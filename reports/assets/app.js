@@ -58,13 +58,31 @@
     later.focus();
   }
 
+  // Settings button on every page (bottom-left; the back-to-top arrow is bottom-right), so people
+  // can always get back to their notification settings.
+  function bell() {
+    if (/\/app\.html$/.test(location.pathname)) return;
+    var a = document.createElement("a");
+    a.href = base + "app.html";
+    a.className = "n180-bell";
+    a.setAttribute("aria-label", "Notification settings");
+    a.title = "Notification settings";
+    a.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6V11a7 7 0 0 0-5.5-6.84V3.5a1.5 1.5 0 0 0-3 0v.66A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2Z"/></svg>';
+    var css = document.createElement("style");
+    css.textContent = ".n180-bell{position:fixed;left:16px;bottom:16px;z-index:50;width:44px;height:44px;border-radius:50%;" +
+      "display:grid;place-items:center;background:var(--panel,#fff);color:var(--ink,#14213a);border:1px solid var(--line,#d5dbe5);" +
+      "box-shadow:0 2px 8px rgba(0,0,0,.18)}@media print{.n180-bell{display:none}}";
+    document.head.appendChild(css);
+    document.body.appendChild(a);
+  }
+
   // Only prompt once push is live (config/push.json -> worker_url set), so members never see a
   // "set up notifications" sheet that leads to "coming soon".
   function start() {
     if (!base) return;
     fetch(base + "../config/push.json", { cache: "no-cache" })
       .then(function (r) { return r.json(); })
-      .then(function (c) { if (c && c.worker_url) showPrompt(); })
+      .then(function (c) { if (c && c.worker_url) { bell(); showPrompt(); } })
       .catch(function () {});
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
