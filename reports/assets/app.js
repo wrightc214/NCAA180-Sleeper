@@ -1,6 +1,6 @@
 // NCAA 180 app layer, loaded on every page (todo-pwa.md):
 //  1. registers the service worker (offline + push)
-//  2. first-run prompt: a full-screen "Set up NCAA 180" sheet on every open while this phone has no
+//  2. first-run prompt (only once push is live): a full-screen "Set up NCAA 180" sheet on every open while this phone has no
 //     follows or notifications are off. "Not now" hides it for this visit only; it never blocks the site.
 // The setup itself lives on app.html.
 (function () {
@@ -58,6 +58,15 @@
     later.focus();
   }
 
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", showPrompt);
-  else showPrompt();
+  // Only prompt once push is live (config/push.json -> worker_url set), so members never see a
+  // "set up notifications" sheet that leads to "coming soon".
+  function start() {
+    if (!base) return;
+    fetch(base + "../config/push.json", { cache: "no-cache" })
+      .then(function (r) { return r.json(); })
+      .then(function (c) { if (c && c.worker_url) showPrompt(); })
+      .catch(function () {});
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
+  else start();
 })();
