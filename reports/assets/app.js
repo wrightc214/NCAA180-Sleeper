@@ -1,6 +1,6 @@
 // NCAA 180 app layer, loaded on every page (todo-pwa.md):
 //  1. registers the service worker (offline + push)
-//  2. first-run prompt (only once push is live): a full-screen "Set up NCAA 180" sheet on every open while this phone has no
+//  2. first-run prompt (installed app only, once push is live): a full-screen "Set up NCAA 180" sheet on every open while this phone has no
 //     follows or notifications are off. "Not now" hides it for this visit only; it never blocks the site.
 // The setup itself lives on app.html.
 (function () {
@@ -23,7 +23,12 @@
     return !(hasFollows && s.on && granted);
   }
 
+  function installed() {
+    return window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+  }
+
   function showPrompt() {
+    if (!installed()) return;  // Chris, 2026-10-31: the full-screen prompt is for the installed app only; browsers use the bell
     if (/\/app\.html$/.test(location.pathname)) return;     // already on setup
     try { if (sessionStorage.getItem(SNOOZE)) return; } catch (e) {}
     if (!needsSetup()) return;
