@@ -5,7 +5,7 @@ them against Postseason_Historic.csv (Chris, 2026-10-27). Writes only to a scrat
 Exact checks (must match history): CCG pairings + winners; playoff field; bracket built from
 that year's real seeds, every round's pairings + winners; bowl and NIT pools; NIT advancement
 and bracket when fed the real group draws.
-Rule checks (random draws can't match history): a fresh bowl draw and fresh NIT Group Stage 1
+Rule checks (random draws can't match history): fresh bowl draws under the tiered rules and fresh NIT Group Stage 1
 and 2 draws obey the rules (sizes, every team once, no same-league bowl games, state/region
 exclusions, league spreading). Info: the bots' seeding vs the seeds actually used.
 
@@ -84,22 +84,39 @@ def main():
     _, field_path, _ = ps.paths(argparse.Namespace(data_dir=d))
     _, cfg = ps.config()
     hb = h[h["Event"] == "Bowl"]
-    pool32, notes, table = B.build_pool(y, field_path, cfg["bowls"])
-    check(f"bowl count ({len(table)}) and pool match history", len(table) == len(hb) and {t["Team"] for t in pool32} == set(hb["TeamA"]) | set(hb["TeamB"]))
-    check("bowls used play in the same weeks as history", sorted(str(b["week"]) for b in table) == sorted(hb["Week"]))
-    ok_all = True
+    bcfg = cfg["bowls"]
+    pool32, notes = B.build_pool(y, field_path, bcfg)
+    check(f"bowl pool ({len(pool32)} teams) matches history", len(pool32) == 2 * len(hb)
+          and {t["Team"] for t in pool32} == set(hb["TeamA"]) | set(hb["TeamB"]))
+    hist = B.history(y, bcfg)
+    tiers = {t["name"]: t for t in bcfg["tiers"]}
+    fixed = sum(len(t["bowls"]) for t in bcfg["tiers"] if t["fill"] != "random")
+    ok_all, repeats = True, 0
     for k in range(200):
-        gms, unfilled, left = B.draw(pool32, table, random.Random(k))
+        gms, unfilled, left, _ = B.draw(y, pool32, bcfg, random.Random(k), hist)
+        d0 = B.Draw(y, pool32, bcfg, random.Random(0), hist)
         placed = [t for _, x, z in gms for t in (x, z)]
-        bad = [b["name"] for b, x, z in gms if x["LeagueID"] == z["LeagueID"]
-               or (b.get("exclude_state") and b["exclude_state"] in (x["State"], z["State"]))
-               or (b.get("exclude_region") and b["exclude_region"] in (x["Region"], z["Region"]))
-               or (b.get("max_one_state") and x["State"] == z["State"] == b["max_one_state"])]
-        once = len(placed) == len({(t["LeagueID"], t["RosterID"]) for t in placed})
-        if bad or not once or unfilled or left:
+        bad = []
+        for b, x, z in gms:
+            if x["LeagueID"] == z["LeagueID"]:
+                bad.append(f"{b['name']}: same league")
+            if b["tier"] == "Opening Bowls" or (b["tier"] == "Showcase Bowls" and not b.get("pool")):
+                spots = [z] if b.get("lean") and d0.lg(x) == b["lean"] else [x, z]
+                if any(not d0.allowed(b, t) for t in spots):
+                    bad.append(f"{b['name']}: exclusion")
+            if frozenset((B.slot(x), B.slot(z))) in hist[0]:
+                if b["tier"] == "Marquee Bowls":
+                    repeats += 1
+                else:
+                    bad.append(f"{b['name']}: repeat matchup")
+        once = len(placed) == len({B.slot(t) for t in placed})
+        showcase_all = {b["name"] for b, _, _ in gms if b["tier"] == "Showcase Bowls"} == {b["name"] for b in tiers["Showcase Bowls"]["bowls"]}
+        if bad or not once or unfilled or left or not showcase_all or len(gms) != len(pool32) // 2:
             ok_all = False
-            print(f"    draw {k}: rule problems {bad} unfilled {unfilled} unplaced {[t['Team'] for t in left]}")
-    check("200 fresh bowl draws obey the rules (no same-league, exclusions, every team once, all filled)", ok_all)
+            print(f"    draw {k}: {bad} unfilled {unfilled} unplaced {[t['Team'] for t in left]} showcase_all={showcase_all}")
+    check(f"200 fresh bowl draws obey the new rules (tiers filled, all {fixed} fixed bowls played, no same-league, "
+          "exclusions on random spots, no recent rematch outside Marquee, every team once)", ok_all)
+    print(f"  info  Marquee rematches across 200 draws (penalised, allowed only if unavoidable): {repeats}")
     code, out = run("scripts/bowls.py", "--year", str(y), "--from-history", "--data-dir", d)
 
     print("NIT")

@@ -51,6 +51,25 @@ def round_name(event, year, raw):
     return r.get(str(year), {}).get(raw) or r.get("*", {}).get(raw) or raw
 
 
+def stagg():
+    """NIT Final display name (Chris, 2026-10-28: past finals relabeled too)."""
+    return lcfg.cfg()["postseason"]["bowls"].get("nit_final_label", "")
+
+
+def location(bowl):
+    """League location for a bowl that's in the current lineup (or the Stagg Bowl); else None."""
+    if not bowl:
+        return None
+    b = lcfg.cfg()["postseason"]["bowls"]
+    if bowl == b.get("nit_final_label"):
+        return b.get("nit_final_location")
+    for tier in b["tiers"]:
+        for x in tier["bowls"]:
+            if x["name"] == bowl:
+                return x.get("location")
+    return None
+
+
 def week_label(week):
     w = disp()["week_labels"]
     last = lcfg.last_regular_week()
@@ -114,7 +133,8 @@ def build(year, hist, lids, short):
         rnd = "Bowl" if ev == "Bowl" else ("Conference Championship" if ev == "CCG" else round_name(ev, year, r.RoundName))
         games.append({"id": f"{year}-{ev}-W{r.W}-{counters[key]:02d}", "event": ev, "week": r.W,
                       "round": rnd, "round_raw": r.RoundName,
-                      "bowl": r.Bowl if ev == "Bowl" else "",
+                      "bowl": r.Bowl if ev == "Bowl" else (stagg() if ev == "NIT" and rnd == "Final" else ""),
+                      "location": location(r.Bowl if ev == "Bowl" else (stagg() if ev == "NIT" and rnd == "Final" else "")),
                       "conference": short.get(r.Bowl.strip(), r.Bowl) if ev == "CCG" else "",
                       "tier": tiers.get(r.W, "") if ev == "Bowl" else "",
                       "group": r.Bowl if ev in ("NIT", "Playoff") and len(sd) > 2 else "",
@@ -135,7 +155,7 @@ def build(year, hist, lids, short):
                 elif ev == "Bowl":
                     parts.append(tiers.get(w, "Bowls"))
                 elif ev == "NIT":
-                    parts.append(f"NIT {PLURAL.get(rd, rd)}")
+                    parts.append(stagg() if rd == "Final" and stagg() else f"NIT {PLURAL.get(rd, rd)}")
                 else:
                     parts.append(f"Playoff {rd}" if rd in nit_rounds else rd)
         label, short_label = week_label(w)
