@@ -1,0 +1,16 @@
+{
+  "name": "NCAA 180",
+  "short_name": "NCAA 180",
+  "description": "Standings, scores, polls and postseason for the NCAA 180 super league.",
+  "id": "./",
+  "start_url": "index.html?source=app",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#eef1f5",
+  "theme_color": "#14213a",
+  "icons": [
+    {"src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "assets/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}

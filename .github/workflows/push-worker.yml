@@ -1,0 +1,35 @@
+name: Push store (Cloudflare Worker)
+
+# Deploys worker/ (the anonymous push-subscription store) to Cloudflare and applies its
+# database schema. Runs by hand, or when worker/ changes on main.
+# Needs (repo Settings -> Secrets and variables -> Actions):
+#   secrets   CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, PUSH_ADMIN_TOKEN
+#   variable  D1_DATABASE_ID   (the id of the D1 database "ncaa180-push")
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["worker/**"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fill in the database id
+        run: |
+          if [ -z "${{ vars.D1_DATABASE_ID }}" ]; then echo "::error::Repo variable D1_DATABASE_ID is not set"; exit 1; fi
+          sed -i "s/__D1_DATABASE_ID__/${{ vars.D1_DATABASE_ID }}/" worker/wrangler.toml
+      - name: Apply schema + deploy
+        uses: cloudflare/wrangler-action@v3
+        env:
+          ADMIN_TOKEN: ${{ secrets.PUSH_ADMIN_TOKEN }}
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: worker
+          secrets: |
+            ADMIN_TOKEN
+          preCommands: npx wrangler d1 execute ncaa180-push --remote --file=schema.sql
+          command: deploy
