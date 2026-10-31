@@ -3,7 +3,7 @@
   "app_name": "NCAA 180",
   "group": "ncaa180",
   "_group_note": "Super-league id (Chris, 2026-10-30: keep the door open to more super leagues in one app). Every follow stored in the push store is prefixed '<group>|' (e.g. 'ncaa180|Big Sky:6'); this pipeline only reads its own group's follows.",
-  "worker_url": "",
+  "worker_url": "https://ncaa180-push.wrightc214.workers.dev",
   "_worker_url_note": "Set after the Cloudflare Worker is deployed, e.g. https://ncaa180-push.<account>.workers.dev (no trailing slash). Empty = push UI shows 'coming soon' and the sender skips push.",
   "vapid_public_key": "BAyU4KWODLn8qoh-FykglSjtfa8oKqUeKaOnUXiIBY6xxMZohfWn_ASfXDNYBbgmybXAThOk-BrivTU-lH-mojE",
   "vapid_subject": "https://ncaa180.short.gy",
