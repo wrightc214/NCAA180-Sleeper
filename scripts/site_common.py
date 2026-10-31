@@ -28,6 +28,9 @@ def built_weeks():
     return sorted(out)
 
 
+BELL = ('<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" style="vertical-align:-3px"><path fill="currentColor" d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6V11a7 7 0 0 0-5.5-6.84V3.5a1.5 1.5 0 0 0-3 0v.66A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2Z"/></svg>')
+
+
 def nav_html(current, weeks=None):
     """Main tabs: Weekly Awards (latest week; older weeks via week_archive_html on that page),
     Roster Map, Standings, Matchups, Poll, Managers. Poll sub-pages (how it works, bot ballots) highlight Poll."""
@@ -49,7 +52,9 @@ def nav_html(current, weeks=None):
     if current == "records" or os.path.exists(os.path.join(OUT_DIR, "records.html")):
         links.append(f'<a href="records.html"{cur if current == "records" else ""}>Records</a>')
     if current == "app" or os.path.exists(os.path.join(OUT_DIR, "app.html")):
-        links.append(f'<a href="app.html"{cur if current == "app" else ""}>Notifications</a>')
+        # Notification settings: a bell icon in the tab row (Chris, 2026-10-30: in the menu, not floating over data)
+        links.append(f'<a href="app.html" class="n180-bell" aria-label="Notification settings" title="Notification settings"'
+                     f'{cur if current == "app" else ""}>{BELL}</a>')
     return "".join(links)
 
 
