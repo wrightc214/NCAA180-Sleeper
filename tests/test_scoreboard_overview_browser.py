@@ -32,7 +32,7 @@ class OverviewBrowserTests(unittest.TestCase):
                 for width in (1450,400):
                     for phase in ('pre','in','post'):
                         with self.subTest(width=width,phase=phase):
-                            page=browser.new_page(viewport={'width':width,'height':1100})
+                            page=browser.new_page(viewport={'width':width,'height':1100});page.add_init_script("try{sessionStorage.setItem('ncaa180.push.snooze','1')}catch(e){}")
                             errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
                             state={'fail':None,'stats':0,'espn':0,'players':0}
                             rs=copy.deepcopy(fixture['rosters'])
@@ -62,34 +62,35 @@ class OverviewBrowserTests(unittest.TestCase):
                             page.goto(f'http://127.0.0.1:{server.server_port}/reports/scoreboard.html?week=6')
                             page.wait_for_function("document.getElementById('updated')?.textContent.startsWith('Updated')")
                             self.assertEqual(page.locator('.conference').count(),len(index['leagues']))
-                            self.assertEqual(page.locator('.mini-match').count(),sum(len(l['teams']) for l in index['leagues'].values())//2)
+                            self.assertEqual(page.locator('.conference .mini-match').count(),sum(len(l['teams']) for l in index['leagues'].values())//2)
                             self.assertEqual(state['stats'],1);self.assertEqual(state['espn'],1);self.assertEqual(state['players'],0)
                             self.assertFalse(page.evaluate('document.documentElement.scrollWidth > innerWidth'))
                             self.assertEqual(page.locator('a[aria-current="page"]').inner_text(),'Scoreboard')
                             statuses=page.locator('.match-status').all_text_contents()
-                            self.assertTrue(all(('Final' if phase=='post' else 'Live' if phase=='in' else 'Upcoming') in s for s in statuses))
-                            self.assertIn('PREGAME %' if phase!='in' else 'LIVE WIN %',page.locator('.match-meta').first.inner_text())
+                            want=('Final',) if phase=='post' else ('Live',) if phase=='in' else ('Upcoming',' ET')  # pregame shows next kickoff time
+                            self.assertTrue(all(any(k in s for k in want) for s in statuses),(phase,statuses[:4]))
+                            self.assertIn('PRE %' if phase!='in' else 'LIVE %',page.locator('.hdr3').first.inner_text().upper())
                             if os.environ.get('SCOREBOARD_SCREENSHOTS'):
                                 dest=Path(os.environ['SCOREBOARD_SCREENSHOTS']);dest.mkdir(parents=True,exist_ok=True)
                                 page.screenshot(path=str(dest/f'overview-{phase}-{width}.png'),full_page=True)
                             lid=next(iter(index['leagues']));state['fail']=lid
-                            old=page.locator('.score-row').all_text_contents()
+                            old=page.locator('.conference .score-row').all_text_contents()
                             page.get_by_role('button',name='↻ Refresh').click()
                             page.wait_for_function("document.getElementById('updated')?.textContent.includes('conferences refreshed')")
                             self.assertEqual(page.locator('.conference-error').count(),1)
                             self.assertIn('STALE',page.locator('.conference-error').inner_text())
-                            self.assertEqual(page.locator('.score-row').all_text_contents(),old)
+                            self.assertEqual(page.locator('.conference .score-row').all_text_contents(),old)
                             state['fail']=None
                             page.select_option('#league',lid)
                             page.wait_for_function("document.getElementById('updated')?.textContent.startsWith('Updated') && document.querySelectorAll('.conference').length===1")
-                            self.assertEqual(page.locator('.mini-match').count(),6)
+                            self.assertEqual(page.locator('.conference .mini-match').count(),6)
                             page.select_option('#week','5')
                             page.wait_for_function("document.getElementById('updated')?.textContent.startsWith('Updated') && location.search.includes('week=5')")
-                            self.assertEqual(page.locator('.mini-match').count(),6)
+                            self.assertEqual(page.locator('.conference .mini-match').count(),6)
                             page.select_option('#week','6')
                             page.select_option('#week','5')
-                            page.wait_for_function("document.getElementById('updated')?.textContent.startsWith('Updated') && location.search.includes('week=5') && document.querySelectorAll('.mini-match').length===6")
-                            page.locator('.mini-match').first.click()
+                            page.wait_for_function("document.getElementById('updated')?.textContent.startsWith('Updated') && location.search.includes('week=5') && document.querySelectorAll('.conference .mini-match').length===6")
+                            page.locator('.conference .mini-match').first.click()
                             page.wait_for_function("document.getElementById('updated')?.textContent.startsWith('Updated') && document.querySelectorAll('.big').length===2")
                             self.assertTrue(page.locator('#overview-back').is_visible())
                             page.locator('#overview-back').click()

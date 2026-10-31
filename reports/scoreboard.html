@@ -4,7 +4,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Barlow:wght@400;600;700&family=Barlow+Condensed:wght@500;600&display=swap">
-<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png"><meta name="theme-color" content="#14213a"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="NCAA 180"><script src="assets/app.js" defer></script>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<meta name="theme-color" content="#14213a"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="NCAA 180"><script src="assets/app.js" defer></script>
 <style>
 /* Layout: stadium-scoreboard header, then a two-column stat sheet (poll left, week detail right) that stacks on phones */
 :root{--bg:#eef1f5;--panel:#ffffff;--ink:#14213a;--mute:#5d6a80;--line:#d5dbe5;--accent:#c8102e;--gold:#b8860b;--up:#1d7a43;--dn:#b3261e;
@@ -76,18 +78,51 @@ footer{font-size:12px;color:var(--mute)}
 @media(max-width:700px){.game-view .sbh h1{font-size:34px}.game-view .sbh{padding-bottom:8px}}
 .conference-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:start}.gwrap:has(.conference-grid){max-width:1450px}.conference{padding:0;min-width:0;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}.conference h2{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0;padding:10px 12px;font:800 20px var(--num);background:#14213a;color:#fff}.conference h2 span{font:600 10px var(--sans,sans-serif);letter-spacing:.04em;text-transform:uppercase}.mini-match{display:block;padding:8px 12px 9px;border-top:1px solid var(--line);color:var(--ink);text-decoration:none}.mini-match:hover,.mini-match:focus-visible{background:color-mix(in srgb,var(--panel),var(--ink) 7%);outline:2px solid #38638b;outline-offset:-2px}.match-meta{display:flex;justify-content:space-between;gap:8px;font:600 10px var(--sans,sans-serif);text-transform:uppercase;letter-spacing:.04em;color:var(--mute);margin-bottom:4px}.match-status.is-live{color:#16743b;font-weight:800}.score-row{display:grid;grid-template-columns:24px minmax(0,1fr) 66px 46px;gap:6px;align-items:center;min-height:28px}.team-icon{display:flex;width:22px;height:22px;align-items:center;justify-content:center;border-radius:3px;overflow:hidden}.team-icon img{width:100%;height:100%;object-fit:contain;background:#fff}.school{font-size:14px;overflow-wrap:anywhere}.score,.chance{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--num);font-size:17px}.chance{font-size:14px;font-weight:500;color:var(--mute)}.winner .school,.winner .score{font-weight:800}.conference-note,.conference-error{padding:8px 12px;margin:0;font-size:12px}.conference-error{background:#fff0d7;color:#6f2a00;border-top:1px solid #dca665}.overview-back{font-weight:700;color:var(--ink)}[hidden]{display:none!important}@media(max-width:1100px){.conference-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:650px){.conference-grid{grid-template-columns:1fr;gap:14px}.school{font-size:15px}.score-row{min-height:30px}}.pick:has(#game[hidden]) #league{flex:1 1 240px}.pick:has(#game[hidden]) #week{flex:0 1 130px}
 .conference h2.has-logo{justify-content:center;padding:8px 12px}.lgtag{display:flex;align-items:center;background:#fff;border-radius:6px;padding:4px 14px}.lgtag img{display:block;height:32px;max-width:150px;object-fit:contain}
+/* Games page (Chris, 2026-10-30): Score | Proj | Win % in every state; status strip; preview callouts;
+   ranked sections; collapsible conferences. */
+.score-row.r3{grid-template-columns:22px minmax(0,1fr) 54px 50px 44px;gap:5px}
+.r3 .school{display:block;line-height:1.15;min-width:0}
+.r3 .school .rec{display:block;margin-top:1px;font-size:11px;color:var(--mute);font-weight:500}
+.r3 .school .rk{font-family:var(--num)}
+.r3 .score{font-size:16px;font-weight:700}.r3 .score.dash{color:var(--mute);font-weight:400}
+.r3 .proj{text-align:right;font:500 15px var(--num);color:var(--mute);font-variant-numeric:tabular-nums}
+.r3 .chance{font-size:13px}
+.hdr3{display:grid;grid-template-columns:22px minmax(0,1fr) 54px 50px 44px;gap:5px;font:600 10px var(--sans,sans-serif);text-transform:uppercase;letter-spacing:.04em;color:var(--mute);margin-bottom:4px}
+.hdr3 span:nth-child(n+3){text-align:right}
+.hdr3 .match-status{grid-column:1/3}.hdr3>span:first-child{display:none}
+.mini-match .ew{font-size:11px;color:var(--mute);margin-top:4px}
+.wkstate{border:1px solid var(--line);border-left:5px solid #7a5cff;border-radius:6px;padding:9px 12px;background:var(--panel);font-size:14px;margin:4px 0 14px}
+.wk-live{border-left-color:#16743b}.wk-live b:first-child{color:#16743b}.wk-fin{border-left-color:#555}
+.callouts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-bottom:14px}
+.callouts div{border:1px solid var(--line);border-radius:6px;padding:10px 12px;background:var(--panel);font-size:14px}
+.callouts b{display:block;font:700 11px var(--num);letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin-bottom:4px}
+h3.sec{font:800 15px var(--num);text-transform:uppercase;letter-spacing:.04em;margin:16px 0 8px}
+h3.sec small{font:600 12px var(--sans,sans-serif);color:var(--mute);text-transform:none;letter-spacing:0;margin-left:6px}
+.feat{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+.featured .mini-match{border-top:0}
+details.sec-d>summary,details.conference>summary{list-style:none;cursor:pointer}
+details.sec-d>summary::-webkit-details-marker,details.conference>summary::-webkit-details-marker{display:none}
+details.sec-d>summary h3::before{content:"▸ "}details.sec-d[open]>summary h3::before{content:"▾ "}
+details.conference>summary h2{position:relative}
+details.conference>summary h2::after{content:"▾";position:absolute;right:12px;font-size:14px;opacity:.8}
+details.conference:not([open])>summary h2::after{content:"▸"}
+.conference h2 .csum{position:absolute;left:12px;font:600 11px var(--sans,sans-serif);text-transform:none;letter-spacing:0;opacity:.9}
+.conference h2.has-logo .csum{position:absolute}
+details.conference>summary:focus-visible{outline:2px solid #38638b;outline-offset:-2px}
+@media(max-width:400px){.score-row.r3,.hdr3{grid-template-columns:20px minmax(0,1fr) 50px 46px 38px}.r3 .school{font-size:14px}}
 </style>
 </head><body><a href="#" class="totop" aria-label="Back to top" hidden>&#8593;</a><script>(function(){var b=document.currentScript.previousElementSibling;function f(){b.hidden=window.scrollY<window.innerHeight*0.9;}window.addEventListener("scroll",f,{passive:true});window.addEventListener("load",f);b.addEventListener("click",function(ev){ev.preventDefault();var r=window.matchMedia("(prefers-reduced-motion: reduce)").matches;window.scrollTo({top:0,behavior:r?"auto":"smooth"});});})();</script><div class="wrap gwrap">
-<nav class="weeks" aria-label="Pages"><a href="week-07.html">Weekly Awards</a><a href="roster-map.html">Roster Map</a><a href="standings.html">Standings</a><a href="matchups.html">Matchups</a><a href="scoreboard.html" aria-current="page">Scoreboard</a><a href="poll.html">Poll</a><a href="managers.html">Managers</a><a href="records.html">Records</a></nav>
-<header class="sbh"><div><div class="eyebrow">15 conferences · live scores · standard scoring</div><h1>NCAA 180 <em>Scoreboard</em></h1></div></header>
+<nav class="weeks" aria-label="Pages"><a href="week-07.html">Weekly Awards</a><a href="roster-map.html">Roster Map</a><a href="standings.html">Standings</a><a href="scoreboard.html" aria-current="page">Scoreboard</a><a href="poll.html">Poll</a><a href="managers.html">Managers</a><a href="records.html">Records</a><a href="app.html" class="n180-bell" aria-label="Notification settings" title="Notification settings"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" style="vertical-align:-3px"><path fill="currentColor" d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6V11a7 7 0 0 0-5.5-6.84V3.5a1.5 1.5 0 0 0-3 0v.66A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2Z"/></svg></a></nav>
+<header class="sbh"><div><div class="eyebrow">15 conferences · projections &amp; live scores · standard scoring</div><h1>NCAA 180 <em>Scoreboard</em></h1></div></header>
 <div class="validation" role="note"><strong>⚠ Validation phase</strong> Questions or inaccuracies? <b>Ping @Wrightc214 on Discord</b> with the matchup.</div>
 <a id="overview-back" class="overview-back" href="scoreboard.html" hidden>← All games</a>
 <form id="chooser" class="tools pick"><select id="league" aria-label="League"></select><select id="week" aria-label="Week"></select>
 <select id="game" aria-label="Game"></select></form>
 <div class="tools"><button id="refresh" type="button">↻ Refresh</button><span id="updated" role="status">Loading…</span></div>
-<p id="overview-help" class="note" hidden>Select a game for player details. Final games show Tuesday’s pregame win chance; live games show an estimate. — means odds unavailable.</p>
+<p id="overview-help" class="note" hidden>One page all week: projections before kickoff, live scores once games start. Tap a game for both lineups.</p>
 <p id="error" role="alert" hidden></p><div id="board" aria-busy="true"></div>
-<p class="note">Scores retain Sleeper points and apply the standard-rule correction. † appears only when a scoring-rule difference changes a team’s score.
+<p class="note"><b>Score</b> = points scored so far (– = no starter has played). <b>Proj</b> = Tuesday projection; once a game's players start it adjusts for known results (points so far + projections for players still to play), and it returns to the Tuesday number when the game is final. <b>Win %</b> follows the same rule: pregame until the game starts, live while it's on, pregame again at the final.
+Scores retain Sleeper points and apply the standard-rule correction. † appears only when a scoring-rule difference changes a team’s score.
 Records currently follow the published standings. Live odds and minutes remaining are estimates, not official results.
 Tuesday pregame expectations stay frozen. Live projection = points so far + player projection × share of game remaining.
 Questions? Ping @Wrightc214 on Discord.</p></div>

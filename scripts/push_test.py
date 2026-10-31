@@ -63,7 +63,7 @@ def main():
         items = sample_week(year, week)
         if not items:
             sys.exit(f"No postseason games found for {as_week} in {HIST}")
-        ann = {"id": f"test-{stamp}", "event": "results", "test": True, "url": "matchups.html",
+        ann = {"id": f"test-{stamp}", "event": "results", "test": True, "url": "scoreboard.html",
                "title": f"[TEST] Week {week} postseason results ({year})",
                "summary": f"Sample from {year}, week {week}", "items": items}
     else:

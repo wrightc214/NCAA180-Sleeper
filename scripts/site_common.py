@@ -33,7 +33,7 @@ BELL = ('<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" styl
 
 def nav_html(current, weeks=None):
     """Main tabs: Weekly Awards (latest week; older weeks via week_archive_html on that page),
-    Roster Map, Standings, Matchups, Poll, Managers. Poll sub-pages (how it works, bot ballots) highlight Poll."""
+    Roster Map, Standings, Scoreboard, Poll, Managers. Poll sub-pages (how it works, bot ballots) highlight Poll."""
     weeks = built_weeks() if weeks is None else weeks
     cur = ' aria-current="page"'
     links = []
@@ -41,8 +41,7 @@ def nav_html(current, weeks=None):
         links.append(f'<a href="week-{max(weeks):02d}.html"{cur if isinstance(current, int) else ""}>Weekly Awards</a>')
     links.append(f'<a href="roster-map.html"{cur if current == "map" else ""}>Roster Map</a>')
     links.append(f'<a href="standings.html"{cur if current == "standings" else ""}>Standings</a>')
-    if current == "matchups" or os.path.exists(os.path.join(OUT_DIR, "matchups.html")):
-        links.append(f'<a href="matchups.html"{cur if current == "matchups" else ""}>Matchups</a>')
+    # Matchups page retired 2026-10-30: the scoreboard is the one Games page all week.
     if current == "scoreboard" or os.path.exists(os.path.join(OUT_DIR, "scoreboard.html")):
         links.append(f'<a href="scoreboard.html"{cur if current == "scoreboard" else ""}>Scoreboard</a>')
     if current in ("poll", "poll-how", "poll-bots") or os.path.exists(os.path.join(OUT_DIR, "poll.html")):
