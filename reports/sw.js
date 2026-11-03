@@ -50,9 +50,9 @@ self.addEventListener("fetch", (e) => {
 // ---- push ----
 self.addEventListener("push", (e) => {
   let d = {};
-  try { d = e.data ? e.data.json() : {}; } catch { d = { title: "NCAA 180", body: e.data ? e.data.text() : "" }; }
+  try { d = e.data ? e.data.json() : {}; } catch { d = { title: "Dynasty Data", body: e.data ? e.data.text() : "" }; }
   e.waitUntil(
-    self.registration.showNotification(d.title || "NCAA 180", {
+    self.registration.showNotification(d.title || "Dynasty Data", {
       body: d.body || "",
       tag: d.tag || undefined,
       icon: "assets/icons/icon-192.png",

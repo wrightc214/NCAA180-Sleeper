@@ -1,6 +1,6 @@
 {
   "_note": "Push notifications (todo-pwa.md). Read by the site (reports/assets/app.js, via reports/data/push.json) and by scripts/notify.py. Public values only: the private VAPID key and the admin token are repo/Worker secrets, never committed.",
-  "app_name": "NCAA 180",
+  "app_name": "Dynasty Data",
   "group": "ncaa180",
   "_group_note": "Super-league id (Chris, 2026-10-30: keep the door open to more super leagues in one app). Every follow stored in the push store is prefixed '<group>|' (e.g. 'ncaa180|Big Sky:6'); this pipeline only reads its own group's follows.",
   "worker_url": "https://ncaa180-push.wrightc214.workers.dev",
