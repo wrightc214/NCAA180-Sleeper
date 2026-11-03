@@ -39,9 +39,13 @@ def group_sizes(n, groups):
     return [base + 1] * extra + [base] * (groups - extra)
 
 
-def assign_groups(teams, sizes, rng, branch_of=None):
+def assign_groups(teams, sizes, rng, branch_of=None, met=None):
     """Greedy best-effort same-league avoidance. Most-represented leagues placed first.
-    branch_of(i) -> (pairing, half) for bracket spreading (Group Stage 2)."""
+    branch_of(i) -> (pairing, half) for bracket spreading (Group Stage 2).
+    met: franchise pairs that met in recent postseasons -- avoided too, but ranked below the
+    league rules (Chris, 2026-10-28: soft rule)."""
+    met = met or set()
+    key = lambda t: (str(t["LeagueName"]).strip(), str(t["RosterID"]))  # noqa: E731
     groups = [[] for _ in sizes]
     by_lg = {}
     for t in teams:
@@ -58,18 +62,25 @@ def assign_groups(teams, sizes, rng, branch_of=None):
                 if len(g) >= sizes[i]:
                     continue
                 same = sum(x["LeagueID"] == lg for x in g)
-                k = (same, len(g))
+                rematch = sum(frozenset((key(t), key(x))) in met for x in g)
+                k = (same, rematch, len(g))
                 if branch_of:
                     p, h = branch_of(i)
                     same_p = sum(x["LeagueID"] == lg for j, gg in enumerate(groups) if branch_of(j)[0] == p for x in gg)
                     same_h = sum(x["LeagueID"] == lg for j, gg in enumerate(groups) if branch_of(j)[1] == h for x in gg)
-                    k = (same, same_p, same_h, len(g))
+                    k = (same, same_p, same_h, rematch, len(g))
                 if best_k is None or k < best_k:
                     best, best_k = [i], k
                 elif k == best_k:
                     best.append(i)
             groups[rng.choice(best)].append(t)
     return groups
+
+
+def recent_met(year):
+    """Franchise pairs that met in the last postseason.bowls.repeat_seasons postseasons."""
+    import bowls
+    return bowls.history(year, ps.config()[1]["bowls"])[0]
 
 
 def conflicts(groups):
@@ -184,7 +195,7 @@ def main():
             if seed is None:
                 groups = history_groups(year, STAGE1, team)
             else:
-                groups = assign_groups(pool, group_sizes(len(pool), c1["groups"]), random.Random(seed))
+                groups = assign_groups(pool, group_sizes(len(pool), c1["groups"]), random.Random(seed), met=recent_met(year))
                 if min(len(g) for g in groups) < c1["min_size"]:
                     sys.exit(f"FATAL: pool of {len(pool)} is too small for {c1['groups']} groups of {c1['min_size']}+")
             return stage_rows(year, STAGE1, c1["week"], groups, seed or "history")
@@ -216,7 +227,7 @@ def main():
             else:
                 ng = c2["groups"]
                 branch = lambda i: (i // 2, i // (ng // 2))  # noqa: E731  (pairing A/B.., bracket half)
-                groups = assign_groups(winners1, [c2["size"]] * ng, random.Random(seed), branch_of=branch)
+                groups = assign_groups(winners1, [c2["size"]] * ng, random.Random(seed), branch_of=branch, met=recent_met(year))
             return stage_rows(year, STAGE2, c2["week"], groups, seed or "history")
         if not draft_or_publish(STAGE2, make2):
             return finish(problems)

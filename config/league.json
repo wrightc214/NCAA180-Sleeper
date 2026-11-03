@@ -140,250 +140,578 @@
       ]
     },
     "bowls": {
-      "_note": "Bowl count is flexible: enough bowls (top of the table first) for every non-playoff team with min_wins+, plus at most max_bumps team(s) with bump_wins to make the count even. Lowest-priority bowls (bottom of the table) are dropped when fewer are needed.",
+      "_note": "Bowl rules (Chris, 2026-10-28 redesign). Tiers fill in order: Prestige (top-ranked), Marquee (each league's best + rank, tie-in fit), Showcase (service + international, always played), Opening (flexible; bottom of the list sits out). Names/locations are 2026+; history keeps the names played.",
       "min_wins": 6,
       "bump_wins": 5,
       "max_bumps": 1,
       "review_before_publish": true,
-      "table": [
+      "repeat_seasons": 3,
+      "_repeat_note": "No bowl pairing of two franchises (league + roster slot) that met in any postseason game or NIT group in the last N seasons.",
+      "pools": {
+        "_note": "School-name pools (future-proof: include schools not in the league today).",
+        "armed_forces": [
+          "Army",
+          "Navy",
+          "Air Force",
+          "Coast Guard",
+          "Merchant Marine",
+          "Citadel",
+          "The Citadel",
+          "VMI"
+        ],
+        "military": [
+          "Army",
+          "Navy",
+          "Air Force",
+          "Coast Guard",
+          "Merchant Marine",
+          "Citadel",
+          "The Citadel",
+          "VMI",
+          "Texas A&M",
+          "Virginia Tech",
+          "Norwich",
+          "North Georgia",
+          "Vanderbilt"
+        ],
+        "navy": [
+          "Navy"
+        ]
+      },
+      "tiers": [
         {
-          "name": "Tangerine Bowl",
+          "name": "Prestige Bowls",
           "week": 16,
-          "type": "rank"
-        },
-        {
-          "name": "Liberty Bowl",
-          "week": 16,
-          "type": "rank"
-        },
-        {
-          "name": "Independence Bowl",
-          "week": 16,
-          "type": "rank"
-        },
-        {
-          "name": "New Orleans Bowl",
-          "week": 16,
-          "type": "rank"
-        },
-        {
-          "name": "Gator Bowl",
-          "week": 16,
-          "type": "rank"
-        },
-        {
-          "name": "Holiday Bowl",
-          "week": 16,
-          "type": "reserved_plus_league",
-          "league": "Wild"
-        },
-        {
-          "name": "Music City Bowl",
-          "week": 16,
-          "type": "conf_pair",
-          "leagues": [
-            "HBCU",
-            "Ivy"
-          ]
-        },
-        {
-          "name": "Alamo Bowl",
-          "week": 16,
-          "type": "conf_pair",
-          "leagues": [
-            "CUSA",
-            "Pioneer"
-          ]
-        },
-        {
-          "name": "Aloha Bowl",
-          "week": 15,
-          "type": "conf_pair",
-          "leagues": [
-            "Pac-12",
-            "Big 12"
-          ]
-        },
-        {
-          "name": "Citrus Bowl",
-          "week": 15,
-          "type": "conf_pair",
-          "leagues": [
-            "Mountain West",
-            "Sun Belt"
-          ]
-        },
-        {
-          "name": "Sun Bowl",
-          "week": 15,
-          "type": "conf_pair",
-          "leagues": [
-            "ACC",
-            "Big East"
-          ]
-        },
-        {
-          "name": "Gasparilla Bowl",
-          "week": 15,
-          "type": "conf_pair",
-          "leagues": [
-            "SEC",
-            "Big Ten"
-          ]
-        },
-        {
-          "name": "Bahamas Bowl",
-          "week": 15,
-          "type": "conf_pair",
-          "leagues": [
-            "Big Sky",
-            "Ohio Valley"
-          ]
-        },
-        {
-          "name": "Military Bowl",
-          "week": 15,
-          "type": "favored_teams",
-          "teams": [
+          "fill": "rank",
+          "bowls": [
             {
-              "league": "Big 12",
-              "roster": "4",
-              "name_note": "Texas A&M"
+              "name": "Citrus Bowl",
+              "location": {
+                "city": "Orlando",
+                "state": "FL",
+                "country": "USA",
+                "lat": 28.54,
+                "lon": -81.4
+              }
             },
             {
-              "league": "SEC",
-              "roster": "9",
-              "name_note": "Vanderbilt"
-            }
-          ]
-        },
-        {
-          "name": "Armed Forces Bowl",
-          "week": 15,
-          "type": "favored_teams",
-          "teams": [
-            {
-              "league": "Big East",
-              "roster": "8",
-              "name_note": "Army"
+              "name": "Sun Bowl",
+              "location": {
+                "city": "El Paso",
+                "state": "TX",
+                "country": "USA",
+                "venue": "Sun Bowl Stadium",
+                "lat": 31.77,
+                "lon": -106.51
+              }
             },
             {
-              "league": "Mountain West",
-              "roster": "4",
-              "name_note": "Air Force"
-            }
-          ]
-        },
-        {
-          "name": "Poinsettia Bowl",
-          "week": 14,
-          "type": "favored_teams",
-          "teams": [
+              "name": "Gator Bowl",
+              "location": {
+                "city": "Jacksonville",
+                "state": "FL",
+                "country": "USA",
+                "lat": 30.32,
+                "lon": -81.64
+              }
+            },
             {
-              "league": "Big East",
-              "roster": "11",
-              "name_note": "Navy"
+              "name": "Liberty Bowl",
+              "location": {
+                "city": "Memphis",
+                "state": "TN",
+                "country": "USA",
+                "lat": 35.12,
+                "lon": -89.98
+              }
+            },
+            {
+              "name": "Alamo Bowl",
+              "location": {
+                "city": "San Antonio",
+                "state": "TX",
+                "country": "USA",
+                "venue": "Alamodome",
+                "lat": 29.42,
+                "lon": -98.48
+              }
             }
           ]
         },
         {
-          "name": "Las Vegas Bowl",
+          "name": "Marquee Bowls",
           "week": 15,
-          "type": "favored_conf_pair",
-          "leagues": [
-            "Mountain West",
-            "Pac-12"
+          "fill": "marquee",
+          "max_shift": 3,
+          "_note": "Each league's best remaining team + top-ranked remaining = 16; pair by rank (shift up to max_shift spots), place pairs by tie-in fit (primary 2, secondary 1). Wild has no tie-ins. Exact ties: the bowl those leagues visited least recently.",
+          "bowls": [
+            {
+              "name": "Tangerine Bowl",
+              "primary": [
+                "ACC",
+                "Sun Belt",
+                "Big East"
+              ],
+              "secondary": [
+                "CUSA",
+                "Pioneer",
+                "Big Ten"
+              ],
+              "location": {
+                "city": "Orlando",
+                "state": "FL",
+                "country": "USA",
+                "lat": 28.54,
+                "lon": -81.4
+              }
+            },
+            {
+              "name": "Independence Bowl",
+              "primary": [
+                "Big 12",
+                "CUSA",
+                "SEC"
+              ],
+              "secondary": [
+                "Ohio Valley",
+                "Big Sky",
+                "Sun Belt"
+              ],
+              "location": {
+                "city": "Shreveport",
+                "state": "LA",
+                "country": "USA",
+                "lat": 32.48,
+                "lon": -93.79
+              }
+            },
+            {
+              "name": "New Orleans Bowl",
+              "primary": [
+                "SEC",
+                "Sun Belt"
+              ],
+              "secondary": [
+                "HBCU",
+                "Big 12",
+                "Ohio Valley",
+                "Big East"
+              ],
+              "location": {
+                "city": "New Orleans",
+                "state": "LA",
+                "country": "USA",
+                "venue": "Superdome",
+                "lat": 29.95,
+                "lon": -90.08
+              }
+            },
+            {
+              "name": "Holiday Bowl",
+              "primary": [
+                "Pac-12",
+                "Mountain West"
+              ],
+              "secondary": [
+                "Big Sky",
+                "Big 12",
+                "SEC"
+              ],
+              "location": {
+                "city": "San Diego",
+                "state": "CA",
+                "country": "USA",
+                "lat": 32.72,
+                "lon": -117.16
+              }
+            },
+            {
+              "name": "Music City Bowl",
+              "primary": [
+                "Ohio Valley",
+                "Big Ten",
+                "ACC"
+              ],
+              "secondary": [
+                "Pioneer",
+                "Ivy"
+              ],
+              "location": {
+                "city": "Nashville",
+                "state": "TN",
+                "country": "USA",
+                "lat": 36.16,
+                "lon": -86.78
+              }
+            },
+            {
+              "name": "Aloha Bowl",
+              "primary": [
+                "Mountain West",
+                "Big Sky",
+                "Pac-12"
+              ],
+              "secondary": [
+                "CUSA",
+                "ACC"
+              ],
+              "location": {
+                "city": "Honolulu",
+                "state": "HI",
+                "country": "USA",
+                "lat": 21.31,
+                "lon": -157.86
+              }
+            },
+            {
+              "name": "Gasparilla Bowl",
+              "primary": [
+                "Big East",
+                "Ivy",
+                "Big Ten"
+              ],
+              "secondary": [
+                "SEC",
+                "Mountain West"
+              ],
+              "location": {
+                "city": "Tampa",
+                "state": "FL",
+                "country": "USA",
+                "lat": 27.95,
+                "lon": -82.46
+              }
+            },
+            {
+              "name": "Celebration Bowl",
+              "primary": [],
+              "secondary": [
+                "ACC",
+                "Big Ten",
+                "Big 12",
+                "Big East",
+                "Big Sky",
+                "CUSA",
+                "Ivy",
+                "Mountain West",
+                "Ohio Valley",
+                "Pac-12",
+                "Pioneer",
+                "SEC",
+                "Sun Belt"
+              ],
+              "location": {
+                "city": "Atlanta",
+                "state": "GA",
+                "country": "USA",
+                "lat": 33.75,
+                "lon": -84.39
+              },
+              "anchor": [
+                "HBCU"
+              ],
+              "_note": "HBCU anchor (3 pts) so HBCU's Marquee team lands here over its New Orleans secondary; every other tied league is secondary."
+            }
           ]
         },
         {
-          "name": "Texas Bowl",
+          "name": "Showcase Bowls",
           "week": 14,
-          "type": "random",
-          "max_one_state": "TX"
+          "fill": "showcase",
+          "_note": "Service + international bowls, always played. Service bowls pick pool teams first (Poinsettia, Armed Forces, Military), the one away from that bowl longest; the rest draw from the top-ranked remaining teams.",
+          "bowls": [
+            {
+              "name": "Poinsettia Bowl",
+              "pool": "navy",
+              "location": {
+                "city": "San Diego",
+                "state": "CA",
+                "country": "USA",
+                "lat": 32.72,
+                "lon": -117.16
+              }
+            },
+            {
+              "name": "Armed Forces Bowl",
+              "pool": "armed_forces",
+              "location": {
+                "city": "Fort Worth",
+                "state": "TX",
+                "country": "USA",
+                "lat": 32.76,
+                "lon": -97.33
+              }
+            },
+            {
+              "name": "Military Bowl",
+              "pool": "military",
+              "location": {
+                "city": "Annapolis",
+                "state": "MD",
+                "country": "USA",
+                "lat": 38.98,
+                "lon": -76.49
+              }
+            },
+            {
+              "name": "Bahamas Bowl",
+              "location": {
+                "city": "Nassau",
+                "state": "",
+                "country": "Bahamas",
+                "lat": 25.05,
+                "lon": -77.35
+              }
+            },
+            {
+              "name": "Bacardi Bowl",
+              "location": {
+                "city": "Havana",
+                "state": "",
+                "country": "Cuba",
+                "lat": 23.11,
+                "lon": -82.37
+              },
+              "origin": "Havana, 1907–1946 (Bacardi Bowl / Rhumba Bowl)"
+            },
+            {
+              "name": "Mirage Bowl",
+              "exclude_pool": "armed_forces",
+              "location": {
+                "city": "Tokyo",
+                "state": "",
+                "country": "Japan",
+                "lat": 35.68,
+                "lon": 139.69
+              },
+              "origin": "Tokyo, 1977–85 (later the Coca-Cola Classic)"
+            },
+            {
+              "name": "International Bowl",
+              "location": {
+                "city": "Toronto",
+                "state": "ON",
+                "country": "Canada",
+                "venue": "SkyDome",
+                "lat": 43.64,
+                "lon": -79.39
+              }
+            }
+          ]
         },
         {
-          "name": "Idaho Potato Bowl",
-          "week": 14,
-          "type": "random",
-          "exclude_state": "ID"
-        },
-        {
-          "name": "New Mexico Bowl",
-          "week": 14,
-          "type": "random",
-          "exclude_state": "NM"
-        },
-        {
-          "name": "Arizona Bowl",
-          "week": 14,
-          "type": "random",
-          "exclude_state": "AZ"
-        },
-        {
-          "name": "Brooklyn Bowl",
-          "week": 14,
-          "type": "random",
-          "exclude_region": "Northeast"
-        },
-        {
-          "name": "Miami Beach Bowl",
-          "week": 14,
-          "type": "random",
-          "exclude_state": "FL"
-        },
-        {
-          "name": "Fenway Bowl",
+          "name": "Opening Bowls",
           "week": 13,
-          "type": "random",
-          "exclude_region": "Northeast"
-        },
-        {
-          "name": "International Bowl",
-          "week": 13,
-          "type": "random"
-        },
-        {
-          "name": "Birmingham Bowl",
-          "week": 13,
-          "type": "random",
-          "exclude_state": "AL"
-        },
-        {
-          "name": "Pinstripe Bowl",
-          "week": 13,
-          "type": "random",
-          "exclude_region": "Northeast"
-        },
-        {
-          "name": "Boca Raton Bowl",
-          "week": 13,
-          "type": "random",
-          "exclude_state": "FL"
-        },
-        {
-          "name": "Cure Bowl",
-          "week": 13,
-          "type": "random",
-          "exclude_state": "FL"
-        },
-        {
-          "name": "LA Bowl",
-          "week": 13,
-          "type": "random",
-          "exclude_region": "SoCal"
-        },
-        {
-          "name": "Camellia Bowl",
-          "week": 14,
-          "type": "random",
-          "exclude_state": "AL"
-        },
-        {
-          "name": "Motor City Bowl",
-          "week": 13,
-          "type": "random"
+          "fill": "random",
+          "_note": "Only flexible week: as many bowls as the season needs, top of this list first. HBCU lean: an unplaced HBCU bowl team gets first shot. Home exclusions apply to random spots only (never block a lean team).",
+          "bowls": [
+            {
+              "name": "Vulcan Bowl",
+              "lean": "HBCU",
+              "exclude_state": "AL",
+              "location": {
+                "city": "Birmingham",
+                "state": "AL",
+                "country": "USA",
+                "venue": "Rickwood Field",
+                "lat": 33.52,
+                "lon": -86.81
+              },
+              "origin": "Birmingham, 1941–49 & 1952 (HBCU bowl)"
+            },
+            {
+              "name": "Bluebonnet Bowl",
+              "max_one_state": "TX",
+              "location": {
+                "city": "Houston",
+                "state": "TX",
+                "country": "USA",
+                "venue": "Astrodome",
+                "lat": 29.76,
+                "lon": -95.37
+              },
+              "origin": "Houston, 1959–87"
+            },
+            {
+              "name": "Idaho Potato Bowl",
+              "exclude_state": "ID",
+              "location": {
+                "city": "Boise",
+                "state": "ID",
+                "country": "USA",
+                "lat": 43.62,
+                "lon": -116.2
+              }
+            },
+            {
+              "name": "Copper Bowl",
+              "exclude_state": "AZ",
+              "location": {
+                "city": "Tucson",
+                "state": "AZ",
+                "country": "USA",
+                "lat": 32.22,
+                "lon": -110.97
+              },
+              "origin": "Tucson, 1989–96"
+            },
+            {
+              "name": "Camellia Bowl",
+              "exclude_state": "AL",
+              "location": {
+                "city": "Montgomery",
+                "state": "AL",
+                "country": "USA",
+                "lat": 32.38,
+                "lon": -86.3
+              },
+              "origin": "Lafayette 1948; Sacramento 1961–80 (NAIA / D-II / I-AA title game)"
+            },
+            {
+              "name": "Motor City Bowl",
+              "location": {
+                "city": "Detroit",
+                "state": "MI",
+                "country": "USA",
+                "venue": "Pontiac Silverdome",
+                "lat": 42.33,
+                "lon": -83.05
+              },
+              "origin": "Detroit, 1997–2008"
+            },
+            {
+              "name": "Zia Bowl",
+              "exclude_state": "NM",
+              "location": {
+                "city": "Albuquerque",
+                "state": "NM",
+                "country": "USA",
+                "lat": 35.08,
+                "lon": -106.65
+              },
+              "origin": "Albuquerque, D-II title game 1979–80"
+            },
+            {
+              "name": "Gotham Bowl",
+              "exclude_region": "Northeast",
+              "location": {
+                "city": "New York",
+                "state": "NY",
+                "country": "USA",
+                "venue": "Polo Grounds",
+                "region": "Northeast",
+                "lat": 40.71,
+                "lon": -74.01
+              },
+              "origin": "New York, 1961–62"
+            },
+            {
+              "name": "Heritage Bowl",
+              "lean": "HBCU",
+              "location": {
+                "city": "Atlanta",
+                "state": "GA",
+                "country": "USA",
+                "lat": 33.75,
+                "lon": -84.39
+              },
+              "origin": "1991–99 MEAC vs SWAC (Miami, Tallahassee, Atlanta)"
+            },
+            {
+              "name": "Freedom Bowl",
+              "exclude_region": "SoCal",
+              "location": {
+                "city": "Anaheim",
+                "state": "CA",
+                "country": "USA",
+                "region": "SoCal",
+                "lat": 33.84,
+                "lon": -117.91
+              },
+              "origin": "Anaheim, 1984–94"
+            },
+            {
+              "name": "Palm Bowl",
+              "exclude_state": "FL",
+              "location": {
+                "city": "Miami",
+                "state": "FL",
+                "country": "USA",
+                "lat": 25.76,
+                "lon": -80.19
+              },
+              "origin": "McAllen TX; D-II title game 1981–85, NAIA 1978–79"
+            },
+            {
+              "name": "Las Vegas Bowl",
+              "location": {
+                "city": "Las Vegas",
+                "state": "NV",
+                "country": "USA",
+                "lat": 36.17,
+                "lon": -115.14
+              }
+            },
+            {
+              "name": "Pinstripe Bowl",
+              "exclude_region": "Northeast",
+              "location": {
+                "city": "Bronx",
+                "state": "NY",
+                "country": "USA",
+                "venue": "Yankee Stadium",
+                "region": "Northeast",
+                "lat": 40.83,
+                "lon": -73.93
+              }
+            },
+            {
+              "name": "Fenway Bowl",
+              "exclude_region": "Northeast",
+              "location": {
+                "city": "Boston",
+                "state": "MA",
+                "country": "USA",
+                "venue": "Fenway Park",
+                "region": "Northeast",
+                "lat": 42.35,
+                "lon": -71.1
+              }
+            },
+            {
+              "name": "Cure Bowl",
+              "exclude_state": "FL",
+              "location": {
+                "city": "Orlando",
+                "state": "FL",
+                "country": "USA",
+                "lat": 28.54,
+                "lon": -81.4
+              }
+            }
+          ]
         }
-      ]
+      ],
+      "history_names": {
+        "_note": "Old bowl names -> current bowl (for 'visited least recently' and service-bowl history).",
+        "Brooklyn Bowl": "Gotham Bowl",
+        "Texas Bowl": "Bluebonnet Bowl",
+        "Arizona Bowl": "Copper Bowl",
+        "Birmingham Bowl": "Vulcan Bowl",
+        "New Mexico Bowl": "Zia Bowl",
+        "LA Bowl": "Freedom Bowl",
+        "Miami Beach Bowl": "Palm Bowl",
+        "Boca Raton Bowl": "Palm Bowl"
+      },
+      "nit_final_label": "Stagg Bowl",
+      "nit_final_location": {
+        "city": "Salem",
+        "state": "VA",
+        "country": "USA",
+        "venue": "Salem Stadium",
+        "lat": 37.29,
+        "lon": -80.05
+      }
     },
     "nit": {
       "review_before_publish": true,
