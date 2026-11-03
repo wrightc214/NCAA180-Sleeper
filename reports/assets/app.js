@@ -39,7 +39,7 @@
     d.setAttribute("aria-labelledby", "n180-setup-h");
     d.innerHTML =
       '<div class="n180-card">' +
-      '<img src="' + base + 'assets/icons/icon-192.png" alt="" width="64" height="64">' +
+      '<img src="' + base + '../assets/app/icon-192.png" alt="" width="64" height="64">' +
       '<h2 id="n180-setup-h">Get NCAA 180 notifications</h2>' +
       '<p>Pick your teams, leagues and events. You’ll get a notification when their games are final — no account, no login.</p>' +
       '<a class="n180-go" href="' + base + 'app.html">Set up</a>' +

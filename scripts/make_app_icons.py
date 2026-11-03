@@ -1,6 +1,6 @@
 """make_app_icons.py -- app icons from the Dynasty Data bot avatar (a blue disc on any background).
 
-  python scripts/make_app_icons.py SOURCE_IMAGE reports/assets/icons
+  python scripts/make_app_icons.py assets/app/dynasty-data-icon.png assets/app
 
 Finds the blue disc, crops it, and writes icon-192/512, maskable-512 (disc shrunk so Android's
 round crop keeps the edge text), apple-touch-icon and a one-color badge-96 (football silhouette).
