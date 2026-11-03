@@ -9,8 +9,9 @@ Nothing real is written: Matchups/Postseason files are untouched (projection run
 in a scratch data dir). Bowl order uses the latest poll available (the real selection uses the
 week-11 poll).
 
-Shown: Prestige + Marquee games (rule-driven, deterministic), Showcase service-bowl teams and the
-rest of the Showcase pool, and the Opening pool (those bowls are random draws, so no matchups).
+Shown (Chris, 2026-11-03): the projected playoff field (seeded by the latest poll; AQ = projected
+conference champion) + Prestige and Marquee games (rule-driven, deterministic). Showcase and Opening
+are random draws and are left out.
 
 Approval flow (Chris: nothing public without his approval):
   python scripts/bowl_projection.py            build reports/bowl-projection.html + data JSON
@@ -118,16 +119,41 @@ CSS = """
 .tm{display:flex;align-items:center;gap:6px;border-radius:5px;padding:4px 7px;font-weight:700;font-size:13px;line-height:1.15;min-width:0}
 .tm img{width:22px;height:22px;object-fit:contain;flex:none;background:#fff;border-radius:3px}
 .tm small{display:block;font-weight:500;font-size:10px;opacity:.9;color:inherit!important;margin:0}
-.chips{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.sd{display:grid;grid-template-columns:20px 1fr;gap:4px;align-items:center;margin:0 0 4px}
+.sd .n{font:700 12px var(--num);text-align:right}
+.sd .tm{padding:3px 6px;font-size:12px}
+.tm .nm{flex:1;min-width:0}
+.aq{font:800 9px var(--num);letter-spacing:.04em;border:1.5px solid;border-radius:3px;padding:1px 3px;flex:none}
 .foot{font-size:10px;color:var(--mute);margin:8px 0 0}
 """
 
 
-def team(t, col, short):
+def team(t, col, short, badge=""):
     bg, fg = col.get(t["Team"], ("#14213a", "#ffffff"))
     lg = short.get(str(t["LeagueName"]).strip(), str(t["LeagueName"]).strip())
-    return (f'<div class="tm" style="background:{bg};color:{fg}">{logo(t["Team"])}<div>{e(t["Team"])}'
-            f'<small>{int(t["Wins"])}-{int(t["Losses"])} · {e(lg)}</small></div></div>')
+    b = f'<span class="aq" style="border-color:{fg};color:{fg}">{e(badge)}</span>' if badge else ""
+    return (f'<div class="tm" style="background:{bg};color:{fg}">{logo(t["Team"])}<div class="nm">{e(t["Team"])}'
+            f'<small>{int(float(t["Wins"]))}-{int(float(t["Losses"]))} · {e(lg)}</small></div>{b}</div>')
+
+
+def field_card(year, field, col, short):
+    """Projected playoff field, seeded by the latest poll among the field (the real seeds come from
+    the bots' Seeding ballot after the CCG). AQ = projected conference champion (auto bid)."""
+    ranks, wk = B.poll_ranks(year, "BotConsensus")
+    f = field.copy()
+    f["_p"] = [ranks.get((str(l), str(r)), 10 ** 6) for l, r in zip(f["LeagueID"], f["RosterID"])]
+    f = f.reset_index(drop=True).assign(_i=lambda d: d.index).sort_values(["_p", "_i"]).reset_index(drop=True)
+    f["Seed"] = range(1, len(f) + 1)
+    rows = [f'<div class="sd"><span class="n">{r.Seed}</span>'
+            f'{team(r._asdict(), col, short, "AQ" if str(r.BidType).startswith("Auto") else "")}</div>'
+            for r in f.itertuples()]
+    half = (len(rows) + 1) // 2
+    n_aq = int(f["BidType"].astype(str).str.startswith("Auto").sum())
+    return (f'<section class="card"><h2>Playoff field <small>{len(f)} teams</small></h2>'
+            f'<p class="sub">AQ = projected conference champion ({n_aq} auto bids); the rest are at-large. '
+            f'Projected seeds follow the week-{wk} poll; first round is 1 v {len(f)}, 2 v {len(f) - 1}…</p>'
+            f'<div class="cols"><div>{"".join(rows[:half])}</div><div>{"".join(rows[half:])}</div></div></section>')
 
 
 def bowl_logo(name):
@@ -148,7 +174,8 @@ def build(year):
     for b, x, y in games:
         by_tier.setdefault(b["tier"], []).append((b, x, y))
     lr = ps.last_regular_week()
-    sub = f"{year} · after week {after} · weeks {after + 1}–{lr} and the CCG projected"
+    sub = (f"Projection, not official · {year} after week {after} · weeks {after + 1}–{lr} + CCG projected "
+           f"(each team scores its season average)")
     secs = []
 
     def games_card(tier, label):
@@ -160,27 +187,9 @@ def build(year):
         return (f'<section class="card"><h2>{e(tier)} <small>week {e(str(by_tier[tier][0][0]["week"]))}</small></h2>'
                 f'<p class="sub">{e(label)}</p>{"".join(rows)}</section>') if rows else ""
 
+    secs.append(field_card(year, field, col, short))
     secs.append(games_card("Prestige Bowls", "Top of the bowl order."))
     secs.append(games_card("Marquee Bowls", "One seat per league, topped up by bowl order; placed by tie-ins."))
-
-    def pool_card(tier, label, extra=""):
-        ts = [t for b, x, y in by_tier.get(tier, []) for t in (x, y)]
-        ts.sort(key=lambda t: draw.order[B.slot(t)])
-        if not ts:
-            return ""
-        wk = by_tier[tier][0][0]["week"]
-        return (f'<section class="card"><h2>{e(tier)} <small>week {wk}</small></h2><p class="sub">{e(label)}</p>{extra}'
-                f'<div class="chips">{"".join(team(t, col, short) for t in ts)}</div></section>')
-
-    svc = []
-    for b, x, y in by_tier.get("Showcase Bowls", []):
-        if b.get("pool"):
-            anchors = [t for t in (x, y) if t["Team"] in in_pool.get(b["pool"], [])]
-            if anchors:
-                svc.append(f'<b>{e(b["name"])}</b>: {e(" & ".join(t["Team"] for t in anchors))}')
-    extra = f'<p class="sub">Service bowls: {"; ".join(svc)}. Other matchups are drawn.</p>' if svc else ""
-    secs.append(pool_card("Showcase Bowls", "Service + international bowls. Matchups are a random draw.", extra))
-    secs.append(pool_card("Opening Bowls", "Matchups and bowls are a random draw."))
 
     n_po = len(field)
     method = draw.cfg.get("rank", {})

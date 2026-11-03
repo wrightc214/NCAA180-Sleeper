@@ -153,7 +153,7 @@
       "marquee_league_seat": "division_leaders",
       "_marquee_league_seat_note": "Marquee seat per league. division_leaders (Chris, 2026-11-03): after playoff + Prestige teams are out, only each division's top remaining team is a candidate; the better of them (bowl order) takes the seat -- a division's 4th place never passes its own 3rd. best_ranked: the league's best remaining team in bowl order.",
       "projection": {
-        "_note": "Weekly bowl projection (scripts/bowl_projection.py, Chris 2026-11-03). Runs in the weekly job from from_week until the regular season ends; preview goes to lm-private-data only. Release with script bowl_projection_publish (posts the stored images, never rebuilds). post_to_league true = also post to the league automatically after the preview.",
+        "_note": "Weekly bowl projection (scripts/bowl_projection.py, Chris 2026-11-03). Runs in the weekly job once from_week regular-season weeks are final (6 = first drop the Tuesday after week 6) until the regular season ends. Cards: playoff field (projected seeds, AQs) + Prestige + Marquee; preview goes to lm-private-data only. Release with script bowl_projection_publish (posts the stored images, never rebuilds). post_to_league true = also post to the league automatically after the preview.",
         "enabled": true,
         "from_week": 6,
         "post_to_league": false
