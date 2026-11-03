@@ -34,7 +34,9 @@ def build():
         out.append(lg)
     events = [{"key": f"{group}|{e['key']}", "label": e["label"], "default": e.get("default", False)}
               for e in conf["events"]]
-    return {"group": group, "app_name": conf["app_name"], "worker_url": conf.get("worker_url", ""),
+    freqs = [{"key": f"{group}|freq:{f['key']}", "label": f["label"], "default": f.get("default", False)}
+             for f in conf.get("game_frequencies", [])]
+    return {"group": group, "app_name": conf["app_name"], "frequencies": freqs, "worker_url": conf.get("worker_url", ""),
             "vapid_public_key": conf["vapid_public_key"], "max_follows": conf.get("max_follows", 60),
             "leagues": out, "events": events}
 
