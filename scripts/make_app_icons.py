@@ -36,11 +36,15 @@ icon(192, 1.00, "icon-192.png")
 icon(512, 1.00, "icon-512.png")
 icon(512, 0.86, "maskable-512.png")   # Android round crop keeps the disc edge text
 icon(180, 1.00, "apple-touch-icon.png")
-# monochrome status-bar badge: football silhouette (brown pixels) in white
+# monochrome status-bar badge: solid football silhouette (convex hull of the brown pixels) in white
+from scipy.spatial import ConvexHull
 small = disc.resize((96, 96), Image.LANCZOS)
 b = np.asarray(small).astype(int)
-brown = (b[..., 0] > 90) & (b[..., 0] < 200) & (b[..., 1] < 110) & (b[..., 2] < 80)
-badge = np.zeros((96, 96, 4), dtype=np.uint8)
-badge[brown] = (255, 255, 255, 255)
-Image.fromarray(badge).save(f"{out}/badge-96.png")
+brown = (b[..., 0] > 90) & (b[..., 0] < 210) & (b[..., 1] < 120) & (b[..., 2] < 90) & (b[..., 0] - b[..., 2] > 40)
+ys, xs = np.nonzero(brown)
+pts = np.stack([xs, ys], 1)
+hull = [tuple(int(v) for v in pts[i]) for i in ConvexHull(pts).vertices]
+badge = Image.new("RGBA", (96, 96), (0, 0, 0, 0))
+ImageDraw.Draw(badge).polygon(hull, fill=(255, 255, 255, 255))
+badge.save(f"{out}/badge-96.png")
 print("disc box", box)
