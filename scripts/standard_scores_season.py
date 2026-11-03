@@ -192,6 +192,8 @@ def flips(m, scores, detail):
         b = std.get((r.LeagueID, str(r.OpponentRosterID).replace(".0", ""), r.WeekN))
         if not a or not b or res(a[0], b[0]) == res(a[1], b[1]):
             continue
+        if a[0] == 0 and b[0] == 0:  # no Sleeper points yet (matchups not pulled): not a real result
+            continue
         name = lambda rid: tn.season_name(int(r.Year), r.LeagueName, rid) or f"{r.LeagueName.strip()} r{rid}"
         opp = str(r.OpponentRosterID).replace(".0", "")
         rules = sorted(set(detail.get((r.LeagueID, r.RosterID, r.WeekN), []) + detail.get((r.LeagueID, opp, r.WeekN), [])))

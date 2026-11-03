@@ -107,7 +107,8 @@ def win_pct(a, b):
 def ccg_pairs(season, wk):
     """CCG week only: the conference championship games (written by conference_championships.py)
     as matchup-like rows; None for any other postseason week or when pairings are missing."""
-    if wk != int(lcfg.cfg()["schedule"]["ccg_week"]) or not os.path.exists("data/Postseason_Season.csv"):
+    if wk != int(lcfg.cfg()["schedule"]["ccg_week"]) or not os.path.exists("data/Postseason_Season.csv") \
+            or os.path.getsize("data/Postseason_Season.csv") <= 1:
         return None
     ps = pd.read_csv("data/Postseason_Season.csv", dtype=str)
     ps = ps[(ps["Round"] == "CCG") & (ps["Year"] == str(season)) & (ps["Week"] == str(wk))]
