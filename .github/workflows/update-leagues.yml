@@ -11,6 +11,10 @@ on:
         description: 'Post the weekly report to Discord after this run (use to release a held post)'
         type: boolean
         default: false
+      allow_zero_games:
+        description: 'Publish even if a finished week has a 0-0 game (zero_game_check.py normally blocks it)'
+        type: boolean
+        default: false
   schedule:
     # Weekly: Sleeper advances the NFL week on Tuesday at a variable time. Wake every
     # 2h from Tue 09:30 UTC (5:30am EDT / 4:30am EST) -> Wed 19:30 UTC; week_gate.py runs
@@ -58,6 +62,7 @@ jobs:
           VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
           PUSH_ADMIN_TOKEN: ${{ secrets.PUSH_ADMIN_TOKEN }}
           DISCORD_WEBHOOK_TEAM_STATS: ${{ secrets.DISCORD_WEBHOOK_TEAM_STATS }}
+          ALLOW_ZERO_GAMES: ${{ github.event.inputs.allow_zero_games }}
         run: |
           # Default to 'all' if no manual input was provided
           SCRIPT_TO_RUN="${{ github.event.inputs.script_to_run }}"
@@ -71,7 +76,9 @@ jobs:
           # AFTER the commit step below still saves whatever succeeded.
           set +e
           FAILED=""
+          BLOCKED=""  # set by zero_check: a finished week has a 0-0 game -> run nothing else
           run() {  # run <name> <file> [in_all]
+              if [ -n "$BLOCKED" ]; then return; fi
               if [ "$SCRIPT_TO_RUN" = "$1" ] || { [ "$3" = "all" ] && [ "$SCRIPT_TO_RUN" = "all" ]; }; then
                   echo "::group::$1"
                   python scripts/$2  # unquoted: "$2" may carry flags, e.g. "bowls.py --publish"
@@ -80,6 +87,7 @@ jobs:
                   if [ $rc -ne 0 ]; then
                       echo "::error::$1 ($2) failed with exit code $rc"
                       FAILED="$FAILED $1"
+                      if [ "$1" = "zero_check" ]; then BLOCKED=1; echo "::error::Publishing blocked: remaining scripts skipped"; fi
                   fi
               fi
           }
@@ -87,6 +95,8 @@ jobs:
           run league_ids            league_ids.py            all
           run rosters               rosters.py               all
           run matchups              league_matchups.py       all
+          # 0-0 game in a finished week = Sleeper points missing: block scripts, commits and posts (retries next run)
+          run zero_check            zero_game_check.py       all
           run users                 users.py                 all
           run players               players.py               all
           run rosterhistory         rosterhistory.py         all
@@ -144,6 +154,13 @@ jobs:
           esac
 
           echo "$FAILED" > /tmp/failed_scripts.txt
+
+      # zero_game_check.py wrote work/publish_blocked.txt -> no commits, no poll/LM posts (weekly post holds + alerts)
+      - name: Publish check
+        id: pub
+        if: always()
+        run: |
+          if [ -f work/publish_blocked.txt ]; then echo "ok=false" >> "$GITHUB_OUTPUT"; cat work/publish_blocked.txt; else echo "ok=true" >> "$GITHUB_OUTPUT"; fi
 
       # Image only when the latest week's numbers changed (or the template/no image yet).
       - name: Check if report image needs rendering
@@ -251,7 +268,7 @@ jobs:
           fi
 
       - name: Commit and push CSVs
-        if: always()
+        if: always() && steps.pub.outputs.ok == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -286,7 +303,7 @@ jobs:
 
       # Bot poll post (preview to lm-private-data until publish.post_to_league is true in config/poll.json).
       - name: Post poll to Discord
-        if: always() && steps.pollchk.outputs.published == 'true' && ((github.event_name == 'schedule') || (github.event.inputs.post == 'true'))
+        if: always() && steps.pub.outputs.ok == 'true' && steps.pollchk.outputs.published == 'true' && ((github.event_name == 'schedule') || (github.event.inputs.post == 'true'))
         continue-on-error: true
         env:
           DISCORD_WEBHOOK_TEAM_STATS: ${{ secrets.DISCORD_WEBHOOK_TEAM_STATS }}
@@ -301,7 +318,7 @@ jobs:
 
       # Bot ballots (every bot's rank, Top 25 card) -> lm-private-data. League cards stay in reports/poll-bots/ for sharing.
       - name: Post bot ballots to LM channel
-        if: always() && steps.pollchk.outputs.published == 'true' && ((github.event_name == 'schedule') || (github.event.inputs.post == 'true'))
+        if: always() && steps.pub.outputs.ok == 'true' && steps.pollchk.outputs.published == 'true' && ((github.event_name == 'schedule') || (github.event.inputs.post == 'true'))
         continue-on-error: true
         env:
           DISCORD_WEBHOOK_LM_PRIVATE_DATA: ${{ secrets.DISCORD_WEBHOOK_LM_PRIVATE_DATA }}
@@ -309,7 +326,7 @@ jobs:
 
       # Weekly inactive-manager report -> private LM channel (alert webhook), same trigger as the post.
       - name: Inactivity report to LM channel
-        if: always() && ((github.event_name == 'schedule') || (github.event.inputs.post == 'true'))
+        if: always() && steps.pub.outputs.ok == 'true' && ((github.event_name == 'schedule') || (github.event.inputs.post == 'true'))
         env:
           DISCORD_WEBHOOK_LM_PRIVATE_DATA: ${{ secrets.DISCORD_WEBHOOK_LM_PRIVATE_DATA }}
           DISCORD_CONTACT_ID: ${{ vars.DISCORD_CONTACT_ID }}
@@ -325,7 +342,7 @@ jobs:
         run: python scripts/update_lastmodified.py
 
       - name: Commit and push CSV modifieds
-        if: always()
+        if: always() && steps.pub.outputs.ok == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

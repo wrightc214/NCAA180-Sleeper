@@ -99,6 +99,9 @@ def main():
     png_ok = os.path.exists(PNG) and os.path.getsize(PNG) <= MAX_BYTES and png_status != "failure"
 
     problems = []
+    if os.path.exists("work/publish_blocked.txt"):  # zero_game_check.py: 0-0 games, nothing published
+        problems.append("🛑 PUBLISHING BLOCKED, 0-0 games — " + open("work/publish_blocked.txt").read().strip()
+                        + " Nothing posted or committed; the next scheduled run retries.")
     if failed:
         problems.append(f"Scripts failed: {', '.join(failed)}")
     if week is None:

@@ -122,7 +122,8 @@ def real_postseason_opponents(rows):
     import os
     lr = lcfg.last_regular_week()
     games = {}
-    if os.path.exists("data/Postseason_Season.csv"):
+    # the file is empty (not missing) between seasons and until CCG week -- skip it then
+    if os.path.exists("data/Postseason_Season.csv") and os.path.getsize("data/Postseason_Season.csv") > 1:
         ps = pd.read_csv("data/Postseason_Season.csv", dtype=str).fillna("")
         for r in ps[ps["Year"] == str(CURRENT_YEAR)].itertuples():
             if r.Week:
