@@ -11,6 +11,10 @@ on:
         description: 'Post the weekly report to Discord after this run (use to release a held post)'
         type: boolean
         default: false
+      lm_report:
+        description: 'With post: also send the LM inactivity report (untick when re-posting the league message only)'
+        type: boolean
+        default: true
       allow_zero_games:
         description: 'Publish even if a finished week has a 0-0 game (zero_game_check.py normally blocks it)'
         type: boolean
@@ -326,7 +330,7 @@ jobs:
 
       # Weekly inactive-manager report -> private LM channel (alert webhook), same trigger as the post.
       - name: Inactivity report to LM channel
-        if: always() && steps.pub.outputs.ok == 'true' && ((github.event_name == 'schedule') || (github.event.inputs.post == 'true'))
+        if: always() && github.event.inputs.lm_report != 'false' && steps.pub.outputs.ok == 'true' && ((github.event_name == 'schedule') || (github.event.inputs.post == 'true'))
         env:
           DISCORD_WEBHOOK_LM_PRIVATE_DATA: ${{ secrets.DISCORD_WEBHOOK_LM_PRIVATE_DATA }}
           DISCORD_CONTACT_ID: ${{ vars.DISCORD_CONTACT_ID }}
