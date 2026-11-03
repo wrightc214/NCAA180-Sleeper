@@ -171,7 +171,9 @@ jobs:
         id: needpng
         if: always() && hashFiles('reports/index.html') != ''
         run: |
-          if [ ! -f reports/latest.png ] || ! git diff --quiet HEAD -- reports/data templates || [ -n "$(git ls-files --others --exclude-standard reports/data)" ]; then
+          # Manual post always re-renders (a re-post must never reuse an old image). data/Poll_Season.csv:
+          # the Top 25 table lives in the page, not reports/data, so a poll rebuild alone must trigger it.
+          if [ "${{ github.event.inputs.post }}" = "true" ] || [ ! -f reports/latest.png ] || ! git diff --quiet HEAD -- reports/data templates data/Poll_Season.csv || [ -n "$(git ls-files --others --exclude-standard reports/data)" ]; then
             echo "render=true" >> "$GITHUB_OUTPUT"
           else
             echo "render=false" >> "$GITHUB_OUTPUT"
