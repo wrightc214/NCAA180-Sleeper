@@ -50,6 +50,26 @@
       "default": true
     }
   ],
+  "game_frequencies": [
+    {
+      "key": "windows",
+      "label": "After every game window (Thursday, Sunday early / late / night, Monday)"
+    },
+    {
+      "key": "sunday",
+      "label": "After Sunday's games, then when each game is final"
+    },
+    {
+      "key": "final",
+      "label": "Only when each game is final",
+      "default": true
+    },
+    {
+      "key": "off",
+      "label": "Off (postseason results only)"
+    }
+  ],
+  "_game_frequencies_note": "Game notifications for followed teams (scripts/game_notify.py). One setting per phone, stored as an event follow 'freq:<key>' (Chris, 2026-11-03; a per-team override may come later).",
   "_events_note": "Only events the sender produces today are listed. Polls and weekly awards get added here when they are wired (todo-pwa.md MVP).",
   "prestige": [
     "Playoff",

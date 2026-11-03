@@ -90,6 +90,7 @@ summary .n{color:var(--mute);font-weight:400}
 .picks{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:4px 12px;padding:0 0 10px}
 .picks label{display:flex;gap:8px;align-items:center;padding:6px 0;min-height:32px}
 .picks input{width:20px;height:20px;accent-color:var(--accent)}
+.picks.one{grid-template-columns:1fr}
 .chosen{color:var(--mute);font-size:14px;margin-top:6px}
 .actions{display:grid;gap:10px}
 .btn{display:block;width:100%;border:0;border-radius:10px;padding:14px;font:inherit;font-weight:700;cursor:pointer;text-align:center}
@@ -138,7 +139,13 @@ summary .n{color:var(--mute);font-weight:400}
   </section>
 
   <section class="card">
-    <h2>3. Events</h2>
+    <h2>3. Game updates for your teams</h2>
+    <p class="hint">Score, projection and win chance for the teams you follow, during the regular season and the postseason.</p>
+    <div class="picks one" id="freqs"></div>
+  </section>
+
+  <section class="card">
+    <h2>4. Events</h2>
     <p class="hint">Everything in these, whoever is playing.</p>
     <div class="picks" id="events"></div>
   </section>
@@ -222,11 +229,16 @@ summary .n{color:var(--mute);font-weight:400}
     }).join("");
     $("leagues").innerHTML = lists.leagues.map(function (lg) { return box("league", lg.key, lg.name, chosen("league", lg.key)); }).join("");
     $("events").innerHTML = lists.events.map(function (e) { return box("event", e.key, e.label, first ? e.default : chosen("event", e.key)); }).join("");
+    var fs = lists.frequencies || [];
+    var cur = fs.filter(function (f) { return chosen("event", f.key); })[0] || fs.filter(function (f) { return f.default; })[0];
+    $("freqs").innerHTML = fs.map(function (f) {
+      return '<label><input type="radio" name="freq" data-kind="event" value="' + esc(f.key) + '"' + (cur && cur.key === f.key ? " checked" : "") + "> " + esc(f.label) + "</label>";
+    }).join("");
     count();
   }
 
   function picked() {
-    return Array.prototype.map.call(document.querySelectorAll("input[type=checkbox]:checked"), function (i) {
+    return Array.prototype.map.call(document.querySelectorAll("input[type=checkbox]:checked, input[type=radio]:checked"), function (i) {
       return { kind: i.dataset.kind, key: i.value };
     });
   }

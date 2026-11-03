@@ -1,0 +1,66 @@
+name: Game notifications
+
+# Pushes game updates for followed teams (scripts/game_notify.py; todo-pwa.md).
+# Runs a little after each NFL window's scheduled end. If games are still live it waits and
+# re-checks every 15 minutes (up to 2 hours). Times are UTC, set for Eastern Standard Time
+# (Nov-Jan); in September/October (EDT) they land about an hour after the window, which is fine.
+#   Thu night  -> Fri 04:45 UTC      Sun early -> Sun 21:30 UTC     Sun late -> Mon 00:45 UTC
+#   Sun night  -> Mon 04:45 UTC      Mon night -> Tue 04:45 UTC
+# Saturday games (late season) get no run of their own; the Sunday runs pick them up.
+
+on:
+  schedule:
+    - cron: '45 4 * * FRI'
+    - cron: '30 21 * * SUN'
+    - cron: '45 0 * * MON'
+    - cron: '45 4 * * MON'
+    - cron: '45 4 * * TUE'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "test = tester phones only, nothing recorded; dry-run = print only; normal = real send"
+        type: choice
+        options: [test, dry-run, normal]
+        default: test
+      week:
+        description: "NFL week (blank = current week)"
+        default: ""
+
+concurrency:
+  group: game-notify
+  cancel-in-progress: false
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements.txt
+      - name: Send game notifications
+        env:
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+          PUSH_ADMIN_TOKEN: ${{ secrets.PUSH_ADMIN_TOKEN }}
+        run: |
+          ARGS=""
+          if [ -n "${{ github.event.inputs.week }}" ]; then ARGS="$ARGS --week ${{ github.event.inputs.week }}"; fi
+          case "${{ github.event.inputs.mode }}" in
+            test) ARGS="$ARGS --test" ;;
+            dry-run) ARGS="$ARGS --dry-run" ;;
+          esac
+          python scripts/game_notify.py $ARGS
+      - name: Save the ledger (stops repeats)
+        if: always()
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add data/push 2>/dev/null || true
+          git diff --cached --quiet && exit 0
+          git commit -m "Game notifications ledger"
+          for i in 1 2 3; do git pull --rebase -q && git push -q && exit 0; sleep 5; done
+          exit 1

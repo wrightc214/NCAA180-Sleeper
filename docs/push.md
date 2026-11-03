@@ -30,3 +30,12 @@ Secrets/variables live in GitHub → repo **Settings → Secrets and variables �
 ## Keys
 - VAPID key pair: public half in `config/push.json`; private half only in the `VAPID_PRIVATE_KEY` secret. Changing it means every phone must turn notifications on again.
 - `PUSH_ADMIN_TOKEN`: shared by the Worker (set by the deploy workflow) and the sender.
+
+## Game notifications (followed teams, every week)
+- `scripts/game_notify.py`, workflow **Game notifications** (`game-notify.yml`). Runs a little after each NFL window (Thu night, Sun early / late / night, Mon night); if games are still live it re-checks every 15 minutes for up to 2 hours.
+- Each phone picks one frequency on the Notifications page (stored as `freq:<key>`): after every window · after Sunday then finals · finals only (default) · off.
+- A game is **final** when both teams have 0 minutes left. Live lines show score, projection and win chance, computed by `scripts/live_model.py`, the Python twin of the scoreboard's `scoreboard-core.js` (`tests/test_live_model.py` keeps them identical).
+- Tuesday: the weekly job runs `game_notify.py --settle` and pushes only when settled standard scores flip a game-night final.
+- Ledger `data/push/GameNotify_Season.csv` stops repeats.
+- Testing: run the workflow by hand with mode **test** (tester phones only, nothing recorded) and a past week, e.g. `9`.
+- Postseason weeks need the scoreboard's frozen baseline for that week (`data/scoreboard/<season>/week-NN.json`); without it the run skips the week.
