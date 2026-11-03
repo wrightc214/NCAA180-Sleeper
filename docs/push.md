@@ -5,7 +5,7 @@ Design and decisions: project doc `todo-pwa.md`. This page = how it works in the
 ## Pieces
 | Piece | Where | What it does |
 |---|---|---|
-| Install + offline | `reports/manifest.webmanifest`, `reports/sw.js`, `reports/assets/icons/` | Makes the site installable; caches pages (network first) and logos |
+| Install + offline | `reports/manifest.webmanifest`, `reports/sw.js`, `assets/app/` (icons, master icon, announcement graphic) | Makes the site installable; caches pages (network first) and logos |
 | First-run prompt | `reports/assets/app.js` (every page, via `site_common.page_head` / the weekly template) | Full-screen "Set up" sheet while a phone has no follows or notifications off; "Not now" hides it for the visit |
 | Setup page | `reports/app.html` (built by `scripts/app_page.py`) | Pick teams / leagues / events, turn notifications on, stop them; `?test=1` = tester phone |
 | Picker lists | `reports/data/push-teams.json` (`scripts/push_teams.py`) | Team keys = `ncaa180|<league short>:<roster ID>` (identity = slot) |

@@ -1,10 +1,10 @@
 // NCAA 180 service worker (todo-pwa.md): offline shell + push notifications.
 // Scope: reports/ (this file's folder). Bump VERSION when the caching rules change; pages and
 // data are never cached forever (network first), so ordinary deploys need no bump.
-const VERSION = "v1";
+const VERSION = "v2";
 const SHELL = "ncaa180-shell-" + VERSION;
 const DATA = "ncaa180-data-" + VERSION;
-const PRECACHE = ["index.html", "app.html", "assets/app.js", "assets/icons/icon-192.png", "manifest.webmanifest"];
+const PRECACHE = ["index.html", "app.html", "assets/app.js", "../assets/app/icon-192.png", "manifest.webmanifest"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(SHELL).then((c) => c.addAll(PRECACHE)).then(() => self.skipWaiting()));
@@ -50,13 +50,13 @@ self.addEventListener("fetch", (e) => {
 // ---- push ----
 self.addEventListener("push", (e) => {
   let d = {};
-  try { d = e.data ? e.data.json() : {}; } catch { d = { title: "NCAA 180", body: e.data ? e.data.text() : "" }; }
+  try { d = e.data ? e.data.json() : {}; } catch { d = { title: "Dynasty Data", body: e.data ? e.data.text() : "" }; }
   e.waitUntil(
-    self.registration.showNotification(d.title || "NCAA 180", {
+    self.registration.showNotification(d.title || "Dynasty Data", {
       body: d.body || "",
       tag: d.tag || undefined,
-      icon: "assets/icons/icon-192.png",
-      badge: "assets/icons/badge-96.png",
+      icon: "../assets/app/icon-192.png",
+      badge: "../assets/app/badge-96.png",
       data: { url: d.url || "index.html" },
     })
   );

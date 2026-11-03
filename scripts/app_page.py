@@ -62,7 +62,7 @@ BODY = """
     <ol class="steps">
       <li>In Safari, tap the <b>Share</b> button.</li>
       <li>Choose <b>Add to Home Screen</b>, then <b>Add</b>.</li>
-      <li>Open <b>NCAA 180</b> from your Home Screen and come back to this page.</li>
+      <li>Open <b>Dynasty Data</b> from your Home Screen and come back to this page.</li>
     </ol>
   </section>
 
