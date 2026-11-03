@@ -87,6 +87,7 @@ jobs:
           python -m playwright install-deps chromium
           python -m playwright install --only-shell chromium
           python scripts/poll_png.py
+          python scripts/poll_bot_cards.py  # Bot ballots page + cards (build only; no LM post)
 
       # Raw ballots stay in work/ (gitignored); only aggregates and pages are committed.
       - name: Commit
@@ -96,6 +97,7 @@ jobs:
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/Poll_Season.csv data/PollBots_Season.csv data/PollRanks_Current.csv data/RankedMatchups_Current.csv
           git add reports/poll*.html reports/discord-poll 2>/dev/null || true
+          git add reports/poll-bots 2>/dev/null || true
           git commit -m "Poll: ${{ steps.agg.outputs.poll_type }} through week ${{ steps.agg.outputs.week }}" || exit 0
           for i in 1 2 3; do
             git pull --rebase && git push && exit 0
