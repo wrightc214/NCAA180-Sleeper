@@ -1,6 +1,6 @@
 {
  "week": 7,
- "avg": 120.22,
+ "avg": 120.17,
  "median": 123.5,
  "unbeaten": 6,
  "winless": 9,
@@ -11,8 +11,8 @@
    "Lg": "Pac-12",
    "Owner": "chzhead412",
    "Rec": "7-0",
-   "Pts": 1148.46,
-   "Luck": 0.87,
+   "Pts": 1147.46,
+   "Luck": 0.88,
    "Move": 0
   },
   {
@@ -32,7 +32,7 @@
    "Owner": "keppin",
    "Rec": "7-0",
    "Pts": 1129.44,
-   "Luck": 1.35,
+   "Luck": 1.34,
    "Move": 0
   },
   {
@@ -101,7 +101,7 @@
    "Lg": "Big Ten",
    "Owner": "Schuflakka",
    "Rec": "6-1",
-   "Pts": 1079.2,
+   "Pts": 1078.2,
    "Luck": 0.56,
    "Move": 7
   },
@@ -122,7 +122,7 @@
    "Owner": "dilbennett",
    "Rec": "6-1",
    "Pts": 1063.92,
-   "Luck": 1.09,
+   "Luck": 1.08,
    "Move": 4
   },
   {
@@ -172,7 +172,7 @@
    "Owner": "alicho",
    "Rec": "6-1",
    "Pts": 1012.82,
-   "Luck": 1.02,
+   "Luck": 1.01,
    "Move": 8
   },
   {
@@ -182,7 +182,7 @@
    "Owner": "errand",
    "Rec": "6-1",
    "Pts": 1011.82,
-   "Luck": 1.16,
+   "Luck": 1.15,
    "Move": 6
   },
   {
@@ -212,7 +212,7 @@
    "Owner": "Mo00",
    "Rec": "6-1",
    "Pts": 934.38,
-   "Luck": 1.9,
+   "Luck": 1.91,
    "Move": 8
   },
   {
@@ -227,23 +227,23 @@
   },
   {
    "Rank": 23,
-   "Team": "South Carolina",
-   "Lg": "SEC",
-   "Owner": "Orphan",
-   "Rec": "6-1",
-   "Pts": 901.4,
-   "Luck": 2.41,
-   "Move": 5
-  },
-  {
-   "Rank": 24,
    "Team": "UNC Charlotte",
    "Lg": "Wild",
    "Owner": "DBGiants",
    "Rec": "6-1",
    "Pts": 900.58,
    "Luck": 2.35,
-   "Move": 9
+   "Move": 10
+  },
+  {
+   "Rank": 24,
+   "Team": "South Carolina",
+   "Lg": "SEC",
+   "Owner": "Orphan",
+   "Rec": "6-1",
+   "Pts": 900.4,
+   "Luck": 2.42,
+   "Move": 4
   },
   {
    "Rank": 25,
@@ -281,8 +281,8 @@
    "Lg": "Big 12",
    "Owner": "robertlouis7",
    "Rec": "5-2",
-   "Pts": 1130.82,
-   "Luck": -0.79,
+   "Pts": 1129.82,
+   "Luck": -0.77,
    "Move": -17
   },
   {
@@ -291,8 +291,8 @@
    "Lg": "Big East",
    "Owner": "CodeKhaos",
    "Rec": "5-2",
-   "Pts": 1114.02,
-   "Luck": -0.55,
+   "Pts": 1113.02,
+   "Luck": -0.54,
    "Move": 9
   },
   {
@@ -312,7 +312,7 @@
    "Owner": "LanceBoneau",
    "Rec": "5-2",
    "Pts": 1101.9,
-   "Luck": 0.12,
+   "Luck": 0.11,
    "Move": 8
   },
   {
@@ -333,8 +333,8 @@
    "Owner": "dh671",
    "P": 187.58,
    "Opp": "Louisiana Monroe",
-   "PA": 94.32,
-   "Margin": 93.26
+   "PA": 95.32,
+   "Margin": 92.26
   },
   {
    "Team": "BYU",
@@ -351,8 +351,8 @@
    "Owner": "ethansherwood22",
    "P": 181.24,
    "Opp": "Delaware",
-   "PA": 95.46,
-   "Margin": 85.78
+   "PA": 96.46,
+   "Margin": 84.78
   },
   {
    "Team": "ETSU",
@@ -387,8 +387,8 @@
    "Owner": "masshole4eva",
    "P": 168.68,
    "Opp": "Georgia State",
-   "PA": 148.42,
-   "Margin": 20.26
+   "PA": 147.42,
+   "Margin": 21.26
   },
   {
    "Team": "Texas A&M",
@@ -414,18 +414,18 @@
    "Owner": "bkoldham",
    "P": 166.88,
    "Opp": "New Mexico",
-   "PA": 112.48,
-   "Margin": 54.4
+   "PA": 112.38,
+   "Margin": 54.5
   }
  ],
  "leagues": [
   {
    "Lg": "Big Sky",
-   "Avg": 130.17
+   "Avg": 130.16
   },
   {
    "Lg": "Big East",
-   "Avg": 126.89
+   "Avg": 126.81
   },
   {
    "Lg": "CUSA",
@@ -437,11 +437,11 @@
   },
   {
    "Lg": "Mountain West",
-   "Avg": 124.05
+   "Avg": 124.04
   },
   {
    "Lg": "Big 12",
-   "Avg": 123.01
+   "Avg": 122.92
   },
   {
    "Lg": "Wild",
@@ -453,31 +453,31 @@
   },
   {
    "Lg": "ACC",
-   "Avg": 120.48
+   "Avg": 120.4
   },
   {
    "Lg": "Pioneer",
-   "Avg": 119.51
+   "Avg": 119.42
   },
   {
    "Lg": "Pac-12",
-   "Avg": 119.04
+   "Avg": 118.95
   },
   {
    "Lg": "Big Ten",
-   "Avg": 117.42
+   "Avg": 117.33
   },
   {
    "Lg": "Sun Belt",
-   "Avg": 114.73
+   "Avg": 114.72
   },
   {
    "Lg": "HBCU",
-   "Avg": 108.27
+   "Avg": 108.19
   },
   {
    "Lg": "SEC",
-   "Avg": 105.21
+   "Avg": 105.12
   }
  ],
  "awards": {
@@ -487,8 +487,8 @@
    "Owner": "dh671",
    "P": 187.58,
    "Opp": "Louisiana Monroe",
-   "PA": 94.32,
-   "Margin": 93.26
+   "PA": 95.32,
+   "Margin": 92.26
   },
   "blowout": {
    "Team": "Wisconsin",
@@ -541,8 +541,8 @@
    "Owner": "devbovino",
    "P": 49.78,
    "Opp": "South Carolina",
-   "PA": 101.4,
-   "Margin": -51.62,
+   "PA": 100.4,
+   "Margin": -50.62,
    "Max": 183.38,
    "Left": 133.6,
    "Count": 50
@@ -574,8 +574,8 @@
    "Owner": "masshole4eva",
    "P": 168.68,
    "Opp": "Georgia State",
-   "PA": 148.42,
-   "Margin": 20.26,
+   "PA": 147.42,
+   "Margin": 21.26,
    "Proj": 124.35,
    "Over": 44.33
   }
