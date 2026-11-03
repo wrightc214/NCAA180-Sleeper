@@ -144,6 +144,14 @@
       "min_wins": 6,
       "bump_wins": 5,
       "max_bumps": 1,
+      "rank": {
+        "_note": "Bowl order (Chris, 2026-11-03). poll_per_win: rank by poll rank - poll_spots_per_win x wins, i.e. a team with one fewer win must be poll_spots_per_win+ spots higher in the poll to pass you; same record -> poll decides. record: wins, then the tiebreakers.order. Poll = poll_type through the last regular week (latest available). Comparison: claude/rank-source-comparison-2026-11-03.md.",
+        "method": "poll_per_win",
+        "poll_spots_per_win": 25,
+        "poll_type": "BotConsensus"
+      },
+      "marquee_league_seat": "division_leaders",
+      "_marquee_league_seat_note": "Marquee seat per league. division_leaders (Chris, 2026-11-03): after playoff + Prestige teams are out, only each division's top remaining team is a candidate; the better of them (bowl order) takes the seat -- a division's 4th place never passes its own 3rd. best_ranked: the league's best remaining team in bowl order.",
       "review_before_publish": true,
       "repeat_seasons": 3,
       "_repeat_note": "No bowl pairing of two franchises (league + roster slot) that met in any postseason game or NIT group in the last N seasons.",

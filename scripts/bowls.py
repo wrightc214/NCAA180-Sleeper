@@ -5,8 +5,13 @@ Redesign (Chris, 2026-10-28). The pool is unchanged: non-playoff teams with min_
 wins; if the count is odd the best bump_wins team moves up (max_bumps); surplus beyond the bowl
 slots falls to the NIT. Tiers then fill in order:
 
+Bowl order (rank, Chris 2026-11-03): config rank.method. poll_per_win = poll rank minus
+poll_spots_per_win x wins (default 25: one fewer win needs 25+ poll spots to pass you); record =
+wins + tiebreakers. "Top-ranked" below means this order.
+
   Prestige (wk 16)  the top-ranked teams, best available pairings, bowls in priority order.
-  Marquee  (wk 15)  each league's best remaining team, topped up by rank to 16. Pair by rank
+  Marquee  (wk 15)  one seat per league (marquee_league_seat: division_leaders = the better of each
+                    division's top remaining team), topped up by rank to 16. Pair by rank
                     (partners at most max_shift spots apart), then place every pair in the bowl
                     whose tie-ins fit best (anchor 3, primary 2, secondary 1; Wild has none). All 8
                     pairs are placed together; exact ties go to the bowl those leagues visited
@@ -53,6 +58,46 @@ def bowl_list(cfg):
     return out
 
 
+def poll_ranks(year, poll_type):
+    """{(LeagueID, RosterID): rank} from the latest poll_type poll through the last regular week."""
+    import league_config as lcfg
+    frames = [pd.read_csv(f, dtype=str) for f in ("data/Poll_Season.csv", "data/Poll_Historic.csv") if os.path.exists(f)]
+    if not frames:
+        return {}, None
+    p = pd.concat(frames)
+    p = p[(p["Year"] == str(year)) & (p["PollType"] == poll_type)]
+    p = p[pd.to_numeric(p["ThroughWeek"]) <= lcfg.last_regular_week()]
+    if p.empty:
+        return {}, None
+    wk = pd.to_numeric(p["ThroughWeek"]).max()
+    p = p[pd.to_numeric(p["ThroughWeek"]) == wk]
+    return {(str(r.LeagueID), str(r.RosterID)): int(float(r.Rank)) for r in p.itertuples()}, int(wk)
+
+
+def order_pool(pool, year, cfg, notes):
+    """Bowl order (config rank). pool: DataFrame already in record order."""
+    rk = cfg.get("rank", {"method": "record"})
+    if rk.get("method", "record") == "record":
+        return pool
+    if rk["method"] != "poll_per_win":
+        raise ValueError(f"unknown bowls.rank.method {rk['method']}")
+    ranks, wk = poll_ranks(year, rk.get("poll_type", "BotConsensus"))
+    if not ranks:
+        notes.append(f"no {rk.get('poll_type')} poll for {year}: bowl order falls back to record")
+        return pool
+    worst = max(ranks.values()) + 1
+    pool = pool.copy()
+    pool["PollRank"] = [ranks.get((str(l), str(r)), worst) for l, r in zip(pool["LeagueID"], pool["RosterID"])]
+    missing = pool[pool["PollRank"] == worst]["Team"].tolist()
+    if missing:
+        notes.append(f"not in the week-{wk} poll (ranked last): " + ", ".join(missing))
+    x = float(rk.get("poll_spots_per_win", 25))
+    pool["_rec"] = range(len(pool))  # record order breaks exact ties
+    pool["BowlScore"] = pool["PollRank"] - x * pool["Wins"].astype(float)
+    notes.append(f"bowl order: week-{wk} {rk.get('poll_type')} poll rank - {x:g} x wins")
+    return pool.sort_values(["BowlScore", "_rec"]).drop(columns="_rec").reset_index(drop=True)
+
+
 def build_pool(year, field_path, cfg):
     """(pool, notes): eligible non-playoff teams, best first. Flexible count (Chris, 2026-10-27):
     every non-playoff team with min_wins+ gets a bowl; odd count -> the best bump_wins team moves up."""
@@ -62,14 +107,20 @@ def build_pool(year, field_path, cfg):
     if field.empty or (field["BidType"] == "Tied - Unresolved").any():
         sys.exit("FATAL: playoff field missing or unresolved -- run playoff_field.py first")
     in_field = set(zip(field["LeagueID"], field["RosterID"]))
+    divrank = {}  # place within the division (all teams, playoff included) -- Marquee seat rule
+    for _, g in st.groupby(["LeagueID", "Division"]):
+        for i, r in enumerate(ps.rank(g).itertuples(), 1):
+            divrank[(r.LeagueID, r.RosterID)] = i
+    st = st.assign(DivisionRank=[divrank.get((l, r)) for l, r in zip(st["LeagueID"], st["RosterID"])])
     non = st[[(l, r) not in in_field for l, r in zip(st["LeagueID"], st["RosterID"])]]
     pool = ps.rank(non[non["Wins"] >= cfg["min_wins"]])
-    notes = []
+    notes = []  # (bowl order applied after the bump: order_pool)
     if len(pool) % 2:
         bump = ps.rank(non[non["Wins"] == cfg["bump_wins"]]).head(int(cfg.get("max_bumps", 1)))
         if len(bump):
             notes.append(f"{len(bump)} {cfg['bump_wins']}-win team(s) pulled up to make the count even: " + ", ".join(bump["Team"]))
         pool = ps.rank(pd.concat([pool, bump]))
+    pool = order_pool(pool, year, cfg, notes)
     slots = 2 * len(bowl_list(cfg))
     if len(pool) > slots:
         notes.append(f"{len(pool) - slots} eligible team(s) beyond the {slots // 2} bowls fall to the NIT: "
@@ -163,6 +214,18 @@ class Draw:
                 continue
             self.place(b, *pair)
 
+    def seat_order(self):
+        """Marquee seat candidates, best first. division_leaders: a team counts only if it is the top
+        remaining team of its own division (DivisionRank), so a division's 4th never passes its 3rd."""
+        if self.cfg.get("marquee_league_seat", "best_ranked") != "division_leaders":
+            return list(self.left)
+        top = {}
+        for t in self.left:
+            k = (t["LeagueID"], t.get("Division"))
+            top[k] = min(top.get(k, 99), int(t.get("DivisionRank") or 99))
+        return sorted(self.left, key=lambda t: (int(t.get("DivisionRank") or 99) != top[(t["LeagueID"], t.get("Division"))],
+                                                self.order[slot(t)]))
+
     def fit(self, b, t):
         lg = self.lg(t)
         if lg in b.get("anchor", []):  # a league's one home bowl (Celebration = HBCU)
@@ -172,7 +235,7 @@ class Draw:
     def marquee(self, bowls, max_shift):
         n = 2 * len(bowls)
         picks, seen = [], set()
-        for t in self.left:  # each league's best remaining team
+        for t in self.seat_order():  # one seat per league (marquee_league_seat)
             if t["LeagueID"] not in seen:
                 picks.append(t)
                 seen.add(t["LeagueID"])
