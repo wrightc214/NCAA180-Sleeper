@@ -1,6 +1,6 @@
 {
  "week": 1,
- "avg": 134.3,
+ "avg": 134.32,
  "median": 134.75,
  "unbeaten": 90,
  "winless": 90,
@@ -148,7 +148,7 @@
   {
    "Rank": 15,
    "Team": "Colorado",
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Owner": "keppin",
    "Rec": "1-0",
    "Pts": 179.32,
@@ -168,7 +168,7 @@
   {
    "Rank": 17,
    "Team": "Oregon State",
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Owner": "Dunebuggy619",
    "Rec": "1-0",
    "Pts": 178.88,
@@ -197,21 +197,21 @@
   },
   {
    "Rank": 20,
-   "Team": "TCU",
-   "Lg": "Big 12",
-   "Owner": "CousinMose15",
+   "Team": "North Carolina Central",
+   "Lg": "Ohio Valley",
+   "Owner": "Firephool",
    "Rec": "1-0",
-   "Pts": 173.66,
+   "Pts": 173.96,
    "Luck": 0.11,
    "Move": null
   },
   {
    "Rank": 21,
-   "Team": "North Carolina Central",
-   "Lg": "Ohio Valley",
-   "Owner": "Firephool",
+   "Team": "TCU",
+   "Lg": "Big 12",
+   "Owner": "CousinMose15",
    "Rec": "1-0",
-   "Pts": 172.96,
+   "Pts": 173.66,
    "Luck": 0.11,
    "Move": null
   },
@@ -228,7 +228,7 @@
   {
    "Rank": 23,
    "Team": "UCLA",
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Owner": "lmerkouSaints",
    "Rec": "1-0",
    "Pts": 171.36,
@@ -248,7 +248,7 @@
   {
    "Rank": 25,
    "Team": "Washington State",
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Owner": "chzhead412",
    "Rec": "1-0",
    "Pts": 170.0,
@@ -278,7 +278,7 @@
   {
    "Rank": 28,
    "Team": "Purdue",
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Owner": "Mo00",
    "Rec": "1-0",
    "Pts": 164.3,
@@ -433,10 +433,10 @@
   },
   {
    "Lg": "Ohio Valley",
-   "Avg": 137.73
+   "Avg": 137.9
   },
   {
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Avg": 136.97
   },
   {
@@ -452,7 +452,7 @@
    "Avg": 134.24
   },
   {
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Avg": 134.07
   },
   {
@@ -477,7 +477,7 @@
   },
   {
    "Lg": "Big Sky",
-   "Avg": 120.07
+   "Avg": 120.23
   }
  ],
  "awards": {
@@ -519,7 +519,7 @@
   },
   "lucky": {
    "Team": "California",
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Owner": "ImagineWiigons",
    "P": 89.06,
    "Opp": "Oregon",
@@ -532,8 +532,8 @@
    "Owner": "Pinky7373",
    "P": 32.34,
    "Opp": "Eastern Washington",
-   "PA": 116.44,
-   "Margin": -84.1
+   "PA": 118.44,
+   "Margin": -86.1
   },
   "ybs": {
    "Team": "Montana",
@@ -549,7 +549,7 @@
   },
   "coach": {
    "Team": "Indiana",
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Owner": "ChAiNSmOkErTk",
    "P": 140.2,
    "Opp": "Michigan State",

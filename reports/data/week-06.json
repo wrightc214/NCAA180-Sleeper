@@ -1,6 +1,6 @@
 {
  "week": 6,
- "avg": 113.7,
+ "avg": 113.71,
  "median": 115.05,
  "unbeaten": 9,
  "winless": 11,
@@ -8,7 +8,7 @@
   {
    "Rank": 1,
    "Team": "Washington State",
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Owner": "chzhead412",
    "Rec": "6-0",
    "Pts": 1002.76,
@@ -28,7 +28,7 @@
   {
    "Rank": 3,
    "Team": "Colorado",
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Owner": "keppin",
    "Rec": "6-0",
    "Pts": 979.4,
@@ -118,7 +118,7 @@
   {
    "Rank": 12,
    "Team": "Arizona State",
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Owner": "wrightc214",
    "Rec": "5-1",
    "Pts": 992.84,
@@ -168,7 +168,7 @@
   {
    "Rank": 17,
    "Team": "Iowa",
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Owner": "Schuflakka",
    "Rec": "5-1",
    "Pts": 926.92,
@@ -212,7 +212,7 @@
    "Owner": "JustTouchdown1221",
    "Rec": "5-1",
    "Pts": 900.22,
-   "Luck": 0.45,
+   "Luck": 0.46,
    "Move": 10
   },
   {
@@ -288,7 +288,7 @@
   {
    "Rank": 29,
    "Team": "Purdue",
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Owner": "Mo00",
    "Rec": "5-1",
    "Pts": 795.78,
@@ -329,7 +329,7 @@
  "top_scores": [
   {
    "Team": "Arizona State",
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Owner": "wrightc214",
    "P": 185.26,
    "Opp": "Washington",
@@ -338,7 +338,7 @@
   },
   {
    "Team": "Nebraska",
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Owner": "EthanH",
    "P": 174.86,
    "Opp": "Penn State",
@@ -347,7 +347,7 @@
   },
   {
    "Team": "Washington State",
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Owner": "chzhead412",
    "P": 170.54,
    "Opp": "Utah",
@@ -374,7 +374,7 @@
   },
   {
    "Team": "Colorado",
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Owner": "keppin",
    "P": 169.2,
    "Opp": "Oregon State",
@@ -428,12 +428,12 @@
    "Avg": 120.7
   },
   {
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Avg": 119.88
   },
   {
    "Lg": "Ohio Valley",
-   "Avg": 117.94
+   "Avg": 118.11
   },
   {
    "Lg": "Wild",
@@ -456,7 +456,7 @@
    "Avg": 114.76
   },
   {
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Avg": 114.0
   },
   {
@@ -483,7 +483,7 @@
  "awards": {
   "high": {
    "Team": "Arizona State",
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Owner": "wrightc214",
    "P": 185.26,
    "Opp": "Washington",

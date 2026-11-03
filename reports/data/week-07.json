@@ -1,6 +1,6 @@
 {
  "week": 7,
- "avg": 120.21,
+ "avg": 120.22,
  "median": 123.5,
  "unbeaten": 6,
  "winless": 9,
@@ -8,7 +8,7 @@
   {
    "Rank": 1,
    "Team": "Washington State",
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Owner": "chzhead412",
    "Rec": "7-0",
    "Pts": 1148.46,
@@ -28,7 +28,7 @@
   {
    "Rank": 3,
    "Team": "Colorado",
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Owner": "keppin",
    "Rec": "7-0",
    "Pts": 1129.44,
@@ -78,7 +78,7 @@
   {
    "Rank": 8,
    "Team": "Arizona State",
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Owner": "wrightc214",
    "Rec": "6-1",
    "Pts": 1109.86,
@@ -98,7 +98,7 @@
   {
    "Rank": 10,
    "Team": "Iowa",
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Owner": "Schuflakka",
    "Rec": "6-1",
    "Pts": 1079.2,
@@ -208,7 +208,7 @@
   {
    "Rank": 21,
    "Team": "Purdue",
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Owner": "Mo00",
    "Rec": "6-1",
    "Pts": 934.38,
@@ -318,7 +318,7 @@
   {
    "Rank": 32,
    "Team": "Minnesota",
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Owner": "linkoftime1",
    "Rec": "5-2",
    "Pts": 1100.88,
@@ -433,7 +433,7 @@
   },
   {
    "Lg": "Ohio Valley",
-   "Avg": 124.51
+   "Avg": 124.67
   },
   {
    "Lg": "Mountain West",
@@ -460,11 +460,11 @@
    "Avg": 119.51
   },
   {
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Avg": 119.04
   },
   {
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Avg": 117.42
   },
   {
@@ -492,7 +492,7 @@
   },
   "blowout": {
    "Team": "Wisconsin",
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Owner": "laxbro000",
    "P": 153.42,
    "Opp": "Indiana",
@@ -521,14 +521,14 @@
    "Team": "Charleston Southern",
    "Lg": "Ohio Valley",
    "Owner": "leathershoe4",
-   "P": 78.54,
+   "P": 79.54,
    "Opp": "Morehead State",
    "PA": 69.06,
-   "Margin": 9.48
+   "Margin": 10.48
   },
   "low": {
    "Team": "Indiana",
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Owner": "ChAiNSmOkErTk",
    "P": 22.4,
    "Opp": "Wisconsin",

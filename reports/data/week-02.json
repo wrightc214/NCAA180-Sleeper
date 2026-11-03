@@ -8,7 +8,7 @@
   {
    "Rank": 1,
    "Team": "Minnesota",
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Owner": "linkoftime1",
    "Rec": "2-0",
    "Pts": 408.48,
@@ -188,7 +188,7 @@
   {
    "Rank": 19,
    "Team": "UCLA",
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Owner": "lmerkouSaints",
    "Rec": "2-0",
    "Pts": 312.5,
@@ -198,7 +198,7 @@
   {
    "Rank": 20,
    "Team": "Washington State",
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Owner": "chzhead412",
    "Rec": "2-0",
    "Pts": 311.96,
@@ -248,7 +248,7 @@
   {
    "Rank": 25,
    "Team": "Purdue",
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Owner": "Mo00",
    "Rec": "2-0",
    "Pts": 303.02,
@@ -278,7 +278,7 @@
   {
    "Rank": 28,
    "Team": "Colorado",
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Owner": "keppin",
    "Rec": "2-0",
    "Pts": 294.64,
@@ -329,7 +329,7 @@
  "top_scores": [
   {
    "Team": "Minnesota",
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Owner": "linkoftime1",
    "P": 253.72,
    "Opp": "Iowa",
@@ -356,7 +356,7 @@
   },
   {
    "Team": "Arizona State",
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Owner": "wrightc214",
    "P": 216.68,
    "Opp": "USC",
@@ -444,7 +444,7 @@
    "Avg": 125.69
   },
   {
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Avg": 123.19
   },
   {
@@ -472,7 +472,7 @@
    "Avg": 120.18
   },
   {
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Avg": 118.67
   },
   {
@@ -483,7 +483,7 @@
  "awards": {
   "high": {
    "Team": "Minnesota",
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Owner": "linkoftime1",
    "P": 253.72,
    "Opp": "Iowa",
@@ -549,7 +549,7 @@
   },
   "coach": {
    "Team": "Ohio State",
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Owner": "Klashified",
    "P": 173.48,
    "Opp": "Indiana",
@@ -560,7 +560,7 @@
   },
   "exceed": {
    "Team": "Minnesota",
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Owner": "linkoftime1",
    "P": 253.72,
    "Opp": "Iowa",

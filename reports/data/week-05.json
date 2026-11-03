@@ -1,6 +1,6 @@
 {
  "week": 5,
- "avg": 130.47,
+ "avg": 130.49,
  "median": 130.08,
  "unbeaten": 12,
  "winless": 15,
@@ -28,7 +28,7 @@
   {
    "Rank": 3,
    "Team": "Washington State",
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Owner": "chzhead412",
    "Rec": "5-0",
    "Pts": 832.22,
@@ -68,7 +68,7 @@
   {
    "Rank": 7,
    "Team": "Colorado",
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Owner": "keppin",
    "Rec": "5-0",
    "Pts": 810.2,
@@ -108,7 +108,7 @@
   {
    "Rank": 11,
    "Team": "Purdue",
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Owner": "Mo00",
    "Rec": "5-0",
    "Pts": 696.76,
@@ -138,7 +138,7 @@
   {
    "Rank": 14,
    "Team": "Minnesota",
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Owner": "linkoftime1",
    "Rec": "4-1",
    "Pts": 851.76,
@@ -168,7 +168,7 @@
   {
    "Rank": 17,
    "Team": "Arizona State",
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Owner": "wrightc214",
    "Rec": "4-1",
    "Pts": 807.58,
@@ -198,7 +198,7 @@
   {
    "Rank": 20,
    "Team": "Iowa",
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Owner": "Schuflakka",
    "Rec": "4-1",
    "Pts": 785.44,
@@ -272,7 +272,7 @@
    "Owner": "Yarby",
    "Rec": "4-1",
    "Pts": 757.96,
-   "Luck": 0.27,
+   "Luck": 0.28,
    "Move": -14
   },
   {
@@ -312,7 +312,7 @@
    "Owner": "JustTouchdown1221",
    "Rec": "4-1",
    "Pts": 745.38,
-   "Luck": 0.39,
+   "Luck": 0.4,
    "Move": 4
   },
   {
@@ -322,7 +322,7 @@
    "Owner": "errand",
    "Rec": "4-1",
    "Pts": 741.36,
-   "Luck": 0.56,
+   "Luck": 0.57,
    "Move": -1
   }
  ],
@@ -392,7 +392,7 @@
   },
   {
    "Team": "Colorado",
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Owner": "keppin",
    "P": 196.34,
    "Opp": "USC",
@@ -410,7 +410,7 @@
   },
   {
    "Team": "Nebraska",
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Owner": "EthanH",
    "P": 191.74,
    "Opp": "Northwestern",
@@ -449,7 +449,7 @@
   },
   {
    "Lg": "Ohio Valley",
-   "Avg": 130.29
+   "Avg": 130.46
   },
   {
    "Lg": "CUSA",
@@ -468,11 +468,11 @@
    "Avg": 125.31
   },
   {
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Avg": 124.95
   },
   {
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Avg": 124.91
   },
   {
@@ -492,7 +492,7 @@
   },
   "blowout": {
    "Team": "Nebraska",
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Owner": "EthanH",
    "P": 191.74,
    "Opp": "Northwestern",
@@ -528,7 +528,7 @@
   },
   "low": {
    "Team": "Northwestern",
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Owner": "kfitch3p",
    "P": 46.6,
    "Opp": "Nebraska",
@@ -537,7 +537,7 @@
   },
   "ybs": {
    "Team": "Utah",
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Owner": "seniormeow",
    "P": 94.86,
    "Opp": "UCLA",
@@ -549,7 +549,7 @@
   },
   "coach": {
    "Team": "Washington State",
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Owner": "chzhead412",
    "P": 164.54,
    "Opp": "California",

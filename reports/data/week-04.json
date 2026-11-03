@@ -1,6 +1,6 @@
 {
  "week": 4,
- "avg": 133.01,
+ "avg": 133.02,
  "median": 128.93,
  "unbeaten": 19,
  "winless": 18,
@@ -58,7 +58,7 @@
   {
    "Rank": 6,
    "Team": "Washington State",
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Owner": "chzhead412",
    "Rec": "4-0",
    "Pts": 667.68,
@@ -108,7 +108,7 @@
   {
    "Rank": 11,
    "Team": "Colorado",
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Owner": "keppin",
    "Rec": "4-0",
    "Pts": 613.86,
@@ -132,7 +132,7 @@
    "Owner": "Yarby",
    "Rec": "4-0",
    "Pts": 609.26,
-   "Luck": 0.99,
+   "Luck": 1.0,
    "Move": 2
   },
   {
@@ -148,7 +148,7 @@
   {
    "Rank": 15,
    "Team": "Purdue",
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Owner": "Mo00",
    "Rec": "4-0",
    "Pts": 599.24,
@@ -218,7 +218,7 @@
   {
    "Rank": 22,
    "Team": "Minnesota",
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Owner": "linkoftime1",
    "Rec": "3-1",
    "Pts": 674.16,
@@ -228,7 +228,7 @@
   {
    "Rank": 23,
    "Team": "Arizona State",
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Owner": "wrightc214",
    "Rec": "3-1",
    "Pts": 667.72,
@@ -258,7 +258,7 @@
   {
    "Rank": 26,
    "Team": "Iowa",
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Owner": "Schuflakka",
    "Rec": "3-1",
    "Pts": 620.14,
@@ -302,7 +302,7 @@
    "Owner": "krichknowsbest",
    "Rec": "3-1",
    "Pts": 603.84,
-   "Luck": -0.07,
+   "Luck": -0.06,
    "Move": -10
   },
   {
@@ -312,7 +312,7 @@
    "Owner": "errand",
    "Rec": "3-1",
    "Pts": 601.26,
-   "Luck": 0.19,
+   "Luck": 0.2,
    "Move": 10
   },
   {
@@ -338,7 +338,7 @@
   },
   {
    "Team": "Iowa",
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Owner": "Schuflakka",
    "P": 201.62,
    "Opp": "Nebraska",
@@ -392,7 +392,7 @@
   },
   {
    "Team": "Washington State",
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Owner": "chzhead412",
    "P": 189.84,
    "Opp": "Oregon",
@@ -429,7 +429,7 @@
   },
   {
    "Lg": "Ohio Valley",
-   "Avg": 137.07
+   "Avg": 137.23
   },
   {
    "Lg": "Big East",
@@ -452,7 +452,7 @@
    "Avg": 133.67
   },
   {
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Avg": 132.66
   },
   {
@@ -468,7 +468,7 @@
    "Avg": 129.86
   },
   {
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Avg": 129.34
   },
   {
@@ -519,7 +519,7 @@
   },
   "lucky": {
    "Team": "Northwestern",
-   "Lg": "Big 10",
+   "Lg": "Big Ten",
    "Owner": "kfitch3p",
    "P": 103.88,
    "Opp": "Wisconsin",
@@ -537,7 +537,7 @@
   },
   "ybs": {
    "Team": "California",
-   "Lg": "Pac 12",
+   "Lg": "Pac-12",
    "Owner": "ImagineWiigons",
    "P": 79.28,
    "Opp": "Washington",
