@@ -290,7 +290,7 @@ def post(where_to):
         note("warning", f"Bowl projection not posted: {hook} not set")
         return 1
     contact = os.environ.get("DISCORD_CONTACT_ID", "").strip()
-    head = f"**{lcfg.brand()} bowl projection · after week {meta['after_week']}**"
+    head = f"**{lcfg.brand()} Playoff & Bowl Projection · after week {meta['after_week']}**"
     if where_to == "preview":
         msg = (head + " — PREVIEW (not posted to the league).\nTo release exactly these images: Actions → "
                "Weekly League Update → Run workflow → script `bowl_projection_publish`.")
@@ -298,7 +298,8 @@ def post(where_to):
         if contact:
             msg = f"<@{contact}> " + msg
     else:
-        msg = head + "\nIf the season ended the way it's trending. Projection, not official."
+        msg = (head + "\nIf the season ended the way it's trending: projected playoff first round, Prestige Bowls "
+               "and Marquee Bowls. Remaining games are projected from each team's season scoring average. Not official.")
         mentions = [contact] if contact else []
         if contact:
             msg += f"\n<@{contact}>"
