@@ -140,19 +140,22 @@
         "Final Four",
         "National Championship"
       ],
-      "round_bowls": {
-        "3": [
-          "Orange Bowl",
-          "Cotton Bowl",
-          "Peach Bowl",
-          "Fiesta Bowl"
-        ],
-        "4": [
+      "bowl_rotation": [
+        [
           "Rose Bowl",
           "Sugar Bowl"
+        ],
+        [
+          "Orange Bowl",
+          "Cotton Bowl"
+        ],
+        [
+          "Peach Bowl",
+          "Fiesta Bowl"
         ]
-      },
-      "_round_bowls_note": "Bowl hosting each game, in bracket game order (2022-2025 history): Elite 8 = the 1-seed's quadrant (Orange), 4-seed's (Cotton), 2-seed's (Peach), 3-seed's (Fiesta); Final Four = Orange/Cotton winners (Rose), Peach/Fiesta winners (Sugar). National Championship has no bowl name."
+      ],
+      "bowl_rotation_anchor": 2025,
+      "_bowl_rotation_note": "Chris, 2026-11-04: the semifinal (Final Four) pair rotates every year; the other four host the Elite 8. Year Y uses pair (Y - anchor) mod 3 for the semis (2025 = Rose/Sugar, 2026 = Orange/Cotton, 2027 = Peach/Fiesta). Elite 8 = the next two pairs in order, by bracket game (1-seed, 4-seed, 2-seed, 3-seed quadrants); semifinal 1 = winners of Elite 8 games 1-2, semifinal 2 = games 3-4. National Championship has no bowl name."
     },
     "bowls": {
       "_note": "Bowl rules (Chris, 2026-10-28 redesign). Tiers fill in order: Prestige (top-ranked), Marquee (each league's best + rank, tie-in fit), Showcase (service + international, always played), Opening (flexible; bottom of the list sits out). Names/locations are 2026+; history keeps the names played.",

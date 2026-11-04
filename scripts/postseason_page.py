@@ -212,7 +212,8 @@ def build_season(year, years):
         body = ""
         for rnd, wk, name in rounds:
             gs = [g for g in po if (g["round"], g["week"], g["name"]) == (rnd, wk, name)]
-            hosts = [b for v in ps.config()[1]["playoff"].get("round_bowls", {}).values() for b in v]
+            hosts = ([b for v in ps.playoff_round_bowls(year).values() for b in v] if int(year) >= ps.current_season() else []) or \
+                ["Orange Bowl", "Cotton Bowl", "Peach Bowl", "Fiesta Bowl", "Rose Bowl", "Sugar Bowl"]  # past: as played
             gs.sort(key=lambda g: (hosts.index(g["bowl"]) if g["bowl"] in hosts else 99,
                                    min(int(num(t["Seed"]) or 99) for t in g["teams"])))  # bracket order
             natty = name == "National Championship"
