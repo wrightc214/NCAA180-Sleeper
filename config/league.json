@@ -639,12 +639,11 @@
               "name": "Freedom Bowl",
               "exclude_region": "SoCal",
               "location": {
-                "city": "Anaheim",
+                "city": "Los Angeles",
                 "state": "CA",
                 "country": "USA",
-                "region": "SoCal",
-                "lat": 33.84,
-                "lon": -117.91
+                "lat": 34.05,
+                "lon": -118.24
               },
               "origin": "Anaheim, 1984–94"
             },
@@ -652,11 +651,11 @@
               "name": "Palm Bowl",
               "exclude_state": "FL",
               "location": {
-                "city": "Miami",
+                "city": "Boca Raton",
                 "state": "FL",
                 "country": "USA",
-                "lat": 25.76,
-                "lon": -80.19
+                "lat": 26.37,
+                "lon": -80.1
               },
               "origin": "McAllen TX; D-II title game 1981–85, NAIA 1978–79"
             },
@@ -774,7 +773,9 @@
         "Mirage Bowl",
         "Pelican Bowl",
         "Stagg Bowl",
-        "Zia Bowl"
+        "Zia Bowl",
+        "Palm Bowl",
+        "Vulcan Bowl"
       ],
       "_approved_logos_note": "Chris, 2026-11-03: only these bowl logos are drawn (site + Discord); any other bowl shows its name only. Sponsor-branded files stay unused until replaced with a clean version (no corporate sponsor), then added here. Upload to assets/logos/Bowls/<Bowl Name>.png and run the Trim logos workflow with folder assets/logos/Bowls."
     },
