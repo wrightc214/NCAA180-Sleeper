@@ -15,7 +15,10 @@ DRAFT (data/postseason_drafts/PlayoffField_<year>.csv) and previewed to Chris in
 writes the live file (site, announcements). Once published it is locked. --data-dir runs
 (replays, the projection) skip the review and write directly.
 
-  python scripts/playoff_field.py [--year 2026] [--publish] [--data-dir DIR]
+--auto (weekly job): quietly does nothing until every CCG is final, and only writes the draft
+(and flags it for the LM preview) when it is new or changed.
+
+  python scripts/playoff_field.py [--year 2026] [--publish | --auto] [--data-dir DIR]
 """
 import argparse
 import os
@@ -26,11 +29,18 @@ import pandas as pd
 import _postseason_common as ps
 
 
+def mark_new_draft():
+    """Tell the workflow a new/changed draft exists (postseason_preview posts it to LM)."""
+    os.makedirs("work", exist_ok=True)
+    open("work/postseason_draft.new", "a").close()
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--year", type=int)
     ap.add_argument("--data-dir")
     ap.add_argument("--publish", action="store_true", help="approve the draft: write the live field")
+    ap.add_argument("--auto", action="store_true", help="weekly job: draft once the CCGs are final, else no-op")
     a = ap.parse_args()
     year = a.year or ps.current_season()
     season_path, field_path, draft_dir = ps.paths(a)
@@ -52,6 +62,9 @@ def main():
     df = ps.read_season(season_path)
     ccg = df[(df["Year"].astype(str) == str(year)) & (df["Round"] == "CCG")]
     if ccg.empty or (ccg["Status"] != "Final").any() or (ccg["Outcome"] == "Tie").any():
+        if a.auto:
+            print(f"Playoff field {year}: waiting for every CCG to be final")
+            return
         sys.exit(f"FATAL: every CCG must be final (and not tied) before the field can be set ({season_path})")
     st = ps.standings(year)
     auto = []
@@ -89,7 +102,12 @@ def main():
     cols = ["Year", "LeagueID", "LeagueName", "RosterID", "Team", "OwnerName", "Division", "BidType", "Wins", "Losses", "PointsFor"]
     if review and not a.publish:
         os.makedirs(draft_dir, exist_ok=True)
+        if a.auto and os.path.exists(draft) and pd.read_csv(draft, dtype=str).fillna("").equals(
+                out[cols].astype(str).replace("nan", "").reset_index(drop=True)):
+            print(f"Playoff field {year}: draft unchanged ({draft})")
+            return
         out[cols].to_csv(draft, index=False)
+        mark_new_draft()
         print(f"Playoff field {year}: DRAFT {len(keys)} auto + {n_at} at-large -> {draft} "
               f"(awaiting review; approve with --publish / script playoff_publish)")
         sys.exit(0 if complete else 1)

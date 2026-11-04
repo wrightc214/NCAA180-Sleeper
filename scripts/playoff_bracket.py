@@ -13,6 +13,8 @@ published, a run writes a DRAFT (data/postseason_drafts/Playoff_<year>.csv: seed
 pairings), from the live field or, if that isn't published yet, the field draft. --publish needs
 the published field, checks the pairings still match the draft, then writes the live bracket.
 After that every run refreshes results as before. --data-dir runs skip the review.
+--auto (weekly job): drafts only when a field (draft or live) and the seeding ballot exist and the
+bracket isn't published; writes + flags for the LM preview only when the draft is new or changed.
 
   python scripts/playoff_bracket.py [--year 2026] [--seeds bots|manual|history] [--data-dir DIR]
 """
@@ -67,12 +69,19 @@ def load_seeds(year, source, field_teams):
     return seeds
 
 
+def mark_new_draft():
+    """Tell the workflow a new/changed draft exists (postseason_preview posts it to LM)."""
+    os.makedirs("work", exist_ok=True)
+    open("work/postseason_draft.new", "a").close()
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--year", type=int)
     ap.add_argument("--seeds")
     ap.add_argument("--data-dir")
     ap.add_argument("--publish", action="store_true", help="approve the draft: write the live bracket")
+    ap.add_argument("--auto", action="store_true", help="weekly job: draft once field + seeding ballot exist, else no-op")
     a = ap.parse_args()
     year = a.year or ps.current_season()
     season_path, field_path, draft_dir = ps.paths(a)
@@ -88,6 +97,9 @@ def main():
         sys.exit("FATAL: publish the playoff field first (playoff_field.py --publish)")
     if review and not live_field and os.path.exists(field_draft):
         field_path = field_draft  # draft bracket from the draft field
+    if a.auto and (not review or not (live_field or os.path.exists(field_draft))):
+        print(f"Playoff {year}: " + ("published; refresh runs manually" if published else "no field yet"))
+        return
     n = int(pc["field_size"])
     if n & (n - 1):
         sys.exit(f"FATAL: field_size {n} is not a power of two (byes aren't supported)")
@@ -96,6 +108,9 @@ def main():
     if len(field) and (field["BidType"] == "Tied - Unresolved").any():
         sys.exit("FATAL: the playoff field has an unresolved bubble tie")
     seeds = load_seeds(year, a.seeds or pc.get("seeding", "bots"), field)
+    if a.auto and sorted(seeds.values()) != list(range(1, n + 1)):
+        print(f"Playoff {year}: waiting for the seeding ballot")
+        return
     if sorted(seeds.values()) != list(range(1, n + 1)):
         sys.exit(f"FATAL: seeds for {year} aren't exactly 1..{n} (got {len(seeds)} teams)")
     if len(field) and set(seeds) != set(zip(field["LeagueID"], field["RosterID"])):
@@ -131,7 +146,14 @@ def main():
         r1 = sorted((r["GameID"], r["LeagueID"], str(r["RosterID"]), str(r["Seed"])) for r in rows if str(r["PlayoffRound"]) == "1")
         if not a.publish:
             os.makedirs(draft_dir, exist_ok=True)
+            if a.auto and os.path.exists(draft):
+                old1 = sorted((r.GameID, r.LeagueID, str(r.RosterID), str(r.Seed)) for r in ps.read_season(draft).itertuples()
+                              if str(r.PlayoffRound) == "1")
+                if old1 == r1:
+                    print(f"Playoff {year}: draft unchanged ({draft})")
+                    return
             pd.DataFrame(rows, columns=ps.COLUMNS).to_csv(draft, index=False)
+            mark_new_draft()
             print(f"Playoff {year}: DRAFT seeds + {len(r1) // 2} first-round games -> {draft} "
                   f"(awaiting review; approve with --publish / script playoff_publish)")
             return

@@ -137,6 +137,10 @@ jobs:
           # CCG pairings: no-op until weeks 1..last_regular_week are final; then writes the week-12
           # games (before the Matchups page / scoreboard freeze them) and refreshes their scores.
           run conference_championships conference_championships.py all
+          # Real selection drafts (Chris approves: playoff_publish). No-ops until CCGs / seeding ballot exist;
+          # a new or changed draft is previewed to lm-private-data (Postseason review step).
+          run playoff_field_draft   "playoff_field.py --auto" all
+          run playoff_bracket_draft "playoff_bracket.py --auto" all
           run postseason_export     postseason_export.py     all
           # App (todo-pwa.md): follow-picker lists, the setup page, then push for anything newly final.
           run push_teams            push_teams.py            all
@@ -356,7 +360,7 @@ jobs:
       # Postseason drafts -> Chris for approval (lm-private-data only). Runs after any selection/draw
       # script; lists every unpublished draft (field/seeds, bowls, NIT) and the script that approves it.
       - name: Postseason review to LM channel
-        if: always() && contains(fromJSON('["playoff_field","playoff_bracket","bowls","bowls_redraw","nit","nit_redraw"]'), github.event.inputs.script_to_run)
+        if: always() && (hashFiles('work/postseason_draft.new') != '' || contains(fromJSON('["playoff_field","playoff_bracket","bowls","bowls_redraw","nit","nit_redraw"]'), github.event.inputs.script_to_run))
         continue-on-error: true
         env:
           DISCORD_WEBHOOK_LM_PRIVATE_DATA: ${{ secrets.DISCORD_WEBHOOK_LM_PRIVATE_DATA }}
