@@ -624,27 +624,26 @@
               "origin": "New York, 1961–62"
             },
             {
-              "name": "Heritage Bowl",
+              "name": "Pelican Bowl",
               "lean": "HBCU",
               "location": {
-                "city": "Atlanta",
-                "state": "GA",
+                "city": "New Orleans",
+                "state": "LA",
                 "country": "USA",
-                "lat": 33.75,
-                "lon": -84.39
+                "lat": 29.95,
+                "lon": -90.07
               },
-              "origin": "1991–99 MEAC vs SWAC (Miami, Tallahassee, Atlanta)"
+              "origin": "MEAC vs SWAC champions: Durham NC 1972, New Orleans 1974–75 (location matches Chris's logo; Chris, 2026-11-04: takes Heritage's slot and HBCU lean)"
             },
             {
               "name": "Freedom Bowl",
               "exclude_region": "SoCal",
               "location": {
-                "city": "Anaheim",
+                "city": "Los Angeles",
                 "state": "CA",
                 "country": "USA",
-                "region": "SoCal",
-                "lat": 33.84,
-                "lon": -117.91
+                "lat": 34.05,
+                "lon": -118.24
               },
               "origin": "Anaheim, 1984–94"
             },
@@ -652,11 +651,11 @@
               "name": "Palm Bowl",
               "exclude_state": "FL",
               "location": {
-                "city": "Miami",
+                "city": "Boca Raton",
                 "state": "FL",
                 "country": "USA",
-                "lat": 25.76,
-                "lon": -80.19
+                "lat": 26.37,
+                "lon": -80.1
               },
               "origin": "McAllen TX; D-II title game 1981–85, NAIA 1978–79"
             },
@@ -706,6 +705,17 @@
                 "lat": 28.54,
                 "lon": -81.4
               }
+            },
+            {
+              "name": "Heritage Bowl",
+              "location": {
+                "city": "Atlanta",
+                "state": "GA",
+                "country": "USA",
+                "lat": 33.75,
+                "lon": -84.39
+              },
+              "origin": "1991–99 MEAC vs SWAC (Miami, Tallahassee, Atlanta) (moved to the end of the Opening order, no lean -- Chris, 2026-11-04)"
             }
           ]
         }
@@ -729,7 +739,45 @@
         "venue": "Salem Stadium",
         "lat": 37.29,
         "lon": -80.05
-      }
+      },
+      "approved_logos": [
+        "Citrus Bowl",
+        "Tangerine Bowl",
+        "Independence Bowl",
+        "New Orleans Bowl",
+        "Holiday Bowl",
+        "Music City Bowl",
+        "Aloha Bowl",
+        "Bahamas Bowl",
+        "International Bowl",
+        "Camellia Bowl",
+        "Motor City Bowl",
+        "Las Vegas Bowl",
+        "Fenway Bowl",
+        "Cure Bowl",
+        "Gasparilla Bowl",
+        "Gator Bowl",
+        "Pinstripe Bowl",
+        "Alamo Bowl",
+        "Liberty Bowl",
+        "Military Bowl",
+        "Sun Bowl",
+        "Armed Forces Bowl",
+        "Bacardi Bowl",
+        "Bluebonnet Bowl",
+        "Celebration Bowl",
+        "Copper Bowl",
+        "Freedom Bowl",
+        "Gotham Bowl",
+        "Heritage Bowl",
+        "Mirage Bowl",
+        "Pelican Bowl",
+        "Stagg Bowl",
+        "Zia Bowl",
+        "Palm Bowl",
+        "Vulcan Bowl"
+      ],
+      "_approved_logos_note": "Chris, 2026-11-03: only these bowl logos are drawn (site + Discord); any other bowl shows its name only. Sponsor-branded files stay unused until replaced with a clean version (no corporate sponsor), then added here. Upload to assets/logos/Bowls/<Bowl Name>.png and run the Trim logos workflow with folder assets/logos/Bowls."
     },
     "nit": {
       "review_before_publish": true,
