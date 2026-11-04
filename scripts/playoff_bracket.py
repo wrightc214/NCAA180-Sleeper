@@ -131,7 +131,9 @@ def main():
                 nxt.append(None)
                 continue
             gid = f"{year}-PO-R{r_i}-G{g_i:02d}"
-            gr = ps.game_rows(year, "Playoff", week, gid, pair, stage=label, playoff_round=r_i, seeds=seeds)
+            hosts = ps.playoff_round_bowls(year).get(str(r_i), [])  # host bowl (config playoff.bowl_rotation)
+            gr = ps.game_rows(year, "Playoff", week, gid, pair, stage=label, playoff_round=r_i, seeds=seeds,
+                              bowl=hosts[g_i - 1] if g_i <= len(hosts) else "")
             rows += gr
             w = [r for r in gr if r["Outcome"] == "Win"]
             if any(r["Outcome"] == "Tie" for r in gr):

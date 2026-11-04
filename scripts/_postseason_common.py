@@ -177,6 +177,18 @@ def regular_games(year):
     return reg
 
 
+def playoff_round_bowls(year):
+    """{playoff round: [host bowl per game, in bracket order]} for a season (config playoff.bowl_rotation):
+    semifinal pair rotates yearly, the other two pairs host the Elite 8 (Chris, 2026-11-04)."""
+    pc = config()[1]["playoff"]
+    pairs = pc.get("bowl_rotation") or []
+    if len(pairs) != 3:
+        return {}
+    k = (int(year) - int(pc.get("bowl_rotation_anchor", 2025))) % 3
+    rounds = len(pc["rounds"])
+    return {str(rounds - 2): pairs[(k + 1) % 3] + pairs[(k + 2) % 3], str(rounds - 1): list(pairs[k])}
+
+
 def standings(year):
     """One row per team: regular season (weeks 1..last_regular_week) Wins/Losses/PointsFor,
     decided under this season's scoring mode; plus division, team name, owner, state/region."""
