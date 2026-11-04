@@ -155,7 +155,40 @@
         ]
       ],
       "bowl_rotation_anchor": 2025,
-      "_bowl_rotation_note": "Chris, 2026-11-04: the semifinal (Final Four) pair rotates every year; the other four host the Elite 8. Year Y uses pair (Y - anchor) mod 3 for the semis (2025 = Rose/Sugar, 2026 = Orange/Cotton, 2027 = Peach/Fiesta). Elite 8 = the next two pairs in order, by bracket game (1-seed, 4-seed, 2-seed, 3-seed quadrants); semifinal 1 = winners of Elite 8 games 1-2, semifinal 2 = games 3-4. National Championship has no bowl name."
+      "_bowl_rotation_note": "Chris, 2026-11-04: the semifinal (Final Four) pair rotates every year; the other four host the Elite 8. Year Y uses pair (Y - anchor) mod 3 for the semis (2025 = Rose/Sugar, 2026 = Orange/Cotton, 2027 = Peach/Fiesta). Elite 8 = the next two pairs in order, by bracket game (1-seed, 4-seed, 2-seed, 3-seed quadrants); semifinal 1 = winners of Elite 8 games 1-2, semifinal 2 = games 3-4. National Championship has no bowl name.",
+      "championship_sites": {
+        "2024": {
+          "city": "Atlanta",
+          "state": "GA",
+          "country": "USA"
+        },
+        "2025": {
+          "city": "Miami Gardens",
+          "state": "FL",
+          "country": "USA"
+        },
+        "2026": {
+          "city": "Las Vegas",
+          "state": "NV",
+          "country": "USA"
+        },
+        "2027": {
+          "city": "New Orleans",
+          "state": "LA",
+          "country": "USA"
+        },
+        "2028": {
+          "city": "Tampa",
+          "state": "FL",
+          "country": "USA"
+        },
+        "2029": {
+          "city": "Miami Gardens",
+          "state": "FL",
+          "country": "USA"
+        }
+      },
+      "_championship_sites_note": "Chris, 2026-11-04: the National Championship is 'played' where the real CFP title game is that season (season year = the fall it starts). City only, no sponsor venue names. 2024-2026 confirmed; 2027-2029 reported, not official (checked 2026-11-04) -- update as the CFP announces. A missing year shows no location."
     },
     "bowls": {
       "_note": "Bowl rules (Chris, 2026-10-28 redesign). Tiers fill in order: Prestige (top-ranked), Marquee (each league's best + rank, tie-in fit), Showcase (service + international, always played), Opening (flexible; bottom of the list sits out). Names/locations are 2026+; history keeps the names played.",

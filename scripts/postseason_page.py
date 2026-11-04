@@ -84,7 +84,7 @@ def history_games(year):
             sl = tn.slot(year, n) or (None, None)
             teams.append({"Team": n, "LeagueName": (sl[0] or "").strip(), "RosterID": sl[1], "Seed": seeds[i] if i < len(seeds) else "",
                           "Points": scores[i] if i < len(scores) else None, "Win": r["Winner"].strip() == n})
-        out.append({"event": r["Event"], "round": int(r["Round"] or 0), "name": display_round(year, r["Event"], r["RoundName"], nit_rounds),
+        out.append({"year": int(year), "event": r["Event"], "round": int(r["Round"] or 0), "name": display_round(year, r["Event"], r["RoundName"], nit_rounds),
                     "week": int(r["Week"]) if str(r["Week"]).isdigit() else 0, "bowl": r["Bowl"] if r["Event"] in ("Bowl", "Playoff") else "",
                     "group": re.sub(r"^Group\s+", "", r["Bowl"]) if r["Event"] == "NIT" else "", "teams": teams,
                     "final": any(t["Win"] for t in teams), "note": r["Notes"]})
@@ -103,7 +103,7 @@ def season_games(year):
                  for r in g.to_dict("records")]
         rnd = int(num(r0["PlayoffRound"]) or 0) if ev == "Playoff" else 0
         name = {"CCG": "Conference Championship", "Bowl": "Bowl"}.get(ev, r0["Stage"])
-        out.append({"event": ev, "round": rnd, "name": display_round(year, ev, name, set()), "week": int(num(r0["Week"]) or 0),
+        out.append({"year": int(year), "event": ev, "round": rnd, "name": display_round(year, ev, name, set()), "week": int(num(r0["Week"]) or 0),
                     "bowl": r0["BowlName"] if ev in ("Bowl", "Playoff") else "",
                     "group": gid.split("-")[-1] if ev == "NIT" and len(teams) > 2 else "",
                     "teams": teams, "final": (g["Status"] == "Final").all(), "note": ""})
@@ -168,7 +168,10 @@ def game_html(g, col, short, label=None, logo_name=""):
     head = label if label is not None else (g["bowl"] or (("Group " + g["group"]) if g["group"] else ""))
     lg = bp.bowl_logo(logo_name or g["bowl"]) if (logo_name or g["bowl"]) else ""
     loc = ""
-    if g["bowl"]:
+    if logo_name == "National Championship":
+        site = ps.config()[1]["playoff"].get("championship_sites", {}).get(str(g.get("year", "")))
+        loc = bp.where({"location": site}) if site else ""
+    elif g["bowl"]:
         b = next((x for x in B.bowl_list(ps.config()[1]["bowls"]) if x["name"] == g["bowl"]), None)
         loc = bp.where(b) if b else ""
     hd = f'<p class="hd">{lg}{e(head)}{f"<span>{e(loc)}</span>" if loc else ""}</p>' if (head or lg) else ""
