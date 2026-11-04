@@ -389,6 +389,19 @@ def stored():
     return json.load(open(META)), files
 
 
+WORDS = {1: "One week", 2: "Two weeks", 3: "Three weeks", 4: "Four weeks", 5: "Five weeks", 6: "Six weeks"}
+
+
+def league_message(meta):
+    """The league post (wording locked with Chris, 2026-11-03). <link> stops Discord's link preview,
+    so only the three cards show."""
+    left = ps.last_regular_week() - int(meta["after_week"])
+    lead = f"{WORDS.get(left, f'{left} weeks')} left. " if left > 0 else ""
+    return (f"\U0001F3C8 **{lcfg.brand()} Playoff & Bowl Projection · After Week {meta['after_week']}**\n"
+            f"{lead}Here's where you're headed.\n"
+            f"Full projection, the bubble and every bowl team: <{LINK}>")
+
+
 def post(where_to):
     import poll_discord as pdisc
     from discord_post import note, valid
@@ -400,16 +413,15 @@ def post(where_to):
         return 1
     contact = os.environ.get("DISCORD_CONTACT_ID", "").strip()
     mentions = [contact] if contact else []
-    head = f"**{lcfg.brand()} Playoff & Bowl Projection · after week {meta['after_week']}**"
+    head = f"\U0001F3C8 **{lcfg.brand()} Playoff & Bowl Projection · After Week {meta['after_week']}**"
     if where_to == "preview":
         msg = (head + " — PREVIEW (not posted to the league).\nTo release exactly these images: Actions → "
-               "Weekly League Update → Run workflow → script `bowl_projection_publish`.")
+               "Weekly League Update → Run workflow → script `bowl_projection_publish`.\n\nLeague message:\n> "
+               + league_message(meta).replace("\n", "\n> "))
         if contact:
             msg = f"<@{contact}> " + msg
     else:
-        msg = (head + "\nIf the season ended the way it's trending: projected playoff first round, Prestige Bowls "
-               "and Marquee Bowls. Remaining games are projected from each team's season scoring average. Not official."
-               f"\nFull projection, bubble and every bowl team: {LINK}")
+        msg = league_message(meta)
         if contact:
             msg += f"\n<@{contact}>"
     pdisc.send(url, msg, mentions=mentions, files=files[:10])
