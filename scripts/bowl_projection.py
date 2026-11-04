@@ -313,7 +313,7 @@ def should_run(year):
         return False, "projection disabled in config"
     done = max(ps.completed_weeks(year), default=0)
     if done < int(pc.get("from_week", 8)):
-        return False, f"only {done} week(s) played (from_week {pc.get("from_week", 8)})"
+        return False, f"only {done} week(s) played (from_week {pc.get('from_week', 8)})"
     if done >= ps.last_regular_week():
         return False, "regular season over: real bowl selection takes over"
     return True, ""
