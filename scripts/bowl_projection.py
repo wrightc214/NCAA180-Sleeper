@@ -97,6 +97,18 @@ def project(year):
         draw = B.Draw(year, pool, bcfg, random.Random(0))
         games, unfilled, left = draw.run()
         field = pd.read_csv(field_path, dtype=str)
+        rem = {}  # projected remaining W/L per team (weeks after+1..lr + CCG): seeds
+        for r in m[fut].itertuples():
+            k = (str(r.LeagueID), str(r.RosterID))
+            w, l = rem.get(k, (0, 0))
+            rem[k] = (w + (r.Outcome == "Win"), l + (r.Outcome == "Loss"))
+        sp, _, _ = ps.paths(argparse.Namespace(data_dir=d))
+        s_ = ps.read_season(sp)
+        for r in s_[s_["Round"] == "CCG"].itertuples():
+            k = (str(r.LeagueID), str(r.RosterID))
+            w, l = rem.get(k, (0, 0))
+            rem[k] = (w + (r.Outcome == "Win"), l + (r.Outcome == "Loss"))
+        field.attrs["rem"] = rem
         in_pool = {name: [t["Team"] for t in pool if draw.in_pool(t, name)] for name in draw.pools}
     finally:
         ps._matchups, ps.completed_weeks = real_matchups, real_completed
@@ -119,8 +131,9 @@ CSS = """
 .tm{display:flex;align-items:center;gap:6px;border-radius:5px;padding:4px 7px;font-weight:700;font-size:13px;line-height:1.15;min-width:0}
 .tm img{width:22px;height:22px;object-fit:contain;flex:none;background:#fff;border-radius:3px}
 .tm small{display:block;font-weight:500;font-size:10px;opacity:.9;color:inherit!important;margin:0}
-.cols{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.sd{display:grid;grid-template-columns:20px 1fr;gap:4px;align-items:center;margin:0 0 4px}
+.pr{display:grid;grid-template-columns:1fr 12px 1fr;gap:4px;align-items:center;margin:0 0 4px}
+.pr .v{font:600 10px var(--num);color:var(--mute);text-align:center}
+.sd{display:grid;grid-template-columns:18px 1fr;gap:3px;align-items:center;min-width:0}
 .sd .n{font:700 12px var(--num);text-align:right}
 .sd .tm{padding:3px 6px;font-size:12px}
 .tm .nm{flex:1;min-width:0}
@@ -137,23 +150,46 @@ def team(t, col, short, badge=""):
             f'<small>{int(float(t["Wins"]))}-{int(float(t["Losses"]))} · {e(lg)}</small></div>{b}</div>')
 
 
+def poll_scores(year):
+    """{(LeagueID, RosterID): (consensus Score, rank)} from the latest BotConsensus poll through the
+    last regular week, and that week."""
+    import league_config as L
+    frames = [pd.read_csv(f, dtype=str) for f in ("data/Poll_Season.csv", "data/Poll_Historic.csv") if os.path.exists(f)]
+    p = pd.concat(frames)
+    p = p[(p["Year"] == str(year)) & (p["PollType"] == "BotConsensus")]
+    p = p[pd.to_numeric(p["ThroughWeek"]) <= L.last_regular_week()]
+    wk = int(pd.to_numeric(p["ThroughWeek"]).max())
+    p = p[pd.to_numeric(p["ThroughWeek"]) == wk]
+    return {(str(r.LeagueID), str(r.RosterID)): (float(r.Score), int(float(r.Rank))) for r in p.itertuples()}, wk
+
+
 def field_card(year, field, col, short):
-    """Projected playoff field, seeded by the latest poll among the field (the real seeds come from
-    the bots' Seeding ballot after the CCG). AQ = projected conference champion (auto bid)."""
-    ranks, wk = B.poll_ranks(year, "BotConsensus")
-    f = field.copy()
-    f["_p"] = [ranks.get((str(l), str(r)), 10 ** 6) for l, r in zip(f["LeagueID"], f["RosterID"])]
-    f = f.reset_index(drop=True).assign(_i=lambda d: d.index).sort_values(["_p", "_i"]).reset_index(drop=True)
+    """Projected playoff field as first-round pairings (1 v 32 ... 16 v 17). Seeds (Chris, 2026-11-03):
+    the latest consensus poll Score, plus seed_per_win for each projected remaining win (CCG
+    included) and minus seed_per_loss per projected loss. Not shown -- only the pairings. The real
+    seeds come from the bots' Seeding ballot after the CCG. AQ = projected conference champion."""
+    pc = lcfg.cfg()["postseason"]["bowls"].get("projection", {})
+    pw, pl = float(pc.get("seed_per_win", 0.1)), float(pc.get("seed_per_loss", 0.1))
+    sc, wk = poll_scores(year)
+    rem = field.attrs.get("rem", {})
+    f = field.copy().reset_index(drop=True)
+    keys = list(zip(f["LeagueID"].astype(str), f["RosterID"].astype(str)))
+    f["_s"] = [sc.get(k, (-99, 999))[0] + pw * rem.get(k, (0, 0))[0] - pl * rem.get(k, (0, 0))[1] for k in keys]
+    f["_r"] = [sc.get(k, (-99, 999))[1] for k in keys]
+    f = f.sort_values(["_s", "_r"], ascending=[False, True]).reset_index(drop=True)
     f["Seed"] = range(1, len(f) + 1)
-    rows = [f'<div class="sd"><span class="n">{r.Seed}</span>'
-            f'{team(r._asdict(), col, short, "AQ" if str(r.BidType).startswith("Auto") else "")}</div>'
-            for r in f.itertuples()]
-    half = (len(rows) + 1) // 2
-    n_aq = int(f["BidType"].astype(str).str.startswith("Auto").sum())
-    return (f'<section class="card"><h2>Playoff field <small>{len(f)} teams</small></h2>'
+    rows_ = f.to_dict("records")
+
+    def cell(t):
+        return (f'<div class="sd"><span class="n">{t["Seed"]}</span>'
+                f'{team(t, col, short, "AQ" if str(t["BidType"]).startswith("Auto") else "")}</div>')
+    n = len(rows_)
+    pairs = "".join(f'<div class="pr">{cell(rows_[i])}<span class="v">v</span>{cell(rows_[n - 1 - i])}</div>'
+                    for i in range(n // 2))
+    n_aq = sum(str(t["BidType"]).startswith("Auto") for t in rows_)
+    return (f'<section class="card"><h2>Playoff field <small>first round</small></h2>'
             f'<p class="sub">AQ = projected conference champion ({n_aq} auto bids); the rest are at-large. '
-            f'Projected seeds follow the week-{wk} poll; first round is 1 v {len(f)}, 2 v {len(f) - 1}…</p>'
-            f'<div class="cols"><div>{"".join(rows[:half])}</div><div>{"".join(rows[half:])}</div></div></section>')
+            f'Projected seeds: week-{wk} poll, adjusted for projected wins and losses.</p>{pairs}</section>')
 
 
 def bowl_logo(name):
@@ -276,8 +312,8 @@ def should_run(year):
     if not pc.get("enabled", True):
         return False, "projection disabled in config"
     done = max(ps.completed_weeks(year), default=0)
-    if done < int(pc.get("from_week", 6)):
-        return False, f"only {done} week(s) played (from_week {pc.get('from_week', 6)})"
+    if done < int(pc.get("from_week", 8)):
+        return False, f"only {done} week(s) played (from_week {pc.get("from_week", 8)})"
     if done >= ps.last_regular_week():
         return False, "regular season over: real bowl selection takes over"
     return True, ""
