@@ -209,7 +209,8 @@
         "from_week": 8,
         "seed_per_win": 0.1,
         "seed_per_loss": 0.1,
-        "_seed_note": "Projected playoff seeds (Chris, 2026-11-03): latest consensus poll Score + seed_per_win per projected remaining win (CCG included) - seed_per_loss per projected loss. Background only; the card shows first-round pairings."
+        "_seed_note": "Projected playoff seeds (Chris, 2026-11-03): latest consensus poll Score + seed_per_win per projected remaining win (CCG included) - seed_per_loss per projected loss. Background only; the card shows first-round pairings.",
+        "bubble_width": 6
       },
       "review_before_publish": true,
       "repeat_seasons": 3,
@@ -949,5 +950,18 @@
       "final": 8,
       "title": 25
     }
+  },
+  "game_of_the_week": {
+    "_note": "scripts/game_of_the_week.py. premier_max_rank: a game with both teams in this poll range is always the pick. bubble_width: spots either side of the projected at-large cut that count as bubble stakes.",
+    "weights": {
+      "quality": 0.55,
+      "stakes": 0.3,
+      "rivalry": 0.15
+    },
+    "premier_max_rank": 15,
+    "top_race_rank": 10,
+    "bubble_width": 6,
+    "quality_scale": 25,
+    "rank_gap_scale": 12
   }
 }

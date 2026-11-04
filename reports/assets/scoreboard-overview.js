@@ -55,7 +55,9 @@
   // Game of the Week (Chris, 2026-11-04): one game per regular-season week, picked in data/scoreboard/<season>/game-of-the-week.json
   // Blue badge in the regular season, gold ("GOTW Postseason") from CCG week on.
   const badge=()=>week>=(cfg.schedule?.ccg_week||12)?'../assets/logos/badges/GOTW%20Postseason.png':'../assets/logos/badges/GOTW.png';
-  function isGotw(g){const pick=gotw?.[String(week)];if(!Array.isArray(pick)||pick.length!==2)return false;
+  // Entry: ["A","B"] (manual) or {teams:[A,B],reason,source:"auto"} (scripts/game_of_the_week.py)
+  const gotwPick=()=>{const p=gotw?.[String(week)];return Array.isArray(p)?{teams:p}:p&&Array.isArray(p.teams)?p:null;};
+  function isGotw(g){const pick=gotwPick()?.teams;if(!Array.isArray(pick)||pick.length!==2)return false;
     const t=index.leagues[g.id]?.teams||{},names=g.match.map(r=>String(t[String(r.roster_id)]?.name||'').toLowerCase()).sort();
     return names.join('|')===pick.map(x=>String(x).toLowerCase()).sort().join('|');}
   function card(g){
@@ -112,7 +114,7 @@
     const open=(()=>{try{return localStorage.getItem('sb-ranked-open')==='1';}catch(e){return false;}})();
     let html=strip(all,ids);
     const top=all.find(isGotw);
-    if(top)html+=`<section class="gotw"><img class="gotw-badge" src="${badge()}" alt="Game of the Week"><div class="feat-card">${card(top)}</div></section>`;
+    if(top)html+=`<section class="gotw"><img class="gotw-badge" src="${badge()}" alt="Game of the Week"><div class="feat-card">${card(top)}${gotwPick()?.reason?`<p class="gotw-why">${esc(gotwPick().reason)}</p>`:''}</div></section>`;
     html+=callouts(top);
     if(rvr.length)html+=`<h3 class="sec">Ranked vs ranked <small>${rvr.length} game${rvr.length===1?'':'s'}</small></h3>${feat(rvr)}`;
     if(ranked.length)html+=`<details class="sec-d" id="ranked-d"${open?' open':''}><summary><h3 class="sec">Ranked teams in action <small>${ranked.length} game${ranked.length===1?'':'s'}</small></h3></summary>${feat(ranked)}</details>`;

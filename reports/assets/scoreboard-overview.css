@@ -32,4 +32,4 @@ details.conference:not([open])>summary h2::after{content:"▸"}
 .conference h2.has-logo .csum{position:absolute}
 details.conference>summary:focus-visible{outline:2px solid #38638b;outline-offset:-2px}
 @media(max-width:400px){.score-row.r3,.hdr3{grid-template-columns:20px minmax(0,1fr) 50px 46px 38px}.r3 .school{font-size:14px}}
-.gotw{display:grid;grid-template-columns:96px minmax(0,440px);gap:14px;align-items:center;margin:0 0 16px}.gotw-badge{width:96px;height:96px;object-fit:contain}.gotw-mini{width:20px;height:20px;object-fit:contain;vertical-align:middle}@media(max-width:650px){.gotw{grid-template-columns:48px minmax(0,1fr);gap:8px}.gotw-badge{width:48px;height:48px}}
+.gotw{display:grid;grid-template-columns:96px minmax(0,440px);gap:14px;align-items:center;margin:0 0 16px}.gotw-badge{width:96px;height:96px;object-fit:contain}.gotw-why{margin:6px 2px 0;font-size:12px;color:var(--mute)}.gotw-mini{width:20px;height:20px;object-fit:contain;vertical-align:middle}@media(max-width:650px){.gotw{grid-template-columns:48px minmax(0,1fr);gap:8px}.gotw-badge{width:48px;height:48px}}
