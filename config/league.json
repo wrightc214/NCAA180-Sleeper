@@ -130,6 +130,8 @@
       "auto_bid_leagues": "all",
       "seeding": "bots",
       "manual_seeds_file": "data/PlayoffSeeds_Season.csv",
+      "review_before_publish": true,
+      "_review_note": "Chris, 2026-11-03: the field and the seeded bracket are drafts until he approves (script playoff_publish). Preview goes to lm-private-data. Bowls and NIT draws already work this way (bowls/nit review_before_publish).",
       "first_week": 13,
       "rounds": [
         "First Round",

@@ -9,7 +9,16 @@ At-large spots = field_size - auto bids (calculated, never typed). At-large rank
 season only (weeks 1..last_regular_week), Wins then PointsFor; a tie across the last spot is
 flagged, never guessed (exit 1). Needs every CCG final.
 
-  python scripts/playoff_field.py [--year 2026] [--data-dir DIR]
+Review step (Chris, 2026-11-03; postseason.playoff.review_before_publish): the field is written as a
+DRAFT (data/postseason_drafts/PlayoffField_<year>.csv) and previewed to Chris in lm-private-data
+(postseason_preview.py). --publish recomputes it, checks it still matches the draft, and only then
+writes the live file (site, announcements). Once published it is locked. --data-dir runs
+(replays, the projection) skip the review and write directly.
+
+--auto (weekly job): quietly does nothing until every CCG is final, and only writes the draft
+(and flags it for the LM preview) when it is new or changed.
+
+  python scripts/playoff_field.py [--year 2026] [--publish | --auto] [--data-dir DIR]
 """
 import argparse
 import os
@@ -20,15 +29,29 @@ import pandas as pd
 import _postseason_common as ps
 
 
+def mark_new_draft():
+    """Tell the workflow a new/changed draft exists (postseason_preview posts it to LM)."""
+    os.makedirs("work", exist_ok=True)
+    open("work/postseason_draft.new", "a").close()
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--year", type=int)
     ap.add_argument("--data-dir")
+    ap.add_argument("--publish", action="store_true", help="approve the draft: write the live field")
+    ap.add_argument("--auto", action="store_true", help="weekly job: draft once the CCGs are final, else no-op")
     a = ap.parse_args()
     year = a.year or ps.current_season()
-    season_path, field_path, _ = ps.paths(a)
+    season_path, field_path, draft_dir = ps.paths(a)
     _, cfg = ps.config()
     pc = cfg["playoff"]
+    review = bool(pc.get("review_before_publish", True)) and not a.data_dir
+    draft = os.path.join(draft_dir, f"PlayoffField_{year}.csv")
+    live = pd.read_csv(field_path, dtype=str) if os.path.exists(field_path) else pd.DataFrame(columns=["Year"])
+    if review and (live["Year"].astype(str) == str(year)).any():
+        print(f"Playoff field {year}: published (locked) -> {field_path}")
+        return
     if pc.get("auto_bid_leagues", "all") != "all":
         sys.exit("FATAL: only auto_bid_leagues = 'all' is supported so far")
     n_auto = int(pc["auto_bids_per_league"])
@@ -39,6 +62,9 @@ def main():
     df = ps.read_season(season_path)
     ccg = df[(df["Year"].astype(str) == str(year)) & (df["Round"] == "CCG")]
     if ccg.empty or (ccg["Status"] != "Final").any() or (ccg["Outcome"] == "Tie").any():
+        if a.auto:
+            print(f"Playoff field {year}: waiting for every CCG to be final")
+            return
         sys.exit(f"FATAL: every CCG must be final (and not tied) before the field can be set ({season_path})")
     st = ps.standings(year)
     auto = []
@@ -74,6 +100,27 @@ def main():
     out = pd.DataFrame(rows)
     out.insert(0, "Year", year)
     cols = ["Year", "LeagueID", "LeagueName", "RosterID", "Team", "OwnerName", "Division", "BidType", "Wins", "Losses", "PointsFor"]
+    if review and not a.publish:
+        os.makedirs(draft_dir, exist_ok=True)
+        if a.auto and os.path.exists(draft) and pd.read_csv(draft, dtype=str).fillna("").equals(
+                out[cols].astype(str).replace("nan", "").reset_index(drop=True)):
+            print(f"Playoff field {year}: draft unchanged ({draft})")
+            return
+        out[cols].to_csv(draft, index=False)
+        mark_new_draft()
+        print(f"Playoff field {year}: DRAFT {len(keys)} auto + {n_at} at-large -> {draft} "
+              f"(awaiting review; approve with --publish / script playoff_publish)")
+        sys.exit(0 if complete else 1)
+    if review and a.publish:
+        if not os.path.exists(draft):
+            sys.exit(f"FATAL: no field draft to publish ({draft}); run playoff_field first")
+        d = pd.read_csv(draft, dtype=str)
+        same = sorted(zip(d["LeagueID"], d["RosterID"].astype(str), d["BidType"])) == \
+            sorted(zip(out["LeagueID"], out["RosterID"].astype(str), out["BidType"]))
+        if not same:
+            sys.exit("FATAL: results changed since the draft was previewed -- rerun playoff_field for a new draft")
+        if not complete:
+            sys.exit("FATAL: the field still has an unresolved tie -- resolve it before publishing")
     old = pd.read_csv(field_path, dtype=str) if os.path.exists(field_path) else pd.DataFrame(columns=cols)
     old = old[old["Year"].astype(str) != str(year)] if len(old) else old
     pd.concat([old, out[cols]], ignore_index=True).to_csv(field_path, index=False)
