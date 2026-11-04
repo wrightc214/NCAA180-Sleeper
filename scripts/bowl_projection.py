@@ -222,8 +222,11 @@ def bowl_logo(name):
     """Only logos Chris approved (postseason.bowls.approved_logos: no sponsor branding); else none."""
     if name not in lcfg.cfg()["postseason"]["bowls"].get("approved_logos", []):
         return ""
-    p = os.path.join("assets/logos/Bowls", f"{name}.png")
-    return f'<img src="../{e(p)}" alt="">' if os.path.exists(p) else ""
+    for folder in ("assets/logos/Bowls", "assets/logos/Playoffs"):  # playoff bowls + National Championship
+        p = os.path.join(folder, f"{name}.png")
+        if os.path.exists(p):
+            return f'<img src="../{e(p)}" alt="">'
+    return ""
 
 
 def where(b):
@@ -319,7 +322,7 @@ def build(year):
             + other_card)
     doc = (page_head(f"{lcfg.brand()} postseason", CSS) +
            f'<div class="wrap"><nav class="weeks" aria-label="Pages">{nav_html("postseason")}</nav>'
-           f'{ARCH_MARK}<header><h1>{lcfg.brand()} <em>Postseason</em></h1></header>{body}</div></body></html>')
+           f'{seasons_row(year)}{ARCH_MARK}<header><h1>{lcfg.brand()} <em>Postseason</em></h1></header>{body}</div></body></html>')
     os.makedirs(OUT_DIR, exist_ok=True)
     with open(ARCHIVE.format(after), "w", encoding="utf-8") as fh:
         fh.write(doc)
@@ -334,6 +337,16 @@ def build(year):
         with open(path, "w") as fh:
             json.dump(meta, fh, indent=1)
     return meta
+
+
+def seasons_row(year):
+    """Links to past seasons' real postseason pages (postseason_page.py); this season = the projection."""
+    try:
+        import postseason_page
+        return postseason_page.season_row_html(current=year)
+    except Exception as ex:  # the projection must never fail over a nav row
+        print(f"WARNING: season row skipped ({ex})")
+        return ""
 
 
 ARCH_MARK = "<!--projection-archive-->"
