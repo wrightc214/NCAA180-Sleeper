@@ -33,7 +33,7 @@ class BrowserTests(unittest.TestCase):
                 for width in (1150,400):
                     for phase in ('pre','in','post'):
                         with self.subTest(width=width,phase=phase):
-                            page=browser.new_page(viewport={'width':width,'height':1000});page.add_init_script("try{sessionStorage.setItem('ncaa180.push.snooze','1')}catch(e){}");errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
+                            page=browser.new_page(viewport={'width':width,'height':1000},service_workers='block');page.add_init_script("try{sessionStorage.setItem('ncaa180.push.snooze','1')}catch(e){}");errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
                             state={'fail':False}
                             rosters=copy.deepcopy(fixture['rosters'])
                             if phase=='pre':
@@ -59,9 +59,11 @@ class BrowserTests(unittest.TestCase):
                             page.route('https://site.api.espn.com/**',lambda r:r.fulfill(content_type='application/json',body=json.dumps(espn)))
                             page.route('https://fonts.googleapis.com/**',lambda r:r.abort())
                             page.route('https://fonts.gstatic.com/**',lambda r:r.abort())
+                            page.route('**/game-of-the-week.json',lambda r:r.fulfill(content_type='application/json',body=json.dumps({'6':{'teams':['Montana State','Stony Brook'],'reason':'x','source':'auto'}})))
                             page.goto(f'http://127.0.0.1:{server.server_port}/reports/scoreboard.html?league=1316899756005412864&week=6&roster=6')
                             page.wait_for_function("document.getElementById('updated')?.textContent.startsWith('Updated')")
                             self.assertEqual(page.locator('.big').count(),2)
+                            self.assertEqual(page.locator('.mid .gbadge').count(),1)  # Game of the Week badge above the status
                             self.assertFalse(page.evaluate('document.documentElement.scrollWidth > innerWidth'))
                             self.assertIn('VALIDATION PHASE',page.locator('.validation').inner_text().upper())
                             if phase=='in':

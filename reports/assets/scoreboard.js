@@ -9,7 +9,7 @@
   const C=window.ScoreboardCore, $=id=>document.getElementById(id);
   const escape=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const money=x=>Number(x).toFixed(2), pct=x=>x<1?'<1%':x>99?'>99%':`${Math.round(x)}%`;
-  let cfg,index,baseline,metadata,leagueId,week,season,rosters=[],chosen=[],timer,lastGood=null,failures=0,busy=false,live=false,crunch=false;
+  let gotw={},cfg,index,baseline,metadata,leagueId,week,season,rosters=[],chosen=[],timer,lastGood=null,failures=0,busy=false,live=false,crunch=false;
   let metadataAt=0,metadataWarning='',abort,resumeNeeded=false,leagueInfo=null;
   const params=new URLSearchParams(location.search);
   async function get(url, signal) {
@@ -26,6 +26,15 @@
   function setOptions(el, options, value) {
     el.replaceChildren(...options.map(([v,label])=>{const o=document.createElement('option');o.value=v;o.textContent=label;return o;}));
     if(value!==undefined) el.value=String(value);
+  }
+  // Game badges in the center column (Chris, 2026-11-04). One list so bowl / playoff / rivalry badges
+  // plug in here when the postseason game views are built. Each: {src, alt}.
+  function badges(){
+    const out=[],names=chosen.map(r=>String(team(r.roster_id).name).toLowerCase()).sort().join('|');
+    const p=gotw?.[String(week)],pick=Array.isArray(p)?p:p?.teams;
+    if(Array.isArray(pick)&&pick.map(x=>String(x).toLowerCase()).sort().join('|')===names)
+      out.push({src:week>=(cfg.schedule?.ccg_week||12)?'../assets/logos/badges/GOTW%20Postseason.png':'../assets/logos/badges/GOTW.png',alt:'Game of the Week'});
+    return out;
   }
   function team(rid) {return index.leagues[leagueId].teams[String(rid)] || {name:`Roster ${rid}`,background:'#fff',text:'#14213a',primary:'#14213a',secondary:'#888'};}
   function pairs(rs) {
@@ -133,7 +142,7 @@
     const [a,b]=models,center=title(games,models),isFinal=center.includes('FINAL'),pregame=models.every(m=>m.starters.every(p=>['pre','bye','out'].includes(p.phase)));
     const slots=index.leagues[leagueId].slots;
     const benches=chosen.map((r,i)=>C.benchPlayers(r,playerSets[i],models[i].starters,slots,cfg,pregame));
-    let html=`<div class="eyebrow">${escape(index.leagues[leagueId].label||index.leagues[leagueId].name)} · ${season} · ${baseline.pairs?'Conference Championship':`Week ${week}`}</div><div class="top">${header(chosen[0],a,false,isFinal,pregame)}<div class="mid">${center}</div>${header(chosen[1],b,true,isFinal,pregame)}</div><div class="odds">`;
+    let html=`<div class="eyebrow">${escape(index.leagues[leagueId].label||index.leagues[leagueId].name)} · ${season} · ${baseline.pairs?'Conference Championship':`Week ${week}`}</div><div class="top">${header(chosen[0],a,false,isFinal,pregame)}<div class="mid">${badges().map(b=>`<img class="gbadge" src="${b.src}" alt="${escape(b.alt)}" title="${escape(b.alt)}">`).join('')}<div class="mid-status">${center}</div></div>${header(chosen[1],b,true,isFinal,pregame)}</div><div class="odds">`;
     const missing=models.some(m=>m.starters.some(p=>p.missingProjection||p.phase==='unknown'));
     if(isFinal) {
       const m=C.round(Math.abs(a.actual-b.actual)),w=a.actual>b.actual?chosen[0]:chosen[1];
@@ -209,6 +218,7 @@
     cfg=await get('../config/league.json');index=await get(`${cfg.data.scoreboard}/index.json`);season=Number(params.get('season')||index.season);
     if(season!==index.season)throw new Error('This scoreboard currently supports the active season only.');
     metadata=await get(`${cfg.data.scoreboard}/${season}/players.json`);metadataAt=Date.now();
+    try{gotw=await get(`${cfg.data.scoreboard}/${season}/game-of-the-week.json`);}catch(e){gotw={};}
     leagueId=params.get('league')||Object.keys(index.leagues)[0];week=Number(params.get('week')||index.week);
     if(!index.leagues[leagueId])throw new Error('Unknown league in scoreboard URL.');
     if(!index.weeks.includes(week))throw new Error('No frozen pregame data for this week.');
