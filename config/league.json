@@ -744,13 +744,9 @@
         "Motor City Bowl",
         "Las Vegas Bowl",
         "Fenway Bowl",
-        "Cure Bowl",
-        "Alamo Bowl",
-        "Liberty Bowl",
-        "Armed Forces Bowl",
-        "Military Bowl"
+        "Cure Bowl"
       ],
-      "_approved_logos_note": "Chris, 2026-11-03: only these bowl logos are drawn (site + Discord); any other bowl shows its name only. Sponsor-branded files stay unused until replaced with a clean version (no corporate sponsor), then added here. Upload to assets/logos/Bowls/<Bowl Name>.png and run the Trim logos workflow with folder assets/logos/Bowls. Alamo, Liberty, Armed Forces, Military: sponsor text removed from the official logo (originals kept in assets/logos/source/Bowls/sponsor-originals/)."
+      "_approved_logos_note": "Chris, 2026-11-03: only these bowl logos are drawn (site + Discord); any other bowl shows its name only. Sponsor-branded files stay unused until replaced with a clean version (no corporate sponsor), then added here. Upload to assets/logos/Bowls/<Bowl Name>.png and run the Trim logos workflow with folder assets/logos/Bowls."
     },
     "nit": {
       "review_before_publish": true,
