@@ -270,6 +270,11 @@ jobs:
         run: |
           python scripts/scoreboard_data.py || { echo "scoreboard" >> /tmp/failed_scripts.txt; exit 1; }
 
+      # Same tab row on every page (a new tab otherwise only reaches pages rebuilt that run)
+      - name: Refresh page tabs
+        if: always()
+        run: python scripts/nav_refresh.py
+
       - name: Render orphan card
         if: always() && steps.orphan.outputs.render == 'true'
         continue-on-error: true

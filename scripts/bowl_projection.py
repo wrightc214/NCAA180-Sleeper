@@ -52,7 +52,7 @@ PAGE = "reports/postseason.html"
 ARCHIVE = "reports/postseason-proj-wk{:02d}.html"
 OUT_DIR = "reports/postseason"            # Discord cards + per-week data (movement)
 META = os.path.join(OUT_DIR, "meta.json")
-SITE = "https://wrightc214.github.io/NCAA180-Sleeper/reports/"
+LINK = "https://ncaa180.short.gy/postseason"  # Chris's shortlink to reports/postseason.html
 BUBBLE = 4
 e = html.escape
 
@@ -308,22 +308,21 @@ def build(year):
            f'Projected seeds use the latest poll, adjusted for projected wins and losses; the real seeds come from the '
            f'bots\' seeding ballot after championship week. Marquee Bowls give each league a seat (the better of its '
            f'two division leaders still available), then fill by bowl order. Records shown are projected final records.</p></details>')
-    weeks = sorted(int(m.group(1)) for f in glob.glob("reports/postseason-proj-wk*.html")
-                   if (m := re.search(r"wk(\d+)", f))) + [after]
-    arch = " · ".join(f'<a href="postseason-proj-wk{w:02d}.html">after wk {w}</a>' for w in sorted(set(weeks)))
     body = (f'<p class="status"><b>Projection after week {after}</b> · not official · updates every Tuesday until selection</p>'
             + how + field_card(P, col, short, prev, foot)
             + games_card("Prestige Bowls", "Top of the bowl order.")
             + games_card("Marquee Bowls", "One seat per league (its better division leader still available), then at-large by bowl order; "
                          "placed by tie-ins.", tags=True)
-            + other_card + f'<p class="note">Past projections: {arch}</p>')
+            + other_card)
     doc = (page_head(f"{lcfg.brand()} postseason", CSS) +
            f'<div class="wrap"><nav class="weeks" aria-label="Pages">{nav_html("postseason")}</nav>'
-           f'<header><h1>{lcfg.brand()} <em>Postseason</em></h1></header>{body}</div></body></html>')
+           f'{ARCH_MARK}<header><h1>{lcfg.brand()} <em>Postseason</em></h1></header>{body}</div></body></html>')
     os.makedirs(OUT_DIR, exist_ok=True)
-    for path in (PAGE, ARCHIVE.format(after)):
-        with open(path, "w", encoding="utf-8") as fh:
-            fh.write(doc)
+    with open(ARCHIVE.format(after), "w", encoding="utf-8") as fh:
+        fh.write(doc)
+    with open(PAGE, "w", encoding="utf-8") as fh:
+        fh.write(doc)
+    refresh_archive_rows(after)
     meta = {"year": int(year), "after_week": after, "playoff_field": len(P["field"]), "notes": P["notes"],
             "seeds": {"|".join(key(t)): t["Seed"] for t in P["field"]},
             "games": {t: [[b["name"], x["Team"], y["Team"]] for b, x, y in g] for t, g in by_tier.items()},
@@ -332,6 +331,31 @@ def build(year):
         with open(path, "w") as fh:
             json.dump(meta, fh, indent=1)
     return meta
+
+
+ARCH_MARK = "<!--projection-archive-->"
+ARCH_RE = re.compile(r'(<!--projection-archive-->)(<nav class="weeks sub" aria-label="Projection archive">.*?</nav>)?', re.S)
+
+
+def archive_row(weeks, current):
+    """Point-in-time picker (like the Weekly Awards archive): one link per projection week."""
+    if len(weeks) < 2:
+        return ""
+    cur = ' aria-current="page"'
+    links = "".join(f'<a href="{ARCHIVE.format(w).split("/")[-1]}"{cur if w == current else ""}>After wk {w}</a>' for w in weeks)
+    return f'<nav class="weeks sub" aria-label="Projection archive"><span>Projection</span>{links}</nav>'
+
+
+def refresh_archive_rows(latest):
+    """Every projection page (current + archive) gets the full, current week list."""
+    weeks = sorted(int(m.group(1)) for f in glob.glob(ARCHIVE.replace("{:02d}", "*"))
+                   if (m := re.search(r"wk(\d+)\.html$", f)))
+    pages = [(PAGE, latest)] + [(ARCHIVE.format(w), w) for w in weeks]
+    for path, w in pages:
+        doc = open(path, encoding="utf-8").read()
+        doc = ARCH_RE.sub(lambda mm: ARCH_MARK + archive_row(weeks, w), doc, count=1)
+        with open(path, "w", encoding="utf-8") as fh:
+            fh.write(doc)
 
 
 def shoot():
@@ -385,7 +409,7 @@ def post(where_to):
     else:
         msg = (head + "\nIf the season ended the way it's trending: projected playoff first round, Prestige Bowls "
                "and Marquee Bowls. Remaining games are projected from each team's season scoring average. Not official."
-               f"\nFull projection, bubble and every bowl team: {SITE}postseason.html")
+               f"\nFull projection, bubble and every bowl team: {LINK}")
         if contact:
             msg += f"\n<@{contact}>"
     pdisc.send(url, msg, mentions=mentions, files=files[:10])
