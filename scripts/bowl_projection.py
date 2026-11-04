@@ -219,6 +219,9 @@ def team(t, col, short, badge="", tag=""):
 
 
 def bowl_logo(name):
+    """Only logos Chris approved (postseason.bowls.approved_logos: no sponsor branding); else none."""
+    if name not in lcfg.cfg()["postseason"]["bowls"].get("approved_logos", []):
+        return ""
     p = os.path.join("assets/logos/Bowls", f"{name}.png")
     return f'<img src="../{e(p)}" alt="">' if os.path.exists(p) else ""
 

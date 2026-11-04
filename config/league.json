@@ -729,7 +729,24 @@
         "venue": "Salem Stadium",
         "lat": 37.29,
         "lon": -80.05
-      }
+      },
+      "approved_logos": [
+        "Citrus Bowl",
+        "Tangerine Bowl",
+        "Independence Bowl",
+        "New Orleans Bowl",
+        "Holiday Bowl",
+        "Music City Bowl",
+        "Aloha Bowl",
+        "Bahamas Bowl",
+        "International Bowl",
+        "Camellia Bowl",
+        "Motor City Bowl",
+        "Las Vegas Bowl",
+        "Fenway Bowl",
+        "Cure Bowl"
+      ],
+      "_approved_logos_note": "Chris, 2026-11-03: only these bowl logos are drawn (site + Discord); any other bowl shows its name only. Sponsor-branded files stay unused until replaced with a clean version (no corporate sponsor), then added here. Upload to assets/logos/Bowls/<Bowl Name>.png and run the Trim logos workflow with folder assets/logos/Bowls."
     },
     "nit": {
       "review_before_publish": true,
