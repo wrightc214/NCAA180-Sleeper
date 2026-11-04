@@ -1,0 +1,214 @@
+{
+ "year": 2026,
+ "after_week": 8,
+ "playoff_field": 32,
+ "notes": [
+  "bowl order: week-8 BotConsensus poll rank - 25 x wins"
+ ],
+ "seeds": {
+  "1331775106527006720|4": 1,
+  "1331774741488369664|1": 2,
+  "1316899936696016896|11": 3,
+  "1331774695346823168|7": 4,
+  "1331774599196585984|6": 5,
+  "1331775206619885568|7": 6,
+  "1331775170712444928|8": 7,
+  "1331774880181399552|5": 8,
+  "1331775106527006720|8": 9,
+  "1331774915392577536|12": 10,
+  "1331774544905510912|4": 11,
+  "1331774599196585984|1": 12,
+  "1316899756005412864|3": 13,
+  "1331774454493122560|10": 14,
+  "1331774804222545920|8": 15,
+  "1331774741488369664|5": 16,
+  "1316899756005412864|12": 17,
+  "1331775106527006720|7": 18,
+  "1331774846710849536|9": 19,
+  "1331774599196585984|11": 20,
+  "1331774454493122560|1": 21,
+  "1331774630620332032|1": 22,
+  "1331774630620332032|4": 23,
+  "1331774915392577536|10": 24,
+  "1331774741488369664|11": 25,
+  "1331774880181399552|7": 26,
+  "1316899936696016896|10": 27,
+  "1331774846710849536|6": 28,
+  "1331774880181399552|8": 29,
+  "1331774846710849536|1": 30,
+  "1331775170712444928|2": 31,
+  "1331774846710849536|8": 32
+ },
+ "games": {
+  "Prestige Bowls": [
+   [
+    "Citrus Bowl",
+    "Pittsburgh",
+    "Portland State"
+   ],
+   [
+    "Sun Bowl",
+    "Coastal Carolina",
+    "UNC Charlotte"
+   ],
+   [
+    "Gator Bowl",
+    "ETSU",
+    "Missouri"
+   ],
+   [
+    "Liberty Bowl",
+    "UCLA",
+    "Georgia State"
+   ],
+   [
+    "Alamo Bowl",
+    "Texas A&M",
+    "James Madison"
+   ]
+  ],
+  "Marquee Bowls": [
+   [
+    "Tangerine Bowl",
+    "Georgia Tech",
+    "Arkansas State"
+   ],
+   [
+    "Independence Bowl",
+    "Texas",
+    "Citadel"
+   ],
+   [
+    "New Orleans Bowl",
+    "Colgate",
+    "Georgia Southern"
+   ],
+   [
+    "Holiday Bowl",
+    "Austin Peay",
+    "USC"
+   ],
+   [
+    "Music City Bowl",
+    "Belmont",
+    "Minnesota"
+   ],
+   [
+    "Aloha Bowl",
+    "Colorado State",
+    "Montana State"
+   ],
+   [
+    "Gasparilla Bowl",
+    "UCONN",
+    "Monmouth"
+   ],
+   [
+    "Celebration Bowl",
+    "Mississippi State",
+    "Tuskegee"
+   ]
+  ],
+  "Showcase Bowls": [
+   [
+    "Poinsettia Bowl",
+    "Michigan",
+    "Cornell"
+   ],
+   [
+    "Armed Forces Bowl",
+    "Army",
+    "Texas State"
+   ],
+   [
+    "Military Bowl",
+    "North Alabama",
+    "Purdue"
+   ],
+   [
+    "Bahamas Bowl",
+    "Nebraska",
+    "Auburn"
+   ],
+   [
+    "Bacardi Bowl",
+    "Florida Atlantic",
+    "Fresno State"
+   ],
+   [
+    "Mirage Bowl",
+    "UT Martin",
+    "FSU"
+   ],
+   [
+    "International Bowl",
+    "Eastern Washington",
+    "Holy Cross"
+   ]
+  ],
+  "Opening Bowls": [
+   [
+    "Vulcan Bowl",
+    "Delaware State",
+    "South Carolina"
+   ],
+   [
+    "Bluebonnet Bowl",
+    "Ohio State",
+    "Columbia"
+   ],
+   [
+    "Idaho Potato Bowl",
+    "UTSA",
+    "Boston College"
+   ],
+   [
+    "Copper Bowl",
+    "Notre Dame",
+    "Davidson"
+   ],
+   [
+    "Camellia Bowl",
+    "Villanova",
+    "Alcorn State"
+   ],
+   [
+    "Motor City Bowl",
+    "South Alabama",
+    "Wyoming"
+   ],
+   [
+    "Zia Bowl",
+    "Howard",
+    "Virginia"
+   ],
+   [
+    "Gotham Bowl",
+    "Georgia",
+    "Murray State"
+   ],
+   [
+    "Heritage Bowl",
+    "Florida A&M",
+    "Delaware"
+   ],
+   [
+    "Freedom Bowl",
+    "Stony Brook",
+    "Eastern Michigan"
+   ]
+  ]
+ },
+ "last_in": [
+  "LSU",
+  "West Virginia",
+  "Tulsa",
+  "Memphis"
+ ],
+ "first_out": [
+  "UNC Charlotte",
+  "Portland State",
+  "Minnesota",
+  "ETSU"
+ ]
+}
