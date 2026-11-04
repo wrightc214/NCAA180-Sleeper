@@ -32,7 +32,7 @@ class OverviewBrowserTests(unittest.TestCase):
                 for width in (1450,400):
                     for phase in ('pre','in','post'):
                         with self.subTest(width=width,phase=phase):
-                            page=browser.new_page(viewport={'width':width,'height':1100});page.add_init_script("try{sessionStorage.setItem('ncaa180.push.snooze','1')}catch(e){}")
+                            page=browser.new_page(viewport={'width':width,'height':1100},service_workers='block');page.add_init_script("try{sessionStorage.setItem('ncaa180.push.snooze','1')}catch(e){}")
                             errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
                             state={'fail':None,'stats':0,'espn':0,'players':0}
                             rs=copy.deepcopy(fixture['rosters'])
@@ -59,6 +59,8 @@ class OverviewBrowserTests(unittest.TestCase):
                             page.route('https://site.api.espn.com/**',espn)
                             page.route('https://fonts.googleapis.com/**',lambda r:r.abort())
                             page.route('https://fonts.gstatic.com/**',lambda r:r.abort())
+                            gotw={'6':{'teams':['Rutgers','Pittsburgh'],'reason':'test reason','source':'auto'}}
+                            page.route('**/game-of-the-week.json',lambda r:r.fulfill(content_type='application/json',body=json.dumps(gotw)))
                             page.goto(f'http://127.0.0.1:{server.server_port}/reports/scoreboard.html?week=6')
                             page.wait_for_function("document.getElementById('updated')?.textContent.startsWith('Updated')")
                             self.assertEqual(page.locator('.conference').count(),len(index['leagues']))
@@ -69,6 +71,8 @@ class OverviewBrowserTests(unittest.TestCase):
                             statuses=page.locator('.match-status').all_text_contents()
                             want=('Final',) if phase=='post' else ('Live',) if phase=='in' else ('Upcoming',' ET')  # pregame shows next kickoff time
                             self.assertTrue(all(any(k in s for k in want) for s in statuses),(phase,statuses[:4]))
+                            self.assertEqual(page.locator('.gotw .gotw-why').inner_text(),'test reason')  # auto pick (object form)
+                            self.assertEqual(page.locator('.conference .gotw-mini').count(),1)
                             self.assertIn('PRE %' if phase!='in' else 'LIVE %',page.locator('.hdr3').first.inner_text().upper())
                             if os.environ.get('SCOREBOARD_SCREENSHOTS'):
                                 dest=Path(os.environ['SCOREBOARD_SCREENSHOTS']);dest.mkdir(parents=True,exist_ok=True)

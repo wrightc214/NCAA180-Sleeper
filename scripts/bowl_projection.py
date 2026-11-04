@@ -129,6 +129,7 @@ def project(year):
         rest = st[[key(r) not in auto for r in st.to_dict("records")]]
         order, _, _ = ps.rank_ties(rest)
         n_at = int((field["BidType"] == "At-Large").sum())
+        at_large_order = [key(r) for r in order.to_dict("records")]  # Game of the Week bubble band
         last_in = order.iloc[max(n_at - BUBBLE, 0):n_at].to_dict("records")
         first_out = order.iloc[n_at:n_at + BUBBLE].to_dict("records")
 
@@ -170,7 +171,8 @@ def project(year):
     f = f.sort_values(["_s", "_r"], ascending=[False, True]).reset_index(drop=True)
     f["Seed"] = range(1, len(f) + 1)
     return dict(year=int(year), after=after, poll_week=poll_wk, pool=pool, games=games, draw=draw,
-                field=f.to_dict("records"), last_in=last_in, first_out=first_out, seats=seats, notes=notes)
+                field=f.to_dict("records"), last_in=last_in, first_out=first_out, seats=seats, notes=notes,
+                at_large_order=at_large_order, n_at=n_at)
 
 
 # ------------------------------------------------------------------ page
@@ -271,6 +273,14 @@ def field_card(P, col, short, prev, foot):
             f'{pairs}{bub}<p class="foot">{e(foot)}</p></section>')
 
 
+def bubble_band(P, width=None):
+    """Teams within `width` spots of the projected at-large cut line (Game of the Week stakes):
+    [[LeagueID, RosterID, position - cut], ...]; negative = currently in."""
+    width = width or int(lcfg.cfg()["postseason"]["bowls"].get("projection", {}).get("bubble_width", 6))
+    n = P["n_at"]
+    return [[k[0], k[1], i - n + 1] for i, k in enumerate(P["at_large_order"]) if n - width <= i < n + width]
+
+
 def build(year):
     P = project(year)
     col = colors()
@@ -332,7 +342,8 @@ def build(year):
     meta = {"year": int(year), "after_week": after, "playoff_field": len(P["field"]), "notes": P["notes"],
             "seeds": {"|".join(key(t)): t["Seed"] for t in P["field"]},
             "games": {t: [[b["name"], x["Team"], y["Team"]] for b, x, y in g] for t, g in by_tier.items()},
-            "last_in": [t["Team"] for t in P["last_in"]], "first_out": [t["Team"] for t in P["first_out"]]}
+            "last_in": [t["Team"] for t in P["last_in"]], "first_out": [t["Team"] for t in P["first_out"]],
+            "bubble": bubble_band(P)}
     for path in (META, os.path.join(OUT_DIR, f"proj-wk{after:02d}.json")):
         with open(path, "w") as fh:
             json.dump(meta, fh, indent=1)
