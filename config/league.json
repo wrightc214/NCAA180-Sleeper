@@ -624,16 +624,16 @@
               "origin": "New York, 1961–62"
             },
             {
-              "name": "Heritage Bowl",
+              "name": "Pelican Bowl",
               "lean": "HBCU",
               "location": {
-                "city": "Atlanta",
-                "state": "GA",
+                "city": "New Orleans",
+                "state": "LA",
                 "country": "USA",
-                "lat": 33.75,
-                "lon": -84.39
+                "lat": 29.95,
+                "lon": -90.07
               },
-              "origin": "1991–99 MEAC vs SWAC (Miami, Tallahassee, Atlanta)"
+              "origin": "MEAC vs SWAC champions: Durham NC 1972, New Orleans 1974–75 (location matches Chris's logo; Chris, 2026-11-04: takes Heritage's slot and HBCU lean)"
             },
             {
               "name": "Freedom Bowl",
@@ -706,6 +706,17 @@
                 "lat": 28.54,
                 "lon": -81.4
               }
+            },
+            {
+              "name": "Heritage Bowl",
+              "location": {
+                "city": "Atlanta",
+                "state": "GA",
+                "country": "USA",
+                "lat": 33.75,
+                "lon": -84.39
+              },
+              "origin": "1991–99 MEAC vs SWAC (Miami, Tallahassee, Atlanta) (moved to the end of the Opening order, no lean -- Chris, 2026-11-04)"
             }
           ]
         }
@@ -752,7 +763,18 @@
         "Liberty Bowl",
         "Military Bowl",
         "Sun Bowl",
-        "Armed Forces Bowl"
+        "Armed Forces Bowl",
+        "Bacardi Bowl",
+        "Bluebonnet Bowl",
+        "Celebration Bowl",
+        "Copper Bowl",
+        "Freedom Bowl",
+        "Gotham Bowl",
+        "Heritage Bowl",
+        "Mirage Bowl",
+        "Pelican Bowl",
+        "Stagg Bowl",
+        "Zia Bowl"
       ],
       "_approved_logos_note": "Chris, 2026-11-03: only these bowl logos are drawn (site + Discord); any other bowl shows its name only. Sponsor-branded files stay unused until replaced with a clean version (no corporate sponsor), then added here. Upload to assets/logos/Bowls/<Bowl Name>.png and run the Trim logos workflow with folder assets/logos/Bowls."
     },
