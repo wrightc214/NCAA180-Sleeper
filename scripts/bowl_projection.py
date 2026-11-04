@@ -17,15 +17,15 @@ Projected seeds (background only, never shown): latest consensus poll Score + se
 projected remaining win (CCG included) - seed_per_loss per loss. The real seeds come from the
 bots' Seeding ballot after the CCG.
 
-Approval flow (Chris: nothing public without his approval):
+Posting (Chris approved the format 2026-11-03; it now posts weekly with the awards and poll):
   python scripts/bowl_projection.py            build the page + data
   python scripts/bowl_projection.py --render   + screenshot the Discord cards (playoff, Prestige, Marquee)
   python scripts/bowl_projection.py --shoot    screenshot the existing page only (workflow render step)
-  python scripts/bowl_projection.py --preview  post the stored cards to lm-private-data (review);
-                                               with projection.post_to_league also to the league
-  python scripts/bowl_projection.py --publish  post the STORED cards (exactly what was previewed)
-                                               to the league channel; never rebuilds
-Config: postseason.bowls.projection (enabled, from_week, seed_per_win/loss, post_to_league).
+  python scripts/bowl_projection.py --publish  post the STORED cards to the league channel (never
+                                               rebuilds). The weekly job does this with the other
+                                               weekly posts (Chris, 2026-11-03: no LM preview step)
+  python scripts/bowl_projection.py --preview  optional: the same post to lm-private-data
+Config: postseason.bowls.projection (enabled, from_week, seed_per_win/loss).
 """
 import argparse
 import glob
@@ -52,7 +52,7 @@ PAGE = "reports/postseason.html"
 ARCHIVE = "reports/postseason-proj-wk{:02d}.html"
 OUT_DIR = "reports/postseason"            # Discord cards + per-week data (movement)
 META = os.path.join(OUT_DIR, "meta.json")
-SITE = "https://wrightc214.github.io/NCAA180-Sleeper/reports/"
+LINK = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "config", "short_links.json")))["postseason"]
 BUBBLE = 4
 e = html.escape
 
@@ -308,22 +308,21 @@ def build(year):
            f'Projected seeds use the latest poll, adjusted for projected wins and losses; the real seeds come from the '
            f'bots\' seeding ballot after championship week. Marquee Bowls give each league a seat (the better of its '
            f'two division leaders still available), then fill by bowl order. Records shown are projected final records.</p></details>')
-    weeks = sorted(int(m.group(1)) for f in glob.glob("reports/postseason-proj-wk*.html")
-                   if (m := re.search(r"wk(\d+)", f))) + [after]
-    arch = " · ".join(f'<a href="postseason-proj-wk{w:02d}.html">after wk {w}</a>' for w in sorted(set(weeks)))
     body = (f'<p class="status"><b>Projection after week {after}</b> · not official · updates every Tuesday until selection</p>'
             + how + field_card(P, col, short, prev, foot)
             + games_card("Prestige Bowls", "Top of the bowl order.")
             + games_card("Marquee Bowls", "One seat per league (its better division leader still available), then at-large by bowl order; "
                          "placed by tie-ins.", tags=True)
-            + other_card + f'<p class="note">Past projections: {arch}</p>')
+            + other_card)
     doc = (page_head(f"{lcfg.brand()} postseason", CSS) +
            f'<div class="wrap"><nav class="weeks" aria-label="Pages">{nav_html("postseason")}</nav>'
-           f'<header><h1>{lcfg.brand()} <em>Postseason</em></h1></header>{body}</div></body></html>')
+           f'{ARCH_MARK}<header><h1>{lcfg.brand()} <em>Postseason</em></h1></header>{body}</div></body></html>')
     os.makedirs(OUT_DIR, exist_ok=True)
-    for path in (PAGE, ARCHIVE.format(after)):
-        with open(path, "w", encoding="utf-8") as fh:
-            fh.write(doc)
+    with open(ARCHIVE.format(after), "w", encoding="utf-8") as fh:
+        fh.write(doc)
+    with open(PAGE, "w", encoding="utf-8") as fh:
+        fh.write(doc)
+    refresh_archive_rows(after)
     meta = {"year": int(year), "after_week": after, "playoff_field": len(P["field"]), "notes": P["notes"],
             "seeds": {"|".join(key(t)): t["Seed"] for t in P["field"]},
             "games": {t: [[b["name"], x["Team"], y["Team"]] for b, x, y in g] for t, g in by_tier.items()},
@@ -332,6 +331,31 @@ def build(year):
         with open(path, "w") as fh:
             json.dump(meta, fh, indent=1)
     return meta
+
+
+ARCH_MARK = "<!--projection-archive-->"
+ARCH_RE = re.compile(r'(<!--projection-archive-->)(<nav class="weeks sub" aria-label="Projection archive">.*?</nav>)?', re.S)
+
+
+def archive_row(weeks, current):
+    """Point-in-time picker (like the Weekly Awards archive): one link per projection week."""
+    if len(weeks) < 2:
+        return ""
+    cur = ' aria-current="page"'
+    links = "".join(f'<a href="{ARCHIVE.format(w).split("/")[-1]}"{cur if w == current else ""}>After wk {w}</a>' for w in weeks)
+    return f'<nav class="weeks sub" aria-label="Projection archive"><span>Projection</span>{links}</nav>'
+
+
+def refresh_archive_rows(latest):
+    """Every projection page (current + archive) gets the full, current week list."""
+    weeks = sorted(int(m.group(1)) for f in glob.glob(ARCHIVE.replace("{:02d}", "*"))
+                   if (m := re.search(r"wk(\d+)\.html$", f)))
+    pages = [(PAGE, latest)] + [(ARCHIVE.format(w), w) for w in weeks]
+    for path, w in pages:
+        doc = open(path, encoding="utf-8").read()
+        doc = ARCH_RE.sub(lambda mm: ARCH_MARK + archive_row(weeks, w), doc, count=1)
+        with open(path, "w", encoding="utf-8") as fh:
+            fh.write(doc)
 
 
 def shoot():
@@ -365,6 +389,20 @@ def stored():
     return json.load(open(META)), files
 
 
+WORDS = {1: "One week", 2: "Two weeks", 3: "Three weeks", 4: "Four weeks", 5: "Five weeks", 6: "Six weeks"}
+
+
+def league_message(meta, contact=""):
+    """The league post (wording locked with Chris, 2026-11-03): three cards + the short link (Discord
+    link preview on, like the other weekly posts) + "Questions? Ask @Chris" like the awards post."""
+    left = ps.last_regular_week() - int(meta["after_week"])
+    lead = f"{WORDS.get(left, f'{left} weeks')} left. " if left > 0 else ""
+    return (f"\U0001F3C8 **{lcfg.brand()} Playoff & Bowl Projection · After Week {meta['after_week']}**\n"
+            f"{lead}Here's where you're headed.\n"
+            f"Full projection, the bubble and every bowl team: {LINK}\n"
+            f"Questions? Ask {f'<@{contact}>' if contact else 'the data manager'}.")
+
+
 def post(where_to):
     import poll_discord as pdisc
     from discord_post import note, valid
@@ -376,18 +414,9 @@ def post(where_to):
         return 1
     contact = os.environ.get("DISCORD_CONTACT_ID", "").strip()
     mentions = [contact] if contact else []
-    head = f"**{lcfg.brand()} Playoff & Bowl Projection · after week {meta['after_week']}**"
+    msg = league_message(meta, contact)
     if where_to == "preview":
-        msg = (head + " — PREVIEW (not posted to the league).\nTo release exactly these images: Actions → "
-               "Weekly League Update → Run workflow → script `bowl_projection_publish`.")
-        if contact:
-            msg = f"<@{contact}> " + msg
-    else:
-        msg = (head + "\nIf the season ended the way it's trending: projected playoff first round, Prestige Bowls "
-               "and Marquee Bowls. Remaining games are projected from each team's season scoring average. Not official."
-               f"\nFull projection, bubble and every bowl team: {SITE}postseason.html")
-        if contact:
-            msg += f"\n<@{contact}>"
+        msg = "PREVIEW (not posted to the league):\n" + msg
     pdisc.send(url, msg, mentions=mentions, files=files[:10])
     note("notice", f"Bowl projection (after week {meta['after_week']}) posted: {where_to}")
     return 0
@@ -423,10 +452,7 @@ if __name__ == "__main__":
         print(f"Rendered {len(shoot())} card(s) in {OUT_DIR}/")
         sys.exit(0)
     if a.preview and not a.render:
-        rc = post("preview")
-        if not rc and pcfg().get("post_to_league"):
-            rc = post("league")
-        sys.exit(rc)
+        sys.exit(post("preview"))
     year = a.year or ps.current_season()
     ok, why = should_run(year)
     if not ok and not a.force:

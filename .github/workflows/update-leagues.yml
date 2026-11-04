@@ -270,6 +270,11 @@ jobs:
         run: |
           python scripts/scoreboard_data.py || { echo "scoreboard" >> /tmp/failed_scripts.txt; exit 1; }
 
+      # Same tab row on every page (a new tab otherwise only reaches pages rebuilt that run)
+      - name: Refresh page tabs
+        if: always()
+        run: python scripts/nav_refresh.py
+
       - name: Render orphan card
         if: always() && steps.orphan.outputs.render == 'true'
         continue-on-error: true
@@ -345,16 +350,18 @@ jobs:
           DISCORD_WEBHOOK_LM_PRIVATE_DATA: ${{ secrets.DISCORD_WEBHOOK_LM_PRIVATE_DATA }}
         run: python scripts/poll_bot_cards.py --post
 
-      # Bowl projection PREVIEW -> lm-private-data only (Chris approves before anything public;
-      # release = script bowl_projection_publish). projection.post_to_league = also auto-post.
-      - name: Bowl projection preview to LM channel
-        if: always() && hashFiles('work/bowl_projection.built') != '' && github.event.inputs.lm_report != 'false' && steps.pub.outputs.ok == 'true' && ((github.event_name == 'schedule') || (github.event.inputs.post == 'true'))
+      # Bowl projection -> league channel with the other weekly posts (Chris, 2026-11-03). Same gate as the
+      # weekly post: never when publishing is blocked or any script failed (the weekly post is held then too).
+      - name: Post bowl projection to Discord
+        if: always() && hashFiles('work/bowl_projection.built') != '' && steps.pub.outputs.ok == 'true' && ((github.event_name == 'schedule') || (github.event.inputs.post == 'true'))
         continue-on-error: true
         env:
-          DISCORD_WEBHOOK_LM_PRIVATE_DATA: ${{ secrets.DISCORD_WEBHOOK_LM_PRIVATE_DATA }}
           DISCORD_WEBHOOK_TEAM_STATS: ${{ secrets.DISCORD_WEBHOOK_TEAM_STATS }}
           DISCORD_CONTACT_ID: ${{ vars.DISCORD_CONTACT_ID }}
-        run: python scripts/bowl_projection.py --preview
+        run: |
+          FAILED=$(cat /tmp/failed_scripts.txt 2>/dev/null)
+          if [ -n "$(echo $FAILED)" ]; then echo "::warning::Bowl projection held: scripts failed:$FAILED"; exit 0; fi
+          python scripts/bowl_projection.py --publish
 
       # Weekly inactive-manager report -> private LM channel (alert webhook), same trigger as the post.
       - name: Inactivity report to LM channel
