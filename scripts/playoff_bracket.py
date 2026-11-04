@@ -8,6 +8,11 @@ Seeds come from postseason.playoff.seeding:
   --seeds history  -> the seeds actually used that year (Postseason_Historic; replays only)
 Rebuilt deterministically every run from seeds + finished results (nothing random to lock).
 A tie in a game is flagged and stops that branch (exit 1).
+Review step (Chris, 2026-11-03; postseason.playoff.review_before_publish): until the bracket is
+published, a run writes a DRAFT (data/postseason_drafts/Playoff_<year>.csv: seeds + first-round
+pairings), from the live field or, if that isn't published yet, the field draft. --publish needs
+the published field, checks the pairings still match the draft, then writes the live bracket.
+After that every run refreshes results as before. --data-dir runs skip the review.
 
   python scripts/playoff_bracket.py [--year 2026] [--seeds bots|manual|history] [--data-dir DIR]
 """
@@ -67,11 +72,22 @@ def main():
     ap.add_argument("--year", type=int)
     ap.add_argument("--seeds")
     ap.add_argument("--data-dir")
+    ap.add_argument("--publish", action="store_true", help="approve the draft: write the live bracket")
     a = ap.parse_args()
     year = a.year or ps.current_season()
-    season_path, field_path, _ = ps.paths(a)
+    season_path, field_path, draft_dir = ps.paths(a)
     _, cfg = ps.config()
     pc = cfg["playoff"]
+    season = ps.read_season(season_path)
+    published = ((season["Year"].astype(str) == str(year)) & (season["Round"] == "Playoff")).any()
+    review = bool(pc.get("review_before_publish", True)) and not a.data_dir and not published
+    draft = os.path.join(draft_dir, f"Playoff_{year}.csv")
+    field_draft = os.path.join(draft_dir, f"PlayoffField_{year}.csv")
+    live_field = os.path.exists(field_path) and (pd.read_csv(field_path, dtype=str)["Year"].astype(str) == str(year)).any()
+    if review and a.publish and not live_field:
+        sys.exit("FATAL: publish the playoff field first (playoff_field.py --publish)")
+    if review and not live_field and os.path.exists(field_draft):
+        field_path = field_draft  # draft bracket from the draft field
     n = int(pc["field_size"])
     if n & (n - 1):
         sys.exit(f"FATAL: field_size {n} is not a power of two (byes aren't supported)")
@@ -111,6 +127,20 @@ def main():
         current = [[nxt[2 * i], nxt[2 * i + 1]] if nxt[2 * i] and nxt[2 * i + 1] else None for i in range(len(nxt) // 2)]
         if all(p is None for p in current):
             break
+    if review:
+        r1 = sorted((r["GameID"], r["LeagueID"], str(r["RosterID"]), str(r["Seed"])) for r in rows if str(r["PlayoffRound"]) == "1")
+        if not a.publish:
+            os.makedirs(draft_dir, exist_ok=True)
+            pd.DataFrame(rows, columns=ps.COLUMNS).to_csv(draft, index=False)
+            print(f"Playoff {year}: DRAFT seeds + {len(r1) // 2} first-round games -> {draft} "
+                  f"(awaiting review; approve with --publish / script playoff_publish)")
+            return
+        if not os.path.exists(draft):
+            sys.exit(f"FATAL: no bracket draft to publish ({draft}); run playoff_bracket first")
+        d = ps.read_season(draft)
+        d1 = sorted((r.GameID, r.LeagueID, str(r.RosterID), str(r.Seed)) for r in d.itertuples() if str(r.PlayoffRound) == "1")
+        if d1 != r1:
+            sys.exit("FATAL: seeds or pairings changed since the draft was previewed -- rerun playoff_bracket for a new draft")
     ps.replace_rows(year, lambda r: r["Round"] != "Playoff", rows, season_path)
     print(f"Playoff {year}: {len(rows) // 2} games written ({sum(r['Status'] == 'Final' for r in rows) // 2} final) -> {season_path}")
     for p in problems:
