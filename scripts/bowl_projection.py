@@ -393,13 +393,13 @@ WORDS = {1: "One week", 2: "Two weeks", 3: "Three weeks", 4: "Four weeks", 5: "F
 
 
 def league_message(meta):
-    """The league post (wording locked with Chris, 2026-11-03). <link> stops Discord's link preview,
-    so only the three cards show."""
+    """The league post (wording locked with Chris, 2026-11-03): three cards, the link (with Discord's
+    link preview), and the @mention added by post()."""
     left = ps.last_regular_week() - int(meta["after_week"])
     lead = f"{WORDS.get(left, f'{left} weeks')} left. " if left > 0 else ""
     return (f"\U0001F3C8 **{lcfg.brand()} Playoff & Bowl Projection · After Week {meta['after_week']}**\n"
             f"{lead}Here's where you're headed.\n"
-            f"Full projection, the bubble and every bowl team: <{LINK}>")
+            f"Full projection, the bubble and every bowl team: {LINK}")
 
 
 def post(where_to):
