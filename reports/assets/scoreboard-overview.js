@@ -73,6 +73,9 @@
   // Blue badge in the regular season, gold ("GOTW Postseason") from CCG week on.
   const badge=()=>week>=(cfg.schedule?.ccg_week||12)?'../assets/logos/badges/GOTW%20Postseason.png':'../assets/logos/badges/GOTW.png';
   // Entry: ["A","B"] (manual) or {teams:[A,B],reason,source:"auto"} (scripts/game_of_the_week.py)
+  // National Championship: the natty logo, not the GotW badge (Chris, 2026-11-04).
+  const nattyLogo='../assets/logos/Playoffs/National%20Championship.png';
+  const featBadge=g=>g?.post?nattyLogo:badge(),featAlt=g=>g?.post?'National Championship':'Game of the Week';
   const gotwPick=()=>{const p=gotw?.[String(week)];return Array.isArray(p)?{teams:p}:p&&Array.isArray(p.teams)?p:null;};
   function isGotw(g){if(g.post)return g.post.round==='Playoff'&&String(g.post.playoff_round)===String(cfg.postseason?.playoff?.rounds?.length||5);const pick=gotwPick()?.teams;if(!Array.isArray(pick)||pick.length!==2)return false;
     const t=index.leagues[g.id]?.teams||{},names=g.match.map(r=>String(t[String(r.roster_id)]?.name||'').toLowerCase()).sort();
@@ -95,13 +98,13 @@
     const pre=s.live&&s.pregame!=null?`<div class="ew">Pregame: ${esc(league.teams[String(match[0].roster_id)]?.name)} ${esc(pct(s.pregame))}</div>`:'';
     const ew=!s.started&&o?.EveryWeek?`<div class="ew">If they'd played every week: ${esc(o.EveryWeekLeader?o.EveryWeekLeader+' ':'')}${esc(o.EveryWeek)}</div>`:'';
     const pt=g.post?`<div class="ptitle">${esc(gLabel(g.post))}</div>`:'';
-    return `<a class="mini-match" href="${esc(href)}" aria-label="${esc(league.teams[String(match[0].roster_id)]?.name)} versus ${esc(league.teams[String(match[1].roster_id)]?.name)} — player details">${pt}<div class="hdr3"><span>${isGotw(g)?`<img class="gotw-mini" src="${badge()}" alt="Game of the Week" title="Game of the Week">`:''}</span><span class="match-status${s.active?' is-live':''}">${esc(status)}</span><span>Score</span><span>${s.live?'Live proj':'Proj'}</span><span>${s.live?'Live %':'Pre %'}</span></div>${row(match[0],s.models[0],s.proj[0],p,s,s.models[0].actual>s.models[1].actual,g.post?pside(g,0):side(o,match[0].roster_id))}${row(match[1],s.models[1],s.proj[1],p===null?null:100-p,s,s.models[1].actual>s.models[0].actual,g.post?pside(g,1):side(o,match[1].roster_id))}${pre}${ew}</a>`;
+    return `<a class="mini-match" href="${esc(href)}" aria-label="${esc(league.teams[String(match[0].roster_id)]?.name)} versus ${esc(league.teams[String(match[1].roster_id)]?.name)} — player details">${pt}<div class="hdr3"><span>${isGotw(g)?`<img class="gotw-mini" src="${featBadge(g)}" alt="${featAlt(g)}" title="${featAlt(g)}">`:''}</span><span class="match-status${s.active?' is-live':''}">${esc(status)}</span><span>Score</span><span>${s.live?'Live proj':'Proj'}</span><span>${s.live?'Live %':'Pre %'}</span></div>${row(match[0],s.models[0],s.proj[0],p,s,s.models[0].actual>s.models[1].actual,g.post?pside(g,0):side(o,match[0].roster_id))}${row(match[1],s.models[1],s.proj[1],p===null?null:100-p,s,s.models[1].actual>s.models[0].actual,g.post?pside(g,1):side(o,match[1].roster_id))}${pre}${ew}</a>`;
   }
   function pside(g,i){const r=g.match[i],x=g.post.sides.find(y=>String(y.RosterID)===String(r.roster_id)&&String(y.LeagueID)===String(r.leagueId))||{};return {rec:x.Rec,seed:g.post.round==='Playoff'?x.Seed:''};}
   function postPaint(){
     const all=postGames();let html=strip(all,[]);
     const top=all.find(isGotw);
-    if(top)html+=`<section class="gotw"><img class="gotw-badge" src="${badge()}" alt="Game of the Week"><div class="feat-card">${card(top)}</div></section>`;
+    if(top)html+=`<section class="gotw"><img class="gotw-badge" src="${featBadge(top)}" alt="${featAlt(top)}"><div class="feat-card">${card(top)}</div></section>`;
     for(const [k,name]of SECT){const gs=all.filter(g=>g.post.round===k);if(!gs.length)continue;
       html+=`<h3 class="sec">${name} <small>${gs.length} game${gs.length===1?'':'s'}</small></h3><div class="feat">${gs.map(g=>`<section class="feat-card">${card(g)}</section>`).join('')}</div>`;}
     const errs=[...cards.entries()].filter(([,c])=>c?.error).map(([id,c])=>`${lname(id)}: ${c.error}`);

@@ -66,7 +66,7 @@ class PostseasonBrowserTests(unittest.TestCase):
                         secs = page.locator('h3.sec').all_inner_texts()
                         self.assertEqual([s.split()[0].upper() for s in secs], ['PLAYOFF', 'BOWLS', 'NIT'])
                         self.assertEqual(sorted(set(fetched)), sorted(L[:10]))  # only leagues in games
-                        self.assertEqual(page.locator('.gotw .gotw-badge').count(), 1)  # National Championship
+                        self.assertEqual(page.locator('.gotw .gotw-badge').get_attribute('alt'), 'National Championship')  # natty logo, not GotW
                         self.assertEqual(page.locator('.mini-match.grp .score-row').count() >= 4, True)
                         self.assertEqual(page.locator('.mini-match.grp .score-row.out').count(), 3)  # final: 3 can't advance
                         self.assertIn('POSTSEASON WEEK 1', page.locator('h1').inner_text().upper())
@@ -85,7 +85,7 @@ class PostseasonBrowserTests(unittest.TestCase):
                                 self.assertEqual(page.locator('.gr.out').count(), 3)
                                 self.assertEqual(page.locator('.gcols').is_visible(), width >= 1000)
                             alts = page.locator('.mid .gbadge').evaluate_all('e=>e.map(x=>x.alt)')
-                            want = {'2026-B-1': ['Rose Bowl'], '2026-P-31': ['National Championship', 'Game of the Week'], '2026-N-A': ['NIT']}[gid]
+                            want = {'2026-B-1': ['Rose Bowl'], '2026-P-31': ['National Championship'], '2026-N-A': ['NIT']}[gid]
                             self.assertEqual(alts, want)
                             self.assertFalse(page.evaluate('document.documentElement.scrollWidth > innerWidth'))
                             if os.environ.get('SCOREBOARD_SCREENSHOTS'):

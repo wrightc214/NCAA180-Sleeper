@@ -36,7 +36,7 @@
       out.push({src:week>=(cfg.schedule?.ccg_week||12)?'../assets/logos/badges/GOTW%20Postseason.png':'../assets/logos/badges/GOTW.png',alt:'Game of the Week'});
     if(postGame){const g=postGame,logo=n=>({src:encodeURI(`../assets/logos/${(cfg.postseason?.playoff?.bowl_rotation||[]).flat().concat(['National Championship']).includes(n)?'Playoffs':'Bowls'}/${n}.png`),alt:n});
       const approved=cfg.postseason?.bowls?.approved_logos||[];
-      if(g.round==='Playoff'&&String(g.playoff_round)===String(cfg.postseason?.playoff?.rounds?.length||5))out.unshift(logo('National Championship'),{src:'../assets/logos/badges/GOTW%20Postseason.png',alt:'Game of the Week'});
+      if(g.round==='Playoff'&&String(g.playoff_round)===String(cfg.postseason?.playoff?.rounds?.length||5))out.unshift(logo('National Championship'));
       else if(g.bowl&&approved.includes(g.bowl))out.unshift(logo(g.bowl));
       else if(g.round==='NIT')out.unshift({src:'../assets/logos/NIT.png',alt:'NIT'});}
     return out;
