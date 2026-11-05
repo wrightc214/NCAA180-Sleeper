@@ -76,6 +76,25 @@ def player_map(full=None):
     return {k: v for k, v in result.items() if set(v["positions"]) & {"QB", "RB", "FB", "WR", "TE", "K", "DEF"}}
 
 
+def post_games(year, wk, path="data/PostseasonProjections_Historic.csv"):
+    """Bowl / playoff / NIT games for one week from PostseasonProjections_Historic.csv (frozen by
+    matchups_page.py from PUBLISHED pairings): [{id, round, stage, bowl, playoff_round, sides:[...]}],
+    sides in seed order then by win chance. Empty when the week isn't frozen yet."""
+    if not Path(path).exists():
+        return []
+    games = {}
+    for r in rows(path):
+        if int(r["Year"]) == year and int(r["Week"]) == wk:
+            g = games.setdefault(r["GameID"], {"id": r["GameID"], "round": r["Round"], "stage": r["Stage"],
+                                               "bowl": r["BowlName"], "playoff_round": r["PlayoffRound"], "sides": []})
+            g["sides"].append({"LeagueID": r["LeagueID"], "RosterID": r["RosterID"], "Team": r["Team"], "Seed": r["Seed"],
+                               "Rec": r["Rec"], "Proj": float(r["Proj"]), "WinPct": float(r["WinPct"])})
+    for g in games.values():
+        g["sides"].sort(key=lambda x: (int(x["Seed"]) if x["Seed"].isdigit() else 99, -x["WinPct"]))
+    order = {"Playoff": 0, "Bowl": 1, "NIT": 2}  # Chris, 2026-11-04: Playoff, Bowls, NIT
+    return sorted(games.values(), key=lambda g: (order.get(g["round"], 9), g["id"]))
+
+
 def ccg_pairs(year, wk, odds, leagues):
     """CCG week: exactly one game per league, and it must be the game conference_championships.py
     wrote to Postseason_Season.csv. Otherwise nothing is frozen (frozen files never change)."""
@@ -160,9 +179,13 @@ def build(offline=False):
                 # Sleeper's postseason pairings are placeholders; the matchups page pairs the real
                 # CCG games (from Postseason_Season.csv), so its frozen odds are the real games.
                 if wk != cfg["schedule"]["ccg_week"]:
-                    print(f"Week {wk}: postseason weeks after the CCG are not supported yet; not frozen")
-                    continue
-                extra = {"event": "CCG", "pairs": ccg_pairs(year, wk, odds, leagues)}
+                    games = post_games(year, wk)
+                    if not games:
+                        print(f"Week {wk}: no frozen postseason odds yet (published pairings + matchups_page); not frozen")
+                        continue
+                    odds, extra = [], {"event": "postseason", "games": games}
+                else:
+                    extra = {"event": "CCG", "pairs": ccg_pairs(year, wk, odds, leagues)}
             elif len(odds) != sum(len(l["teams"]) for l in leagues.values()) // 2:
                 raise ValueError(f"Incomplete frozen matchup odds for week {wk}")
             dump(target, {"season": year, "week": wk, "snapshot": projections[0]["SnapshotUTC"],
@@ -170,7 +193,7 @@ def build(offline=False):
                           "player_info": {r["PlayerID"]: {"team": r.get("NFLTeam", ""), "position": r.get("Position", "")} for r in projections}})
         available.append(wk)
     if week not in available and week > cfg["schedule"]["ccg_week"] and available:
-        print(f"Week {week} is past the CCG (not supported yet); scoreboard defaults to week {max(available)}")
+        print(f"Week {week}: no frozen postseason games yet; scoreboard defaults to week {max(available)}")
         week = max(available)
     if week not in available:
         raise ValueError(f"No valid pregame baseline for {year} week {week}; existing index preserved")

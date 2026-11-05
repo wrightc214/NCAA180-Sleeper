@@ -157,6 +157,77 @@ def ccg_pairs(season, wk):
                          "OpponentRosterID": ps["OpponentRosterID"]})
 
 
+OUT_POST = "data/PostseasonProjections_Historic.csv"
+POST_KEEP = ["Round", "Stage", "GameID", "BowlName", "PlayoffRound", "Seed"]
+
+
+def post_games(season, wk):
+    """{GameID: [rows]} for one bowl/playoff/NIT week from PUBLISHED Postseason_Season.csv rows
+    (drafts live in data/postseason_drafts until Chris approves them, so approval stays the gate)."""
+    f = "data/Postseason_Season.csv"
+    if not os.path.exists(f) or os.path.getsize(f) <= 1:
+        return {}
+    d = pd.read_csv(f, dtype=str, keep_default_na=False)
+    d = d[(d["Year"] == str(season)) & (d["Week"] == str(wk)) & d["Round"].isin(["Playoff", "Bowl", "NIT"])]
+    return {g: x.to_dict("records") for g, x in d.groupby("GameID", sort=False)}
+
+
+def chance_top(projs, sd=None, steps=2000):
+    """Chance each team posts the top score (independent normals, sd = SPREAD). 2 teams = win_pct."""
+    sd = sd or SPREAD
+    lo, hi = min(projs) - 6 * sd, max(projs) + 6 * sd
+    dx = (hi - lo) / steps
+    pdf = lambda x, m: math.exp(-0.5 * ((x - m) / sd) ** 2) / (sd * math.sqrt(2 * math.pi))  # noqa: E731
+    cdf = lambda x, m: 0.5 * (1 + math.erf((x - m) / (sd * math.sqrt(2))))  # noqa: E731
+    out = []
+    for i, m in enumerate(projs):
+        tot = 0.0
+        for k in range(steps):
+            x = lo + (k + 0.5) * dx
+            pr = pdf(x, m)
+            for j, n in enumerate(projs):
+                if j != i:
+                    pr *= cdf(x, n)
+            tot += pr * dx
+        out.append(tot * 100)
+    s = sum(out) or 1
+    return [round(v * 100 / s, 1) for v in out]
+
+
+def write_post(season, wk, post, rows, teams, stamp):
+    """One row per team per game into PostseasonProjections_Historic.csv (frozen once per week,
+    like the regular-season odds). WinPct = chance to win the game / finish top of the NIT group."""
+    rec = standings(season, int(pc.config().get("last_regular_week", 11)) + 1)  # regular-season record
+    out, missing = [], []
+    for gid, g in post.items():
+        keys = [(r["LeagueID"], str(r["RosterID"]).replace(".0", "")) for r in g]
+        miss = [k for k in keys if k not in rows]
+        if miss:
+            missing += miss
+            continue
+        pct = chance_top([rows[k]["Best"] for k in keys])
+        for r, k, p in zip(g, keys, pct):
+            out.append({"Year": season, "Week": wk, **{c: r.get(c, "") for c in POST_KEEP},
+                        "LeagueID": k[0], "League": rows[k]["League"], "RosterID": k[1], "Team": teams.get(k, r.get("Team", "")),
+                        "Rec": rec.get(k, ""), "Proj": rows[k]["Best"], "CurLineup": rows[k]["Current"],
+                        "ZeroStarters": rows[k]["ZeroStarters"], "WinPct": p, "Snapshot": stamp})
+    if missing:
+        print(f"Week {wk}: {len(missing)} postseason team(s) missing from the lineup snapshot: {missing[:5]}")
+    g = pd.DataFrame(out)
+    if g.empty:
+        return False
+    if os.path.exists(OUT_POST):
+        h = pd.read_csv(OUT_POST, dtype=str)
+        if ((h["Year"] == str(season)) & (h["Week"] == str(wk))).any():
+            print(f"{OUT_POST}: {season} week {wk} already recorded; left unchanged")
+            return True
+        g.to_csv(OUT_POST, mode="a", header=False, index=False, columns=list(h.columns))
+    else:
+        g.to_csv(OUT_POST, index=False)
+    print(f"{OUT_POST}: {season} week {wk}: {g['GameID'].nunique()} games, {len(g)} teams")
+    return True
+
+
 def build(week=None):
     """week=None: upcoming week (page + _Current + _Historic). week=N: past week, _Historic only."""
     season = max(pc.seasons())
@@ -165,8 +236,13 @@ def build(week=None):
         print(f"No projection snapshot{f' for week {week}' if week else ''}; nothing to build.")
         return False
     wk, proj_f, line_f = snap
-    ccg = None
-    if wk > int(pc.config().get("last_regular_week", 11)):
+    ccg = post = None
+    if wk > int(lcfg.cfg()["schedule"]["ccg_week"]):  # bowl / playoff / NIT weeks: published pairings only
+        post = post_games(season, wk)
+        if not post:
+            print(f"Week {wk}: no published postseason games yet; nothing frozen.")
+            return False
+    elif wk > int(pc.config().get("last_regular_week", 11)):
         ccg = ccg_pairs(season, wk)
         if ccg is None:
             print(f"Week {wk} is postseason; matchups page skipped (pairings are fictional).")
@@ -198,6 +274,9 @@ def build(week=None):
         cur = round(sum(pts.get(p, 0) for p in starters if p not in ("", "0")), 2)
         rows[(r.LeagueID, r.RosterID)] = {"Best": best, "Current": cur, "ZeroStarters": zero,
                                           "League": short.get(r.LeagueName.strip().upper(), r.LeagueName)}
+
+    if post:
+        return write_post(season, wk, post, rows, teams, stamp)
 
     rk = {}
     ranks_current = False
