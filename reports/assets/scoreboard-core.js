@@ -65,6 +65,14 @@
     if (variance<1e-10) return a.projected===b.projected?50:(a.projected>b.projected?100:0);
     return 50*(1+erf((a.projected-b.projected)/Math.sqrt(2*variance)));
   }
+  // NIT groups (3–5 teams): chance each team posts the top score (independent normals). 2 teams = probability().
+  function chanceTop(models,steps=800) {
+    const ms=models.map(m=>({mu:m.projected,sd:Math.sqrt(Math.max(m.variance,1e-6))}));
+    const lo=Math.min(...ms.map(m=>m.mu-6*m.sd)),hi=Math.max(...ms.map(m=>m.mu+6*m.sd)),dx=(hi-lo)/steps;
+    const cdf=(x,m)=>0.5*(1+erf((x-m.mu)/(m.sd*Math.SQRT2))),pdf=(x,m)=>Math.exp(-0.5*((x-m.mu)/m.sd)**2)/(m.sd*Math.sqrt(2*Math.PI));
+    const out=ms.map((m,i)=>{let t=0;for(let k=0;k<steps;k++){const x=lo+(k+.5)*dx;let p=pdf(x,m);ms.forEach((n,j)=>{if(j!==i)p*=cdf(x,n);});t+=p*dx;}return t;});
+    const sum=out.reduce((a,b)=>a+b,0)||1;return out.map(v=>100*v/sum);
+  }
   function playerModel(id, metadata, raw, projection, game, official, cfg, past=false) {
     const p=metadata || {name:`Player ${id}`,positions:[],team:'',status:''};
     const positions=p.positions || [p.position];
@@ -105,7 +113,7 @@
     keep.sort(pregame?(a,b)=>order.indexOf(a.position)-order.indexOf(b.position)||b.baseline-a.baseline:(a,b)=>b.gain-a.gain);
     return {players:pregame?keep:keep.slice(0,5),zeros,others:candidates.length-zeros-(pregame?keep.length:Math.min(5,keep.length))};
   }
-  const api={num,round,statsMap,normalizedStats,score,remaining,eligible,bestLineup,probability,playerModel,teamModel,benchPlayers};
+  const api={num,round,statsMap,normalizedStats,score,remaining,eligible,bestLineup,probability,chanceTop,playerModel,teamModel,benchPlayers};
   if(typeof module!=='undefined' && module.exports) module.exports=api;
   root.ScoreboardCore=api;
 })(typeof window==='undefined'?globalThis:window);
