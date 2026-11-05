@@ -10,6 +10,19 @@ Pool: every team not in the playoff field or a (published) bowl.
 Same-league avoidance is best effort: groups minimise same-league teams, and Group Stage 2
 spreads a league's winners across bracket branches so they meet as late as possible.
 
+REALIGNED FORMAT from postseason.nit.realigned_from (2026; Chris, 2026-11-04; project doc
+nit-format-2026.md). Earlier seasons keep the format above (history replays).
+  Round 1 (week 13): groups of 4 (some 3s), World Cup pots from the final bot poll, one team per
+    pot per group, same-league spreading. Advance: group winners + "lucky dogs" (best scores among
+    the rest) to a round-2 field of 28 (21 for small fields).
+  Round 2 (week 14): 7 groups of 4; pots from the average of round-1 points rank and poll rank;
+    never two teams from the same round-1 group. Advance: 7 winners + 1 lucky dog = 8.
+  Quarterfinals (week 15): two halves of 4 (pots by combined group points), conflicts kept apart
+    in priority order: same league > same round-2 group > same round-1 group; tossups prefer
+    cross-league rivals meeting; then closest to straight seeding. Seeds are not shown.
+  Ties (group wins, lucky dogs, pots, seeds): every-week head-to-head among the tied teams, then
+    wins, then points.
+
 Review step (Chris, 2026-10-27): each random draw (Group Stage 1, Group Stage 2) is written
 as a DRAFT with its seed recorded; --publish locks it; --redraw makes a new draft. Results
 and the bracket are refreshed every run. An exact tie for a group/game win is flagged.
@@ -187,6 +200,9 @@ def main():
         print(f"NIT {year}: {stage} published ({len(rows)} team rows)")
         return True
 
+    if year >= int(cfg.get("realigned_from", 9999)) and not a.from_history:
+        return realigned(year, a, cfg, team, pool, nit, season_path, draft_or_publish, problems)
+
     # ---- Group Stage 1
     g1 = nit[nit["Stage"] == STAGE1]
     c1 = cfg["group_stage_1"]
@@ -269,6 +285,235 @@ def main():
             break
     ps.replace_rows(year, lambda r: not (r["Round"] == "NIT" and r["Stage"] in bc["rounds"]), rows, season_path)
     print(f"NIT {year}: bracket {len(rows) // 2} games ({sum(r['Status'] == 'Final' for r in rows) // 2} final)")
+    return finish(problems)
+
+
+# ---------------- realigned format (2026+) ----------------
+def key(t):
+    return (str(t["LeagueID"]), str(t["RosterID"]).replace(".0", ""))
+
+
+def weekly(year):
+    """{team key: {week: points}} for the regular season (this season's scoring mode)."""
+    out = {}
+    for r in ps.regular_games(year).itertuples():
+        out.setdefault((str(r.LeagueID), str(r.RosterID)), {})[int(r.Week)] = float(r.PF)
+    return out
+
+
+def tb_sort(teams, W):
+    """Tied teams, best first: every-week head-to-head among them, then wins, then points."""
+    def ew(t):
+        mine = W.get(key(t), {})
+        return sum(1 for u in teams if u is not t for w, v in mine.items() if v > W.get(key(u), {}).get(w, float("inf")))
+    return sorted(teams, key=lambda t: (-ew(t), -float(t.get("Wins") or 0), -float(t.get("PointsFor") or 0)))
+
+
+def rank(teams, metric, W):
+    """Best first by metric (higher = better); exact ties broken by tb_sort."""
+    by = {}
+    for t in teams:
+        by.setdefault(round(float(metric(t)), 2), []).append(t)
+    return [t for v in sorted(by, reverse=True) for t in tb_sort(by[v], W)]
+
+
+def poll_rank(year, before_week):
+    """{team key: rank} from the latest BotConsensus poll before the NIT starts."""
+    p = pd.read_csv("data/Poll_Season.csv", dtype=str) if year == ps.current_season() else pd.read_csv("data/Poll_Historic.csv", dtype=str)
+    p = p[(p["Year"] == str(year)) & (p["PollType"] == "BotConsensus")]
+    tw = pd.to_numeric(p["ThroughWeek"])
+    p = p[tw == tw[tw < int(before_week)].max()]
+    return {(str(r.LeagueID), str(r.RosterID)): int(float(r.Rank)) for r in p.itertuples()}
+
+
+def rivals():
+    try:
+        r = pd.read_csv("data/rivalries/football.csv", dtype=str)
+    except FileNotFoundError:
+        return set()
+    return {frozenset((a, b)) for a, b, c in zip(r["team_a"], r["team_b"], r["certainty"]) if str(c).isdigit() and int(c) >= 4}
+
+
+def pot_draw(order, ngroups, rng, hard=lambda a, b: False, soft=lambda a, b: 0, tries=3000):
+    """World Cup pots: order (best first) cut into pots of ngroups; one team per pot per group.
+    hard conflicts never share a group; soft conflicts are minimised. Reproducible from rng."""
+    pots = [order[i:i + ngroups] for i in range(0, len(order), ngroups)]
+    best = None
+    for _ in range(tries):
+        groups, cost, ok = [[] for _ in range(ngroups)], 0, True
+        for pot in pots:
+            pot = pot[:]
+            rng.shuffle(pot)
+            free = list(range(ngroups))
+            for t in pot:
+                cand = [(sum(soft(t, u) for u in groups[g]), g) for g in free if not any(hard(t, u) for u in groups[g])]
+                if not cand:
+                    ok = False
+                    break
+                m = min(c for c, _ in cand)
+                g = rng.choice([g for c, g in cand if c == m])
+                groups[g].append(t)
+                free.remove(g)
+                cost += m
+            if not ok:
+                break
+        if ok and (best is None or cost < best[0]):
+            best = (cost, groups)
+            if cost == 0:
+                break
+    if best is None:
+        sys.exit("FATAL: no valid NIT draw satisfies the hard rules")
+    return best[1]
+
+
+def settle(rows, team, W):
+    """All groups final -> (rows with Outcome fixed by the tiebreak, [(GameID, winner, points)], [(team, points, GameID)])
+    for every team; None while any group is pending."""
+    df = pd.DataFrame(rows)
+    if df.empty or (df["Status"] != "Final").any():
+        return None
+    winners, everyone = [], []
+    for gid, g in df.groupby("GameID", sort=False):
+        ts = [(team[(r.LeagueID, str(r.RosterID))], float(r.Points)) for r in g.itertuples()]
+        pts = {key(t): p for t, p in ts}
+        order = rank([t for t, _ in ts], lambda t: pts[key(t)], W)
+        winners.append((gid, order[0], pts[key(order[0])]))
+        everyone += [(t, pts[key(t)], gid) for t in order]
+        for r in rows:
+            if r["GameID"] == gid:
+                r["Outcome"] = "Win" if (r["LeagueID"], str(r["RosterID"])) == key(order[0]) else "Loss"
+    return rows, winners, everyone
+
+
+def qf_bracket(q, combined, gid1, gid2, W, riv, wts):
+    """Two halves of 4 + QF pairings. Minimise, in order: weighted conflicts meeting in a QF,
+    conflicts in the same half (= a SF meeting), then prefer cross-league rivals meeting, then
+    closest to straight seeding (halves 1,4,5,8 / 2,3,6,7; 1v4, 2v3)."""
+    from itertools import product
+    order = rank(q, lambda t: combined[key(t)], W)
+    pots = [order[i:i + 2] for i in range(0, 8, 2)]
+
+    def w(a, b):
+        return max([wts["league"] * (a["LeagueID"] == b["LeagueID"]), wts["round2"] * (gid2[key(a)] == gid2[key(b)]),
+                    wts["round1"] * (gid1[key(a)] == gid1[key(b)])])
+
+    def riv_pair(a, b):
+        return a["LeagueID"] != b["LeagueID"] and frozenset((a["Team"], b["Team"])) in riv
+
+    pairings = [((0, 3), (1, 2)), ((0, 2), (1, 3)), ((0, 1), (2, 3))]
+    best = None
+    for picks in product((0, 1), repeat=4):
+        A = [p[i] for p, i in zip(pots, picks)]
+        B = [p[1 - i] for p, i in zip(pots, picks)]
+        halves = [sorted(h, key=order.index) for h in (A, B)]
+        same_half = sum(w(a, b) for h in halves for i, a in enumerate(h) for b in h[i + 1:])
+        for pa in pairings:
+            for pb in pairings:
+                games = [[halves[0][i] for i in pa[0]], [halves[0][i] for i in pa[1]],
+                         [halves[1][i] for i in pb[0]], [halves[1][i] for i in pb[1]]]
+                qf = sum(w(*g) for g in games)
+                rv = sum(riv_pair(*g) for g in games)
+                disp = sum(x != y for x, y in zip(picks, (0, 1, 0, 1))) + pairings.index(pa) + pairings.index(pb)
+                k = (qf, same_half, -rv, disp)
+                if best is None or k < best[0]:
+                    best = (k, games)
+    return best[1]
+
+
+def realigned(year, a, cfg, team, pool, nit, season_path, draft_or_publish, problems):
+    c1, c2, cq = cfg["group_stage_1"], cfg["group_stage_2"], cfg["realigned"]
+    W = weekly(year)
+    pr = poll_rank(year, c1["week"])
+    order0 = rank(pool, lambda t: -pr.get(key(t), 999), W)  # poll order, best first
+    met = recent_met(year)
+    mk = lambda t: (str(t["LeagueName"]).strip(), str(t["RosterID"]))  # noqa: E731
+    soft = lambda x, y: cq["weights"]["league"] * (x["LeagueID"] == y["LeagueID"]) + (frozenset((mk(x), mk(y))) in met)  # noqa: E731
+
+    # ---- Round 1
+    g1 = nit[nit["Stage"] == STAGE1]
+    if g1.empty:
+        def make1(seed):
+            n = len(pool)
+            ng = -(-n // int(cq["group_size"]))
+            groups = pot_draw(order0, ng, random.Random(seed), soft=soft)
+            return stage_rows(year, STAGE1, c1["week"], groups, seed)
+        if not draft_or_publish(STAGE1, make1):
+            return
+        g1 = ps.read_season(season_path)
+        g1 = g1[(g1["Year"].astype(str) == str(year)) & (g1["Round"] == "NIT") & (g1["Stage"] == STAGE1)]
+    rows1 = refresh(year, g1, STAGE1, team)
+    s1 = settle(rows1, team, W)
+    ps.replace_rows(year, lambda r: not (r["Round"] == "NIT" and r["Stage"] == STAGE1), s1[0] if s1 else rows1, season_path)
+    if s1 is None:
+        print(f"NIT {year}: {STAGE1} in progress / pending")
+        return finish(problems)
+    _, win1, all1 = s1
+    gid1 = {key(t): g for t, _, g in all1}
+    pts1 = {key(t): p for t, p, _ in all1}
+    field2 = int(cq["round2_field"] if len(pool) >= int(cq["small_field_below"]) else cq["round2_field_small"])
+    wk = {key(t) for _, t, _ in win1}
+    rest = rank([t for t, _, _ in all1 if key(t) not in wk], lambda t: pts1[key(t)], W)
+    dogs1 = rest[:max(field2 - len(win1), 0)]
+    adv1 = [t for _, t, _ in win1] + dogs1
+    print(f"NIT {year}: {STAGE1} final -> {len(win1)} group winners + {len(dogs1)} lucky dogs: "
+          + ", ".join(f"{t['Team']} {pts1[key(t)]:.2f}" for t in dogs1))
+
+    # ---- Round 2
+    nit = ps.read_season(season_path)
+    g2 = nit[(nit["Year"].astype(str) == str(year)) & (nit["Round"] == "NIT") & (nit["Stage"] == STAGE2)]
+    if g2.empty:
+        def make2(seed):
+            ng = 8 - int(cq.get("round2_lucky_dogs", 1))  # 7 groups: 28 -> 7x4, 21 -> 7x3
+            by_pts = {key(t): i for i, t in enumerate(rank(adv1, lambda t: pts1[key(t)], W))}
+            by_poll = {key(t): i for i, t in enumerate(rank(adv1, lambda t: -pr.get(key(t), 999), W))}
+            order2 = sorted(adv1, key=lambda t: ((by_pts[key(t)] + by_poll[key(t)]) / 2, by_pts[key(t)]))
+            groups = pot_draw(order2, ng, random.Random(seed), hard=lambda x, y: gid1[key(x)] == gid1[key(y)], soft=soft)
+            return stage_rows(year, STAGE2, c2["week"], groups, seed)
+        if not draft_or_publish(STAGE2, make2):
+            return finish(problems)
+        nit = ps.read_season(season_path)
+        g2 = nit[(nit["Year"].astype(str) == str(year)) & (nit["Round"] == "NIT") & (nit["Stage"] == STAGE2)]
+    rows2 = refresh(year, g2, STAGE2, team)
+    s2 = settle(rows2, team, W)
+    ps.replace_rows(year, lambda r: not (r["Round"] == "NIT" and r["Stage"] == STAGE2), s2[0] if s2 else rows2, season_path)
+    if s2 is None:
+        print(f"NIT {year}: {STAGE2} in progress / pending")
+        return finish(problems)
+    _, win2, all2 = s2
+    gid2 = {key(t): g for t, _, g in all2}
+    pts2 = {key(t): p for t, p, _ in all2}
+    wk2 = {key(t) for _, t, _ in win2}
+    rest2 = rank([t for t, _, _ in all2 if key(t) not in wk2], lambda t: pts2[key(t)], W)
+    q = [t for _, t, _ in win2] + rest2[:max(8 - len(win2), 0)]
+    print(f"NIT {year}: {STAGE2} final -> {len(win2)} winners + lucky dog(s): " + ", ".join(t["Team"] for t in q[len(win2):]))
+
+    # ---- Quarterfinal halves (deterministic) -> SF -> Final
+    combined = {key(t): pts1[key(t)] + pts2[key(t)] for t in q}
+    current = qf_bracket(q, combined, gid1, gid2, W, rivals(), cq["weights"])
+    bc = cfg["bracket"]
+    rows = []
+    for r_i, label in enumerate(bc["rounds"]):
+        week = int(bc["first_week"]) + r_i
+        nxt = []
+        for g_i, pair in enumerate(current, 1):
+            if pair is None:
+                nxt.append(None)
+                continue
+            gid = f"{year}-NIT-{label[:2].upper()}{g_i}"
+            gr = ps.game_rows(year, "NIT", week, gid, pair, stage=label, bowl=f"{label} {g_i}" if len(current) > 1 else label)
+            st = settle(gr, team, W)
+            if st:
+                gr = st[0]
+            rows += gr
+            w = [r for r in gr if r["Outcome"] == "Win"]
+            nxt.append(team[(w[0]["LeagueID"], w[0]["RosterID"])] if w else None)
+        if len(nxt) == 1:
+            break
+        current = [[nxt[i], nxt[i + 1]] if nxt[i] and nxt[i + 1] else None for i in range(0, len(nxt), 2)]
+        if all(c is None for c in current):
+            break
+    ps.replace_rows(year, lambda r: not (r["Round"] == "NIT" and r["Stage"] in bc["rounds"]), rows, season_path)
+    print(f"NIT {year}: bracket {len({r['GameID'] for r in rows})} games")
     return finish(problems)
 
 

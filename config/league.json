@@ -865,6 +865,21 @@
           "Final"
         ],
         "first_week": 15
+      },
+      "realigned_from": 2026,
+      "realigned": {
+        "_note": "Chris, 2026-11-04 (project doc nit-format-2026.md). group_size 4 (remainder -> some 3s); round-2 field 28, or 21 when the NIT pool is below small_field_below; 8 reach the QF (round-2 winners + lucky dogs). weights rank QF conflicts: league > round 2 group > round 1 group.",
+        "group_size": 4,
+        "round2_field": 28,
+        "round2_field_small": 21,
+        "small_field_below": 80,
+        "weights": {
+          "league": 100,
+          "round2": 10,
+          "round1": 1
+        },
+        "hide_seeds": true,
+        "round2_lucky_dogs": 1
       }
     },
     "display": {
