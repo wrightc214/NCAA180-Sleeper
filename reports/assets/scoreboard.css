@@ -3,3 +3,19 @@
 @media(max-width:700px){.game-view .sbh h1{font-size:34px}.game-view .sbh{padding-bottom:8px}}
 
 .mid{display:flex;flex-direction:column;align-items:center;gap:6px}.gbadge{width:72px;height:72px;object-fit:contain}@media(max-width:700px){.gbadge{width:44px;height:44px}}
+
+/* NIT group game view (2026-11-04): phone = ranked list (tap a team for its lineup); desktop = lineup columns */
+.gtop{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px;display:grid;gap:10px}
+.glist .gh,.gr summary{display:grid;grid-template-columns:minmax(0,1fr) 70px 56px 64px;gap:6px;align-items:center}
+.glist .gh{font:700 10px var(--sans,sans-serif);text-transform:uppercase;letter-spacing:.04em;color:var(--mute);padding:0 4px}
+.glist .gh span:not(:first-child),.gr summary span:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}
+.gr{border-top:1px solid var(--line)}.gr summary{list-style:none;cursor:pointer;padding:8px 4px}.gr summary::-webkit-details-marker{display:none}
+.gt .pt{display:inline-block;padding:2px 6px;border-radius:4px;font-weight:800}.gt small{display:block;color:var(--mute);font-size:11px}
+.gs{font:800 18px var(--num)}.gj,.gc{color:var(--mute)}.out{opacity:.45}
+.gl .gp,.gcol .gp{display:grid;grid-template-columns:minmax(0,1fr) 56px;border-top:1px solid var(--line);padding:4px 0}
+.gcols{display:none;gap:10px;margin-top:12px}.gcol{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px;min-width:0}
+.gch{display:grid;gap:2px;padding-bottom:6px}.gch b{font:800 22px var(--num)}
+@media(min-width:1000px){.gcols{display:grid}.gr summary{cursor:default;pointer-events:none}.gl{display:none}}
+#game{min-width:0;max-width:100%;text-overflow:ellipsis}
+.pick{min-width:0;max-width:100%}.pick select{min-width:0;max-width:100%;width:0}
+.gtop .mid{justify-self:center;max-width:none}
