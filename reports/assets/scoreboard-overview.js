@@ -11,8 +11,25 @@
   let pausedHidden=false,loadedAt=Date.now();
   const settings=new Map(),cards=new Map();
   $('game').hidden=true;$('overview-help').hidden=false;
-  const wkName=w=>w===cfg.schedule.ccg_week?'CCG Week':`Week ${w}`;
-  const title=()=>{document.querySelector('h1').innerHTML=`${esc(cfg.brand||'')} <em>${week===cfg.schedule.ccg_week?'Conference Championships':`Week ${week} Games`}</em>`;};
+  const ccgW=()=>cfg.schedule.ccg_week;
+  const wkName=w=>w===ccgW()?'CCG Week':w>ccgW()?`Postseason Week ${w-ccgW()}`:`Week ${w}`;
+  // Postseason weeks 13+ (Chris, 2026-11-04): games come from the frozen baseline (published pairings), cross-league.
+  const isPost=()=>baseline?.event==='postseason';
+  const PR=r=>(cfg.postseason?.playoff?.rounds||['First Round','Sweet 16','Elite 8','Final Four','National Championship'])[Number(r)-1];
+  const SECT=[['Playoff','Playoff'],['Bowl','Bowls'],['NIT','NIT']];
+  function gLabel(g){if(g.round==='Playoff')return [PR(g.playoff_round)||'Playoff',g.bowl].filter(Boolean).join(' · ');
+    if(g.round==='Bowl')return g.bowl||'Bowl';return `${g.stage||'NIT'}${g.sides.length>2?` · Group ${String(g.id).split('-').pop()}`:''}`;}
+  function postSel(){const sel=$('league').value,gs=(baseline.games||[]).filter(g=>!sel||g.sides.some(x=>String(x.LeagueID)===sel));
+    return {gs,ids:[...new Set(gs.flatMap(g=>g.sides.map(x=>String(x.LeagueID))))]};}
+  function postGames(){
+    const out=[];
+    for(const g of postSel().gs){const parts=g.sides.map(x=>{const c=cards.get(String(x.LeagueID));const r=c?.rs?.find(r=>String(r.roster_id)===String(x.RosterID));return r?{r:{...r,leagueId:String(x.LeagueID)},sc:c.scoring}:null;});
+      if(parts.some(x=>!x))continue;
+      const match=parts.map(x=>x.r),s=S.summarize(match,metadata,baseline,lastGames,lastStats,parts.map(x=>x.sc),cfg,week<index.week);
+      out.push({post:g,id:match[0].leagueId,match,s});}
+    return out;}
+  let lastGames={},lastStats={};
+  const title=()=>{document.querySelector('h1').innerHTML=`${esc(cfg.brand||'')} <em>${week===ccgW()?'Conference Championships':week>ccgW()?wkName(week):`Week ${week} Games`}</em>`;};
   async function get(url,signal){
     const abort=new AbortController(),cancel=()=>abort.abort();
     signal?.addEventListener('abort',cancel,{once:true});
@@ -50,23 +67,47 @@
     const t=index.leagues[r.leagueId].teams[String(r.roster_id)]||{name:`Roster ${r.roster_id}`};
     const changed=Math.abs(model.actual-model.official)>.011;
     const score=model.played||s.final?`${model.actual.toFixed(2)}${changed?'†':''}`:'–';
-    return `<div class="score-row r3${s.final&&winner?' winner':''}"><span class="team-icon" style="background:${esc(t.primary)}">${t.logo?`<img src="${esc(t.logo)}" alt="" onerror="this.hidden=true">`:''}</span><span class="school">${info.rank?`<b class="rk">#${esc(info.rank)}</b> `:''}${esc(t.name)}${info.rec?`<small class="rec">${esc(info.rec)}</small>`:''}</span><span class="score${model.played||s.final?'':' dash'}" title="${changed?`Sleeper: ${model.official.toFixed(2)}`:'Standard score'}">${score}</span><span class="proj">${proj.toFixed(1)}</span><span class="chance">${esc(pct(probability))}</span></div>`;
+    return `<div class="score-row r3${s.final&&winner?' winner':''}"><span class="team-icon" style="background:${esc(t.primary)}">${t.logo?`<img src="${esc(t.logo)}" alt="" onerror="this.hidden=true">`:''}</span><span class="school">${info.seed?`<b class="rk seed">${esc(info.seed)}</b> `:''}${info.rank?`<b class="rk">#${esc(info.rank)}</b> `:''}${esc(t.name)}${info.rec?`<small class="rec">${esc(info.rec)}</small>`:''}</span><span class="score${model.played||s.final?'':' dash'}" title="${changed?`Sleeper: ${model.official.toFixed(2)}`:'Standard score'}">${score}</span><span class="proj">${proj.toFixed(1)}</span><span class="chance">${esc(pct(probability))}</span></div>`;
   }
   // Game of the Week (Chris, 2026-11-04): one game per regular-season week, picked in data/scoreboard/<season>/game-of-the-week.json
   // Blue badge in the regular season, gold ("GOTW Postseason") from CCG week on.
   const badge=()=>week>=(cfg.schedule?.ccg_week||12)?'../assets/logos/badges/GOTW%20Postseason.png':'../assets/logos/badges/GOTW.png';
   // Entry: ["A","B"] (manual) or {teams:[A,B],reason,source:"auto"} (scripts/game_of_the_week.py)
   const gotwPick=()=>{const p=gotw?.[String(week)];return Array.isArray(p)?{teams:p}:p&&Array.isArray(p.teams)?p:null;};
-  function isGotw(g){const pick=gotwPick()?.teams;if(!Array.isArray(pick)||pick.length!==2)return false;
+  function isGotw(g){if(g.post)return g.post.round==='Playoff'&&String(g.post.playoff_round)===String(cfg.postseason?.playoff?.rounds?.length||5);const pick=gotwPick()?.teams;if(!Array.isArray(pick)||pick.length!==2)return false;
     const t=index.leagues[g.id]?.teams||{},names=g.match.map(r=>String(t[String(r.roster_id)]?.name||'').toLowerCase()).sort();
     return names.join('|')===pick.map(x=>String(x).toLowerCase()).sort().join('|');}
+  function groupCard(g){
+    const {match,s,post}=g,href=`scoreboard.html?${new URLSearchParams({season,week,post:post.id,overview:$('league').value||'all'})}`;
+    const status=s.active?`● Live · ${s.active} playing`:s.final?'Final':s.started?'In progress':s.next?kickTxt(s.next.kickoff):s.status;
+    const ch=s.chances||[],top=Math.max(...s.models.map(m=>m.actual));
+    const idx=match.map((_,i)=>i).sort((a,b)=>s.started?s.models[b].actual-s.models[a].actual:(ch[b]??0)-(ch[a]??0));
+    const rows=idx.map(i=>{const x=post.sides.find(y=>String(y.RosterID)===String(match[i].roster_id)&&String(y.LeagueID)===String(match[i].leagueId))||{};
+      const out=s.final?s.models[i].actual<top:ch[i]!=null&&ch[i]<0.1&&s.started;
+      return row(match[i],s.models[i],s.proj[i],ch[i]??null,s,s.final&&!out,{rec:x.Rec}).replace('class="score-row r3',`class="score-row r3${out?' out':''}`);}).join('');
+    return `<a class="mini-match grp" href="${esc(href)}" aria-label="${esc(gLabel(post))}"><div class="ptitle">${esc(gLabel(post))}</div><div class="hdr3"><span></span><span class="match-status${s.active?' is-live':''}">${esc(status)}</span><span>Score</span><span>${s.live?'Live proj':'Proj'}</span><span>${s.live?'Live adv':'Adv %'}</span></div>${rows}</a>`;
+  }
   function card(g){
+    if(g.post&&g.match.length>2)return groupCard(g);
     const {id,game,match,s,o}=g,league=index.leagues[id];
-    const p=s.probability===null?null:Math.round(s.probability),href=`scoreboard.html?${new URLSearchParams({season,week,league:id,game,overview:$('league').value||'all'})}`;
+    const p=s.probability===null?null:Math.round(s.probability),href=`scoreboard.html?${new URLSearchParams(g.post?{season,week,post:g.post.id,overview:$('league').value||'all'}:{season,week,league:id,game,overview:$('league').value||'all'})}`;
     const status=s.active?`● Live · ${s.active} playing`:s.final?'Final':s.started?'In progress':s.next?kickTxt(s.next.kickoff):s.status;
     const pre=s.live&&s.pregame!=null?`<div class="ew">Pregame: ${esc(league.teams[String(match[0].roster_id)]?.name)} ${esc(pct(s.pregame))}</div>`:'';
     const ew=!s.started&&o?.EveryWeek?`<div class="ew">If they'd played every week: ${esc(o.EveryWeekLeader?o.EveryWeekLeader+' ':'')}${esc(o.EveryWeek)}</div>`:'';
-    return `<a class="mini-match" href="${esc(href)}" aria-label="${esc(league.teams[String(match[0].roster_id)]?.name)} versus ${esc(league.teams[String(match[1].roster_id)]?.name)} — player details"><div class="hdr3"><span>${isGotw(g)?`<img class="gotw-mini" src="${badge()}" alt="Game of the Week" title="Game of the Week">`:''}</span><span class="match-status${s.active?' is-live':''}">${esc(status)}</span><span>Score</span><span>${s.live?'Live proj':'Proj'}</span><span>${s.live?'Live %':'Pre %'}</span></div>${row(match[0],s.models[0],s.proj[0],p,s,s.models[0].actual>s.models[1].actual,side(o,match[0].roster_id))}${row(match[1],s.models[1],s.proj[1],p===null?null:100-p,s,s.models[1].actual>s.models[0].actual,side(o,match[1].roster_id))}${pre}${ew}</a>`;
+    const pt=g.post?`<div class="ptitle">${esc(gLabel(g.post))}</div>`:'';
+    return `<a class="mini-match" href="${esc(href)}" aria-label="${esc(league.teams[String(match[0].roster_id)]?.name)} versus ${esc(league.teams[String(match[1].roster_id)]?.name)} — player details">${pt}<div class="hdr3"><span>${isGotw(g)?`<img class="gotw-mini" src="${badge()}" alt="Game of the Week" title="Game of the Week">`:''}</span><span class="match-status${s.active?' is-live':''}">${esc(status)}</span><span>Score</span><span>${s.live?'Live proj':'Proj'}</span><span>${s.live?'Live %':'Pre %'}</span></div>${row(match[0],s.models[0],s.proj[0],p,s,s.models[0].actual>s.models[1].actual,g.post?pside(g,0):side(o,match[0].roster_id))}${row(match[1],s.models[1],s.proj[1],p===null?null:100-p,s,s.models[1].actual>s.models[0].actual,g.post?pside(g,1):side(o,match[1].roster_id))}${pre}${ew}</a>`;
+  }
+  function pside(g,i){const r=g.match[i],x=g.post.sides.find(y=>String(y.RosterID)===String(r.roster_id)&&String(y.LeagueID)===String(r.leagueId))||{};return {rec:x.Rec,seed:g.post.round==='Playoff'?x.Seed:''};}
+  function postPaint(){
+    const all=postGames();let html=strip(all,[]);
+    const top=all.find(isGotw);
+    if(top)html+=`<section class="gotw"><img class="gotw-badge" src="${badge()}" alt="Game of the Week"><div class="feat-card">${card(top)}</div></section>`;
+    for(const [k,name]of SECT){const gs=all.filter(g=>g.post.round===k);if(!gs.length)continue;
+      html+=`<h3 class="sec">${name} <small>${gs.length} game${gs.length===1?'':'s'}</small></h3><div class="feat">${gs.map(g=>`<section class="feat-card">${card(g)}</section>`).join('')}</div>`;}
+    const errs=[...cards.entries()].filter(([,c])=>c?.error).map(([id,c])=>`${lname(id)}: ${c.error}`);
+    if(errs.length)html+=`<p class="conference-error" role="status">${esc(errs.join(' · '))}</p>`;
+    if(!all.length)html+=`<p class="conference-note">${$('league').value?'No postseason games for this conference this week. <a href="?">All games</a>':'Loading games…'}</p>`;
+    $('board').innerHTML=html;
   }
   function block(id,rs,scoring,games,stats){
     const league=index.leagues[id],groups=pairs(rs,id);let allFinal=true,warning=false;
@@ -108,6 +149,7 @@
     return `<div class="callouts">${rvr&&!top?`<div><b>Top-ranked matchup</b>#${esc(rvr.Rank)} ${esc(rvr.Team)} vs #${esc(rvr.OppRank)} ${esc(rvr.OppTeam)} · ${esc(pct(wp(rvr)))} / ${esc(pct(100-wp(rvr)))}</div>`:''}<div><b>Closest projected game</b>${esc(close.Team)} vs ${esc(close.OppTeam)} · ${gap(close).toFixed(1)} pts · ${esc(pct(wp(close)))}</div><div><b>Biggest mismatch</b>${esc(blow.Team)} over ${esc(blow.OppTeam)} by ${gap(blow).toFixed(1)} · ${esc(pct(wp(blow)))}</div></div>`;
   }
   function paint(ids){
+    if(isPost())return postPaint();
     const all=ids.flatMap(id=>cards.get(id)?.games||[]),f=folded(),one=!!$('league').value;
     const rvr=all.filter(g=>g.o?.Rank&&g.o?.OppRank),ranked=all.filter(g=>(g.o?.Rank||g.o?.OppRank)&&!(g.o?.Rank&&g.o?.OppRank));
     const feat=list=>`<div class="feat">${list.map(g=>`<section class="feat-card">${card(g)}</section>`).join('')}</div>`;
@@ -126,11 +168,11 @@
   }
   async function refresh(){
     if(busy||document.hidden)return;busy=true;clearTimeout(timer);$('refresh').disabled=true;
-    const turn=generation,signal=controller.signal,ids=Object.keys(index.leagues).filter(id=>!$('league').value||id===$('league').value).sort((a,b)=>lname(a).localeCompare(lname(b)));
+    const turn=generation,signal=controller.signal,ids=isPost()?postSel().ids:Object.keys(index.leagues).filter(id=>!$('league').value||id===$('league').value).sort((a,b)=>lname(a).localeCompare(lname(b)));
     try{
       const [clock,feed]=await Promise.all([get(`${cfg.api.espn}?dates=${season}&week=${week}&seasontype=2`,signal),get(`${cfg.api.sleeper}/stats/nfl/regular/${season}/${week}`,signal)]);
       if(turn!==generation)return;
-      const games=nflGames(clock),stats=C.statsMap(feed);
+      const games=nflGames(clock),stats=C.statsMap(feed);lastGames=games;lastStats=stats;
       if(!feed||typeof feed!=='object')throw Error('NFL statistics are unavailable');
       if(Date.now()-metadataAt>900000){try{const m=await get(`${cfg.data.scoreboard}/${season}/players.json`,signal);if(Object.keys(m).length<100)throw Error('Incomplete metadata');metadata=m;metadataAt=Date.now();}catch(e){if(signal.aborted)throw e;throw Error('Player status file unavailable; last scores retained');}}
       let cursor=0,failed=0;
@@ -138,7 +180,7 @@
         const [rs,league]=await Promise.all([get(`${cfg.api.sleeper}/league/${id}/matchups/${week}`,signal),settings.has(id)?settings.get(id):get(`${cfg.api.sleeper}/league/${id}`,signal)]);
         if(turn!==generation||signal.aborted)return;
         if(!Object.keys(league.scoring_settings||{}).length)throw Error('Scoring settings missing');settings.set(id,league);
-        cards.set(id,{...block(id,rs,league.scoring_settings,games,stats),updated:new Date()});
+        cards.set(id,isPost()?{rs,scoring:league.scoring_settings,updated:new Date(),allFinal:false}:{...block(id,rs,league.scoring_settings,games,stats),updated:new Date()});
       }catch(e){if(turn!==generation||signal.aborted)return;failed++;cards.set(id,{...cards.get(id),error:`${cards.get(id)?.updated?'STALE — ':'Unavailable — '}${e.message}`});}
       if(turn===generation)paint(ids);}}
       await Promise.all(Array.from({length:Math.min(4,ids.length)},()=>worker()));
@@ -148,7 +190,8 @@
       loadedAt=Date.now();
       $('updated').textContent=failed?`${ids.length-failed} of ${ids.length} conferences refreshed · see warnings`:`Updated ${new Date().toLocaleTimeString()} · refreshes every 5 minutes until final`;
       $('error').hidden=!failed;$('error').textContent=failed?'Some conferences could not refresh. Last successful scores are retained where available.':'';
-      if(failed||ids.some(id=>!cards.get(id)?.allFinal))schedule(failed?Math.min(cfg.refresh.max_backoff_ms,60000*2**Math.min(failures,5)):cfg.refresh.normal_ms);
+      const notFinal=isPost()?postGames().some(g=>!g.s.final):ids.some(id=>!cards.get(id)?.allFinal);
+      if(failed||notFinal)schedule(failed?Math.min(cfg.refresh.max_backoff_ms,60000*2**Math.min(failures,5)):cfg.refresh.normal_ms);
       else $('updated').textContent=`Updated ${times.length?new Date(Math.min(...times)).toLocaleTimeString():''} · all games final`;
     }catch(e){if(turn!==generation||signal.aborted)return;failures++;for(const id of ids)cards.set(id,{...cards.get(id),error:`${cards.get(id)?.updated?'STALE — ':''}${e.message}`});paint(ids);$('error').hidden=false;$('error').textContent='Refresh failed. Scores below have not been updated. Use Refresh to retry.';$('updated').textContent='Live data unavailable / stale';schedule(Math.min(cfg.refresh.max_backoff_ms,60000*2**Math.min(failures-1,5)));}
     finally{if(turn===generation){busy=false;$('refresh').disabled=false;$('board').setAttribute('aria-busy','false');}}
@@ -165,10 +208,10 @@
   try{
     cfg=await get('../config/league.json');index=await get(`${cfg.data.scoreboard}/index.json`);season=Number(params.get('season')||index.season);
     if(season!==index.season)throw Error('Only the active season is available');
-    week=Number(params.get('week')||index.week);if(!index.weeks.includes(week)||week>cfg.schedule.ccg_week)throw Error('No supported baseline for this week');title();
+    week=Number(params.get('week')||index.week);if(!index.weeks.includes(week))throw Error('No supported baseline for this week');title();
     [metadata,colors]=await Promise.all([get(`${cfg.data.scoreboard}/${season}/players.json`),get(`${cfg.data.scoreboard}/leagues.json`)]);metadataAt=Date.now();
     try{gotw=await get(`${cfg.data.scoreboard}/${season}/game-of-the-week.json`);}catch(e){gotw={};}
-    options($('week'),index.weeks.filter(w=>w<=cfg.schedule.ccg_week).map(w=>[w,wkName(w)]),week);
+    options($('week'),index.weeks.map(w=>[w,wkName(w)]),week);
     options($('league'),[['','All conferences'],...Object.entries(index.leagues).sort((a,b)=>lname(a[0]).localeCompare(lname(b[0]))).map(([id,l])=>[id,colors[id]?.label||l.label||l.name])],index.leagues[params.get('league')]?params.get('league'):'');
     $('chooser').addEventListener('submit',e=>e.preventDefault());for(const id of ['league','week'])$(id).addEventListener('change',select);
     $('refresh').addEventListener('click',select);
