@@ -361,9 +361,7 @@ def pot_draw(order, ngroups, rng, hard=lambda a, b: False, soft=lambda a, b: 0, 
             best = (cost, groups)
             if cost == 0:
                 break
-    if best is None:
-        sys.exit("FATAL: no valid NIT draw satisfies the hard rules")
-    return best[1]
+    return best[1] if best else None
 
 
 def settle(rows, team, W):
@@ -436,6 +434,8 @@ def realigned(year, a, cfg, team, pool, nit, season_path, draft_or_publish, prob
             n = len(pool)
             ng = -(-n // int(cq["group_size"]))
             groups = pot_draw(order0, ng, random.Random(seed), soft=soft)
+            if groups is None:
+                sys.exit("FATAL: no valid NIT round-1 draw")
             return stage_rows(year, STAGE1, c1["week"], groups, seed)
         if not draft_or_publish(STAGE1, make1):
             return
@@ -467,7 +467,15 @@ def realigned(year, a, cfg, team, pool, nit, season_path, draft_or_publish, prob
             by_pts = {key(t): i for i, t in enumerate(rank(adv1, lambda t: pts1[key(t)], W))}
             by_poll = {key(t): i for i, t in enumerate(rank(adv1, lambda t: -pr.get(key(t), 999), W))}
             order2 = sorted(adv1, key=lambda t: ((by_pts[key(t)] + by_poll[key(t)]) / 2, by_pts[key(t)]))
-            groups = pot_draw(order2, ng, random.Random(seed), hard=lambda x, y: gid1[key(x)] == gid1[key(y)], soft=soft)
+            # Hard (Chris, 2026-11-04): no round-1 group-mates and no regular-season rematch. Leagues play a
+            # full round robin, so a regular-season rematch = same league.
+            same_g1 = lambda x, y: gid1[key(x)] == gid1[key(y)]  # noqa: E731
+            groups = pot_draw(order2, ng, random.Random(seed), hard=lambda x, y: same_g1(x, y) or x["LeagueID"] == y["LeagueID"], soft=soft)
+            if groups is None:  # only if one league floods round 2; keep it as a strong preference and say so
+                print("WARNING: round-2 draw could not avoid every regular-season rematch; minimised instead")
+                groups = pot_draw(order2, ng, random.Random(seed), hard=same_g1, soft=soft)
+            if groups is None:
+                sys.exit("FATAL: no valid NIT round-2 draw")
             return stage_rows(year, STAGE2, c2["week"], groups, seed)
         if not draft_or_publish(STAGE2, make2):
             return finish(problems)

@@ -30,6 +30,15 @@ class Realigned(unittest.TestCase):
             self.assertEqual(len({gid1[N.key(t)] for t in g}), 4)
             self.assertEqual(sorted(teams.index(t) // 7 for t in g), [0, 1, 2, 3])  # one per pot
 
+    def test_round2_no_regular_season_rematch(self):
+        teams = [T(f"L{i % 10}", i) for i in range(28)]  # several leagues with 3 teams
+        gid1 = {N.key(t): i // 4 for i, t in enumerate(teams)}
+        hard = lambda x, y: gid1[N.key(x)] == gid1[N.key(y)] or x["LeagueID"] == y["LeagueID"]  # noqa: E731
+        groups = N.pot_draw(teams, 7, random.Random(5), hard=hard)
+        self.assertIsNotNone(groups)
+        for g in groups:
+            self.assertEqual(len({t["LeagueID"] for t in g}), len(g))
+
     def test_qf_league_first_then_seeding(self):
         q = [T(f"L{i}", i) for i in range(8)]
         q[7]["LeagueID"] = "L0"  # 1 & 8 same league
