@@ -6,7 +6,7 @@ scoreboard, the one Games page all week.
 
 PREGAME = the week's Tuesday BASELINE snapshot (the FIRST snapshot file for that week). A later
 manual snapshot never changes the posted odds (Chris, 2026-10-14). Each week's rows are also
-appended ONCE to data/MatchupProjections_Historic.csv, which is never rewritten; that file is
+appended ONCE to data/MatchupProjections_Historic.csv (odds never rewritten; only the rank/record labels are refreshed, see refresh_labels); that file is
 the record of pregame expectations for predictive measures. Game-time projections for awards and
 manager stats live separately (gametime_projections.py).
 
@@ -64,6 +64,44 @@ def baseline_snapshot(season, wk=None):
         return None
     proj = week_files[0]
     return wk, proj, proj.replace("_proj.csv", "_lineups.csv")
+
+
+LABELS = ["Rec", "OppRec", "EveryWeekLeader", "EveryWeek"]  # context, not odds
+RANK_LABELS = ["Rank", "OppRank"]
+SWAP = {"Rec": "OppRec", "OppRec": "Rec", "Rank": "OppRank", "OppRank": "Rank"}
+
+
+def refresh_labels(g, ranks_current):
+    """The pregame ODDS are frozen at the first snapshot, but the labels beside them (poll rank,
+    record, every-week record) must match the latest completed week. A run that froze the week
+    early (e.g. the failed week 8 run, 2026-11-04) left week-7 ranks/records on week 9. Every later
+    run re-stamps only these label columns on the already-recorded rows; ranks only once the poll
+    applies to this week. scoreboard_data.py copies them into the frozen week file."""
+    if g.empty or not os.path.exists(OUT_HIST):
+        return False
+    cols = LABELS + (RANK_LABELS if ranks_current else [])
+    h = pd.read_csv(OUT_HIST, dtype=str, keep_default_na=False)
+    yr, wk = str(g["Year"].iloc[0]), str(g["Week"].iloc[0])
+    new = {}
+    for r in g.astype(str).to_dict("records"):
+        new[(r["LeagueID"], r["RosterID"], r["OpponentRosterID"])] = (r, False)
+        new[(r["LeagueID"], r["OpponentRosterID"], r["RosterID"])] = (r, True)
+    changed = 0
+    for i in h.index[(h["Year"] == yr) & (h["Week"] == wk)]:
+        hit = new.get((h.at[i, "LeagueID"], h.at[i, "RosterID"], h.at[i, "OpponentRosterID"]))
+        if not hit:
+            continue
+        r, flip = hit
+        for c in cols:
+            v = r[SWAP.get(c, c)] if flip else r[c]
+            v = "" if v in ("nan", "None") else v
+            if h.at[i, c] != v:
+                h.at[i, c] = v
+                changed += 1
+    if changed:
+        h.to_csv(OUT_HIST, index=False)
+        print(f"{OUT_HIST}: {yr} week {wk} labels refreshed ({changed} value(s); odds unchanged)")
+    return bool(changed)
 
 
 def append_historic(g):
@@ -162,9 +200,14 @@ def build(week=None):
                                           "League": short.get(r.LeagueName.strip().upper(), r.LeagueName)}
 
     rk = {}
+    ranks_current = False
     if week is None and os.path.exists(pc.RANKS_CURRENT):  # current poll only fits the upcoming week
         rr = pd.read_csv(pc.RANKS_CURRENT, dtype=str)
-        rk = {(r.LeagueID, r.RosterID): int(r.Rank) for r in rr.itertuples()}
+        ranks_current = set(rr["AppliesToWeek"].astype(str)) == {str(wk)}
+        if ranks_current:
+            rk = {(r.LeagueID, r.RosterID): int(r.Rank) for r in rr.itertuples()}
+        else:  # stale poll (e.g. a failed run): no ranks now; refresh_labels adds them once it's rebuilt
+            print(f"Poll ranks apply to week(s) {sorted(set(rr['AppliesToWeek']))}, not {wk}: ranks left blank for now")
     st = standings(season, wk)
     ws = weekly_scores(season, wk)
 
@@ -189,7 +232,8 @@ def build(week=None):
                       "WinPct": round(p, 1), "Snapshot": stamp,
                       **every_week_label(teams.get(a, ""), teams.get(b, ""), every_week(ws.get(a, {}), ws.get(b, {})))})
     g = pd.DataFrame(games)
-    append_historic(g)
+    if not append_historic(g) and week is None:
+        refresh_labels(g, ranks_current)
     if week is not None:
         return True
     g.to_csv(OUT_CSV, index=False)

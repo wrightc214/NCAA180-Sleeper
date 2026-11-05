@@ -25,6 +25,27 @@ def rows(path):
         return list(csv.DictReader(f))
 
 
+LABELS = ("Rank", "OppRank", "Rec", "OppRec", "EveryWeekLeader", "EveryWeek")
+
+
+def restamp_labels(target, year, wk):
+    """Frozen week files keep their odds; copy the context labels (rank, record, every-week record)
+    from MatchupProjections_Historic.csv, which matchups_page.py keeps current (2026-11-04 fix)."""
+    hist = {(r["LeagueID"], r["RosterID"], r["OpponentRosterID"]): r for r in rows("data/MatchupProjections_Historic.csv")
+            if int(r["Year"]) == year and int(r["Week"]) == wk}
+    data = json.loads(Path(target).read_text(encoding="utf-8"))
+    changed = 0
+    for o in data.get("odds", []):
+        h = hist.get((str(o["LeagueID"]), str(o["RosterID"]), str(o["OpponentRosterID"])))
+        for c in LABELS:
+            if h is not None and c in h and c in o and o[c] != h[c]:
+                o[c] = h[c]
+                changed += 1
+    if changed:
+        dump(target, data)
+        print(f"{target}: {changed} label value(s) refreshed (odds unchanged)")
+
+
 def dump(path, data):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -129,7 +150,9 @@ def build(offline=False):
         if any(r.get("GameState") in ("in", "post") for r in projections):
             continue
         target = base / f"week-{wk:02d}.json"
-        if not target.exists():
+        if target.exists():
+            restamp_labels(target, year, wk)
+        else:
             baseline = {r["PlayerID"]: json.loads(r["Stats"] or "{}") for r in projections}
             odds = [r for r in rows("data/MatchupProjections_Historic.csv") if int(r["Year"]) == year and int(r["Week"]) == wk]
             extra = {}
