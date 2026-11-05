@@ -48,6 +48,7 @@ class PostseasonBrowserTests(unittest.TestCase):
                             if '/matchups/' in u:
                                 fetched.append(u.split('/league/')[1].split('/')[0]); data = copy.deepcopy(fixture['rosters'])
                             elif '/stats/' in u: data = fixture['stats']
+                            elif u.endswith('/users') or u.endswith('/rosters'): data = []
                             else: data = {'scoring_settings': fixture['scoring']}
                             route.fulfill(content_type='application/json', body=json.dumps(data))
 
@@ -73,6 +74,22 @@ class PostseasonBrowserTests(unittest.TestCase):
                         if os.environ.get('SCOREBOARD_SCREENSHOTS'):
                             d = Path(os.environ['SCOREBOARD_SCREENSHOTS']); d.mkdir(parents=True, exist_ok=True)
                             page.screenshot(path=str(d / f'post-{width}.png'), full_page=True)
+                        # single-game pages
+                        for gid, n in (('2026-B-1', 2), ('2026-P-31', 2), ('2026-N-A', 4)):
+                            page.goto(f'http://127.0.0.1:{server.server_port}/reports/scoreboard.html?week=13&post={gid}&overview=all')
+                            page.wait_for_function("document.getElementById('updated')?.textContent.startsWith('Updated')", timeout=30000)
+                            if n == 2:
+                                self.assertEqual(page.locator('.big').count(), 2)
+                            else:
+                                self.assertEqual(page.locator('.gr').count(), 4)
+                                self.assertEqual(page.locator('.gr.out').count(), 3)
+                                self.assertEqual(page.locator('.gcols').is_visible(), width >= 1000)
+                            alts = page.locator('.mid .gbadge').evaluate_all('e=>e.map(x=>x.alt)')
+                            want = {'2026-B-1': ['Rose Bowl'], '2026-P-31': ['National Championship', 'Game of the Week'], '2026-N-A': ['NIT']}[gid]
+                            self.assertEqual(alts, want)
+                            self.assertFalse(page.evaluate('document.documentElement.scrollWidth > innerWidth'))
+                            if os.environ.get('SCOREBOARD_SCREENSHOTS'):
+                                page.screenshot(path=str(Path(os.environ['SCOREBOARD_SCREENSHOTS']) / f'game-{gid}-{width}.png'), full_page=True)
                         self.assertEqual(errors, [])
                         page.close()
                 b.close()
