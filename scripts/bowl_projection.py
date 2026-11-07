@@ -178,6 +178,13 @@ def project(year):
 # ------------------------------------------------------------------ page
 CSS = """
 .card{margin:0 0 18px;padding:14px 14px 10px}
+.card.fold>h2{cursor:pointer;position:relative;padding-right:22px}
+.card.fold>h2::after{content:"\\25BE";position:absolute;right:0;top:2px;font-size:14px;opacity:.7}
+.card.fold.closed>h2::after{content:"\\25B8"}
+.card.fold.closed>:not(h2){display:none}
+.card.fold.closed{padding-bottom:12px}
+.fold-bar{display:flex;justify-content:flex-end;margin:0 0 8px}
+.fold-all{font:700 12px var(--sans,sans-serif);padding:5px 10px;border:1px solid var(--line);border-radius:6px;background:var(--panel,#fff);color:inherit;cursor:pointer}
 .card h2{font-size:20px;margin:0 0 2px}
 .card h2 small{font-size:12px}
 .card h3{font-size:13px;margin:12px 0 6px;text-transform:uppercase;letter-spacing:.04em}
@@ -273,6 +280,22 @@ def field_card(P, col, short, prev, foot):
             f'{pairs}{bub}<p class="foot">{e(foot)}</p></section>')
 
 
+# Collapsible sections + Collapse all / Expand all, like the Games page (Chris, 2026-11-07).
+# Tap a section title to fold it; folds persist per browser. Pages open expanded when nothing is
+# stored, so the headless Discord screenshots always capture full cards.
+FOLD_JS = """<script>(()=>{const K='pp-folded',get=()=>{try{return new Set(JSON.parse(localStorage.getItem(K)||'[]'))}catch(e){return new Set()}},
+put=f=>{try{localStorage.setItem(K,JSON.stringify([...f]))}catch(e){}};
+const cards=[...document.querySelectorAll('.wrap section.card[id]')];if(!cards.length)return;
+const f=get();cards.forEach(c=>{c.classList.add('fold');if(f.has(c.id))c.classList.add('closed');
+ const h=c.querySelector(':scope>h2');h.setAttribute('role','button');h.tabIndex=0;h.setAttribute('aria-expanded',String(!c.classList.contains('closed')));
+ const t=()=>{c.classList.toggle('closed');h.setAttribute('aria-expanded',String(!c.classList.contains('closed')));const s=get();c.classList.contains('closed')?s.add(c.id):s.delete(c.id);put(s);lab();};
+ h.addEventListener('click',t);h.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();t();}});});
+const bar=document.createElement('div');bar.className='fold-bar';const b=document.createElement('button');b.type='button';b.className='fold-all';bar.append(b);
+cards[0].before(bar);const lab=()=>{b.textContent=cards.some(c=>!c.classList.contains('closed'))?'Collapse all':'Expand all';};lab();
+b.addEventListener('click',()=>{const close=cards.some(c=>!c.classList.contains('closed'));const s=get();
+ cards.forEach(c=>{c.classList.toggle('closed',close);c.querySelector(':scope>h2').setAttribute('aria-expanded',String(!close));close?s.add(c.id):s.delete(c.id);});put(s);lab();});})();</script>"""
+
+
 def bubble_band(P, width=None):
     """Teams within `width` spots of the projected at-large cut line (Game of the Week stakes):
     [[LeagueID, RosterID, position - cut], ...]; negative = currently in."""
@@ -330,6 +353,7 @@ def build(year):
             + games_card("Marquee Bowls", "One seat per league (its better division leader still available), then at-large by bowl order; "
                          "placed by tie-ins.", tags=True)
             + other_card)
+    body += FOLD_JS
     doc = (page_head(f"{lcfg.brand()} postseason", CSS) +
            f'<div class="wrap"><nav class="weeks" aria-label="Pages">{nav_html("postseason")}</nav>'
            f'{seasons_row(year)}{ARCH_MARK}<header><h1>{lcfg.brand()} <em>Postseason</em></h1></header>{body}</div></body></html>')
