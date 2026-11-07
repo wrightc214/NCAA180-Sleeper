@@ -223,6 +223,22 @@
   // starters and the notable bench ("would have helped / close calls"). The board is copied into a
   // hidden 400px-wide frame so the phone layout applies from any device; html2canvas 1.4.1 (vendored,
   // MIT) draws it from the laid-out boxes. Phone: share sheet; computer: download.
+  // html2canvas 1.4.1 only reads rgb/hsl/hex colors. Safari reports color-mix() results (dark theme) as
+  // color(srgb ...), and newer CSS can yield oklch()/lab(); repaint every such value as rgba first
+  // (Chris's iPhone, 2026-11-07: "unsupported color function color").
+  function plainColors(w,root) {
+    const cv=w.document.createElement('canvas');cv.width=cv.height=1;
+    const cx=cv.getContext('2d',{willReadFrequently:true});
+    const rgb=v=>{cx.clearRect(0,0,1,1);cx.fillStyle='#000';cx.fillStyle=v;cx.fillRect(0,0,1,1);
+      const d=cx.getImageData(0,0,1,1).data;return `rgba(${d[0]},${d[1]},${d[2]},${+(d[3]/255).toFixed(3)})`;};
+    const FN=/(?:color|oklch|oklab|lab|lch|color-mix)\((?:[^()]|\([^()]*\))*\)/g,BAD=/(?:color|oklch|oklab|lab|lch|color-mix)\(/;
+    const props=['color','background-color','border-top-color','border-right-color','border-bottom-color','border-left-color',
+      'outline-color','text-decoration-color','column-rule-color','caret-color','fill','stroke','background-image','box-shadow','text-shadow'];
+    for(const el of [root,...root.querySelectorAll('*')]){
+      const cs=w.getComputedStyle(el);
+      for(const p of props){const v=cs.getPropertyValue(p);if(v&&BAD.test(v))el.style.setProperty(p,v.replace(FN,rgb),'important');}
+    }
+  }
   async function saveImage() {
     const btn=$('save-img'),label=btn.textContent;btn.disabled=true;btn.textContent='Saving…';
     let f;
@@ -243,6 +259,7 @@
       await w.document.fonts.ready;
       await Promise.all([...w.document.images].map(im=>im.complete?0:new Promise(r=>{im.onload=im.onerror=r;})));
       const el=w.document.getElementById('snap');
+      plainColors(w,el);
       const canvas=await w.html2canvas(el,{scale:2,windowWidth:400,useCORS:true,logging:false,backgroundColor:w.getComputedStyle(w.document.body).backgroundColor});
       const blob=await new Promise(r=>canvas.toBlob(r,'image/png'));
       const names=chosen.map(r=>team(r.roster_id,r.leagueId).name).join(' vs ');
