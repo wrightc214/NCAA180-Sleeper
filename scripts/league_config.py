@@ -22,6 +22,14 @@ def brand():
     return cfg()["brand"]
 
 
+def term(plural=False, cap=False):
+    """What one Sleeper league is called on pages/posts (config unit_term; NCAA 180: "conference").
+    Chris, 2026-11-07: use this on rebuilt pages instead of hard-coding "league"."""
+    t = cfg().get("unit_term", {})
+    w = t.get("plural" if plural else "singular", "leagues" if plural else "league")
+    return w[:1].upper() + w[1:] if cap else w
+
+
 def sleeper():
     """Sleeper API base, e.g. https://api.sleeper.app/v1."""
     return cfg()["api"]["sleeper"]
