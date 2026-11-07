@@ -942,6 +942,14 @@
         "Bowl": ""
       },
       "_prefix_note": "Playoff rounds show without a prefix unless the same week has an NIT round of the same name; NIT rounds always prefixed."
+    },
+    "odds": {
+      "_note": "scripts/postseason_odds.py (Chris, 2026-11-07). Most impactful games: top_games biggest swings per subsection (playoff / bowl; \"leagues\" = as many as there are leagues, 15), then one row for every other league whose biggest swing is at least min_swing.",
+      "sims": 10000,
+      "shrink_games": 4,
+      "seed": 2026,
+      "top_games": "leagues",
+      "min_swing": 0.05
     }
   },
   "draft": {

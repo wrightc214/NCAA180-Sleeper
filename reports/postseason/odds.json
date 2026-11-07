@@ -2,7 +2,7 @@
  "year": 2026,
  "after_week": 8,
  "sims": 10000,
- "seconds": 10.8,
+ "seconds": 10.9,
  "columns": [
   "CCG",
   "Playoff",
@@ -3291,6 +3291,111 @@
    "with_loss": 0.1551,
    "LeagueID": "1331774599196585984",
    "RosterID": "12"
+  },
+  {
+   "week": 9,
+   "a": "Arkansas State",
+   "b": "Louisiana Monroe",
+   "league": "CUSA",
+   "pwin_a": 0.7555,
+   "swing": 0.5065,
+   "team": "Arkansas State",
+   "outcome": "Marquee",
+   "label": "make a Marquee Bowl",
+   "with_win": 0.6909,
+   "with_loss": 0.1845,
+   "LeagueID": "1331774695346823168",
+   "RosterID": "8"
+  },
+  {
+   "week": 9,
+   "a": "Alcorn State",
+   "b": "Bethune - Cookman",
+   "league": "HBCU",
+   "pwin_a": 0.8785,
+   "swing": 0.5027,
+   "team": "Alcorn State",
+   "outcome": "Postseason",
+   "label": "go bowling",
+   "with_win": 0.6533,
+   "with_loss": 0.1506,
+   "LeagueID": "1331774630620332032",
+   "RosterID": "8"
+  },
+  {
+   "week": 9,
+   "a": "BYU",
+   "b": "New Mexico",
+   "league": "Mountain West",
+   "pwin_a": 0.7833,
+   "swing": 0.501,
+   "team": "New Mexico",
+   "outcome": "Postseason",
+   "label": "go bowling",
+   "with_win": 0.862,
+   "with_loss": 0.361,
+   "LeagueID": "1331774599196585984",
+   "RosterID": "9"
+  },
+  {
+   "week": 9,
+   "a": "Pittsburgh",
+   "b": "UCONN",
+   "league": "Big East",
+   "pwin_a": 0.6926,
+   "swing": 0.4971,
+   "team": "Pittsburgh",
+   "outcome": "Playoff",
+   "label": "make the playoff",
+   "with_win": 0.8673,
+   "with_loss": 0.3702,
+   "LeagueID": "1331775206619885568",
+   "RosterID": "4"
+  },
+  {
+   "week": 9,
+   "a": "Purdue",
+   "b": "Minnesota",
+   "league": "Big Ten",
+   "pwin_a": 0.144,
+   "swing": 0.4963,
+   "team": "Minnesota",
+   "outcome": "Playoff",
+   "label": "make the playoff",
+   "with_win": 0.4963,
+   "with_loss": 0.0,
+   "LeagueID": "1316899936696016896",
+   "RosterID": "7"
+  },
+  {
+   "week": 9,
+   "a": "Florida",
+   "b": "LSU",
+   "league": "SEC",
+   "pwin_a": 0.092,
+   "swing": 0.4927,
+   "team": "LSU",
+   "outcome": "Playoff",
+   "label": "make the playoff",
+   "with_win": 0.7253,
+   "with_loss": 0.2326,
+   "LeagueID": "1331775170712444928",
+   "RosterID": "2"
+  },
+  {
+   "week": 9,
+   "a": "Rutgers",
+   "b": "Notre Dame",
+   "league": "Big East",
+   "pwin_a": 0.5341,
+   "swing": 0.4891,
+   "team": "Notre Dame",
+   "outcome": "Postseason",
+   "label": "go bowling",
+   "with_win": 0.7718,
+   "with_loss": 0.2827,
+   "LeagueID": "1331775206619885568",
+   "RosterID": "12"
   }
  ],
  "impact_all": [
@@ -4820,18 +4925,8 @@
    "with_win": 0.8728,
    "with_loss": 0.4794,
    "swing": 0.3934,
-   "pwin": 0.8836
-  },
-  {
-   "team": "Temple",
-   "opp": "Louisiana Tech",
-   "league": "Sun Belt",
-   "LeagueID": "1331774846710849536",
-   "RosterID": "1",
-   "with_win": 0.4952,
-   "with_loss": 0.1065,
-   "swing": 0.3886,
-   "pwin": 0.724
+   "pwin": 0.8836,
+   "extra": true
   },
   {
    "team": "NC State",
@@ -4842,18 +4937,8 @@
    "with_win": 0.4491,
    "with_loss": 0.064,
    "swing": 0.385,
-   "pwin": 0.7377
-  },
-  {
-   "team": "Georgetown",
-   "opp": "Colgate",
-   "league": "Ivy",
-   "LeagueID": "1331774741488369664",
-   "RosterID": "5",
-   "with_win": 0.941,
-   "with_loss": 0.5567,
-   "swing": 0.3843,
-   "pwin": 0.8748
+   "pwin": 0.7377,
+   "extra": true
   },
   {
    "team": "North Carolina A&T",
@@ -4864,7 +4949,8 @@
    "with_win": 0.587,
    "with_loss": 0.214,
    "swing": 0.373,
-   "pwin": 0.9514
+   "pwin": 0.9514,
+   "extra": true
   },
   {
    "team": "Portland State",
@@ -4875,183 +4961,8 @@
    "with_win": 0.3673,
    "with_loss": 0.0,
    "swing": 0.3673,
-   "pwin": 0.8159
-  },
-  {
-   "team": "Illinois",
-   "opp": "Penn State",
-   "league": "Big Ten",
-   "LeagueID": "1316899936696016896",
-   "RosterID": "10",
-   "with_win": 0.4191,
-   "with_loss": 0.0564,
-   "swing": 0.3627,
-   "pwin": 0.7945
-  },
-  {
-   "team": "Monmouth",
-   "opp": "Kennesaw State",
-   "league": "Ohio Valley",
-   "LeagueID": "1331774544905510912",
-   "RosterID": "10",
-   "with_win": 0.72,
-   "with_loss": 0.358,
-   "swing": 0.362,
-   "pwin": 0.7986
-  },
-  {
-   "team": "Army",
-   "opp": "Coastal Carolina",
-   "league": "Big East",
-   "LeagueID": "1331775206619885568",
-   "RosterID": "8",
-   "with_win": 0.3833,
-   "with_loss": 0.0241,
-   "swing": 0.3592,
-   "pwin": 0.353
-  },
-  {
-   "team": "William & Mary",
-   "opp": "Weber State",
-   "league": "Big Sky",
-   "LeagueID": "1316899756005412864",
-   "RosterID": "3",
-   "with_win": 0.8691,
-   "with_loss": 0.5278,
-   "swing": 0.3413,
-   "pwin": 0.9892
-  },
-  {
-   "team": "Southern",
-   "opp": "Florida A&M",
-   "league": "HBCU",
-   "LeagueID": "1331774630620332032",
-   "RosterID": "4",
-   "with_win": 0.8323,
-   "with_loss": 0.5248,
-   "swing": 0.3075,
-   "pwin": 0.7824
-  },
-  {
-   "team": "Southern Miss",
-   "opp": "Rice",
-   "league": "Sun Belt",
-   "LeagueID": "1331774846710849536",
-   "RosterID": "9",
-   "with_win": 0.8292,
-   "with_loss": 0.5261,
-   "swing": 0.3031,
-   "pwin": 0.9272
-  },
-  {
-   "team": "Texas A&M",
-   "opp": "Missouri",
-   "league": "Big 12",
-   "LeagueID": "1331774880181399552",
-   "RosterID": "4",
-   "with_win": 0.3128,
-   "with_loss": 0.0118,
-   "swing": 0.3009,
-   "pwin": 0.6535
-  },
-  {
-   "team": "UNLV",
-   "opp": "Nevada",
-   "league": "Mountain West",
-   "LeagueID": "1331774599196585984",
-   "RosterID": "11",
-   "with_win": 0.9516,
-   "with_loss": 0.6614,
-   "swing": 0.2902,
-   "pwin": 0.8426
-  },
-  {
-   "team": "Purdue",
-   "opp": "Minnesota",
-   "league": "Big Ten",
-   "LeagueID": "1316899936696016896",
-   "RosterID": "1",
-   "with_win": 0.3507,
-   "with_loss": 0.066,
-   "swing": 0.2847,
-   "pwin": 0.144
-  },
-  {
-   "team": "James Madison",
-   "opp": "Central Arkansas",
-   "league": "Wild",
-   "LeagueID": "1331774454493122560",
-   "RosterID": "2",
-   "with_win": 0.2697,
-   "with_loss": 0.0021,
-   "swing": 0.2676,
-   "pwin": 0.9064
-  },
-  {
-   "team": "Auburn",
-   "opp": "Kentucky",
-   "league": "SEC",
-   "LeagueID": "1331775170712444928",
-   "RosterID": "4",
-   "with_win": 0.2767,
-   "with_loss": 0.0124,
-   "swing": 0.2643,
-   "pwin": 0.2526
-  },
-  {
-   "team": "Montana",
-   "opp": "Central Michigan",
-   "league": "Wild",
-   "LeagueID": "1331774454493122560",
-   "RosterID": "1",
-   "with_win": 0.692,
-   "with_loss": 0.4371,
-   "swing": 0.2548,
-   "pwin": 0.9467
-  },
-  {
-   "team": "Michigan",
-   "opp": "Wisconsin",
-   "league": "Big Ten",
-   "LeagueID": "1316899936696016896",
-   "RosterID": "12",
-   "with_win": 0.3823,
-   "with_loss": 0.1329,
-   "swing": 0.2494,
-   "pwin": 0.7698
-  },
-  {
-   "team": "Old Dominion",
-   "opp": "South Dakota",
-   "league": "Wild",
-   "LeagueID": "1331774454493122560",
-   "RosterID": "10",
-   "with_win": 0.9679,
-   "with_loss": 0.7281,
-   "swing": 0.2398,
-   "pwin": 0.8915
-  },
-  {
-   "team": "Belmont",
-   "opp": "Morehead State",
-   "league": "Ohio Valley",
-   "LeagueID": "1331774544905510912",
-   "RosterID": "1",
-   "with_win": 0.2501,
-   "with_loss": 0.0134,
-   "swing": 0.2368,
-   "pwin": 0.8128
-  },
-  {
-   "team": "Georgia Tech",
-   "opp": "Boston College",
-   "league": "ACC",
-   "LeagueID": "1331774915392577536",
-   "RosterID": "3",
-   "with_win": 0.5301,
-   "with_loss": 0.2974,
-   "swing": 0.2327,
-   "pwin": 0.3456
+   "pwin": 0.8159,
+   "extra": true
   },
   {
    "team": "Campbell",
@@ -5062,62 +4973,8 @@
    "with_win": 0.9504,
    "with_loss": 0.734,
    "swing": 0.2163,
-   "pwin": 0.9406
-  },
-  {
-   "team": "Iowa",
-   "opp": "Indiana",
-   "league": "Big Ten",
-   "LeagueID": "1316899936696016896",
-   "RosterID": "11",
-   "with_win": 0.9687,
-   "with_loss": 0.7556,
-   "swing": 0.2131,
-   "pwin": 0.9644
-  },
-  {
-   "team": "Davidson",
-   "opp": "Holy Cross",
-   "league": "Pioneer",
-   "LeagueID": "1331774804222545920",
-   "RosterID": "12",
-   "with_win": 0.195,
-   "with_loss": 0.0006,
-   "swing": 0.1943,
-   "pwin": 0.3836
-  },
-  {
-   "team": "UCLA",
-   "opp": "Washington",
-   "league": "Pac-12",
-   "LeagueID": "1331775106527006720",
-   "RosterID": "12",
-   "with_win": 0.195,
-   "with_loss": 0.0043,
-   "swing": 0.1907,
-   "pwin": 0.8609
-  },
-  {
-   "team": "UT Martin",
-   "opp": "Butler",
-   "league": "Pioneer",
-   "LeagueID": "1331774804222545920",
-   "RosterID": "11",
-   "with_win": 0.2967,
-   "with_loss": 0.1116,
-   "swing": 0.1851,
-   "pwin": 0.8234
-  },
-  {
-   "team": "Kansas State",
-   "opp": "Baylor",
-   "league": "Big 12",
-   "LeagueID": "1331774880181399552",
-   "RosterID": "7",
-   "with_win": 0.9857,
-   "with_loss": 0.8051,
-   "swing": 0.1806,
-   "pwin": 0.161
+   "pwin": 0.9406,
+   "extra": true
   },
   {
    "team": "Texas State",
@@ -5128,117 +4985,8 @@
    "with_win": 0.3309,
    "with_loss": 0.1567,
    "swing": 0.1742,
-   "pwin": 0.2236
-  },
-  {
-   "team": "Cornell",
-   "opp": "Brown",
-   "league": "Ivy",
-   "LeagueID": "1331774741488369664",
-   "RosterID": "12",
-   "with_win": 0.4039,
-   "with_loss": 0.2361,
-   "swing": 0.1679,
-   "pwin": 0.1223
-  },
-  {
-   "team": "Brown",
-   "opp": "Cornell",
-   "league": "Ivy",
-   "LeagueID": "1331774741488369664",
-   "RosterID": "1",
-   "with_win": 0.9714,
-   "with_loss": 0.8062,
-   "swing": 0.1652,
-   "pwin": 0.8777
-  },
-  {
-   "team": "Clemson",
-   "opp": "Virginia Tech",
-   "league": "ACC",
-   "LeagueID": "1331774915392577536",
-   "RosterID": "12",
-   "with_win": 0.9811,
-   "with_loss": 0.8417,
-   "swing": 0.1394,
-   "pwin": 0.9261
-  },
-  {
-   "team": "South Alabama",
-   "opp": "Middle Tennessee State",
-   "league": "CUSA",
-   "LeagueID": "1331774695346823168",
-   "RosterID": "4",
-   "with_win": 0.2307,
-   "with_loss": 0.0934,
-   "swing": 0.1373,
-   "pwin": 0.29
-  },
-  {
-   "team": "South Carolina",
-   "opp": "Mississippi State",
-   "league": "SEC",
-   "LeagueID": "1331775170712444928",
-   "RosterID": "10",
-   "with_win": 0.1358,
-   "with_loss": 0.0,
-   "swing": 0.1358,
-   "pwin": 0.1797
-  },
-  {
-   "team": "Colgate",
-   "opp": "Georgetown",
-   "league": "Ivy",
-   "LeagueID": "1331774741488369664",
-   "RosterID": "8",
-   "with_win": 0.135,
-   "with_loss": 0.0225,
-   "swing": 0.1125,
-   "pwin": 0.1252
-  },
-  {
-   "team": "Villanova",
-   "opp": "Eastern Washington",
-   "league": "Big Sky",
-   "LeagueID": "1316899756005412864",
-   "RosterID": "2",
-   "with_win": 0.1173,
-   "with_loss": 0.005,
-   "swing": 0.1122,
-   "pwin": 0.3616
-  },
-  {
-   "team": "Georgia State",
-   "opp": "Louisiana",
-   "league": "CUSA",
-   "LeagueID": "1331774695346823168",
-   "RosterID": "5",
-   "with_win": 0.112,
-   "with_loss": 0.0,
-   "swing": 0.112,
-   "pwin": 0.9518
-  },
-  {
-   "team": "UCONN",
-   "opp": "Pittsburgh",
-   "league": "Big East",
-   "LeagueID": "1331775206619885568",
-   "RosterID": "5",
-   "with_win": 0.1119,
-   "with_loss": 0.0012,
-   "swing": 0.1108,
-   "pwin": 0.3074
-  },
-  {
-   "team": "BYU",
-   "opp": "New Mexico",
-   "league": "Mountain West",
-   "LeagueID": "1331774599196585984",
-   "RosterID": "6",
-   "with_win": 0.9849,
-   "with_loss": 0.8782,
-   "swing": 0.1068,
-   "pwin": 0.7833
+   "pwin": 0.2236,
+   "extra": true
   }
  ],
  "impact_bowl": [
@@ -5416,29 +5164,8 @@
    "with_win": 0.8498,
    "with_loss": 0.3961,
    "swing": 0.4537,
-   "pwin": 0.1252
-  },
-  {
-   "team": "North Carolina Central",
-   "opp": "Delaware",
-   "league": "Ohio Valley",
-   "LeagueID": "1331774544905510912",
-   "RosterID": "12",
-   "with_win": 0.4598,
-   "with_loss": 0.0118,
-   "swing": 0.448,
-   "pwin": 0.7532
-  },
-  {
-   "team": "Delaware",
-   "opp": "North Carolina Central",
-   "league": "Ohio Valley",
-   "LeagueID": "1331774544905510912",
-   "RosterID": "7",
-   "with_win": 0.8801,
-   "with_loss": 0.4359,
-   "swing": 0.4442,
-   "pwin": 0.2468
+   "pwin": 0.1252,
+   "extra": true
   },
   {
    "team": "Oregon State",
@@ -5449,7 +5176,8 @@
    "with_win": 0.4398,
    "with_loss": 0.0002,
    "swing": 0.4395,
-   "pwin": 0.1835
+   "pwin": 0.1835,
+   "extra": true
   },
   {
    "team": "Louisiana Monroe",
@@ -5460,117 +5188,8 @@
    "with_win": 0.5145,
    "with_loss": 0.0776,
    "swing": 0.437,
-   "pwin": 0.2445
-  },
-  {
-   "team": "Citadel",
-   "opp": "North Dakota State",
-   "league": "Wild",
-   "LeagueID": "1331774454493122560",
-   "RosterID": "8",
-   "with_win": 0.427,
-   "with_loss": 0.0019,
-   "swing": 0.425,
-   "pwin": 0.6373
-  },
-  {
-   "team": "Marshall",
-   "opp": "UTSA",
-   "league": "Sun Belt",
-   "LeagueID": "1331774846710849536",
-   "RosterID": "5",
-   "with_win": 1.0,
-   "with_loss": 0.5904,
-   "swing": 0.4096,
-   "pwin": 0.6428
-  },
-  {
-   "team": "Eastern Michigan",
-   "opp": "San Jose State",
-   "league": "Wild",
-   "LeagueID": "1331774454493122560",
-   "RosterID": "6",
-   "with_win": 0.4095,
-   "with_loss": 0.0005,
-   "swing": 0.4091,
-   "pwin": 0.7809
-  },
-  {
-   "team": "Stony Brook",
-   "opp": "Portland State",
-   "league": "Big Sky",
-   "LeagueID": "1316899756005412864",
-   "RosterID": "5",
-   "with_win": 0.975,
-   "with_loss": 0.5812,
-   "swing": 0.3938,
-   "pwin": 0.1841
-  },
-  {
-   "team": "Virginia Tech",
-   "opp": "Clemson",
-   "league": "ACC",
-   "LeagueID": "1331774915392577536",
-   "RosterID": "4",
-   "with_win": 1.0,
-   "with_loss": 0.6119,
-   "swing": 0.3881,
-   "pwin": 0.0739
-  },
-  {
-   "team": "Eastern Kentucky",
-   "opp": "ETSU",
-   "league": "Ohio Valley",
-   "LeagueID": "1331774544905510912",
-   "RosterID": "5",
-   "with_win": 0.3762,
-   "with_loss": 0.001,
-   "swing": 0.3752,
-   "pwin": 0.2238
-  },
-  {
-   "team": "North Alabama",
-   "opp": "Charleston Southern",
-   "league": "Ohio Valley",
-   "LeagueID": "1331774544905510912",
-   "RosterID": "11",
-   "with_win": 0.9011,
-   "with_loss": 0.5392,
-   "swing": 0.3619,
-   "pwin": 0.875
-  },
-  {
-   "team": "Navy",
-   "opp": "UCF",
-   "league": "Big East",
-   "LeagueID": "1331775206619885568",
-   "RosterID": "11",
-   "with_win": 0.4042,
-   "with_loss": 0.0483,
-   "swing": 0.3559,
-   "pwin": 0.6334
-  },
-  {
-   "team": "Troy",
-   "opp": "Florida International",
-   "league": "CUSA",
-   "LeagueID": "1331774695346823168",
-   "RosterID": "1",
-   "with_win": 0.3661,
-   "with_loss": 0.0122,
-   "swing": 0.3539,
-   "pwin": 0.8528
-  },
-  {
-   "team": "UTSA",
-   "opp": "Marshall",
-   "league": "Sun Belt",
-   "LeagueID": "1331774846710849536",
-   "RosterID": "12",
-   "with_win": 1.0,
-   "with_loss": 0.6562,
-   "swing": 0.3438,
-   "pwin": 0.3572
+   "pwin": 0.2445,
+   "extra": true
   },
   {
    "team": "Dayton",
@@ -5581,7 +5200,8 @@
    "with_win": 1.0,
    "with_loss": 0.6564,
    "swing": 0.3436,
-   "pwin": 0.2817
+   "pwin": 0.2817,
+   "extra": true
   },
   {
    "team": "Mississippi State",
@@ -5592,458 +5212,8 @@
    "with_win": 0.9159,
    "with_loss": 0.576,
    "swing": 0.3399,
-   "pwin": 0.8203
-  },
-  {
-   "team": "USC",
-   "opp": "Oregon State",
-   "league": "Pac-12",
-   "LeagueID": "1331775106527006720",
-   "RosterID": "2",
-   "with_win": 1.0,
-   "with_loss": 0.661,
-   "swing": 0.339,
-   "pwin": 0.8165
-  },
-  {
-   "team": "Murray State",
-   "opp": "Furman",
-   "league": "Pioneer",
-   "LeagueID": "1331774804222545920",
-   "RosterID": "3",
-   "with_win": 0.396,
-   "with_loss": 0.0585,
-   "swing": 0.3375,
-   "pwin": 0.7622
-  },
-  {
-   "team": "Florida Atlantic",
-   "opp": "Texas State",
-   "league": "CUSA",
-   "LeagueID": "1331774695346823168",
-   "RosterID": "3",
-   "with_win": 0.961,
-   "with_loss": 0.6436,
-   "swing": 0.3174,
-   "pwin": 0.7764
-  },
-  {
-   "team": "Georgia",
-   "opp": "Alabama",
-   "league": "SEC",
-   "LeagueID": "1331775170712444928",
-   "RosterID": "7",
-   "with_win": 1.0,
-   "with_loss": 0.6895,
-   "swing": 0.3105,
-   "pwin": 0.5031
-  },
-  {
-   "team": "Butler",
-   "opp": "UT Martin",
-   "league": "Pioneer",
-   "LeagueID": "1331774804222545920",
-   "RosterID": "4",
-   "with_win": 1.0,
-   "with_loss": 0.6974,
-   "swing": 0.3026,
-   "pwin": 0.1766
-  },
-  {
-   "team": "Delaware State",
-   "opp": "Grambling State",
-   "league": "HBCU",
-   "LeagueID": "1331774630620332032",
-   "RosterID": "3",
-   "with_win": 1.0,
-   "with_loss": 0.6978,
-   "swing": 0.3022,
-   "pwin": 0.7889
-  },
-  {
-   "team": "UCF",
-   "opp": "Navy",
-   "league": "Big East",
-   "LeagueID": "1331775206619885568",
-   "RosterID": "9",
-   "with_win": 0.3003,
-   "with_loss": 0.0,
-   "swing": 0.3003,
-   "pwin": 0.3666
-  },
-  {
-   "team": "Columbia",
-   "opp": "Bucknell",
-   "league": "Ivy",
-   "LeagueID": "1331774741488369664",
-   "RosterID": "4",
-   "with_win": 1.0,
-   "with_loss": 0.707,
-   "swing": 0.293,
-   "pwin": 0.5624
-  },
-  {
-   "team": "Holy Cross",
-   "opp": "Davidson",
-   "league": "Pioneer",
-   "LeagueID": "1331774804222545920",
-   "RosterID": "2",
-   "with_win": 1.0,
-   "with_loss": 0.7101,
-   "swing": 0.2899,
-   "pwin": 0.6164
-  },
-  {
-   "team": "Central Michigan",
-   "opp": "Montana",
-   "league": "Wild",
-   "LeagueID": "1331774454493122560",
-   "RosterID": "4",
-   "with_win": 0.2871,
-   "with_loss": 0.0,
-   "swing": 0.2871,
-   "pwin": 0.0533
-  },
-  {
-   "team": "Western Kentucky",
-   "opp": "North Texas",
-   "league": "CUSA",
-   "LeagueID": "1331774695346823168",
-   "RosterID": "6",
-   "with_win": 0.2848,
-   "with_loss": 0.0,
-   "swing": 0.2848,
-   "pwin": 0.7539
-  },
-  {
-   "team": "Bucknell",
-   "opp": "Columbia",
-   "league": "Ivy",
-   "LeagueID": "1331774741488369664",
-   "RosterID": "3",
-   "with_win": 0.2838,
-   "with_loss": 0.0007,
-   "swing": 0.2831,
-   "pwin": 0.4376
-  },
-  {
-   "team": "South Alabama",
-   "opp": "Middle Tennessee State",
-   "league": "CUSA",
-   "LeagueID": "1331774695346823168",
-   "RosterID": "4",
-   "with_win": 1.0,
-   "with_loss": 0.7224,
-   "swing": 0.2776,
-   "pwin": 0.29
-  },
-  {
-   "team": "Washington",
-   "opp": "UCLA",
-   "league": "Pac-12",
-   "LeagueID": "1331775106527006720",
-   "RosterID": "6",
-   "with_win": 0.2761,
-   "with_loss": 0.0,
-   "swing": 0.2761,
-   "pwin": 0.1391
-  },
-  {
-   "team": "Rutgers",
-   "opp": "Notre Dame",
-   "league": "Big East",
-   "LeagueID": "1331775206619885568",
-   "RosterID": "1",
-   "with_win": 0.2741,
-   "with_loss": 0.0002,
-   "swing": 0.2739,
-   "pwin": 0.5341
-  },
-  {
-   "team": "Oklahoma",
-   "opp": "West Virginia",
-   "league": "Big 12",
-   "LeagueID": "1331774880181399552",
-   "RosterID": "9",
-   "with_win": 0.2897,
-   "with_loss": 0.0227,
-   "swing": 0.267,
-   "pwin": 0.3441
-  },
-  {
-   "team": "Ohio State",
-   "opp": "Nebraska",
-   "league": "Big Ten",
-   "LeagueID": "1316899936696016896",
-   "RosterID": "9",
-   "with_win": 1.0,
-   "with_loss": 0.7458,
-   "swing": 0.2542,
-   "pwin": 0.2414
-  },
-  {
-   "team": "Montana State",
-   "opp": "Rhode Island",
-   "league": "Big Sky",
-   "LeagueID": "1316899756005412864",
-   "RosterID": "6",
-   "with_win": 1.0,
-   "with_loss": 0.7476,
-   "swing": 0.2524,
-   "pwin": 0.8051
-  },
-  {
-   "team": "Arkansas",
-   "opp": "Vanderbilt",
-   "league": "SEC",
-   "LeagueID": "1331775170712444928",
-   "RosterID": "12",
-   "with_win": 0.2462,
-   "with_loss": 0.0,
-   "swing": 0.2462,
-   "pwin": 0.86
-  },
-  {
-   "team": "Louisiana Tech",
-   "opp": "Temple",
-   "league": "Sun Belt",
-   "LeagueID": "1331774846710849536",
-   "RosterID": "11",
-   "with_win": 0.2402,
-   "with_loss": 0.0012,
-   "swing": 0.239,
-   "pwin": 0.276
-  },
-  {
-   "team": "Duke",
-   "opp": "NC State",
-   "league": "ACC",
-   "LeagueID": "1331774915392577536",
-   "RosterID": "7",
-   "with_win": 0.2265,
-   "with_loss": 0.0005,
-   "swing": 0.2259,
-   "pwin": 0.2623
-  },
-  {
-   "team": "Howard",
-   "opp": "Tuskegee",
-   "league": "HBCU",
-   "LeagueID": "1331774630620332032",
-   "RosterID": "6",
-   "with_win": 1.0,
-   "with_loss": 0.7743,
-   "swing": 0.2257,
-   "pwin": 0.1865
-  },
-  {
-   "team": "Tuskegee",
-   "opp": "Howard",
-   "league": "HBCU",
-   "LeagueID": "1331774630620332032",
-   "RosterID": "11",
-   "with_win": 1.0,
-   "with_loss": 0.7748,
-   "swing": 0.2252,
-   "pwin": 0.8135
-  },
-  {
-   "team": "Austin Peay",
-   "opp": "Wofford",
-   "league": "Pioneer",
-   "LeagueID": "1331774804222545920",
-   "RosterID": "9",
-   "with_win": 1.0,
-   "with_loss": 0.7756,
-   "swing": 0.2244,
-   "pwin": 0.3876
-  },
-  {
-   "team": "UT Martin",
-   "opp": "Butler",
-   "league": "Pioneer",
-   "LeagueID": "1331774804222545920",
-   "RosterID": "11",
-   "with_win": 1.0,
-   "with_loss": 0.7792,
-   "swing": 0.2208,
-   "pwin": 0.8234
-  },
-  {
-   "team": "Rhode Island",
-   "opp": "Montana State",
-   "league": "Big Sky",
-   "LeagueID": "1316899756005412864",
-   "RosterID": "1",
-   "with_win": 0.2175,
-   "with_loss": 0.0004,
-   "swing": 0.2172,
-   "pwin": 0.1949
-  },
-  {
-   "team": "Wisconsin",
-   "opp": "Michigan",
-   "league": "Big Ten",
-   "LeagueID": "1316899936696016896",
-   "RosterID": "6",
-   "with_win": 0.212,
-   "with_loss": 0.0001,
-   "swing": 0.2119,
-   "pwin": 0.2302
-  },
-  {
-   "team": "Fresno State",
-   "opp": "Boise State",
-   "league": "Mountain West",
-   "LeagueID": "1331774599196585984",
-   "RosterID": "7",
-   "with_win": 1.0,
-   "with_loss": 0.7949,
-   "swing": 0.2051,
-   "pwin": 0.7938
-  },
-  {
-   "team": "Boston College",
-   "opp": "Georgia Tech",
-   "league": "ACC",
-   "LeagueID": "1331774915392577536",
-   "RosterID": "8",
-   "with_win": 1.0,
-   "with_loss": 0.7989,
-   "swing": 0.2011,
-   "pwin": 0.6544
-  },
-  {
-   "team": "Stanford",
-   "opp": "Arizona State",
-   "league": "Pac-12",
-   "LeagueID": "1331775106527006720",
-   "RosterID": "5",
-   "with_win": 0.1967,
-   "with_loss": 0.0006,
-   "swing": 0.1962,
-   "pwin": 0.1164
-  },
-  {
-   "team": "TCU",
-   "opp": "Kansas",
-   "league": "Big 12",
-   "LeagueID": "1331774880181399552",
-   "RosterID": "11",
-   "with_win": 0.1874,
-   "with_loss": 0.0,
-   "swing": 0.1874,
-   "pwin": 0.3586
-  },
-  {
-   "team": "Yale",
-   "opp": "Lehigh",
-   "league": "Ivy",
-   "LeagueID": "1331774741488369664",
-   "RosterID": "9",
-   "with_win": 0.1835,
-   "with_loss": 0.0,
-   "swing": 0.1835,
-   "pwin": 0.6932
-  },
-  {
-   "team": "Colorado State",
-   "opp": "NIU",
-   "league": "Mountain West",
-   "LeagueID": "1331774599196585984",
-   "RosterID": "8",
-   "with_win": 1.0,
-   "with_loss": 0.8167,
-   "swing": 0.1833,
-   "pwin": 0.7982
-  },
-  {
-   "team": "Penn",
-   "opp": "Princeton",
-   "league": "Ivy",
-   "LeagueID": "1331774741488369664",
-   "RosterID": "7",
-   "with_win": 0.1798,
-   "with_loss": 0.0,
-   "swing": 0.1798,
-   "pwin": 0.6461
-  },
-  {
-   "team": "FSU",
-   "opp": "North Carolina",
-   "league": "ACC",
-   "LeagueID": "1331774915392577536",
-   "RosterID": "5",
-   "with_win": 1.0,
-   "with_loss": 0.8327,
-   "swing": 0.1673,
-   "pwin": 0.746
-  },
-  {
-   "team": "North Dakota State",
-   "opp": "Citadel",
-   "league": "Wild",
-   "LeagueID": "1331774454493122560",
-   "RosterID": "3",
-   "with_win": 0.1668,
-   "with_loss": 0.0,
-   "swing": 0.1668,
-   "pwin": 0.3627
-  },
-  {
-   "team": "Tennessee",
-   "opp": "Ole Miss",
-   "league": "SEC",
-   "LeagueID": "1331775170712444928",
-   "RosterID": "3",
-   "with_win": 0.1635,
-   "with_loss": 0.0,
-   "swing": 0.1635,
-   "pwin": 0.7095
-  },
-  {
-   "team": "NIU",
-   "opp": "Colorado State",
-   "league": "Mountain West",
-   "LeagueID": "1331774599196585984",
-   "RosterID": "5",
-   "with_win": 0.1581,
-   "with_loss": 0.0001,
-   "swing": 0.158,
-   "pwin": 0.2018
-  },
-  {
-   "team": "Tulane",
-   "opp": "UTEP",
-   "league": "Sun Belt",
-   "LeagueID": "1331774846710849536",
-   "RosterID": "3",
-   "with_win": 0.1502,
-   "with_loss": 0.0008,
-   "swing": 0.1494,
-   "pwin": 0.2922
-  },
-  {
-   "team": "Nebraska",
-   "opp": "Ohio State",
-   "league": "Big Ten",
-   "LeagueID": "1316899936696016896",
-   "RosterID": "2",
-   "with_win": 0.9943,
-   "with_loss": 0.8882,
-   "swing": 0.1062,
-   "pwin": 0.7586
-  },
-  {
-   "team": "Florida A&M",
-   "opp": "Southern",
-   "league": "HBCU",
-   "LeagueID": "1331774630620332032",
-   "RosterID": "5",
-   "with_win": 1.0,
-   "with_loss": 0.8974,
-   "swing": 0.1026,
-   "pwin": 0.2176
+   "pwin": 0.8203,
+   "extra": true
   }
  ]
 }

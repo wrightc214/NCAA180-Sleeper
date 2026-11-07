@@ -49,7 +49,7 @@ import league_config as lcfg  # noqa: E402
 
 OUT_DIR = "reports/postseason"
 COLS = ["CCG", "Playoff", "Bowl", "Prestige", "Marquee", "NIT", "Natty"]
-DEFAULTS = {"sims": 10000, "shrink_games": 4, "seed": 2026, "top_games": 8}
+DEFAULTS = {"sims": 10000, "shrink_games": 4, "seed": 2026, "top_games": "leagues", "min_swing": 0.05}
 
 
 def settings():
@@ -408,7 +408,9 @@ def build(year, sims=None, seed=None, write=True):
     top.sort(key=lambda x: -x["swing"])
     # Page + Discord (Chris, 2026-11-07): one row per TEAM, split into a playoff and a bowl list,
     # each ranked by swing (with-win minus with-loss); swings under min_swing are left out.
-    n_top, floor = int(settings()["top_games"]), float(settings().get("min_swing", 0.10))
+    tg = settings()["top_games"]  # a number, or "leagues" = one row per league (Chris, 2026-11-07)
+    n_top = len({t["League"] for t in teams}) if str(tg) == "leagues" else int(tg)
+    floor = float(settings()["min_swing"])
     by = {"Playoff": [], "Postseason": []}
     for gi in S["upcoming"]:
         L_, (w, a, b) = S["lev"][gi], S["games"][gi]
@@ -424,9 +426,17 @@ def build(year, sims=None, seed=None, write=True):
                                   "with_loss": round(pl_, 4), "swing": round(pw_ - pl_, 4), "pwin": round(nw / max(L_["n"], 1), 4)})
     for o in by:
         by[o].sort(key=lambda x: -x["swing"])
+        # Chris, 2026-11-07: the top `top_games` swings, then one row (its biggest swing) for every
+        # league not already in them -- unless that league has nothing above the floor.
+        top_, seen = by[o][:n_top], {g["league"] for g in by[o][:n_top]}
+        extra = []
+        for g in by[o][n_top:]:
+            if g["league"] not in seen:
+                seen.add(g["league"])
+                extra.append({**g, "extra": True})
+        by[o] = top_ + extra
     out = {"year": int(year), "after_week": int(S["after"]), "sims": S["sims"], "seconds": round(S["took"], 1),
            "columns": COLS, "teams": teams, "impact": top[:n_top], "impact_all": top,
-           # no row cap yet (Chris, 2026-11-07): every swing >= min_swing; review counts after a week, cap later
            "impact_playoff": by["Playoff"], "impact_bowl": by["Postseason"]}
     if write:
         os.makedirs(OUT_DIR, exist_ok=True)
