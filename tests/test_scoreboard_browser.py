@@ -64,6 +64,18 @@ class BrowserTests(unittest.TestCase):
                             page.wait_for_function("document.getElementById('updated')?.textContent.startsWith('Updated')")
                             self.assertEqual(page.locator('.big').count(),2)
                             self.assertEqual(page.locator('.mid .gbadge').count(),1)  # Game of the Week badge above the status
+                            if phase=='in':  # Save image: phone-width PNG of this game (2026-11-07)
+                                with page.expect_download(timeout=30000) as dl:
+                                    page.click('#save-img')
+                                path=dl.value.path()
+                                import struct
+                                with open(path,'rb') as fh:
+                                    head=fh.read(24)
+                                self.assertEqual(head[:8],b'\x89PNG\r\n\x1a\n')
+                                self.assertEqual(struct.unpack('>I',head[16:20])[0],800)  # 400px at 2x
+                                if os.environ.get('SCOREBOARD_SCREENSHOTS'):
+                                    import shutil
+                                    shutil.copy(path,str(Path(os.environ['SCOREBOARD_SCREENSHOTS'])/f'saved-{width}.png'))
                             self.assertFalse(page.evaluate('document.documentElement.scrollWidth > innerWidth'))
                             self.assertIn('VALIDATION PHASE',page.locator('.validation').inner_text().upper())
                             if phase=='in':
