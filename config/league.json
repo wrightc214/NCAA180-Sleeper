@@ -993,14 +993,12 @@
     "rank_gap_scale": 12
   },
   "about": {
-    "_note": "About page (scripts/about_page.py). Not linked in the site nav until Chris approves it. Directory: league_manager / data_contact = names + Sleeper display names; conference assistants = everyone else with LM powers (data/LeagueStaff.csv, scripts/league_staff.py); accounts without a team = users with no roster in any league they're in (computed).",
+    "_note": "About page (scripts/about_page.py). Not linked in the site nav until Chris approves it. Directory: league_manager / data_contact = Sleeper display names only (Chris, 2026-11-07: no real names anywhere); conference assistants = everyone else with LM powers (data/LeagueStaff.csv, scripts/league_staff.py); accounts without a team = users with no roster in any league they're in (computed).",
     "discord_invite": "https://discord.gg/UdtSXkjpq",
     "league_manager": {
-      "name": "William",
       "sleeper": ""
     },
     "data_contact": {
-      "name": "Chris",
       "sleeper": "wrightc214",
       "discord": "Wrightc214"
     }
