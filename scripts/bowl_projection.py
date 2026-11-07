@@ -209,7 +209,7 @@ CSS = """
 .ot thead th button{all:unset;cursor:pointer}.ot thead th[aria-sort=descending] button::after{content:" \\25BE"}.ot thead th[aria-sort=ascending] button::after{content:" \\25B4"}
 .ot tbody th{font-weight:700;max-width:150px;overflow:hidden;text-overflow:ellipsis}.ot tbody th small{display:block;font-weight:500;color:var(--mute);font-size:10px}
 .ot td{text-align:right;background:color-mix(in srgb,#2e7d32 calc(var(--h)*45%),transparent)}
-.ot td.clinched{font-weight:800}.ot td.out{color:var(--mute)}
+.ot td.na{background:none;color:var(--mute)}.ot td.clinched{font-weight:800}.ot td.out{color:var(--mute)}
 .fold-all{font:700 12px var(--sans,sans-serif);padding:5px 10px;border:1px solid var(--line);border-radius:6px;background:var(--panel,#fff);color:inherit;cursor:pointer}
 .card h2{font-size:20px;margin:0 0 2px}
 .card h2 small{font-size:12px}
@@ -376,14 +376,24 @@ def odds_cards(O, col, short):
     po = (f'<section class="card" id="playoff-odds"><h2>Playoff odds <small>{O["sims"]:,} simulated seasons</small></h2>'
           f'<p class="sub">Locks 99%+ · Likely 75–99% · Bubble 25–75% · Long shots 5–25%. "Clinched" only when no result can change it.</p>'
           + "".join(tl) + '</section>')
+    min_w = int(lcfg.cfg()["postseason"]["bowls"]["min_wins"])
+
+    def cell(t, k):
+        # Chris, 2026-11-07: NIT shows a dash once a team has min_wins (6) -- bowl eligible, so the
+        # NIT only happens in edge cases the odds never produce (not "Out": that is only for proofs).
+        if k == "NIT" and int(t["Rec"].split("-")[0]) >= min_w:
+            return f'<td data-v="{t[k]:.4f}" class="na" title="{min_w}+ wins: bowl eligible">\u2014</td>'
+        f = t["flags"].get(k, "")
+        return f'<td data-v="{t[k]:.4f}" class="{f}" style="--h:{t[k]:.3f}">{pct(t[k], f)}</td>'
+
     leagues = sorted({t["League"] for t in O["teams"]})
     head = "".join(f'<th data-k="{k}" title="{e(tip)}" aria-sort="none"><button type="button">{e(lbl)}</button></th>' for k, lbl, tip in ODDS_HEAD)
     body = "".join(
         f'<tr data-l="{e(t["League"])}" data-n="{e(t["Team"].lower())}"><th scope="row">{e(t["Team"])}<small>{e(t["League"])} · {e(t["Rec"])}</small></th>'
-        + "".join(f'<td data-v="{t[k]:.4f}" class="{t["flags"].get(k, "")}" style="--h:{t[k]:.3f}">{pct(t[k], t["flags"].get(k, ""))}</td>' for k, _, _ in ODDS_HEAD)
+        + "".join(cell(t, k) for k, _, _ in ODDS_HEAD)
         + "</tr>" for t in sorted(O["teams"], key=lambda t: (-t["Playoff"], -t["Natty"], t["Team"])))
     table = (f'<section class="card" id="odds"><h2>Full odds table <small>{len(O["teams"])} teams</small></h2>'
-             f'<p class="sub">Playoff + Bowl + NIT = 100% for every team. Tap a column to sort.</p>'
+             f'<p class="sub">Playoff + Bowl + NIT = 100% for every team. NIT shows \u2014 once a team has {min_w} wins (bowl eligible). Tap a column to sort.</p>'
              f'<div class="ofilt"><select id="o-l" aria-label="Conference"><option value="">All conferences</option>'
              + "".join(f'<option>{e(l_)}</option>' for l_ in leagues) +
              f'</select><input id="o-q" type="search" placeholder="Team" aria-label="Find a team"></div>'
