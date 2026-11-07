@@ -239,7 +239,7 @@ Scores retain Sleeper points and apply the standard-rule correction. † appears
 Records currently follow the published standings. Live odds and minutes remaining are estimates, not official results.
 Tuesday pregame expectations stay frozen. Live projection = points so far + player projection × share of game remaining.
 Questions? Ping {contact} on Discord.</p></div>
-<script src="assets/scoreboard-core.js"></script><script src="assets/scoreboard-overview-model.js"></script><script src="assets/scoreboard-overview.js" defer></script><script src="assets/scoreboard.js" defer></script></body></html>'''
+<script src="assets/snapshot.js"></script><script src="assets/scoreboard-core.js"></script><script src="assets/scoreboard-overview-model.js"></script><script src="assets/scoreboard-overview.js" defer></script><script src="assets/scoreboard.js" defer></script></body></html>'''
     Path("reports/scoreboard.html").write_text(page_head(f"{brand} Games", css) + body, encoding="utf-8")
 
 

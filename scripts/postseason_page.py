@@ -258,12 +258,17 @@ def build_season(year, years):
         secs.append('<p class="status">Nothing published yet for this season.</p>')
     cur = ' aria-current="page"'
     picker = ('<nav class="weeks sub" aria-label="Seasons"><span>Season</span>' +
-              "".join(f'<a href="postseason-{y}.html"{cur if y == year else ""}>{y}</a>' for y in years) + "</nav>")
+              "".join(f'<a href="postseason-{y}.html"{cur if y == year else ""}>{y}</a>' for y in years) +
+              # this season before anything is published: its entry is the projection page (postseason.html)
+              (f'<a href="postseason.html">{ps.current_season()}</a>' if ps.current_season() not in years else "") + "</nav>")
     note = ('<p class="note">Names, logos and formats as played that season. Some early seasons are missing scores '
             '(results were recorded outside Sleeper).</p>') if int(year) < ps.current_season() else ""
     return (page_head(f"{lcfg.brand()} postseason {year}", CSS) +
             f'<div class="wrap"><nav class="weeks" aria-label="Pages">{nav_html("postseason")}</nav>{picker}'
-            f'<header><h1>{lcfg.brand()} <em>{year} Postseason</em></h1></header>' + "".join(secs) + note + "</div></body></html>")
+            f'<header><h1>{lcfg.brand()} <em>{year} Postseason</em></h1></header>' + "".join(secs) + note
+            # fold + save image on every section (Chris, 2026-11-07 site design rule)
+            + bp.FOLD_JS + bp.snap_js(0, foot=f"{lcfg.brand()} · {year} Postseason · {bp.LINK.replace('https://', '')}", tag=str(year))
+            + "</div></body></html>")
 
 
 def season_row_html(current=None):

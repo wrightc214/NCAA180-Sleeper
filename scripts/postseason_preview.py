@@ -167,7 +167,7 @@ def shoot():
         b = p.chromium.launch()
         pg = b.new_page(viewport={"width": 600, "height": 900}, device_scale_factor=2, color_scheme="light")
         pg.goto("file://" + os.path.abspath(OUT_HTML), wait_until="networkidle")
-        pg.add_style_tag(content=".totop{display:none!important}")
+        pg.add_style_tag(content=".totop,.snap-btn,.fold-bar{display:none!important}")
         pg.evaluate("document.fonts.ready")
         for i, s in enumerate(pg.query_selector_all("section.card.shot")):
             path = os.path.join(OUT_DIR, f"{i:02d}-{s.get_attribute('id')}.png")
