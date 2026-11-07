@@ -184,6 +184,22 @@ CSS = """
 .card.fold.closed>:not(h2){display:none}
 .card.fold.closed{padding-bottom:12px}
 .fold-bar{display:flex;justify-content:flex-end;margin:0 0 8px}
+.ig{padding:7px 0;border-top:1px solid var(--line)}.ig:first-of-type{border-top:0}
+.im{font:700 13px var(--num);margin:0}.im span{font-weight:500;color:var(--mute)}.im small{font:500 10px var(--sans,sans-serif);color:var(--mute);margin-left:6px}
+.iw{margin:2px 0 0;font-size:13px}
+.ochips{display:flex;flex-wrap:wrap;gap:4px}.oc{border-radius:4px;padding:3px 7px;font-weight:700;font-size:12px}.oc b{font:800 11px var(--num);margin-left:4px;opacity:.9}
+.card h3 small{font-weight:600;color:var(--mute);margin-left:4px}
+.ofilt{display:flex;gap:6px;margin:0 0 8px}.ofilt select,.ofilt input{font:inherit;font-size:13px;padding:5px 7px;border:1px solid var(--line);border-radius:6px;background:var(--panel,#fff);color:inherit;min-width:0}
+.ofilt input{flex:1}
+.otw{overflow-x:auto;max-width:100%;border:1px solid var(--line);border-radius:6px}
+.ot{border-collapse:collapse;width:100%;font-size:12px;font-variant-numeric:tabular-nums}
+.ot th,.ot td{padding:5px 6px;border-bottom:1px solid var(--line);white-space:nowrap}
+.ot thead th{position:sticky;top:0;background:var(--panel,#fff);font:700 11px var(--sans,sans-serif);text-align:right}
+.ot thead th:first-child,.ot tbody th{text-align:left;position:sticky;left:0;background:var(--panel,#fff);z-index:1}
+.ot thead th button{all:unset;cursor:pointer}.ot thead th[aria-sort=descending] button::after{content:" \\25BE"}.ot thead th[aria-sort=ascending] button::after{content:" \\25B4"}
+.ot tbody th{font-weight:700;max-width:150px;overflow:hidden;text-overflow:ellipsis}.ot tbody th small{display:block;font-weight:500;color:var(--mute);font-size:10px}
+.ot td{text-align:right;background:color-mix(in srgb,#2e7d32 calc(var(--h)*45%),transparent)}
+.ot td.clinched{font-weight:800}.ot td.out{color:var(--mute)}
 .fold-all{font:700 12px var(--sans,sans-serif);padding:5px 10px;border:1px solid var(--line);border-radius:6px;background:var(--panel,#fff);color:inherit;cursor:pointer}
 .card h2{font-size:20px;margin:0 0 2px}
 .card h2 small{font-size:12px}
@@ -274,7 +290,7 @@ def field_card(P, col, short, prev, foot):
            + "".join(team(t, col, short) for t in P["last_in"]) +
            f'</div><div><p class="sub">First {len(P["first_out"])} out</p>'
            + "".join(team(t, col, short) for t in P["first_out"]) + '</div></div>')
-    return (f'<section class="card shot" id="playoff"><h2>Playoff field <small>first round</small></h2>'
+    return (f'<section class="card shot" id="playoff"><h2>Most likely playoff field <small>first round</small></h2>'
             f'<p class="sub">AQ = projected conference champion ({n_aq} auto bids); the rest are at-large. '
             f'Projected seeds: week-{P["poll_week"]} poll, adjusted for projected wins and losses.</p>'
             f'{pairs}{bub}<p class="foot">{e(foot)}</p></section>')
@@ -294,6 +310,77 @@ const bar=document.createElement('div');bar.className='fold-bar';const b=documen
 cards[0].before(bar);const lab=()=>{b.textContent=cards.some(c=>!c.classList.contains('closed'))?'Collapse all':'Expand all';};lab();
 b.addEventListener('click',()=>{const close=cards.some(c=>!c.classList.contains('closed'));const s=get();
  cards.forEach(c=>{c.classList.toggle('closed',close);c.querySelector(':scope>h2').setAttribute('aria-expanded',String(!close));close?s.add(c.id):s.delete(c.id);});put(s);lab();});})();</script>"""
+
+
+# ------------------------------------------------------------------ odds (postseason_odds.py)
+ODDS_HEAD = [("CCG", "CCG", "Conference championship game berth"), ("Playoff", "PO", "Makes the playoff"),
+             ("Bowl", "Bowl", "Non-playoff bowl (Prestige and Marquee are part of it)"), ("Prestige", "Prst", "Prestige Bowl"),
+             ("Marquee", "Marq", "Marquee Bowl"), ("NIT", "NIT", "NIT"), ("Natty", "Natty", "Wins the National Championship")]
+
+
+def pct(p, flag=""):
+    """Clinched / Out only when proven; the runs alone never say 0% or 100%."""
+    if flag == "clinched":
+        return "Clinched"
+    if flag == "out":
+        return "Out"
+    if p >= 0.995:
+        return ">99%"
+    if p < 0.005:
+        return "<1%"
+    return f"{p:.0%}"
+
+
+def odds_cards(O, col, short):
+    """(impact card, playoff-odds card, full table card) as HTML; '' when no odds."""
+    if not O:
+        return "", "", ""
+    T = {(t["LeagueID"], t["RosterID"]): t for t in O["teams"]}
+    imp = "".join(
+        f'<div class="ig"><p class="im">{e(g["a"])} <span>vs</span> {e(g["b"])}<small>{e(g["league"])}</small></p>'
+        f'<p class="iw"><b>{e(g["team"])}</b> {pct(g["with_loss"])} \u2192 <b>{pct(g["with_win"])}</b> to {e(g["label"])} with a win</p></div>'
+        for g in O["impact"])
+    impact = (f'<section class="card" id="impact"><h2>Most impactful games <small>week {O["after_week"] + 1}</small></h2>'
+              f'<p class="sub">The games that move postseason odds the most: each line is one team\'s chance with a loss \u2192 with a win.</p>'
+              f'{imp}</section>') if imp else ""
+    tiers = [("Locks", lambda p, f: f == "clinched" or p >= 0.99), ("Likely", lambda p, f: 0.75 <= p < 0.99),
+             ("Bubble", lambda p, f: 0.25 <= p < 0.75), ("Long shots", lambda p, f: 0.05 <= p < 0.25)]
+    rows = sorted(O["teams"], key=lambda t: -t["Playoff"])
+    tl = []
+    for name, test in tiers:
+        ts = [t for t in rows if test(t["Playoff"], t["flags"].get("Playoff", ""))]
+        if ts:
+            chips = "".join(f'<span class="oc" style="background:{col.get(t["Team"], ("#14213a", "#fff"))[0]};'
+                            f'color:{col.get(t["Team"], ("#14213a", "#fff"))[1]}">{e(t["Team"])} <b>{pct(t["Playoff"], t["flags"].get("Playoff", ""))}</b></span>'
+                            for t in ts)
+            tl.append(f'<h3>{name} <small>{len(ts)}</small></h3><div class="ochips">{chips}</div>')
+    po = (f'<section class="card" id="playoff-odds"><h2>Playoff odds <small>{O["sims"]:,} simulated seasons</small></h2>'
+          f'<p class="sub">Locks 99%+ · Likely 75–99% · Bubble 25–75% · Long shots 5–25%. "Clinched" only when no result can change it.</p>'
+          + "".join(tl) + '</section>')
+    leagues = sorted({t["League"] for t in O["teams"]})
+    head = "".join(f'<th data-k="{k}" title="{e(tip)}" aria-sort="none"><button type="button">{e(lbl)}</button></th>' for k, lbl, tip in ODDS_HEAD)
+    body = "".join(
+        f'<tr data-l="{e(t["League"])}" data-n="{e(t["Team"].lower())}"><th scope="row">{e(t["Team"])}<small>{e(t["League"])} · {e(t["Rec"])}</small></th>'
+        + "".join(f'<td data-v="{t[k]:.4f}" class="{t["flags"].get(k, "")}" style="--h:{t[k]:.3f}">{pct(t[k], t["flags"].get(k, ""))}</td>' for k, _, _ in ODDS_HEAD)
+        + "</tr>" for t in sorted(O["teams"], key=lambda t: (-t["Playoff"], -t["Natty"], t["Team"])))
+    table = (f'<section class="card" id="odds"><h2>Full odds table <small>{len(O["teams"])} teams</small></h2>'
+             f'<p class="sub">Playoff + Bowl + NIT = 100% for every team. Tap a column to sort.</p>'
+             f'<div class="ofilt"><select id="o-l" aria-label="Conference"><option value="">All conferences</option>'
+             + "".join(f'<option>{e(l_)}</option>' for l_ in leagues) +
+             f'</select><input id="o-q" type="search" placeholder="Team" aria-label="Find a team"></div>'
+             f'<div class="otw"><table class="ot"><thead><tr><th scope="col">Team</th>{head}</tr></thead><tbody>{body}</tbody></table></div>'
+             f'<p class="foot">{O["sims"]:,} simulated seasons after week {O["after_week"]}: this week from the Tuesday projections, '
+             f'later weeks from each team\'s scoring so far (pulled toward the league average); the real selection rules run on every season; '
+             f'title odds use projected seeds. Not official.</p></section>')
+    return impact, po, table
+
+
+ODDS_JS = """<script>(()=>{const t=document.querySelector('table.ot');if(!t)return;const tb=t.tBodies[0];
+const ths=[...t.tHead.rows[0].cells].slice(1);ths.forEach((th,i)=>th.querySelector('button').addEventListener('click',()=>{
+const down=th.getAttribute('aria-sort')!=='descending';ths.forEach(x=>x.setAttribute('aria-sort','none'));th.setAttribute('aria-sort',down?'descending':'ascending');
+[...tb.rows].sort((a,b)=>{const d=(+b.cells[i+1].dataset.v)-(+a.cells[i+1].dataset.v);return down?d:-d;}).forEach(r=>tb.append(r));}));
+const l=document.getElementById('o-l'),q=document.getElementById('o-q'),f=()=>{const lv=l.value,qv=q.value.trim().toLowerCase();
+[...tb.rows].forEach(r=>{r.hidden=!!((lv&&r.dataset.l!==lv)||(qv&&!r.dataset.n.includes(qv)));});};l.addEventListener('change',f);q.addEventListener('input',f);})();</script>"""
 
 
 def bubble_band(P, width=None):
@@ -340,19 +427,29 @@ def build(year):
 
     rk = P["draw"].cfg.get("rank", {})
     how = (f'<details class="how"><summary>How the projection works</summary>'
-           f'<p>Every remaining regular-season game (weeks {after + 1}–{lr}) and every conference championship game goes to '
+           f'<p><b>Odds</b> (impactful games, playoff odds, the full table): the rest of the season, the conference championships and the playoff are '
+           f'simulated 10,000 times — this week from the Tuesday projections, later weeks from each team\'s scoring so far — and the real '
+           f'selection rules run on every one. "Clinched" and "Out" appear only when no result can change them.</p>'
+           f'<p><b>Most likely field and bowls:</b> every remaining regular-season game (weeks {after + 1}–{lr}) and every conference championship game goes to '
            f'the team with the higher season scoring average. Then the real postseason rules run on those results: '
            f'conference champions get automatic bids (AQ), at-large spots go by record and the tiebreakers, and bowl teams '
            f'are ordered by poll rank adjusted for wins ({rk.get("poll_spots_per_win", 25)} poll spots per win). '
            f'Projected seeds use the latest poll, adjusted for projected wins and losses; the real seeds come from the '
            f'bots\' seeding ballot after championship week. Marquee Bowls give each league a seat (the better of its '
            f'two division leaders still available), then fill by bowl order. Records shown are projected final records.</p></details>')
+    try:
+        import postseason_odds
+        O = postseason_odds.build(year)
+    except Exception as ex:  # the projection page must never fail over the odds
+        print(f"WARNING: odds skipped ({ex})")
+        O = None
+    impact, po_card, table = odds_cards(O, col, short)
     body = (f'<p class="status"><b>Projection after week {after}</b> · not official · updates every Tuesday until selection</p>'
-            + how + field_card(P, col, short, prev, foot)
+            + how + impact + po_card + field_card(P, col, short, prev, foot)
             + games_card("Prestige Bowls", "Top of the bowl order.")
             + games_card("Marquee Bowls", "One seat per league (its better division leader still available), then at-large by bowl order; "
                          "placed by tie-ins.", tags=True)
-            + other_card)
+            + other_card + table + (ODDS_JS if table else ""))
     body += FOLD_JS
     doc = (page_head(f"{lcfg.brand()} postseason", CSS) +
            f'<div class="wrap"><nav class="weeks" aria-label="Pages">{nav_html("postseason")}</nav>'
@@ -367,7 +464,7 @@ def build(year):
             "seeds": {"|".join(key(t)): t["Seed"] for t in P["field"]},
             "games": {t: [[b["name"], x["Team"], y["Team"]] for b, x, y in g] for t, g in by_tier.items()},
             "last_in": [t["Team"] for t in P["last_in"]], "first_out": [t["Team"] for t in P["first_out"]],
-            "bubble": bubble_band(P)}
+            "bubble": bubble_band(P), "impact": (O or {}).get("impact", [])[:3]}
     for path in (META, os.path.join(OUT_DIR, f"proj-wk{after:02d}.json")):
         with open(path, "w") as fh:
             json.dump(meta, fh, indent=1)
@@ -448,8 +545,11 @@ def league_message(meta, contact=""):
     link preview on, like the other weekly posts) + "Questions? Ask @Chris" like the awards post."""
     left = ps.last_regular_week() - int(meta["after_week"])
     lead = f"{WORDS.get(left, f'{left} weeks')} left. " if left > 0 else ""
+    imp = "".join(f"\n• {g['a']} vs {g['b']}: {g['team']} {pct(g['with_loss'])} \u2192 {pct(g['with_win'])} to {g['label']} with a win"
+                  for g in meta.get("impact", []))
+    imp = f"\n**Most impactful games this week**{imp}\n" if imp else ""
     return (f"\U0001F3C8 **{lcfg.brand()} Playoff & Bowl Projection · After Week {meta['after_week']}**\n"
-            f"{lead}Here's where you're headed.\n"
+            f"{lead}Here's where you're headed.\n{imp}"
             f"Full projection, the bubble and every bowl team: {LINK}\n"
             f"Questions? Ask {f'<@{contact}>' if contact else 'the data manager'}.")
 

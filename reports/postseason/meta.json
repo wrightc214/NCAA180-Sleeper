@@ -272,5 +272,52 @@
    "5",
    6
   ]
+ ],
+ "impact": [
+  {
+   "week": 9,
+   "a": "Penn State",
+   "b": "Illinois",
+   "league": "Big Ten",
+   "pwin_a": 0.2055,
+   "swing": 0.6424,
+   "team": "Penn State",
+   "outcome": "Postseason",
+   "label": "go bowling",
+   "with_win": 0.8657,
+   "with_loss": 0.2233,
+   "LeagueID": "1316899936696016896",
+   "RosterID": "5"
+  },
+  {
+   "week": 9,
+   "a": "Georgia Southern",
+   "b": "Memphis",
+   "league": "Sun Belt",
+   "pwin_a": 0.258,
+   "swing": 0.5615,
+   "team": "Memphis",
+   "outcome": "Playoff",
+   "label": "make the playoff",
+   "with_win": 0.5964,
+   "with_loss": 0.0349,
+   "LeagueID": "1331774846710849536",
+   "RosterID": "8"
+  },
+  {
+   "week": 9,
+   "a": "Wyoming",
+   "b": "Air Force",
+   "league": "Mountain West",
+   "pwin_a": 0.8181,
+   "swing": 0.5462,
+   "team": "Wyoming",
+   "outcome": "Postseason",
+   "label": "go bowling",
+   "with_win": 0.7557,
+   "with_loss": 0.2095,
+   "LeagueID": "1331774599196585984",
+   "RosterID": "3"
+  }
  ]
 }
