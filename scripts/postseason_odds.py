@@ -406,8 +406,27 @@ def build(year, sims=None, seed=None, write=True):
             top.append({"week": int(w), "a": teams[a]["Team"], "b": teams[b]["Team"], "league": teams[a]["League"],
                         "pwin_a": round(na / max(L_["n"], 1), 4), **best})
     top.sort(key=lambda x: -x["swing"])
+    # Page + Discord (Chris, 2026-11-07): one row per TEAM, split into a playoff and a bowl list,
+    # each ranked by swing (with-win minus with-loss); swings under min_swing are left out.
+    n_top, floor = int(settings()["top_games"]), float(settings().get("min_swing", 0.10))
+    by = {"Playoff": [], "Postseason": []}
+    for gi in S["upcoming"]:
+        L_, (w, a, b) = S["lev"][gi], S["games"][gi]
+        na, nb = L_["a_win"], L_["n"] - L_["a_win"]
+        for side, i, j, nw, nl in (("a", a, b, na, nb), ("b", b, a, nb, na)):
+            if nw < 50 or nl < 50:
+                continue
+            for o in by:
+                pw_, pl_ = L_[f"{side}_{o}_w"] / nw, L_[f"{side}_{o}_l"] / nl
+                if pw_ - pl_ >= floor:
+                    by[o].append({"team": teams[i]["Team"], "opp": teams[j]["Team"], "league": teams[i]["League"],
+                                  "LeagueID": keys[i][0], "RosterID": keys[i][1], "with_win": round(pw_, 4),
+                                  "with_loss": round(pl_, 4), "swing": round(pw_ - pl_, 4), "pwin": round(nw / max(L_["n"], 1), 4)})
+    for o in by:
+        by[o].sort(key=lambda x: -x["swing"])
     out = {"year": int(year), "after_week": int(S["after"]), "sims": S["sims"], "seconds": round(S["took"], 1),
-           "columns": COLS, "teams": teams, "impact": top[: int(settings()["top_games"])], "impact_all": top}
+           "columns": COLS, "teams": teams, "impact": top[:n_top], "impact_all": top,
+           "impact_playoff": by["Playoff"][:n_top], "impact_bowl": by["Postseason"][:n_top]}
     if write:
         os.makedirs(OUT_DIR, exist_ok=True)
         for p in (os.path.join(OUT_DIR, "odds.json"), os.path.join(OUT_DIR, f"odds-wk{S['after']:02d}.json")):
@@ -428,8 +447,9 @@ def main():
     t = out["teams"]
     s = {c_: round(sum(x[c_] for x in t), 1) for c_ in COLS}
     print(f"Odds {year} after week {out['after_week']}: {out['sims']} runs in {out['seconds']}s; column totals {s}")
-    for g in out["impact"]:
-        print(f"  {g['a']} vs {g['b']}: {g['team']} {g['with_loss']:.0%} -> {g['with_win']:.0%} to {g['label']} with a win")
+    for lbl, k_ in (("playoff", "impact_playoff"), ("bowl", "impact_bowl")):
+        for g in out[k_]:
+            print(f"  {lbl}: {g['team']} (vs {g['opp']}) {g['with_loss']:.0%} -> {g['with_win']:.0%} with a win")
 
 
 if __name__ == "__main__":

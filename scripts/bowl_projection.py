@@ -184,9 +184,12 @@ CSS = """
 .card.fold.closed>:not(h2){display:none}
 .card.fold.closed{padding-bottom:12px}
 .fold-bar{display:flex;justify-content:flex-end;margin:0 0 8px}
-.ig{padding:7px 0;border-top:1px solid var(--line)}.ig:first-of-type{border-top:0}
-.im{font:700 13px var(--num);margin:0}.im span{font-weight:500;color:var(--mute)}.im small{font:500 10px var(--sans,sans-serif);color:var(--mute);margin-left:6px}
-.iw{margin:2px 0 0;font-size:13px}
+.lev{margin:0 0 12px}.lh,.lr{display:grid;grid-template-columns:64px minmax(0,1fr) 64px;align-items:center;gap:8px}
+.lh{font:700 10px var(--sans,sans-serif);text-transform:uppercase;letter-spacing:.05em;color:var(--mute);padding:0 0 4px}
+.lh span:nth-child(2),.lt{text-align:center}.lh span:first-child,.lo{text-align:right}
+.lr{padding:6px 0;border-top:1px solid var(--line)}
+.lo,.hi{font:800 18px var(--num);font-variant-numeric:tabular-nums}.lo{color:#c62828}.hi{color:#2e7d32}
+.lt b{display:block;font-size:14px}.lt small{display:block;color:var(--mute);font-size:11px}
 .ochips{display:flex;flex-wrap:wrap;gap:4px}.oc{border-radius:4px;padding:3px 7px;font-weight:700;font-size:12px}.oc b{font:800 11px var(--num);margin-left:4px;opacity:.9}
 .card h3 small{font-weight:600;color:var(--mute);margin-left:4px}
 .ofilt{display:flex;gap:6px;margin:0 0 8px}.ofilt select,.ofilt input{font:inherit;font-size:13px;padding:5px 7px;border:1px solid var(--line);border-radius:6px;background:var(--panel,#fff);color:inherit;min-width:0}
@@ -336,12 +339,16 @@ def odds_cards(O, col, short):
     if not O:
         return "", "", ""
     T = {(t["LeagueID"], t["RosterID"]): t for t in O["teams"]}
-    imp = "".join(
-        f'<div class="ig"><p class="im">{e(g["a"])} <span>vs</span> {e(g["b"])}<small>{e(g["league"])}</small></p>'
-        f'<p class="iw"><b>{e(g["team"])}</b> {pct(g["with_loss"])} \u2192 <b>{pct(g["with_win"])}</b> to {e(g["label"])} with a win</p></div>'
-        for g in O["impact"])
+    def lev(title, rows):
+        if not rows:
+            return ""
+        body = "".join(
+            f'<div class="lr"><span class="lo">{pct(g["with_loss"])}</span><span class="lt"><b>{e(g["team"])}</b>'
+            f'<small>vs {e(g["opp"])} · {e(g["league"])}</small></span><span class="hi">{pct(g["with_win"])}</span></div>' for g in rows)
+        return (f'<h3>{title}</h3><div class="lev"><div class="lh"><span>w/ loss</span><span>Team</span><span>w/ win</span></div>{body}</div>')
+    imp = lev("Playoff", O.get("impact_playoff", [])) + lev("Bowl <small>bowl or playoff</small>", O.get("impact_bowl", []))
     impact = (f'<section class="card" id="impact"><h2>Most impactful games <small>week {O["after_week"] + 1}</small></h2>'
-              f'<p class="sub">The games that move postseason odds the most: each line is one team\'s chance with a loss \u2192 with a win.</p>'
+              f'<p class="sub">Each team\'s odds with a loss (left) and with a win (right), biggest swings first.</p>'
               f'{imp}</section>') if imp else ""
     tiers = [("Locks", lambda p, f: f == "clinched" or p >= 0.99), ("Likely", lambda p, f: 0.75 <= p < 0.99),
              ("Bubble", lambda p, f: 0.25 <= p < 0.75), ("Long shots", lambda p, f: 0.05 <= p < 0.25)]
@@ -464,7 +471,8 @@ def build(year):
             "seeds": {"|".join(key(t)): t["Seed"] for t in P["field"]},
             "games": {t: [[b["name"], x["Team"], y["Team"]] for b, x, y in g] for t, g in by_tier.items()},
             "last_in": [t["Team"] for t in P["last_in"]], "first_out": [t["Team"] for t in P["first_out"]],
-            "bubble": bubble_band(P), "impact": (O or {}).get("impact", [])[:3]}
+            "bubble": bubble_band(P), "impact_playoff": (O or {}).get("impact_playoff", [])[:2],
+            "impact_bowl": (O or {}).get("impact_bowl", [])[:2]}
     for path in (META, os.path.join(OUT_DIR, f"proj-wk{after:02d}.json")):
         with open(path, "w") as fh:
             json.dump(meta, fh, indent=1)
@@ -545,8 +553,9 @@ def league_message(meta, contact=""):
     link preview on, like the other weekly posts) + "Questions? Ask @Chris" like the awards post."""
     left = ps.last_regular_week() - int(meta["after_week"])
     lead = f"{WORDS.get(left, f'{left} weeks')} left. " if left > 0 else ""
-    imp = "".join(f"\n• {g['a']} vs {g['b']}: {g['team']} {pct(g['with_loss'])} \u2192 {pct(g['with_win'])} to {g['label']} with a win"
-                  for g in meta.get("impact", []))
+    def lines(rows, what):
+        return "".join(f"\n• {g['team']} (vs {g['opp']}): {pct(g['with_loss'])} \u2192 {pct(g['with_win'])} to {what} with a win" for g in rows)
+    imp = lines(meta.get("impact_playoff", []), "make the playoff") + lines(meta.get("impact_bowl", []), "go bowling")
     imp = f"\n**Most impactful games this week**{imp}\n" if imp else ""
     return (f"\U0001F3C8 **{lcfg.brand()} Playoff & Bowl Projection · After Week {meta['after_week']}**\n"
             f"{lead}Here's where you're headed.\n{imp}"

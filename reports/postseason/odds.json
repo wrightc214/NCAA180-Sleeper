@@ -2,7 +2,7 @@
  "year": 2026,
  "after_week": 8,
  "sims": 10000,
- "seconds": 11.4,
+ "seconds": 11.0,
  "columns": [
   "CCG",
   "Playoff",
@@ -4643,6 +4643,186 @@
    "with_loss": 0.0,
    "LeagueID": "1316899756005412864",
    "RosterID": "10"
+  }
+ ],
+ "impact_playoff": [
+  {
+   "team": "Memphis",
+   "opp": "Georgia Southern",
+   "league": "Sun Belt",
+   "LeagueID": "1331774846710849536",
+   "RosterID": "8",
+   "with_win": 0.5964,
+   "with_loss": 0.0349,
+   "swing": 0.5615,
+   "pwin": 0.742
+  },
+  {
+   "team": "UNC Charlotte",
+   "opp": "Wichita State",
+   "league": "Wild",
+   "LeagueID": "1331774454493122560",
+   "RosterID": "12",
+   "with_win": 0.7467,
+   "with_loss": 0.2276,
+   "swing": 0.5191,
+   "pwin": 0.347
+  },
+  {
+   "team": "Pittsburgh",
+   "opp": "UCONN",
+   "league": "Big East",
+   "LeagueID": "1331775206619885568",
+   "RosterID": "4",
+   "with_win": 0.8673,
+   "with_loss": 0.3702,
+   "swing": 0.4971,
+   "pwin": 0.6926
+  },
+  {
+   "team": "Minnesota",
+   "opp": "Purdue",
+   "league": "Big Ten",
+   "LeagueID": "1316899936696016896",
+   "RosterID": "7",
+   "with_win": 0.4963,
+   "with_loss": 0.0,
+   "swing": 0.4963,
+   "pwin": 0.856
+  },
+  {
+   "team": "LSU",
+   "opp": "Florida",
+   "league": "SEC",
+   "LeagueID": "1331775170712444928",
+   "RosterID": "2",
+   "with_win": 0.7253,
+   "with_loss": 0.2326,
+   "swing": 0.4927,
+   "pwin": 0.908
+  },
+  {
+   "team": "West Virginia",
+   "opp": "Oklahoma",
+   "league": "Big 12",
+   "LeagueID": "1331774880181399552",
+   "RosterID": "8",
+   "with_win": 0.5415,
+   "with_loss": 0.0543,
+   "swing": 0.4872,
+   "pwin": 0.6559
+  },
+  {
+   "team": "Missouri",
+   "opp": "Texas A&M",
+   "league": "Big 12",
+   "LeagueID": "1331774880181399552",
+   "RosterID": "3",
+   "with_win": 0.7276,
+   "with_loss": 0.2422,
+   "swing": 0.4853,
+   "pwin": 0.3465
+  },
+  {
+   "team": "Dartmouth",
+   "opp": "Harvard",
+   "league": "Ivy",
+   "LeagueID": "1331774741488369664",
+   "RosterID": "11",
+   "with_win": 0.6292,
+   "with_loss": 0.1703,
+   "swing": 0.4588,
+   "pwin": 0.8732
+  }
+ ],
+ "impact_bowl": [
+  {
+   "team": "Penn State",
+   "opp": "Illinois",
+   "league": "Big Ten",
+   "LeagueID": "1316899936696016896",
+   "RosterID": "5",
+   "with_win": 0.8657,
+   "with_loss": 0.2233,
+   "swing": 0.6424,
+   "pwin": 0.2055
+  },
+  {
+   "team": "Wyoming",
+   "opp": "Air Force",
+   "league": "Mountain West",
+   "LeagueID": "1331774599196585984",
+   "RosterID": "3",
+   "with_win": 0.7557,
+   "with_loss": 0.2095,
+   "swing": 0.5462,
+   "pwin": 0.8181
+  },
+  {
+   "team": "Richmond",
+   "opp": "Youngstown State",
+   "league": "Big Sky",
+   "LeagueID": "1316899756005412864",
+   "RosterID": "7",
+   "with_win": 0.7092,
+   "with_loss": 0.1641,
+   "swing": 0.5451,
+   "pwin": 0.109
+  },
+  {
+   "team": "Texas",
+   "opp": "Iowa State",
+   "league": "Big 12",
+   "LeagueID": "1331774880181399552",
+   "RosterID": "6",
+   "with_win": 0.9158,
+   "with_loss": 0.3861,
+   "swing": 0.5297,
+   "pwin": 0.7814
+  },
+  {
+   "team": "Mississippi Valley State",
+   "opp": "Jackson State",
+   "league": "HBCU",
+   "LeagueID": "1331774630620332032",
+   "RosterID": "7",
+   "with_win": 0.7609,
+   "with_loss": 0.2516,
+   "swing": 0.5093,
+   "pwin": 0.8136
+  },
+  {
+   "team": "San Diego State",
+   "opp": "Hawaii",
+   "league": "Mountain West",
+   "LeagueID": "1331774599196585984",
+   "RosterID": "12",
+   "with_win": 0.6619,
+   "with_loss": 0.1551,
+   "swing": 0.5068,
+   "pwin": 0.0559
+  },
+  {
+   "team": "Alcorn State",
+   "opp": "Bethune - Cookman",
+   "league": "HBCU",
+   "LeagueID": "1331774630620332032",
+   "RosterID": "8",
+   "with_win": 0.6533,
+   "with_loss": 0.1506,
+   "swing": 0.5027,
+   "pwin": 0.8785
+  },
+  {
+   "team": "New Mexico",
+   "opp": "BYU",
+   "league": "Mountain West",
+   "LeagueID": "1331774599196585984",
+   "RosterID": "9",
+   "with_win": 0.862,
+   "with_loss": 0.361,
+   "swing": 0.501,
+   "pwin": 0.2167
   }
  ]
 }
