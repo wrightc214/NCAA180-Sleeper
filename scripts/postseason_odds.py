@@ -426,7 +426,8 @@ def build(year, sims=None, seed=None, write=True):
         by[o].sort(key=lambda x: -x["swing"])
     out = {"year": int(year), "after_week": int(S["after"]), "sims": S["sims"], "seconds": round(S["took"], 1),
            "columns": COLS, "teams": teams, "impact": top[:n_top], "impact_all": top,
-           "impact_playoff": by["Playoff"][:n_top], "impact_bowl": by["Postseason"][:n_top]}
+           # no row cap yet (Chris, 2026-11-07): every swing >= min_swing; review counts after a week, cap later
+           "impact_playoff": by["Playoff"], "impact_bowl": by["Postseason"]}
     if write:
         os.makedirs(OUT_DIR, exist_ok=True)
         for p in (os.path.join(OUT_DIR, "odds.json"), os.path.join(OUT_DIR, f"odds-wk{S['after']:02d}.json")):
