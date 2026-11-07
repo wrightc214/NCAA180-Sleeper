@@ -72,6 +72,10 @@ class BrowserTests(unittest.TestCase):
                                     page.click('#save-img')
                                 self.assertTrue(page.locator('#error').is_hidden() or 'Image' not in page.locator('#error').inner_text(), page.locator('#error').inner_text())
                                 path=dl.value.path()
+                                # labeling rule (2026-11-07): live = timestamp + Unofficial; what-if banner
+                                lab=page.evaluate("NCAASnap.labels({state:'live',time:new Date(Date.UTC(2026,10,8,21,12))},['Wyoming beats Boise State'])")
+                                self.assertIn('LIVE · UNOFFICIAL',lab);self.assertIn('4:12 PM ET',lab);self.assertIn('WHAT-IF',lab);self.assertIn('Wyoming beats Boise State',lab)
+                                self.assertIn('Unofficial',page.locator('#updated').inner_text())
                                 import struct
                                 with open(path,'rb') as fh:
                                     head=fh.read(24)

@@ -1,7 +1,11 @@
 /* snapshot.js -- "Save image" for any part of any page (Chris, 2026-11-07: every collapsible section
  * gets an image button; part of the site design from here on).
  *
- *   NCAASnap.save({html, name, footer, title})   -> PNG via share sheet (phones) or download
+ *   NCAASnap.save({html, name, footer, title, stamp, whatif})   -> PNG via share sheet (phones) or download
+ *     stamp:  {state: 'live'|'pregame'|'final'|'projection', time: Date, note}  -> label on top of the image
+ *     whatif: ['Wyoming beats Boise State', ...]                                 -> WHAT-IF banner
+ *   Labeling rule (Chris, 2026-11-07, site-wide): anything reacting to a live situation carries a
+ *   timestamp and an "Unofficial" declaration; what-if images carry a clear WHAT-IF banner.
  *   NCAASnap.button(label)                       -> a small save-image <button> for a section header
  *
  * The HTML is drawn in a hidden 400px-wide frame that carries the page's styles and <html>/<body>
@@ -30,15 +34,33 @@
     }
   }
 
-  async function render(html, footer) {
+  const ET = t => t.toLocaleString('en-US', {timeZone: 'America/New_York', weekday: 'short', month: 'short', day: 'numeric',
+    hour: 'numeric', minute: '2-digit'}) + ' ET';
+  function labels(stamp, whatif) {
+    let out = '';
+    if (whatif && whatif.length)
+      out += `<div class="snap-lab wi"><b>WHAT-IF</b> · not real results · ${esc(whatif.join(' · '))}</div>`;
+    if (stamp) {
+      const when = stamp.time ? ` · as of ${esc(ET(stamp.time))}` : '';
+      const head = {live: 'LIVE · UNOFFICIAL', pregame: 'PREGAME PROJECTION · UNOFFICIAL',
+        final: 'FINAL · UNOFFICIAL until stat corrections', projection: 'PROJECTION · UNOFFICIAL'}[stamp.state] || 'UNOFFICIAL';
+      out += `<div class="snap-lab ${esc(stamp.state || '')}"><b>${head}</b>${when}${stamp.note ? ` · ${esc(stamp.note)}` : ''}</div>`;
+    }
+    return out;
+  }
+
+  async function render(html, footer, top = '') {
     const css = [...document.querySelectorAll('style,link[rel="stylesheet"]')].map(n => n.outerHTML).join('');
     const de = document.documentElement;
     const doc = `<!doctype html><html class="${esc(de.className)}"${de.dataset.theme ? ` data-theme="${esc(de.dataset.theme)}"` : ''}><head>` +
       `<meta charset="utf-8"><meta name="viewport" content="width=400"><base href="${esc(location.href)}">${css}` +
       `<script src="${esc(LIB)}"><\/script><style>body{margin:0;background:var(--bg,#fff)}.snapwrap{padding:12px 12px 6px;max-width:none}` +
       `.snap-foot{margin:10px 0 0;font:600 11px var(--sans,sans-serif);color:var(--mute,#667);text-align:center}` +
-      `.snap-btn,.fold-bar{display:none!important}</style></head>` +
-      `<body class="${esc(document.body.className)}"><div class="wrap snapwrap" id="snap">${html}` +
+      `.snap-btn,.fold-bar{display:none!important}` +
+      `.snap-lab{margin:0 0 8px;padding:6px 9px;border-radius:6px;font:600 11px var(--sans,sans-serif);letter-spacing:.02em;` +
+      `background:#fff4d6;color:#5c4400;border:1px solid #e0b84a}.snap-lab b{font-weight:800}` +
+      `.snap-lab.live b{color:#b42318}.snap-lab.wi{background:#4a1d96;color:#fff;border-color:#4a1d96;font-size:12px}</style></head>` +
+      `<body class="${esc(document.body.className)}"><div class="wrap snapwrap" id="snap">${top}${html}` +
       `<p class="snap-foot">${esc(footer)}</p></div></body></html>`;
     const f = document.createElement('iframe');
     f.setAttribute('aria-hidden', 'true'); f.tabIndex = -1;
@@ -59,8 +81,8 @@
     } finally { f.remove(); }
   }
 
-  async function save({html, name, footer, title}) {
-    const blob = await render(html, footer ?? `${location.host}${location.pathname.replace(/[^/]*$/, '')}`);
+  async function save({html, name, footer, title, stamp, whatif}) {
+    const blob = await render(html, footer ?? `${location.host}${location.pathname.replace(/[^/]*$/, '')}`, labels(stamp, whatif));
     const file = new File([blob], `${name || 'ncaa180'}.png`.replace(/[^\w .-]+/g, '').replace(/\s+/g, '-'), {type: 'image/png'});
     if (navigator.canShare && navigator.canShare({files: [file]})) {
       try { await navigator.share({files: [file], title: title || name}); } catch (e) { if (e?.name !== 'AbortError') throw e; }
@@ -78,5 +100,5 @@
     return b;
   }
 
-  window.NCAASnap = {save, render, button, plainColors};
+  window.NCAASnap = {save, render, button, plainColors, labels};
 })();

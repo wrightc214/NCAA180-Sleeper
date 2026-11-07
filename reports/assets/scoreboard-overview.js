@@ -247,7 +247,7 @@
       failures=failed?failures+1:0;
       const times=ids.map(id=>cards.get(id)?.updated).filter(Boolean);
       loadedAt=Date.now();
-      $('updated').textContent=failed?`${ids.length-failed} of ${ids.length} conferences refreshed · see warnings`:`Updated ${new Date().toLocaleTimeString()} · refreshes every 5 minutes until final`;
+      $('updated').textContent=failed?`${ids.length-failed} of ${ids.length} conferences refreshed · see warnings`:`Updated ${new Date().toLocaleTimeString()} · Unofficial · refreshes every 5 minutes until final`;
       $('error').hidden=!failed;$('error').textContent=failed?'Some conferences could not refresh. Last successful scores are retained where available.':'';
       const notFinal=isPost()?postGames().some(g=>!g.s.final):ids.some(id=>!cards.get(id)?.allFinal);
       if(failed||notFinal)schedule(failed?Math.min(cfg.refresh.max_backoff_ms,60000*2**Math.min(failures,5)):cfg.refresh.normal_ms);

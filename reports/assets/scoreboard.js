@@ -129,6 +129,7 @@
   function renderGroup(models,playerSets,warns,games) {
     const center=title(games,models),isFinal=center.includes('FINAL');
     const started=models.some(m=>m.starters.some(p=>['in','post'].includes(p.phase)||p.actual!==0));
+    snapState=isFinal?'final':started?'live':'pregame';
     const missing=models.some(m=>m.starters.some(p=>p.missingProjection||p.phase==='unknown'));
     const pre=chosen.map(r=>Number(postSide(r)?.WinPct??0));
     const ch=isFinal||!started?pre:missing?null:C.chanceTop(models);
@@ -204,6 +205,7 @@
   }
   function renderPair(models,playerSets,warns,games) {
     const [a,b]=models,center=title(games,models),isFinal=center.includes('FINAL'),pregame=models.every(m=>m.starters.every(p=>['pre','bye','out'].includes(p.phase)));
+    snapState=isFinal?'final':pregame?'pregame':'live';
     const slots=index.leagues[leagueId].slots;
     const benches=chosen.map((r,i)=>C.benchPlayers(r,playerSets[i],models[i].starters,slots,cfg,pregame));
     let html=`<div class="eyebrow">${postGame?`${escape(gLabel(postGame))} · ${season} · ${escape(wkName(week))}`:`${escape(index.leagues[leagueId].label||index.leagues[leagueId].name)} · ${season} · ${baseline.pairs?'Conference Championship':`Week ${week}`}`}</div><div class="top">${header(chosen[0],a,false,isFinal,pregame)}<div class="mid">${badges().map(b=>`<img class="gbadge" src="${b.src}" alt="${escape(b.alt)}" title="${escape(b.alt)}">`).join('')}<div class="mid-status">${center}</div></div>${header(chosen[1],b,true,isFinal,pregame)}</div><div class="odds">`;
@@ -226,11 +228,12 @@
   // Save image (Chris, 2026-11-07): a PNG of this game exactly as a phone shows it -- header, odds,
   // starters and the notable bench ("would have helped / close calls"). Drawn by the shared
   // assets/snapshot.js (phone layout from any device; share sheet on phones, download on computers).
+  let snapState='live';
   async function saveImage() {
     const btn=$('save-img'),label=btn.textContent;btn.disabled=true;btn.textContent='Saving…';
     try {
       const names=chosen.map(r=>team(r.roster_id,r.leagueId).name).join(' vs ');
-      await window.NCAASnap.save({html:$('board').outerHTML,name:`${names} wk${week}`,title:names,
+      await window.NCAASnap.save({html:$('board').outerHTML,name:`${names} wk${week}`,title:names,stamp:{state:snapState,time:lastGood||new Date()},
         footer:`${cfg.brand||''} · ${location.host}${location.pathname.replace(/[^/]*$/,'')}`});
     } catch(e) {
       $('error').hidden=false;$('error').textContent=`Image could not be made (${e.message||e}).`;
@@ -249,7 +252,7 @@
         await loadPost(abort.signal);
         const games=gameMap(espn),stats=C.statsMap(feed);
         const warnings=render(stats,games);failures=0;lastGood=new Date();
-        $('updated').textContent=`Updated ${lastGood.toLocaleTimeString()} · ${live?`auto-refresh ${crunch?'30 seconds':'5 minutes'}`:'manual refresh while no starters are live'}`;
+        $('updated').textContent=`Updated ${lastGood.toLocaleTimeString()}${snapState==='final'?'':' · Unofficial'} · ${live?`auto-refresh ${crunch?'30 seconds':'5 minutes'}`:'manual refresh while no starters are live'}`;
         $('error').hidden=!warnings.length;$('error').textContent=warnings.join(' ');
         const url=new URL(location.href);url.search=new URLSearchParams({season:String(season),week:String(week),post:postGame.id,...(route.has('overview')?{overview:route.get('overview')}:{})}).toString();history.replaceState(null,'',url);
         const filter=route.get('overview')||'all';
@@ -283,7 +286,7 @@
       if(!chosen)throw new Error('Requested game not found. Select a game above.');
       const warnings=render(stats,games);
       failures=0;lastGood=new Date();
-      $('updated').textContent=`Updated ${lastGood.toLocaleTimeString()} · ${live?`auto-refresh ${crunch?'30 seconds':'5 minutes'}`:'manual refresh while no starters are live'}`;
+      $('updated').textContent=`Updated ${lastGood.toLocaleTimeString()}${snapState==='final'?'':' · Unofficial'} · ${live?`auto-refresh ${crunch?'30 seconds':'5 minutes'}`:'manual refresh while no starters are live'}`;
       $('error').hidden=!warnings.length;$('error').textContent=warnings.join(' ');
       const url=new URL(location.href);url.search=new URLSearchParams({season:String(season),league:leagueId,week:String(week),game:selected,...(route.has('overview')?{overview:route.get('overview')}:{})}).toString();history.replaceState(null,'',url);
       const filter=route.get('overview')||leagueId;

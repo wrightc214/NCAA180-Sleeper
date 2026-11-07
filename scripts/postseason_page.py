@@ -267,7 +267,7 @@ def build_season(year, years):
             f'<div class="wrap"><nav class="weeks" aria-label="Pages">{nav_html("postseason")}</nav>{picker}'
             f'<header><h1>{lcfg.brand()} <em>{year} Postseason</em></h1></header>' + "".join(secs) + note
             # fold + save image on every section (Chris, 2026-11-07 site design rule)
-            + bp.FOLD_JS + bp.snap_js(0, foot=f"{lcfg.brand()} · {year} Postseason · {bp.LINK.replace('https://', '')}", tag=str(year))
+            + bp.FOLD_JS + bp.snap_js(0, foot=f"{lcfg.brand()} · {year} Postseason · {bp.LINK.replace('https://', '')}", tag=str(year), projection=False)
             + "</div></body></html>")
 
 
