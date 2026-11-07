@@ -106,7 +106,7 @@ footer{font-size:12px;color:var(--mute)}
 .ot thead th button{all:unset;cursor:pointer}.ot thead th[aria-sort=descending] button::after{content:" \25BE"}.ot thead th[aria-sort=ascending] button::after{content:" \25B4"}
 .ot tbody th{font-weight:700;max-width:150px;overflow:hidden;text-overflow:ellipsis}.ot tbody th small{display:block;font-weight:500;color:var(--mute);font-size:10px}
 .ot td{text-align:right;background:color-mix(in srgb,#2e7d32 calc(var(--h)*45%),transparent)}
-.ot td.clinched{font-weight:800}.ot td.out{color:var(--mute)}
+.ot td.na{background:none;color:var(--mute)}.ot td.clinched{font-weight:800}.ot td.out{color:var(--mute)}
 .fold-all{font:700 12px var(--sans,sans-serif);padding:5px 10px;border:1px solid var(--line);border-radius:6px;background:var(--panel,#fff);color:inherit;cursor:pointer}
 .card h2{font-size:20px;margin:0 0 2px}
 .card h2 small{font-size:12px}
@@ -168,7 +168,7 @@ const f=get();cards.forEach(c=>{c.classList.add('fold');if(f.has(c.id))c.classLi
 const bar=document.createElement('div');bar.className='fold-bar';const b=document.createElement('button');b.type='button';b.className='fold-all';bar.append(b);
 cards[0].before(bar);const lab=()=>{b.textContent=cards.some(c=>!c.classList.contains('closed'))?'Collapse all':'Expand all';};lab();
 b.addEventListener('click',()=>{const close=cards.some(c=>!c.classList.contains('closed'));const s=get();
- cards.forEach(c=>{c.classList.toggle('closed',close);c.querySelector(':scope>h2').setAttribute('aria-expanded',String(!close));close?s.add(c.id):s.delete(c.id);});put(s);lab();});})();</script><script src="assets/snapshot.js"></script><script>(()=>{const S=window.NCAASnap;if(!S)return;const FOOT="NCAA 180 \u00b7 2022 Postseason \u00b7 ncaa180.short.gy/postseason",TAG="2022";for(const c of document.querySelectorAll('.wrap section.card[id]')){const h=c.querySelector(':scope>h2');if(!h)continue;
+ cards.forEach(c=>{c.classList.toggle('closed',close);c.querySelector(':scope>h2').setAttribute('aria-expanded',String(!close));close?s.add(c.id):s.delete(c.id);});put(s);lab();});})();</script><script src="assets/snapshot.js"></script><script>(()=>{const S=window.NCAASnap;if(!S)return;const FOOT="NCAA 180 \u00b7 2022 Postseason \u00b7 ncaa180.short.gy/postseason",TAG="2022",ST=null;if(ST)ST.time=new Date(ST.time);for(const c of document.querySelectorAll('.wrap section.card[id]')){const h=c.querySelector(':scope>h2');if(!h)continue;
 const t=(h.childNodes[0]?.textContent||c.id).trim(),b=S.button(t);c.append(b);
 const stop=e=>e.stopPropagation();b.addEventListener('keydown',stop);
 b.addEventListener('click',async e=>{e.stopPropagation();b.disabled=true;b.classList.add('busy');
@@ -180,6 +180,6 @@ const note=document.createElement('p');note.className='sub';
 if(!lv&&!qv&&kept.length>25){kept.slice(25).forEach(r=>r.remove());note.textContent=`Showing 25 of ${kept.length} teams in the current sort.`;}
 else note.textContent=`${lv||'Search: '+qv}: ${kept.length} team${kept.length===1?'':'s'}.`;
 cl.querySelector('.otw').before(note);const st=document.createElement('style');st.textContent='#odds .otw{overflow:visible;border:0}#odds .ot{font-size:10px;letter-spacing:0;table-layout:fixed}#odds .ot th,#odds .ot td{padding:4px 2px;letter-spacing:0}'+'#odds .ot thead th{font-size:9px}#odds .ot thead th:first-child,#odds .ot tbody th{width:104px;max-width:104px}#odds .ot tbody th small{font-size:8.5px}';cl.prepend(st);cl.querySelector('.sub').textContent='Playoff + Bowl + NIT = 100% for every team.';}
-await S.save({html:cl.outerHTML,name:`${t} ${TAG}`,footer:FOOT,title:t});}
+await S.save({html:cl.outerHTML,name:`${t} ${TAG}`,footer:FOOT,title:t,stamp:ST});}
 catch(err){b.title='Image could not be made: '+(err.message||err);console.error(err);}
 finally{b.disabled=false;b.classList.remove('busy');}});}})();</script></div></body></html>
