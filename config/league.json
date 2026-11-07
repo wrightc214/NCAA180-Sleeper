@@ -1,5 +1,10 @@
 {
   "brand": "NCAA 180",
+  "unit_term": {
+    "_note": "What one Sleeper league is called on pages and posts (Chris, 2026-11-07: in NCAA 180 each league is a conference). Use league_config.term() / config unit_term on rebuilt pages instead of hard-coding 'league'.",
+    "singular": "conference",
+    "plural": "conferences"
+  },
   "contact": {
     "username": "Wrightc214",
     "discord_user_id": "233001719573905408"
