@@ -263,7 +263,10 @@ def build_season(year, years):
             '(results were recorded outside Sleeper).</p>') if int(year) < ps.current_season() else ""
     return (page_head(f"{lcfg.brand()} postseason {year}", CSS) +
             f'<div class="wrap"><nav class="weeks" aria-label="Pages">{nav_html("postseason")}</nav>{picker}'
-            f'<header><h1>{lcfg.brand()} <em>{year} Postseason</em></h1></header>' + "".join(secs) + note + "</div></body></html>")
+            f'<header><h1>{lcfg.brand()} <em>{year} Postseason</em></h1></header>' + "".join(secs) + note
+            # fold + save image on every section (Chris, 2026-11-07 site design rule)
+            + bp.FOLD_JS + bp.snap_js(0, foot=f"{lcfg.brand()} · {year} Postseason · {bp.LINK.replace('https://', '')}", tag=str(year))
+            + "</div></body></html>")
 
 
 def season_row_html(current=None):

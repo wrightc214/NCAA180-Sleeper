@@ -405,10 +405,12 @@ const l=document.getElementById('o-l'),q=document.getElementById('o-q'),f=()=>{c
 # Save image on every section (Chris, 2026-11-07; site-wide design rule): a small button at the top
 # right of each card makes a phone-width PNG of the whole card (even when folded) via the shared
 # assets/snapshot.js. The odds table saves what is on screen (filter + sort); unfiltered, the first 25 rows.
-def snap_js(after):
-    foot = f"{lcfg.brand()} · Projection after week {after} · {LINK.replace('https://', '')}"
+def snap_js(after, foot=None, tag=None):
+    """after: projection week (default footer/name); season pages pass their own foot + tag (e.g. '2025')."""
+    foot = foot or f"{lcfg.brand()} · Projection after week {after} · {LINK.replace('https://', '')}"
+    tag = tag or f"wk{int(after)}"
     return ('<script src="assets/snapshot.js"></script><script>(()=>{const S=window.NCAASnap;if(!S)return;'
-            f'const FOOT={json.dumps(foot)},WK={int(after)};'
+            f'const FOOT={json.dumps(foot)},TAG={json.dumps(tag)};'
             """for(const c of document.querySelectorAll('.wrap section.card[id]')){const h=c.querySelector(':scope>h2');if(!h)continue;
 const t=(h.childNodes[0]?.textContent||c.id).trim(),b=S.button(t);c.append(b);
 const stop=e=>e.stopPropagation();b.addEventListener('keydown',stop);
@@ -421,7 +423,7 @@ const note=document.createElement('p');note.className='sub';
 if(!lv&&!qv&&kept.length>25){kept.slice(25).forEach(r=>r.remove());note.textContent=`Showing 25 of ${kept.length} teams in the current sort.`;}
 else note.textContent=`${lv||'Search: '+qv}: ${kept.length} team${kept.length===1?'':'s'}.`;
 cl.querySelector('.otw').before(note);const st=document.createElement('style');st.textContent='#odds .otw{overflow:visible;border:0}#odds .ot{font-size:10px;letter-spacing:0;table-layout:fixed}#odds .ot th,#odds .ot td{padding:4px 2px;letter-spacing:0}'+'#odds .ot thead th{font-size:9px}#odds .ot thead th:first-child,#odds .ot tbody th{width:104px;max-width:104px}#odds .ot tbody th small{font-size:8.5px}';cl.prepend(st);cl.querySelector('.sub').textContent='Playoff + Bowl + NIT = 100% for every team.';}
-await S.save({html:cl.outerHTML,name:`${t} wk${WK}`,footer:FOOT,title:t});}
+await S.save({html:cl.outerHTML,name:`${t} ${TAG}`,footer:FOOT,title:t});}
 catch(err){b.title='Image could not be made: '+(err.message||err);console.error(err);}
 finally{b.disabled=false;b.classList.remove('busy');}});}})();</script>""")
 
