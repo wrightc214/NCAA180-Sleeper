@@ -65,8 +65,12 @@ class BrowserTests(unittest.TestCase):
                             self.assertEqual(page.locator('.big').count(),2)
                             self.assertEqual(page.locator('.mid .gbadge').count(),1)  # Game of the Week badge above the status
                             if phase=='in':  # Save image: phone-width PNG of this game (2026-11-07)
+                                # Safari reports color-mix() colors as color(srgb ...), which html2canvas can't parse
+                                # (Chris's iPhone, 2026-11-07): force some here so the converter is exercised
+                                page.add_style_tag(content='.top,.board{border-color:color(srgb .5 .5 .5)!important;background-color:color(srgb 1 1 1 / .97)!important}.pr{box-shadow:0 1px 0 color(srgb .2 .3 .4)}')
                                 with page.expect_download(timeout=30000) as dl:
                                     page.click('#save-img')
+                                self.assertTrue(page.locator('#error').is_hidden() or 'Image' not in page.locator('#error').inner_text(), page.locator('#error').inner_text())
                                 path=dl.value.path()
                                 import struct
                                 with open(path,'rb') as fh:
