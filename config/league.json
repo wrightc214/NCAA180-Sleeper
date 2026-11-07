@@ -993,7 +993,19 @@
     "rank_gap_scale": 12
   },
   "about": {
-    "_note": "About page (scripts/about_page.py). Not linked in the site nav until Chris approves it.",
-    "discord_invite": "https://discord.gg/UdtSXkjpq"
+    "_note": "About page (scripts/about_page.py). Not linked in the site nav until Chris approves it. Directory: league_manager / data_contact = Sleeper display names; conference assistants = everyone else with LM powers (data/LeagueStaff.csv, scripts/league_staff.py); special_accounts = Sleeper display name -> what it's for.",
+    "discord_invite": "https://discord.gg/UdtSXkjpq",
+    "league_manager": {
+      "name": "William",
+      "sleeper": ""
+    },
+    "data_contact": {
+      "name": "Chris",
+      "sleeper": "",
+      "discord": "Wrightc214"
+    },
+    "special_accounts": {
+      "NCAAranks": "Rankings account in every conference league; reads league data for the site and the poll. Not a team owner."
+    }
   }
 }

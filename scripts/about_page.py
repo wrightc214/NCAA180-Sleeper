@@ -52,6 +52,39 @@ def champions():
     return out
 
 
+def directory(term, short):
+    """League manager, then the data contact and each conference's assistant(s) with LM powers, then the
+    special accounts (Chris, 2026-11-07). Names are Sleeper display names; tap one to copy it (Sleeper has
+    no public link that opens a DM)."""
+    a = lcfg.cfg().get("about", {})
+    special = {k: v for k, v in a.get("special_accounts", {}).items() if not k.startswith("_")}
+    lm, dc = a.get("league_manager", {}), a.get("data_contact", {})
+    f = "data/LeagueStaff.csv"
+    st = pd.read_csv(f, dtype=str, keep_default_na=False) if os.path.exists(f) else pd.DataFrame()
+    un = lambda n: f'<button type="button" class="un" data-u="{e(n)}" title="Copy Sleeper name">@{e(n)}</button>' if n else ""  # noqa: E731
+    owners = st[st["IsOwner"] == "True"] if len(st) else st
+    lm_name = lm.get("sleeper", "")
+    if not lm_name and len(owners):  # the commissioner of the most leagues, not the data contact or a special account
+        c = owners[~owners["DisplayName"].isin(list(special) + [dc.get("sleeper", "")])]["DisplayName"].value_counts()
+        lm_name = c.index[0] if len(c) and c.iloc[0] > 1 else ""
+    taken = {lm_name, dc.get("sleeper", ""), *special}
+    h = (f'<h3>League manager</h3><p class="dl"><b>{e(lm.get("name", ""))}</b> {un(lm_name)}</p>'
+         f'<h3>Data &amp; site</h3><p class="dl"><b>{e(dc.get("name", ""))}</b> {un(dc.get("sleeper", ""))}'
+         + (f' <span class="dd">Discord @{e(dc["discord"])}</span>' if dc.get("discord") else "") + "</p>")
+    if len(owners):
+        rows = ""
+        for lg, g in sorted(owners.groupby("LeagueName"), key=lambda x: short.get(x[0].strip(), x[0])):
+            names = [n for n in g["DisplayName"] if n not in taken]
+            rows += (f'<tr><th scope="row">{e(short.get(lg.strip(), lg.strip()))}</th>'
+                     f'<td>{" ".join(un(n) for n in names) or "—"}</td></tr>')
+        h += f'<h3>{e(term.title())} assistants <small>LM powers in their {e(term)}</small></h3><table class="ct dt"><tbody>{rows}</tbody></table>'
+    else:
+        h += f'<p class="sub">{e(term.title())} assistants appear after the next weekly run.</p>'
+    if special:
+        h += '<h3>Special accounts</h3><ul class="rl">' + "".join(f'<li>{un(k)} {e(v)}</li>' for k, v in special.items()) + "</ul>"
+    return h + '<p class="sub">Tap a name to copy it, then search it in Sleeper to send a message.</p>'
+
+
 def build():
     cfg = lcfg.cfg()
     pc = cfg["postseason"]
@@ -155,6 +188,7 @@ def build():
 
     body = (top
             + card("glance", "At a glance", glance)
+            + card("directory", "Directory", directory(term, short))
             + card("calendar", "The season", cal)
             + card("rules", "Rosters & rules", rules, "from the league bylaws")
             + card("postseason", "Postseason", post)
@@ -166,7 +200,9 @@ def build():
 b.addEventListener('click',async()=>{const u=b.dataset.url;let ok=false;
 try{await navigator.clipboard.writeText(u);ok=true;}catch(e){const t=document.createElement('textarea');t.value=u;document.body.append(t);t.select();
 try{ok=document.execCommand('copy');}catch(x){}t.remove();}
-s.textContent=ok?'Copied: '+u:u;setTimeout(()=>{s.textContent='';},4000);});})();</script>"""
+s.textContent=ok?'Copied: '+u:u;setTimeout(()=>{s.textContent='';},4000);});
+document.querySelectorAll('.un').forEach(x=>x.addEventListener('click',async()=>{const u=x.dataset.u;try{await navigator.clipboard.writeText(u);}catch(e){}
+const t=x.textContent;x.textContent='Copied';setTimeout(()=>{x.textContent=t;},1500);}));})();</script>"""
     doc = (page_head(f"About {lcfg.brand()}", CSS)
            + f'<div class="wrap"><nav class="weeks" aria-label="Pages">{nav_html(None)}</nav>'
            + f'<header><h1>About <em>{lcfg.brand()}</em></h1></header>{body}'
@@ -182,6 +218,8 @@ CSS = bp.CSS + """
  background:var(--panel,#fff);color:inherit;cursor:pointer;text-decoration:none}
 .share .btn{background:#5865f2;border-color:#5865f2;color:#fff}
 #copied{font-size:12px;color:var(--mute)}
+.un{font:700 12px var(--sans,sans-serif);padding:2px 7px;margin:2px 3px 2px 0;border:1px solid var(--line);border-radius:12px;background:var(--panel,#fff);color:inherit;cursor:pointer}
+.dl{margin:0 0 6px}.dd{font-size:12px;color:var(--mute)}.dt th{width:38%}
 .inst{margin:-6px 0 16px;font-size:13px}.inst a{font-weight:700}
 .facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0 0 10px}
 .facts div{text-align:center;padding:8px 4px;border:1px solid var(--line);border-radius:8px}
