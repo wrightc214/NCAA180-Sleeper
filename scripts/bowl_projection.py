@@ -190,6 +190,9 @@ CSS = """
 .lr{padding:6px 0;border-top:1px solid var(--line)}
 .lo,.hi{font:800 18px var(--num);font-variant-numeric:tabular-nums}.lo{color:#c62828}.hi{color:#2e7d32}
 .lt b{display:block;font-size:14px}
+.lc{display:inline-flex;align-items:center;gap:6px;max-width:100%}
+.lt .lp{display:inline-block;padding:2px 8px;border-radius:4px;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.lt .sw{display:inline-block;font:800 13px var(--num);color:#2e7d32;white-space:nowrap}
 .lx{margin:10px 0 2px;font:700 10px var(--sans,sans-serif);text-transform:uppercase;letter-spacing:.05em;color:var(--mute);text-align:center}.lt small{display:block;color:var(--mute);font-size:11px}
 .ochips{display:flex;flex-wrap:wrap;gap:4px}.oc{border-radius:4px;padding:3px 7px;font-weight:700;font-size:12px}.oc b{font:800 11px var(--num);margin-left:4px;opacity:.9}
 .card h3 small{font-weight:600;color:var(--mute);margin-left:4px}
@@ -345,14 +348,16 @@ def odds_cards(O, col, short):
             return ""
         body = "".join(
             ('<p class="lx">One per conference</p>' if g.get("extra") and not rows[i - 1].get("extra") else "") +
-            f'<div class="lr"><span class="lo">{pct(g["with_loss"])}</span><span class="lt"><b>{e(g["team"])}</b>'
+            f'<div class="lr"><span class="lo">{pct(g["with_loss"])}</span><span class="lt"><span class="lc">'
+            f'<b class="lp" style="background:{col.get(g["team"], ("#14213a", "#fff"))[0]};color:{col.get(g["team"], ("#14213a", "#fff"))[1]}">{e(g["team"])}</b>'
+            f'<b class="sw">+{round(g["with_win"] * 100) - round(g["with_loss"] * 100)}</b></span>'
             f'<small>vs {e(g["opp"])} · {e(g["league"])}</small></span><span class="hi">{pct(g["with_win"])}</span></div>'
             for i, g in enumerate(rows))
         return (f'<h3>{title}</h3><div class="lev"><div class="lh"><span>w/ loss</span><span>Team</span><span>w/ win</span></div>{body}</div>')
     imp = lev("Playoff", O.get("impact_playoff", [])) + lev("Bowl <small>bowl or playoff</small>", O.get("impact_bowl", []))
     impact = (f'<section class="card" id="impact"><h2>Most impactful games <small>week {O["after_week"] + 1}</small></h2>'
-              f'<p class="sub">Each team\'s odds with a loss (left) and with a win (right): the 15 biggest swings, then the biggest '
-              f'in each conference not listed yet (swings of 5+ points).</p>'
+              f'<p class="sub">Each team\'s odds with a loss (left) and with a win (right); +N = how many points the win is worth. '
+              f'The 15 biggest swings, then the biggest in each conference not listed yet (5+ points).</p>'
               f'{imp}</section>') if imp else ""
     tiers = [("Locks", lambda p, f: f == "clinched" or p >= 0.99), ("Likely", lambda p, f: 0.75 <= p < 0.99),
              ("Bubble", lambda p, f: 0.25 <= p < 0.75), ("Long shots", lambda p, f: 0.05 <= p < 0.25)]
