@@ -219,6 +219,40 @@
     $('board').innerHTML=html;
     return [...new Set([...warns,...(metadataWarning?[metadataWarning]:[])])];
   }
+  // Save image (Chris, 2026-11-07): a PNG of this game exactly as a phone shows it -- header, odds,
+  // starters and the notable bench ("would have helped / close calls"). The board is copied into a
+  // hidden 400px-wide frame so the phone layout applies from any device; html2canvas 1.4.1 (vendored,
+  // MIT) draws it from the laid-out boxes. Phone: share sheet; computer: download.
+  async function saveImage() {
+    const btn=$('save-img'),label=btn.textContent;btn.disabled=true;btn.textContent='Saving…';
+    let f;
+    try {
+      const css=[...document.querySelectorAll('style,link[rel="stylesheet"]')].map(n=>n.outerHTML).join('');
+      const site=location.host+location.pathname.replace(/[^/]*$/,'');
+      const doc=`<!doctype html><html class="${escape(document.documentElement.className)}"${document.documentElement.dataset.theme?` data-theme="${escape(document.documentElement.dataset.theme)}"`:''}><head><meta charset="utf-8"><meta name="viewport" content="width=400"><base href="${escape(location.href)}">${css}`+
+        `<script src="assets/vendor/html2canvas-1.4.1.min.js"><\/script><style>body{margin:0;background:var(--bg,#fff)}.snapwrap{padding:12px 12px 6px;max-width:none}`+
+        `.snap-foot{margin:10px 0 0;font:600 11px var(--sans,sans-serif);color:var(--mute,#667);text-align:center}</style></head>`+
+        `<body class="${escape(document.body.className)}"><div class="wrap snapwrap" id="snap">${$('board').outerHTML}<p class="snap-foot">${escape(cfg.brand||'')} · ${escape(site)}</p></div></body></html>`;
+      f=document.createElement('iframe');f.setAttribute('aria-hidden','true');f.tabIndex=-1;
+      f.style.cssText='position:fixed;left:-10000px;top:0;width:400px;height:4000px;border:0;visibility:hidden';
+      document.body.append(f);
+      await new Promise((ok,bad)=>{f.onload=ok;f.onerror=bad;f.srcdoc=doc;});
+      const w=f.contentWindow;
+      for(let i=0;i<50&&!w.html2canvas;i++)await new Promise(r=>setTimeout(r,100));
+      if(!w.html2canvas)throw new Error('image library did not load');
+      await w.document.fonts.ready;
+      await Promise.all([...w.document.images].map(im=>im.complete?0:new Promise(r=>{im.onload=im.onerror=r;})));
+      const el=w.document.getElementById('snap');
+      const canvas=await w.html2canvas(el,{scale:2,windowWidth:400,useCORS:true,logging:false,backgroundColor:w.getComputedStyle(w.document.body).backgroundColor});
+      const blob=await new Promise(r=>canvas.toBlob(r,'image/png'));
+      const names=chosen.map(r=>team(r.roster_id,r.leagueId).name).join(' vs ');
+      const file=new File([blob],`${names} wk${week}.png`.replace(/[^\w .-]+/g,'').replace(/\s+/g,'-'),{type:'image/png'});
+      if(navigator.canShare&&navigator.canShare({files:[file]}))await navigator.share({files:[file],title:names});
+      else{const a=document.createElement('a');a.href=URL.createObjectURL(file);a.download=file.name;document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1000);}
+    } catch(e) {
+      if(e?.name!=='AbortError'){$('error').hidden=false;$('error').textContent=`Image could not be made (${e.message||e}).`;}
+    } finally {f?.remove();btn.disabled=false;btn.textContent=label;}
+  }
   function schedule(ms) {clearTimeout(timer);if(!document.hidden)timer=setTimeout(()=>refresh(),ms);}
   async function refresh() {
     if(busy)return;
@@ -307,6 +341,7 @@
     for(const id of ['league','week'])$(id).addEventListener('change',()=>{if(!busy)select().catch(showError);});
     $('game').addEventListener('change',()=>{if(!busy)refresh();});
     $('refresh').addEventListener('click',()=>refresh());
+    $('save-img').hidden=false;$('save-img').addEventListener('click',saveImage);
     document.addEventListener('visibilitychange',()=>{clearTimeout(timer);if(document.hidden)abort?.abort();else if(!busy)refresh();else resumeNeeded=true;});
     await select();
   } catch(e) {showError(e);}

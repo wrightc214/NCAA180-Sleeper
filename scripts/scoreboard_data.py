@@ -231,7 +231,7 @@ def write_page(cfg):
 <a id="overview-back" class="overview-back" href="scoreboard.html" hidden>← All games</a>
 <form id="chooser" class="tools pick"><select id="league" aria-label="League"></select><select id="week" aria-label="Week"></select>
 <select id="game" aria-label="Game"></select></form>
-<div class="tools"><button id="refresh" type="button">↻ Refresh</button><span id="updated" role="status">Loading…</span></div>
+<div class="tools"><button id="refresh" type="button">↻ Refresh</button><button id="save-img" type="button" hidden>⤓ Save image</button><span id="updated" role="status">Loading…</span></div>
 <p id="overview-help" class="note" hidden>One page all week: projections before kickoff, live scores once games start. Tap a game for both lineups.</p>
 <p id="error" role="alert" hidden></p><div id="board" aria-busy="true"></div>
 <p class="note"><b>Score</b> = points scored so far (– = no starter has played). <b>Proj</b> = Tuesday projection; once a game's players start it adjusts for known results (points so far + projections for players still to play), and it returns to the Tuesday number when the game is final. <b>Win %</b> follows the same rule: pregame until the game starts, live while it's on, pregame again at the final.
