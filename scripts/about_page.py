@@ -52,6 +52,17 @@ def champions():
     return out
 
 
+def discord_link(dc):
+    """One tap to the person's Discord profile (then Message): https://discord.com/users/<numeric id>.
+    The id comes from config about.data_contact.discord_id, else the DISCORD_CONTACT_ID the weekly job
+    already uses to tag Chris (Chris, 2026-11-07: only his Discord for now). No id -> plain text."""
+    name = dc.get("discord", "")
+    did = str(dc.get("discord_id", "") or os.environ.get("DISCORD_CONTACT_ID", "")).strip()
+    if did.isdigit():
+        return f' <a class="dc" href="https://discord.com/users/{did}" target="_blank" rel="noopener">Discord @{e(name)}</a>'
+    return f' <span class="dd">Discord @{e(name)}</span>' if name else ""
+
+
 def directory(term, short, col=None):
     """League manager, then the data contact and each conference's assistant(s) with LM powers, then the
     special accounts (Chris, 2026-11-07). Names are Sleeper display names; tap one to copy it (Sleeper has
@@ -89,7 +100,7 @@ def directory(term, short, col=None):
         return f'{un(n)} {" ".join(chip(t, col) for t in ts)}' if n else ""
     h = (f'<h3>League manager</h3><p class="dl">{who(lm_name)}</p>'
          f'<h3>Data &amp; site</h3><p class="dl">{who(dc.get("sleeper", ""))}'
-         + (f' <span class="dd">Discord @{e(dc["discord"])}</span>' if dc.get("discord") else "") + "</p>")
+         + discord_link(dc) + "</p>")
     if len(owners):
         rows = ""
         for lg, g in sorted(owners.groupby("LeagueName"), key=lambda x: short.get(x[0].strip(), x[0])):
@@ -247,7 +258,7 @@ CSS = bp.CSS + """
 .share .btn{background:#5865f2;border-color:#5865f2;color:#fff}
 #copied{font-size:12px;color:var(--mute)}
 .un{font:700 12px var(--sans,sans-serif);padding:2px 7px;margin:2px 3px 2px 0;border:1px solid var(--line);border-radius:12px;background:var(--panel,#fff);color:inherit;cursor:pointer}
-.dl{margin:0 0 6px}.dd{font-size:12px;color:var(--mute)}.dt th{width:38%}
+.dl{margin:0 0 6px}.dc{font:700 12px var(--sans,sans-serif);padding:2px 8px;border-radius:12px;background:#5865f2;color:#fff;text-decoration:none}.dd{font-size:12px;color:var(--mute)}.dt th{width:38%}
 .inst{margin:-6px 0 16px;font-size:13px}.inst a{font-weight:700}
 .facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0 0 10px}
 .facts div{text-align:center;padding:8px 4px;border:1px solid var(--line);border-radius:8px}
