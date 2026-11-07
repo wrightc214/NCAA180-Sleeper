@@ -181,9 +181,12 @@ CSS = """
 .card.fold>h2{cursor:pointer;position:relative;padding-right:22px}
 .card.fold>h2::after{content:"\\25BE";position:absolute;right:0;top:2px;font-size:14px;opacity:.7}
 .card.fold.closed>h2::after{content:"\\25B8"}
-.card.fold.closed>:not(h2){display:none}
+.card.fold.closed>:not(h2):not(.snap-btn){display:none}
 .card.fold.closed{padding-bottom:12px}
 .fold-bar{display:flex;justify-content:flex-end;margin:0 0 8px}
+.card{position:relative}.card.fold>h2{padding-right:52px}
+.snap-btn{position:absolute;top:12px;right:30px;display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;padding:0;border:1px solid var(--line);border-radius:6px;background:var(--panel,#fff);color:var(--mute);cursor:pointer}
+.snap-btn:hover{color:inherit}.snap-btn.busy{opacity:.5;cursor:progress}.snap-btn:focus-visible{outline:2px solid #38638b;outline-offset:2px}
 .lev{margin:0 0 12px}.lh,.lr{display:grid;grid-template-columns:64px minmax(0,1fr) 64px;align-items:center;gap:8px}
 .lh{font:700 10px var(--sans,sans-serif);text-transform:uppercase;letter-spacing:.05em;color:var(--mute);padding:0 0 4px}
 .lh span:nth-child(2),.lt{text-align:center}.lh span:first-child,.lo{text-align:right}
@@ -399,6 +402,30 @@ const l=document.getElementById('o-l'),q=document.getElementById('o-q'),f=()=>{c
 [...tb.rows].forEach(r=>{r.hidden=!!((lv&&r.dataset.l!==lv)||(qv&&!r.dataset.n.includes(qv)));});};l.addEventListener('change',f);q.addEventListener('input',f);})();</script>"""
 
 
+# Save image on every section (Chris, 2026-11-07; site-wide design rule): a small button at the top
+# right of each card makes a phone-width PNG of the whole card (even when folded) via the shared
+# assets/snapshot.js. The odds table saves what is on screen (filter + sort); unfiltered, the first 25 rows.
+def snap_js(after):
+    foot = f"{lcfg.brand()} · Projection after week {after} · {LINK.replace('https://', '')}"
+    return ('<script src="assets/snapshot.js"></script><script>(()=>{const S=window.NCAASnap;if(!S)return;'
+            f'const FOOT={json.dumps(foot)},WK={int(after)};'
+            """for(const c of document.querySelectorAll('.wrap section.card[id]')){const h=c.querySelector(':scope>h2');if(!h)continue;
+const t=(h.childNodes[0]?.textContent||c.id).trim(),b=S.button(t);c.append(b);
+const stop=e=>e.stopPropagation();b.addEventListener('keydown',stop);
+b.addEventListener('click',async e=>{e.stopPropagation();b.disabled=true;b.classList.add('busy');
+try{const cl=c.cloneNode(true);cl.classList.remove('closed');cl.querySelectorAll('.snap-btn,.ofilt').forEach(x=>x.remove());
+if(c.id==='odds'){const live=[...c.querySelectorAll('tbody tr')],rows=[...cl.querySelectorAll('tbody tr')];
+const lv=document.getElementById('o-l')?.value,qv=document.getElementById('o-q')?.value.trim();
+rows.forEach((r,i)=>{if(live[i].hidden)r.remove();});let kept=[...cl.querySelectorAll('tbody tr')];
+const note=document.createElement('p');note.className='sub';
+if(!lv&&!qv&&kept.length>25){kept.slice(25).forEach(r=>r.remove());note.textContent=`Showing 25 of ${kept.length} teams in the current sort.`;}
+else note.textContent=`${lv||'Search: '+qv}: ${kept.length} team${kept.length===1?'':'s'}.`;
+cl.querySelector('.otw').before(note);const st=document.createElement('style');st.textContent='#odds .otw{overflow:visible;border:0}#odds .ot{font-size:10px;letter-spacing:0;table-layout:fixed}#odds .ot th,#odds .ot td{padding:4px 2px;letter-spacing:0}'+'#odds .ot thead th{font-size:9px}#odds .ot thead th:first-child,#odds .ot tbody th{width:104px;max-width:104px}#odds .ot tbody th small{font-size:8.5px}';cl.prepend(st);cl.querySelector('.sub').textContent='Playoff + Bowl + NIT = 100% for every team.';}
+await S.save({html:cl.outerHTML,name:`${t} wk${WK}`,footer:FOOT,title:t});}
+catch(err){b.title='Image could not be made: '+(err.message||err);console.error(err);}
+finally{b.disabled=false;b.classList.remove('busy');}});}})();</script>""")
+
+
 def bubble_band(P, width=None):
     """Teams within `width` spots of the projected at-large cut line (Game of the Week stakes):
     [[LeagueID, RosterID, position - cut], ...]; negative = currently in."""
@@ -466,7 +493,7 @@ def build(year):
             + games_card("Marquee Bowls", "One seat per league (its better division leader still available), then at-large by bowl order; "
                          "placed by tie-ins.", tags=True)
             + other_card + table + (ODDS_JS if table else ""))
-    body += FOLD_JS
+    body += FOLD_JS + snap_js(after)
     doc = (page_head(f"{lcfg.brand()} postseason", CSS) +
            f'<div class="wrap"><nav class="weeks" aria-label="Pages">{nav_html("postseason")}</nav>'
            f'{seasons_row(year)}{ARCH_MARK}<header><h1>{lcfg.brand()} <em>Postseason</em></h1></header>{body}</div></body></html>')
@@ -534,7 +561,7 @@ def shoot():
         b = p.chromium.launch()
         pg = b.new_page(viewport={"width": 600, "height": 900}, device_scale_factor=2, color_scheme="light")
         pg.goto("file://" + os.path.abspath(PAGE), wait_until="networkidle")
-        pg.add_style_tag(content=".totop{display:none!important}")
+        pg.add_style_tag(content=".totop,.snap-btn,.fold-bar{display:none!important}")
         pg.evaluate("document.fonts.ready")
         for i, s in enumerate(pg.query_selector_all("section.card.shot")):
             path = os.path.join(OUT_DIR, f"{i:02d}-{s.get_attribute('id')}.png")
