@@ -272,5 +272,53 @@
    "5",
    6
   ]
+ ],
+ "impact_playoff": [
+  {
+   "team": "Memphis",
+   "opp": "Georgia Southern",
+   "league": "Sun Belt",
+   "LeagueID": "1331774846710849536",
+   "RosterID": "8",
+   "with_win": 0.5964,
+   "with_loss": 0.0349,
+   "swing": 0.5615,
+   "pwin": 0.742
+  },
+  {
+   "team": "UNC Charlotte",
+   "opp": "Wichita State",
+   "league": "Wild",
+   "LeagueID": "1331774454493122560",
+   "RosterID": "12",
+   "with_win": 0.7467,
+   "with_loss": 0.2276,
+   "swing": 0.5191,
+   "pwin": 0.347
+  }
+ ],
+ "impact_bowl": [
+  {
+   "team": "Penn State",
+   "opp": "Illinois",
+   "league": "Big Ten",
+   "LeagueID": "1316899936696016896",
+   "RosterID": "5",
+   "with_win": 0.8657,
+   "with_loss": 0.2233,
+   "swing": 0.6424,
+   "pwin": 0.2055
+  },
+  {
+   "team": "Wyoming",
+   "opp": "Air Force",
+   "league": "Mountain West",
+   "LeagueID": "1331774599196585984",
+   "RosterID": "3",
+   "with_win": 0.7557,
+   "with_loss": 0.2095,
+   "swing": 0.5462,
+   "pwin": 0.8181
+  }
  ]
 }
