@@ -34,3 +34,18 @@ details.conference>summary:focus-visible{outline:2px solid #38638b;outline-offse
 @media(max-width:400px){.score-row.r3,.hdr3{grid-template-columns:20px minmax(0,1fr) 50px 46px 38px}.r3 .school{font-size:14px}}
 .gotw{display:grid;grid-template-columns:96px minmax(0,440px);gap:14px;align-items:center;margin:0 0 16px}.gotw-badge{width:96px;height:96px;object-fit:contain}.gotw-why{margin:6px 2px 0;font-size:12px;color:var(--mute)}.gotw-mini{width:20px;height:20px;object-fit:contain;vertical-align:middle}@media(max-width:650px){.gotw{grid-template-columns:48px minmax(0,1fr);gap:8px}.gotw-badge{width:48px;height:48px}}
 .ptitle{font:800 11px var(--sans,sans-serif);letter-spacing:.04em;text-transform:uppercase;color:var(--mute);margin:0 0 4px}.score-row.out{opacity:.45}.rk.seed{font-weight:800}
+
+/* Lucky dog race (2026-11-06) */
+.race{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px;margin:0 0 12px}
+.race h3{margin:0 0 8px;font-size:15px}.race h3 small{font-weight:600;color:var(--mute);font-size:12px}
+.race ol{list-style:none;margin:0;padding:0}.race li{display:grid;grid-template-columns:24px minmax(0,1fr) 64px 56px;gap:6px;align-items:center;padding:5px 2px;border-top:1px solid var(--line)}
+.race li .n{color:var(--mute);font:700 12px var(--num)}.race li .t small{display:block;color:var(--mute);font-size:11px}
+.race li .v,.race li .gp{text-align:right;font-variant-numeric:tabular-nums}.race li .v{font:800 15px var(--num)}.race li .gp{color:var(--mute);font-size:12px}
+.race li.in .n{color:var(--good,#1a7f37)}.race li.out{opacity:.7}
+.race li.cutline{display:block;border-top:2px dashed var(--bad,#b42318);color:var(--bad,#b42318);font:800 10px var(--sans,sans-serif);text-transform:uppercase;letter-spacing:.06em;padding:2px 0 0;text-align:center}
+.race .leaders{margin-top:10px}.race .leaders summary{cursor:pointer;font-weight:700;font-size:13px}
+.race .leaders ul{list-style:none;padding:0;margin:6px 0 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:2px 12px;font-size:12px}
+.race .leaders li{display:block;border:0;padding:2px 0}.race .leaders li b{display:inline-block;width:22px;color:var(--mute)}.race .leaders li span{float:right;font-variant-numeric:tabular-nums}
+.race .leaders li.mine{font-weight:800}.race .note{margin:8px 0 0;color:var(--mute);font-size:11px}
+.ldtag{display:inline-block;margin-left:5px;padding:0 4px;border-radius:3px;font:800 9px var(--sans,sans-serif);letter-spacing:.04em;text-transform:uppercase;vertical-align:middle}
+.ldtag.lead{background:var(--good,#1a7f37);color:#fff}.ldtag.dog{background:#b8860b;color:#fff}

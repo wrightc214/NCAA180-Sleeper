@@ -25,6 +25,10 @@ class PostseasonBrowserTests(unittest.TestCase):
                  {'id': '2026-B-1', 'round': 'Bowl', 'stage': '', 'bowl': 'Rose Bowl', 'playoff_round': '', 'sides': [side(4, 3, '', 60), side(5, 4, '', 40)]},
                  {'id': '2026-N-A', 'round': 'NIT', 'stage': 'Opening Groups', 'bowl': '', 'playoff_round': '',
                   'sides': [side(6, 5, '', 40), side(7, 6, '', 30), side(8, 7, '', 20), side(9, 8, '', 10)]}]
+        # five more Opening Groups (24 NIT teams -> small field 21 -> 15 lucky dogs; 3 miss the cut)
+        for gi, letter in enumerate('BCDEF'):
+            games.append({'id': f'2026-N-{letter}', 'round': 'NIT', 'stage': 'Opening Groups', 'bowl': '', 'playoff_round': '',
+                          'sides': [side((gi * 4 + j) % 15, 9 + j, '', 25) for j in range(4)]})
         base = {**base6, 'week': 13, 'odds': [], 'event': 'postseason', 'games': games}
         idx = {**index, 'week': 13, 'weeks': index['weeks'] + [13]}
         teams = {p['team'] for p in base6['player_info'].values() if p['team']}
@@ -65,10 +69,17 @@ class PostseasonBrowserTests(unittest.TestCase):
                         page.wait_for_function("document.getElementById('updated')?.textContent.startsWith('Updated')", timeout=30000)
                         secs = page.locator('h3.sec').all_inner_texts()
                         self.assertEqual([s.split()[0].upper() for s in secs], ['PLAYOFF', 'BOWLS', 'NIT'])
-                        self.assertEqual(sorted(set(fetched)), sorted(L[:10]))  # only leagues in games
+                        self.assertEqual(sorted(set(fetched)), sorted({x['LeagueID'] for g in games for x in g['sides']}))  # only leagues in games
                         self.assertEqual(page.locator('.gotw .gotw-badge').get_attribute('alt'), 'National Championship')  # natty logo, not GotW
                         self.assertEqual(page.locator('.mini-match.grp .score-row').count() >= 4, True)
-                        self.assertEqual(page.locator('.mini-match.grp .score-row.out').count(), 3)  # final: 3 can't advance
+                        self.assertEqual(page.locator('.mini-match.grp .score-row.out').count(), 3)  # final: 24 - 6 winners - 15 lucky dogs
+                        # lucky dog race: 6 group winners, 15 lucky dogs, cut line before the 16th non-leader
+                        self.assertEqual(page.locator('.race').count(), 1)
+                        self.assertEqual(page.locator('.race ol li.in').count(), 15)
+                        self.assertEqual(page.locator('.race li.cutline').count(), 1)
+                        self.assertEqual(page.locator('.race .leaders li').count(), 6)
+                        self.assertEqual(page.locator('.mini-match.grp .ldtag.lead').count(), 6)
+                        self.assertEqual(page.locator('.mini-match.grp .ldtag.dog').count(), 15)
                         self.assertIn('POSTSEASON WEEK 1', page.locator('h1').inner_text().upper())
                         self.assertFalse(page.evaluate('document.documentElement.scrollWidth > innerWidth'))
                         if os.environ.get('SCOREBOARD_SCREENSHOTS'):

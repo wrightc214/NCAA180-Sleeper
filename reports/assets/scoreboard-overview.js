@@ -20,10 +20,11 @@
   function gLabel(g){if(g.round==='Playoff')return [PR(g.playoff_round)||'Playoff',g.bowl].filter(Boolean).join(' · ');
     if(g.round==='Bowl')return g.bowl||'Bowl';return `${g.stage||'NIT'}${g.sides.length>2?` · Group ${String(g.id).split('-').pop()}`:''}`;}
   function postSel(){const sel=$('league').value,gs=(baseline.games||[]).filter(g=>!sel||g.sides.some(x=>String(x.LeagueID)===sel));
-    return {gs,ids:[...new Set(gs.flatMap(g=>g.sides.map(x=>String(x.LeagueID))))]};}
-  function postGames(){
+    const race=(baseline.games||[]).filter(g=>g.round==='NIT'&&g.sides.length>2);
+    return {gs,ids:[...new Set([...gs,...(sel?race:[])].flatMap(g=>g.sides.map(x=>String(x.LeagueID))))]};}
+  function postGames(every=false){
     const out=[];
-    for(const g of postSel().gs){const parts=g.sides.map(x=>{const c=cards.get(String(x.LeagueID));const r=c?.rs?.find(r=>String(r.roster_id)===String(x.RosterID));return r?{r:{...r,leagueId:String(x.LeagueID)},sc:c.scoring}:null;});
+    for(const g of every?(baseline.games||[]):postSel().gs){const parts=g.sides.map(x=>{const c=cards.get(String(x.LeagueID));const r=c?.rs?.find(r=>String(r.roster_id)===String(x.RosterID));return r?{r:{...r,leagueId:String(x.LeagueID)},sc:c.scoring}:null;});
       if(parts.some(x=>!x))continue;
       const match=parts.map(x=>x.r),s=S.summarize(match,metadata,baseline,lastGames,lastStats,parts.map(x=>x.sc),cfg,week<index.week);
       out.push({post:g,id:match[0].leagueId,match,s});}
@@ -67,7 +68,7 @@
     const t=index.leagues[r.leagueId].teams[String(r.roster_id)]||{name:`Roster ${r.roster_id}`};
     const changed=Math.abs(model.actual-model.official)>.011;
     const score=model.played||s.final?`${model.actual.toFixed(2)}${changed?'†':''}`:'–';
-    return `<div class="score-row r3${s.final&&winner?' winner':''}"><span class="team-icon" style="background:${esc(t.primary)}">${t.logo?`<img src="${esc(t.logo)}" alt="" onerror="this.hidden=true">`:''}</span><span class="school">${info.seed?`<b class="rk seed">${esc(info.seed)}</b> `:''}${info.rank?`<b class="rk">#${esc(info.rank)}</b> `:''}${esc(t.name)}${info.rec?`<small class="rec">${esc(info.rec)}</small>`:''}</span><span class="score${model.played||s.final?'':' dash'}" title="${changed?`Sleeper: ${model.official.toFixed(2)}`:'Standard score'}">${score}</span><span class="proj">${proj.toFixed(1)}</span><span class="chance">${esc(pct(probability))}</span></div>`;
+    return `<div class="score-row r3${s.final&&winner?' winner':''}"><span class="team-icon" style="background:${esc(t.primary)}">${t.logo?`<img src="${esc(t.logo)}" alt="" onerror="this.hidden=true">`:''}</span><span class="school">${info.seed?`<b class="rk seed">${esc(info.seed)}</b> `:''}${info.rank?`<b class="rk">#${esc(info.rank)}</b> `:''}${esc(t.name)}${info.tag?`<b class="ldtag ${info.tag[0]}">${esc(info.tag[1])}</b>`:''}${info.rec?`<small class="rec">${esc(info.rec)}</small>`:''}</span><span class="score${model.played||s.final?'':' dash'}" title="${changed?`Sleeper: ${model.official.toFixed(2)}`:'Standard score'}">${score}</span><span class="proj">${proj.toFixed(1)}</span><span class="chance">${esc(pct(probability))}</span></div>`;
   }
   // Game of the Week (Chris, 2026-11-04): one game per regular-season week, picked in data/scoreboard/<season>/game-of-the-week.json
   // Blue badge in the regular season, gold ("GOTW Postseason") from CCG week on.
@@ -86,8 +87,11 @@
     const ch=s.chances||[],top=Math.max(...s.models.map(m=>m.actual));
     const idx=match.map((_,i)=>i).sort((a,b)=>s.started?s.models[b].actual-s.models[a].actual:(ch[b]??0)-(ch[a]??0));
     const rows=idx.map(i=>{const x=post.sides.find(y=>String(y.RosterID)===String(match[i].roster_id)&&String(y.LeagueID)===String(match[i].leagueId))||{};
-      const out=s.final?s.models[i].actual<top:ch[i]!=null&&ch[i]<0.1&&s.started;
-      return row(match[i],s.models[i],s.proj[i],ch[i]??null,s,s.final&&!out,{rec:x.Rec}).replace('class="score-row r3',`class="score-row r3${out?' out':''}`);}).join('');
+      const tag=raceTag.get(`${match[i].leagueId}|${match[i].roster_id}`);
+      // With a lucky dog race, a team is only out once its group is final and it holds no advancing spot
+      // (a team behind in its group can still be a lucky dog while games are live).
+      const out=raceTag.size?s.final&&!tag:(s.final?s.models[i].actual<top:ch[i]!=null&&ch[i]<0.1&&s.started);
+      return row(match[i],s.models[i],s.proj[i],ch[i]??null,s,s.final&&!out,{rec:x.Rec,tag:raceTag.get(`${match[i].leagueId}|${match[i].roster_id}`)}).replace('class="score-row r3',`class="score-row r3${out?' out':''}`);}).join('');
     return `<a class="mini-match grp" href="${esc(href)}" aria-label="${esc(gLabel(post))}"><div class="ptitle">${esc(gLabel(post))}</div><div class="hdr3"><span></span><span class="match-status${s.active?' is-live':''}">${esc(status)}</span><span>Score</span><span>${s.live?'Live proj':'Proj'}</span><span>${s.live?'Live adv':'Adv %'}</span></div>${rows}</a>`;
   }
   function card(g){
@@ -101,12 +105,50 @@
     return `<a class="mini-match" href="${esc(href)}" aria-label="${esc(league.teams[String(match[0].roster_id)]?.name)} versus ${esc(league.teams[String(match[1].roster_id)]?.name)} — player details">${pt}<div class="hdr3"><span>${isGotw(g)?`<img class="gotw-mini" src="${featBadge(g)}" alt="${featAlt(g)}" title="${featAlt(g)}">`:''}</span><span class="match-status${s.active?' is-live':''}">${esc(status)}</span><span>Score</span><span>${s.live?'Live proj':'Proj'}</span><span>${s.live?'Live %':'Pre %'}</span></div>${row(match[0],s.models[0],s.proj[0],p,s,s.models[0].actual>s.models[1].actual,g.post?pside(g,0):side(o,match[0].roster_id))}${row(match[1],s.models[1],s.proj[1],p===null?null:100-p,s,s.models[1].actual>s.models[0].actual,g.post?pside(g,1):side(o,match[1].roster_id))}${pre}${ew}</a>`;
   }
   function pside(g,i){const r=g.match[i],x=g.post.sides.find(y=>String(y.RosterID)===String(r.roster_id)&&String(y.LeagueID)===String(r.leagueId))||{};return {rec:x.Rec,seed:g.post.round==='Playoff'?x.Seed:''};}
+  // Lucky dog race (Chris, 2026-11-06): realigned NIT group stages advance every group leader plus the
+  // best-scoring non-leaders ("lucky dogs"). Live order = current score once games start, projection before.
+  const raceTag=new Map();
+  function luckyDogs(groups){
+    const n=cfg.postseason?.nit,re=n?.realigned;
+    if(!re||season<Number(n.realigned_from||9999)||!groups.length)return 0;
+    const stage1=groups[0].post.stage===n.group_stage_1?.name;
+    if(!stage1)return Number(re.round2_lucky_dogs||1);
+    const pool=groups.reduce((a,g)=>a+g.match.length,0);
+    return Math.max((pool>=Number(re.small_field_below||80)?Number(re.round2_field||28):Number(re.round2_field_small||21))-groups.length,0);
+  }
+  function race(all){
+    raceTag.clear();
+    const groups=all.filter(g=>g.post.round==='NIT'&&g.match.length>2),dogs=luckyDogs(groups);
+    if(!dogs)return '';
+    const started=groups.some(g=>g.s.started),final=groups.every(g=>g.s.final);
+    const val=(g,i)=>started?g.s.models[i].actual:g.s.proj[i];
+    const leaders=[],rest=[];
+    for(const g of groups){
+      const idx=g.match.map((_,i)=>i).sort((a,b)=>val(g,b)-val(g,a));
+      const t=i=>({g,i,r:g.match[i],v:val(g,i),proj:g.s.proj[i],grp:String(g.post.id).split('-').pop()});
+      leaders.push(t(idx[0]));idx.slice(1).forEach(i=>rest.push(t(i)));
+    }
+    rest.sort((a,b)=>b.v-a.v);
+    const k=x=>`${x.r.leagueId}|${x.r.roster_id}`,name=x=>index.leagues[x.r.leagueId].teams[String(x.r.roster_id)]?.name||`Roster ${x.r.roster_id}`;
+    leaders.forEach(x=>raceTag.set(k(x),['lead',final?'Winner':'Leads']));
+    rest.slice(0,dogs).forEach(x=>raceTag.set(k(x),['dog',final?'Lucky dog':'LD']));
+    const cut=rest[dogs-1]?.v,first=rest[dogs]?.v,unit=started?'pts':'proj';
+    const line=(x,i)=>{const inn=i<dogs,d=inn?(first==null?null:x.v-first):(cut==null?null:cut-x.v),gap=d==null?'':Math.abs(d)<0.005?'tie':`${inn?'+':'−'}${d.toFixed(1)}`;
+      return `<li class="${inn?'in':'out'}"><span class="n">${i+1}</span><span class="t">${esc(name(x))}<small>${esc(lname(x.r.leagueId))} · Group ${esc(x.grp)}</small></span><span class="v">${x.v.toFixed(started?2:1)}</span><span class="gp">${gap}</span></li>`;};
+    const chase=rest.slice(0,dogs+4);
+    const sel=$('league').value,lead=leaders.slice().sort((a,b)=>a.grp.localeCompare(b.grp,undefined,{numeric:true}));
+    return `<section class="race card"><h3>Lucky dog race <small>${final?'Final':started?'Live':'Projected'} · top ${dogs} non-leaders advance</small></h3>
+      <ol class="dogs">${chase.map((x,i)=>(i===dogs?'<li class="cutline" aria-hidden="true">Cut line</li>':'')+line(x,i)).join('')}</ol>
+      <details class="leaders"${sel?' open':''}><summary>${leaders.length} group ${final?'winners':'leaders'}</summary><ul>${lead.map(x=>`<li${sel&&x.r.leagueId===sel?' class="mine"':''}><b>${esc(x.grp)}</b> ${esc(name(x))} <span>${x.v.toFixed(started?2:1)}</span></li>`).join('')}</ul></details>
+      <p class="note">Gap = ${unit} ahead of the first team out (+) or behind the last lucky dog (−). Exact ties: every-week head-to-head, then wins, then points.</p></section>`;
+  }
   function postPaint(){
     const all=postGames();let html=strip(all,[]);
     const top=all.find(isGotw);
     if(top)html+=`<section class="gotw"><img class="gotw-badge" src="${featBadge(top)}" alt="${featAlt(top)}"><div class="feat-card">${card(top)}</div></section>`;
+    const raceHtml=race(postGames(true).filter(g=>g.post.round==='NIT'));
     for(const [k,name]of SECT){const gs=all.filter(g=>g.post.round===k);if(!gs.length)continue;
-      html+=`<h3 class="sec">${name} <small>${gs.length} game${gs.length===1?'':'s'}</small></h3><div class="feat">${gs.map(g=>`<section class="feat-card">${card(g)}</section>`).join('')}</div>`;}
+      html+=`<h3 class="sec">${name} <small>${gs.length} game${gs.length===1?'':'s'}</small></h3>${k==='NIT'?raceHtml:''}<div class="feat">${gs.map(g=>`<section class="feat-card">${card(g)}</section>`).join('')}</div>`;}
     const errs=[...cards.entries()].filter(([,c])=>c?.error).map(([id,c])=>`${lname(id)}: ${c.error}`);
     if(errs.length)html+=`<p class="conference-error" role="status">${esc(errs.join(' · '))}</p>`;
     if(!all.length)html+=`<p class="conference-note">${$('league').value?'No postseason games for this conference this week. <a href="?">All games</a>':'Loading games…'}</p>`;
