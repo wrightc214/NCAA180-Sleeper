@@ -258,7 +258,9 @@ def build_season(year, years):
         secs.append('<p class="status">Nothing published yet for this season.</p>')
     cur = ' aria-current="page"'
     picker = ('<nav class="weeks sub" aria-label="Seasons"><span>Season</span>' +
-              "".join(f'<a href="postseason-{y}.html"{cur if y == year else ""}>{y}</a>' for y in years) + "</nav>")
+              "".join(f'<a href="postseason-{y}.html"{cur if y == year else ""}>{y}</a>' for y in years) +
+              # this season before anything is published: its entry is the projection page (postseason.html)
+              (f'<a href="postseason.html">{ps.current_season()}</a>' if ps.current_season() not in years else "") + "</nav>")
     note = ('<p class="note">Names, logos and formats as played that season. Some early seasons are missing scores '
             '(results were recorded outside Sleeper).</p>') if int(year) < ps.current_season() else ""
     return (page_head(f"{lcfg.brand()} postseason {year}", CSS) +
