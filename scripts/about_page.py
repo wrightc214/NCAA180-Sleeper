@@ -57,7 +57,13 @@ def directory(term, short):
     special accounts (Chris, 2026-11-07). Names are Sleeper display names; tap one to copy it (Sleeper has
     no public link that opens a DM)."""
     a = lcfg.cfg().get("about", {})
-    special = {k: v for k, v in a.get("special_accounts", {}).items() if not k.startswith("_")}
+    # accounts without a team (Chris, 2026-11-07): users with no roster in any league they're in -- just a list
+    if len(st := (pd.read_csv("data/LeagueStaff.csv", dtype=str, keep_default_na=False)
+                  if os.path.exists("data/LeagueStaff.csv") else pd.DataFrame())):
+        has = st.groupby("DisplayName")["HasRoster"].apply(lambda x: (x == "True").any())
+        special = {n: sorted(st[st["DisplayName"] == n]["LeagueName"]) for n in has[~has].index}
+    else:
+        special = {}
     lm, dc = a.get("league_manager", {}), a.get("data_contact", {})
     f = "data/LeagueStaff.csv"
     st = pd.read_csv(f, dtype=str, keep_default_na=False) if os.path.exists(f) else pd.DataFrame()
@@ -81,7 +87,16 @@ def directory(term, short):
     else:
         h += f'<p class="sub">{e(term.title())} assistants appear after the next weekly run.</p>'
     if special:
-        h += '<h3>Special accounts</h3><ul class="rl">' + "".join(f'<li>{un(k)} {e(v)}</li>' for k, v in special.items()) + "</ul>"
+        n_all = st["LeagueID"].nunique()
+
+        def where(lgs):
+            names = [short.get(x.strip(), x.strip()) for x in lgs]
+            if len(names) >= n_all:
+                return f"all {n_all} {lcfg.term(plural=True)}"
+            return ", ".join(names) if len(names) <= 2 else f"{names[0]}, {names[1]} + {len(names) - 2} more"
+        h += ('<h3>Accounts without a team</h3><ul class="rl">'
+              + "".join(f'<li>{un(k)} <span class="dd">{e(where(v))}</span></li>' for k, v in sorted(special.items(), key=lambda kv: -len(kv[1])))
+              + "</ul>")
     return h + '<p class="sub">Tap a name to copy it, then search it in Sleeper to send a message.</p>'
 
 
