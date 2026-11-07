@@ -991,5 +991,9 @@
     "bubble_width": 6,
     "quality_scale": 25,
     "rank_gap_scale": 12
+  },
+  "about": {
+    "_note": "About page (scripts/about_page.py). Not linked in the site nav until Chris approves it.",
+    "discord_invite": "https://discord.gg/UdtSXkjpq"
   }
 }
