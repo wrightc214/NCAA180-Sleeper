@@ -146,13 +146,16 @@
     const all=postGames();let html=strip(all,[]);
     const top=all.find(isGotw);
     if(top)html+=`<section class="gotw"><img class="gotw-badge" src="${featBadge(top)}" alt="${featAlt(top)}"><div class="feat-card">${card(top)}</div></section>`;
-    const raceHtml=race(postGames(true).filter(g=>g.post.round==='NIT'));
+    const raceHtml=race(postGames(true).filter(g=>g.post.round==='NIT')),f=folded();
+    if(SECT.filter(([k])=>all.some(g=>g.post.round===k)).length>1)html+=foldBar();
     for(const [k,name]of SECT){const gs=all.filter(g=>g.post.round===k);if(!gs.length)continue;
-      html+=`<h3 class="sec">${name} <small>${gs.length} game${gs.length===1?'':'s'}</small></h3>${k==='NIT'?raceHtml:''}<div class="feat">${gs.map(g=>`<section class="feat-card">${card(g)}</section>`).join('')}</div>`;}
+      html+=`<details class="sec-d psec" data-id="post-${k}"${f.has(`post-${k}`)?'':' open'}><summary><h3 class="sec">${name} <small>${gs.length} game${gs.length===1?'':'s'}</small></h3></summary>${k==='NIT'?raceHtml:''}<div class="feat">${gs.map(g=>`<section class="feat-card">${card(g)}</section>`).join('')}</div></details>`;}
     const errs=[...cards.entries()].filter(([,c])=>c?.error).map(([id,c])=>`${lname(id)}: ${c.error}`);
     if(errs.length)html+=`<p class="conference-error" role="status">${esc(errs.join(' · '))}</p>`;
     if(!all.length)html+=`<p class="conference-note">${$('league').value?'No postseason games for this conference this week. <a href="?">All games</a>':'Loading games…'}</p>`;
     $('board').innerHTML=html;
+    for(const d of $('board').querySelectorAll('details.psec'))d.addEventListener('toggle',()=>setFolded(d.dataset.id,!d.open));
+    wireFold();
   }
   function block(id,rs,scoring,games,stats){
     const league=index.leagues[id],groups=pairs(rs,id);let allFinal=true,warning=false;
@@ -167,6 +170,15 @@
   }
   const lname=id=>index.leagues[id].label||index.leagues[id].name;
   // Folded conferences are a per-viewer convenience (this browser only).
+  // Collapse / expand all sections (Chris, 2026-11-06). One button; label follows the current state.
+  const FOLD_SEL='details.conference,details.sec-d';
+  function foldBar(){return `<div class="fold-bar"><button type="button" id="fold-all" class="fold-all"></button></div>`;}
+  function wireFold(){
+    const b=$('fold-all');if(!b)return;
+    const ds=()=>[...$('board').querySelectorAll(FOLD_SEL)],label=()=>{b.textContent=ds().some(d=>d.open)?'Collapse all':'Expand all';};
+    label();b.addEventListener('click',()=>{const open=!ds().some(d=>d.open);ds().forEach(d=>{d.open=open;});label();});
+    ds().forEach(d=>d.addEventListener('toggle',label));
+  }
   function folded(){try{return new Set(JSON.parse(localStorage.getItem('sb-folded')||'[]'));}catch(e){return new Set();}}
   function setFolded(id,on){try{const f=folded();on?f.add(id):f.delete(id);localStorage.setItem('sb-folded',JSON.stringify([...f]));}catch(e){}}
   function header(id,c){
@@ -205,11 +217,13 @@
     html+=callouts(top);
     if(rvr.length)html+=`<h3 class="sec">Ranked vs ranked <small>${rvr.length} game${rvr.length===1?'':'s'}</small></h3>${feat(rvr)}`;
     if(ranked.length)html+=`<details class="sec-d" id="ranked-d"${open?' open':''}><summary><h3 class="sec">Ranked teams in action <small>${ranked.length} game${ranked.length===1?'':'s'}</small></h3></summary>${feat(ranked)}</details>`;
+    if(!one)html+=foldBar();
     html+=`<h3 class="sec">${one?'Games':'By conference'}</h3><div class="conference-grid">`+ids.map(id=>{const c=cards.get(id);
       return `<details class="conference" data-id="${esc(id)}"${one||!f.has(id)?' open':''} aria-label="${esc(lname(id))}">${header(id,c)}${c?.games?c.games.map(card).join(''):'<p class="conference-note">Loading games…</p>'}${c?.warning?'<p class="conference-note">Some stats, projections or statuses are unavailable; estimates may be incomplete.</p>':''}${c?.error?`<p class="conference-error" role="status">${esc(c.error)}${c.updated?` · last updated ${c.updated.toLocaleTimeString()}`:''}</p>`:''}</details>`;}).join('')+'</div>';
     $('board').innerHTML=html;
     for(const d of $('board').querySelectorAll('details.conference'))d.addEventListener('toggle',()=>{if(!one)setFolded(d.dataset.id,!d.open);});
     $('ranked-d')?.addEventListener('toggle',e=>{try{localStorage.setItem('sb-ranked-open',e.target.open?'1':'0');}catch(x){}});
+    wireFold();
   }
   async function refresh(){
     if(busy||document.hidden)return;busy=true;clearTimeout(timer);$('refresh').disabled=true;

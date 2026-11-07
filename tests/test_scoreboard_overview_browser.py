@@ -73,6 +73,13 @@ class OverviewBrowserTests(unittest.TestCase):
                             self.assertTrue(all(any(k in s for k in want) for s in statuses),(phase,statuses[:4]))
                             self.assertEqual(page.locator('.gotw .gotw-why').inner_text(),'test reason')  # auto pick (object form)
                             self.assertEqual(page.locator('.conference .gotw-mini').count(),1)
+                            # collapse / expand all (2026-11-06)
+                            self.assertEqual(page.locator('#fold-all').inner_text(),'Collapse all')
+                            page.click('#fold-all')
+                            self.assertEqual(page.evaluate("[...document.querySelectorAll('details.conference')].filter(d=>d.open).length"),0)
+                            self.assertEqual(page.locator('#fold-all').inner_text(),'Expand all')
+                            page.click('#fold-all')
+                            self.assertEqual(page.evaluate("[...document.querySelectorAll('details.conference')].filter(d=>!d.open).length"),0)
                             self.assertIn('PRE %' if phase!='in' else 'LIVE %',page.locator('.hdr3').first.inner_text().upper())
                             if os.environ.get('SCOREBOARD_SCREENSHOTS'):
                                 dest=Path(os.environ['SCOREBOARD_SCREENSHOTS']);dest.mkdir(parents=True,exist_ok=True)

@@ -49,3 +49,4 @@ details.conference>summary:focus-visible{outline:2px solid #38638b;outline-offse
 .race .leaders li.mine{font-weight:800}.race .note{margin:8px 0 0;color:var(--mute);font-size:11px}
 .ldtag{display:inline-block;margin-left:5px;padding:0 4px;border-radius:3px;font:800 9px var(--sans,sans-serif);letter-spacing:.04em;text-transform:uppercase;vertical-align:middle}
 .ldtag.lead{background:var(--good,#1a7f37);color:#fff}.ldtag.dog{background:#b8860b;color:#fff}
+.fold-bar{display:flex;justify-content:flex-end;margin:6px 0 -4px}.fold-all{font:700 12px var(--sans,sans-serif);padding:5px 10px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:inherit;cursor:pointer}.fold-all:focus-visible{outline:2px solid #38638b;outline-offset:2px}

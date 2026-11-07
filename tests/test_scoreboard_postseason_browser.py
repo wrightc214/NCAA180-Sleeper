@@ -75,6 +75,9 @@ class PostseasonBrowserTests(unittest.TestCase):
                         self.assertEqual(page.locator('.mini-match.grp .score-row.out').count(), 3)  # final: 24 - 6 winners - 15 lucky dogs
                         # lucky dog race: 6 group winners, 15 lucky dogs, cut line before the 16th non-leader
                         self.assertEqual(page.locator('.race').count(), 1)
+                        page.click('#fold-all')  # Playoff / Bowls / NIT collapse together
+                        self.assertEqual(page.evaluate("[...document.querySelectorAll('details.psec')].filter(d=>d.open).length"), 0)
+                        page.click('#fold-all')
                         self.assertEqual(page.locator('.race ol li.in').count(), 15)
                         self.assertEqual(page.locator('.race li.cutline').count(), 1)
                         self.assertEqual(page.locator('.race .leaders li').count(), 6)
