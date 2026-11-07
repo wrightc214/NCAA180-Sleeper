@@ -52,7 +52,7 @@ def champions():
     return out
 
 
-def directory(term, short):
+def directory(term, short, col=None):
     """League manager, then the data contact and each conference's assistant(s) with LM powers, then the
     special accounts (Chris, 2026-11-07). Names are Sleeper display names; tap one to copy it (Sleeper has
     no public link that opens a DM)."""
@@ -74,15 +74,28 @@ def directory(term, short):
         c = owners[~owners["DisplayName"].isin(list(special) + [dc.get("sleeper", "")])]["DisplayName"].value_counts()
         lm_name = c.index[0] if len(c) and c.iloc[0] > 1 else ""
     taken = {lm_name, dc.get("sleeper", ""), *special}
-    h = (f'<h3>League manager</h3><p class="dl"><b>{e(lm.get("name", ""))}</b> {un(lm_name)}</p>'
-         f'<h3>Data &amp; site</h3><p class="dl"><b>{e(dc.get("name", ""))}</b> {un(dc.get("sleeper", ""))}'
+    # Sleeper name, then the team they manage, in its colors (Chris, 2026-11-07)
+    col = col or {}
+    ro = pd.read_csv("data/RosterOwners_LastSeen.csv", dtype=str, keep_default_na=False)
+    tm = pd.read_csv("data/Teams.csv", dtype=str, encoding="utf-8-sig")
+    team_of = {(str(l).strip(), str(r)): t for l, r, t in zip(tm["League"], tm["Roster ID"], tm["Team"])}
+    teams_by = {}
+    for l, r, n in zip(ro["LeagueName"], ro["RosterID"], ro["OwnerName"]):
+        if (str(l).strip(), str(r)) in team_of:
+            teams_by.setdefault(n.lower(), []).append((str(l).strip(), team_of[(str(l).strip(), str(r))]))
+
+    def who(n, league=None):
+        ts = [t for lg, t in teams_by.get(str(n).lower(), []) if league is None or lg == league.strip()]
+        return f'{un(n)} {" ".join(chip(t, col) for t in ts)}' if n else ""
+    h = (f'<h3>League manager</h3><p class="dl">{who(lm_name)}</p>'
+         f'<h3>Data &amp; site</h3><p class="dl">{who(dc.get("sleeper", ""))}'
          + (f' <span class="dd">Discord @{e(dc["discord"])}</span>' if dc.get("discord") else "") + "</p>")
     if len(owners):
         rows = ""
         for lg, g in sorted(owners.groupby("LeagueName"), key=lambda x: short.get(x[0].strip(), x[0])):
             names = [n for n in g["DisplayName"] if n not in taken]
             rows += (f'<tr><th scope="row">{e(short.get(lg.strip(), lg.strip()))}</th>'
-                     f'<td>{" ".join(un(n) for n in names) or "—"}</td></tr>')
+                     f'<td>{" ".join(who(n, lg) for n in names) or "—"}</td></tr>')
         h += f'<h3>{e(term.title())} assistants <small>LM powers in their {e(term)}</small></h3><table class="ct dt"><tbody>{rows}</tbody></table>'
     else:
         h += f'<p class="sub">{e(term.title())} assistants appear after the next weekly run.</p>'
@@ -203,7 +216,7 @@ def build():
 
     body = (top
             + card("glance", "At a glance", glance)
-            + card("directory", "Directory", directory(term, short))
+            + card("directory", "Directory", directory(term, short, col))
             + card("calendar", "The season", cal)
             + card("rules", "Rosters & rules", rules, "from the league bylaws")
             + card("postseason", "Postseason", post)
