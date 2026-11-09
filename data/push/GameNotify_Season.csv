@@ -1,2 +1,7 @@
 Year,Week,Key,Kind,At,Data
 2026,9,window:thu-2026-11-05,window,2026-11-06T12:28:33Z,
+2026,9,final:w9-Pac-12-2,final,2026-11-09T01:10:13Z,"{""teams"": [{""league_id"": ""1331775106527006720"", ""roster_id"": ""10"", ""slot"": ""Pac-12:10"", ""name"": ""California"", ""points"": 73.62}, {""league_id"": ""1331775106527006720"", ""roster_id"": ""11"", ""slot"": ""Pac-12:11"", ""name"": ""Utah"", ""points"": 55.6}], ""winner"": ""Pac-12:10"", ""label"": """"}"
+2026,9,final:w9-Mountain West-4,final,2026-11-09T01:10:13Z,"{""teams"": [{""league_id"": ""1331774599196585984"", ""roster_id"": ""2"", ""slot"": ""Mountain West:2"", ""name"": ""Boise State"", ""points"": 103.3}, {""league_id"": ""1331774599196585984"", ""roster_id"": ""7"", ""slot"": ""Mountain West:7"", ""name"": ""Fresno State"", ""points"": 171.18}], ""winner"": ""Mountain West:7"", ""label"": """"}"
+2026,9,final:w9-Ohio Valley-1,final,2026-11-09T01:10:13Z,"{""teams"": [{""league_id"": ""1331774544905510912"", ""roster_id"": ""2"", ""slot"": ""Ohio Valley:2"", ""name"": ""ETSU"", ""points"": 171.48}, {""league_id"": ""1331774544905510912"", ""roster_id"": ""5"", ""slot"": ""Ohio Valley:5"", ""name"": ""Eastern Kentucky"", ""points"": 118.34}], ""winner"": ""Ohio Valley:2"", ""label"": """"}"
+2026,9,window:sun-early,window,2026-11-09T01:10:13Z,
+2026,9,window:sun-late,window,2026-11-09T01:10:13Z,
