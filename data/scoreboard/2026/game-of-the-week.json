@@ -3,5 +3,13 @@
   "9": [
     "Washington State",
     "Colorado"
-  ]
+  ],
+  "10": {
+    "teams": [
+      "William & Mary",
+      "Youngstown State"
+    ],
+    "reason": "William & Mary: projected first team out of the playoff",
+    "source": "auto"
+  }
 }

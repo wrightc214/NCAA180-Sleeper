@@ -1,191 +1,191 @@
 {
  "year": 2026,
- "after_week": 8,
+ "after_week": 9,
  "playoff_field": 32,
  "notes": [
-  "bowl order: week-8 BotConsensus poll rank - 25 x wins"
+  "bowl order: week-9 BotConsensus poll rank - 25 x wins"
  ],
  "seeds": {
   "1331775106527006720|4": 1,
-  "1331774741488369664|1": 2,
-  "1316899936696016896|11": 3,
+  "1316899936696016896|11": 2,
+  "1316899756005412864|12": 3,
   "1331774695346823168|7": 4,
-  "1331774599196585984|6": 5,
+  "1331774880181399552|5": 5,
   "1331775206619885568|7": 6,
-  "1331775170712444928|8": 7,
-  "1331774880181399552|5": 8,
-  "1331775106527006720|8": 9,
-  "1331774915392577536|12": 10,
-  "1331774544905510912|4": 11,
-  "1331774599196585984|1": 12,
-  "1316899756005412864|3": 13,
-  "1331774454493122560|10": 14,
-  "1331774804222545920|8": 15,
-  "1331774741488369664|5": 16,
-  "1316899756005412864|12": 17,
-  "1331775106527006720|7": 18,
-  "1331774846710849536|9": 19,
-  "1331774599196585984|11": 20,
-  "1331774454493122560|1": 21,
+  "1331774454493122560|10": 7,
+  "1331774741488369664|1": 8,
+  "1331774915392577536|12": 9,
+  "1331774599196585984|1": 10,
+  "1331775170712444928|8": 11,
+  "1331774741488369664|5": 12,
+  "1331775106527006720|8": 13,
+  "1331774599196585984|6": 14,
+  "1331774846710849536|9": 15,
+  "1331775106527006720|7": 16,
+  "1331774804222545920|8": 17,
+  "1331774544905510912|2": 18,
+  "1331774599196585984|11": 19,
+  "1331774630620332032|4": 20,
+  "1331774915392577536|10": 21,
   "1331774630620332032|1": 22,
-  "1331774630620332032|4": 23,
-  "1331774915392577536|10": 24,
-  "1331774741488369664|11": 25,
-  "1331774880181399552|7": 26,
-  "1316899936696016896|10": 27,
-  "1331774846710849536|6": 28,
-  "1331774880181399552|8": 29,
-  "1331774846710849536|1": 30,
+  "1316899936696016896|10": 23,
+  "1331774880181399552|7": 24,
+  "1331774846710849536|6": 25,
+  "1331774741488369664|11": 26,
+  "1331774880181399552|3": 27,
+  "1331774846710849536|1": 28,
+  "1331774846710849536|8": 29,
+  "1331775206619885568|8": 30,
   "1331775170712444928|2": 31,
-  "1331774846710849536|8": 32
+  "1331774454493122560|12": 32
  },
  "games": {
   "Prestige Bowls": [
    [
     "Citrus Bowl",
-    "Pittsburgh",
-    "Portland State"
+    "William & Mary",
+    "Chattanooga"
    ],
    [
     "Sun Bowl",
-    "Coastal Carolina",
-    "UNC Charlotte"
-   ],
-   [
-    "Gator Bowl",
-    "ETSU",
-    "Missouri"
-   ],
-   [
-    "Liberty Bowl",
-    "UCLA",
+    "Portland State",
     "Georgia State"
    ],
    [
-    "Alamo Bowl",
-    "Texas A&M",
+    "Gator Bowl",
+    "Auburn",
+    "Minnesota"
+   ],
+   [
+    "Liberty Bowl",
+    "Pittsburgh",
     "James Madison"
+   ],
+   [
+    "Alamo Bowl",
+    "Davidson",
+    "UCONN"
    ]
   ],
   "Marquee Bowls": [
    [
     "Tangerine Bowl",
     "Georgia Tech",
-    "Arkansas State"
+    "UTSA"
    ],
    [
     "Independence Bowl",
-    "Texas",
-    "Citadel"
+    "Montana",
+    "Texas A&M"
    ],
    [
     "New Orleans Bowl",
-    "Colgate",
-    "Georgia Southern"
+    "South Carolina",
+    "UT Martin"
    ],
    [
     "Holiday Bowl",
-    "Austin Peay",
-    "USC"
+    "UCLA",
+    "Monmouth"
    ],
    [
     "Music City Bowl",
-    "Belmont",
-    "Minnesota"
+    "Cornell",
+    "Belmont"
    ],
    [
     "Aloha Bowl",
     "Colorado State",
-    "Montana State"
+    "Arkansas State"
    ],
    [
     "Gasparilla Bowl",
-    "UCONN",
-    "Monmouth"
+    "Coastal Carolina",
+    "Nebraska"
    ],
    [
     "Celebration Bowl",
-    "Mississippi State",
-    "Tuskegee"
+    "Tuskegee",
+    "Montana State"
    ]
   ],
   "Showcase Bowls": [
    [
     "Poinsettia Bowl",
-    "Michigan",
-    "Cornell"
+    "Fresno State",
+    "Columbia"
    ],
    [
     "Armed Forces Bowl",
-    "Army",
+    "Citadel",
     "Texas State"
    ],
    [
     "Military Bowl",
-    "North Alabama",
-    "Purdue"
+    "West Virginia",
+    "USC"
    ],
    [
     "Bahamas Bowl",
-    "Nebraska",
-    "Auburn"
+    "Eastern Washington",
+    "Florida Atlantic"
    ],
    [
     "Bacardi Bowl",
-    "Florida Atlantic",
-    "Fresno State"
+    "Delaware State",
+    "Purdue"
    ],
    [
     "Mirage Bowl",
-    "UT Martin",
-    "FSU"
+    "FSU",
+    "North Alabama"
    ],
    [
     "International Bowl",
-    "Eastern Washington",
-    "Holy Cross"
+    "Michigan",
+    "Boston College"
    ]
   ],
   "Opening Bowls": [
    [
     "Vulcan Bowl",
-    "Delaware State",
-    "South Carolina"
+    "Alcorn State",
+    "Texas"
    ],
    [
     "Bluebonnet Bowl",
-    "Ohio State",
-    "Columbia"
+    "Georgia",
+    "Ohio State"
    ],
    [
     "Idaho Potato Bowl",
-    "UTSA",
-    "Boston College"
+    "Rutgers",
+    "Georgia Southern"
    ],
    [
     "Copper Bowl",
-    "Notre Dame",
-    "Davidson"
+    "Mississippi State",
+    "North Carolina Central"
    ],
    [
     "Camellia Bowl",
-    "Villanova",
-    "Alcorn State"
+    "Holy Cross",
+    "Stony Brook"
    ],
    [
     "Motor City Bowl",
-    "South Alabama",
+    "Austin Peay",
     "Wyoming"
    ],
    [
     "Zia Bowl",
-    "Howard",
-    "Virginia"
+    "Troy",
+    "Mississippi Valley State"
    ],
    [
     "Gotham Bowl",
-    "Georgia",
-    "Murray State"
+    "Central Michigan",
+    "Dayton"
    ],
    [
     "Pelican Bowl",
@@ -194,57 +194,62 @@
    ],
    [
     "Freedom Bowl",
-    "Stony Brook",
-    "Eastern Michigan"
+    "Howard",
+    "Colgate"
+   ],
+   [
+    "Palm Bowl",
+    "Murray State",
+    "Villanova"
    ]
   ]
  },
  "last_in": [
+  "Memphis",
   "LSU",
-  "West Virginia",
-  "Tulsa",
-  "Memphis"
+  "UNC Charlotte",
+  "Army"
  ],
  "first_out": [
-  "UNC Charlotte",
+  "William & Mary",
   "Portland State",
   "Minnesota",
-  "ETSU"
+  "Chattanooga"
  ],
  "bubble": [
   [
-   "1331774846710849536",
-   "1",
+   "1331774915392577536",
+   "10",
    -5
   ],
   [
-   "1316899936696016896",
-   "10",
+   "1331774846710849536",
+   "1",
    -4
+  ],
+  [
+   "1331774846710849536",
+   "8",
+   -3
   ],
   [
    "1331775170712444928",
    "2",
-   -3
-  ],
-  [
-   "1331774880181399552",
-   "8",
    -2
-  ],
-  [
-   "1331774846710849536",
-   "6",
-   -1
-  ],
-  [
-   "1331774846710849536",
-   "8",
-   0
   ],
   [
    "1331774454493122560",
    "12",
+   -1
+  ],
+  [
+   "1331775206619885568",
+   "8",
+   0
+  ],
+  [
+   "1316899756005412864",
+   "3",
    1
   ],
   [
@@ -259,66 +264,66 @@
   ],
   [
    "1331774544905510912",
-   "2",
+   "4",
    4
-  ],
-  [
-   "1331775206619885568",
-   "6",
-   5
   ],
   [
    "1331774695346823168",
    "5",
+   5
+  ],
+  [
+   "1331775170712444928",
+   "4",
    6
   ]
  ],
  "impact_playoff": [
   {
-   "team": "Memphis",
-   "opp": "Georgia Southern",
-   "league": "Sun Belt",
-   "LeagueID": "1331774846710849536",
+   "team": "Army",
+   "opp": "Notre Dame",
+   "league": "Big East",
+   "LeagueID": "1331775206619885568",
    "RosterID": "8",
-   "with_win": 0.5964,
-   "with_loss": 0.0349,
-   "swing": 0.5615,
-   "pwin": 0.742
+   "with_win": 0.7427,
+   "with_loss": 0.0264,
+   "swing": 0.7162,
+   "pwin": 0.5001
   },
   {
-   "team": "UNC Charlotte",
-   "opp": "Wichita State",
-   "league": "Wild",
-   "LeagueID": "1331774454493122560",
-   "RosterID": "12",
-   "with_win": 0.7467,
-   "with_loss": 0.2276,
-   "swing": 0.5191,
-   "pwin": 0.347
+   "team": "Pittsburgh",
+   "opp": "Syracuse",
+   "league": "Big East",
+   "LeagueID": "1331775206619885568",
+   "RosterID": "4",
+   "with_win": 0.8469,
+   "with_loss": 0.1991,
+   "swing": 0.6477,
+   "pwin": 0.3442
   }
  ],
  "impact_bowl": [
   {
    "team": "Penn State",
-   "opp": "Illinois",
+   "opp": "Iowa",
    "league": "Big Ten",
    "LeagueID": "1316899936696016896",
    "RosterID": "5",
-   "with_win": 0.8657,
-   "with_loss": 0.2233,
-   "swing": 0.6424,
-   "pwin": 0.2055
+   "with_win": 0.8212,
+   "with_loss": 0.0,
+   "swing": 0.8212,
+   "pwin": 0.2372
   },
   {
-   "team": "Wyoming",
-   "opp": "Air Force",
-   "league": "Mountain West",
-   "LeagueID": "1331774599196585984",
-   "RosterID": "3",
-   "with_win": 0.7557,
-   "with_loss": 0.2095,
-   "swing": 0.5462,
-   "pwin": 0.8181
+   "team": "Citadel",
+   "opp": "Wichita State",
+   "league": "Wild",
+   "LeagueID": "1331774454493122560",
+   "RosterID": "8",
+   "with_win": 0.7849,
+   "with_loss": 0.0007,
+   "swing": 0.7841,
+   "pwin": 0.5889
   }
  ]
 }
