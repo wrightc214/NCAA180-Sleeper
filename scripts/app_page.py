@@ -15,7 +15,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from site_common import nav_html, page_head  # noqa: E402
+from site_common import SECTIONS_JS, nav_html, page_head  # noqa: E402
 
 OUT = "reports/app.html"
 
@@ -292,6 +292,7 @@ BODY = """
 
 def main():
     page = page_head("NCAA 180: notification settings", extra_css=CSS) + BODY.replace("{nav}", nav_html("app")) + "</body></html>\n"
+    page = page.replace("</body></html>", SECTIONS_JS + "</body></html>")
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     old = open(OUT, encoding="utf-8").read() if os.path.exists(OUT) else ""
     if old != page:

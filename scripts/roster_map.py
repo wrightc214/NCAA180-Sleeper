@@ -32,7 +32,7 @@ import sys
 import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from site_common import nav_html, page_head  # noqa: E402
+from site_common import SECTIONS_JS, nav_html, page_head  # noqa: E402
 from week_status import completed_weeks as finished_weeks  # noqa: E402
 import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 import standard_results  # noqa: E402 (standard-scoring scores/results)
@@ -283,7 +283,7 @@ def main():
         "{{DATA}}", json.dumps(payload).replace("</", "<\\/"))
     os.makedirs("reports", exist_ok=True)
     with open(OUT_HTML, "w", encoding="utf-8") as f:
-        f.write(page)
+        f.write(page.replace("</body></html>", SECTIONS_JS + "</body></html>"))
     print(f"Wrote {OUT_HTML}")
 
 

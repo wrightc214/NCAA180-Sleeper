@@ -88,6 +88,7 @@ td,th{white-space:nowrap}
 <nav class="weeks" aria-label="Pages"><a href="week-09.html">Weekly Awards</a><a href="roster-map.html">Roster Map</a><a href="standings.html" aria-current="page">Standings</a><a href="scoreboard.html">Games</a><a href="poll.html">Poll</a><a href="postseason.html">Postseason</a><a href="managers.html">Managers</a><a href="records.html">Records</a><a href="app.html" class="n180-bell" aria-label="Notification settings" title="Notification settings"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" style="vertical-align:-3px"><path fill="currentColor" d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6V11a7 7 0 0 0-5.5-6.84V3.5a1.5 1.5 0 0 0-3 0v.66A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2Z"/></svg></a></nav>
 <header><div><div class="eyebrow">All 180 teams · regular season to date</div><h1>NCAA 180 <em>Standings</em></h1></div></header>
 <section>
+  <h2>All teams</h2>
   <div class="tools">
     <label>Conference <select id="lg"><option value="">All</option><option>ACC</option><option>Big 12</option><option>Big East</option><option>Big Sky</option><option>Big Ten</option><option>CUSA</option><option>HBCU</option><option>Ivy</option><option>Mountain West</option><option>Ohio Valley</option><option>Pac-12</option><option>Pioneer</option><option>SEC</option><option>Sun Belt</option><option>Wild</option></select></label>
     <a href="../data/OverallStandings_Season.csv">Raw CSV</a>
@@ -111,4 +112,4 @@ document.querySelectorAll('th button').forEach(b => b.onclick = () => { const i 
 sel.onchange = render;
 render();
 </script>
-</body></html>
+<script src="assets/snapshot.js"></script><script src="assets/sections.js"></script></body></html>

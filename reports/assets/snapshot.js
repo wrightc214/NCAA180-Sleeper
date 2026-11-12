@@ -8,7 +8,7 @@
  *   timestamp and an "Unofficial" declaration; what-if images carry a clear WHAT-IF banner.
  *   NCAASnap.button(label)                       -> a small save-image <button> for a section header
  *
- * The HTML is drawn in a hidden 400px-wide frame that carries the page's styles and <html>/<body>
+ * The HTML is drawn in a hidden 400px-wide frame (save({width}) widens it for wide tables) that carries the page's styles and <html>/<body>
  * classes, so every image uses the phone layout whatever the device. html2canvas 1.4.1 (MIT, vendored
  * in assets/vendor) draws it at 2x. Colors written as color()/oklch()/lab()/color-mix() -- what Safari
  * reports in dark mode -- are converted to rgba first (html2canvas can't read them).
@@ -49,11 +49,11 @@
     return out;
   }
 
-  async function render(html, footer, top = '') {
+  async function render(html, footer, top = '', width = 400) {
     const css = [...document.querySelectorAll('style,link[rel="stylesheet"]')].map(n => n.outerHTML).join('');
     const de = document.documentElement;
     const doc = `<!doctype html><html class="${esc(de.className)}"${de.dataset.theme ? ` data-theme="${esc(de.dataset.theme)}"` : ''}><head>` +
-      `<meta charset="utf-8"><meta name="viewport" content="width=400"><base href="${esc(location.href)}">${css}` +
+      `<meta charset="utf-8"><meta name="viewport" content="width=${width}"><base href="${esc(location.href)}">${css}` +
       `<script src="${esc(LIB)}"><\/script><style>body{margin:0;background:var(--bg,#fff)}.snapwrap{padding:12px 12px 6px;max-width:none}` +
       `.snap-foot{margin:10px 0 0;font:600 11px var(--sans,sans-serif);color:var(--mute,#667);text-align:center}` +
       `.snap-btn,.fold-bar{display:none!important}` +
@@ -64,7 +64,7 @@
       `<p class="snap-foot">${esc(footer)}</p></div></body></html>`;
     const f = document.createElement('iframe');
     f.setAttribute('aria-hidden', 'true'); f.tabIndex = -1;
-    f.style.cssText = 'position:fixed;left:-10000px;top:0;width:400px;height:4000px;border:0;visibility:hidden';
+    f.style.cssText = `position:fixed;left:-10000px;top:0;width:${width}px;height:4000px;border:0;visibility:hidden`;
     document.body.append(f);
     try {
       await new Promise((ok, bad) => { f.onload = ok; f.onerror = bad; f.srcdoc = doc; });
@@ -75,14 +75,14 @@
       await Promise.all([...w.document.images].map(im => im.complete ? 0 : new Promise(r => { im.onload = im.onerror = r; })));
       const el = w.document.getElementById('snap');
       plainColors(w, el);
-      const canvas = await w.html2canvas(el, {scale: 2, windowWidth: 400, useCORS: true, logging: false,
+      const canvas = await w.html2canvas(el, {scale: 2, windowWidth: width, useCORS: true, logging: false,
         backgroundColor: w.getComputedStyle(w.document.body).backgroundColor});
       return await new Promise(r => canvas.toBlob(r, 'image/png'));
     } finally { f.remove(); }
   }
 
-  async function save({html, name, footer, title, stamp, whatif}) {
-    const blob = await render(html, footer ?? `${location.host}${location.pathname.replace(/[^/]*$/, '')}`, labels(stamp, whatif));
+  async function save({html, name, footer, title, stamp, whatif, width}) {
+    const blob = await render(html, footer ?? `${location.host}${location.pathname.replace(/[^/]*$/, '')}`, labels(stamp, whatif), width || 400);
     const file = new File([blob], `${name || 'ncaa180'}.png`.replace(/[^\w .-]+/g, '').replace(/\s+/g, '-'), {type: 'image/png'});
     if (navigator.canShare && navigator.canShare({files: [file]})) {
       try { await navigator.share({files: [file], title: title || name}); } catch (e) { if (e?.name !== 'AbortError') throw e; }
