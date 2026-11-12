@@ -39,7 +39,7 @@ import math
 import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from site_common import SECTIONS_JS, nav_html, season_row_html, week_archive_html  # noqa: E402
+from site_common import SECTIONS_JS, logo_html, nav_html, season_row_html, week_archive_html  # noqa: E402
 from poll_common import ranks_for_week  # noqa: E402
 from week_status import completed_weeks as finished_weeks  # noqa: E402
 import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
@@ -296,10 +296,7 @@ def render(d, weeks, colors, tpl, updated, lcolors, ranks=None, year=None, past=
         return f'<span class="chip" style="background:{bg};color:{fg}" aria-hidden="true"></span>'
 
     def mark(team):
-        f = os.path.join(LOGO_DIR, f"{team}.png")
-        if os.path.exists(f):
-            return f'<img class="logo" src="../{LOGO_DIR}/{quote(team)}.png" alt="">'
-        return chip(team)
+        return logo_html(team, cls="logo") or chip(team)
 
     def mv(x):
         if x is None:
@@ -313,8 +310,7 @@ def render(d, weeks, colors, tpl, updated, lcolors, ranks=None, year=None, past=
     def card(label, g, val, unit, note):
         f = os.path.join(LOGO_DIR, f"{g['Team']}.png")
         has = os.path.exists(f)
-        strip = (f'<div class="ls"><img src="../{LOGO_DIR}/{quote(g["Team"])}.png" alt="{e(g["Team"])} logo"></div>'
-                 if has else "")
+        strip = f'<div class="ls">{logo_html(g["Team"], alt=g["Team"] + " logo")}</div>' if has else ""
         return (f'<div class="aw"><div class="al">{label}</div>'
                 f'<div class="av n">{val}<small>{unit}</small></div>'
                 f'<div class="at">{"" if has else chip(g["Team"])}<b>{rk(g["Team"])}{e(g["Team"])}</b></div>'

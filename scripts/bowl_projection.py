@@ -249,7 +249,7 @@ def team(t, col, short, badge="", tag=""):
     lg = short.get(str(t["LeagueName"]).strip(), str(t["LeagueName"]).strip())
     b = f'<span class="aq" style="border-color:{fg};color:{fg}">{e(badge)}</span>' if badge else ""
     lg_txt = e(lg) + (" seat" if tag == "seat" else f" · {e(tag)}" if tag else "")
-    return (f'<div class="tm" style="background:{bg};color:{fg}">{logo(t["Team"])}<div class="nm">{e(t["Team"])}'
+    return (f'<div class="tm" style="background:{bg};color:{fg}">{logo(t["Team"], bg)}<div class="nm">{e(t["Team"])}'
             f'<small>{int(float(t["Wins"]))}-{int(float(t["Losses"]))} · {lg_txt}</small></div>{b}</div>')
 
 

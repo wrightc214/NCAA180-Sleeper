@@ -167,7 +167,7 @@ def chip(t, col, short, seed=""):
     bg, fg = col.get(t["Team"], ("#14213a", "#ffffff"))
     lg = short.get(t["LeagueName"], t["LeagueName"])
     s = f'<span class="sd2" style="color:{fg}">{e(str(seed))}</span>' if seed not in ("", None) else ""
-    return (f'<div class="tm" style="background:{bg};color:{fg}">{s}{logo(t["Team"])}<div class="nm">{e(t["Team"])}'
+    return (f'<div class="tm" style="background:{bg};color:{fg}">{s}{logo(t["Team"], bg)}<div class="nm">{e(t["Team"])}'
             f'<small>{e(lg)}</small></div></div>')
 
 
@@ -272,7 +272,7 @@ def bracket_html(po, col):
         if w:
             bg, fg = col.get(w["Team"], ("#14213a", "#ffffff"))
             cols.append(f'<div class="bcol champ-col"><h4>Champion</h4><div class="bgames"><div class="bchamp" style="background:{bg};color:{fg}">'
-                        f'{logo(w["Team"])}<b>{e(w["Team"])}</b></div></div></div>')
+                        f'{logo(w["Team"], bg)}<b>{e(w["Team"])}</b></div></div></div>')
     return f'<div class="brk-wrap"><div class="brk">{"".join(cols)}</div></div>'
 
 

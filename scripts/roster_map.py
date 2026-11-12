@@ -32,7 +32,7 @@ import sys
 import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from site_common import SECTIONS_JS, nav_html, page_head  # noqa: E402
+from site_common import SECTIONS_JS, glow_dark, nav_html, page_head  # noqa: E402
 from week_status import completed_weeks as finished_weeks  # noqa: E402
 import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 import standard_results  # noqa: E402 (standard-scoring scores/results)
@@ -274,7 +274,10 @@ def main():
                       "eff": None if pd.isna(r.Eff) else round(float(r.Eff) * 100, 1), "effR": int(r.EffRank), "picks": r.Picks, "con": round(float(r.Contender), 3),
                       "dynR": int(r.DynastyTotalRank), "redR": int(r.LineupRedraftRank),
                       "conR": int(r.ContenderRank), "ppgR": int(r.PPGRank),
-                      "logo": f"../{LOGO_DIR}/{r.Team}.png" if logo else None})
+                      "logo": f"../{LOGO_DIR}/{r.Team}.png" if logo else None,
+                      # dark alt + glow (Chris, 2026-11-12): alt path unencoded like "logo" (the page encodes)
+                      "logoDark": f"../{LOGO_DIR}/alt-dark/{r.Team}.png" if logo and os.path.exists(os.path.join(LOGO_DIR, "alt-dark", f"{r.Team}.png")) else None,
+                      "glow": bool(logo) and r.Team in glow_dark()})
     payload = {"teams": teams, "colors": colors, "tcolors": team_colors, "week": week, "w": round(w, 2),
                "leagues": sorted(set(t["Lg"]))}
     page = page_head(f"{lcfg.brand()} Roster Map", MAP_CSS) + MAP_BODY.replace(
@@ -434,7 +437,9 @@ function draw() {
     const cx = X(t.dyn), cy = Y(t.con);
     if (!all && t.logo) {
       el('circle', {cx, cy, r: r + 3, class: 'ring'}, g);
-      el('image', {href: encodeURI(t.logo), x: cx - r, y: cy - r, width: r * 2, height: r * 2, preserveAspectRatio: 'xMidYMid meet'}, g);
+      const im = {x: cx - r, y: cy - r, width: r * 2, height: r * 2, preserveAspectRatio: 'xMidYMid meet'};
+      if (t.logoDark) { el('image', {...im, href: encodeURI(t.logo), class: 'tl-hd'}, g); el('image', {...im, href: encodeURI(t.logoDark), class: 'tl-d'}, g); }
+      else el('image', {...im, href: encodeURI(t.logo), class: t.glow ? 'tl-g' : ''}, g);
     } else {
       const tc = D.tcolors[t.team];  // two-tone: school primary fill, secondary ring
       // Near-white secondaries overwhelm the chart in dark mode: give those a hairline neutral ring instead.
@@ -454,7 +459,7 @@ function draw() {
 }
 function show(t) {
   const c = document.getElementById('card');
-  c.innerHTML = `<div class="card">${t.logo ? `<img src="${encodeURI(t.logo)}" alt="">` : '<span></span>'}
+  c.innerHTML = `<div class="card">${t.logo ? (t.logoDark ? `<img class="tl-hd" src="${encodeURI(t.logo)}" alt=""><img class="tl-d" src="${encodeURI(t.logoDark)}" alt="">` : `<img${t.glow ? ' class="tl-g"' : ''} src="${encodeURI(t.logo)}" alt="">`) : '<span></span>'}
   <div><h3>${esc(t.team)}</h3><div class="hint">${esc(t.owner)} · ${esc(t.lg)} · ${esc(t.rec)}</div>
   <div class="stats">
    <div><b>${fmt(t.dyn)}</b><span>Dynasty value · #${t.dynR}</span></div>
