@@ -33,7 +33,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import managers_page as mp  # noqa: E402
 import manager_lineups as ml  # noqa: E402
 import team_names as tn  # noqa: E402
-from site_common import nav_html, page_head  # noqa: E402
+from site_common import SECTIONS_JS, nav_html, page_head  # noqa: E402
 import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 import standard_results  # noqa: E402 (standard-scoring scores/results)
 
@@ -576,7 +576,7 @@ are as of that season.
 """
     os.makedirs("reports", exist_ok=True)
     with open(OUT, "w", encoding="utf-8") as f:
-        f.write(page_head(f"{lcfg.brand()} All-Time Records", CSS) + body)
+        f.write((page_head(f"{lcfg.brand()} All-Time Records", CSS) + body).replace("</body></html>", SECTIONS_JS + "</body></html>"))
 
 
 if __name__ == "__main__":

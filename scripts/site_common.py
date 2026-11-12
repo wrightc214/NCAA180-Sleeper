@@ -201,3 +201,7 @@ def team_colors(primary, secondary, background=None, text=None, name=None,
         return display_pair(p, sc, palettes().get(name, []), name=name)
     except Exception:
         return default
+
+
+# Standard section treatment (Chris, 2026-11-08): fold + Collapse all + save image on every section.
+SECTIONS_JS = '<script src="assets/snapshot.js"></script><script src="assets/sections.js"></script>'

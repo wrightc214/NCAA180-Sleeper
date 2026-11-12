@@ -16,7 +16,7 @@ import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import poll_common as pc  # noqa: E402
-from site_common import nav_html, page_head, team_colors  # noqa: E402
+from site_common import SECTIONS_JS, nav_html, page_head, team_colors  # noqa: E402
 from poll_aggregate import ranked_games  # noqa: E402
 import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
@@ -281,12 +281,12 @@ def main():
         bots = allbots[allbots["ThroughWeek"] == str(w)]
         doc = page(cfg, poll, bots, archive, col, year, w, ptype, prev)
         with open(os.path.join(OUT_DIR, fname(ptype, w)), "w", encoding="utf-8") as f:
-            f.write(doc)
+            f.write(doc.replace("</body></html>", SECTIONS_JS + "</body></html>"))
         ranked = poll[poll["Status"] == "Ranked"]
         prev = {(r.LeagueID, r.RosterID): r.Team for r in ranked.itertuples()}
         html_latest = doc
     with open(os.path.join(OUT_DIR, "poll.html"), "w", encoding="utf-8") as f:
-        f.write(html_latest)
+        f.write(html_latest.replace("</body></html>", SECTIONS_JS + "</body></html>"))
     print(f"Wrote {OUT_DIR}/poll.html + {len(archive)} archive page(s)")
     import poll_how  # "How it works" page, built from config/poll.json alongside the poll
     poll_how.main()
