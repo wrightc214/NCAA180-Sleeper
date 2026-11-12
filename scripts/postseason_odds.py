@@ -341,29 +341,133 @@ def deterministic(year):
 
 
 # ------------------------------------------------------------------ proofs (Clinched / Out)
+# Chris, 2026-11-11: sharper calls. Conferences play only themselves in the regular season, so each
+# one's remaining games are enumerated (every win/loss combination) and the worst / best case for a
+# team is the sum of each conference's own worst / best case. Equal wins count AGAINST the team for a
+# clinch and FOR it for an out (points-for tiebreaks are unknown in advance). A conference with more
+# than MAX_ENUM games left falls back to the simple wins bound.
+MAX_ENUM = 20
+
+
+class _Conf:
+    def __init__(self, members, divs, games, W0):
+        self.m = list(members)                      # global team indices
+        loc = {g: i for i, g in enumerate(self.m)}
+        self.divs = [[loc[g] for g in d] for d in divs]
+        self.games = [(loc[a], loc[b]) for a, b in games]
+        self.W0 = W0[self.m].astype(int)
+        self.left = np.zeros(len(self.m), dtype=int)
+        for a, b in self.games:
+            self.left[a] += 1
+            self.left[b] += 1
+        self.exact = len(self.games) <= MAX_ENUM
+        if self.exact:
+            G = len(self.games)
+            bits = ((np.arange(2 ** G)[:, None] >> np.arange(G)) & 1).astype(bool)  # True = first team wins
+            W = np.tile(self.W0, (2 ** G, 1))
+            for gi, (a, b) in enumerate(self.games):
+                W[:, a] += bits[:, gi]
+                W[:, b] += ~bits[:, gi]
+            self.W, self.bits = W, bits
+
+    def _mask(self, li, win):
+        """Outcomes where local team li wins (win=True) or loses all its remaining games."""
+        ok = np.ones(len(self.W), dtype=bool)
+        for gi, (a, b) in enumerate(self.games):
+            if li in (a, b):
+                ok &= self.bits[:, gi] == ((a == li) == win)
+        return ok
+
+    def most_ahead(self, t, li=None):
+        """Most teams (other than li, who loses out) that can finish with >= t wins at once, less one
+        when both division champions must be among them (one of them is then the auto bid)."""
+        keep = [j for j in range(len(self.m)) if j != li]
+        two = len(self.divs) == 2
+        if not self.exact:
+            return int(sum(self.W0[j] + self.left[j] >= t for j in keep))
+        W = self.W[self._mask(li, False)] if li is not None else self.W
+        ge = W >= t
+        cnt = ge[:, keep].sum(1)
+        if two:
+            both = np.all([ge[:, [j for j in d if j != li]].any(1) if [j for j in d if j != li] else np.zeros(len(W), bool)
+                           for d in self.divs], axis=0)
+            cnt = cnt - both
+        return int(cnt.max())
+
+    def fewest_ahead(self, t, li=None):
+        """Fewest teams (other than li, who wins out) certain to finish with > t wins, less the one
+        that can take the auto bid."""
+        keep = [j for j in range(len(self.m)) if j != li]
+        two = len(self.divs) == 2
+        if not self.exact:
+            c = int(sum(self.W0[j] > t for j in keep))
+            return c - (1 if two and c else 0)
+        W = self.W[self._mask(li, True)] if li is not None else self.W
+        cnt = (W[:, keep] > t).sum(1)
+        if two:
+            cnt = cnt - (cnt > 0)
+        return int(cnt.min())
+
+    def ccg(self, li):
+        d = next(d for d in self.divs if li in d)
+        riv = [j for j in d if j != li]
+        if not riv:
+            return "clinched"
+        if not self.exact:
+            lo, hi = self.W0[li], self.W0[li] + self.left[li]
+            if lo > max(self.W0[j] + self.left[j] for j in riv):
+                return "clinched"
+            return "out" if any(hi < self.W0[j] for j in riv) else ""
+        Wl = self.W[self._mask(li, False)]
+        if (Wl[:, riv].max(1) < Wl[:, li]).all():
+            return "clinched"
+        Ww = self.W[self._mask(li, True)]
+        if (Ww[:, riv].max(1) > Ww[:, li]).all():
+            return "out"
+        return ""
+
+
 def proofs(S):
-    st, keys, games = S["st"], S["keys"], S["games"]
+    keys, games = S["keys"], S["games"]
     n = len(keys)
+    R = S["rules"]
+    W0 = np.asarray(S["W0"])
+    conf_of, confs = {}, {}
+    for l, divs in R.leagues.items():
+        mem = [int(i) for d in divs for i in d]
+        gl = [(a, b) for _, a, b in games if a in mem]
+        confs[l] = _Conf(mem, [[int(i) for i in d] for d in divs], gl, W0)
+        for i in mem:
+            conf_of[i] = l
     left = np.zeros(n)
     for _, a, b in games:
         left[a] += 1
         left[b] += 1
-    wmin, wmax = S["W0"], S["W0"] + left
-    R = S["rules"]
+    wmax = W0 + left
+    at_large = R.field - len(R.leagues)
+    cache_most, cache_few = {}, {}
     flag = {c_: [""] * n for c_ in COLS}
-    for (l, d), ix in R.div.items():
-        for i in ix:
-            rivals = [j for j in ix if j != i]
-            if rivals and wmin[i] > max(wmax[j] for j in rivals):
-                flag["CCG"][i] = "clinched"
-            elif any(wmax[i] < wmin[j] for j in rivals):
-                flag["CCG"][i] = "out"
     for i in range(n):
-        others = np.delete(np.arange(n), i)
-        if (wmax[others] >= wmin[i]).sum() <= R.field - len(R.leagues) - 1:
+        C = confs[conf_of[i]]
+        li = C.m.index(i)
+        flag["CCG"][i] = C.ccg(li)
+        t = int(W0[i])
+        for l, D in confs.items():
+            if l != conf_of[i] and (l, t) not in cache_most:
+                cache_most[(l, t)] = D.most_ahead(t)
+        worst = C.most_ahead(t, li) + sum(cache_most[(l, t)] for l in confs if l != conf_of[i])
+        if flag["CCG"][i] == "clinched" and len(C.divs) < 2:
             flag["Playoff"][i] = "clinched"
-        elif flag["CCG"][i] == "out" and (wmin[others] > wmax[i]).sum() >= R.field:
-            flag["Playoff"][i] = "out"
+        elif worst <= at_large - 1:
+            flag["Playoff"][i] = "clinched"
+        elif flag["CCG"][i] == "out":
+            u = int(wmax[i])
+            for l, D in confs.items():
+                if l != conf_of[i] and (l, u) not in cache_few:
+                    cache_few[(l, u)] = D.fewest_ahead(u)
+            best = C.fewest_ahead(u, li) + sum(cache_few[(l, u)] for l in confs if l != conf_of[i])
+            if best >= at_large:
+                flag["Playoff"][i] = "out"
         if flag["Playoff"][i] == "clinched":
             flag["Bowl"][i] = flag["NIT"][i] = flag["Prestige"][i] = flag["Marquee"][i] = "out"
         elif wmax[i] < R.bc["bump_wins"]:
