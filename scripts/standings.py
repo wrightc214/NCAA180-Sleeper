@@ -38,17 +38,12 @@ LAST_REGULAR_WEEK = lcfg.last_regular_week()
 LEAGUE_DISPLAY = lcfg.league_display()  # friendly names: data/LeagueShortNames.csv
 
 
-def main():
-    m = standard_results.apply(pd.read_csv(MATCHUPS_FILE, dtype=str))  # standard scores; 2026+ results on them
-    m["Week"] = m["Week"].astype(int)
-    m["PointsFor"] = m["PointsFor"].astype(float)
+HISTORY_DIR = "data/standings"  # OverallStandings_<year>.csv, one per finished season (Chris, 2026-11-11)
 
-    # Completed regular-season weeks only: every row in the week has an Outcome.
-    reg = m[m["Week"] <= LAST_REGULAR_WEEK]
-    weeks = sorted(set(finished_weeks(m["Year"].iloc[0])) & set(reg["Week"]))
-    if not weeks:
-        raise SystemExit("No completed regular-season weeks yet.")
-    reg = reg[reg["Week"].isin(weeks)].copy()
+
+def overall(reg, teams):
+    """The standings table for one season's completed regular-season rows.
+    teams: LeagueName, RosterID, Team, DivisionKey (that season's names and divisions)."""
     n_teams = reg.groupby("Week").size()
     if (n_teams != 180).any():
         print(f"WARNING: week team counts not all 180: {n_teams.to_dict()}")
@@ -60,6 +55,7 @@ def main():
         equal = p.apply(lambda x: (p == x).sum() - 1)  # exclude self
         return (below + 0.5 * equal) / (len(g) - 1)
 
+    reg = reg.copy()
     reg["ExpW"] = reg.groupby("Week", group_keys=False).apply(week_exp)
     reg["W"] = (reg["Outcome"] == "Win").astype(int)
     reg["L"] = (reg["Outcome"] == "Loss").astype(int)
@@ -73,13 +69,10 @@ def main():
         Points=("PointsFor", "sum"), Wins=("W", "sum"), Losses=("L", "sum"),
         Ties=("T", "sum"), ExpWins=("ExpW", "sum"))
 
-    t = pd.read_csv(TEAMS_FILE, dtype=str, encoding="utf-8-sig")
-    t["DivisionKey"] = t["Division Name"].str.strip().str.upper()
-    t = t.rename(columns={"League": "LeagueName", "Roster ID": "RosterID"})
-    s = s.merge(t[["LeagueName", "RosterID", "Team", "DivisionKey"]],
+    s = s.merge(teams[["LeagueName", "RosterID", "Team", "DivisionKey"]],
                 on=["LeagueName", "RosterID"], how="left")
     if s["Team"].isna().any():
-        print("WARNING: no Teams.csv match for:")
+        print("WARNING: no team name match for:")
         print(s[s["Team"].isna()][["LeagueName", "RosterID", "OwnerName"]].to_string(index=False))
 
     s["WinVal"] = s["Wins"] + 0.5 * s["Ties"]
@@ -97,10 +90,59 @@ def main():
     s["League"] = s["LeagueName"].map(LEAGUE_DISPLAY).fillna(s["LeagueName"])
     s["User ID"] = s["OwnerName"]  # already "Orphan" for orphan rosters (league_matchups.py)
 
-    out = s[["Playoff Rank", "User ID", "Team", "League", "Points", "Wins", "Losses",
-             "Ties", "Exp Wins", "Luck", "Division Place"]]
+    return s[["Playoff Rank", "User ID", "Team", "League", "Points", "Wins", "Losses",
+              "Ties", "Exp Wins", "Luck", "Division Place"]]
+
+
+def main():
+    if "--history" in sys.argv:
+        return history()
+    m = standard_results.apply(pd.read_csv(MATCHUPS_FILE, dtype=str))  # standard scores; 2026+ results on them
+    m["Week"] = m["Week"].astype(int)
+    m["PointsFor"] = m["PointsFor"].astype(float)
+
+    # Completed regular-season weeks only: every row in the week has an Outcome.
+    reg = m[m["Week"] <= LAST_REGULAR_WEEK]
+    weeks = sorted(set(finished_weeks(m["Year"].iloc[0])) & set(reg["Week"]))
+    if not weeks:
+        raise SystemExit("No completed regular-season weeks yet.")
+    reg = reg[reg["Week"].isin(weeks)].copy()
+
+    t = pd.read_csv(TEAMS_FILE, dtype=str, encoding="utf-8-sig")
+    t["DivisionKey"] = t["Division Name"].str.strip().str.upper()
+    t = t.rename(columns={"League": "LeagueName", "Roster ID": "RosterID"})
+    out = overall(reg, t)
     out.to_csv(OUTPUT_FILE, index=False)
     print(f"Wrote {OUTPUT_FILE}: {len(out)} teams, weeks {weeks[0]}-{weeks[-1]}")
+    # a season that moved to Matchups_Historic gets its past-season file once
+    done = {f[17:21] for f in os.listdir(HISTORY_DIR)} if os.path.isdir(HISTORY_DIR) else set()
+    if set(pd.read_csv("data/Matchups_Historic.csv", usecols=["Year"])["Year"].astype(str)) - done:
+        history()
+
+
+def history():
+    """Final regular-season standings for every past season in Matchups_Historic.csv, same rules and
+    columns, with that season's team names and divisions -> data/standings/OverallStandings_<year>.csv.
+    Results are as recorded that season (official Sleeper scoring)."""
+    import team_names as tn
+    m = pd.read_csv("data/Matchups_Historic.csv", dtype=str)
+    m = m[m["IsRegularSeason"].astype(str) == "True"].copy()
+    m["Week"] = m["Week"].astype(int)
+    m["PointsFor"] = m["PointsFor"].astype(float)
+    sh = pd.read_csv("data/Standings_Historic.csv", dtype=str)
+    os.makedirs(HISTORY_DIR, exist_ok=True)
+    for year, reg in m.groupby("Year"):
+        n = tn.names(year).copy()
+        n["LeagueName"] = n["LeagueName"].str.strip()
+        d = sh[sh["Year"] == year][["LeagueName", "RosterID", "DivisionName"]].copy()
+        d["LeagueName"] = d["LeagueName"].str.strip()
+        d["DivisionKey"] = d["DivisionName"].str.strip().str.upper()
+        teams = n.merge(d[["LeagueName", "RosterID", "DivisionKey"]], on=["LeagueName", "RosterID"], how="left")
+        reg = reg.assign(LeagueName=reg["LeagueName"].str.strip())
+        out = overall(reg, teams)
+        path = os.path.join(HISTORY_DIR, f"OverallStandings_{year}.csv")
+        out.to_csv(path, index=False)
+        print(f"Wrote {path}: {len(out)} teams, weeks {reg['Week'].min()}-{reg['Week'].max()}")
 
 
 if __name__ == "__main__":
