@@ -430,7 +430,7 @@ def snap_js(after, foot=None, tag=None, projection=True):
 const t=(h.childNodes[0]?.textContent||c.id).trim(),b=S.button(t);c.append(b);
 const stop=e=>e.stopPropagation();b.addEventListener('keydown',stop);
 b.addEventListener('click',async e=>{e.stopPropagation();b.disabled=true;b.classList.add('busy');
-try{const cl=c.cloneNode(true);cl.classList.remove('closed');cl.querySelectorAll('.snap-btn,.ofilt').forEach(x=>x.remove());
+try{const cl=c.cloneNode(true);cl.classList.remove('closed','fold');cl.querySelectorAll('.snap-btn,.ofilt').forEach(x=>x.remove());
 if(c.id==='odds'){const live=[...c.querySelectorAll('tbody tr')],rows=[...cl.querySelectorAll('tbody tr')];
 const lv=document.getElementById('o-l')?.value,qv=document.getElementById('o-q')?.value.trim();
 rows.forEach((r,i)=>{if(live[i].hidden)r.remove();});let kept=[...cl.querySelectorAll('tbody tr')];
@@ -438,7 +438,8 @@ const note=document.createElement('p');note.className='sub';
 if(!lv&&!qv&&kept.length>25){kept.slice(25).forEach(r=>r.remove());note.textContent=`Showing 25 of ${kept.length} teams in the current sort.`;}
 else note.textContent=`${lv||'Search: '+qv}: ${kept.length} team${kept.length===1?'':'s'}.`;
 cl.querySelector('.otw').before(note);const st=document.createElement('style');st.textContent='#odds .otw{overflow:visible;border:0}#odds .ot{font-size:10px;letter-spacing:0;table-layout:fixed}#odds .ot th,#odds .ot td{padding:4px 2px;letter-spacing:0}'+'#odds .ot thead th{font-size:9px}#odds .ot thead th:first-child,#odds .ot tbody th{width:104px;max-width:104px}#odds .ot tbody th small{font-size:8.5px}';cl.prepend(st);cl.querySelector('.sub').textContent='Playoff + Bowl + NIT = 100% for every team.';}
-await S.save({html:cl.outerHTML,name:`${t} ${TAG}`,footer:FOOT,title:t,stamp:ST});}
+const bw=c.querySelector('.brk');if(bw){const w=cl.querySelector('.brk-wrap');if(w)w.style.overflow='visible';}
+await S.save({html:cl.outerHTML,name:`${t} ${TAG}`,footer:FOOT,title:t,stamp:ST,width:bw?Math.min(1400,Math.max(400,bw.scrollWidth+56)):400});}
 catch(err){b.title='Image could not be made: '+(err.message||err);console.error(err);}
 finally{b.disabled=false;b.classList.remove('busy');}});}})();</script>""")
 
