@@ -71,6 +71,7 @@ footer{font-size:12px;color:var(--mute)}
 .totop:hover,.totop:focus-visible{opacity:1}
 .totop[hidden]{display:none}
 @media print{.totop{display:none}}
+/* team logos on dark backgrounds (Chris, 2026-11-12): dark alt swaps in, else a white glow (data/LogoGlow.json) */@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .tl-d{display:none!important}}:root[data-theme="light"] .tl-d{display:none!important}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tl-hd{display:none!important}:root:not([data-theme="light"]) .tl-g{filter:drop-shadow(0 0 1px rgba(255,255,255,.95)) drop-shadow(0 0 2px rgba(255,255,255,.55))}}:root[data-theme="dark"] .tl-hd{display:none!important}:root[data-theme="dark"] .tl-g,.tl-gx{filter:drop-shadow(0 0 1px rgba(255,255,255,.95)) drop-shadow(0 0 2px rgba(255,255,255,.55))}
 </style>
 </head><body>
 <div class="wrap">
@@ -97,6 +98,6 @@ footer{font-size:12px;color:var(--mute)}
     <section><h2>Top starters <small>By position</small></h2><p class="note">Player scores aren't kept for this season.</p></section>
   </div>
 </div>
-<footer>Source: Sleeper, via the NCAA180-Sleeper pipeline. Regular season through week 7. Updated 2026-11-12 03:16 UTC.</footer>
+<footer>Source: Sleeper, via the NCAA180-Sleeper pipeline. Regular season through week 7. Updated 2026-11-12 14:03 UTC.</footer>
 </div>
 <a href="#" class="totop" aria-label="Back to top" hidden>&#8593;</a><script>(function(){var b=document.currentScript.previousElementSibling;function f(){b.hidden=window.scrollY<window.innerHeight*0.9;}window.addEventListener("scroll",f,{passive:true});window.addEventListener("load",f);b.addEventListener("click",function(ev){ev.preventDefault();var r=window.matchMedia("(prefers-reduced-motion: reduce)").matches;window.scrollTo({top:0,behavior:r?"auto":"smooth"});});})();</script><script src="assets/snapshot.js"></script><script src="assets/sections.js"></script></body></html>

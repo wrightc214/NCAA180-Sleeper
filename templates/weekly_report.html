@@ -71,6 +71,7 @@ footer{font-size:12px;color:var(--mute)}
 .totop:hover,.totop:focus-visible{opacity:1}
 .totop[hidden]{display:none}
 @media print{.totop{display:none}}
+/* team logos on dark backgrounds (Chris, 2026-11-12): dark alt swaps in, else a white glow (data/LogoGlow.json) */@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .tl-d{display:none!important}}:root[data-theme="light"] .tl-d{display:none!important}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tl-hd{display:none!important}:root:not([data-theme="light"]) .tl-g{filter:drop-shadow(0 0 1px rgba(255,255,255,.95)) drop-shadow(0 0 2px rgba(255,255,255,.55))}}:root[data-theme="dark"] .tl-hd{display:none!important}:root[data-theme="dark"] .tl-g,.tl-gx{filter:drop-shadow(0 0 1px rgba(255,255,255,.95)) drop-shadow(0 0 2px rgba(255,255,255,.55))}
 </style>
 </head><body>
 <div class="wrap">

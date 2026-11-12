@@ -1002,5 +1002,19 @@
       "sleeper": "wrightc214",
       "discord": "Wrightc214"
     }
+  },
+  "logos": {
+    "_doc": "Glow on dark backgrounds (logo_contrast.py, Chris 2026-11-12): a logo whose share of pixels reaching 3:1 contrast on the card navy is below glow_cutoff glows, plus force_glow, minus no_glow; teams with a dark alt never glow.",
+    "glow_cutoff": 0.3,
+    "force_glow": [
+      "ETSU",
+      "Florida International",
+      "Charleston Southern",
+      "Citadel",
+      "Louisiana Tech",
+      "South Alabama",
+      "Wofford"
+    ],
+    "no_glow": []
   }
 }

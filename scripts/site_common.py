@@ -14,6 +14,8 @@ import glob
 import html
 import os
 import re
+import urllib.parse
+import json
 
 TEMPLATE = "templates/weekly_report.html"
 OUT_DIR = "reports"
@@ -218,3 +220,60 @@ def team_colors(primary, secondary, background=None, text=None, name=None,
 
 # Standard section treatment (Chris, 2026-11-08): fold + Collapse all + save image on every section.
 SECTIONS_JS = '<script src="assets/snapshot.js"></script><script src="assets/sections.js"></script>'
+
+
+# ---- Team logos by background (Chris, 2026-11-12) -------------------------------------
+# On a dark background: the dark alt (assets/logos/teams/alt-dark/<Team>.png) if there is one,
+# else the normal logo with a white glow if the team is on the glow list (data/LogoGlow.json,
+# written by logo_contrast.py: scan + config overrides), else the normal logo. Light backgrounds
+# use the normal logo. Theme-following pages emit both images and let CSS (.tl-hd / .tl-d / .tl-g,
+# in the shared stylesheet) pick; blocks with a fixed color (team-color chips) decide here.
+LOGO_DIR = "assets/logos/teams"
+_GLOW = None
+
+
+def glow_dark():
+    global _GLOW
+    if _GLOW is None:
+        try:
+            _GLOW = set(json.load(open("data/LogoGlow.json"))["glow_dark"])
+        except (OSError, ValueError, KeyError):
+            _GLOW = set()
+    return _GLOW
+
+
+def logo_info(team, prefix="../"):
+    """{'src', 'dark' (alt src or ''), 'glow'} for a team, or None without a logo."""
+    if not team or not os.path.exists(os.path.join(LOGO_DIR, f"{team}.png")):
+        return None
+    alt = os.path.exists(os.path.join(LOGO_DIR, "alt-dark", f"{team}.png"))
+    q = urllib.parse.quote(team)
+    return {"src": f"{prefix}{LOGO_DIR}/{q}.png", "dark": f"{prefix}{LOGO_DIR}/alt-dark/{q}.png" if alt else "",
+            "glow": (not alt) and team in glow_dark()}
+
+
+def is_dark(hexcolor):
+    try:
+        h = hexcolor.lstrip("#")
+        r, g, b = (int(h[i:i + 2], 16) / 255 for i in (0, 2, 4))
+    except (AttributeError, ValueError):
+        return False
+    lin = lambda c: c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4  # noqa: E731
+    return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b) < 0.18
+
+
+def logo_html(team, prefix="../", cls="", alt="", bg=None, attrs=""):
+    """<img> markup for a team logo ('' without one). bg=None follows the page theme;
+    bg='#hex' is a fixed background (decided now)."""
+    i = logo_info(team, prefix)
+    if not i:
+        return ""
+    a = f' alt="{html.escape(alt)}"{attrs}'
+    c = lambda extra: f' class="{(cls + " " + extra).strip()}"' if (cls or extra) else ""  # noqa: E731
+    if bg is not None:
+        if not is_dark(bg):
+            return f'<img{c("")} src="{i["src"]}"{a}>'
+        return f'<img{c("" if i["dark"] else ("tl-gx" if i["glow"] else ""))} src="{i["dark"] or i["src"]}"{a}>'
+    if i["dark"]:
+        return f'<img{c("tl-hd")} src="{i["src"]}"{a}><img{c("tl-d")} src="{i["dark"]}" alt="">'
+    return f'<img{c("tl-g" if i["glow"] else "")} src="{i["src"]}"{a}>'

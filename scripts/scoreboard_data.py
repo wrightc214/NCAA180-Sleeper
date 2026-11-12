@@ -14,7 +14,7 @@ import json
 import os
 from pathlib import Path
 
-from site_common import page_head, nav_html, team_colors
+from site_common import logo_info, page_head, nav_html, team_colors
 from league_config import league_display, normalized, standard_settings  # noqa: F401 (normalized re-exported for tests)
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -147,6 +147,10 @@ def build(offline=False):
         raise ValueError("Scoring snapshot does not cover every league")
     standard = standard_settings(scoring)
     colors = {r["Team"]: r for r in rows("data/Colors - Teams.csv")}
+    def logo_fields(team):  # dark alt + glow (Chris, 2026-11-12; site_common.logo_info)
+        i = logo_info(team)
+        return {"logo": i["src"] if i else "", "logo_dark": i["dark"] if i else "", "glow": bool(i and i["glow"])}
+
     teams = {}
     for r in rows("data/Teams.csv"):
         c = colors.get(r["Team"], {})
@@ -154,7 +158,7 @@ def build(offline=False):
         teams.setdefault(r["League"].strip(), {})[r["Roster ID"]] = {
             "name": r["Team"], "primary": c.get("Primary") or bg, "secondary": c.get("Secondary") or fg,
             "background": bg, "text": fg,
-            "logo": f"../assets/logos/teams/{r['Team']}.png" if Path(f"assets/logos/teams/{r['Team']}.png").exists() else ""}
+            **logo_fields(r["Team"])}
     for lid, league in leagues.items():
         league["teams"] = teams.get(league["name"], {})
         if not league["teams"]:

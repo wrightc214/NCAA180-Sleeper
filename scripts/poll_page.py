@@ -16,7 +16,7 @@ import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import poll_common as pc  # noqa: E402
-from site_common import SECTIONS_JS, nav_html, page_head, team_colors  # noqa: E402
+from site_common import SECTIONS_JS, logo_html, nav_html, page_head, team_colors  # noqa: E402
 from poll_aggregate import ranked_games  # noqa: E402
 import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
@@ -59,9 +59,10 @@ def colors():
 LOGOS = "assets/logos/teams"  # one PNG per school name (that season's name)
 
 
-def logo(team):
-    p = os.path.join(LOGOS, f"{team}.png")
-    return f'<img src="../{e(p)}" alt="">' if os.path.exists(p) else ""
+def logo(team, bg=None):
+    """Team logo <img>; bg = a fixed background color behind it (team-color chips), else the
+    page theme decides (dark alt / glow, site_common.logo_html)."""
+    return logo_html(team, bg=bg)
 
 
 def pill(team, col, rank=None):
