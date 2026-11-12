@@ -222,7 +222,7 @@ def build():
             '<li><b>Poll</b> — the weekly Top 25 from the bot ballots.</li>'
             '<li><b>Postseason</b> — the projected field and bowls during the season, odds and the most impactful games; '
             'every past postseason since 2019.</li>'
-            '<li><b>Standings, Weekly Awards, Managers, Records, Roster Map.</b></li>'
+            '<li><b>Standings, Awards, Managers, Records, Roster Map.</b></li>'
             '<li>Anything live is <b>unofficial</b> until the weekly run after stat corrections; projections are estimates.</li></ul>')
 
     body = (top

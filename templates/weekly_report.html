@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NCAA 180 Week {{WEEK}} Report</title>
+<title>NCAA 180 {{YEAR}} Week {{WEEK}} Awards</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Barlow:wght@400;600;700&family=Barlow+Condensed:wght@500;600&display=swap">
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="../assets/app/apple-touch-icon.png">
@@ -75,9 +75,9 @@ footer{font-size:12px;color:var(--mute)}
 </head><body>
 <div class="wrap">
 <nav class="weeks" aria-label="Pages">{{NAV}}</nav>
-{{ARCHIVE}}
+{{SEASONS}}{{ARCHIVE}}
 <header>
-  <div><div class="eyebrow">15 conferences · 180 teams · 2026 regular season</div><h1>NCAA 180 <em>Week {{WEEK}}</em></h1></div>
+  <div><div class="eyebrow">15 conferences · 180 teams · {{YEAR}} regular season</div><h1>NCAA 180 <em>{{YEARH}}Week {{WEEK}}</em></h1></div>
   <div class="kpis">
     <div class="kpi"><b>{{AVG}}</b><span>Avg score</span></div>
     <div class="kpi"><b>{{MED}}</b><span>Median</span></div>

@@ -39,7 +39,7 @@ import math
 import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from site_common import nav_html, week_archive_html  # noqa: E402
+from site_common import SECTIONS_JS, nav_html, season_row_html, week_archive_html  # noqa: E402
 from poll_common import ranks_for_week  # noqa: E402
 from week_status import completed_weeks as finished_weeks  # noqa: E402
 import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
@@ -84,6 +84,34 @@ def load():
     m["Lg"] = m["LeagueName"].map(LEAGUE_DISPLAY).fillna(m["LeagueName"])
     m["Team"] = m["Team"].fillna(m["OwnerName"])
     return m
+
+
+def past_seasons():
+    """[(year, matchups)] for every finished season in Matchups_Historic.csv: regular season only,
+    results as recorded that season, that season's team names. [] if the file is missing."""
+    path = "data/Matchups_Historic.csv"
+    if not os.path.exists(path):
+        return []
+    import team_names as tn
+    h = pd.read_csv(path, dtype=str)
+    h = h[(h["IsRegularSeason"].astype(str) == "True") & h["Outcome"].isin(["Win", "Loss", "Tie"])].copy()
+    h["Week"] = h["Week"].astype(int)
+    h["P"] = h["PointsFor"].astype(float)
+    h["PA"] = h["PointsAgainst"].astype(float)
+    h["LeagueName"] = h["LeagueName"].str.strip()
+    out = []
+    for y, m in h.groupby("Year"):
+        n = tn.names(y)[["LeagueName", "RosterID", "Team"]].copy()
+        n["LeagueName"] = n["LeagueName"].str.strip()
+        n = n.drop_duplicates(["LeagueName", "RosterID"])
+        m = m.merge(n, on=["LeagueName", "RosterID"], how="left")
+        opp = m[["LeagueID", "Week", "RosterID", "Team"]].rename(columns={"RosterID": "OpponentRosterID", "Team": "OppTeam"})
+        m = m.merge(opp, on=["LeagueID", "Week", "OpponentRosterID"], how="left")
+        m["Lg"] = m["LeagueName"].map(LEAGUE_DISPLAY).fillna(m["LeagueName"])
+        m["Team"] = m["Team"].fillna(m["OwnerName"])
+        m["OppTeam"] = m["OppTeam"].fillna("")
+        out.append((int(y), m))
+    return out
 
 
 def completed_weeks(m):
@@ -136,12 +164,14 @@ def pct_label(p):
     return "<1%" if p < 1 else (">99%" if p > 99 else f"{p:.0f}%")
 
 
-def upset(m, W):
+def upset(m, W, done=None):
     """Biggest Upset: the winner with the lowest pregame win probability (win_prob, from
-    regular-season scores BEFORE week W). None before UPSET_FIRST_WEEK."""
+    regular-season scores BEFORE week W). None before UPSET_FIRST_WEEK. done: finished weeks
+    (default: this season's, from week_status)."""
     if W < UPSET_FIRST_WEEK:
         return None
-    prior = m[m["Week"].isin([w for w in finished_weeks(m["Year"].iloc[0]) if w < W])]
+    done = finished_weeks(m["Year"].iloc[0]) if done is None else done
+    prior = m[m["Week"].isin([w for w in done if w < W])]
     if prior.empty:
         return None
     lm, lsd = prior["P"].mean(), prior["P"].std()
@@ -161,7 +191,7 @@ def upset(m, W):
     return {**game(r), "WinPct": round(p * 100, 1)}
 
 
-def week_data(m, sc, mx, pos_map, W, gp=None):
+def week_data(m, sc, mx, pos_map, W, gp=None, done=None):
     w = m[m["Week"] == W].copy()
     d = {"week": W, "avg": round(w["P"].mean(), 2), "median": round(w["P"].median(), 2)}
 
@@ -212,7 +242,7 @@ def week_data(m, sc, mx, pos_map, W, gp=None):
             # Great Coaching: best lineup efficiency in a win; tie -> narrowest victory
             r = g2.sort_values(["Eff", "Mg"], ascending=[False, True]).iloc[0]
             aw["coach"] = {**game(r), "Max": round(r.MaxPoints, 2), "Eff": float(r.Eff)}
-    up = upset(m, W)
+    up = upset(m, W, done)
     if up:
         aw["upset"] = up
     if gp is not None:
@@ -225,10 +255,12 @@ def week_data(m, sc, mx, pos_map, W, gp=None):
             aw["exceed"] = {**game(r), "Proj": round(r.ProjStarters, 2), "Over": round(r.Over, 2)}
     d["awards"] = aw
 
+    d["players"] = []
+    if sc is None:  # past seasons: player scores not kept
+        return d
     st = sc[(sc["wk"] == W) & sc["st"]].copy()
     st["pos"] = st["player_id"].map(pos_map)
     best = st.sort_values("pts", ascending=False).drop_duplicates("player_id")
-    d["players"] = []
     for p in POSITIONS:
         b = best[best["pos"] == p].head(1)
         if len(b):
@@ -250,7 +282,7 @@ def award_cols(n):
     return min((3, 4, 5), key=lambda c: ((-n) % c, c))
 
 
-def render(d, weeks, colors, tpl, updated, lcolors, ranks=None):
+def render(d, weeks, colors, tpl, updated, lcolors, ranks=None, year=None, past=False, seasons=""):
     W = d["week"]
     ranks = ranks or {}
 
@@ -348,7 +380,7 @@ def render(d, weeks, colors, tpl, updated, lcolors, ranks=None):
         f'<small>{e(p["NFL"])} · started in {p["Started"]} of {N_LEAGUES} leagues</small></span>'
         f'<span class="n v">{p["Pts"]:.2f}</span></li>' for p in d["players"])
     cur = ' aria-current="page"'
-    nav = nav_html(W, weeks)
+    nav = nav_html("awards" if past else W, None if past else weeks)
 
     top32 = """<section><h2>Playoff Rank: Top 32 <small>Wins, then points</small></h2>
     <div class="tbl"><table><thead><tr><th class="r">#</th><th>{{PREVHDR}}</th><th>Team</th><th class="r">W-L</th><th class="r">PF</th><th class="r" title="Wins minus expected wins">Luck</th></tr></thead><tbody>{{ROWS}}</tbody></table></div>
@@ -357,7 +389,7 @@ def render(d, weeks, colors, tpl, updated, lcolors, ranks=None):
     ranksec = top32
     try:  # the NCAA 180 Top 25 poll replaces the Playoff Rank table once a poll exists for this week
         import poll_page
-        ps = poll_page.weekly_section(W)
+        ps = None if past else poll_page.weekly_section(W)
         if ps:
             ranksec = f"<style>{ps[0]}</style>" + ps[1]
     except Exception as ex:  # fall back to Playoff Rank, never break the report
@@ -367,14 +399,19 @@ def render(d, weeks, colors, tpl, updated, lcolors, ranks=None):
         "WEEK": str(W), "PREVHDR": f"Wk {W - 1}" if W > 1 else "Wk",
         "MOVENOTE": (f"Movement is change in overall standings rank from Week {W - 1}. " if W > 1 else "")
         + "Luck is wins minus expected wins (share of all 179 other teams outscored each week). ",
-        "UPDATED": updated, "NAV": nav, "BRAND": lcfg.brand(), "ARCHIVE": week_archive_html(W, weeks),
+        "UPDATED": updated, "NAV": nav, "BRAND": lcfg.brand(),
+        "ARCHIVE": week_archive_html(W, weeks, f"week-{year}-" if past else "week-"), "SEASONS": seasons,
+        "YEAR": str(year), "YEARH": f"{year} " if past else "",
         "AVG": f'{d["avg"]:.2f}', "MED": f'{d["median"]:.2f}',
         "UND": str(d["unbeaten"]), "WL": str(d["winless"]),
         "AW": "".join(cards), "AWCOLS": str(award_cols(len(cards))), "ROWS": rows, "TS": ts, "LG": lg, "PL": pl,
     }.items():
         out = out.replace("{{" + k + "}}", v)
     out = out.replace("Bars start at 115 points.", f"Bars start at {lo:.0f} points.")
-    return out
+    if not d["players"]:
+        out = out.replace('<ul class="list"></ul>', '<p class="note">Player scores aren\'t kept for this season.</p>')
+    # standard sections: fold + collapse all + save image (Chris, 2026-11-08)
+    return out.replace("</body></html>", SECTIONS_JS + "</body></html>") if "</body></html>" in out else out.replace("</body>", SECTIONS_JS + "</body>")
 
 
 # ---------------------------------------------------------------- main
@@ -427,11 +464,26 @@ def main():
     updated = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 
     os.makedirs(os.path.join(OUT_DIR, "data"), exist_ok=True)
+    year = int(m["Year"].iloc[0])
+    hist = past_seasons()
+    past_years = [(y, max(int(w) for w in hm["Week"])) for y, hm in hist]
+    for y, hm in hist:  # past seasons (Chris, 2026-11-08): rebuilt each run, cheap
+        if only:
+            break
+        wk = sorted(set(hm["Week"]))
+        for W in wk:
+            d = week_data(hm, None, None, {}, W, None, done=wk)
+            page = render(d, wk, colors, tpl, updated, lcolors, {}, year=y, past=True,
+                          seasons=season_row_html(y, past_years, year, weeks[-1]))
+            with open(os.path.join(OUT_DIR, f"week-{y}-{W:02d}.html"), "w", encoding="utf-8") as f:
+                f.write(page)
+        print(f"Awards {y}: weeks {wk[0]}-{wk[-1]}")
     for W in weeks:
         if only and W != only:
             continue
         d = week_data(m, sc, mx, pos_map, W, gp)
-        page = render(d, weeks, colors, tpl, updated, lcolors, ranks_for_week(m["Year"].iloc[0], W))
+        page = render(d, weeks, colors, tpl, updated, lcolors, ranks_for_week(m["Year"].iloc[0], W), year=year,
+                      seasons=season_row_html(year, past_years, year, weeks[-1]))
         with open(os.path.join(OUT_DIR, f"week-{W:02d}.html"), "w", encoding="utf-8") as f:
             f.write(page)
         with open(os.path.join(OUT_DIR, "data", f"week-{W:02d}.json"), "w", encoding="utf-8") as f:
