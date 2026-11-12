@@ -285,10 +285,10 @@
    "league": "Big East",
    "LeagueID": "1331775206619885568",
    "RosterID": "8",
-   "with_win": 0.7427,
-   "with_loss": 0.0264,
-   "swing": 0.7162,
-   "pwin": 0.5001
+   "with_win": 0.724,
+   "with_loss": 0.01,
+   "swing": 0.714,
+   "pwin": 0.6388
   },
   {
    "team": "Pittsburgh",
@@ -296,10 +296,10 @@
    "league": "Big East",
    "LeagueID": "1331775206619885568",
    "RosterID": "4",
-   "with_win": 0.8469,
-   "with_loss": 0.1991,
-   "swing": 0.6477,
-   "pwin": 0.3442
+   "with_win": 0.8509,
+   "with_loss": 0.1857,
+   "swing": 0.6653,
+   "pwin": 0.1194
   }
  ],
  "impact_bowl": [
@@ -309,10 +309,10 @@
    "league": "Big Ten",
    "LeagueID": "1316899936696016896",
    "RosterID": "5",
-   "with_win": 0.8212,
+   "with_win": 0.814,
    "with_loss": 0.0,
-   "swing": 0.8212,
-   "pwin": 0.2372
+   "swing": 0.814,
+   "pwin": 0.1532
   },
   {
    "team": "Citadel",
@@ -320,10 +320,10 @@
    "league": "Wild",
    "LeagueID": "1331774454493122560",
    "RosterID": "8",
-   "with_win": 0.7849,
-   "with_loss": 0.0007,
-   "swing": 0.7841,
-   "pwin": 0.5889
+   "with_win": 0.7836,
+   "with_loss": 0.0028,
+   "swing": 0.7808,
+   "pwin": 0.6802
   }
  ]
 }
