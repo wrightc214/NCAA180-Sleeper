@@ -50,19 +50,39 @@ def trimmed(im):
     return out
 
 
-def process(path):
-    src = source_path(path)
-    if not os.path.exists(src) and max(Image.open(path).size) > MAX_SIDE:
-        os.makedirs(os.path.dirname(src), exist_ok=True)
-        shutil.copy2(path, src)  # keep the high-quality original untouched
-    base = src if os.path.exists(src) else path
+def web_copy(base):
     im = Image.open(base).convert("RGBA")
     out = trimmed(im) or im
     if max(out.size) > MAX_SIDE:
         out.thumbnail((MAX_SIDE, MAX_SIDE), Image.LANCZOS)
+    return im, out
+
+
+def png_bytes(im):
+    import io
+    b = io.BytesIO()
+    im.save(b, format="PNG", optimize=True)
+    return b.getvalue()
+
+
+def process(path):
+    src = source_path(path)
+    before = open(path, "rb").read()
+    if os.path.exists(src) and png_bytes(web_copy(src)[1]) != before:
+        # The web file isn't the master's web copy: it's a NEW upload (2026-11-11 fix: a replaced
+        # logo used to be overwritten by its old master). A big upload becomes the new master; a
+        # small one retires the old master.
+        if max(Image.open(path).size) > MAX_SIDE:
+            shutil.copy2(path, src)
+        else:
+            os.remove(src)
+    if not os.path.exists(src) and max(Image.open(path).size) > MAX_SIDE:
+        os.makedirs(os.path.dirname(src), exist_ok=True)
+        shutil.copy2(path, src)  # keep the high-quality original untouched
+    base = src if os.path.exists(src) else path
+    im, out = web_copy(base)
     if base == path and out is im:
         return False  # already trimmed and web-sized
-    before = open(path, "rb").read()
     out.save(path, optimize=True)
     return open(path, "rb").read() != before
 
