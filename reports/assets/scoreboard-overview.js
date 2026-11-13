@@ -63,14 +63,14 @@
   function oddsRow(id,a,b){return baseline.odds.find(o=>String(o.LeagueID)===String(id)&&[String(o.RosterID),String(o.OpponentRosterID)].sort().join(',')===[String(a),String(b)].sort().join(','));}
   function side(o,rid){if(!o)return {rec:'',rank:''};const mine=String(o.RosterID)===String(rid);return {rec:mine?o.Rec:o.OppRec,rank:mine?o.Rank:o.OppRank};}
   const kickTxt=t=>new Date(t).toLocaleString('en-US',{timeZone:'America/New_York',weekday:'short',hour:'numeric',minute:'2-digit'})+' ET';
-  // Team tiles: a dark tile color gets the dark alt logo, else the glow (Chris, 2026-11-12; same rule as site_common.is_dark)
+  // Team tiles: a dark tile color gets the dark-background logo (alt, else glow file; Chris, 2026-11-12; same rule as site_common.is_dark)
   const darkBg=h=>{const m=/^#?([0-9a-f]{6})$/i.exec(String(h||''));if(!m)return false;const c=[0,2,4].map(i=>parseInt(m[1].slice(i,i+2),16)/255).map(v=>v<=.03928?v/12.92:((v+.055)/1.055)**2.4);return .2126*c[0]+.7152*c[1]+.0722*c[2]<.18;};
   // One row: logo | team (+ record) | Score | Proj | Win %. Same columns in every state (Chris, 2026-10-30).
   function row(r,model,proj,probability,s,winner,info){
     const t=index.leagues[r.leagueId].teams[String(r.roster_id)]||{name:`Roster ${r.roster_id}`};
     const changed=Math.abs(model.actual-model.official)>.011;
     const score=model.played||s.final?`${model.actual.toFixed(2)}${changed?'†':''}`:'–';
-    return `<div class="score-row r3${s.final&&winner?' winner':''}"><span class="team-icon" style="background:${esc(t.primary)}">${t.logo?(()=>{const dk=darkBg(t.primary);return `<img src="${esc(dk&&t.logo_dark||t.logo)}"${dk&&!t.logo_dark&&t.glow?' class="tl-gx"':''} alt="" onerror="this.hidden=true">`;})():''}</span><span class="school">${info.seed?`<b class="rk seed">${esc(info.seed)}</b> `:''}${info.rank?`<b class="rk">#${esc(info.rank)}</b> `:''}${esc(t.name)}${info.tag?`<b class="ldtag ${info.tag[0]}">${esc(info.tag[1])}</b>`:''}${info.rec?`<small class="rec">${esc(info.rec)}</small>`:''}</span><span class="score${model.played||s.final?'':' dash'}" title="${changed?`Sleeper: ${model.official.toFixed(2)}`:'Standard score'}">${score}</span><span class="proj">${proj.toFixed(1)}</span><span class="chance">${esc(pct(probability))}</span></div>`;
+    return `<div class="score-row r3${s.final&&winner?' winner':''}"><span class="team-icon" style="background:${esc(t.primary)}">${t.logo?(()=>{const dk=darkBg(t.primary);return `<img src="${esc(dk&&t.logo_dark||t.logo)}" alt="" onerror="this.hidden=true">`;})():''}</span><span class="school">${info.seed?`<b class="rk seed">${esc(info.seed)}</b> `:''}${info.rank?`<b class="rk">#${esc(info.rank)}</b> `:''}${esc(t.name)}${info.tag?`<b class="ldtag ${info.tag[0]}">${esc(info.tag[1])}</b>`:''}${info.rec?`<small class="rec">${esc(info.rec)}</small>`:''}</span><span class="score${model.played||s.final?'':' dash'}" title="${changed?`Sleeper: ${model.official.toFixed(2)}`:'Standard score'}">${score}</span><span class="proj">${proj.toFixed(1)}</span><span class="chance">${esc(pct(probability))}</span></div>`;
   }
   // Game of the Week (Chris, 2026-11-04): one game per regular-season week, picked in data/scoreboard/<season>/game-of-the-week.json
   // Blue badge in the regular season, gold ("GOTW Postseason") from CCG week on.

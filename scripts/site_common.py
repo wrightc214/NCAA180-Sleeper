@@ -223,33 +223,21 @@ SECTIONS_JS = '<script src="assets/snapshot.js"></script><script src="assets/sec
 
 
 # ---- Team logos by background (Chris, 2026-11-12) -------------------------------------
-# On a dark background: the dark alt (assets/logos/teams/alt-dark/<Team>.png) if there is one,
-# else the normal logo with a white glow if the team is on the glow list (data/LogoGlow.json,
-# written by logo_contrast.py: scan + config overrides), else the normal logo. Light backgrounds
-# use the normal logo. Theme-following pages emit both images and let CSS (.tl-hd / .tl-d / .tl-g,
-# in the shared stylesheet) pick; blocks with a fixed color (team-color chips) decide here.
+# Dark backgrounds only: Chris's dark alt (assets/logos/teams/alt-dark/<Team>.png) if there is one,
+# else the glow version (glow-dark/<Team>.png, logo_glow.py), else the normal logo. Light
+# backgrounds use the normal logo. Theme-following pages emit both images and CSS picks
+# (.tl-hd / .tl-d in the shared stylesheet); blocks with a fixed color (team-color chips) decide here.
 LOGO_DIR = "assets/logos/teams"
-_GLOW = None
-
-
-def glow_dark():
-    global _GLOW
-    if _GLOW is None:
-        try:
-            _GLOW = set(json.load(open("data/LogoGlow.json"))["glow_dark"])
-        except (OSError, ValueError, KeyError):
-            _GLOW = set()
-    return _GLOW
 
 
 def logo_info(team, prefix="../"):
-    """{'src', 'dark' (alt src or ''), 'glow'} for a team, or None without a logo."""
+    """{'src', 'dark'} for a team ('dark' = alt or glow file, '' if neither), or None without a logo."""
     if not team or not os.path.exists(os.path.join(LOGO_DIR, f"{team}.png")):
         return None
-    alt = os.path.exists(os.path.join(LOGO_DIR, "alt-dark", f"{team}.png"))
     q = urllib.parse.quote(team)
-    return {"src": f"{prefix}{LOGO_DIR}/{q}.png", "dark": f"{prefix}{LOGO_DIR}/alt-dark/{q}.png" if alt else "",
-            "glow": (not alt) and team in glow_dark()}
+    dark = next((f"{prefix}{LOGO_DIR}/{d}/{q}.png" for d in ("alt-dark", "glow-dark")
+                 if os.path.exists(os.path.join(LOGO_DIR, d, f"{team}.png"))), "")
+    return {"src": f"{prefix}{LOGO_DIR}/{q}.png", "dark": dark}
 
 
 def is_dark(hexcolor):
@@ -271,9 +259,7 @@ def logo_html(team, prefix="../", cls="", alt="", bg=None, attrs=""):
     a = f' alt="{html.escape(alt)}"{attrs}'
     c = lambda extra: f' class="{(cls + " " + extra).strip()}"' if (cls or extra) else ""  # noqa: E731
     if bg is not None:
-        if not is_dark(bg):
-            return f'<img{c("")} src="{i["src"]}"{a}>'
-        return f'<img{c("" if i["dark"] else ("tl-gx" if i["glow"] else ""))} src="{i["dark"] or i["src"]}"{a}>'
+        return f'<img{c("")} src="{i["dark"] if is_dark(bg) and i["dark"] else i["src"]}"{a}>'
     if i["dark"]:
         return f'<img{c("tl-hd")} src="{i["src"]}"{a}><img{c("tl-d")} src="{i["dark"]}" alt="">'
-    return f'<img{c("tl-g" if i["glow"] else "")} src="{i["src"]}"{a}>'
+    return f'<img{c("")} src="{i["src"]}"{a}>'
