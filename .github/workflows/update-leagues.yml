@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       script_to_run:
-        description: 'Script to run (league_ids, rosters, users, rosterhistory, matchups, scores, standard_scores, max_points, weekly_awards, players, transactions, drafts, standings, orphans, lineup_streaks, push_teams, app_page, push_announce, game_settle, player_values, draft_picks, weekly_report, roster_map, poll, poll_page, matchups_page, gametime_projections, manager_lineups, managers_page, records_page, standings_page, postseason_export, postseason_page, league_staff, about_page, bowl_projection, bowl_projection_publish, game_of_the_week, scoreboard, conference_championships, playoff_field, playoff_bracket, playoff_publish, bowls, bowls_publish, bowls_redraw, nit, nit_publish, nit_redraw, patch_orphans, all). Postseason scripts are manual only (except conference_championships, which runs in all).'
+        description: 'Script to run (league_ids, rosters, users, rosterhistory, matchups, scores, standard_scores, max_points, weekly_awards, players, transactions, drafts, standings, orphans, lineup_streaks, push_teams, app_page, push_announce, game_settle, player_values, draft_picks, weekly_report, roster_map, poll, poll_page, matchups_page, gametime_projections, manager_lineups, managers_page, records_page, standings_page, postseason_export, postseason_page, league_staff, about_page, bowl_projection, bowl_projection_publish, game_of_the_week, scoreboard, conference_championships, selection_watch, playoff_field, playoff_bracket, playoff_publish, bowls, bowls_publish, bowls_redraw, nit, nit_publish, nit_redraw, patch_orphans, all). Postseason scripts are manual only (except conference_championships, which runs in all).'
         required: true
         default: 'all'
       post:
@@ -139,6 +139,8 @@ jobs:
           # CCG pairings: no-op until weeks 1..last_regular_week are final; then writes the week-12
           # games (before the Matchups page / scoreboard freeze them) and refreshes their scores.
           run conference_championships conference_championships.py all
+          # Selection Watch data (CCG week): no-op until the regular season is final and CCGs are paired.
+          run selection_watch       selection_watch.py       all
           # Real selection drafts (Chris approves: playoff_publish). No-ops until CCGs / seeding ballot exist;
           # a new or changed draft is previewed to lm-private-data (Postseason review step).
           run playoff_field_draft   "playoff_field.py --auto" all
