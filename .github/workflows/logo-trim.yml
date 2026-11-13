@@ -1,16 +1,28 @@
 name: Trim team logos
 
-# Manual only: crop empty canvas around team logos after uploading new ones.
+# Runs on every team-logo upload (Chris, 2026-11-12) and on demand:
+#   1. logo_trim.py  -- crop empty canvas, web-size copies (masters kept in assets/logos/source/)
+#   2. logo_glow.py  -- glow version of every team logo for dark backgrounds (teams/glow-dark/)
+# Its own commit is made with the workflow token, which never starts another run (no loop).
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'assets/logos/teams/**'
+      - '!assets/logos/teams/glow-dark/**'
   workflow_dispatch:
     inputs:
       folder:
-        description: 'Logo folder'
+        description: 'Logo folder to trim'
         required: true
         default: 'assets/logos/teams'
 
 permissions:
   contents: write
+
+concurrency:
+  group: logo-trim
+  cancel-in-progress: false
 
 jobs:
   trim:
@@ -20,15 +32,21 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install Pillow numpy
-      - run: python scripts/logo_trim.py "${{ github.event.inputs.folder }}"
-      - run: python scripts/logo_contrast.py  # glow list for dark backgrounds (data/LogoGlow.json)
+      - run: pip install Pillow
+      - name: Trim
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            python scripts/logo_trim.py "${{ github.event.inputs.folder }}"
+          else
+            python scripts/logo_trim.py assets/logos/teams assets/logos/teams/alt-dark
+          fi
+      - run: python scripts/logo_glow.py
       - name: Commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add assets/logos data/LogoGlow.json
+          git add assets/logos
           if git diff --cached --quiet; then echo "Nothing to trim."; exit 0; fi
-          git commit -m "Trim logos"
+          git commit -m "Trim logos + glow versions"
           for i in 1 2 3; do git pull --rebase -q && git push && exit 0; sleep 10; done
           exit 1

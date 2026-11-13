@@ -147,9 +147,9 @@ def build(offline=False):
         raise ValueError("Scoring snapshot does not cover every league")
     standard = standard_settings(scoring)
     colors = {r["Team"]: r for r in rows("data/Colors - Teams.csv")}
-    def logo_fields(team):  # dark alt + glow (Chris, 2026-11-12; site_common.logo_info)
+    def logo_fields(team):  # dark-background logo: alt, else glow file (Chris, 2026-11-12; site_common.logo_info)
         i = logo_info(team)
-        return {"logo": i["src"] if i else "", "logo_dark": i["dark"] if i else "", "glow": bool(i and i["glow"])}
+        return {"logo": i["src"] if i else "", "logo_dark": i["dark"] if i else ""}
 
     teams = {}
     for r in rows("data/Teams.csv"):
