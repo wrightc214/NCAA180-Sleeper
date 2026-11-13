@@ -102,6 +102,25 @@ def former_names(league, roster_id):
     return out
 
 
+def short_name(team):
+    """Approved short name for a team, '' if none (Chris, 2026-11-13). Teams.csv has a ShortName
+    column that starts empty; graphics use the full name and fall back to the short name only when
+    space is tight AND an entry exists. data/TeamShortNames_Draft.csv is the unreviewed draft list
+    (off-season review) -- not used by any page."""
+    global _SHORT
+    if _SHORT is None:
+        _SHORT = {}
+        f = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "Teams.csv")
+        if os.path.exists(f):
+            t = pd.read_csv(f, dtype=str, encoding="utf-8-sig").fillna("")
+            if "ShortName" in t.columns:
+                _SHORT = {r["Team"].strip(): r["ShortName"].strip() for _, r in t.iterrows() if r["ShortName"].strip()}
+    return _SHORT.get(str(team).strip(), "")
+
+
+_SHORT = None
+
+
 def colors_row(name):
     """Colors - Teams.csv row (dict) for a school name, or None."""
     if "col" not in _cache:

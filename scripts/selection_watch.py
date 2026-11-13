@@ -4,7 +4,8 @@ selection_watch.py -- data for the Selection Watch page during CCG week (Chris, 
 Once the regular season is final the at-large order is fixed and only the 15 conference
 championship games (CCGs) are left. This writes everything the page needs to work the playoff
 field out live in the browser:
-  order   every team, best first, by the shared tiebreakers in REAL-TOSS mode (win % -> points
+  order   every team, best first (full names; 'short' only when an approved Teams.csv ShortName
+          exists -- the page falls back to it when space is tight), by the shared tiebreakers in REAL-TOSS mode (win % -> points
           for -> points against; a tie still standing stays tied unless a real coin toss has been
           recorded in config tiebreakers.coin_toss_results -- no hidden toss for the cut)
   ccg     the 15 CCG pairings (+ result when final)
@@ -33,21 +34,14 @@ import pandas as pd
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import _postseason_common as ps  # noqa: E402
 import league_config as lcfg  # noqa: E402
+import team_names as tn  # noqa: E402
 
 OUT = "reports/postseason/selection-watch.json"
-SHORT = "data/TeamShortNames_Draft.csv"
 HIST = "data/Postseason_Historic.csv"
 
 
 def key(lid, rid):
     return f"{lid}|{rid}"
-
-
-def short_names():
-    if not os.path.exists(SHORT):
-        return {}
-    s = pd.read_csv(SHORT, dtype=str).fillna("")
-    return {t: n for t, n in zip(s["Team"], s["ShortName"]) if n}
 
 
 def ccg_pairs(year, st):
@@ -79,11 +73,10 @@ def ccg_pairs(year, st):
 def build(year):
     st = ps.standings(year)
     order, tied, _ = ps.rank_ties(st, real_toss=True)
-    short = short_names()
     lg = {v.strip(): k for k, v in ps.league_short().items()}  # league name -> short name
     teams = []
     for i, r in enumerate(order.itertuples()):
-        teams.append({"k": key(r.LeagueID, r.RosterID), "team": r.Team, "short": short.get(r.Team, r.Team),
+        teams.append({"k": key(r.LeagueID, r.RosterID), "team": r.Team, "short": tn.short_name(r.Team),
                       "conf": lg.get(r.LeagueName.strip(), r.LeagueName), "div": r.Division or "",
                       "w": int(r.Wins), "l": int(r.Losses), "t": int(r.Ties), "pf": float(r.PointsFor),
                       "pa": float(r.PointsAgainst), "rank": i + 1})
@@ -185,8 +178,8 @@ def check(year):
             print("  " + "-" * 30 + " cut " + "-" * 30)
         ar = tm[at_risk[i]] if i < len(at_risk) else None
         th = tm[t["team"]]
-        print(f"  {'IN ' if t['leading'] else 'out'} {th['short']:<18} #{th['rank']:<3} | "
-              f"{(ar['short'] + ' #' + str(ar['rank'])) if ar else '':<22} {'out' if t['leading'] else 'IN'}")
+        print(f"  {'IN ' if t['leading'] else 'out'} {(th['short'] or th['team']):<18} #{th['rank']:<3} | "
+              f"{((ar['short'] or ar['team']) + ' #' + str(ar['rank'])) if ar else '':<22} {'out' if t['leading'] else 'IN'}")
     return f == actual, d
 
 
