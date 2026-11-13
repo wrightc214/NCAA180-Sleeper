@@ -45,10 +45,12 @@ def main():
     for (lid, lname), g in st.groupby(["LeagueID", "LeagueName"]):
         champs = []
         for div, d in g.groupby("Division"):
-            r, ties, _ = ps.rank_ties(d, games)
+            r, ties, _ = ps.rank_ties(d, games, real_toss=True)  # real toss only (Chris, 2026-11-12)
             tied = next((t for t in ties if r.iloc[0]["Team"] in t), [])
             if tied:
-                problems.append(f"{lname} / {div}: division title still tied after every tiebreaker ({', '.join(tied)})")
+                problems.append(f"{lname} / {div}: division title tied after every tiebreaker ({', '.join(tied)}) -- "
+                                "REAL COIN TOSS NEEDED with both managers present; record it in config "
+                                "tiebreakers.coin_toss_results and rerun")
                 continue
             champs.append(r.iloc[0].to_dict())
         if len(champs) != per:

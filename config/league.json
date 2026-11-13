@@ -109,13 +109,14 @@
     "postseason_start_week": 13
   },
   "tiebreakers": {
-    "_note": "Order used to rank teams everywhere they are compared: division titles (CCG), playoff at-large, bowl and NIT pools. Matches Sleeper's default (support.sleeper.com, checked 2026-10-30): record, then points for, then points against, then coin toss. Keys: win_pct (ties count half), wins, points_for, points_against (higher ranks higher), head_to_head (games between the teams still tied), coin_toss (reproducible: fixed hash of season + team; every toss is printed in the run log). Teams tied after the last key are flagged.",
+    "_note": "Order used to rank teams everywhere they are compared: division titles (CCG), playoff at-large, bowl and NIT pools. Matches Sleeper's default (support.sleeper.com, checked 2026-10-30): record, then points for, then points against, then coin toss. Keys: win_pct (ties count half), wins, points_for, points_against (higher ranks higher), head_to_head (games between the teams still tied), coin_toss (reproducible: fixed hash of season + team; every toss is printed in the run log). Teams tied after the last key are flagged. Real coin toss (Chris, 2026-11-12): division titles and the last playoff at-large spot never use the simulated toss -- a tie still standing there waits for a real toss with both managers present, recorded in coin_toss_results ({year, teams, order, note}). Bowl/NIT pools and projections use the simulated toss and note it.",
     "order": [
       "win_pct",
       "points_for",
       "points_against",
       "coin_toss"
-    ]
+    ],
+    "coin_toss_results": []
   },
   "postseason": {
     "_note": "Postseason rules (Chris/commissioner). Weeks: CCG = schedule.ccg_week; playoff rounds start the week after.",

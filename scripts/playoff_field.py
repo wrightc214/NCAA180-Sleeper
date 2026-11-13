@@ -77,7 +77,8 @@ def main():
     n_at = int(pc["field_size"]) - len(keys)
     if n_at < 0:
         sys.exit(f"FATAL: {len(keys)} auto bids exceed field size {pc['field_size']}")
-    pool, unresolved, _ = ps.rank_ties(st[[(l, r) not in keys for l, r in zip(st["LeagueID"], st["RosterID"])]])
+    # no hidden toss for the last spot (Chris, 2026-11-12): a tie across the cut waits for a real toss
+    pool, unresolved, _ = ps.rank_ties(st[[(l, r) not in keys for l, r in zip(st["LeagueID"], st["RosterID"])]], real_toss=True)
     rows, complete = [], True
     for l, r, bid in auto:
         t = st[(st["LeagueID"] == l) & (st["RosterID"] == r)].iloc[0]
@@ -92,7 +93,8 @@ def main():
             above = pool.iloc[:names.index(cut_tie[0])]
             same = pool[pool["Team"].isin(cut_tie)]
             print(f"WARNING: {len(same)} teams still tied after every tiebreaker for the last "
-                  f"{n_at - len(above)} at-large spot(s): {', '.join(cut_tie)} -- resolve manually")
+                  f"{n_at - len(above)} at-large spot(s): {', '.join(cut_tie)} -- REAL COIN TOSS NEEDED with both "
+                  "managers present; record it in config tiebreakers.coin_toss_results and rerun")
             rows += [{**t, "BidType": "At-Large"} for t in above.to_dict("records")]
             rows += [{**t, "BidType": "Tied - Unresolved"} for t in same.to_dict("records")]
         else:

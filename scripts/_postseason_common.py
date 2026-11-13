@@ -227,12 +227,19 @@ def rank(df, games=None):
     return rank_ties(df, games)[0]
 
 
-def rank_ties(df, games=None):
+TOSSES = []  # simulated coin tosses used this run (for draft notes)
+
+
+def rank_ties(df, games=None, real_toss=False):
     """(ranked df, teams still tied after every tiebreaker, groups split by coin toss).
-    Every coin toss is printed so the run log shows it."""
-    out, tied, tosses = tiebreak.order(df, games if games is not None else _last_games, label=_last_year)
+    real_toss=True (division titles, the playoff cut): no simulated toss -- a tie that survives
+    every key is left tied for a real toss (see tiebreak.py). Every simulated toss is printed."""
+    out, tied, tosses = tiebreak.order(df, games if games is not None else _last_games, label=_last_year,
+                                       real_toss=real_toss)
     for t in tosses:
-        print(f"NOTE: coin toss (reproducible) between {', '.join(t)}")
+        print(f"NOTE: simulated coin toss (reproducible) between {', '.join(t)}")
+        if t not in TOSSES:
+            TOSSES.append(t)
     return out, tied, tosses
 
 
