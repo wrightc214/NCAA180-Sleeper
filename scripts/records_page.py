@@ -113,7 +113,7 @@ def regular_games(m, flags):
         rows.append({"Year": r.Year, "Week": int(r.Week), "Stage": f"Week {int(r.Week)}", "League": r.LeagueName,
                      "WTeam": name(r.Year, r.LeagueName, W[0]), "WOwner": W[2], "WPts": round(W[1], 2), "WOrphan": W[3],
                      "LTeam": name(r.Year, r.LeagueName, L[0]), "LOwner": L[2], "LPts": round(L[1], 2), "LOrphan": L[3],
-                     "Tie": tie, "Dagger": dag, "Post": False})
+                     "Tie": tie, "Dagger": dag, "Post": False, "WLg": r.LeagueName, "LLg": r.LeagueName})
     return pd.DataFrame(rows)
 
 
@@ -158,7 +158,7 @@ def postseason(owner_last, year):
             games.append({"Year": y, "Week": int(float(r.Week)) if isinstance(r.Week, str) and r.Week else 99,
                           "Stage": stage, "League": lw, "WTeam": w, "WOwner": ow, "WPts": sa if w == ta[0] else sb,
                           "WOrphan": orw, "LTeam": l, "LOwner": ol, "LPts": sb if w == ta[0] else sa, "LOrphan": orl,
-                          "Tie": False, "Dagger": False, "Post": True})
+                          "Tie": False, "Dagger": False, "Post": True, "WLg": lw, "LLg": ll})
         else:  # group: everyone listed in TeamA with scores in ScoreA
             sc = [float(x) if x else None for x in mp.split(r.ScoreA)] if isinstance(r.ScoreA, str) else []
             seeds = mp.split(r.SeedA)
@@ -173,22 +173,45 @@ def postseason(owner_last, year):
     return pd.DataFrame(games), pd.DataFrame(team_rows)
 
 
-def entry(cat, rank, value, year, team, owner, league, detail, dagger=False, live=False):
+def lgs_of(leagues):
+    """Conference tags for the page filter: short names, '|'-joined, no blanks or repeats."""
+    return "|".join(dict.fromkeys(lg_short(x) for x in leagues if isinstance(x, str) and x.strip()))
+
+
+def entry(cat, rank, value, year, team, owner, league, detail, dagger=False, live=False, lgs=None):
+    """Shown: in the all-conference list. Lgs: conferences this row counts for (filter). N: list length."""
     return {"Category": cat, "Rank": rank, "Value": value, "Year": year, "Team": team, "Owner": owner,
-            "League": lg_short(league) if league else "", "Detail": detail, "Dagger": dagger, "Live": live}
+            "League": lg_short(league) if league else "", "Detail": detail, "Dagger": dagger, "Live": live,
+            "Lgs": lgs_of(lgs if lgs is not None else [league]), "Shown": True, "N": 0, "Scope": ""}
 
 
-def top(df, cat, sort, asc, fn, n=TOP):
-    """Top n by `sort`; equal values list oldest first (Year, then Week)."""
+def top(df, cat, sort, asc, fn, n=TOP, by=None):
+    """Top n by `sort`; equal values list oldest first (Year, then Week).
+
+    Conference filter (Chris, 2026-11-08): returns the CANDIDATES in overall order -- the overall top n
+    (Shown) plus every conference's own top n -- each tagged with the conferences it counts for
+    (`by`: row -> league names; default the row's League). The page filters and takes the first n,
+    so a conference's list and the overall list both come from this one ranking."""
     keys = list(sort)
     asc = list(asc) if isinstance(asc, (list, tuple)) else [asc] * len(keys)
     for k in ("Year", "Week"):
         if k in df.columns and k not in keys:
             keys.append(k)
             asc.append(True)
-    out = []
-    for i, r in enumerate(df.sort_values(keys, ascending=asc, kind="mergesort").head(n).itertuples(), 1):
-        out.append(fn(cat, i, r))
+    by = by or (lambda r: [getattr(r, "League", "")])
+    out, seen, per = [], 0, defaultdict(int)
+    for r in df.sort_values(keys, ascending=asc, kind="mergesort").itertuples():
+        tags = lgs_of(by(r))
+        want = seen < n or any(per[t] < n for t in tags.split("|") if t)
+        if not want:
+            continue
+        ent = fn(cat, seen + 1 if seen < n else "", r)
+        ent.update(Lgs=tags, Shown=seen < n, N=n)
+        seen += 1 if seen < n else 0
+        for t in tags.split("|"):
+            if t:
+                per[t] += 1
+        out.append(ent)
     return out
 
 
@@ -211,24 +234,28 @@ def build():
 
     # team-side scores for high/low
     sides = pd.concat([
-        clean.assign(Team=clean.WTeam, Owner=clean.WOwner, Pts=clean.WPts, Side="W"),
-        clean.assign(Team=clean.LTeam, Owner=clean.LOwner, Pts=clean.LPts, Side="L")], ignore_index=True)
+        clean.assign(Team=clean.WTeam, Owner=clean.WOwner, Pts=clean.WPts, Side="W", League=clean.WLg),
+        clean.assign(Team=clean.LTeam, Owner=clean.LOwner, Pts=clean.LPts, Side="L", League=clean.LLg)], ignore_index=True)
     live = lambda r: r.Year == year  # noqa: E731
+    # conference filter: a score counts for the team's own conference; a game for the credited team's
+    # (closest / combined: either team's). Cross-conference postseason games carry both.
+    own = lambda r: [r.WLg if r.Side == "W" else r.LLg]  # noqa: E731
+    both = lambda r: [r.WLg, r.LLg]  # noqa: E731
     sg = [
         ("Highest score", top(sides, "Highest score", ["Pts"], False, lambda c, i, r: entry(
-            c, i, f"{r.Pts:.2f}", r.Year, r.Team, r.Owner, r.League, game_detail(r, r.Side), r.Dagger, live(r)))),
+            c, i, f"{r.Pts:.2f}", r.Year, r.Team, r.Owner, r.League, game_detail(r, r.Side), r.Dagger, live(r)), by=own)),
         ("Lowest score (regular season)", top(sides[~sides["Post"]], "Lowest score", ["Pts"], True, lambda c, i, r: entry(
-            c, i, f"{r.Pts:.2f}", r.Year, r.Team, r.Owner, r.League, game_detail(r, r.Side), r.Dagger, live(r)))),
+            c, i, f"{r.Pts:.2f}", r.Year, r.Team, r.Owner, r.League, game_detail(r, r.Side), r.Dagger, live(r)), by=own)),
         ("Biggest blowout", top(clean, "Biggest blowout", ["Margin"], False, lambda c, i, r: entry(
-            c, i, f"+{r.Margin:.2f}", r.Year, r.WTeam, r.WOwner, r.League, game_detail(r), r.Dagger, live(r)))),
+            c, i, f"+{r.Margin:.2f}", r.Year, r.WTeam, r.WOwner, r.League, game_detail(r), r.Dagger, live(r)), by=lambda r: [r.WLg])),
         ("Closest games", top(clean, "Closest games", ["Margin", "Combined"], [True, False], lambda c, i, r: entry(
-            c, i, "Tie" if r.Tie else f"{r.Margin:.2f}", r.Year, r.WTeam, r.WOwner, r.League, game_detail(r), r.Dagger, live(r)))),
+            c, i, "Tie" if r.Tie else f"{r.Margin:.2f}", r.Year, r.WTeam, r.WOwner, r.League, game_detail(r), r.Dagger, live(r)), by=both)),
         ("Highest losing score", top(clean[~clean["Tie"]], "Highest losing score", ["LPts"], False, lambda c, i, r: entry(
-            c, i, f"{r.LPts:.2f}", r.Year, r.LTeam, r.LOwner, r.League, game_detail(r, "L"), r.Dagger, live(r)))),
+            c, i, f"{r.LPts:.2f}", r.Year, r.LTeam, r.LOwner, r.LLg, game_detail(r, "L"), r.Dagger, live(r)), by=lambda r: [r.LLg])),
         ("Lowest winning score", top(clean[~clean["Tie"]], "Lowest winning score", ["WPts"], True, lambda c, i, r: entry(
-            c, i, f"{r.WPts:.2f}", r.Year, r.WTeam, r.WOwner, r.League, game_detail(r), r.Dagger, live(r)))),
+            c, i, f"{r.WPts:.2f}", r.Year, r.WTeam, r.WOwner, r.League, game_detail(r), r.Dagger, live(r)), by=lambda r: [r.WLg])),
         ("Highest combined score", top(clean, "Highest combined score", ["Combined"], False, lambda c, i, r: entry(
-            c, i, f"{r.Combined:.2f}", r.Year, r.WTeam, r.WOwner, r.League, game_detail(r), r.Dagger, live(r)))),
+            c, i, f"{r.Combined:.2f}", r.Year, r.WTeam, r.WOwner, r.League, game_detail(r), r.Dagger, live(r)), by=both)),
     ]
     sections.append(("single", "Single game", sg))
 
@@ -246,6 +273,7 @@ def build():
         cur = (tn.current_name(*sl) if sl else None) or c["Team"]
         by_mgr[c["Owner"]].append((c["Year"], cur))
         by_prog[cur].append((c["Year"], c["Owner"]))
+    champ_lg = {c["Year"]: c["League"] for c in champs}
     lists = [("National champions", champs)]
     if max((len(v) for v in by_mgr.values()), default=0) >= 2 or max((len(v) for v in by_prog.values()), default=0) >= 2:
         same = all(len({p for _, p in v}) == 1 for v in by_mgr.values()) and \
@@ -258,7 +286,8 @@ def build():
                 yrs = ", ".join(str(y) for y, _ in sorted(v))
                 others = sorted({x for _, x in v})
                 team, owner = ("|".join(others), k) if who_is_owner else (k, " & ".join(others))
-                out.append(entry(cat, i, len(v), min(y for y, _ in v), team, owner, "", yrs))
+                out.append(dict(entry(cat, i, len(v), min(y for y, _ in v), team, owner, "", yrs),
+                                Lgs="|".join(dict.fromkeys(champ_lg[y] for y, _ in sorted(v) if champ_lg.get(y)))))
             return out
         if same:
             lists.append(("Most national titles", ranked(by_mgr, "Titles", True)))
@@ -337,7 +366,6 @@ def build():
     # ---- milestones: first TEAM (league + roster slot) to each mark; Legend points = first manager.
     # Only the next unreached mark is shown. Wins/losses: regular season (weeks 1-11), adjudicated results.
     ms = pd.read_csv(mp.OUT_SEASONS, dtype={"OwnerID": str, "RosterID": str}) if os.path.exists(mp.OUT_SEASONS) else pd.DataFrame()
-    miles = []
     tm = adj.sort_values(["Year", "Week"]).copy()
     tm["K"] = tm["LeagueName"] + "|" + tm["RosterID"]
     tm["When"] = [f"Week {int(w)}, {int(y)}" for y, w in zip(tm["Year"], tm["Week"])]
@@ -359,40 +387,56 @@ def build():
             d = d.sort_values(["Year", "V"]).groupby(["K", "Year"], as_index=False).last().sort_values("Year")
             series[key] = (d, "team")
         series["Legend points"] = (ms.assign(K=ms["OwnerID"], V=ms["Legend"]), "manager")
-    for key in MILESTONES:
-        if key not in series:
-            continue
-        d, kind = series[key]
-        d = d.copy()
-        d["Cum"] = d.groupby("K")["V"].cumsum()
-        last_team = d.groupby("K")["Team"].last()
-        last_who = d.groupby("K")["Who"].last()
-        label = (lambda k: f"{last_team[k]} ({last_who[k]})") if kind == "team" else (lambda k: f"{last_who[k]} ({last_team[k]})")
-        noun = "team" if kind == "team" else "manager"
-        first, step = MILESTONES[key]
-        for mark in marks(first, step):
-            unit = "title" if (key == "titles" and mark == 1) else key
-            hit = d[d["Cum"] >= mark].groupby("K").head(1).sort_values(["Year", "Week"])
-            if len(hit):
-                f0 = hit.iloc[0]
-                same = hit[(hit["Year"] == f0.Year) & (hit["Week"] == f0.Week)]
-                who = " & ".join(same["Who"]) if kind == "team" else " & ".join(last_who[k] for k in same["K"])
-                miles.append(entry("Milestone", f"{mark} {unit}", f"{mark:g} {unit}", int(f0.Year), "|".join(same["Team"]),
-                                   who, "", f"{f0.When} · {len(hit)} {noun}{'s' if len(hit) != 1 else ''} there now"))
+    def mile_list(scope):
+        """The milestone list for all conferences (scope '') or one conference's teams/games (its short name)."""
+        miles = []
+        for key in MILESTONES:
+            if key not in series:
                 continue
-            tot = d.groupby("K")["Cum"].max().sort_values(ascending=False)
-            top_v = tot.iloc[0]
-            near = list(tot[tot == top_v].index)
-            u = key if not (key == "titles" and top_v == 1) else "title"
-            hover = ""
-            if len(near) > 3:
-                who = f"{len(near)} {noun}s with {top_v:g} {u}"
-                hover = "|".join(sorted((label(k) for k in near), key=str.lower))
-            else:
-                who = ", ".join(label(k) for k in near) + f", {top_v:g} {u}"
-            miles.append(dict(entry("Milestone", f"{mark} {unit}", f"{mark:g} {unit}", "", "", "Nobody yet", "",
-                                    f"Nearest: {who}", live=True), Hover=hover))
-            break
+            d, kind = series[key]
+            d = d.copy()
+            if scope:
+                d = d[d["LeagueName"].map(lg_short) == scope]
+                if d.empty:
+                    continue
+            d["Cum"] = d.groupby("K")["V"].cumsum()
+            last_team = d.groupby("K")["Team"].last()
+            last_who = d.groupby("K")["Who"].last()
+            label = (lambda k: f"{last_team[k]} ({last_who[k]})") if kind == "team" else (lambda k: f"{last_who[k]} ({last_team[k]})")
+            noun = "team" if kind == "team" else "manager"
+            first, step = MILESTONES[key]
+            for mark in marks(first, step):
+                unit = "title" if (key == "titles" and mark == 1) else key
+                hit = d[d["Cum"] >= mark].groupby("K").head(1).sort_values(["Year", "Week"])
+                if len(hit):
+                    f0 = hit.iloc[0]
+                    same = hit[(hit["Year"] == f0.Year) & (hit["Week"] == f0.Week)]
+                    who = " & ".join(same["Who"]) if kind == "team" else " & ".join(last_who[k] for k in same["K"])
+                    miles.append(entry("Milestone", f"{mark} {unit}", f"{mark:g} {unit}", int(f0.Year), "|".join(same["Team"]),
+                                       who, "", f"{f0.When} · {len(hit)} {noun}{'s' if len(hit) != 1 else ''} there now"))
+                    continue
+                tot = d.groupby("K")["Cum"].max().sort_values(ascending=False)
+                top_v = tot.iloc[0]
+                near = list(tot[tot == top_v].index)
+                u = key if not (key == "titles" and top_v == 1) else "title"
+                hover = ""
+                if top_v == 0:
+                    who = "nobody has one yet"
+                elif len(near) > 3:
+                    who = f"{len(near)} {noun}s with {top_v:g} {u}"
+                    hover = "|".join(sorted((label(k) for k in near), key=str.lower))
+                else:
+                    who = ", ".join(label(k) for k in near) + f", {top_v:g} {u}"
+                miles.append(dict(entry("Milestone", f"{mark} {unit}", f"{mark:g} {unit}", "", "", "Nobody yet", "",
+                                        f"Nearest: {who}", live=True), Hover=hover))
+                break
+        for e_ in miles:
+            e_["Scope"] = scope
+        return miles
+
+    miles = mile_list("")
+    for sc_ in sorted({lg_short(x) for x in tm["LeagueName"].unique()}):
+        miles += mile_list(sc_)
     sections.append(("milestones", "First to the mark", [("Milestones", miles)]))
 
     # ---- lineups & streaks
@@ -406,14 +450,17 @@ def build():
     loss = lw[lw["Outcome"] == "Loss"]
     left = top(loss, "Most points left on the bench in a loss", ["Left"], False, lambda c, i, r: entry(
         c, i, f"{r.Left:.2f}", r.Year, name(r.Year, r.LeagueName, r.RosterID), r.OwnerName, r.LeagueName,
-        f"Week {r.Week}: started {r.Actual:.2f}, best possible {r.Best:.2f}", live=r.Year == year))
+        f"Week {r.Week}: started {r.Actual:.2f}, best possible {r.Best:.2f}", live=r.Year == year),
+        by=lambda r: [r.LeagueName])
     lss = pd.read_csv(ml.OUT_SEASON, dtype={"OwnerID": str})
     lss = lss[(lss["Year"] < year) & (lss["Games"] >= 9) & (lss["OwnerID"] != "Orphan")]
     lw["Team"] = [name(y, l, r) for y, l, r in zip(lw["Year"], lw["LeagueName"], lw["RosterID"])]
     season_teams = lw.groupby(["Year", "OwnerID"])["Team"].apply(lambda t: "|".join(dict.fromkeys(t))).to_dict()
+    season_lgs = lw.groupby(["Year", "OwnerID"])["LeagueName"].apply(lambda t: list(dict.fromkeys(t))).to_dict()
     bestls = top(lss, "Best Lineup Skill season", ["LineupSkill"], False, lambda c, i, r: entry(
         c, i, f"{r.LineupSkill:.3f}".lstrip("0"), r.Year, season_teams.get((r.Year, r.OwnerID), ""), r.OwnerName, "",
-        f"{int(r.Games)} games · {r.PtsLeftPerGame:.2f} left on bench per game"))
+        f"{int(r.Games)} games · {r.PtsLeftPerGame:.2f} left on bench per game"),
+        by=lambda r: season_lgs.get((r.Year, r.OwnerID), []))
     # streaks: per TEAM (league + roster slot), regular season weeks 1-11 only (CCG is postseason), carried
     # across seasons; adjudicated results (2026+); orphan games count for the team. A tie ends either streak.
     st = adj.sort_values(["Year", "Week"]).copy()
@@ -479,7 +526,8 @@ def build():
     sections.append(("lineups", "Lineups & streaks", [("Best Lineup Skill season (9+ games)", bestls),
                                                       ("Most points left on the bench in a loss", left)] + strk))
 
-    flat = [dict(r, Section=sec[1], List=lst) for sec in sections for lst, rows in sec[2] for r in rows]
+    flat = [{k: v for k, v in dict(r, Section=sec[1], List=lst).items() if k not in ("Lgs", "Shown", "N", "Scope")}
+            for sec in sections for lst, rows in sec[2] for r in rows if r.get("Shown", True) and not r.get("Scope")]
     pd.DataFrame(flat).to_csv(OUT_CSV, index=False)
     write_page(sections, year)
     print(f"Wrote {OUT} and {OUT_CSV} ({len(flat)} entries)")
@@ -510,6 +558,9 @@ CSS = """
 .tip:hover .tipbox,.tip:focus .tipbox,.tip:focus-within .tipbox{display:block}
 .card li.m .v{text-align:left;font-size:13px}
 .card .v.up{color:var(--up)}.card .v.dn{color:var(--dn)}
+.card li[hidden]{display:none}
+.tools{margin:10px 0 0;font:600 13px var(--sans,sans-serif)}.tools select{font:inherit;padding:4px 6px;margin-left:6px}
+h2 .lgtag{font:700 12px var(--num);letter-spacing:.05em;text-transform:uppercase;color:var(--accent)}
 """
 
 
@@ -523,6 +574,10 @@ def write_page(sections, year):
         return out
 
     def li(r):
+        # conference filter hooks: data-l = conferences this row counts for, data-s = a list scoped to one
+        # conference (milestones); rows outside the all-conference list start hidden.
+        at = f' data-l="|{e(r.get("Lgs", ""))}|"' + (f' data-s="{e(r["Scope"])}"' if r["Category"] == "Milestone" else "")
+        at += "" if (r.get("Shown", True) and not r.get("Scope")) else " hidden"
         tag = f'<span class="live">{year}</span>' if r["Live"] and r["Year"] == year else ""
         dag = " †" if r["Dagger"] else ""
         if r["Category"] == "Milestone":
@@ -534,7 +589,7 @@ def write_page(sections, year):
                 cnt = det.split(": ", 1)[1].split(" managers", 1)[0]
                 det = det.replace(f"{cnt} managers", f'<span class="tip" tabindex="0">{cnt} managers'
                                                      f'<span class="tipbox" role="tooltip">{names}</span></span>', 1)
-            return (f'<li class="m"><span class="v">{e(str(r["Value"]))}</span><span class="w">{pill(r["Team"])}<b>{who}</b>'
+            return (f'<li class="m"{at}><span class="v">{e(str(r["Value"]))}</span><span class="w">{pill(r["Team"])}<b>{who}</b>'
                     f'<small>{det}</small></span></li>')
         yr = f'{r["Year"]} · ' if r["Year"] != "" and not str(r["Category"]).startswith(("Champion", "Titles")) else ""
         lg = f' · {e(r["League"])}' if r["League"] else ""
@@ -545,20 +600,27 @@ def write_page(sections, year):
         vcls = ""
         if r["Category"] == "Active streak":  # W/L badge colour
             vcls = " up" if str(r["Value"]).startswith("W") else " dn"
-        return (f'<li><span class="k">{k}</span><span class="w">{head}<small>{yr}{e(r["Detail"])}{lg}</small></span>'
+        return (f'<li{at}><span class="k"{" data-rk" if isinstance(k, int) or (k == "" and r["Category"] != "Champion") else ""}>{k}</span><span class="w">{head}<small>{yr}{e(r["Detail"])}{lg}</small></span>'
                 f'<span class="v{vcls}">{e(str(r["Value"]))}{dag}</span></li>')
 
     jump = "".join(f'<a href="#{sid}">{e(t)}</a>' for sid, t, _ in sections)
     secs = []
     for sid, title, lists in sections:
-        cards = "".join(f'<div class="card"><h3>{e(lt)}</h3><ol>{"".join(li(r) for r in rows) or "<li>–</li>"}</ol></div>'
-                        for lt, rows in lists)
-        secs.append(f'<section id="{sid}"><h2>{e(title)}</h2><div class="grid">{cards}</div></section>')
+        def card(lt, rows):
+            n = max((r.get("N", 0) for r in rows), default=0)  # 0 = show every matching row
+            mode = "scope" if any(r["Category"] == "Milestone" for r in rows) else "top"
+            return (f'<div class="card"><h3>{e(lt)}</h3><ol data-n="{n}" data-mode="{mode}">{"".join(li(r) for r in rows)}'
+                    f'<li class="none"{"" if not rows else " hidden"}>–</li></ol></div>')
+        cards = "".join(card(lt, rows) for lt, rows in lists)
+        secs.append(f'<section id="{sid}"><h2>{e(title)} <small class="lgtag"></small></h2><div class="grid">{cards}</div></section>')
+    confs = sorted({t for _, _, lists in sections for _, rows in lists for r in rows for t in r.get("Lgs", "").split("|") if t})
+    opts = "".join(f'<option value="{e(c)}">{e(c)}</option>' for c in confs)
     body = f"""
 <div class="wrap">
 <nav class="weeks" aria-label="Pages">{nav_html("records")}</nav>
 <header><div><div class="eyebrow">{lcfg.brand()} · 2019–{year}</div><h1>All-Time <em>Records</em></h1></div></header>
 <nav class="jump" aria-label="Sections">{jump}</nav>
+<div class="tools"><label>{lcfg.term(cap=True)} <select id="lgf"><option value="">All {lcfg.term(plural=True)}</option>{opts}</select></label></div>
 {"".join(secs)}
 <section><p class="note">Real games only: regular season plus the postseason (conference championships, bowls, NIT,
 playoffs); Sleeper's placeholder postseason pairings never count. Lowest score is regular season only. Games with an
@@ -570,8 +632,32 @@ on. Streaks and First to the Mark wins/losses belong to the team (league + roste
 (conference championships are postseason), carried across seasons, orphaned stretches included, a tie ends either
 streak; several managers show as games each, e.g. Jones (8), Smith (4) (up to three; then two and "+N more"). Legend points stay per manager. Team names
 are as of that season.
+{lcfg.term(cap=True)} filter: each list is that {lcfg.term()}'s own top entries from the same rankings (a score counts for the
+team's {lcfg.term()}; cross-{lcfg.term()} postseason games count for both teams' where the record belongs to the game);
+First to the Mark becomes the first within that {lcfg.term()}. The Raw CSV has the all-{lcfg.term()} lists.
 <a href="../{OUT_CSV}">Raw CSV</a></p></section>
 </div>
+<script>
+(() => {{
+  const sel = document.getElementById('lgf'), K = 'records:conf';
+  function apply(v) {{
+    document.querySelectorAll('ol[data-mode]').forEach(ol => {{
+      const n = +ol.dataset.n, scope = ol.dataset.mode === 'scope'; let c = 0;
+      ol.querySelectorAll(':scope>li:not(.none)').forEach(li => {{
+        const ok = scope ? (li.dataset.s || '') === v : (!v || li.dataset.l.includes('|' + v + '|'));
+        const show = ok && (scope || !n || c < n);
+        if (show) {{ c++; const k = li.querySelector('.k[data-rk]'); if (k) k.textContent = c; }}
+        li.hidden = !show;
+      }});
+      ol.querySelector(':scope>li.none').hidden = c > 0;
+    }});
+    document.querySelectorAll('.lgtag').forEach(t => {{ t.textContent = v ? v + ' only' : ''; }});
+  }}
+  sel.addEventListener('change', () => {{ try {{ localStorage.setItem(K, sel.value); }} catch (e) {{}} apply(sel.value); }});
+  let v = ''; try {{ v = localStorage.getItem(K) || ''; }} catch (e) {{}}
+  if (v && [...sel.options].some(o => o.value === v)) {{ sel.value = v; apply(v); }}
+}})();
+</script>
 </body></html>
 """
     os.makedirs("reports", exist_ok=True)
