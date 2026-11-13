@@ -121,6 +121,7 @@ def build_pool(year, field_path, cfg):
             notes.append(f"{len(bump)} {cfg['bump_wins']}-win team(s) pulled up to make the count even: " + ", ".join(bump["Team"]))
         pool = ps.rank(pd.concat([pool, bump]))
     pool = order_pool(pool, year, cfg, notes)
+    notes += [f"simulated coin toss used (tied on every tiebreaker): {', '.join(t)}" for t in ps.TOSSES]
     slots = 2 * len(bowl_list(cfg))
     if len(pool) > slots:
         notes.append(f"{len(pool) - slots} eligible team(s) beyond the {slots // 2} bowls fall to the NIT: "

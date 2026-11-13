@@ -11,6 +11,13 @@ Each key splits the teams still tied after the keys before it, so head_to_head o
 compares teams that are exactly level on everything above it. Teams level after the last
 key stay tied and are reported. Every coin toss used is reported too.
 Sleeper's default (support.sleeper.com, checked 2026-10-30): points for, points against, coin toss.
+
+Real coin toss (Chris, 2026-11-12): where a tie decides a real outcome -- the last playoff at-large
+spot or a division title -- there is NO hidden toss. order(..., real_toss=True) skips coin_toss; a
+tie still standing is reported, and a real toss is held with both managers present. Its result is
+recorded in config/league.json -> tiebreakers.coin_toss_results and applied on the next run:
+  {"year": 2026, "teams": ["Team A", "Team B"], "order": ["Team A", "Team B"], "note": "..."}
+Lower-stakes orders (bowl / NIT pools, projections) keep the simulated toss, which is reported.
 """
 import zlib
 
@@ -53,7 +60,16 @@ def _value(key, df, group, games, label=""):
     return pd.Series(out)
 
 
-def order(df, games=None, label=""):
+def recorded(year):
+    """Real coin tosses recorded for a season: {frozenset(teams): [winner first, ...]}."""
+    out = {}
+    for r in lcfg.cfg()["tiebreakers"].get("coin_toss_results", []):
+        if str(r.get("year")) == str(year):
+            out[frozenset(r["teams"])] = list(r.get("order") or r["teams"])
+    return out
+
+
+def order(df, games=None, label="", real_toss=False):
     """(df sorted best first, unresolved, coin_tosses). unresolved = lists of team names still
     tied after every tiebreaker; coin_tosses = lists of team names split by the coin toss.
     df needs Wins, Losses, Ties, PointsFor (PointsAgainst for that key), LeagueID, RosterID,
@@ -64,6 +80,8 @@ def order(df, games=None, label=""):
         if c not in df.columns:
             df[c] = 0
     keys = order_keys()
+    if real_toss:
+        keys = [k for k in keys if k != "coin_toss"]
     tosses = []
 
     def split(group, ks):
@@ -78,7 +96,13 @@ def order(df, games=None, label=""):
         return blocks
 
     blocks = split(list(df.index), keys)
-    out = df.loc[[i for b in blocks for i in b]].reset_index(drop=True)
     name = lambda i: str(df.at[i, "Team"]) if "Team" in df.columns else f"{df.at[i, 'LeagueID']}#{df.at[i, 'RosterID']}"
+    if real_toss:  # apply real tosses already held; the rest stay tied (reported)
+        rec = recorded(label)
+        for bi, b in enumerate(blocks):
+            res = rec.get(frozenset(name(i) for i in b)) if len(b) > 1 else None
+            if res:
+                blocks[bi:bi + 1] = [[i] for i in sorted(b, key=lambda i: res.index(name(i)))]
+    out = df.loc[[i for b in blocks for i in b]].reset_index(drop=True)
     return (out, [[name(i) for i in b] for b in blocks if len(b) > 1],
             [[name(i) for i in g] for g in tosses])
