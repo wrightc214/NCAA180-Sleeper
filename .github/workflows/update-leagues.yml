@@ -323,6 +323,8 @@ jobs:
           git add data/standard 2>/dev/null || true  # separate lines: a missing file must not stop the others
           git add data/StandardAlerts_Season.json 2>/dev/null || true
           git add data/postseason 2>/dev/null || true
+          git add data/standings 2>/dev/null || true  # past-season standings (standings.py --history)
+          git add data/CoinTossAlert.json 2>/dev/null || true  # coin-toss alert sent (posted once per situation)
           git add data/push 2>/dev/null || true  # push ledger: stops a result being announced twice
           git add data/projections 2>/dev/null || true; git add data/ScoringCheck_Current.json 2>/dev/null || true
           git add reports/ || true
