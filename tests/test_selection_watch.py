@@ -85,3 +85,37 @@ def test_tie_across_the_cut_splits_evenly():
     f = sw.field(d, ["t5"])
     assert f["t0"] == f["t1"] == 1 and f["t2"] == f["t3"] == 0.5 and f["t5"] == 1
     assert "t4" not in f or f["t4"] == 0
+
+
+def _tied_board():
+    order = [{"k": f"t{i}", "rank": i + 1, "team": f"Team {i}", "w": 8, "l": 3, "t": 0, "pf": 1500.0 - i, "pa": 1400.0}
+             for i in range(6)]
+    return {"field_size": 4, "order": order, "tie": [["t2", "t3"]],
+            "ccg": [{"id": "g", "a": "t5", "b": "t4"}]}
+
+
+def test_playoff_toss_risk_found_when_tie_can_straddle_the_cut():
+    r = sw.playoff_toss_risks(_tied_board())
+    assert len(r) == 1 and r[0][0] == "Last playoff spot" and r[0][1] == ["Team 2", "Team 3"]
+
+
+def test_no_toss_risk_when_tie_is_safely_inside():
+    d = _tied_board()
+    d["tie"] = [["t0", "t1"]]  # both in under every result
+    assert sw.playoff_toss_risks(d) == []
+
+
+def test_toss_alert_posts_once(monkeypatch, tmp_path):
+    monkeypatch.setattr(sw, "TOSS_STATE", str(tmp_path / "state.json"))
+    monkeypatch.setenv("DISCORD_WEBHOOK_LM_PRIVATE_DATA", "https://discord.com/api/webhooks/1/x")
+    sent = []
+
+    class R:
+        status_code = 204
+    import requests
+    monkeypatch.setattr(requests, "post", lambda url, json, timeout: sent.append(json) or R())
+    risks = sw.playoff_toss_risks(_tied_board())
+    sw.toss_alert(2026, risks)
+    sw.toss_alert(2026, risks)  # same situation: not posted again
+    assert len(sent) == 1 and "Possible real coin toss" in sent[0]["content"]
+    assert sw.toss_alert(2026, []) == "" and len(sent) == 1

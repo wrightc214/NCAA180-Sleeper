@@ -158,6 +158,81 @@ def odds(d, p):
     return chance
 
 
+# ---------- coin-toss alert (Chris, 2026-11-13) ----------
+# After the regular season, any tie that could go to a REAL coin toss is reported to the league
+# manager feed (lm-private-data): a division title tied after every tiebreaker (decided now), or an
+# exact tie that would straddle the last playoff spot in at least one set of CCG results.
+TOSS_STATE = "data/CoinTossAlert.json"  # last alert sent (so each situation is posted once)
+
+
+def toss_risks(year, d):
+    """[(kind, teams, detail)] for every possible real coin toss this season."""
+    return division_toss_risks(year) + playoff_toss_risks(d)
+
+
+def division_toss_risks(year):
+    out = []
+    st = ps.standings(year)
+    for (lname, div), grp in st.groupby(["LeagueName", "Division"]):
+        r, ties, _ = ps.rank_ties(grp, real_toss=True)
+        top = next((t for t in ties if r.iloc[0]["Team"] in t), None)
+        if top:
+            out.append(("Division title", top, f"{lname.strip()} / {div}: tied for the division title"))
+    return out
+
+
+def playoff_toss_risks(d):
+    """Exact ties that straddle the last playoff spot in at least one set of CCG results."""
+    out = []
+    if d["tie"] and d["ccg"]:
+        tm = {t["k"]: t for t in d["order"]}
+        for g in d["tie"]:
+            hit, n = 0, 0
+            for bits in itertools.product((0, 1), repeat=len(d["ccg"])):
+                f = field(d, [c["a"] if b else c["b"] for c, b in zip(d["ccg"], bits)])
+                n += 1
+                hit += any(0 < f.get(k, 0) < 1 for k in g)
+            if hit:
+                names = [tm[k]["team"] for k in g]
+                t0 = tm[g[0]]
+                out.append(("Last playoff spot", names,
+                            f"tied at {t0['w']}-{t0['l']}{'-' + str(t0['t']) if t0['t'] else ''}, {t0['pf']:.2f} PF, "
+                            f"{t0['pa']:.2f} PA (#{t0['rank']}); decides the last spot in {hit:,} of {n:,} CCG outcome sets"))
+    return out
+
+
+def toss_alert(year, risks):
+    """Post the coin-toss alert to lm-private-data once per situation (needs the webhook secret)."""
+    text = ""
+    if risks:
+        lines = [f"🪙 **Possible real coin toss — {year}** (regular season final)"]
+        for kind, teams, detail in risks:
+            lines.append(f"• **{kind}:** {' vs '.join(teams)} — {detail}")
+        lines.append("No hidden toss: if it decides the outcome, hold a real toss with both managers present and "
+                     "record it in config/league.json → tiebreakers.coin_toss_results "
+                     '({"year", "teams", "order": [winner, loser]}).')
+        text = "\n".join(lines)
+    old = json.load(open(TOSS_STATE)).get(str(year), "") if os.path.exists(TOSS_STATE) else ""
+    if not text or text == old:
+        return text
+    print(text)
+    hook = os.environ.get("DISCORD_WEBHOOK_LM_PRIVATE_DATA", "").strip()
+    if not hook:
+        print("Coin-toss alert NOT posted: DISCORD_WEBHOOK_LM_PRIVATE_DATA not set")
+        return text
+    contact = os.environ.get("DISCORD_CONTACT_ID", "").strip()
+    import requests
+    r = requests.post(hook, json={"content": text + (f" <@{contact}>" if contact else ""),
+                                  "allowed_mentions": {"users": [contact] if contact else []}}, timeout=30)
+    if r.status_code >= 300:
+        print(f"Coin-toss alert post failed: HTTP {r.status_code}")
+        return text
+    state = json.load(open(TOSS_STATE)) if os.path.exists(TOSS_STATE) else {}
+    state[str(year)] = text
+    json.dump(state, open(TOSS_STATE, "w"), indent=1)
+    return text
+
+
 def check(year):
     """Past season: rebuild the board from the real CCG results and compare to the real field."""
     d = build(year)
@@ -198,6 +273,7 @@ def main():
         print(f"Selection Watch {year}: regular season not finished (weeks {missing[0]}-{missing[-1]} to go); nothing written")
         return
     d = build(year)
+    toss_alert(year, toss_risks(year, d))  # before the CCG check: a division-title tie blocks pairing
     if len(d["ccg"]) == 0:
         print(f"Selection Watch {year}: no CCG pairings yet (conference_championships.py); nothing written")
         return
