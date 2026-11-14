@@ -100,18 +100,20 @@
     const started=new Set((roster.starters||[]).map(String));
     let zeros=0;
     const candidates=(roster.players||[]).map(String).filter(id=>!started.has(id)).map(id=>players[id]).filter(Boolean);
-    const keep=[];
+    const keep=[],plain=[];
     for (const p of candidates) {
       if (['bye','out'].includes(p.phase) || (!p.baseline&&!p.actual)) { zeros++;continue; }
       if (pregame) { keep.push({...p,gain:0});continue; }
       const alternatives=starters.filter((s,i)=>eligible(p.positions,slots[i],cfg));
       const gain=Math.max(-Infinity,...alternatives.map(s=>p.projected-s.projected));
       const close=alternatives.some(s=>p.baseline>=s.baseline-cfg.bench_near_points);
-      if (gain>0 || close) keep.push({...p,gain,close});
+      if (gain>0 || close) keep.push({...p,gain,close}); else plain.push({...p,gain:0});
     }
     const order=['QB','RB','WR','TE','K','DEF'];
     keep.sort(pregame?(a,b)=>order.indexOf(a.position)-order.indexOf(b.position)||b.baseline-a.baseline:(a,b)=>b.gain-a.gain);
-    return {players:pregame?keep:keep.slice(0,5),zeros,others:candidates.length-zeros-(pregame?keep.length:Math.min(5,keep.length))};
+    // rest: every other bench player with points or a projection, for "Show all bench" (2026-11-14)
+    const rest=pregame?[]:[...keep.slice(5),...plain].sort((a,b)=>b.actual-a.actual||b.baseline-a.baseline);
+    return {players:pregame?keep:keep.slice(0,5),rest,zeros,others:candidates.length-zeros-(pregame?keep.length:Math.min(5,keep.length))};
   }
   const api={num,round,statsMap,normalizedStats,score,remaining,eligible,bestLineup,probability,chanceTop,playerModel,teamModel,benchPlayers};
   if(typeof module!=='undefined' && module.exports) module.exports=api;

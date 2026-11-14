@@ -37,16 +37,22 @@ class FollowsFirst(unittest.TestCase):
         def api(route):
             u = route.request.url
             d = fx['rosters'] if '/matchups/' in u else (fx['stats'] if '/stats/' in u else {'scoring_settings': fx['scoring']})
+            if u.endswith('/users'):  # the embedded game page (My team) also loads managers
+                d = [{'user_id': f'u{r["roster_id"]}', 'display_name': f'Manager {r["roster_id"]}'} for r in fx['rosters']]
+            elif u.endswith('/rosters'):
+                d = [{'roster_id': r['roster_id'], 'owner_id': f'u{r["roster_id"]}'} for r in fx['rosters']]
             route.fulfill(content_type='application/json', body=json.dumps(d))
 
-        def run(browser, follows, standalone=False, first=None):
+        def run(browser, follows, standalone=False, first=None, mine=None):
             page = browser.new_page(viewport={'width': 1150, 'height': 1000}, service_workers='block')
-            init = "try{sessionStorage.setItem('ncaa180.push.snooze','1');"
+            init = "if(window.top===window)try{sessionStorage.setItem('ncaa180.push.snooze','1');"
             if follows is not None:
-                init += f"localStorage.setItem('ncaa180.push',{json.dumps(json.dumps({'follows': follows}))});"
+                st = {'follows': follows}
+                if mine: st['myTeam'] = mine
+                init += f"localStorage.setItem('ncaa180.push',{json.dumps(json.dumps(st))});"
             if first is not None:
                 init += f"localStorage.setItem('sb-follows-first','{first}');"
-            init += "}catch(e){}"
+            init += "}catch(e){}"  # top page only: the My team iframe must not reset storage
             if standalone:
                 init += "window.matchMedia=(q=>({matches:/standalone/.test(q),addEventListener(){},removeEventListener(){}}));"
             page.add_init_script(init)
@@ -61,7 +67,19 @@ class FollowsFirst(unittest.TestCase):
               banner:!!document.querySelector('.fol-banner'),toggle:!!document.getElementById('fol-first'),
               teamCards:document.querySelectorAll('[data-id=fol-teams] .mini-match').length,
               yourConfs:document.querySelectorAll('[data-id=fol-leagues] details.conference').length,
-              heads:[...document.querySelectorAll('#board h3.sec')].map(h=>h.textContent.trim().split(' ')[0])})""")
+              heads:[...document.querySelectorAll('#board h3.sec')].map(h=>h.textContent.trim().split(' ')[0]),
+              myBoard:!!document.getElementById('my-board')&&!document.getElementById('my-board').hidden,
+              mySrc:document.querySelector('#my-board iframe')?.getAttribute('src')||'',
+              myTeam:JSON.parse(localStorage.getItem('ncaa180.push')||'{}').myTeam||''})""")
+            if out['myBoard']:  # the embedded game page loads without chrome and sizes its frame
+                fr = page.frame_locator('#my-board iframe')
+                fr.locator('.big').first.wait_for(timeout=60000)
+                out['embedBigs'] = fr.locator('.big').count()
+                out['embedNav'] = fr.locator('nav.weeks').is_visible()
+                page.wait_for_function("parseInt(document.querySelector('#my-board iframe').style.height)>200", timeout=30000)
+                if os.environ.get('SCOREBOARD_SCREENSHOTS'):
+                    page.set_viewport_size({'width': 400, 'height': 1000}); page.wait_for_timeout(1500)
+                    page.screenshot(path=os.path.join(os.environ['SCOREBOARD_SCREENSHOTS'], f'my-team-{len(follows)}.png'), full_page=True)
             page.close()
             self.assertEqual(errs, [])
             return out
@@ -74,17 +92,26 @@ class FollowsFirst(unittest.TestCase):
             # installed app, no follows: banner only
             o = run(b, [], standalone=True)
             self.assertTrue(o['banner']); self.assertNotIn('fol-teams', o['ids'])
-            # follows a team and a conference: teams, conferences, featured, then the rest
-            f = [{'kind': 'team', 'key': f'ncaa180|{label}:{fx["rosters"][0]["roster_id"]}'}, {'kind': 'league', 'key': f'ncaa180|{label}'}]
+            rid = fx["rosters"][0]["roster_id"]
+            me = f'ncaa180|{label}:{rid}'
+            # follows a team and a conference: that team becomes My team automatically (existing users,
+            # 2026-11-14) and gets the full board; its game is not repeated as a card
+            f = [{'kind': 'team', 'key': me}, {'kind': 'league', 'key': f'ncaa180|{label}'}]
             o = run(b, f)
-            self.assertEqual(o['ids'][:2], ['fol-teams', 'fol-leagues'])
-            self.assertGreaterEqual(o['teamCards'], 1); self.assertEqual(o['yourConfs'], 1)
-            self.assertIn('Other', o['heads']); self.assertTrue(o['toggle'])
-            # plain order toggle off: no follow sections, toggle still there to turn it back on
+            self.assertEqual(o['myTeam'], me); self.assertTrue(o['myBoard'])
+            self.assertIn('embed=1', o['mySrc']); self.assertEqual(o['embedBigs'], 2); self.assertFalse(o['embedNav'])
+            self.assertEqual(o['ids'][:1], ['fol-leagues']); self.assertNotIn('fol-teams', o['ids'])
+            self.assertEqual(o['yourConfs'], 1); self.assertIn('Other', o['heads']); self.assertTrue(o['toggle'])
+            # My team plus every team in the conference: the other games stay compact cards
+            many = [{'kind': 'team', 'key': f'ncaa180|{label}:{r["roster_id"]}'} for r in fx['rosters']]
+            o = run(b, many, mine=me)
+            self.assertTrue(o['myBoard']); self.assertEqual(o['ids'][:1], ['fol-teams'])
+            self.assertEqual(o['teamCards'], len(fx['rosters']) // 2 - 1)
+            # plain order toggle off: no follow sections or board, toggle still there to turn it back on
             o = run(b, f, first='0')
-            self.assertNotIn('fol-teams', o['ids']); self.assertTrue(o['toggle'])
-            # follows a team that isn't playing: empty-state message, no league section
+            self.assertNotIn('fol-teams', o['ids']); self.assertFalse(o['myBoard']); self.assertTrue(o['toggle'])
+            # My team not playing and no other team follows: empty-state message, no board
             o = run(b, [{'kind': 'team', 'key': 'ncaa180|Nowhere:99'}])
-            self.assertIn('fol-teams', o['ids']); self.assertEqual(o['teamCards'], 0); self.assertNotIn('fol-leagues', o['ids'])
+            self.assertFalse(o['myBoard']); self.assertIn('fol-teams', o['ids']); self.assertEqual(o['teamCards'], 0)
             b.close()
         srv.shutdown()

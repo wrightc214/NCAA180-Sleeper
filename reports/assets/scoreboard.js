@@ -5,6 +5,12 @@
   if(!route.has('game')&&!route.has('post')&&!route.has('roster')&&route.get('view')!=='game')return;
   document.getElementById('overview-back').hidden=false;
   document.body.classList.add('game-view');
+  // Embed mode (My team board on the Games overview, 2026-11-14): no page chrome, links open in the
+  // top window, and the page reports its height so the parent sizes the iframe.
+  const embed=route.get('embed')==='1'&&window.parent!==window;
+  if(embed){document.body.classList.add('embed');const bs=document.createElement('base');bs.target='_top';document.head.append(bs);
+    const post=()=>parent.postMessage({type:'ncaa180-h',h:document.documentElement.scrollHeight},'*');
+    new ResizeObserver(post).observe(document.body);addEventListener('load',post);}
 
   const C=window.ScoreboardCore, $=id=>document.getElementById(id);
   const escape=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -217,10 +223,25 @@
     if(postGame){const x=postSide(chosen[0]);if(x)html+=oddsBar(...chosen,Number(x.WinPct),true,'PREGAME · TUESDAY');}
     const saved=postGame?null:baseline.odds.find(o=>o.LeagueID===leagueId && [o.RosterID,o.OpponentRosterID].includes(String(chosen[0].roster_id)));
     if(saved) html+=oddsBar(...chosen,saved.RosterID===String(chosen[0].roster_id)?Number(saved.WinPct):100-Number(saved.WinPct),true,'PREGAME · TUESDAY');
-    html+=`</div><div class="board"><h2>Starters${pregame?' · projected points':''}</h2>${paired(a.starters,b.starters,slots)}<h2>Bench · ${pregame?'available by position':'would have helped / close calls'}</h2>${paired(benches[0].players,benches[1].players,Array(Math.max(...benches.map(x=>x.players.length))).fill('BN'),false)}<div class="bz">${benches.map(x=>`<span>${x.zeros} others · 0 pts / bye / out${x.others?` · ${x.others} not shown`:''}</span>`).join('')}</div></div>`;
+    html+=`</div><div class="board"><h2>Starters${pregame?' · projected points':''}</h2>${paired(a.starters,b.starters,slots)}${benchHtml(benches,pregame)}</div>`;
     $('board').innerHTML=html;
     return [...new Set([...warns,...(metadataWarning?[metadataWarning]:[])])];
   }
+  // Bench (Chris, 2026-11-14): folded by default (remembered on this device). Open = the notable bench;
+  // "Show all bench" adds every other player with points. 0 pts / bye / out stay a count.
+  const pref=(k,v)=>{try{if(v===undefined)return localStorage.getItem(k)==='1';localStorage.setItem(k,v?'1':'0');}catch(e){return false;}};
+  function benchHtml(benches,pregame){
+    const n=Math.max(...benches.map(x=>x.players.length)),more=Math.max(...benches.map(x=>x.rest.length));
+    const label=pregame?'available by position':n?`${benches.reduce((s,x)=>s+x.players.length,0)} would have helped / close calls`:'no close calls';
+    const all=more?`<details class="bench-all"${pref('sb-bench-all')?' open':''}><summary>Show all bench (${benches.reduce((s,x)=>s+x.rest.length,0)} more)</summary>${paired(benches[0].rest,benches[1].rest,Array(more).fill('BN'),false)}</details>`:'';
+    return `<details class="bench-d"${pref('sb-bench-open')?' open':''}><summary><h2>Bench · ${label}</h2></summary>${paired(benches[0].players,benches[1].players,Array(n).fill('BN'),false)}${all}<div class="bz">${benches.map(x=>`<span>${x.zeros} more · bye / out / no projection</span>`).join('')}</div></details>`;
+  }
+  document.addEventListener('toggle',e=>{const d=e.target;if(d.classList?.contains('bench-d'))pref('sb-bench-open',d.open);else if(d.classList?.contains('bench-all'))pref('sb-bench-all',d.open);},true);
+  // Image copy (Chris, 2026-11-14, option b): always starters + the notable bench, whatever is folded.
+  function snapHtml(){const c=$('board').cloneNode(true);
+    c.querySelectorAll('.bench-all').forEach(x=>x.remove());
+    c.querySelectorAll('details.bench-d').forEach(d=>{const h=d.querySelector('summary h2');d.querySelector('summary').replaceWith(h);d.replaceWith(...d.childNodes);});
+    return c.outerHTML;}
   // Save image (Chris, 2026-11-07): a PNG of this game exactly as a phone shows it -- header, odds,
   // starters and the notable bench ("would have helped / close calls"). The board is copied into a
   // hidden 400px-wide frame so the phone layout applies from any device; html2canvas 1.4.1 (vendored,
@@ -233,7 +254,7 @@
     const btn=$('save-img'),label=btn.textContent;btn.disabled=true;btn.textContent='Saving…';
     try {
       const names=chosen.map(r=>team(r.roster_id,r.leagueId).name).join(' vs ');
-      await window.NCAASnap.save({html:$('board').outerHTML,name:`${names} wk${week}`,title:names,stamp:{state:snapState,time:lastGood||new Date()},
+      await window.NCAASnap.save({html:snapHtml(),name:`${names} wk${week}`,title:names,stamp:{state:snapState,time:lastGood||new Date()},
         footer:`${cfg.brand||''} · ${location.host}${location.pathname.replace(/[^/]*$/,'')}`});
     } catch(e) {
       $('error').hidden=false;$('error').textContent=`Image could not be made (${e.message||e}).`;
@@ -254,7 +275,7 @@
         const warnings=render(stats,games);failures=0;lastGood=new Date();
         $('updated').textContent=`Updated ${lastGood.toLocaleTimeString()}${snapState==='final'?'':' · Unofficial'} · ${live?`auto-refresh ${crunch?'30 seconds':'5 minutes'}`:'manual refresh while no starters are live'}`;
         $('error').hidden=!warnings.length;$('error').textContent=warnings.join(' ');
-        const url=new URL(location.href);url.search=new URLSearchParams({season:String(season),week:String(week),post:postGame.id,...(route.has('overview')?{overview:route.get('overview')}:{})}).toString();history.replaceState(null,'',url);
+        const url=new URL(location.href);url.search=new URLSearchParams({season:String(season),week:String(week),post:postGame.id,...(route.has('overview')?{overview:route.get('overview')}:{}),...(embed?{embed:'1'}:{})}).toString();history.replaceState(null,'',url);
         const filter=route.get('overview')||'all';
         $('overview-back').href='scoreboard.html?'+new URLSearchParams({season,week,...(filter==='all'?{}:{league:filter})});
         if(live)schedule(crunch?cfg.refresh.crunch_ms:cfg.refresh.normal_ms);
@@ -288,7 +309,7 @@
       failures=0;lastGood=new Date();
       $('updated').textContent=`Updated ${lastGood.toLocaleTimeString()}${snapState==='final'?'':' · Unofficial'} · ${live?`auto-refresh ${crunch?'30 seconds':'5 minutes'}`:'manual refresh while no starters are live'}`;
       $('error').hidden=!warnings.length;$('error').textContent=warnings.join(' ');
-      const url=new URL(location.href);url.search=new URLSearchParams({season:String(season),league:leagueId,week:String(week),game:selected,...(route.has('overview')?{overview:route.get('overview')}:{})}).toString();history.replaceState(null,'',url);
+      const url=new URL(location.href);url.search=new URLSearchParams({season:String(season),league:leagueId,week:String(week),game:selected,...(route.has('overview')?{overview:route.get('overview')}:{}),...(embed?{embed:'1'}:{})}).toString();history.replaceState(null,'',url);
       const filter=route.get('overview')||leagueId;
       $('overview-back').href='scoreboard.html?'+new URLSearchParams({season,week,...(filter==='all'?{}:{league:filter})});
       if(live)schedule(crunch?cfg.refresh.crunch_ms:cfg.refresh.normal_ms);
