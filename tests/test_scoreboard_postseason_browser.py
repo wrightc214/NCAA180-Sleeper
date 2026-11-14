@@ -68,7 +68,8 @@ class PostseasonBrowserTests(unittest.TestCase):
                         page.goto(f'http://127.0.0.1:{server.server_port}/reports/scoreboard.html?week=13')
                         page.wait_for_function("document.getElementById('updated')?.textContent.startsWith('Updated')", timeout=30000)
                         secs = page.locator('h3.sec').all_inner_texts()
-                        self.assertEqual([s.split()[0].upper() for s in secs], ['PLAYOFF', 'BOWLS', 'NIT'])
+                        # the Game of the Week / natty card now sits in a collapsible "Featured" section (2026-11-14)
+                        self.assertEqual([s.split()[0].upper() for s in secs if not s.upper().startswith('FEATURED')], ['PLAYOFF', 'BOWLS', 'NIT'])
                         self.assertEqual(sorted(set(fetched)), sorted({x['LeagueID'] for g in games for x in g['sides']}))  # only leagues in games
                         self.assertEqual(page.locator('.gotw .gotw-badge').get_attribute('alt'), 'National Championship')  # natty logo, not GotW
                         self.assertEqual(page.locator('.mini-match.grp .score-row').count() >= 4, True)
