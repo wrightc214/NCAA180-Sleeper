@@ -61,6 +61,7 @@ class FollowsFirst(unittest.TestCase):
             page.route('https://api.sleeper.app/**', api)
             page.route('https://site.api.espn.com/**', lambda r: r.fulfill(content_type='application/json', body=json.dumps(espn)))
             page.route('https://fonts.*/**', lambda r: r.abort())
+            page.route('**/game-of-the-week.json', lambda r: r.fulfill(content_type='application/json', body=json.dumps({'6': {'teams': ['Montana State', 'Stony Brook'], 'reason': 'x', 'source': 'auto'}})))
             page.goto(f'http://127.0.0.1:{srv.server_port}/reports/scoreboard.html?week=6')
             page.wait_for_function("document.getElementById('updated')?.textContent.startsWith('Updated')", timeout=60000)
             out = page.evaluate("""()=>({ids:[...document.querySelectorAll('#board details.fsec')].map(d=>d.dataset.id),
@@ -70,6 +71,7 @@ class FollowsFirst(unittest.TestCase):
               heads:[...document.querySelectorAll('#board h3.sec')].map(h=>h.textContent.trim().split(' ')[0]),
               myBoard:!!document.getElementById('my-board')&&!document.getElementById('my-board').hidden,
               mySrc:document.querySelector('#my-board iframe')?.getAttribute('src')||'',
+              slotFirst:!!document.getElementById('gotw-slot')&&!!(document.getElementById('gotw-slot').compareDocumentPosition(document.getElementById('my-board')||document.getElementById('board'))&Node.DOCUMENT_POSITION_FOLLOWING),
               myTeam:JSON.parse(localStorage.getItem('ncaa180.push')||'{}').myTeam||''})""")
             if out['myBoard']:  # the embedded game page loads without chrome and sizes its frame
                 fr = page.frame_locator('#my-board iframe')
@@ -106,6 +108,7 @@ class FollowsFirst(unittest.TestCase):
             many = [{'kind': 'team', 'key': f'ncaa180|{label}:{r["roster_id"]}'} for r in fx['rosters']]
             o = run(b, many, mine=me)
             self.assertTrue(o['myBoard']); self.assertEqual(o['ids'][:1], ['fol-teams'])
+            self.assertTrue(o['slotFirst'])  # Game of the Week above My team (2026-11-14)
             self.assertEqual(o['teamCards'], len(fx['rosters']) // 2 - 1)
             # plain order toggle off: no follow sections or board, toggle still there to turn it back on
             o = run(b, f, first='0')

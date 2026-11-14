@@ -168,7 +168,7 @@
         if(t.length&&!t.every(g=>moved.has(g.post.round)))ev+=fsec('fol-champs','Title games','',`<div class="feat">${t.map(g=>`<section class="feat-card">${card(g)}</section>`).join('')}</div>`);}
       if(ev)html+=`<h3 class="sec fol-h">Your events</h3>`+ev;
     }
-    if(top)html+=fsec('featured','Featured','',`<section class="gotw"><img class="gotw-badge" src="${featBadge(top)}" alt="${featAlt(top)}"><div class="feat-card">${card(top)}</div></section>`);
+    topSlot(top&&fsec('gotw-top',featAlt(top),'',`<section class="gotw"><img class="gotw-badge" src="${featBadge(top)}" alt="${featAlt(top)}"><div class="feat-card">${card(top)}</div></section>`));
     for(const s of SECT)if(!moved.has(s[0]))html+=sect(s);
     if(use||F.on===false)html+=plainToggle(F);
     const errs=[...cards.entries()].filter(([,c])=>c?.error).map(([id,c])=>`${lname(id)}: ${c.error}`);
@@ -247,6 +247,14 @@
     if(fr.getAttribute('src')!==src)fr.setAttribute('src',src);
     box.hidden=false;
   }
+  // Game of the Week gets top billing, above My team (Chris, 2026-11-14): its own slot before #my-board
+  // and #board. Plain HTML, so it is simply rewritten on each paint.
+  function topSlot(html){
+    let el=$('gotw-slot');
+    if(!el){if(!html)return;el=document.createElement('div');el.id='gotw-slot';($('my-board')||$('board')).before(el);}
+    el.innerHTML=html||'';
+    el.querySelector('details')?.addEventListener('toggle',e=>setFolded('gotw-top',!e.target.open));
+  }
   function plainToggle(F){
     if(F.none&&!F.events.size)return '';
     return `<p class="fol-toggle"><label><input type="checkbox" id="fol-first"${F.on?' checked':''}> Show my follows first</label></p>`;
@@ -259,7 +267,7 @@
   function foldBar(){return `<div class="fold-bar"><button type="button" id="fold-all" class="fold-all"></button></div>`;}
   function wireFold(){
     const b=$('fold-all');if(!b)return;
-    const ds=()=>[...$('board').querySelectorAll(FOLD_SEL),...($('my-board')&&!$('my-board').hidden?[$('my-board')]:[])],label=()=>{b.textContent=ds().some(d=>d.open)?'Collapse all':'Expand all';};
+    const ds=()=>[...($('gotw-slot')?.querySelectorAll(FOLD_SEL)||[]),...$('board').querySelectorAll(FOLD_SEL),...($('my-board')&&!$('my-board').hidden?[$('my-board')]:[])],label=()=>{b.textContent=ds().some(d=>d.open)?'Collapse all':'Expand all';};
     label();b.addEventListener('click',()=>{const open=!ds().some(d=>d.open);ds().forEach(d=>{d.open=open;});label();});
     ds().forEach(d=>d.addEventListener('toggle',label));
   }
@@ -308,7 +316,7 @@
     }
     const top=all.find(isGotw);
     let fe='';
-    if(top)fe+=`<section class="gotw"><img class="gotw-badge" src="${badge()}" alt="Game of the Week"><div class="feat-card">${card(top)}${gotwPick()?.reason?`<p class="gotw-why">${esc(gotwPick().reason)}</p>`:''}</div></section>`;
+    topSlot(top&&fsec('gotw-top','Game of the Week','',`<section class="gotw"><img class="gotw-badge" src="${badge()}" alt="Game of the Week"><div class="feat-card">${card(top)}${gotwPick()?.reason?`<p class="gotw-why">${esc(gotwPick().reason)}</p>`:''}</div></section>`));
     fe+=callouts(top);
     if(rvr.length)fe+=`<h3 class="sec">Ranked vs ranked <small>${nG(rvr.length)}</small></h3>${feat(rvr)}`;
     if(ranked.length)fe+=`<details class="sec-d" id="ranked-d"${open?' open':''}><summary><h3 class="sec">Ranked teams in action <small>${nG(ranked.length)}</small></h3></summary>${feat(ranked)}</details>`;
