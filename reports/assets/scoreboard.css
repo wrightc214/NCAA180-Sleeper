@@ -24,3 +24,10 @@
 body.embed{background:transparent}
 body.embed .weeks,body.embed .sbh,body.embed .validation,body.embed #chooser,body.embed .overview-back,body.embed #overview-help,body.embed .note,body.embed .totop{display:none!important}
 body.embed .gwrap{padding:0;margin:0;max-width:none}
+
+/* Bench folds (2026-11-14) */
+.bench-d>summary,.bench-all>summary{list-style:none;cursor:pointer}
+.bench-d>summary::-webkit-details-marker,.bench-all>summary::-webkit-details-marker{display:none}
+.bench-d>summary h2::after{content:" \25B8";font-size:.8em}.bench-d[open]>summary h2::after{content:" \25BE"}
+.bench-all>summary{font:700 12px var(--sans,sans-serif);letter-spacing:.03em;text-transform:uppercase;color:#38638b;padding:8px 0}
+.bench-all[open]>summary{color:var(--mute)}
