@@ -52,6 +52,10 @@ def nav_html(current, weeks=None):
     if current == "postseason" or os.path.exists(os.path.join(OUT_DIR, "postseason.html")):
         # Projected field + bowls in season (bowl_projection.py); the real postseason after selection
         links.append(f'<a href="postseason.html"{cur if current == "postseason" else ""}>Postseason</a>')
+    if current == "special" or os.path.exists(os.path.join(OUT_DIR, "special.html")):
+        # Special Events (Chris, 2026-11-14): the Guillotine now, the Dwight Fight and other
+        # non-standard events later, each its own sub-tab (special_nav_html)
+        links.append(f'<a href="special.html"{cur if current == "special" else ""}>Special Events</a>')
     if current == "managers" or os.path.exists(os.path.join(OUT_DIR, "managers.html")):
         links.append(f'<a href="managers.html"{cur if current == "managers" else ""}>Managers</a>')
     if current == "records" or os.path.exists(os.path.join(OUT_DIR, "records.html")):
@@ -61,6 +65,17 @@ def nav_html(current, weeks=None):
         links.append(f'<a href="app.html" class="n180-bell" aria-label="Notification settings" title="Notification settings"'
                      f'{cur if current == "app" else ""}>{BELL}</a>')
     return "".join(links)
+
+
+# Special Events sub-tabs: (page, label). Add an event here when its page exists (Dwight Fight next).
+SPECIAL_EVENTS = [("special.html", "The Guillotine")]
+
+
+def special_nav_html(current):
+    cur = ' aria-current="page"'
+    links = "".join(f'<a href="{href}"{cur if href == current else ""}>{html.escape(label)}</a>'
+                    for href, label in SPECIAL_EVENTS if href == current or os.path.exists(os.path.join(OUT_DIR, href)))
+    return f'<nav class="weeks sub" aria-label="Special events"><span>Event</span>{links}</nav>'
 
 
 def week_archive_html(current, weeks=None, prefix="week-"):

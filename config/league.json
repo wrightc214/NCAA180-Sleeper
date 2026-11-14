@@ -956,6 +956,16 @@
       "seed": 2026,
       "top_games": "leagues",
       "min_swing": 0.05
+    },
+    "guillotine": {
+      "_note": "The Guillotine (Chris, 2026-11-04 / 11-14; claude/todo-guillotine.md): every team plays weeks first_week..last_week on its own standard score. Each week half of the field entering the week (rounded down) advances; everyone tied with the last spot advances too (PGA style). The top score in last_week wins; an exact tie there is broken by tiebreak_week's score, then co-champions. A rerun after stat corrections only ADDS teams to a frozen week (nobody already advanced is removed). Orphan teams play like everyone else.",
+      "name": "The Guillotine",
+      "from_season": 2026,
+      "first_week": 13,
+      "last_week": 17,
+      "tiebreak_week": 18,
+      "badge": "assets/logos/badges/Guillotine.png",
+      "_badge_note": "Placeholder (a copy of the GOTW Postseason badge) until Chris makes the real one: replace the file, keep the name."
     }
   },
   "draft": {
