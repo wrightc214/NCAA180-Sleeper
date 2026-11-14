@@ -17,13 +17,13 @@ from site_common import nav_html, page_head, special_nav_html  # noqa: E402
 
 CSS = """
 .gwrap{max-width:900px}
-.gl-title{display:flex;align-items:center;gap:14px}.gl-title img{width:64px;height:64px;object-fit:contain}
+.gl-hdr{padding-bottom:10px;border-bottom:3px solid var(--accent);margin-bottom:6px}.gl-title{margin:8px 0 0;line-height:0}.gl-title img{display:block;width:100%;max-width:640px;height:auto}
 .tools{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:10px 0}
 .tools button{font:600 14px var(--num);padding:9px 12px;border:1px solid var(--line);border-radius:5px;background:var(--panel);color:var(--ink);cursor:pointer}
 .tools #updated{font-size:13px;color:var(--mute)}
 #error{padding:12px;background:#fff0d7;color:#722a00;border:1px solid #aa6d15;border-radius:5px}
 .gl-champ{display:flex;align-items:center;gap:14px;background:var(--panel);border:2px solid var(--gold);border-radius:10px;padding:12px 16px;margin:10px 0}
-.gl-champ img{width:56px;height:56px;object-fit:contain}.gl-cname{display:flex;align-items:center;gap:8px;font:800 24px var(--num)}
+.gl-champ{flex-wrap:wrap}.gl-champ img{width:min(320px,100%);height:auto}.gl-cname{display:flex;align-items:center;gap:8px;font:800 24px var(--num)}
 .gl-head{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:10px 0 6px}
 .gl-k{display:flex;flex-direction:column;align-items:center;text-align:center}.gl-k b{font:800 26px/1.1 var(--num)}
 .gl-k span{font:600 10px var(--body);text-transform:uppercase;letter-spacing:.05em;color:var(--mute)}.gl-k.proj b{color:var(--accent)}
@@ -53,7 +53,7 @@ CSS = """
 .gl-weeks{margin-top:8px}
 @media(max-width:600px){.gl-head{grid-template-columns:repeat(2,minmax(0,1fr))}.gl-k b{font-size:22px}
 .live-t .gl-h,.live-t .gl-r{grid-template-columns:20px minmax(0,1fr) 56px 46px 34px 46px;gap:4px;padding:6px 6px}
-.gl-n,.gl-w{font-size:14px}.gl-t{font-size:13px}.gl-title img{width:44px;height:44px}}
+.gl-n,.gl-w{font-size:14px}.gl-t{font-size:13px}}
 [hidden]{display:none!important}
 """
 
@@ -64,12 +64,13 @@ def main():
     brand = html.escape(c.get("brand", ""))
     g = c["postseason"].get("guillotine", {})
     name = html.escape(g.get("name", "The Guillotine"))
-    badge = html.escape("../" + g.get("badge", "")) if g.get("badge") else ""
+    logo = g.get("logos", {}).get("wordmark", "")
+    logo = html.escape("../" + logo.replace(" ", "%20")) if logo else ""
     body = f'''<div class="wrap gwrap">
 <nav class="weeks" aria-label="Pages">{nav_html("special")}</nav>
 {special_nav_html("special.html")}
-<header class="sbh"><div><div class="eyebrow">Special events · every team · postseason weeks</div>
-<h1 class="gl-title">{f'<img src="{badge}" alt="">' if badge else ''}<span>{brand} <em>{name}</em></span></h1></div></header>
+<header class="sbh gl-hdr"><div class="eyebrow">{brand} · special events · every team · postseason weeks</div>
+<h1 class="gl-title">{f'<img id="gl-logo" src="{logo}" alt="{name}">' if logo else f'{brand} <em>{name}</em>'}</h1></header>
 <div class="tools"><button id="refresh" type="button">↻ Refresh</button><span id="updated" role="status">Loading…</span></div>
 <p id="error" role="alert" hidden></p>
 <div id="board" aria-live="polite"></div>

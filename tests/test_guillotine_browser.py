@@ -19,7 +19,9 @@ def _gd(index, live=True):
             teams.append({'l': lid, 'r': rid, 'team': t['name'], 'owner': f'mgr{rid}', 'league': lg['name'],
                           'status': 'alive', 'out': None, 'scores': {}, 'added': []})
     gd = {'season': 2026, 'name': 'The Guillotine', 'first_week': 13, 'last_week': 17, 'tiebreak_week': 18,
-          'badge': 'assets/logos/badges/Guillotine.png', 'status': 'upcoming', 'next_week': 13,
+          'logos': {'wordmark': 'assets/logos/Guillotine/Guillotine.png', 'mark': 'assets/logos/Guillotine/Guillotine G.png',
+                    'weeks': {str(w): f'assets/logos/Guillotine/{n}.png' for w, n in zip(range(13, 18), ['Round 1', 'Round 2', 'Round 3', 'Round 4', 'Final'])}},
+          'status': 'upcoming', 'next_week': 13,
           'entrants': len(teams), 'weeks': [], 'champions': [], 'teams': teams}
     if not live:
         for i, t in enumerate(teams):
@@ -113,6 +115,8 @@ class GuillotineBrowserTests(unittest.TestCase):
             # MNF Q4 -> automatic refresh every 30 seconds
             self.assertIn('every 30 seconds', page.locator('#updated').inner_text())
             self.assertEqual(page.locator('nav[aria-label="Special events"] a').inner_text(), 'The Guillotine')
+            self.assertIn('Round%201.png', page.locator('#gl-logo').get_attribute('src'))
+            self.assertTrue(page.evaluate("[...document.images].filter(i=>i.src.includes('Guillotine')).every(i=>i.complete&&i.naturalWidth>0)"))
             self.assertIn('Special Events', page.locator('nav.weeks[aria-label="Pages"]').inner_text())
         self.run_page(gd, 13, live, 'live', check)
 
@@ -135,10 +139,12 @@ class GuillotineBrowserTests(unittest.TestCase):
             # week 14 live view: only the 91 survivors, from their conferences only
             self.assertEqual(page.locator('.live-t .gl-r').count(), 91)
             self.assertEqual(page.locator('.out-t .gl-r').count(), 89)
+            self.assertIn('Round%202.png', page.locator('#gl-logo').get_attribute('src'))
             self.assertEqual(page.locator('.gl-weeks a').count(), 2)
             page.click('.gl-weeks a >> nth=0')
             page.wait_for_selector('.fz-t')
             self.assertEqual(page.locator('.fz-t .gl-r').count(), 180)
+            self.assertIn('Round%201.png', page.locator('#gl-logo').get_attribute('src'))
             self.assertEqual(page.locator('.fz-t .gl-r.gone').count(), 89)
             self.assertIn('added after stat corrections', page.locator('.fz-t').inner_text())
         self.run_page(gd, 14, pre, 'frozen', check)

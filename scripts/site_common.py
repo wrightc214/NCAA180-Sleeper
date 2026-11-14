@@ -67,14 +67,15 @@ def nav_html(current, weeks=None):
     return "".join(links)
 
 
-# Special Events sub-tabs: (page, label). Add an event here when its page exists (Dwight Fight next).
-SPECIAL_EVENTS = [("special.html", "The Guillotine")]
+# Special Events sub-tabs: (page, label, icon). Add an event here when its page exists (Dwight Fight next).
+SPECIAL_EVENTS = [("special.html", "The Guillotine", "../assets/logos/Guillotine/Guillotine%20G.png")]
 
 
 def special_nav_html(current):
     cur = ' aria-current="page"'
-    links = "".join(f'<a href="{href}"{cur if href == current else ""}>{html.escape(label)}</a>'
-                    for href, label in SPECIAL_EVENTS if href == current or os.path.exists(os.path.join(OUT_DIR, href)))
+    icon = lambda src: f'<img src="{src}" alt="" width="16" height="16" style="vertical-align:-3px;margin-right:4px">' if src else ""  # noqa: E731
+    links = "".join(f'<a href="{href}"{cur if href == current else ""}>{icon(src)}{html.escape(label)}</a>'
+                    for href, label, src in SPECIAL_EVENTS if href == current or os.path.exists(os.path.join(OUT_DIR, href)))
     return f'<nav class="weeks sub" aria-label="Special events"><span>Event</span>{links}</nav>'
 
 

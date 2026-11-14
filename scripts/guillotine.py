@@ -193,7 +193,7 @@ def page_json(year, g, rows, summary, ids):
                                       and r["AddedByCorrection"] == "1")})
     return {"season": int(year), "name": g.get("name", "The Guillotine"), "first_week": int(g["first_week"]),
             "last_week": int(g["last_week"]), "tiebreak_week": int(g.get("tiebreak_week", int(g["last_week"]) + 1)),
-            "badge": g.get("badge", ""), "status": "final" if summary["finished"] else "live" if summary["weeks"] else "upcoming",
+            "logos": g.get("logos", {}), "status": "final" if summary["finished"] else "live" if summary["weeks"] else "upcoming",
             "next_week": summary["next_week"], "entrants": len(ids), "weeks": summary["weeks"],
             "champions": [{"l": k[0], "r": k[1], "team": ids[k]["Team"]} for k in summary["champions"]],
             "teams": teams, "built_at": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")}

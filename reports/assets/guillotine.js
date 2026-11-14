@@ -48,7 +48,7 @@
   function champBanner(){
     if(!gd.champions?.length)return '';
     const co=gd.champions.length>1;
-    return `<section class="gl-champ"><img src="${esc('../'+gd.badge)}" alt="" onerror="this.hidden=true"><div><div class="eyebrow">${esc(gd.name)} ${co?'co-champions':'champion'}</div>${gd.champions.map(c=>`<div class="gl-cname">${icon(c)} ${esc(ident(c).name)}</div>`).join('')}</div></section>`;
+    return `<section class="gl-champ"><img src="${esc(logoFor(gd.last_week))}" alt="${esc(gd.name)} final" onerror="this.hidden=true"><div><div class="eyebrow">${esc(gd.name)} ${co?'co-champions':'champion'}</div>${gd.champions.map(c=>`<div class="gl-cname">${icon(c)} ${esc(ident(c).name)}</div>`).join('')}</div></section>`;
   }
   function rules(){
     const n=gd.entrants||gd.teams.length;
@@ -121,7 +121,11 @@
     const head=`<section class="gl-head card"><div class="gl-k"><b>${f.field}</b><span>played</span></div><div class="gl-k"><b>${f.advanced}</b><span>${last?'champion':'survived'}</span></div><div class="gl-k"><b>${Number(f.cutline).toFixed(2)}</b><span>${last?'winning score':'cut line'}</span></div>${f.added?`<div class="gl-k"><b>${f.added}</b><span>added by stat corrections</span></div>`:''}</section>`;
     return `${head}<p class="gl-state">${esc(wkName(w))} · Final</p><div class="gl-table fz-t"><div class="gl-h"><span></span><span>Team</span><span>Score</span><span></span></div>${rows}</div>`;
   }
+  // Chris's logos: the round logo for the week on screen; the plain wordmark before the first week.
+  function logoFor(w){const L=gd.logos||{},src=L.weeks?.[String(w)]||L.wordmark||'';return src?'../'+src.split(' ').join('%20'):'';}
   function paint(){
+    const lg=$('gl-logo'),src=logoFor(gd.status==='upcoming'&&!frozen(week)&&!baseline?null:week);
+    if(lg&&src&&lg.getAttribute('src')!==src){lg.setAttribute('src',src);lg.alt=`${gd.name} · ${wkName(week)}`;}
     let body=champBanner()+weekNav();
     if(gd.status==='upcoming'&&!baseline)body+=`<p class="gl-state">Starts ${esc(wkName(gd.first_week))}: all ${gd.entrants} teams. Projections appear here once that week's postseason games are set.</p>`;
     if(frozen(week))body+=frozenView(week);else if(week===liveWeek())body+=liveView();

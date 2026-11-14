@@ -964,8 +964,18 @@
       "first_week": 13,
       "last_week": 17,
       "tiebreak_week": 18,
-      "badge": "assets/logos/badges/Guillotine.png",
-      "_badge_note": "Placeholder (a copy of the GOTW Postseason badge) until Chris makes the real one: replace the file, keep the name."
+      "logos": {
+        "wordmark": "assets/logos/Guillotine/Guillotine.png",
+        "mark": "assets/logos/Guillotine/Guillotine G.png",
+        "weeks": {
+          "13": "assets/logos/Guillotine/Round 1.png",
+          "14": "assets/logos/Guillotine/Round 2.png",
+          "15": "assets/logos/Guillotine/Round 3.png",
+          "16": "assets/logos/Guillotine/Round 4.png",
+          "17": "assets/logos/Guillotine/Final.png"
+        }
+      },
+      "_logos_note": "Chris's logos (2026-11-14). wordmark = no round (default, out of season); mark = square G (Special Events sub-tab); weeks = the round logo shown for that week, Final = week 17 and the champion banner."
     }
   },
   "draft": {
