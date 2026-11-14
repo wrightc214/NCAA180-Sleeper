@@ -5,6 +5,12 @@
   if(!route.has('game')&&!route.has('post')&&!route.has('roster')&&route.get('view')!=='game')return;
   document.getElementById('overview-back').hidden=false;
   document.body.classList.add('game-view');
+  // Embed mode (My team board on the Games overview, 2026-11-14): no page chrome, links open in the
+  // top window, and the page reports its height so the parent sizes the iframe.
+  const embed=route.get('embed')==='1'&&window.parent!==window;
+  if(embed){document.body.classList.add('embed');const bs=document.createElement('base');bs.target='_top';document.head.append(bs);
+    const post=()=>parent.postMessage({type:'ncaa180-h',h:document.documentElement.scrollHeight},'*');
+    new ResizeObserver(post).observe(document.body);addEventListener('load',post);}
 
   const C=window.ScoreboardCore, $=id=>document.getElementById(id);
   const escape=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -254,7 +260,7 @@
         const warnings=render(stats,games);failures=0;lastGood=new Date();
         $('updated').textContent=`Updated ${lastGood.toLocaleTimeString()}${snapState==='final'?'':' · Unofficial'} · ${live?`auto-refresh ${crunch?'30 seconds':'5 minutes'}`:'manual refresh while no starters are live'}`;
         $('error').hidden=!warnings.length;$('error').textContent=warnings.join(' ');
-        const url=new URL(location.href);url.search=new URLSearchParams({season:String(season),week:String(week),post:postGame.id,...(route.has('overview')?{overview:route.get('overview')}:{})}).toString();history.replaceState(null,'',url);
+        const url=new URL(location.href);url.search=new URLSearchParams({season:String(season),week:String(week),post:postGame.id,...(route.has('overview')?{overview:route.get('overview')}:{}),...(embed?{embed:'1'}:{})}).toString();history.replaceState(null,'',url);
         const filter=route.get('overview')||'all';
         $('overview-back').href='scoreboard.html?'+new URLSearchParams({season,week,...(filter==='all'?{}:{league:filter})});
         if(live)schedule(crunch?cfg.refresh.crunch_ms:cfg.refresh.normal_ms);
@@ -288,7 +294,7 @@
       failures=0;lastGood=new Date();
       $('updated').textContent=`Updated ${lastGood.toLocaleTimeString()}${snapState==='final'?'':' · Unofficial'} · ${live?`auto-refresh ${crunch?'30 seconds':'5 minutes'}`:'manual refresh while no starters are live'}`;
       $('error').hidden=!warnings.length;$('error').textContent=warnings.join(' ');
-      const url=new URL(location.href);url.search=new URLSearchParams({season:String(season),league:leagueId,week:String(week),game:selected,...(route.has('overview')?{overview:route.get('overview')}:{})}).toString();history.replaceState(null,'',url);
+      const url=new URL(location.href);url.search=new URLSearchParams({season:String(season),league:leagueId,week:String(week),game:selected,...(route.has('overview')?{overview:route.get('overview')}:{}),...(embed?{embed:'1'}:{})}).toString();history.replaceState(null,'',url);
       const filter=route.get('overview')||leagueId;
       $('overview-back').href='scoreboard.html?'+new URLSearchParams({season,week,...(filter==='all'?{}:{league:filter})});
       if(live)schedule(crunch?cfg.refresh.crunch_ms:cfg.refresh.normal_ms);

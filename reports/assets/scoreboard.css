@@ -19,3 +19,8 @@
 #game{min-width:0;max-width:100%;text-overflow:ellipsis}
 .pick{min-width:0;max-width:100%}.pick select{min-width:0;max-width:100%;width:0}
 .gtop .mid{justify-self:center;max-width:none}
+
+/* Embedded game board (My team on the Games overview, 2026-11-14) */
+body.embed{background:transparent}
+body.embed .weeks,body.embed .sbh,body.embed .validation,body.embed #chooser,body.embed .overview-back,body.embed #overview-help,body.embed .note,body.embed .totop{display:none!important}
+body.embed .gwrap{padding:0;margin:0;max-width:none}

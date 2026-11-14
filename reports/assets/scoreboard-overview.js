@@ -153,8 +153,10 @@
       return `<details class="sec-d psec" data-id="post-${k}"${f.has(`post-${k}`)?'':' open'}><summary><h3 class="sec">${name} <small>${nG(gs.length)}</small></h3></summary>${k==='NIT'?raceHtml:''}<div class="feat">${gs.map(g=>`<section class="feat-card">${card(g)}</section>`).join('')}</div></details>`;};
     html+=foldBar();
     const moved=new Set();
+    if(!use)myBoard(F,all,false);
     if(use){
       const where=g=>(SECT.find(([k])=>k===g.post.round)||[])[1];
+      myBoard(F,all,true);
       html+=followTeams(F,all,g=>where(g)?`<div class="fol-also">also in ${esc(where(g))} ↓</div>`:'');
       for(const label of F.leagues){const id=leagueIdOf(label);if(!id)continue;
         const gs=all.filter(g=>g.match.some(r=>String(r.leagueId)===String(id)));if(!gs.length)continue;
@@ -198,9 +200,12 @@
     const tail=k=>String(k).split('|').slice(1).join('|');
     const teams=new Set(f.filter(x=>x.kind==='team').map(x=>tail(x.key))),leagues=f.filter(x=>x.kind==='league').map(x=>tail(x.key));
     const events=new Set(f.filter(x=>x.kind==='event').map(x=>tail(x.key)));
+    // My team; a device with team follows but no pick uses its first followed team (same rule as app.js,
+    // which may load after this script).
+    let mine='';try{const st=JSON.parse(localStorage.getItem('ncaa180.push')||'{}'),k=st.myTeam||(f.find(x=>x.kind==='team')||{}).key;if(k)mine=tail(k);}catch(e){}
     let on=true;try{on=localStorage.getItem('sb-follows-first')!=='0';}catch(e){}
     const app=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
-    return {teams,leagues,events,on,app,none:!teams.size&&!leagues.length};
+    return {teams,leagues,events,on,app,mine,none:!teams.size&&!leagues.length&&!mine};
   }
   const tkey=(lid,rid)=>`${lname(lid)}:${rid}`;
   const hasTeam=(g,T)=>g.match.some(r=>T.has(tkey(r.leagueId,r.roster_id)));
@@ -212,10 +217,35 @@
   // Followed teams: the only follow section with an empty-state message (Chris, 2026-11-14).
   function followTeams(F,all,tag){
     if(F.none)return F.app?`<div class="fol-banner">Follow your teams to see them here. <a href="app.html">Choose teams</a></div>`:'';
-    if(!F.teams.size)return '';
-    const gs=all.filter(g=>hasTeam(g,F.teams));
+    // My team's game has its own full board above, so it is left out of these cards; if it was the only
+    // followed game, there is no section at all.
+    const M=new Set(F.mine?[F.mine]:[]),T=new Set([...F.teams,...M]);
+    if(!T.size)return '';
+    const gsAll=all.filter(g=>hasTeam(g,T)),gs=gsAll.filter(g=>!hasTeam(g,M));
+    if(!gs.length&&gsAll.length)return '';
     const body=gs.length?`<div class="feat">${gs.map(g=>`<section class="feat-card">${tag?tag(g):''}${card(g)}</section>`).join('')}</div>`:`<p class="conference-note">No followed teams playing this week. ${editLink}</p>`;
     return fsec('fol-teams','Your teams',`${gs.length?nG(gs.length)+' · ':''}${editLink}`,body);
+  }
+  // My team (Chris, 2026-11-14): one full game board, the game page itself in an iframe. It lives in
+  // #my-board outside #board, because #board is re-rendered on every refresh and moving or rewriting
+  // an iframe reloads it. The embedded page refreshes on its own timer.
+  function myBoard(F,all,use){
+    const g=use&&F.mine?all.find(x=>hasTeam(x,new Set([F.mine]))):null;
+    let box=$('my-board');
+    if(!box&&!g)return;  // created only once there is a game to show
+    if(!box){box=document.createElement('details');box.id='my-board';box.className='sec-d fsec my-board';box.dataset.id='my-team';box.hidden=true;
+      box.innerHTML='<summary><h3 class="sec"></h3></summary><iframe title="My team game" loading="lazy" scrolling="no"></iframe>';
+      box.open=!folded().has('my-team');box.addEventListener('toggle',()=>setFolded('my-team',!box.open));
+      $('board').before(box);
+      addEventListener('message',e=>{const fr=box.querySelector('iframe');if(e.source===fr.contentWindow&&e.data?.type==='ncaa180-h')fr.style.height=Math.ceil(e.data.h)+'px';});}
+    if(!g){box.hidden=true;return;}
+    const q=g.post?{season,week,post:g.post.id,embed:'1'}:{season,week,league:g.id,game:g.game,embed:'1'};
+    const src=`scoreboard.html?${new URLSearchParams(q)}`,fr=box.querySelector('iframe');
+    const [lab,rid]=[F.mine.slice(0,F.mine.lastIndexOf(':')),F.mine.slice(F.mine.lastIndexOf(':')+1)];
+    const name=index.leagues[leagueIdOf(lab)]?.teams?.[rid]?.name||'My team';
+    box.querySelector('h3').innerHTML=`My team <small>${esc(name)} · <a class="fol-edit" href="app.html">Change</a></small>`;
+    if(fr.getAttribute('src')!==src)fr.setAttribute('src',src);
+    box.hidden=false;
   }
   function plainToggle(F){
     if(F.none&&!F.events.size)return '';
@@ -229,7 +259,7 @@
   function foldBar(){return `<div class="fold-bar"><button type="button" id="fold-all" class="fold-all"></button></div>`;}
   function wireFold(){
     const b=$('fold-all');if(!b)return;
-    const ds=()=>[...$('board').querySelectorAll(FOLD_SEL)],label=()=>{b.textContent=ds().some(d=>d.open)?'Collapse all':'Expand all';};
+    const ds=()=>[...$('board').querySelectorAll(FOLD_SEL),...($('my-board')&&!$('my-board').hidden?[$('my-board')]:[])],label=()=>{b.textContent=ds().some(d=>d.open)?'Collapse all':'Expand all';};
     label();b.addEventListener('click',()=>{const open=!ds().some(d=>d.open);ds().forEach(d=>{d.open=open;});label();});
     ds().forEach(d=>d.addEventListener('toggle',label));
   }
@@ -271,6 +301,7 @@
       return `<details class="conference" data-id="${esc(id)}"${one||!f.has(id)?' open':''} aria-label="${esc(lname(id))}">${header(id,c)}${c?.games?c.games.map(card).join(''):'<p class="conference-note">Loading games…</p>'}${c?.warning?'<p class="conference-note">Some stats, projections or statuses are unavailable; estimates may be incomplete.</p>':''}${c?.error?`<p class="conference-error" role="status">${esc(c.error)}${c.updated?` · last updated ${c.updated.toLocaleTimeString()}`:''}</p>`:''}</details>`;};
     if(!one)html+=foldBar();
     const lgIds=use?F.leagues.map(leagueIdOf).filter(id=>id&&ids.includes(id)):[];
+    myBoard(F,all,use);
     if(use){
       html+=followTeams(F,all);
       if(lgIds.length)html+=fsec('fol-leagues','Your conferences',nG(lgIds.length===1?(cards.get(lgIds[0])?.games||[]).length:lgIds.reduce((a,id)=>a+(cards.get(id)?.games||[]).length,0)),`<div class="conference-grid">${lgIds.map(conf).join('')}</div>`);

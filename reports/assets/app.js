@@ -11,6 +11,24 @@
   var base = here ? here.replace(/assets\/app\.js.*$/, "") : "";
 
   function store() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } }
+  // Existing follows (Chris, 2026-11-14): a device that follows teams but has no My team gets its first
+  // followed team as My team (follows keep list order, so this is the first one ticked on app.html).
+  // Flagged myTeamAuto so the notifications page can ask them to confirm it.
+  (function () {
+    var s = store(); if (s.myTeam) return;
+    var t = (s.follows || []).filter(function (f) { return f && f.kind === "team"; })[0];
+    if (!t) return;
+    s.myTeam = t.key; s.myTeamAuto = true;
+    try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {}
+  })();
+  // My team (Chris, 2026-11-14): the team this device's manager runs, picked on app.html. Any page can
+  // use it for team-specific visuals: NCAA180.myTeam() -> {key, conf, roster} or null.
+  window.NCAA180 = window.NCAA180 || {};
+  window.NCAA180.myTeam = function () {
+    var k = store().myTeam; if (!k) return null;
+    var t = String(k).split("|").slice(1).join("|"), i = t.lastIndexOf(":");
+    return i < 0 ? null : { key: k, conf: t.slice(0, i), roster: t.slice(i + 1) };
+  };
 
   if ("serviceWorker" in navigator && base) {
     navigator.serviceWorker.register(base + "sw.js", { scope: base }).catch(function () {});
@@ -80,6 +98,7 @@
   // Only prompt once push is live (config/push.json -> worker_url set), so members never see a
   // "set up notifications" sheet that leads to "coming soon".
   function start() {
+    if (window.parent !== window) return;  // embedded board (My team): no prompt or bell
     if (!base) return;
     fetch(base + "../config/push.json", { cache: "no-cache" })
       .then(function (r) { return r.json(); })

@@ -44,6 +44,7 @@ summary .n{color:var(--mute);font-weight:400}
 .btn.secondary{background:transparent;color:var(--ink);border:1px solid var(--line)}
 .btn[disabled]{opacity:.5;cursor:not-allowed}
 .steps{margin:0;padding-left:20px} .steps li{margin:6px 0}
+.mtf{display:flex;gap:8px;align-items:center;margin-top:10px}.mtf input{width:20px;height:20px;accent-color:var(--accent)}
 [hidden]{display:none!important}
 """
 
@@ -69,6 +70,15 @@ BODY = """
   <section class="card">
     <h2>Status</h2>
     <p class="status" id="status">Checking&hellip;</p>
+  </section>
+
+  <section class="card">
+    <h2>My team</h2>
+    <p class="hint">The team you manage. The site shows it first &mdash; on the Games page you get its full game board.
+    Saved on this device as soon as you pick it.</p>
+    <select class="search" id="myteam" aria-label="My team"><option value="">Choose your team</option></select>
+    <p class="hint" id="myteam-auto" hidden>Picked from the teams you already follow &mdash; change it if this isn't yours.</p>
+    <label class="mtf"><input type="checkbox" id="myteam-follow" checked> Follow my team for notifications</label>
   </section>
 
   <section class="card">
@@ -168,6 +178,19 @@ BODY = """
 
   function render() {
     var first = !state.follows;  // first visit: event defaults on
+    // My team (Chris, 2026-11-14): one team per device, saved right away (no Save needed); the
+    // "follow" box (default on) keeps that team's checkbox in the team list ticked.
+    $("myteam").innerHTML = '<option value="">Choose your team</option>' + lists.leagues.map(function (lg) {
+      return '<optgroup label="' + esc(lg.name) + '">' + lg.teams.map(function (t) {
+        return '<option value="' + esc(t.key) + '">' + esc(t.name) + "</option>"; }).join("") + "</optgroup>";
+    }).join("");
+    if (!state.myTeam) {  // same rule as app.js, in case this page's script runs first
+      var ft = (state.follows || []).filter(function (f) { return f && f.kind === "team"; })[0];
+      if (ft) { state.myTeam = ft.key; state.myTeamAuto = true; save(); }
+    }
+    $("myteam").value = state.myTeam || "";
+    $("myteam-auto").hidden = !state.myTeamAuto;
+    $("myteam-follow").checked = state.myTeamFollow !== false;
     $("teams").innerHTML = lists.leagues.map(function (lg) {
       var n = lg.teams.filter(function (t) { return chosen("team", t.key); }).length;
       return '<details data-league="' + esc(lg.name) + '"' + (n ? " open" : "") + "><summary>" + esc(lg.name) +
@@ -181,6 +204,14 @@ BODY = """
     $("freqs").innerHTML = fs.map(function (f) {
       return '<label><input type="radio" name="freq" data-kind="event" value="' + esc(f.key) + '"' + (cur && cur.key === f.key ? " checked" : "") + "> " + esc(f.label) + "</label>";
     }).join("");
+    syncMyTeam();
+    count();
+  }
+
+  function syncMyTeam() {  // never unticks: a previous pick may be a follow they want to keep
+    var box = function (k) { return k ? document.querySelector('#teams input[data-kind=team][value="' + k.replace(/"/g, '\\"') + '"]') : null; };
+    var b = box(state.myTeam);
+    if (b) { b.checked = state.myTeamFollow !== false ? true : b.checked; if (b.checked) b.closest("details").open = true; }
     count();
   }
 
@@ -196,6 +227,17 @@ BODY = """
   }
 
   document.addEventListener("change", function (e) { if (e.target.matches("input[type=checkbox]")) count(); });
+  $("myteam").addEventListener("change", function () {
+    state.myTeam = this.value; state.myTeamAuto = false; save();
+    $("myteam-auto").hidden = true; syncMyTeam();
+    status(this.value ? "My team saved on this device." + (state.myTeamFollow !== false ? " Tap Save below to update notifications." : "") : "My team cleared.", "ok");
+  });
+  $("myteam-follow").addEventListener("change", function () {
+    state.myTeamFollow = this.checked; save();
+    var b = state.myTeam && document.querySelector('#teams input[data-kind=team][value="' + state.myTeam.replace(/"/g, '\\"') + '"]');
+    if (b) b.checked = this.checked;
+    count();
+  });
   $("q").addEventListener("input", function () {
     var v = this.value.trim().toLowerCase();
     document.querySelectorAll("#teams details").forEach(function (d) {

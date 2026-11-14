@@ -57,3 +57,7 @@ details.conference>summary:focus-visible{outline:2px solid #38638b;outline-offse
 .fol-also{font:700 10.5px var(--sans,sans-serif);letter-spacing:.04em;text-transform:uppercase;color:var(--mute,#667);margin:0 0 4px}
 .fol-h{margin-top:14px}
 .fol-toggle{margin:14px 0 4px;font-size:13px;color:var(--mute,#667)}.fol-toggle input{margin-right:6px;vertical-align:-2px}
+
+/* My team board (2026-11-14) */
+.my-board iframe{display:block;width:100%;height:520px;border:0;background:transparent}
+.my-board[hidden]{display:none}
