@@ -50,3 +50,10 @@ details.conference>summary:focus-visible{outline:2px solid #38638b;outline-offse
 .ldtag{display:inline-block;margin-left:5px;padding:0 4px;border-radius:3px;font:800 9px var(--sans,sans-serif);letter-spacing:.04em;text-transform:uppercase;vertical-align:middle}
 .ldtag.lead{background:var(--good,#1a7f37);color:#fff}.ldtag.dog{background:#b8860b;color:#fff}
 .fold-bar{display:flex;justify-content:flex-end;margin:6px 0 -4px}.fold-all{font:700 12px var(--sans,sans-serif);padding:5px 10px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:inherit;cursor:pointer}.fold-all:focus-visible{outline:2px solid #38638b;outline-offset:2px}
+/* Follows first (Chris, 2026-11-14) */
+.fol-banner{margin:10px 0;padding:10px 12px;border:1px dashed var(--line);border-radius:8px;background:var(--panel);font-size:14px}
+.fol-banner a,.fol-edit{font-weight:700}
+.sec small .fol-edit{margin-left:4px;text-transform:none;letter-spacing:0}
+.fol-also{font:700 10.5px var(--sans,sans-serif);letter-spacing:.04em;text-transform:uppercase;color:var(--mute,#667);margin:0 0 4px}
+.fol-h{margin-top:14px}
+.fol-toggle{margin:14px 0 4px;font-size:13px;color:var(--mute,#667)}.fol-toggle input{margin-right:6px;vertical-align:-2px}

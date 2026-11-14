@@ -147,17 +147,35 @@
   function postPaint(){
     const all=postGames();let html=strip(all,[]);
     const top=all.find(isGotw);
-    if(top)html+=`<section class="gotw"><img class="gotw-badge" src="${featBadge(top)}" alt="${featAlt(top)}"><div class="feat-card">${card(top)}</div></section>`;
     const raceHtml=race(postGames(true).filter(g=>g.post.round==='NIT')),f=folded();
-    if(SECT.filter(([k])=>all.some(g=>g.post.round===k)).length>1)html+=foldBar();
-    for(const [k,name]of SECT){const gs=all.filter(g=>g.post.round===k);if(!gs.length)continue;
-      html+=`<details class="sec-d psec" data-id="post-${k}"${f.has(`post-${k}`)?'':' open'}><summary><h3 class="sec">${name} <small>${gs.length} game${gs.length===1?'':'s'}</small></h3></summary>${k==='NIT'?raceHtml:''}<div class="feat">${gs.map(g=>`<section class="feat-card">${card(g)}</section>`).join('')}</div></details>`;}
+    const F=fol(),use=F.on&&!$('league').value,EV={Playoff:'playoff_results',Bowl:'bowl_results',NIT:'nit_results'};
+    const sect=([k,name])=>{const gs=all.filter(g=>g.post.round===k);if(!gs.length)return '';
+      return `<details class="sec-d psec" data-id="post-${k}"${f.has(`post-${k}`)?'':' open'}><summary><h3 class="sec">${name} <small>${nG(gs.length)}</small></h3></summary>${k==='NIT'?raceHtml:''}<div class="feat">${gs.map(g=>`<section class="feat-card">${card(g)}</section>`).join('')}</div></details>`;};
+    html+=foldBar();
+    const moved=new Set();
+    if(use){
+      const where=g=>(SECT.find(([k])=>k===g.post.round)||[])[1];
+      html+=followTeams(F,all,g=>where(g)?`<div class="fol-also">also in ${esc(where(g))} ↓</div>`:'');
+      for(const label of F.leagues){const id=leagueIdOf(label);if(!id)continue;
+        const gs=all.filter(g=>g.match.some(r=>String(r.leagueId)===String(id)));if(!gs.length)continue;
+        html+=`<details class="sec-d fsec fol-lg" data-id="fol-lg-${esc(label)}"${f.has(`fol-lg-${label}`)?' open':''}><summary><h3 class="sec">${esc(label)} in the postseason <small>${esc(liveSum(gs))}</small></h3></summary><div class="feat">${gs.map(g=>`<section class="feat-card">${card(g)}</section>`).join('')}</div></details>`;}
+      // Followed events: whole Playoff / Bowls / NIT sections move up here; Champions pins the title games.
+      let ev='';
+      for(const s of SECT){if(F.events.has(EV[s[0]])&&all.some(g=>g.post.round===s[0])){ev+=sect(s);moved.add(s[0]);}}
+      if(F.events.has('champions')){const t=all.filter(g=>isGotw(g)||/stagg/i.test(gLabel(g.post)||''));
+        if(t.length&&!t.every(g=>moved.has(g.post.round)))ev+=fsec('fol-champs','Title games','',`<div class="feat">${t.map(g=>`<section class="feat-card">${card(g)}</section>`).join('')}</div>`);}
+      if(ev)html+=`<h3 class="sec fol-h">Your events</h3>`+ev;
+    }
+    if(top)html+=fsec('featured','Featured','',`<section class="gotw"><img class="gotw-badge" src="${featBadge(top)}" alt="${featAlt(top)}"><div class="feat-card">${card(top)}</div></section>`);
+    for(const s of SECT)if(!moved.has(s[0]))html+=sect(s);
+    if(use||F.on===false)html+=plainToggle(F);
     const errs=[...cards.entries()].filter(([,c])=>c?.error).map(([id,c])=>`${lname(id)}: ${c.error}`);
     if(errs.length)html+=`<p class="conference-error" role="status">${esc(errs.join(' · '))}</p>`;
     if(!all.length)html+=`<p class="conference-note">${$('league').value?'No postseason games for this conference this week. <a href="?">All games</a>':'Loading games…'}</p>`;
     $('board').innerHTML=html;
-    for(const d of $('board').querySelectorAll('details.psec'))d.addEventListener('toggle',()=>setFolded(d.dataset.id,!d.open));
-    wireFold();
+    for(const d of $('board').querySelectorAll('details.psec,details.fsec:not(.fol-lg)'))d.addEventListener('toggle',()=>setFolded(d.dataset.id,!d.open));
+    for(const d of $('board').querySelectorAll('details.fol-lg'))d.addEventListener('toggle',()=>setFolded(d.dataset.id,d.open));  // collapsed by default
+    wireFold();wireToggle();
   }
   function block(id,rs,scoring,games,stats){
     const league=index.leagues[id],groups=pairs(rs,id);let allFinal=true,warning=false;
@@ -171,6 +189,40 @@
     return {games:list,allFinal,warning};
   }
   const lname=id=>index.leagues[id].label||index.leagues[id].name;
+  // Follows first (Chris, 2026-11-14; todo-games-follows.md). The notification picks saved on this device
+  // (app.html -> localStorage "ncaa180.push": {follows:[{kind,key}]}) decide what comes first:
+  // followed teams, followed conferences, followed events, then featured games, then everything else.
+  // Keys: team "ncaa180|<conf>:<roster>", league "ncaa180|<conf>", event "ncaa180|<event>".
+  function fol(){
+    let f=[];try{const st=JSON.parse(localStorage.getItem('ncaa180.push')||'{}');if(Array.isArray(st.follows))f=st.follows;}catch(e){}
+    const tail=k=>String(k).split('|').slice(1).join('|');
+    const teams=new Set(f.filter(x=>x.kind==='team').map(x=>tail(x.key))),leagues=f.filter(x=>x.kind==='league').map(x=>tail(x.key));
+    const events=new Set(f.filter(x=>x.kind==='event').map(x=>tail(x.key)));
+    let on=true;try{on=localStorage.getItem('sb-follows-first')!=='0';}catch(e){}
+    const app=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+    return {teams,leagues,events,on,app,none:!teams.size&&!leagues.length};
+  }
+  const tkey=(lid,rid)=>`${lname(lid)}:${rid}`;
+  const hasTeam=(g,T)=>g.match.some(r=>T.has(tkey(r.leagueId,r.roster_id)));
+  const leagueIdOf=label=>Object.keys(index.leagues).find(id=>lname(id)===label);
+  const nG=n=>`${n} game${n===1?'':'s'}`;
+  function liveSum(gs){const live=gs.filter(g=>g.s.active).length,fin=gs.filter(g=>g.s.final).length;return [nG(gs.length),live&&`${live} live`,fin&&`${fin} final`].filter(Boolean).join(' · ');}
+  function fsec(id,title,small,body){const f=folded();return `<details class="sec-d fsec" data-id="${esc(id)}"${f.has(id)?'':' open'}><summary><h3 class="sec">${title}${small?` <small>${small}</small>`:''}</h3></summary>${body}</details>`;}
+  const editLink='<a class="fol-edit" href="app.html">Edit follows</a>';
+  // Followed teams: the only follow section with an empty-state message (Chris, 2026-11-14).
+  function followTeams(F,all,tag){
+    if(F.none)return F.app?`<div class="fol-banner">Follow your teams to see them here. <a href="app.html">Choose teams</a></div>`:'';
+    if(!F.teams.size)return '';
+    const gs=all.filter(g=>hasTeam(g,F.teams));
+    const body=gs.length?`<div class="feat">${gs.map(g=>`<section class="feat-card">${tag?tag(g):''}${card(g)}</section>`).join('')}</div>`:`<p class="conference-note">No followed teams playing this week. ${editLink}</p>`;
+    return fsec('fol-teams','Your teams',`${gs.length?nG(gs.length)+' · ':''}${editLink}`,body);
+  }
+  function plainToggle(F){
+    if(F.none&&!F.events.size)return '';
+    return `<p class="fol-toggle"><label><input type="checkbox" id="fol-first"${F.on?' checked':''}> Show my follows first</label></p>`;
+  }
+  function wireToggle(){$('fol-first')?.addEventListener('change',e=>{try{localStorage.setItem('sb-follows-first',e.target.checked?'1':'0');}catch(x){}paint(curIds);});}
+  let curIds=[];
   // Folded conferences are a per-viewer convenience (this browser only).
   // Collapse / expand all sections (Chris, 2026-11-06). One button; label follows the current state.
   const FOLD_SEL='details.conference,details.sec-d';
@@ -213,19 +265,31 @@
     const rvr=all.filter(g=>g.o?.Rank&&g.o?.OppRank),ranked=all.filter(g=>(g.o?.Rank||g.o?.OppRank)&&!(g.o?.Rank&&g.o?.OppRank));
     const feat=list=>`<div class="feat">${list.map(g=>`<section class="feat-card">${card(g)}</section>`).join('')}</div>`;
     const open=(()=>{try{return localStorage.getItem('sb-ranked-open')==='1';}catch(e){return false;}})();
-    let html=strip(all,ids);
-    const top=all.find(isGotw);
-    if(top)html+=`<section class="gotw"><img class="gotw-badge" src="${badge()}" alt="Game of the Week"><div class="feat-card">${card(top)}${gotwPick()?.reason?`<p class="gotw-why">${esc(gotwPick().reason)}</p>`:''}</div></section>`;
-    html+=callouts(top);
-    if(rvr.length)html+=`<h3 class="sec">Ranked vs ranked <small>${rvr.length} game${rvr.length===1?'':'s'}</small></h3>${feat(rvr)}`;
-    if(ranked.length)html+=`<details class="sec-d" id="ranked-d"${open?' open':''}><summary><h3 class="sec">Ranked teams in action <small>${ranked.length} game${ranked.length===1?'':'s'}</small></h3></summary>${feat(ranked)}</details>`;
+    let html=strip(all,ids);curIds=ids;
+    const F=fol(),use=F.on&&!one;
+    const conf=id=>{const c=cards.get(id);
+      return `<details class="conference" data-id="${esc(id)}"${one||!f.has(id)?' open':''} aria-label="${esc(lname(id))}">${header(id,c)}${c?.games?c.games.map(card).join(''):'<p class="conference-note">Loading games…</p>'}${c?.warning?'<p class="conference-note">Some stats, projections or statuses are unavailable; estimates may be incomplete.</p>':''}${c?.error?`<p class="conference-error" role="status">${esc(c.error)}${c.updated?` · last updated ${c.updated.toLocaleTimeString()}`:''}</p>`:''}</details>`;};
     if(!one)html+=foldBar();
-    html+=`<h3 class="sec">${one?'Games':'By conference'}</h3><div class="conference-grid">`+ids.map(id=>{const c=cards.get(id);
-      return `<details class="conference" data-id="${esc(id)}"${one||!f.has(id)?' open':''} aria-label="${esc(lname(id))}">${header(id,c)}${c?.games?c.games.map(card).join(''):'<p class="conference-note">Loading games…</p>'}${c?.warning?'<p class="conference-note">Some stats, projections or statuses are unavailable; estimates may be incomplete.</p>':''}${c?.error?`<p class="conference-error" role="status">${esc(c.error)}${c.updated?` · last updated ${c.updated.toLocaleTimeString()}`:''}</p>`:''}</details>`;}).join('')+'</div>';
+    const lgIds=use?F.leagues.map(leagueIdOf).filter(id=>id&&ids.includes(id)):[];
+    if(use){
+      html+=followTeams(F,all);
+      if(lgIds.length)html+=fsec('fol-leagues','Your conferences',nG(lgIds.length===1?(cards.get(lgIds[0])?.games||[]).length:lgIds.reduce((a,id)=>a+(cards.get(id)?.games||[]).length,0)),`<div class="conference-grid">${lgIds.map(conf).join('')}</div>`);
+    }
+    const top=all.find(isGotw);
+    let fe='';
+    if(top)fe+=`<section class="gotw"><img class="gotw-badge" src="${badge()}" alt="Game of the Week"><div class="feat-card">${card(top)}${gotwPick()?.reason?`<p class="gotw-why">${esc(gotwPick().reason)}</p>`:''}</div></section>`;
+    fe+=callouts(top);
+    if(rvr.length)fe+=`<h3 class="sec">Ranked vs ranked <small>${nG(rvr.length)}</small></h3>${feat(rvr)}`;
+    if(ranked.length)fe+=`<details class="sec-d" id="ranked-d"${open?' open':''}><summary><h3 class="sec">Ranked teams in action <small>${nG(ranked.length)}</small></h3></summary>${feat(ranked)}</details>`;
+    if(fe)html+=fsec('featured','Featured','',fe);
+    const rest=ids.filter(id=>!lgIds.includes(id));
+    html+=`<h3 class="sec">${one?'Games':lgIds.length?'Other conferences':'By conference'}</h3><div class="conference-grid">`+rest.map(conf).join('')+'</div>';
+    if(!one)html+=plainToggle(F);
     $('board').innerHTML=html;
+    for(const d of $('board').querySelectorAll('details.fsec'))d.addEventListener('toggle',()=>setFolded(d.dataset.id,!d.open));
     for(const d of $('board').querySelectorAll('details.conference'))d.addEventListener('toggle',()=>{if(!one)setFolded(d.dataset.id,!d.open);});
     $('ranked-d')?.addEventListener('toggle',e=>{try{localStorage.setItem('sb-ranked-open',e.target.open?'1':'0');}catch(x){}});
-    wireFold();
+    wireFold();wireToggle();
   }
   async function refresh(){
     if(busy||document.hidden)return;busy=true;clearTimeout(timer);$('refresh').disabled=true;
