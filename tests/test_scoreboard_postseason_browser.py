@@ -67,11 +67,12 @@ class PostseasonBrowserTests(unittest.TestCase):
                         page.route('**/week-13.json', lambda r: r.fulfill(content_type='application/json', body=json.dumps(base)))
                         page.goto(f'http://127.0.0.1:{server.server_port}/reports/scoreboard.html?week=13')
                         page.wait_for_function("document.getElementById('updated')?.textContent.startsWith('Updated')", timeout=30000)
-                        secs = page.locator('h3.sec').all_inner_texts()
+                        secs = page.locator('#board h3.sec').all_inner_texts()  # the natty card has its own top slot (2026-11-14)
                         # the Game of the Week / natty card now sits in a collapsible "Featured" section (2026-11-14)
                         self.assertEqual([s.split()[0].upper() for s in secs if not s.upper().startswith('FEATURED')], ['PLAYOFF', 'BOWLS', 'NIT'])
                         self.assertEqual(sorted(set(fetched)), sorted({x['LeagueID'] for g in games for x in g['sides']}))  # only leagues in games
-                        self.assertEqual(page.locator('.gotw .gotw-badge').get_attribute('alt'), 'National Championship')  # natty logo, not GotW
+                        self.assertEqual(page.locator('.gotw .gotw-badge').get_attribute('alt'), 'National Championship')
+                        self.assertEqual(page.locator('#gotw-slot h3.sec').inner_text().strip().upper(), 'NATIONAL CHAMPIONSHIP')  # natty logo, not GotW
                         self.assertEqual(page.locator('.mini-match.grp .score-row').count() >= 4, True)
                         self.assertEqual(page.locator('.mini-match.grp .score-row.out').count(), 3)  # final: 24 - 6 winners - 15 lucky dogs
                         # lucky dog race: 6 group winners, 15 lucky dogs, cut line before the 16th non-leader
