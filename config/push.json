@@ -48,6 +48,22 @@
       "key": "champions",
       "label": "National champion and Stagg Bowl winner",
       "default": true
+    },
+    {
+      "key": "guillotine",
+      "label": "The Guillotine: each week's cut and the champion",
+      "default": false,
+      "auto_on_with": [
+        "ccg_results",
+        "playoff_field",
+        "playoff_results",
+        "bowl_pairings",
+        "bowl_results",
+        "nit_pairings",
+        "nit_results",
+        "champions"
+      ],
+      "_auto_on_note": "Chris, 2026-11-14: a phone that already had every event above on gets this one too. Until the phone saves its picks again (app.html adds a 'seen:guillotine' marker), the sender treats it as on; after that, its own tick decides."
     }
   ],
   "game_frequencies": [
@@ -75,6 +91,7 @@
     "Playoff",
     "Bowl",
     "NIT",
+    "Guillotine",
     "CCG"
   ],
   "_prestige_note": "Order of games inside a push after the device's own followed teams (Chris, 2026-10-30): playoff, bowl, NIT. CCG only appears in CCG week, so its place is moot.",

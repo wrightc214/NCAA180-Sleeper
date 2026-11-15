@@ -17,7 +17,7 @@ from site_common import built_weeks, nav_html  # noqa: E402
 NAV = re.compile(r'<nav class="weeks" aria-label="Pages">.*?</nav>', re.S)
 CURRENT = {"roster-map.html": "map", "standings.html": "standings", "scoreboard.html": "scoreboard",
            "poll.html": "poll", "postseason.html": "postseason", "managers.html": "managers",
-           "records.html": "records", "app.html": "app"}
+           "records.html": "records", "app.html": "app", "special.html": "special"}
 
 
 def current_of(block):

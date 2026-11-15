@@ -198,7 +198,12 @@ BODY = """
         lg.teams.map(function (t) { return box("team", t.key, t.name, chosen("team", t.key)); }).join("") + "</div></details>";
     }).join("");
     $("leagues").innerHTML = lists.leagues.map(function (lg) { return box("league", lg.key, lg.name, chosen("league", lg.key)); }).join("");
-    $("events").innerHTML = lists.events.map(function (e) { return box("event", e.key, e.label, first ? e.default : chosen("event", e.key)); }).join("");
+    // A new event (Chris, 2026-11-14) starts ticked on a phone that already had every older event on and
+    // hasn't saved since it was added (no "seen" marker); the sender treats that phone the same way.
+    var autoOn = function (e) {
+      return !!(e.auto_on_with && !chosen("event", e.seen) && e.auto_on_with.every(function (k) { return chosen("event", k); }));
+    };
+    $("events").innerHTML = lists.events.map(function (e) { return box("event", e.key, e.label, first ? e.default : chosen("event", e.key) || autoOn(e)); }).join("");
     var fs = lists.frequencies || [];
     var cur = fs.filter(function (f) { return chosen("event", f.key); })[0] || fs.filter(function (f) { return f.default; })[0];
     $("freqs").innerHTML = fs.map(function (f) {
@@ -216,9 +221,13 @@ BODY = """
   }
 
   function picked() {
-    return Array.prototype.map.call(document.querySelectorAll("input[type=checkbox]:checked, input[type=radio]:checked"), function (i) {
+    var out = Array.prototype.map.call(document.querySelectorAll("input[type=checkbox]:checked, input[type=radio]:checked"), function (i) {
       return { kind: i.dataset.kind, key: i.value };
     });
+    // "seen" markers: this phone has made its own choice on the newer events, so the sender stops
+    // switching them on for it (notify._follows).
+    ((lists && lists.events) || []).forEach(function (e) { if (e.seen) out.push({ kind: "event", key: e.seen }); });
+    return out;
   }
 
   function count() {

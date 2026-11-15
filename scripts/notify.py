@@ -17,6 +17,9 @@ Announcement (plain dict):
   summary   one line for devices that matched only through the event toggle
   items     list of {"text", "tier", "order", "event", "slots": ["Big Sky:6", ...], "leagues": ["Big Sky"]}
   champion  True for national champion / Stagg Bowl (also goes to every team follower)
+  also_ids  ids of announcements folded into this one; recorded in the ledger with it
+  discord_extra  lines added to the league-channel post only (after the items)
+  item "quiet": True  shown only to devices following that item's team/league (per-team lines)
   also_events  more event keys that also receive it (the title game = champion + round results)
   audience  "public" (default) or "lm"
   test      True = tester devices only
@@ -74,7 +77,22 @@ def _follows(device, group=None):
         key = str(f.get("key", ""))
         if f.get("kind") in out and key.startswith(pre):
             out[f["kind"]].add(key[len(pre):])
+    # New events (config events[].auto_on_with; Chris, 2026-11-14): a phone that follows every listed
+    # event gets the new one too, until it saves its picks on app.html again -- that save adds a
+    # "seen:<key>" marker, and from then on its own tick decides.
+    for e in _events():
+        need = e.get("auto_on_with") or []
+        if need and e["key"] not in out["event"] and f"seen:{e['key']}" not in out["event"] \
+                and all(k in out["event"] for k in need):
+            out["event"].add(e["key"])
     return out
+
+
+def _events():
+    try:
+        return cfg().get("events", [])
+    except (OSError, ValueError):
+        return []
 
 
 def _group():
@@ -129,7 +147,9 @@ def body_for(device, ann, conf=None):
     items = visible_items(device, ann) or list(ann.get("items", []))
     own = [it for it in items if set(it.get("slots", [])) & f["team"]]
     league = [it for it in items if it not in own and set(it.get("leagues", [])) & f["league"]]
-    rest = [it for it in items if it not in own and it not in league]
+    # "quiet" items (one line per team, e.g. the Guillotine's 180 survive/out lines) only show to
+    # devices that follow that team or league; event followers get the summary line instead.
+    rest = [it for it in items if it not in own and it not in league and not it.get("quiet")]
     key = lambda i: _prestige(i, conf)  # noqa: E731
     lines = [it["text"] for it in sorted(own, key=key) + sorted(league, key=key) + sorted(rest, key=key)]
     if not own and not league and ann.get("summary"):
@@ -238,8 +258,11 @@ def send_discord(ann):
     if not hook:
         print("Discord webhook not set; skipped.")
         return False
+    # "quiet" items (per-team Guillotine lines) never go to the channel; "discord_extra" lines do
+    # (Chris, 2026-11-14: rounds 1-4 = just the cut; the final gets the full announcement).
     lines = [f"**{ann['title']}**"] + [it["text"] for it in sorted(ann.get("items", []),
-                                                                  key=lambda i: _prestige(i, cfg()))]
+                                                                  key=lambda i: _prestige(i, cfg()))
+                                       if not it.get("quiet")] + list(ann.get("discord_extra", []))
     text = "\n".join(lines)[:1900]
     requests.post(hook, json={"content": text}, timeout=30).raise_for_status()
     return True
@@ -266,4 +289,6 @@ def announce(ann, year):
         went = send_discord(ann) or went
     if went:
         record(year, ann, n)
+        for other in ann.get("also_ids", []):  # announcements folded into this one (one push per run)
+            record(year, {**ann, "id": other}, n)
     return went

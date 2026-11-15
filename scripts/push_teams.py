@@ -32,7 +32,10 @@ def build():
         lg = leagues[sh]
         lg["teams"].sort(key=lambda t: t["name"])
         out.append(lg)
-    events = [{"key": f"{group}|{e['key']}", "label": e["label"], "default": e.get("default", False)}
+    events = [{"key": f"{group}|{e['key']}", "label": e["label"], "default": e.get("default", False),
+               # new event: on for phones that had every listed event on (app.html; notify._follows)
+               **({"auto_on_with": [f"{group}|{k}" for k in e["auto_on_with"]], "seen": f"{group}|seen:{e['key']}"}
+                  if e.get("auto_on_with") else {})}
               for e in conf["events"]]
     freqs = [{"key": f"{group}|freq:{f['key']}", "label": f["label"], "default": f.get("default", False)}
              for f in conf.get("game_frequencies", [])]

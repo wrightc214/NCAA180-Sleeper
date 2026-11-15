@@ -10,6 +10,8 @@ Announcements (each sent once; data/push/Announced_Season.csv is the ledger):
       CCG -> ccg_results, Playoff -> playoff_results, Bowl -> bowl_results, NIT -> nit_results
   - playoff field: once the field is complete (field_size rows, none "Tied - Unresolved")
   - champions: national championship game final; NIT final (Stagg Bowl) final
+  - guillotine: each finished week's cut (folded into that week's results push when both go out
+    in the same run) and the champion (data/Guillotine_Season.csv, scripts/guillotine.py)
 Pairings (bowl/NIT draws) are not announced here yet: they wait for Chris's review.
 
 Usage: python scripts/postseason_announce.py [--dry-run] [--season-file F] [--field-file F]
@@ -28,6 +30,7 @@ import notify  # noqa: E402
 
 SEASON_FILE = "data/Postseason_Season.csv"
 FIELD_FILE = "data/PlayoffField_Season.csv"
+GUILLOTINE_FILE = "data/Guillotine_Season.csv"
 
 
 def _read(path):
@@ -164,7 +167,83 @@ def field_announcement(field, year, smap, league_cfg):
             "url": "standings.html", "summary": summary, "items": items}
 
 
-def build(year, season_file=SEASON_FILE, field_file=FIELD_FILE):
+def _wk_label(week, lc):
+    ccg = int(lc["schedule"]["ccg_week"])
+    return f"Postseason Week {int(week) - ccg}" if int(week) > ccg else f"Week {week}"
+
+
+def guillotine_announcements(gdf, year, smap, lc):
+    """The Guillotine (Chris, 2026-11-14): one announcement per finished week (who survived the cut,
+    who was eliminated) and one for the champion. Per-team lines are "quiet": only phones following
+    that team or league see them; Guillotine event followers get the summary line."""
+    g = lc["postseason"].get("guillotine") or {}
+    if gdf.empty or not g:
+        return []
+    d = gdf[gdf["Year"].astype(str) == str(year)]
+    last = int(g["last_week"])
+    name = g.get("name", "The Guillotine")
+    out = []
+    for week, wk in d.groupby(d["Week"].astype(int), sort=True):
+        wk = wk.copy()
+        wk["_s"] = pd.to_numeric(wk["Score"], errors="coerce")
+        wk = wk.sort_values("_s", ascending=False)
+        if week < last:
+            n_adv = int((wk["Status"] == "Advanced").sum())
+            line = _pts(wk["CutLine"].iloc[0])
+            items = []
+            for i, (_, r) in enumerate(wk.iterrows()):
+                sh = _short(r["LeagueName"], smap)
+                verb = "survives" if r["Status"] == "Advanced" else "eliminated"
+                items.append({"text": f"{name}: {r['Team']} {verb} ({_pts(r['Score'])}; cut {line})", "tier": "Guillotine",
+                              "order": i, "event": "guillotine", "quiet": True,
+                              "slots": [notify.slot_key(sh, r["RosterID"])], "leagues": [sh]})
+            rnd = f"Round {week - int(g['first_week']) + 1}"
+            out.append({"id": f"{year}-w{week}-guillotine", "event": "guillotine", "fold_into": f"{year}-w{week}-results",
+                        "title": f"{name}: {_wk_label(week, lc)} cut", "url": "special.html",
+                        "summary": f"{n_adv} of {len(wk)} survive · cut line {line}", "items": items,  # event followers see the summary
+                        # league channel: just the cut (Chris, 2026-11-14)
+                        "discord_extra": [f"🪓 {name}, {rnd}: {n_adv} of {len(wk)} survive · cut line {line}"]})
+        else:
+            champs = wk[wk["Status"] == "Champion"]
+            if champs.empty:
+                continue  # tied for first: waits for the tiebreak week
+            names = " & ".join(champs["Team"])
+            co = len(champs) > 1
+            items = []
+            for i, (_, r) in enumerate(champs.iterrows()):
+                sh = _short(r["LeagueName"], smap)
+                items.append({"text": f"{name} {'co-' if co else ''}champion: {r['Team']} ({_pts(r['Score'])})",
+                              "tier": "Guillotine", "order": i, "event": "guillotine",
+                              "slots": [notify.slot_key(sh, r["RosterID"])], "leagues": [sh]})
+            # league channel: the full final -- every finalist, ranked (Chris, 2026-11-14)
+            fin = [f"{int(r['Rank'])}. {r['Team']} ({_short(r['LeagueName'], smap)}) {_pts(r['Score'])}"
+                   + (f" · tiebreak {_pts(r['TiebreakScore'])}" if str(r.get('TiebreakScore', '')) else "")
+                   for _, r in wk.iterrows()]
+            out.append({"id": f"{year}-guillotine-champion", "event": "guillotine",
+                        "title": f"🪓 {name} {'co-champions' if co else 'champion'}: {names}", "url": "special.html",
+                        "summary": "", "items": items,
+                        "discord_extra": [f"Final round, {len(wk)} teams:"] + fin})
+    return out
+
+
+def fold(anns, gann, sent=notify.already_sent):
+    """One push per device per run (Chris): a week's Guillotine cut rides along with that week's
+    postseason results push when both are going out now. Otherwise it goes on its own."""
+    by_id = {a["id"]: a for a in anns}
+    out = list(anns)
+    for g in gann:
+        host = by_id.get(g.get("fold_into"))
+        if host and not sent(host["id"]) and not sent(g["id"]):
+            host["items"] = host["items"] + g["items"]
+            host["summary"] = "; ".join(x for x in [host.get("summary"), f"{g['title'].split(':')[0]}: {g['summary']}"] if x)
+            host["also_ids"] = host.get("also_ids", []) + [g["id"]]
+            host["discord_extra"] = host.get("discord_extra", []) + g.get("discord_extra", [])
+        else:
+            out.append(g)
+    return out
+
+
+def build(year, season_file=SEASON_FILE, field_file=FIELD_FILE, guillotine_file=GUILLOTINE_FILE, sent=None):
     conf = notify.cfg()
     smap = notify.league_short_map()
     lc = lcfg.cfg()
@@ -172,7 +251,7 @@ def build(year, season_file=SEASON_FILE, field_file=FIELD_FILE):
     fa = field_announcement(_read(field_file), year, smap, lc)
     if fa:
         anns.append(fa)  # after CCG results: the field is set from them
-    return anns
+    return fold(anns, guillotine_announcements(_read(guillotine_file), year, smap, lc), sent or notify.already_sent)
 
 
 def main():
@@ -180,10 +259,11 @@ def main():
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--season-file", default=SEASON_FILE)
     ap.add_argument("--field-file", default=FIELD_FILE)
+    ap.add_argument("--guillotine-file", default=GUILLOTINE_FILE)
     ap.add_argument("--year", default=None)
     a = ap.parse_args()
     year = a.year or lcfg.season()
-    anns = build(year, a.season_file, a.field_file)
+    anns = build(year, a.season_file, a.field_file, a.guillotine_file)
     if not anns:
         print("Nothing to announce.")
         return

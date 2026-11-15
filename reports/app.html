@@ -103,7 +103,7 @@ summary .n{color:var(--mute);font-weight:400}
 [hidden]{display:none!important}
 </style>
 </head><body><a href="#" class="totop" aria-label="Back to top" hidden>&#8593;</a><script>(function(){var b=document.currentScript.previousElementSibling;function f(){b.hidden=window.scrollY<window.innerHeight*0.9;}window.addEventListener("scroll",f,{passive:true});window.addEventListener("load",f);b.addEventListener("click",function(ev){ev.preventDefault();var r=window.matchMedia("(prefers-reduced-motion: reduce)").matches;window.scrollTo({top:0,behavior:r?"auto":"smooth"});});})();</script>
-<nav class="weeks" aria-label="Pages"><a href="week-09.html">Awards</a><a href="roster-map.html">Roster Map</a><a href="standings.html">Standings</a><a href="scoreboard.html">Games</a><a href="poll.html">Poll</a><a href="postseason.html">Postseason</a><a href="managers.html">Managers</a><a href="records.html">Records</a><a href="app.html" class="n180-bell" aria-label="Notification settings" title="Notification settings" aria-current="page"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" style="vertical-align:-3px"><path fill="currentColor" d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6V11a7 7 0 0 0-5.5-6.84V3.5a1.5 1.5 0 0 0-3 0v.66A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2Z"/></svg></a></nav>
+<nav class="weeks" aria-label="Pages"><a href="week-09.html">Awards</a><a href="roster-map.html">Roster Map</a><a href="standings.html">Standings</a><a href="scoreboard.html">Games</a><a href="poll.html">Poll</a><a href="postseason.html">Postseason</a><a href="special.html">Special Events</a><a href="managers.html">Managers</a><a href="records.html">Records</a><a href="app.html" class="n180-bell" aria-label="Notification settings" title="Notification settings" aria-current="page"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" style="vertical-align:-3px"><path fill="currentColor" d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6V11a7 7 0 0 0-5.5-6.84V3.5a1.5 1.5 0 0 0-3 0v.66A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2Z"/></svg></a></nav>
 <main class="app">
   <div>
     <h1 id="title">Notifications</h1>
@@ -252,7 +252,12 @@ summary .n{color:var(--mute);font-weight:400}
         lg.teams.map(function (t) { return box("team", t.key, t.name, chosen("team", t.key)); }).join("") + "</div></details>";
     }).join("");
     $("leagues").innerHTML = lists.leagues.map(function (lg) { return box("league", lg.key, lg.name, chosen("league", lg.key)); }).join("");
-    $("events").innerHTML = lists.events.map(function (e) { return box("event", e.key, e.label, first ? e.default : chosen("event", e.key)); }).join("");
+    // A new event (Chris, 2026-11-14) starts ticked on a phone that already had every older event on and
+    // hasn't saved since it was added (no "seen" marker); the sender treats that phone the same way.
+    var autoOn = function (e) {
+      return !!(e.auto_on_with && !chosen("event", e.seen) && e.auto_on_with.every(function (k) { return chosen("event", k); }));
+    };
+    $("events").innerHTML = lists.events.map(function (e) { return box("event", e.key, e.label, first ? e.default : chosen("event", e.key) || autoOn(e)); }).join("");
     var fs = lists.frequencies || [];
     var cur = fs.filter(function (f) { return chosen("event", f.key); })[0] || fs.filter(function (f) { return f.default; })[0];
     $("freqs").innerHTML = fs.map(function (f) {
@@ -270,9 +275,13 @@ summary .n{color:var(--mute);font-weight:400}
   }
 
   function picked() {
-    return Array.prototype.map.call(document.querySelectorAll("input[type=checkbox]:checked, input[type=radio]:checked"), function (i) {
+    var out = Array.prototype.map.call(document.querySelectorAll("input[type=checkbox]:checked, input[type=radio]:checked"), function (i) {
       return { kind: i.dataset.kind, key: i.value };
     });
+    // "seen" markers: this phone has made its own choice on the newer events, so the sender stops
+    // switching them on for it (notify._follows).
+    ((lists && lists.events) || []).forEach(function (e) { if (e.seen) out.push({ kind: "event", key: e.seen }); });
+    return out;
   }
 
   function count() {
