@@ -65,10 +65,19 @@ def png_bytes(im):
     return b.getvalue()
 
 
+def same_pixels(a, b):
+    a, b = a.convert("RGBA"), b.convert("RGBA")
+    return a.size == b.size and a.tobytes() == b.tobytes()
+
+
 def process(path):
     src = source_path(path)
     before = open(path, "rb").read()
-    if os.path.exists(src) and png_bytes(web_copy(src)[1]) != before:
+    # Compare pixels, not PNG bytes: the same image encodes to different bytes across Pillow
+    # versions / optimize settings, and a byte mismatch here used to read as "new upload" and
+    # delete the master (found 2026-11-14 running this on assets/logos/Bowls: every bowl master
+    # would have been removed).
+    if os.path.exists(src) and not same_pixels(web_copy(src)[1], Image.open(path)):
         # The web file isn't the master's web copy: it's a NEW upload (2026-11-11 fix: a replaced
         # logo used to be overwritten by its old master). A big upload becomes the new master; a
         # small one retires the old master.
