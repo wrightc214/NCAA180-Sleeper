@@ -73,6 +73,22 @@ class CutTests(unittest.TestCase):
         self.assertEqual({r["CutLine"] for r in rows2}, {f"{91:.2f}"})  # frozen cut line kept
         self.assertEqual({r["FrozenAt"] for r in rows2}, {"t0"})
 
+    def test_correction_does_not_recut_a_frozen_later_week(self):
+        """Week 13 corrections enlarge week 14's field after week 14 was frozen: week 14 keeps its
+        frozen line and size; only teams at/above that line advance (review of PR #97)."""
+        ids = field(8)
+        w13 = {("L", str(i)): 100.0 - i * 10 for i in range(8)}  # T0-T3 advance, line 70
+        w14 = {("L", "0"): 50.0, ("L", "1"): 40.0, ("L", "2"): 30.0, ("L", "3"): 20.0, ("L", "4"): 10.0, ("L", "5"): 45.0}
+        rows, _ = gl.run(2026, None, {13: w13, 14: w14}, {13, 14}, ids, G, now="t0")
+        frozen = pd.DataFrame(rows, columns=gl.COLUMNS).astype(str)
+        w13[("L", "4")] = 75.0
+        w13[("L", "5")] = 75.0  # pushed over week 13's line: field for week 14 is now 6
+        rows2, _ = gl.run(2026, frozen, {13: w13, 14: w14}, {13, 14}, ids, G, now="t1")
+        adv14 = {r["Team"] for r in rows2 if r["Week"] == 14 and r["Status"] == "Advanced"}
+        self.assertEqual(adv14, {"T000", "T001", "T005"})  # T005 (45) clears the frozen 40 line; T002 (30) does not
+        self.assertEqual({r["CutLine"] for r in rows2 if r["Week"] == 14}, {"40.00"})
+        self.assertEqual({r["Advance"] for r in rows2 if r["Week"] == 14}, {2})
+
     def test_last_week_tie_goes_to_tiebreak_week_then_co_champions(self):
         ids = field(4)
         g = {**G, "first_week": 17}
@@ -153,6 +169,49 @@ class PushTests(unittest.TestCase):
         # results already sent -> the cut goes on its own
         out = pa.fold([host], [g], sent=lambda i: i == "2026-w13-results")
         self.assertEqual([x["id"] for x in out], ["2026-w13-results", "2026-w13-guillotine"])
+
+
+class DiscordTests(unittest.TestCase):
+    def posted(self, ann):
+        import types
+        sent = []
+        orig = sys.modules.get("requests")
+        fake = types.SimpleNamespace(post=lambda url, json, timeout: sent.append(json["content"]) or
+                                     types.SimpleNamespace(raise_for_status=lambda: None))
+        sys.modules["requests"] = fake
+        os.environ["DISCORD_WEBHOOK_TEAM_STATS"] = "https://discord.com/api/webhooks/1/x"
+        try:
+            notify.send_discord(ann)
+        finally:
+            os.environ.pop("DISCORD_WEBHOOK_TEAM_STATS")
+            if orig is not None:
+                sys.modules["requests"] = orig
+            else:
+                sys.modules.pop("requests")
+        return sent[0].split("\n")
+
+    def test_round_posts_only_the_cut(self):
+        a = PushTests.ann(PushTests())
+        self.assertEqual(self.posted(a), ["**The Guillotine: Postseason Week 1 cut**",
+                                          "🪓 The Guillotine, Round 1: 3 of 6 survive · cut line 98.00"])
+
+    def test_folded_round_adds_the_cut_line_to_the_results_post(self):
+        host = {"id": "2026-w13-results", "event": "results", "title": "Week 13 postseason results", "summary": "",
+                "items": [{"text": "Rose Bowl: A 1 – 0 B", "tier": "Bowl", "slots": [], "leagues": []}]}
+        out = pa.fold([host], [PushTests.ann(PushTests())], sent=lambda i: False)
+        self.assertEqual(self.posted(out[0])[1:], ["Rose Bowl: A 1 – 0 B",
+                                                   "🪓 The Guillotine, Round 1: 3 of 6 survive · cut line 98.00"])
+
+    def test_final_posts_every_finalist(self):
+        ids = field(3)
+        g = {**G, "first_week": 17}
+        rows, _ = gl.run(2026, None, {17: {("L", "0"): 120.0, ("L", "1"): 110.0, ("L", "2"): 90.0}}, {17}, ids, g, now="t")
+        gdf = pd.DataFrame(rows, columns=gl.COLUMNS).astype(str)
+        lc = gl.psc.config()[0]
+        a = [x for x in pa.guillotine_announcements(gdf, 2026, {"NCAA BIG SKY": "Big Sky"}, lc) if x["id"].endswith("champion")][0]
+        self.assertEqual(self.posted(a), ["**🪓 The Guillotine champion: T000**", "The Guillotine champion: T000 (120.00)",
+                                          "Final round, 3 teams:", "1. T000 (Big Sky) 120.00",
+                                          "2. T001 (Big Sky) 110.00", "3. T002 (Big Sky) 90.00"])
 
 
 if __name__ == "__main__":

@@ -10,8 +10,9 @@ Rules (config/league.json -> postseason.guillotine; Chris 2026-11-04 / 11-14, cl
     the tied teams; still tied -> co-champions. Until tiebreak_week is final the tied teams show "Tied".
   - Orphan teams play like everyone else.
   - Stat corrections: a week is frozen the first run it is final. A later run recomputes it with
-    the current scores and only ADDS teams (AddedByCorrection = 1); nobody who advanced is removed,
-    and the frozen CutLine stays. The added teams join the next week's field.
+    the current scores and only ADDS teams (AddedByCorrection = 1): a team advances if it now scores
+    at or above the frozen CutLine; nobody who advanced is removed. The added teams join the next
+    week's field (and play any later frozen week against that week's frozen line).
   - The champion (last_week) is recomputed each run, like the other postseason results; how late
     stat corrections should treat it is on hold (claude/todo-postseason-stat-corrections.md).
 
@@ -112,7 +113,12 @@ def run(year, frozen, points, done, ids, g, now=None):
             before = {k for k, r in old.items() if str(r.Status) == "Advanced"}
             added_before = {k for k, r in old.items() if str(r.AddedByCorrection) == "1"}
             if old:
-                line = float(next(iter(old.values())).CutLine)  # the frozen cut line stays
+                # A frozen week keeps its cut line AND its size: a team advances only by scoring at or
+                # above that line. A field enlarged by an earlier week's correction must not re-cut a
+                # week already played ("half" of the bigger field applies from the next unplayed week).
+                r0 = next(iter(old.values()))
+                line, target = float(r0.CutLine), int(r0.Advance)
+                adv = {k for k, v in sc.items() if v >= line - EPS}
                 new = adv - before
                 if new:
                     print(f"Week {w}: stat corrections add {len(new)} team(s) to the next round")

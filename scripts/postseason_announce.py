@@ -197,9 +197,12 @@ def guillotine_announcements(gdf, year, smap, lc):
                 items.append({"text": f"{name}: {r['Team']} {verb} ({_pts(r['Score'])}; cut {line})", "tier": "Guillotine",
                               "order": i, "event": "guillotine", "quiet": True,
                               "slots": [notify.slot_key(sh, r["RosterID"])], "leagues": [sh]})
+            rnd = f"Round {week - int(g['first_week']) + 1}"
             out.append({"id": f"{year}-w{week}-guillotine", "event": "guillotine", "fold_into": f"{year}-w{week}-results",
                         "title": f"{name}: {_wk_label(week, lc)} cut", "url": "special.html",
-                        "summary": f"{n_adv} of {len(wk)} survive · cut line {line}", "items": items})  # event followers see the summary
+                        "summary": f"{n_adv} of {len(wk)} survive · cut line {line}", "items": items,  # event followers see the summary
+                        # league channel: just the cut (Chris, 2026-11-14)
+                        "discord_extra": [f"🪓 {name}, {rnd}: {n_adv} of {len(wk)} survive · cut line {line}"]})
         else:
             champs = wk[wk["Status"] == "Champion"]
             if champs.empty:
@@ -212,9 +215,14 @@ def guillotine_announcements(gdf, year, smap, lc):
                 items.append({"text": f"{name} {'co-' if co else ''}champion: {r['Team']} ({_pts(r['Score'])})",
                               "tier": "Guillotine", "order": i, "event": "guillotine",
                               "slots": [notify.slot_key(sh, r["RosterID"])], "leagues": [sh]})
+            # league channel: the full final -- every finalist, ranked (Chris, 2026-11-14)
+            fin = [f"{int(r['Rank'])}. {r['Team']} ({_short(r['LeagueName'], smap)}) {_pts(r['Score'])}"
+                   + (f" · tiebreak {_pts(r['TiebreakScore'])}" if str(r.get('TiebreakScore', '')) else "")
+                   for _, r in wk.iterrows()]
             out.append({"id": f"{year}-guillotine-champion", "event": "guillotine",
                         "title": f"🪓 {name} {'co-champions' if co else 'champion'}: {names}", "url": "special.html",
-                        "summary": "", "items": items})
+                        "summary": "", "items": items,
+                        "discord_extra": [f"Final round, {len(wk)} teams:"] + fin})
     return out
 
 
@@ -229,6 +237,7 @@ def fold(anns, gann, sent=notify.already_sent):
             host["items"] = host["items"] + g["items"]
             host["summary"] = "; ".join(x for x in [host.get("summary"), f"{g['title'].split(':')[0]}: {g['summary']}"] if x)
             host["also_ids"] = host.get("also_ids", []) + [g["id"]]
+            host["discord_extra"] = host.get("discord_extra", []) + g.get("discord_extra", [])
         else:
             out.append(g)
     return out

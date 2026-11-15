@@ -18,6 +18,7 @@ Announcement (plain dict):
   items     list of {"text", "tier", "order", "event", "slots": ["Big Sky:6", ...], "leagues": ["Big Sky"]}
   champion  True for national champion / Stagg Bowl (also goes to every team follower)
   also_ids  ids of announcements folded into this one; recorded in the ledger with it
+  discord_extra  lines added to the league-channel post only (after the items)
   item "quiet": True  shown only to devices following that item's team/league (per-team lines)
   also_events  more event keys that also receive it (the title game = champion + round results)
   audience  "public" (default) or "lm"
@@ -257,8 +258,11 @@ def send_discord(ann):
     if not hook:
         print("Discord webhook not set; skipped.")
         return False
+    # "quiet" items (per-team Guillotine lines) never go to the channel; "discord_extra" lines do
+    # (Chris, 2026-11-14: rounds 1-4 = just the cut; the final gets the full announcement).
     lines = [f"**{ann['title']}**"] + [it["text"] for it in sorted(ann.get("items", []),
-                                                                  key=lambda i: _prestige(i, cfg()))]
+                                                                  key=lambda i: _prestige(i, cfg()))
+                                       if not it.get("quiet")] + list(ann.get("discord_extra", []))
     text = "\n".join(lines)[:1900]
     requests.post(hook, json={"content": text}, timeout=30).raise_for_status()
     return True
