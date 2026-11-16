@@ -39,3 +39,7 @@ Year,Week,Key,Kind,At,Data
 2026,9,settled:w9-Big Ten-3,settled,2026-11-10T17:17:49Z,"{""points"": [49.2, 43.5], ""winner"": ""Big Ten:3"", ""flipped"": false}"
 2026,9,settled:w9-Big Sky-2,settled,2026-11-10T17:17:49Z,"{""points"": [134.54, 46.0], ""winner"": ""Big Sky:3"", ""flipped"": false}"
 2026,10,window:thu-2026-11-12,window,2026-11-13T12:37:11Z,
+2026,10,final:w10-Pac-12-5,final,2026-11-16T01:20:21Z,"{""teams"": [{""league_id"": ""1331775106527006720"", ""roster_id"": ""8"", ""slot"": ""Pac-12:8"", ""name"": ""Colorado"", ""points"": 116.02}, {""league_id"": ""1331775106527006720"", ""roster_id"": ""10"", ""slot"": ""Pac-12:10"", ""name"": ""California"", ""points"": 34.26}], ""winner"": ""Pac-12:8"", ""label"": """"}"
+2026,10,final:w10-Ivy-5,final,2026-11-16T01:20:21Z,"{""teams"": [{""league_id"": ""1331774741488369664"", ""roster_id"": ""4"", ""slot"": ""Ivy:4"", ""name"": ""Columbia"", ""points"": 84.04}, {""league_id"": ""1331774741488369664"", ""roster_id"": ""7"", ""slot"": ""Ivy:7"", ""name"": ""Penn"", ""points"": 160.96}], ""winner"": ""Ivy:7"", ""label"": """"}"
+2026,10,window:sun-early,window,2026-11-16T01:20:21Z,
+2026,10,window:sun-late,window,2026-11-16T01:20:21Z,
