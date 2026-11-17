@@ -77,7 +77,7 @@
     return g.match.map((_,i)=>i).sort((a,b)=>rankFor(g,a)-rankFor(g,b));
   };
   const winStrength=p=>p==null||!Number.isFinite(Number(p))?0:Math.min(1,Math.abs(Number(p)-50)/50);
-  const chanceStyle=p=>p==null?'':` style="--win-strength:${winStrength(p).toFixed(3)}"`;
+  const chanceStyle=p=>p==null?'':` style="--win-mix:${(winStrength(p)*100).toFixed(1)}%;--win-pre-mix:${(winStrength(p)*60).toFixed(1)}%"`;
   // One row: logo | team (+ record) | Score | Proj | Win %. Same columns in every state (Chris, 2026-10-30).
   function row(r,model,proj,probability,s,winner,info){
     const t=index.leagues[r.leagueId].teams[String(r.roster_id)]||{name:`Roster ${r.roster_id}`};
