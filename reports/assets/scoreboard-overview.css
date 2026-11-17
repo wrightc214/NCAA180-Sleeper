@@ -68,14 +68,14 @@ details.conference>summary:focus-visible{outline:2px solid #38638b;outline-offse
 .r3 .chance{color:var(--neutral,var(--mute));font-weight:500}
 .r3.favorite .chance{font-weight:800}
 .r3.live-odds.favorite .chance{
-  color:color-mix(in srgb,var(--good,var(--neutral,var(--mute))) var(--win-mix,0%),var(--neutral,var(--mute)))
+  color:color-mix(in oklab,var(--good,var(--neutral,var(--mute))) var(--win-mix,0%),var(--neutral,var(--mute)))
 }
 .r3.live-odds.underdog .chance{
-  color:color-mix(in srgb,var(--bad,var(--neutral,var(--mute))) var(--win-mix,0%),var(--neutral,var(--mute)))
+  color:color-mix(in oklab,var(--bad,var(--neutral,var(--mute))) var(--win-mix,0%),var(--neutral,var(--mute)))
 }
 .r3.pre-odds.favorite .chance{
-  color:color-mix(in srgb,var(--good,var(--neutral,var(--mute))) var(--win-pre-mix,0%),var(--neutral,var(--mute)))
+  color:color-mix(in oklab,var(--good,var(--neutral,var(--mute))) var(--win-pre-mix,0%),var(--neutral,var(--mute)))
 }
 .r3.pre-odds.underdog .chance{
-  color:color-mix(in srgb,var(--bad,var(--neutral,var(--mute))) var(--win-pre-mix,0%),var(--neutral,var(--mute)))
+  color:color-mix(in oklab,var(--bad,var(--neutral,var(--mute))) var(--win-pre-mix,0%),var(--neutral,var(--mute)))
 }
