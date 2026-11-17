@@ -45,11 +45,11 @@ test('50 percent is neutral and favorites remain bold without relying on color',
   assert.match(css,/var\(--good,var\(--neutral,var\(--mute\)\)\)/);
   assert.match(css,/var\(--bad,var\(--neutral,var\(--mute\)\)\)/);
   const probabilityRules=css.slice(css.indexOf('/* 5.4: probability diverges'));
-  assert.equal((probabilityRules.match(/color-mix\\(in oklab,/g)||[]).length,4);
-  assert.equal((probabilityRules.match(/color-mix\\(in srgb,/g)||[]).length,0);
-  assert.match(probabilityRules,/\\.r3 \\.chance\\{color:var\\(--neutral,var\\(--mute\\)\\)/);
-  assert.match(probabilityRules,/var\\(--win-pre-mix,0%\\)/);
-  assert.match(probabilityRules,/var\\(--win-mix,0%\\)/);
+  assert.equal((probabilityRules.match(/color-mix\(in oklab,/g)||[]).length,4);
+  assert.equal((probabilityRules.match(/color-mix\(in srgb,/g)||[]).length,0);
+  assert.match(probabilityRules,/\.r3 \.chance\{color:var\(--neutral,var\(--mute\)\)/);
+  assert.match(probabilityRules,/var\(--win-pre-mix,0%\)/);
+  assert.match(probabilityRules,/var\(--win-mix,0%\)/);
   assert.match(menu,/var TOKENS_LIGHT = \{"--good":/);
   assert.match(menu,/var TOKENS_DARK = \{"--good":/);
 });
