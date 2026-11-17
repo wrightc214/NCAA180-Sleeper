@@ -65,12 +65,25 @@
   const kickTxt=t=>new Date(t).toLocaleString('en-US',{timeZone:'America/New_York',weekday:'short',hour:'numeric',minute:'2-digit'})+' ET';
   // Team tiles: a dark tile color gets the dark-background logo (alt, else glow file; Chris, 2026-11-12; same rule as site_common.is_dark)
   const darkBg=h=>{const m=/^#?([0-9a-f]{6})$/i.exec(String(h||''));if(!m)return false;const c=[0,2,4].map(i=>parseInt(m[1].slice(i,i+2),16)/255).map(v=>v<=.03928?v/12.92:((v+.055)/1.055)**2.4);return .2126*c[0]+.7152*c[1]+.0722*c[2]<.18;};
+  // Rank ordering is based on the smallest published poll rank; preserve original order for ties/unranked.
+  const validRank=x=>{const n=Number(x);return x!==''&&x!=null&&Number.isInteger(n)&&n>0?n:Infinity;};
+  const bestRank=g=>Math.min(validRank(g.o?.Rank),validRank(g.o?.OppRank));
+  const rankFor=(g,i)=>validRank(side(g.o,g.match[i].roster_id).rank);
+  const cardOrder=g=>{
+    if(g.post){
+      // Frozen postseason pairings are already in seed order.
+      return g.match.map((_,i)=>i);
+    }
+    return g.match.map((_,i)=>i).sort((a,b)=>rankFor(g,a)-rankFor(g,b));
+  };
+  const winStrength=p=>p==null||!Number.isFinite(Number(p))?0:Math.min(1,Math.abs(Number(p)-50)/50);
+  const chanceStyle=p=>p==null?'':` style="--win-strength:${winStrength(p).toFixed(3)}"`;
   // One row: logo | team (+ record) | Score | Proj | Win %. Same columns in every state (Chris, 2026-10-30).
   function row(r,model,proj,probability,s,winner,info){
     const t=index.leagues[r.leagueId].teams[String(r.roster_id)]||{name:`Roster ${r.roster_id}`};
     const changed=Math.abs(model.actual-model.official)>.011;
     const score=model.played||s.final?`${model.actual.toFixed(2)}${changed?'†':''}`:'–';
-    return `<div class="score-row r3${s.final&&winner?' winner':''}"><span class="team-icon" style="background:${esc(t.primary)}">${t.logo?(()=>{const dk=darkBg(t.primary);return `<img src="${esc(dk&&t.logo_dark||t.logo)}" alt="" onerror="this.hidden=true">`;})():''}</span><span class="school">${info.seed?`<b class="rk seed">${esc(info.seed)}</b> `:''}${info.rank?`<b class="rk">#${esc(info.rank)}</b> `:''}${esc(t.name)}${info.tag?`<b class="ldtag ${info.tag[0]}">${esc(info.tag[1])}</b>`:''}${info.rec?`<small class="rec">${esc(info.rec)}</small>`:''}</span><span class="score${model.played||s.final?'':' dash'}" title="${changed?`Sleeper: ${model.official.toFixed(2)}`:'Standard score'}">${score}</span><span class="proj">${proj.toFixed(1)}</span><span class="chance">${esc(pct(probability))}</span></div>`;
+    return `<div class="score-row r3${s.live?' live-odds':' pre-odds'}${probability!=null&&probability>50?' favorite':''}${probability!=null&&probability<50?' underdog':''}${s.final&&winner?' winner':''}"><span class="team-icon" style="background:${esc(t.primary)}">${t.logo?(()=>{const dk=darkBg(t.primary);return `<img src="${esc(dk&&t.logo_dark||t.logo)}" alt="" onerror="this.hidden=true">`;})():''}</span><span class="school">${info.seed?`<b class="rk seed">${esc(info.seed)}</b> `:''}${info.rank?`<b class="rk">#${esc(info.rank)}</b> `:''}${esc(t.name)}${info.tag?`<b class="ldtag ${info.tag[0]}">${esc(info.tag[1])}</b>`:''}${info.rec?`<small class="rec">${esc(info.rec)}</small>`:''}</span><span class="score${model.played||s.final?'':' dash'}" title="${changed?`Sleeper: ${model.official.toFixed(2)}`:'Standard score'}">${score}</span><span class="proj">${proj.toFixed(1)}</span><span class="chance"${chanceStyle(probability)}>${esc(pct(probability))}</span></div>`;
   }
   // Game of the Week (Chris, 2026-11-04): one game per regular-season week, picked in data/scoreboard/<season>/game-of-the-week.json
   // Blue badge in the regular season, gold ("GOTW Postseason") from CCG week on.
@@ -104,7 +117,8 @@
     const pre=s.live&&s.pregame!=null?`<div class="ew">Pregame: ${esc(league.teams[String(match[0].roster_id)]?.name)} ${esc(pct(s.pregame))}</div>`:'';
     const ew=!s.started&&o?.EveryWeek?`<div class="ew">If they'd played every week: ${esc(o.EveryWeekLeader?o.EveryWeekLeader+' ':'')}${esc(o.EveryWeek)}</div>`:'';
     const pt=g.post?`<div class="ptitle">${esc(gLabel(g.post))}</div>`:'';
-    return `<a class="mini-match" href="${esc(href)}" aria-label="${esc(league.teams[String(match[0].roster_id)]?.name)} versus ${esc(league.teams[String(match[1].roster_id)]?.name)} — player details">${pt}<div class="hdr3"><span>${isGotw(g)?`<img class="gotw-mini" src="${featBadge(g)}" alt="${featAlt(g)}" title="${featAlt(g)}">`:''}</span><span class="match-status${s.active?' is-live':''}">${esc(status)}</span><span>Score</span><span>${s.live?'Live proj':'Proj'}</span><span>${s.live?'Live %':'Pre %'}</span></div>${row(match[0],s.models[0],s.proj[0],p,s,s.models[0].actual>s.models[1].actual,g.post?pside(g,0):side(o,match[0].roster_id))}${row(match[1],s.models[1],s.proj[1],p===null?null:100-p,s,s.models[1].actual>s.models[0].actual,g.post?pside(g,1):side(o,match[1].roster_id))}${pre}${ew}</a>`;
+    const order=cardOrder(g);
+    return `<a class="mini-match" href="${esc(href)}" aria-label="${esc(league.teams[String(match[0].roster_id)]?.name)} versus ${esc(league.teams[String(match[1].roster_id)]?.name)} — player details">${pt}<div class="hdr3"><span>${isGotw(g)?`<img class="gotw-mini" src="${featBadge(g)}" alt="${featAlt(g)}" title="${featAlt(g)}">`:''}</span><span class="match-status${s.active?' is-live':''}">${esc(status)}</span><span>Score</span><span>${s.live?'Live proj':'Proj'}</span><span>${s.live?'Live %':'Pre %'}</span></div>${order.map(i=>row(match[i],s.models[i],s.proj[i],p===null?null:i===0?p:100-p,s,s.models[i].actual>s.models[1-i].actual,g.post?pside(g,i):side(o,match[i].roster_id))).join('')}${pre}${ew}</a>`;
   }
   function pside(g,i){const r=g.match[i],x=g.post.sides.find(y=>String(y.RosterID)===String(r.roster_id)&&String(y.LeagueID)===String(r.leagueId))||{};return {rec:x.Rec,seed:g.post.round==='Playoff'?x.Seed:''};}
   // Lucky dog race (Chris, 2026-11-06): realigned NIT group stages advance every group leader plus the
@@ -300,7 +314,8 @@
   function paint(ids){
     if(isPost())return postPaint();
     const all=ids.flatMap(id=>cards.get(id)?.games||[]),f=folded(),one=!!$('league').value;
-    const rvr=all.filter(g=>g.o?.Rank&&g.o?.OppRank),ranked=all.filter(g=>(g.o?.Rank||g.o?.OppRank)&&!(g.o?.Rank&&g.o?.OppRank));
+    const byRank=(a,b)=>bestRank(a)-bestRank(b);
+    const rvr=all.filter(g=>g.o?.Rank&&g.o?.OppRank).sort(byRank),ranked=all.filter(g=>(g.o?.Rank||g.o?.OppRank)&&!(g.o?.Rank&&g.o?.OppRank)).sort(byRank);
     const feat=list=>`<div class="feat">${list.map(g=>`<section class="feat-card">${card(g)}</section>`).join('')}</div>`;
     const open=(()=>{try{return localStorage.getItem('sb-ranked-open')==='1';}catch(e){return false;}})();
     let html=strip(all,ids);curIds=ids;
