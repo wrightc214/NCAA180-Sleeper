@@ -14,7 +14,7 @@ import json
 import os
 from pathlib import Path
 
-from site_common import logo_info, page_head, nav_html, team_colors
+from site_common import logo_info, page_head, menu_html, team_colors
 from league_config import league_display, normalized, standard_settings  # noqa: F401 (normalized re-exported for tests)
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -229,7 +229,7 @@ def write_page(cfg):
     dump("data/scoreboard/leagues.json", themes)
     # Header matches the rest of the site: nav, eyebrow, big two-tone title, accent rule; banner below it.
     body = f'''<div class="wrap gwrap">
-<nav class="weeks" aria-label="Pages">''' + nav_html("scoreboard") + f'''</nav>
+''' + menu_html("scoreboard") + f'''
 <header class="sbh"><div><div class="eyebrow">{len(index["leagues"])} conferences · projections &amp; live scores · standard scoring</div><h1>{brand} <em>Games</em></h1></div></header>
 <div class="validation" role="note"><strong>⚠ Validation phase</strong> Questions or inaccuracies? <b>Ping {contact} on Discord</b> with the matchup.</div>
 <a id="overview-back" class="overview-back" href="scoreboard.html" hidden>← All games</a>

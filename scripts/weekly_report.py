@@ -39,7 +39,7 @@ import math
 import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from site_common import SECTIONS_JS, logo_html, nav_html, season_row_html, week_archive_html  # noqa: E402
+from site_common import SECTIONS_JS, logo_html, menu_html  # noqa: E402
 from poll_common import ranks_for_week  # noqa: E402
 from week_status import completed_weeks as finished_weeks  # noqa: E402
 import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
@@ -282,7 +282,7 @@ def award_cols(n):
     return min((3, 4, 5), key=lambda c: ((-n) % c, c))
 
 
-def render(d, weeks, colors, tpl, updated, lcolors, ranks=None, year=None, past=False, seasons=""):
+def render(d, weeks, colors, tpl, updated, lcolors, ranks=None, year=None, past=False):
     W = d["week"]
     ranks = ranks or {}
 
@@ -376,7 +376,8 @@ def render(d, weeks, colors, tpl, updated, lcolors, ranks=None, year=None, past=
         f'<small>{e(p["NFL"])} · started in {p["Started"]} of {N_LEAGUES} leagues</small></span>'
         f'<span class="n v">{p["Pts"]:.2f}</span></li>' for p in d["players"])
     cur = ' aria-current="page"'
-    nav = nav_html("awards" if past else W, None if past else weeks)
+    # shared menu + season/week rows (todo-header-rebuild.md): filled by assets/menu.js
+    nav = menu_html("awards" if past else W, ["awards-seasons", f"awards-weeks-{year}"])
 
     top32 = """<section><h2>Playoff Rank: Top 32 <small>Wins, then points</small></h2>
     <div class="tbl"><table><thead><tr><th class="r">#</th><th>{{PREVHDR}}</th><th>Team</th><th class="r">W-L</th><th class="r">PF</th><th class="r" title="Wins minus expected wins">Luck</th></tr></thead><tbody>{{ROWS}}</tbody></table></div>
@@ -396,7 +397,6 @@ def render(d, weeks, colors, tpl, updated, lcolors, ranks=None, year=None, past=
         "MOVENOTE": (f"Movement is change in overall standings rank from Week {W - 1}. " if W > 1 else "")
         + "Luck is wins minus expected wins (share of all 179 other teams outscored each week). ",
         "UPDATED": updated, "NAV": nav, "BRAND": lcfg.brand(),
-        "ARCHIVE": week_archive_html(W, weeks, f"week-{year}-" if past else "week-"), "SEASONS": seasons,
         "YEAR": str(year), "YEARH": f"{year} " if past else "",
         "AVG": f'{d["avg"]:.2f}', "MED": f'{d["median"]:.2f}',
         "UND": str(d["unbeaten"]), "WL": str(d["winless"]),
@@ -462,15 +462,13 @@ def main():
     os.makedirs(os.path.join(OUT_DIR, "data"), exist_ok=True)
     year = int(m["Year"].iloc[0])
     hist = past_seasons()
-    past_years = [(y, max(int(w) for w in hm["Week"])) for y, hm in hist]
     for y, hm in hist:  # past seasons (Chris, 2026-11-08): rebuilt each run, cheap
         if only:
             break
         wk = sorted(set(hm["Week"]))
         for W in wk:
             d = week_data(hm, None, None, {}, W, None, done=wk)
-            page = render(d, wk, colors, tpl, updated, lcolors, {}, year=y, past=True,
-                          seasons=season_row_html(y, past_years, year, weeks[-1]))
+            page = render(d, wk, colors, tpl, updated, lcolors, {}, year=y, past=True)
             with open(os.path.join(OUT_DIR, f"week-{y}-{W:02d}.html"), "w", encoding="utf-8") as f:
                 f.write(page)
         print(f"Awards {y}: weeks {wk[0]}-{wk[-1]}")
@@ -478,8 +476,7 @@ def main():
         if only and W != only:
             continue
         d = week_data(m, sc, mx, pos_map, W, gp)
-        page = render(d, weeks, colors, tpl, updated, lcolors, ranks_for_week(m["Year"].iloc[0], W), year=year,
-                      seasons=season_row_html(year, past_years, year, weeks[-1]))
+        page = render(d, weeks, colors, tpl, updated, lcolors, ranks_for_week(m["Year"].iloc[0], W), year=year)
         with open(os.path.join(OUT_DIR, f"week-{W:02d}.html"), "w", encoding="utf-8") as f:
             f.write(page)
         with open(os.path.join(OUT_DIR, "data", f"week-{W:02d}.json"), "w", encoding="utf-8") as f:

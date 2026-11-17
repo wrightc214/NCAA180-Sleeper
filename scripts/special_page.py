@@ -1,7 +1,7 @@
 """
 special_page.py -- reports/special.html, the Special Events tab (Chris, 2026-11-14).
 
-One sub-tab per non-standard event (site_common.SPECIAL_EVENTS). Today: The Guillotine
+One sub-tab per non-standard event (config/nav.json rows.special). Today: The Guillotine
 (scripts/guillotine.py writes its data; reports/assets/guillotine.js draws it live in the browser).
 Static shell only: the page reads data/scoreboard/<season>/guillotine.json, the week's frozen
 projections, Sleeper and ESPN at view time. Rebuild after a design change; data changes need nothing.
@@ -13,7 +13,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import league_config as lcfg  # noqa: E402
-from site_common import nav_html, page_head, special_nav_html  # noqa: E402
+from site_common import menu_html, page_head  # noqa: E402
 
 CSS = """
 .gwrap{max-width:900px}
@@ -67,8 +67,7 @@ def main():
     logo = g.get("logos", {}).get("wordmark", "")
     logo = html.escape("../" + logo.replace(" ", "%20")) if logo else ""
     body = f'''<div class="wrap gwrap">
-<nav class="weeks" aria-label="Pages">{nav_html("special")}</nav>
-{special_nav_html("special.html")}
+{menu_html("special", ["special"])}
 <header class="sbh gl-hdr"><div class="eyebrow">{brand} · special events · every team · postseason weeks</div>
 <h1 class="gl-title">{f'<img id="gl-logo" src="{logo}" alt="{name}">' if logo else f'{brand} <em>{name}</em>'}</h1></header>
 <div class="tools"><button id="refresh" type="button">↻ Refresh</button><span id="updated" role="status">Loading…</span></div>

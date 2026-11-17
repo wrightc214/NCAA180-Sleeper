@@ -1,10 +1,8 @@
 """
 site_common.py -- pieces shared by every page under reports/ (imported, not run).
 
-nav_html(current)   the tab bar: Awards (latest week), Roster Map, Standings, Poll;
-                    week_archive_html(week) lists every week on the awards page
-                    (once reports/poll.html exists).
-                    `current` is an int week, "map", "standings", or "poll".
+menu_html(current, rows)  the page's menu placeholders + assets/menu.js (the one shared menu;
+                    config/nav.json, write_menu). `current` is an int week or a tab key.
 page_head(title)    <head> with the same fonts + stylesheet as the weekly report, plus the app
                     tags (manifest, home-screen icon, assets/app.js) copied from the template
                     (style block lifted from templates/weekly_report.html, so every page
@@ -30,75 +28,134 @@ def built_weeks():
     return sorted(out)
 
 
-BELL = ('<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" style="vertical-align:-3px"><path fill="currentColor" d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6V11a7 7 0 0 0-5.5-6.84V3.5a1.5 1.5 0 0 0-3 0v.66A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2Z"/></svg>')
+# ---- Site menu (todo-header-rebuild.md, 2026-11-17) ------------------------------------
+# One shared menu: config/nav.json -> reports/assets/menu.js (write_menu / scripts/menu_build.py).
+# Pages carry only empty placeholders (menu_html), so a menu change never rebuilds a page.
+NAV_CONFIG = "config/nav.json"
+MENU_TEMPLATE = "templates/menu.js"
+MENU_OUT = os.path.join(OUT_DIR, "assets", "menu.js")
+# aria-labels of the sub-rows (kept from the per-page rows they replace)
+ROW_ARIA = {"awards-seasons": "Seasons", "standings-seasons": "Seasons", "postseason-seasons": "Seasons",
+            "projection-archive": "Projection archive", "poll": "Poll pages", "special": "Special events"}
 
 
-def nav_html(current, weeks=None):
-    """Main tabs: Weekly Awards (latest week; older weeks via week_archive_html on that page),
-    Roster Map, Standings, Scoreboard, Poll, Managers. Poll sub-pages (how it works, bot ballots) highlight Poll."""
-    weeks = built_weeks() if weeks is None else weeks
-    cur = ' aria-current="page"'
-    links = []
-    if weeks:
-        # "Awards" (Chris, 2026-11-08; was "Weekly Awards"); week-NN.html URLs unchanged
-        links.append(f'<a href="week-{max(weeks):02d}.html"{cur if isinstance(current, int) or current == "awards" else ""}>Awards</a>')
-    links.append(f'<a href="roster-map.html"{cur if current == "map" else ""}>Roster Map</a>')
-    links.append(f'<a href="standings.html"{cur if current == "standings" else ""}>Standings</a>')
-    # Matchups page retired 2026-10-30: the scoreboard is the one Games page all week.
-    if current == "scoreboard" or os.path.exists(os.path.join(OUT_DIR, "scoreboard.html")):
-        links.append(f'<a href="scoreboard.html"{cur if current == "scoreboard" else ""}>Games</a>')
-    if current in ("poll", "poll-how", "poll-bots") or os.path.exists(os.path.join(OUT_DIR, "poll.html")):
-        links.append(f'<a href="poll.html"{cur if current in ("poll", "poll-how", "poll-bots") else ""}>Poll</a>')
-    if current == "postseason" or os.path.exists(os.path.join(OUT_DIR, "postseason.html")):
-        # Projected field + bowls in season (bowl_projection.py); the real postseason after selection
-        links.append(f'<a href="postseason.html"{cur if current == "postseason" else ""}>Postseason</a>')
-    if current == "special" or os.path.exists(os.path.join(OUT_DIR, "special.html")):
-        # Special Events (Chris, 2026-11-14): the Guillotine now, the Dwight Fight and other
-        # non-standard events later, each its own sub-tab (special_nav_html)
-        links.append(f'<a href="special.html"{cur if current == "special" else ""}>Special Events</a>')
-    if current == "managers" or os.path.exists(os.path.join(OUT_DIR, "managers.html")):
-        links.append(f'<a href="managers.html"{cur if current == "managers" else ""}>Managers</a>')
-    if current == "records" or os.path.exists(os.path.join(OUT_DIR, "records.html")):
-        links.append(f'<a href="records.html"{cur if current == "records" else ""}>Records</a>')
-    if current == "app" or os.path.exists(os.path.join(OUT_DIR, "app.html")):
-        # Notification settings: a bell icon in the tab row (Chris, 2026-10-30: in the menu, not floating over data)
-        links.append(f'<a href="app.html" class="n180-bell" aria-label="Notification settings" title="Notification settings"'
-                     f'{cur if current == "app" else ""}>{BELL}</a>')
-    return "".join(links)
+def nav_config():
+    with open(NAV_CONFIG, encoding="utf-8") as f:
+        return json.load(f)
 
 
-# Special Events sub-tabs: (page, label, icon). Add an event here when its page exists (Dwight Fight next).
-SPECIAL_EVENTS = [("special.html", "The Guillotine", "../assets/logos/Guillotine/Guillotine%20G.png")]
+def _row_aria(key):
+    return ROW_ARIA.get(key) or ("Weeks" if key.startswith("awards-weeks") else key)
 
 
-def special_nav_html(current):
-    cur = ' aria-current="page"'
-    icon = lambda src: f'<img src="{src}" alt="" width="16" height="16" style="vertical-align:-3px;margin-right:4px">' if src else ""  # noqa: E731
-    links = "".join(f'<a href="{href}"{cur if href == current else ""}>{icon(src)}{html.escape(label)}</a>'
-                    for href, label, src in SPECIAL_EVENTS if href == current or os.path.exists(os.path.join(OUT_DIR, href)))
-    return f'<nav class="weeks sub" aria-label="Special events"><span>Event</span>{links}</nav>'
+def page_state(current):
+    """menu state of the page whose tab key is `current` (visible when not in the menu list)."""
+    for t in nav_config()["tabs"]:
+        if t["id"] == current or current in t.get("aliases", []):
+            return t.get("state", "visible")
+    return "visible"
 
 
-def week_archive_html(current, weeks=None, prefix="week-"):
-    """Week row on the awards page: every built week of that season, current one highlighted.
-    prefix: "week-" this season (week-NN.html), "week-<year>-" a past season."""
-    weeks = built_weeks() if weeks is None else weeks
-    if len(weeks) < 2:
-        return ""
-    cur = ' aria-current="page"'
-    links = "".join(f'<a href="{prefix}{w:02d}.html"{cur if current == w else ""}>Wk {w}</a>' for w in weeks)
-    return f'<nav class="weeks sub" aria-label="Weeks"><span>Week</span>{links}</nav>'
+def menu_html(current, rows=()):
+    """The page's menu block: main-tab placeholder, sub-row placeholders, the shared menu script.
+    current: tab key (int week -> "awards"; see config/nav.json ids/aliases). rows: sub-row keys
+    (awards-seasons, awards-weeks-<year>, standings-seasons, postseason-seasons, projection-archive,
+    poll, special). Written once per page; reports/assets/menu.js fills it in the browser."""
+    key = "awards" if isinstance(current, int) else (current or "")
+    state = page_state(key) if key else "visible"
+    st = f' data-state="{state}"' if state != "visible" else ""
+    out = f'<nav class="weeks" aria-label="Pages" data-current="{html.escape(key)}"{st}></nav>'
+    out += "".join(f'<nav class="weeks sub" aria-label="{html.escape(_row_aria(r))}" data-row="{html.escape(r)}"></nav>' for r in rows)
+    return out + '<script src="assets/menu.js"></script><noscript><a href="index.html">Home</a></noscript>'
 
 
-def season_row_html(year, past_years, current_year, current_latest):
-    """Season row above the week row on the awards page (Chris, 2026-11-08). Past seasons open on
-    their last regular-season week (week-<year>-NN.html); the current season on its latest week."""
-    if not past_years:
-        return ""
-    cur = ' aria-current="page"'
-    links = "".join(f'<a href="week-{y}-{w:02d}.html"{cur if y == year else ""}>{y}</a>' for y, w in past_years)
-    links += f'<a href="week-{current_latest:02d}.html"{cur if year == current_year else ""}>{current_year}</a>'
-    return f'<nav class="weeks sub" aria-label="Seasons"><span>Season</span>{links}</nav>'
+def _files(pattern):
+    return sorted(os.path.basename(f) for f in glob.glob(os.path.join(OUT_DIR, pattern)))
+
+
+def _current_season():
+    try:
+        import _postseason_common as ps
+        return ps.current_season()
+    except Exception:
+        import league_config as lcfg
+        return lcfg.season()
+
+
+def menu_rows(out_dir=None):
+    """Data-driven sub-rows, read from the pages that exist in reports/."""
+    global OUT_DIR
+    keep, OUT_DIR = OUT_DIR, out_dir or OUT_DIR
+    try:
+        cur = _current_season()
+        rows = {}
+        weeks = built_weeks() or sorted(int(m.group(1)) for f in _files("week-*.html") if (m := re.fullmatch(r"week-(\d{2})\.html", f)))
+        past = {}
+        for f in _files("week-*.html"):
+            m = re.fullmatch(r"week-(\d{4})-(\d{2})\.html", f)
+            if m:
+                past.setdefault(int(m.group(1)), []).append(int(m.group(2)))
+        # Awards: season row (past seasons open on their last week) + a week row per season
+        if past and weeks:
+            items = [{"label": str(y), "href": f"week-{y}-{max(w):02d}.html", "match": f"^week-{y}-\\d+\\.html$"} for y, w in sorted(past.items())]
+            items.append({"label": str(cur), "href": f"week-{max(weeks):02d}.html", "match": "^week-\\d{2}\\.html$"})
+            rows["awards-seasons"] = {"label": "Season", "aria": "Seasons", "items": items}
+        for y, w in sorted(past.items()):
+            rows[f"awards-weeks-{y}"] = {"label": "Week", "aria": "Weeks", "min": 2,
+                                         "items": [{"label": f"Wk {x}", "href": f"week-{y}-{x:02d}.html"} for x in sorted(w)]}
+        if weeks:
+            rows[f"awards-weeks-{cur}"] = {"label": "Week", "aria": "Weeks", "min": 2,
+                                           "items": [{"label": f"Wk {x}", "href": f"week-{x:02d}.html"} for x in weeks]}
+        # Standings: past seasons + this season (standings.html)
+        sy = [int(m.group(1)) for f in _files("standings-*.html") if (m := re.fullmatch(r"standings-(\d{4})\.html", f))]
+        rows["standings-seasons"] = {"label": "Season", "aria": "Seasons",
+                                     "items": [{"label": str(y), "href": f"standings-{y}.html"} for y in sorted(sy) if y != cur]
+                                     + [{"label": str(cur), "href": "standings.html", "match": f"^standings(-{cur})?\\.html$"}]}
+        # Postseason: each season's page; this season = postseason.html (projection, then the real page)
+        py = [int(m.group(1)) for f in _files("postseason-*.html") if (m := re.fullmatch(r"postseason-(\d{4})\.html", f))]
+        rows["postseason-seasons"] = {"label": "Season", "aria": "Seasons",
+                                      "items": [{"label": str(y), "href": f"postseason-{y}.html"} for y in sorted(py) if y != cur]
+                                      + [{"label": str(cur), "href": "postseason.html", "match": f"^postseason(-{cur}|-proj-wk\\d+)?\\.html$"}]}
+        # Projection archive: one link per saved projection week; the newest is also postseason.html
+        pw = sorted(int(m.group(1)) for f in _files("postseason-proj-wk*.html") if (m := re.fullmatch(r"postseason-proj-wk(\d+)\.html", f)))
+        rows["projection-archive"] = {"label": "Projection", "aria": "Projection archive", "min": 2,
+                                      "items": [{"label": f"After wk {w}", "href": f"postseason-proj-wk{w:02d}.html",
+                                                 **({"match": f"^postseason(-proj-wk{w:02d})?\\.html$"} if w == pw[-1] else {})} for w in pw]}
+        return rows, (f"week-{max(weeks):02d}.html" if weeks else None)
+    finally:
+        OUT_DIR = keep
+
+
+def menu_data(out_dir=None):
+    """What menu.js carries: tabs (hidden ones left out), fixed + data-driven rows, latest awards page."""
+    cfg = nav_config()
+    rows, awards = menu_rows(out_dir)
+    tabs = []
+    for t in cfg["tabs"]:
+        if t.get("state", "visible") == "hidden":
+            continue
+        t = {k: v for k, v in t.items() if not (k == "state" and v == "visible")}
+        if t["href"] == "@awards":
+            if not awards:
+                continue
+            t["href"] = awards
+        tabs.append(t)
+    for key, row in cfg.get("rows", {}).items():
+        items = [{k: v for k, v in i.items() if not (k == "state" and v == "visible")}
+                 for i in row["items"] if i.get("state", "visible") != "hidden"]
+        rows[key] = {**{k: v for k, v in row.items() if k != "items"}, "aria": _row_aria(key), "items": items}
+    return {"tabs": tabs, "rows": rows, "awards": awards}
+
+
+def write_menu(out_dir=None):
+    data = menu_data(out_dir)
+    tpl = open(MENU_TEMPLATE, encoding="utf-8").read()
+    js = tpl.replace("/*__DATA__*/null", json.dumps(data, ensure_ascii=False, separators=(",", ":")))
+    out = os.path.join(out_dir or OUT_DIR, "assets", "menu.js")
+    os.makedirs(os.path.dirname(out), exist_ok=True)
+    with open(out, "w", encoding="utf-8") as f:
+        f.write(js)
+    return data
 
 
 # Back-to-top button (Chris, 2026-10-14): fixed bottom-right, appears only after scrolling about a screen,

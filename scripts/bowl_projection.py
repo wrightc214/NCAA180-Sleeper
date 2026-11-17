@@ -34,7 +34,6 @@ import io
 import json
 import os
 import random
-import re
 import sys
 import tempfile
 from contextlib import redirect_stdout
@@ -46,7 +45,7 @@ import _postseason_common as ps  # noqa: E402
 import bowls as B  # noqa: E402
 import league_config as lcfg  # noqa: E402
 from poll_page import colors, logo  # noqa: E402
-from site_common import nav_html, page_head  # noqa: E402
+from site_common import menu_html, page_head  # noqa: E402
 
 PAGE = "reports/postseason.html"
 ARCHIVE = "reports/postseason-proj-wk{:02d}.html"
@@ -515,14 +514,13 @@ def build(year):
             + other_card + table + (ODDS_JS if table else ""))
     body += FOLD_JS + snap_js(after)
     doc = (page_head(f"{lcfg.brand()} postseason", CSS) +
-           f'<div class="wrap"><nav class="weeks" aria-label="Pages">{nav_html("postseason")}</nav>'
-           f'{seasons_row(year)}{ARCH_MARK}<header><h1>{lcfg.brand()} <em>Postseason</em></h1></header>{body}</div></body></html>')
+           f'<div class="wrap">{menu_html("postseason", ["postseason-seasons", "projection-archive"])}'
+           f'<header><h1>{lcfg.brand()} <em>Postseason</em></h1></header>{body}</div></body></html>')
     os.makedirs(OUT_DIR, exist_ok=True)
     with open(ARCHIVE.format(after), "w", encoding="utf-8") as fh:
         fh.write(doc)
     with open(PAGE, "w", encoding="utf-8") as fh:
         fh.write(doc)
-    refresh_archive_rows(after)
     meta = {"year": int(year), "after_week": after, "playoff_field": len(P["field"]), "notes": P["notes"],
             "seeds": {"|".join(key(t)): t["Seed"] for t in P["field"]},
             "games": {t: [[b["name"], x["Team"], y["Team"]] for b, x, y in g] for t, g in by_tier.items()},
@@ -533,41 +531,6 @@ def build(year):
         with open(path, "w") as fh:
             json.dump(meta, fh, indent=1)
     return meta
-
-
-def seasons_row(year):
-    """Links to past seasons' real postseason pages (postseason_page.py); this season = the projection."""
-    try:
-        import postseason_page
-        return postseason_page.season_row_html(current=year)
-    except Exception as ex:  # the projection must never fail over a nav row
-        print(f"WARNING: season row skipped ({ex})")
-        return ""
-
-
-ARCH_MARK = "<!--projection-archive-->"
-ARCH_RE = re.compile(r'(<!--projection-archive-->)(<nav class="weeks sub" aria-label="Projection archive">.*?</nav>)?', re.S)
-
-
-def archive_row(weeks, current):
-    """Point-in-time picker (like the Weekly Awards archive): one link per projection week."""
-    if len(weeks) < 2:
-        return ""
-    cur = ' aria-current="page"'
-    links = "".join(f'<a href="{ARCHIVE.format(w).split("/")[-1]}"{cur if w == current else ""}>After wk {w}</a>' for w in weeks)
-    return f'<nav class="weeks sub" aria-label="Projection archive"><span>Projection</span>{links}</nav>'
-
-
-def refresh_archive_rows(latest):
-    """Every projection page (current + archive) gets the full, current week list."""
-    weeks = sorted(int(m.group(1)) for f in glob.glob(ARCHIVE.replace("{:02d}", "*"))
-                   if (m := re.search(r"wk(\d+)\.html$", f)))
-    pages = [(PAGE, latest)] + [(ARCHIVE.format(w), w) for w in weeks]
-    for path, w in pages:
-        doc = open(path, encoding="utf-8").read()
-        doc = ARCH_RE.sub(lambda mm: ARCH_MARK + archive_row(weeks, w), doc, count=1)
-        with open(path, "w", encoding="utf-8") as fh:
-            fh.write(doc)
 
 
 def shoot():

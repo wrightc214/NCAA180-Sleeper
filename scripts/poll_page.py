@@ -16,7 +16,7 @@ import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import poll_common as pc  # noqa: E402
-from site_common import SECTIONS_JS, logo_html, nav_html, page_head, team_colors  # noqa: E402
+from site_common import SECTIONS_JS, logo_html, menu_html, page_head, team_colors  # noqa: E402
 from poll_aggregate import ranked_games  # noqa: E402
 import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
@@ -239,11 +239,11 @@ def page(cfg, poll, bots, archive, col, year, week, ptype, prev_ranked):
                else f"Results through week {week} · applies to week {week + 1} games")
     body = f"""
 <div class="wrap">
-<nav class="weeks" aria-label="Pages">{nav_html("poll")}</nav>
+{menu_html("poll", ["poll"])}
 <header><div><div class="eyebrow">{eyebrow}</div>
 <h1>{lcfg.brand()} <em>{e(label)}</em></h1></div>
 <div class="kpis"><div class="kpi"><b>{nbots}</b><span>Computer bots</span></div>{kpi_h}</div></header>
-<nav class="weeks sub" aria-label="Poll pages"><a href="poll-how.html">How the poll works</a><a href="poll-bots.html">Bot ballots</a></nav>
+
 {poll_html}
 {games_html}
 {bot_grid(cfg, bots, poll, col, ptype)}

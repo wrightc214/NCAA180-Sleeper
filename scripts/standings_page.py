@@ -14,7 +14,7 @@ import sys
 import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from site_common import SECTIONS_JS, nav_html, page_head  # noqa: E402
+from site_common import SECTIONS_JS, menu_html, page_head  # noqa: E402
 import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 SRC = "data/OverallStandings_Season.csv"
@@ -85,13 +85,6 @@ def main():
     print(f"Wrote {OUT}: {len(df)} teams; past seasons {years}")
 
 
-def picker(year, years, cur):
-    here = ' aria-current="page"'
-    links = "".join(f'<a href="standings-{y}.html"{here if y == year else ""}>{y}</a>' for y in years)
-    links += f'<a href="standings.html"{here if year == cur else ""}>{cur or "Current"}</a>'
-    return f'<nav class="weeks sub" aria-label="Seasons"><span>Season</span>{links}</nav>'
-
-
 def write(df, disp, year, years, cur, out, csv_url, eyebrow, extra_note):
     cols = list(df.columns)
     num = [c for c in cols if pd.api.types.is_numeric_dtype(df[c])]
@@ -102,7 +95,7 @@ def write(df, disp, year, years, cur, out, csv_url, eyebrow, extra_note):
                    for i, c in enumerate(cols))
     body = f"""
 <div class="wrap">
-<nav class="weeks" aria-label="Pages">{nav_html("standings")}</nav>{picker(year, years, cur)}
+{menu_html("standings", ["standings-seasons"])}
 <header><div><div class="eyebrow">{eyebrow}</div><h1>{lcfg.brand()} <em>{f"{year} " if year != cur else ""}Standings</em></h1></div></header>
 <section>
   <h2>All teams</h2>

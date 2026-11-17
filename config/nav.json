@@ -1,0 +1,33 @@
+{
+  "_doc": [
+    "The site menu (todo-header-rebuild.md). Edit here, then run: python scripts/menu_build.py",
+    "That writes reports/assets/menu.js, which every page loads; no page needs rebuilding for a menu change.",
+    "state: visible (everyone) | hidden-dev (shown only with Dev view on; listed in the public menu.js) | hidden (left out of menu.js; direct link only).",
+    "Neither hidden state is secret: the repo and every built page are public.",
+    "aliases: other page keys (data-current) that highlight this tab. href '@awards' = the latest week's awards page.",
+    "rows: fixed sub-rows (a page asks for one with data-row). Data-driven rows (seasons, weeks, projection archive) are built from the pages in reports/."
+  ],
+  "tabs": [
+    {"id": "awards", "label": "Awards", "href": "@awards"},
+    {"id": "map", "label": "Roster Map", "href": "roster-map.html"},
+    {"id": "standings", "label": "Standings", "href": "standings.html"},
+    {"id": "scoreboard", "label": "Games", "href": "scoreboard.html"},
+    {"id": "poll", "label": "Poll", "href": "poll.html", "aliases": ["poll-how", "poll-bots"]},
+    {"id": "postseason", "label": "Postseason", "href": "postseason.html"},
+    {"id": "special", "label": "Special Events", "href": "special.html"},
+    {"id": "managers", "label": "Managers", "href": "managers.html"},
+    {"id": "records", "label": "Records", "href": "records.html"},
+    {"id": "about", "label": "About", "href": "about.html", "state": "hidden"},
+    {"id": "app", "label": "Notification settings", "href": "app.html", "icon": "bell"}
+  ],
+  "rows": {
+    "poll": {"label": "", "items": [
+      {"label": "Latest poll", "href": "poll.html", "match": "^poll(-top25-wk\\d+)?\\.html$"},
+      {"label": "How the poll works", "href": "poll-how.html"},
+      {"label": "Bot ballots", "href": "poll-bots.html"}
+    ]},
+    "special": {"label": "Event", "items": [
+      {"label": "The Guillotine", "href": "special.html", "icon": "../assets/logos/Guillotine/Guillotine%20G.png"}
+    ]}
+  }
+}

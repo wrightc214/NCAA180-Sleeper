@@ -23,7 +23,7 @@ import _postseason_common as ps  # noqa: E402
 import bowl_projection as bp  # noqa: E402
 import league_config as lcfg  # noqa: E402
 from poll_page import colors  # noqa: E402
-from site_common import nav_html, page_head  # noqa: E402
+from site_common import menu_html, page_head  # noqa: E402
 
 OUT = "reports/about.html"
 e = html.escape
@@ -243,13 +243,32 @@ s.textContent=ok?'Copied: '+u:u;setTimeout(()=>{s.textContent='';},4000);});
 document.querySelectorAll('.un').forEach(x=>x.addEventListener('click',async()=>{const u=x.dataset.u;try{await navigator.clipboard.writeText(u);}catch(e){}
 const t=x.textContent;x.textContent='Copied';setTimeout(()=>{x.textContent=t;},1500);}));})();</script>"""
     doc = (page_head(f"About {lcfg.brand()}", CSS)
-           + f'<div class="wrap"><nav class="weeks" aria-label="Pages">{nav_html(None)}</nav>'
-           + f'<header><h1>About <em>{lcfg.brand()}</em></h1></header>{body}'
-           + bp.FOLD_JS + bp.snap_js(0, foot=foot, tag="about", projection=False) + js + "</div></body></html>")
+           + f'<div class="wrap">{menu_html("about")}'
+           + f'<header><h1 id="about-title">About <em>{lcfg.brand()}</em></h1></header>{DEV_PANEL}{body}'
+           + bp.FOLD_JS + bp.snap_js(0, foot=foot, tag="about", projection=False) + js + DEV_JS + "</div></body></html>")
     with open(OUT, "w", encoding="utf-8") as f:
         f.write(doc)
     return OUT
 
+
+# Hidden dev menu (Chris, 2026-11-16; todo-about-page.md section 6): tap the page title 5 times within
+# 3 seconds to open it. Per-device switches: Tester notifications (the same push `test` flag as the
+# notifications page's own title-tap trick, saved via app.js NCAA180.setTester) and Dev view (shows
+# hidden-dev menu entries, assets/menu.js). A div, not a section card, so it never folds or saves as an image.
+DEV_PANEL = ('<div class="devpanel" id="devpanel" hidden><h2>Dev menu</h2>'
+             '<label><input type="checkbox" id="dev-tester"><span>Tester notifications<small>Test pushes go only to tester phones.</small></span></label>'
+             '<label><input type="checkbox" id="dev-view"><span>Dev view<small>Show pages that aren\'t public yet in the menu (marked DEV).</small></span></label>'
+             '<p class="st" id="dev-st" role="status"></p></div>')
+DEV_JS = """<script>(()=>{const t=document.getElementById('about-title'),p=document.getElementById('devpanel');if(!t||!p)return;
+const tb=document.getElementById('dev-tester'),vb=document.getElementById('dev-view'),st=document.getElementById('dev-st');
+const sync=()=>{const N=window.NCAA180||{};tb.checked=!!(N.tester&&N.tester());vb.checked=!!(N.menu&&N.menu.dev());};
+let taps=[];t.addEventListener('click',()=>{const now=Date.now();taps=taps.filter(x=>now-x<3000).concat(now);if(taps.length<5)return;taps=[];
+p.hidden=!p.hidden;st.textContent='';if(!p.hidden)sync();});
+vb.addEventListener('change',()=>{const M=(window.NCAA180||{}).menu;if(!M){st.textContent='Menu not loaded.';return;}
+M.setDev(vb.checked);st.textContent=vb.checked?'Dev view on for this device.':'Dev view off.';});
+tb.addEventListener('change',()=>{const f=(window.NCAA180||{}).setTester;if(!f){st.textContent='App script not loaded; try again.';tb.checked=!tb.checked;return;}
+st.textContent='Saving…';f(tb.checked).then(r=>{st.textContent=(tb.checked?'Tester mode on':'Tester mode off')+(r==='saved'?' and saved. Notifications are on.':' on this device (notifications are off, so nothing to save).');})
+.catch(e=>{st.textContent='Tester mode changed on this device, but couldn\\'t save it: '+e.message+'. Open notification settings and tap Save changes.';});});})();</script>"""
 
 CSS = bp.CSS + """
 .share{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 16px}
@@ -271,6 +290,9 @@ CSS = bp.CSS + """
 .cf{border-top:1px solid var(--line);padding:6px 0}.cf summary{cursor:pointer;font-weight:700}.cf summary small{color:var(--mute);font-weight:500}
 .dvs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0 2px}.dv p{margin:0 0 3px;font:700 11px var(--sans,sans-serif);
  text-transform:uppercase;letter-spacing:.04em;color:var(--mute)}
+.devpanel{margin:0 0 18px;padding:12px 14px;border:2px dashed var(--dev,#a85f00);border-radius:8px}
+.devpanel h2{margin:0 0 8px;font-size:15px;color:var(--dev,#a85f00)}.devpanel label{display:flex;gap:8px;align-items:flex-start;margin:0 0 8px;font-size:14px;cursor:pointer}
+.devpanel label small{display:block;color:var(--mute);font-size:12px}.devpanel .st{font-size:12px;color:var(--mute);min-height:1em;margin:0}
 @media(max-width:560px){.facts{grid-template-columns:repeat(2,minmax(0,1fr))}.dvs{grid-template-columns:1fr}}
 """
 

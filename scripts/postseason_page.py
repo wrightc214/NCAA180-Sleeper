@@ -30,7 +30,7 @@ import bowls as B  # noqa: E402
 import league_config as lcfg  # noqa: E402
 import team_names as tn  # noqa: E402
 from poll_page import colors, logo  # noqa: E402
-from site_common import nav_html, page_head  # noqa: E402
+from site_common import menu_html, page_head  # noqa: E402
 
 HIST = "data/Postseason_Historic.csv"
 PAGE = "reports/postseason.html"
@@ -359,29 +359,14 @@ def build_season(year, years):
 
     if not secs:
         secs.append('<p class="status">Nothing published yet for this season.</p>')
-    cur = ' aria-current="page"'
-    picker = ('<nav class="weeks sub" aria-label="Seasons"><span>Season</span>' +
-              "".join(f'<a href="postseason-{y}.html"{cur if y == year else ""}>{y}</a>' for y in years) +
-              # this season before anything is published: its entry is the projection page (postseason.html)
-              (f'<a href="postseason.html">{ps.current_season()}</a>' if ps.current_season() not in years else "") + "</nav>")
     note = ('<p class="note">Names, logos and formats as played that season. Some early seasons are missing scores '
             '(results were recorded outside Sleeper).</p>') if int(year) < ps.current_season() else ""
     return (page_head(f"{lcfg.brand()} postseason {year}", CSS) +
-            f'<div class="wrap"><nav class="weeks" aria-label="Pages">{nav_html("postseason")}</nav>{picker}'
+            f'<div class="wrap">{menu_html("postseason", ["postseason-seasons"])}'
             f'<header><h1>{lcfg.brand()} <em>{year} Postseason</em></h1></header>' + "".join(secs) + note
             # fold + save image on every section (Chris, 2026-11-07 site design rule)
             + bp.FOLD_JS + bp.snap_js(0, foot=f"{lcfg.brand()} · {year} Postseason · {bp.LINK.replace('https://', '')}", tag=str(year), projection=False)
             + "</div></body></html>")
-
-
-def season_row_html(current=None):
-    """Season picker for the projection page (bowl_projection.py)."""
-    ys = seasons()
-    if not ys:
-        return ""
-    return ('<nav class="weeks sub" aria-label="Seasons"><span>Season</span>' +
-            "".join(f'<a href="postseason-{y}.html">{y}</a>' for y in ys if y != current) +
-            (f'<a href="postseason.html" aria-current="page">{current}</a>' if current else "") + "</nav>")
 
 
 def main():
