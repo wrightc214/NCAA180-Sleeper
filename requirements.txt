@@ -2,5 +2,5 @@ pandas
 numpy
 sleeper-wrapper
 scipy
-Pillow
+Pillow==12.3.0
 pywebpush

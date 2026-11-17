@@ -1,6 +1,7 @@
 name: Trim team logos
 
-# Runs on every team-logo upload (Chris, 2026-11-12) and on demand:
+# Runs on every team, CCG or bowl logo upload (teams: Chris 2026-11-12; CCG + bowls 2026-11-17)
+# and on demand:
 #   1. logo_trim.py  -- crop empty canvas, web-size copies (masters kept in assets/logos/source/)
 #   2. logo_glow.py  -- glow version of every team logo for dark backgrounds (teams/glow-dark/)
 # Its own commit is made with the workflow token, which never starts another run (no loop).
@@ -10,6 +11,8 @@ on:
     paths:
       - 'assets/logos/teams/**'
       - '!assets/logos/teams/glow-dark/**'
+      - 'assets/logos/CCG/**'
+      - 'assets/logos/Bowls/**'
   workflow_dispatch:
     inputs:
       folder:
@@ -32,13 +35,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install Pillow
+      - run: pip install "Pillow==12.3.0"  # pinned: same version as requirements.txt
       - name: Trim
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             python scripts/logo_trim.py "${{ github.event.inputs.folder }}"
           else
-            python scripts/logo_trim.py assets/logos/teams assets/logos/teams/alt-dark
+            python scripts/logo_trim.py assets/logos/teams assets/logos/teams/alt-dark assets/logos/CCG assets/logos/Bowls
           fi
       - run: python scripts/logo_glow.py
       - name: Commit
