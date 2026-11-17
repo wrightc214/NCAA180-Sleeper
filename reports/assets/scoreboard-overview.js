@@ -68,6 +68,14 @@
   // Rank ordering is based on the smallest published poll rank; preserve original order for ties/unranked.
   const validRank=x=>{const n=Number(x);return x!==''&&x!=null&&Number.isInteger(n)&&n>0?n:Infinity;};
   const bestRank=g=>Math.min(validRank(g.o?.Rank),validRank(g.o?.OppRank));
+  const rankedSections=all=>{
+    const hasRank=x=>validRank(x)!==Infinity;
+    const byRank=(a,b)=>bestRank(a)-bestRank(b);
+    return {
+      rvr:all.filter(g=>hasRank(g.o?.Rank)&&hasRank(g.o?.OppRank)).sort(byRank),
+      ranked:all.filter(g=>hasRank(g.o?.Rank)!==hasRank(g.o?.OppRank)).sort(byRank)
+    };
+  };
   const rankFor=(g,i)=>validRank(side(g.o,g.match[i].roster_id).rank);
   const cardOrder=g=>{
     if(g.post){
@@ -314,8 +322,7 @@
   function paint(ids){
     if(isPost())return postPaint();
     const all=ids.flatMap(id=>cards.get(id)?.games||[]),f=folded(),one=!!$('league').value;
-    const byRank=(a,b)=>bestRank(a)-bestRank(b);
-    const rvr=all.filter(g=>g.o?.Rank&&g.o?.OppRank).sort(byRank),ranked=all.filter(g=>(g.o?.Rank||g.o?.OppRank)&&!(g.o?.Rank&&g.o?.OppRank)).sort(byRank);
+    const {rvr,ranked}=rankedSections(all);
     const feat=list=>`<div class="feat">${list.map(g=>`<section class="feat-card">${card(g)}</section>`).join('')}</div>`;
     const open=(()=>{try{return localStorage.getItem('sb-ranked-open')==='1';}catch(e){return false;}})();
     let html=strip(all,ids);curIds=ids;
