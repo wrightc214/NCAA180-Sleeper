@@ -53,7 +53,7 @@ class Simulation(unittest.TestCase):
         self.assertAlmostEqual(tot("Prestige"), 10, delta=0.01)
         for x in t:  # every team lands in exactly one of Playoff / Bowl / NIT
             self.assertAlmostEqual(x["Playoff"] + x["Bowl"] + x["NIT"], 1, delta=0.001)
-            self.assertLessEqual(x["Prestige"] + x["Marquee"], x["Bowl"] + 1e-9)
+            self.assertLessEqual(x["Prestige"] + x["Marquee"], x["Bowl"] + 2e-4)  # 3 columns each rounded to 4 dp (±0.00005)
             for c, f in x["flags"].items():  # a proof never contradicts the runs
                 self.assertEqual(x[c], 1.0 if f == "clinched" else 0.0, (x["Team"], c, f))
 
