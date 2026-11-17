@@ -155,7 +155,7 @@ def build_html(cards):
                          f'<div><b>#{al}<small>/{tot}</small></b><span>Dynasty<br>all 180</span></div>'
                          f'<div><b>#{win}<small>/{n}</small></b><span>Win-now<br>conf</span></div></div>')
         parts.append(f"""<div class="oc"><div class="top" style="background:{bg};color:{fg}">
-{logo_html(c["team"], bg=bg) or "<span></span>"}<div><b>{html.escape(c['team'])}</b><span>{html.escape(c['league'])}</span></div></div>
+{logo_html(c["team"], bg="#ffffff") or "<span></span>"}<div><b>{html.escape(c['team'])}</b><span>{html.escape(c['league'])}</span></div></div>
 {rank_html}<div class="body"><h3>Key players</h3><ul>{players}</ul>
 <h3>Top draft picks <small>({c['n_picks']} owned)</small></h3><ul>{picks}</ul></div></div>""")
     n = len(cards)

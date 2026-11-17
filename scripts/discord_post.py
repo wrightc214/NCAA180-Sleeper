@@ -34,9 +34,31 @@ MAX_BYTES = 9_500_000  # stay under Discord's smallest upload limit
 PARTS = "reports/discord/*.png"  # one image per report section (legible on phones); max 10 per message
 
 
+POLL_IMAGES = "reports/discord-poll/*.png"
+
+
+def poll_posts_to_league():
+    """True when this run's poll post (poll_discord.py, next step) carries the Top 25 to the league.
+    POLL_PUBLISHED is set by the workflow (poll published + publishing not blocked); the
+    league switch mirrors poll_discord.py (repo var POLL_POST_TO_LEAGUE, else config/poll.json)."""
+    if os.environ.get("POLL_PUBLISHED", "").strip().lower() != "true" or not glob.glob(POLL_IMAGES):
+        return False
+    env = os.environ.get("POLL_POST_TO_LEAGUE", "").strip().lower()
+    if env in ("true", "false"):
+        return env == "true"
+    try:
+        return bool(json.load(open("config/poll.json")).get("publish", {}).get("post_to_league", False))
+    except (OSError, ValueError):
+        return False
+
+
 def images():
-    """Section images if report_png.py made them, else the single full-page image."""
-    parts = sorted(glob.glob(PARTS))[:10]
+    """Section images if report_png.py made them, else the single full-page image. The Top 25
+    section is left out when the poll post sends it (Chris, 2026-11-17: no duplicate Top 25)."""
+    parts = sorted(glob.glob(PARTS))
+    if poll_posts_to_league():
+        parts = [f for f in parts if "top-25" not in os.path.basename(f)]
+    parts = parts[:10]
     if parts and sum(os.path.getsize(f) for f in parts) <= MAX_BYTES:
         return parts
     return [PNG]

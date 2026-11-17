@@ -345,6 +345,9 @@ jobs:
           DISCORD_CONTACT_ID: ${{ vars.DISCORD_CONTACT_ID }}
           PNG_STATUS: ${{ steps.render.outcome }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          # Top 25 section is dropped from this post when the poll post (next step) sends it to the league
+          POLL_PUBLISHED: ${{ steps.pub.outputs.ok == 'true' && steps.pollchk.outputs.published == 'true' }}
+          POLL_POST_TO_LEAGUE: ${{ vars.POLL_POST_TO_LEAGUE }}
         run: |
           export FAILED="$(cat /tmp/failed_scripts.txt 2>/dev/null)"
           python scripts/discord_post.py
