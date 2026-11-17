@@ -32,7 +32,7 @@ import sys
 import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from site_common import SECTIONS_JS, nav_html, page_head  # noqa: E402
+from site_common import SECTIONS_JS, menu_html, page_head  # noqa: E402
 from week_status import completed_weeks as finished_weeks  # noqa: E402
 import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 import standard_results  # noqa: E402 (standard-scoring scores/results)
@@ -281,7 +281,7 @@ def main():
     payload = {"teams": teams, "colors": colors, "tcolors": team_colors, "week": week, "w": round(w, 2),
                "leagues": sorted(set(t["Lg"]))}
     page = page_head(f"{lcfg.brand()} Roster Map", MAP_CSS) + MAP_BODY.replace(
-        "{{NAV}}", nav_html("map")).replace("{{BRAND}}", lcfg.brand()).replace("{{WEEK}}", str(week)).replace(
+        "{{NAV}}", menu_html("map")).replace("{{BRAND}}", lcfg.brand()).replace("{{WEEK}}", str(week)).replace(
         "{{WPCT}}", f"{round(w * 100)}").replace(
         "{{DATA}}", json.dumps(payload).replace("</", "<\\/"))
     os.makedirs("reports", exist_ok=True)
@@ -325,7 +325,7 @@ svg.map{width:100%;height:auto;display:block;overflow:visible}
 
 MAP_BODY = """
 <div class="wrap">
-<nav class="weeks" aria-label="Pages">{{NAV}}</nav>
+{{NAV}}
 <header>
   <div><div class="eyebrow">15 conferences · 180 teams · after week {{WEEK}}</div><h1>Roster <em>Map</em></h1></div>
 </header>

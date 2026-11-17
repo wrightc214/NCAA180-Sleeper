@@ -20,7 +20,7 @@ Every team plays postseason weeks 13–17 on its own standard score. Settings an
 | Piece | What it does |
 |---|---|
 | `scripts/guillotine.py` | Cuts each finished week → `data/Guillotine_Season.csv` + `data/scoreboard/<season>/guillotine.json`. Weekly job (`guillotine`). `--year 2025 --out-dir DIR` replays a past season. |
-| `scripts/special_page.py` | `reports/special.html`, the **Special Events** tab. Sub-tabs come from `site_common.SPECIAL_EVENTS` (add the Dwight Fight there). |
+| `scripts/special_page.py` | `reports/special.html`, the **Special Events** tab. Sub-tabs come from `config/nav.json` → `rows.special` (add the Dwight Fight there; `python scripts/menu_build.py`). |
 | `reports/assets/guillotine.js` + `guillotine-model.js` | The page: alive teams sorted by live projection (score, live projection, minutes left, % to survive), current and projected cut lines, eliminated teams with their week, and a week picker for frozen weeks. Same live model as the Games page. |
 | `scripts/postseason_announce.py` | Pushes each week's cut (one line per team, only to that team's or league's followers; event followers get the summary) and the champion. A week's cut rides along with that week's postseason results push when both go out in the same run. |
 | `config/push.json` | `guillotine` event. `auto_on_with`: a phone with every older event on gets it until it saves its picks again (`seen:guillotine` marker). |

@@ -33,7 +33,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import managers_page as mp  # noqa: E402
 import manager_lineups as ml  # noqa: E402
 import team_names as tn  # noqa: E402
-from site_common import SECTIONS_JS, nav_html, page_head  # noqa: E402
+from site_common import SECTIONS_JS, menu_html, page_head  # noqa: E402
 import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 import standard_results  # noqa: E402 (standard-scoring scores/results)
 
@@ -617,7 +617,7 @@ def write_page(sections, year):
     opts = "".join(f'<option value="{e(c)}">{e(c)}</option>' for c in confs)
     body = f"""
 <div class="wrap">
-<nav class="weeks" aria-label="Pages">{nav_html("records")}</nav>
+{menu_html("records")}
 <header><div><div class="eyebrow">{lcfg.brand()} · 2019–{year}</div><h1>All-Time <em>Records</em></h1></div></header>
 <nav class="jump" aria-label="Sections">{jump}</nav>
 <div class="tools"><label>{lcfg.term(cap=True)} <select id="lgf"><option value="">All {lcfg.term(plural=True)}</option>{opts}</select></label></div>

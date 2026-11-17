@@ -33,7 +33,7 @@ import pandas as pd
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import manager_lineups as ml  # noqa: E402
 import team_names as tn  # noqa: E402
-from site_common import SECTIONS_JS, nav_html, page_head, team_colors  # noqa: E402
+from site_common import SECTIONS_JS, menu_html, page_head, team_colors  # noqa: E402
 import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 import standard_results  # noqa: E402 (standard-scoring scores/results)
 
@@ -333,7 +333,7 @@ def write_page(mg, seasons, year):
     leg = "".join(f"<li><span>{e(a)}</span><b>{b}</b></li>" for a, b in legend_items)
     body = f"""
 <div class="wrap">
-<nav class="weeks" aria-label="Pages">{nav_html("managers")}</nav>
+{menu_html("managers")}
 <header><div><div class="eyebrow">Every {lcfg.brand()} manager · 2019–{year}</div><h1>All-Time <em>Managers</em></h1></div></header>
 <section>
   <h2>All managers</h2>

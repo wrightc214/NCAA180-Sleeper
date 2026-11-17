@@ -10,7 +10,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import poll_common as pc  # noqa: E402
-from site_common import nav_html, page_head  # noqa: E402
+from site_common import menu_html, page_head  # noqa: E402
 import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 OUT = "reports/poll-how.html"
@@ -116,7 +116,7 @@ def main():
 
     body = f"""
 <div class="wrap">
-<nav class="weeks" aria-label="Pages">{nav_html("poll-how")}</nav>
+{menu_html("poll-how", ["poll"])}
 <header><div><div class="eyebrow">{lcfg.brand()} poll</div><h1>How it <em>works</em></h1></div>
 <div class="kpis"><div class="kpi"><b>{len(bots)}</b><span>Computer bots</span></div></div></header>
 <section><h2>The poll</h2><ul class="rules">{''.join(f'<li>{r}</li>' for r in rules)}</ul>

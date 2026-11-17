@@ -81,28 +81,39 @@
     later.focus();
   }
 
-  // Notification settings: a bell icon at the end of the page's tab row (site_common.nav_html adds it
-  // to rebuilt pages; this adds it to pages built before that, so every page has it now).
-  function bell() {
-    var nav = document.querySelector('nav.weeks[aria-label="Pages"]');
-    if (!nav || nav.querySelector('a[href$="app.html"]')) return;
-    var a = document.createElement("a");
-    a.href = base + "app.html";
-    a.className = "n180-bell";
-    a.setAttribute("aria-label", "Notification settings");
-    a.title = "Notification settings";
-    a.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" style="vertical-align:-3px"><path fill="currentColor" d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6V11a7 7 0 0 0-5.5-6.84V3.5a1.5 1.5 0 0 0-3 0v.66A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2Z"/></svg>';
-    nav.appendChild(a);
-  }
+  // Tester flag (todo-about-page.md §6): the About page's dev panel switches it here; the notifications
+  // page keeps its own title-tap trick. Same flag ({test} in KEY) either way. When this phone already has
+  // notifications on, the change is saved to the push store right away (test pushes go only to testers).
+  // Resolves to "saved" | "local" (saved on this phone only; notifications off) or rejects with the error.
+  window.NCAA180.setTester = function (on) {
+    var s = store(); s.test = !!on;
+    try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {}
+    if (!s.on || !base || !("serviceWorker" in navigator)) return Promise.resolve("local");
+    return fetch(base + "../config/push.json", { cache: "no-cache" })
+      .then(function (r) { return r.json(); })
+      .then(function (c) {
+        if (!c || !c.worker_url) return "local";
+        return navigator.serviceWorker.getRegistration()
+          .then(function (reg) { return reg && reg.pushManager.getSubscription(); })
+          .then(function (sub) {
+            if (!sub) return "local";
+            return fetch(c.worker_url + "/subscribe", {
+              method: "POST", headers: { "content-type": "application/json" },
+              body: JSON.stringify({ subscription: sub.toJSON(), follows: s.follows || [], test: !!s.test })
+            }).then(function (r) { if (!r.ok) throw new Error(r.status); return "saved"; });
+          });
+      });
+  };
+  window.NCAA180.tester = function () { return !!store().test; };
 
   // Only prompt once push is live (config/push.json -> worker_url set), so members never see a
   // "set up notifications" sheet that leads to "coming soon".
   function start() {
-    if (window.parent !== window) return;  // embedded board (My team): no prompt or bell
+    if (window.parent !== window) return;  // embedded board (My team): no prompt
     if (!base) return;
     fetch(base + "../config/push.json", { cache: "no-cache" })
       .then(function (r) { return r.json(); })
-      .then(function (c) { if (c && c.worker_url) { bell(); showPrompt(); } })
+      .then(function (c) { if (c && c.worker_url) showPrompt(); })
       .catch(function () {});
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);

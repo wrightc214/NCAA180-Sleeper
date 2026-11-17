@@ -290,10 +290,11 @@ jobs:
         run: |
           python scripts/scoreboard_data.py || { echo "scoreboard" >> /tmp/failed_scripts.txt; exit 1; }
 
-      # Same tab row on every page (a new tab otherwise only reaches pages rebuilt that run)
-      - name: Refresh page tabs
+      # The one shared site menu (config/nav.json + this run's pages -> reports/assets/menu.js).
+      # Pages only carry placeholders, so no page is rewritten for a menu change (todo-header-rebuild.md).
+      - name: Build site menu
         if: always()
-        run: python scripts/nav_refresh.py
+        run: python scripts/menu_build.py
 
       - name: Render orphan card
         if: always() && steps.orphan.outputs.render == 'true'
