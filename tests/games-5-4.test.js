@@ -34,8 +34,8 @@ test('50 percent is neutral and favorites remain bold without relying on color',
   assert.match(h.chanceStyle(50),/--win-mix:0.0%/);
   assert.match(h.chanceStyle(90),/--win-mix:80.0%/);
   assert.match(css,/\.r3\.favorite \.chance\{font-weight:800\}/);
-  assert.match(css,/var\(--good,var\(--mute\)\)/);
-  assert.match(css,/var\(--bad,var\(--mute\)\)/);
+  assert.match(css,/var\(--good,var\(--neutral,var\(--mute\)\)\)/);
+  assert.match(css,/var\(--bad,var\(--neutral,var\(--mute\)\)\)/);
   assert.match(menu,/var TOKENS_LIGHT = \{"--good":/);
   assert.match(menu,/var TOKENS_DARK = \{"--good":/);
 });
