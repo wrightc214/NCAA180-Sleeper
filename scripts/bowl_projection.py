@@ -245,11 +245,13 @@ details.how summary{cursor:pointer;font-weight:700}
 
 
 def team(t, col, short, badge="", tag=""):
+    """Team chip. The logo sits on a white tile (.tm img), so it always gets the light-background
+    logo, never the dark alt picked for the team color."""
     bg, fg = col.get(t["Team"], ("#14213a", "#ffffff"))
     lg = short.get(str(t["LeagueName"]).strip(), str(t["LeagueName"]).strip())
     b = f'<span class="aq" style="border-color:{fg};color:{fg}">{e(badge)}</span>' if badge else ""
     lg_txt = e(lg) + (" seat" if tag == "seat" else f" · {e(tag)}" if tag else "")
-    return (f'<div class="tm" style="background:{bg};color:{fg}">{logo(t["Team"], bg)}<div class="nm">{e(t["Team"])}'
+    return (f'<div class="tm" style="background:{bg};color:{fg}">{logo(t["Team"], "#ffffff")}<div class="nm">{e(t["Team"])}'
             f'<small>{int(float(t["Wins"]))}-{int(float(t["Losses"]))} · {lg_txt}</small></div>{b}</div>')
 
 
