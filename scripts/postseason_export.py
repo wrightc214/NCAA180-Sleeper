@@ -71,16 +71,7 @@ def location(bowl):
 
 
 def week_label(week):
-    w = disp()["week_labels"]
-    last = lcfg.last_regular_week()
-    if week <= last:
-        k, n = "regular", week
-    elif week == last + 1:
-        k, n = "ccg", 0
-    else:
-        k, n = "post", week - last - 1
-    long_, short = w[k]
-    return long_.format(n=n), short.format(n=n)
+    return lcfg.week_label(week), lcfg.week_label(week, short=True)
 
 
 def bowl_tiers(bowl_weeks):

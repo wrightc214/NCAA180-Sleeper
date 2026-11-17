@@ -115,7 +115,18 @@
     const rest=pregame?[]:[...keep.slice(5),...plain].sort((a,b)=>b.actual-a.actual||b.baseline-a.baseline);
     return {players:pregame?keep:keep.slice(0,5),rest,zeros,others:candidates.length-zeros-(pregame?keep.length:Math.min(5,keep.length))};
   }
-  const api={num,round,statsMap,normalizedStats,score,remaining,eligible,bestLineup,probability,chanceTop,playerModel,teamModel,benchPlayers};
+  // Week labels (Chris, 2026-11-17): one source for every page -- config postseason.display.week_labels
+  // [long, short] per phase, from schedule.ccg_week / postseason_start_week. {n} = NFL week, {p} = postseason week.
+  function weekLabel(cfg, week, short) {
+    const w = Number(week), sch = (cfg && cfg.schedule) || {};
+    const ccg = Number(sch.ccg_week), start = Number(sch.postseason_start_week || ccg + 1);
+    const L = (cfg && cfg.postseason && cfg.postseason.display && cfg.postseason.display.week_labels) || {};
+    const phase = w === ccg ? 'ccg' : w >= start ? 'post' : 'regular';
+    const fallback = {regular: ['Week {n}', 'Wk {n}'], ccg: ['CCG Week', 'CCG'], post: ['Week {n}', 'Wk {n}']}[phase];
+    const pair = Array.isArray(L[phase]) ? L[phase] : fallback;
+    return String(pair[short ? 1 : 0]).replace(/\{n\}/g, w).replace(/\{p\}/g, w - start + 1);
+  }
+  const api={weekLabel,num,round,statsMap,normalizedStats,score,remaining,eligible,bestLineup,probability,chanceTop,playerModel,teamModel,benchPlayers};
   if(typeof module!=='undefined' && module.exports) module.exports=api;
   root.ScoreboardCore=api;
 })(typeof window==='undefined'?globalThis:window);

@@ -12,7 +12,7 @@
   const settings=new Map(),cards=new Map();
   $('game').hidden=true;$('overview-help').hidden=false;
   const ccgW=()=>cfg.schedule.ccg_week;
-  const wkName=w=>w===ccgW()?'CCG Week':w>ccgW()?`Postseason Week ${w-ccgW()}`:`Week ${w}`;
+  const wkName=w=>ScoreboardCore.weekLabel(cfg,w);
   // Postseason weeks 13+ (Chris, 2026-11-04): games come from the frozen baseline (published pairings), cross-league.
   const isPost=()=>baseline?.event==='postseason';
   const PR=r=>(cfg.postseason?.playoff?.rounds||['First Round','Sweet 16','Elite 8','Final Four','National Championship'])[Number(r)-1];
@@ -30,7 +30,7 @@
       out.push({post:g,id:match[0].leagueId,match,s});}
     return out;}
   let lastGames={},lastStats={};
-  const title=()=>{document.querySelector('h1').innerHTML=`${esc(cfg.brand||'')} <em>${week===ccgW()?'Conference Championships':week>ccgW()?wkName(week):`Week ${week} Games`}</em>`;};
+  const title=()=>{document.querySelector('h1').innerHTML=`${esc(cfg.brand||'')} <em>${week===ccgW()?'Conference Championships':`${wkName(week)} Games`}</em>`;};
   async function get(url,signal){
     const abort=new AbortController(),cancel=()=>abort.abort();
     signal?.addEventListener('abort',cancel,{once:true});
