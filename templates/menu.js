@@ -24,6 +24,91 @@
     ".n180-devbar{background:var(--dev);color:var(--panel,#fff);font:700 12px/1.2 var(--num,sans-serif);letter-spacing:.04em;text-align:center;padding:5px 8px;margin:0 0 8px;border-radius:3px}" +
     "@media print{.n180-devbar{display:none}}";
 
+  // ---- Colour tokens (Project Manager 5.8; todo-ranked-odds-colorblind.md) ----------------
+  // Shared good/bad colours for every page. Hard-coded Standard (red/green) for now; the
+  // accessibility page will replace this style element's text per device (colour-blind presets,
+  // custom pickers). Use the tokens, never hex, for anything that means good/bad:
+  //   --good / --bad      text and lines (>= 4.5:1 on --panel, light and dark)
+  //   --neutral           the 50% midpoint of the win % scale (grey, text-safe)
+  //   --good-soft / --bad-soft   background tints (rows, bubbles)
+  //   --good-fill / --bad-fill   solid fills with --on-fill text (same in light and dark)
+  // Diverging scale (win %): NCAA180.colors.scale(p) -> colour for p in 0..1 (bad -> neutral -> good,
+  // blended in OKLab so the middle stays grey). Kept in a <style> element, not inline on <html>,
+  // so saved images (snapshot.js copies style elements) carry the viewer's colours.
+  var TOKENS_ID = "n180-tokens";
+  var TOKENS_LIGHT = {"--good": "#1a7f37", "--bad": "#b42318", "--neutral": "#6b7484",
+    "--good-soft": "#e3f3e8", "--bad-soft": "#fbe4e1"};
+  var TOKENS_DARK = {"--good": "#4fc785", "--bad": "#ff7b72", "--neutral": "#8a96ab",
+    "--good-soft": "#173a2a", "--bad-soft": "#4a2024"};
+  var TOKENS_BOTH = {"--good-fill": "#1a7f37", "--bad-fill": "#b42318", "--on-fill": "#ffffff"};
+  function decl(o) { var s = ""; for (var k in o) s += k + ":" + o[k] + ";"; return s; }
+  function tokensCss(light, dark, both) {
+    var d = decl(dark);
+    return ":root{" + decl(light) + decl(both) + "}" +
+      "@media (prefers-color-scheme:dark){:root:not([data-theme=light]){" + d + "}}" +
+      ":root[data-theme=dark]{" + d + "}";
+  }
+  function applyTokens(css) {
+    if (typeof document === "undefined") return;
+    var st = document.getElementById(TOKENS_ID);
+    if (!st) {
+      st = document.createElement("style");
+      st.id = TOKENS_ID;
+      (document.head || document.documentElement).appendChild(st);
+    }
+    st.textContent = css;
+  }
+
+  // OKLab blend (sRGB hex in, rgb() out).
+  function hexRgb(h) {
+    h = String(h).trim().replace(/^#/, "");
+    if (h.length === 3) h = h.replace(/./g, "$&$&");
+    var n = parseInt(h, 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  }
+  function lin(c) { c /= 255; return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); }
+  function gam(c) { c = c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055; return Math.round(Math.max(0, Math.min(1, c)) * 255); }
+  function toLab(rgb) {
+    var r = lin(rgb[0]), g = lin(rgb[1]), b = lin(rgb[2]);
+    var l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
+    var m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
+    var s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+    return [0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s,
+            1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s,
+            0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s];
+  }
+  function fromLab(o) {
+    var l = Math.pow(o[0] + 0.3963377774 * o[1] + 0.2158037573 * o[2], 3);
+    var m = Math.pow(o[0] - 0.1055613458 * o[1] - 0.0638541728 * o[2], 3);
+    var s = Math.pow(o[0] - 0.0894841775 * o[1] - 1.2914855480 * o[2], 3);
+    return [gam(4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s),
+            gam(-1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s),
+            gam(-0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s)];
+  }
+  function mix(a, b, t) {
+    var A = toLab(hexRgb(a)), B = toLab(hexRgb(b));
+    var c = fromLab([A[0] + (B[0] - A[0]) * t, A[1] + (B[1] - A[1]) * t, A[2] + (B[2] - A[2]) * t]);
+    return "rgb(" + c[0] + "," + c[1] + "," + c[2] + ")";
+  }
+  // Current token values on this page (theme-aware); falls back to the light set off-browser.
+  function tokens() {
+    var out = {good: TOKENS_LIGHT["--good"], bad: TOKENS_LIGHT["--bad"], neutral: TOKENS_LIGHT["--neutral"]};
+    if (typeof getComputedStyle === "undefined" || typeof document === "undefined") return out;
+    var cs = getComputedStyle(document.documentElement);
+    for (var k in out) { var v = cs.getPropertyValue("--" + k).trim(); if (/^#[0-9a-f]{3,6}$/i.test(v)) out[k] = v; }
+    return out;
+  }
+  // p: 0..1 (0.5 = toss-up). t: optional {good, bad, neutral} (from tokens(); pass it when colouring many cells).
+  function scale(p, t) {
+    t = t || tokens();
+    p = Math.max(0, Math.min(1, Number(p)));
+    if (!isFinite(p)) return t.neutral;
+    return mix(t.neutral, p >= 0.5 ? t.good : t.bad, Math.abs(p - 0.5) * 2);
+  }
+  var colors = {tokens: tokens, scale: scale, mix: mix, css: tokensCss(TOKENS_LIGHT, TOKENS_DARK, TOKENS_BOTH),
+                defaults: {light: TOKENS_LIGHT, dark: TOKENS_DARK, both: TOKENS_BOTH}, buildCss: tokensCss, apply: applyTokens};
+  applyTokens(colors.css);  // before the menu draws: no flash
+
   function devOn() { try { return localStorage.getItem(DEV_KEY) === "1"; } catch (e) { return false; } }
   function setDev(on) {
     try { if (on) localStorage.setItem(DEV_KEY, "1"); else localStorage.removeItem(DEV_KEY); } catch (e) {}
@@ -150,11 +235,12 @@
     }
   }
 
-  var api = {render: render, dev: devOn, setDev: setDev, data: D,
+  var api = {render: render, dev: devOn, setDev: setDev, data: D, colors: colors,
              mainModel: mainModel, rowModel: rowModel, needsBar: needsBar};
   if (typeof module !== "undefined" && module.exports) { module.exports = api; return; }  // node tests
   window.NCAA180 = window.NCAA180 || {};
   window.NCAA180.menu = api;
+  window.NCAA180.colors = colors;
   render(false);
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", function () { render(false); });
 })();

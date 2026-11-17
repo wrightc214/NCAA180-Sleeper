@@ -90,3 +90,31 @@ test('generated reports/assets/menu.js parses and carries no hidden tabs', () =>
   assert.ok(!tabs.some((t) => t.state === 'hidden'));
   assert.ok(!src.includes('about.html'), 'hidden About page must not appear in the public menu file');
 });
+
+// Colour tokens (Project Manager 5.8): hard-coded Standard set + the win % diverging scale.
+test('colour tokens: css carries light, dark and fill sets', () => {
+  const c = load(DATA).colors;
+  assert.match(c.css, /^:root\{--good:#1a7f37;--bad:#b42318;--neutral:#6b7484;/);
+  assert.match(c.css, /--good-fill:#1a7f37;--bad-fill:#b42318;--on-fill:#ffffff;/);
+  assert.match(c.css, /prefers-color-scheme:dark\)\{:root:not\(\[data-theme=light\]\)\{--good:#4fc785;/);
+  assert.match(c.css, /:root\[data-theme=dark\]\{--good:#4fc785;/);
+});
+
+test('colour scale: ends are the tokens, 50% is neutral, monotonic, clamps', () => {
+  const c = load(DATA).colors;
+  const t = {good: '#1a7f37', bad: '#b42318', neutral: '#6b7484'};
+  const rgb = h => 'rgb(' + [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)).join(',') + ')';
+  const near = (a, b) => { const x = a.match(/\d+/g).map(Number), y = b.match(/\d+/g).map(Number);
+    return x.every((v, i) => Math.abs(v - y[i]) <= 1); };
+  assert.ok(near(c.scale(1, t), rgb(t.good)));
+  assert.ok(near(c.scale(0, t), rgb(t.bad)));
+  assert.ok(near(c.scale(0.5, t), rgb(t.neutral)));
+  assert.strictEqual(c.scale(1.7, t), c.scale(1, t));
+  assert.strictEqual(c.scale(-3, t), c.scale(0, t));
+  assert.strictEqual(c.scale('x', t), t.neutral);
+  // further from 50% = further from the neutral grey, both directions
+  const n = rgb(t.neutral).match(/\d+/g).map(Number);
+  const d = p => Math.hypot(...c.scale(p, t).match(/\d+/g).map((v, i) => v - n[i]));
+  for (const [a, b] of [[0.55, 0.7], [0.7, 0.85], [0.85, 1], [0.45, 0.3], [0.3, 0.15], [0.15, 0]])
+    assert.ok(d(a) < d(b), `${a} vs ${b}`);
+});
