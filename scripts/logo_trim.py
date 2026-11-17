@@ -3,7 +3,9 @@
 Upload logos at the best quality you have into the normal folder (e.g. assets/logos/teams/).
 For each PNG this script:
   1. keeps the high-quality master: a file larger than MAX_SIDE is moved untouched to
-     assets/logos/source/<folder>/ (once; a master already there is the source from then on);
+     assets/logos/source/<folder>/ (once; a master already there is the source from then on).
+     A NEW upload over an existing logo moves the old master to source/<folder>/retired/ --
+     masters are never deleted;
   2. writes the web copy the pages use: transparent margin trimmed to a small even margin and
      scaled down to MAX_SIDE on the longer side.
 Why (Chris, 2026-10-30): browsers unpack every image to full size; a 3840x2160 logo costs
@@ -65,9 +67,45 @@ def png_bytes(im):
     return b.getvalue()
 
 
+# How close two images must be to count as the same logo. Pillow versions resize slightly
+# differently (found 2026-11-17: a run on another Pillow read 4 unchanged bowl logos as new
+# uploads and deleted their masters), so exact pixel equality is too strict. Resampling noise
+# moves pixels by a few levels; a real edit moves some pixels a lot.
+PIXEL_DIFF = 24       # a pixel "differs" if any channel moved by more than this
+DIFF_SHARE = 0.0005   # same logo if at most this share of pixels differ (0.05%)
+
+
 def same_pixels(a, b):
+    """True if a and b are the same logo, allowing small resampling differences."""
     a, b = a.convert("RGBA"), b.convert("RGBA")
-    return a.size == b.size and a.tobytes() == b.tobytes()
+    if a.size != b.size:
+        return False
+    if a.tobytes() == b.tobytes():
+        return True
+    from PIL import ImageChops
+    d = ImageChops.difference(a, b)
+    ch = d.split()
+    m = ImageChops.lighter(ImageChops.lighter(ch[0], ch[1]), ImageChops.lighter(ch[2], ch[3]))
+    big = sum(m.point(lambda v: 255 if v > PIXEL_DIFF else 0).histogram()[255:])
+    return big <= DIFF_SHARE * a.size[0] * a.size[1]
+
+
+def retire(src):
+    """Move a replaced master to source/<folder>/retired/ instead of deleting it (Chris,
+    2026-11-17): a new upload still wins, and nothing is lost if the check misfires."""
+    import datetime
+    folder, name = os.path.split(src)
+    stem, ext = os.path.splitext(name)
+    dest_dir = os.path.join(folder, "retired")
+    os.makedirs(dest_dir, exist_ok=True)
+    dest = os.path.join(dest_dir, f"{stem} {datetime.date.today().isoformat()}{ext}")
+    n = 2
+    while os.path.exists(dest):
+        dest = os.path.join(dest_dir, f"{stem} {datetime.date.today().isoformat()} ({n}){ext}")
+        n += 1
+    shutil.move(src, dest)
+    print(f"Retired master: {src} -> {dest}")
+    return dest
 
 
 def process(path):
@@ -77,14 +115,13 @@ def process(path):
     # versions / optimize settings, and a byte mismatch here used to read as "new upload" and
     # delete the master (found 2026-11-14 running this on assets/logos/Bowls: every bowl master
     # would have been removed).
-    if os.path.exists(src) and not same_pixels(web_copy(src)[1], Image.open(path)):
+    if os.path.exists(src):
+        if same_pixels(web_copy(src)[1], Image.open(path)):
+            return False  # web copy already made from this master (any Pillow): leave it alone
         # The web file isn't the master's web copy: it's a NEW upload (2026-11-11 fix: a replaced
-        # logo used to be overwritten by its old master). A big upload becomes the new master; a
-        # small one retires the old master.
-        if max(Image.open(path).size) > MAX_SIDE:
-            shutil.copy2(path, src)
-        else:
-            os.remove(src)
+        # logo used to be overwritten by its old master). The old master is moved to retired/
+        # (never deleted); a big upload becomes the new master.
+        retire(src)
     if not os.path.exists(src) and max(Image.open(path).size) > MAX_SIDE:
         os.makedirs(os.path.dirname(src), exist_ok=True)
         shutil.copy2(path, src)  # keep the high-quality original untouched
