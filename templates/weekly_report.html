@@ -8,10 +8,10 @@
 <script src="assets/app.js" defer></script>
 <style>
 /* Layout: stadium-scoreboard header, then a two-column stat sheet (poll left, week detail right) that stacks on phones */
-:root{--bg:#eef1f5;--panel:#ffffff;--ink:#14213a;--mute:#5d6a80;--line:#d5dbe5;--accent:#c8102e;--gold:#b8860b;--up:#1d7a43;--dn:#b3261e;--good:#176b39;--bad:#ac2632;
+:root{--bg:#eef1f5;--panel:#ffffff;--ink:#14213a;--mute:#5d6a80;--line:#d5dbe5;--accent:#c8102e;--gold:#b8860b;--up:#1d7a43;--dn:#b3261e;
 --disp:"Big Shoulders Display",Impact,"Arial Narrow",sans-serif;--body:"Barlow",system-ui,sans-serif;--num:"Barlow Condensed","Arial Narrow",sans-serif}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1526;--panel:#16213a;--ink:#e8edf6;--mute:#9aa7bd;--line:#2a3756;--accent:#ff5468;--gold:#e0b44a;--up:#4fc785;--dn:#ff7b72;--good:#6ddba0;--bad:#ff9188;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#0d1526;--panel:#16213a;--ink:#e8edf6;--mute:#9aa7bd;--line:#2a3756;--accent:#ff5468;--gold:#e0b44a;--up:#4fc785;--dn:#ff7b72;--good:#6ddba0;--bad:#ff9188;color-scheme:dark}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1526;--panel:#16213a;--ink:#e8edf6;--mute:#9aa7bd;--line:#2a3756;--accent:#ff5468;--gold:#e0b44a;--up:#4fc785;--dn:#ff7b72;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0d1526;--panel:#16213a;--ink:#e8edf6;--mute:#9aa7bd;--line:#2a3756;--accent:#ff5468;--gold:#e0b44a;--up:#4fc785;--dn:#ff7b72;color-scheme:dark}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.4}
 .wrap{max-width:1100px;margin:0 auto;padding-inline:16px;padding-block:24px 40px;display:grid;gap:20px}
 header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;border-bottom:4px solid var(--accent);padding-bottom:12px}
