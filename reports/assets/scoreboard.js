@@ -124,7 +124,7 @@
   }
   // ---- Postseason weeks 13+ (Chris, 2026-11-04) ----
   let postGame=null;const leagueCache=new Map();
-  const ccgW=()=>cfg.schedule.ccg_week,wkName=w=>w===ccgW()?'CCG Week':w>ccgW()?`Postseason Week ${w-ccgW()}`:`Week ${w}`;
+  const ccgW=()=>cfg.schedule.ccg_week,wkName=w=>ScoreboardCore.weekLabel(cfg,w);
   const isPost=()=>baseline?.event==='postseason';
   const PR=r=>(cfg.postseason?.playoff?.rounds||[])[Number(r)-1]||'Playoff';
   function gLabel(g){if(g.round==='Playoff')return [PR(g.playoff_round),g.bowl].filter(Boolean).join(' · ');

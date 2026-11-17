@@ -85,7 +85,7 @@ class PostseasonBrowserTests(unittest.TestCase):
                         self.assertEqual(page.locator('.race .leaders li').count(), 6)
                         self.assertEqual(page.locator('.mini-match.grp .ldtag.lead').count(), 6)
                         self.assertEqual(page.locator('.mini-match.grp .ldtag.dog').count(), 15)
-                        self.assertIn('POSTSEASON WEEK 1', page.locator('h1').inner_text().upper())
+                        self.assertIn('WEEK 13 GAMES', page.locator('h1').inner_text().upper())
                         self.assertFalse(page.evaluate('document.documentElement.scrollWidth > innerWidth'))
                         if os.environ.get('SCOREBOARD_SCREENSHOTS'):
                             d = Path(os.environ['SCOREBOARD_SCREENSHOTS']); d.mkdir(parents=True, exist_ok=True)

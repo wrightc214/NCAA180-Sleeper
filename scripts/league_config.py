@@ -67,6 +67,17 @@ def last_regular_week():
     return int(cfg()["schedule"]["last_regular_week"])
 
 
+def week_label(week, short=False):
+    """Display label for a week (Chris, 2026-11-17), same rule as ScoreboardCore.weekLabel in the browser:
+    postseason.display.week_labels [long, short] per phase; {n} = NFL week, {p} = postseason week."""
+    w, sch = int(week), cfg()["schedule"]
+    ccg = int(sch["ccg_week"])
+    start = int(sch.get("postseason_start_week", ccg + 1))
+    phase = "ccg" if w == ccg else "post" if w >= start else "regular"
+    pair = cfg()["postseason"]["display"]["week_labels"][phase]
+    return pair[1 if short else 0].replace("{n}", str(w)).replace("{p}", str(w - start + 1))
+
+
 @functools.lru_cache(maxsize=None)
 def league_display():
     """{full Sleeper league name: display short name}, e.g. 'NCAA SEC' -> 'SEC'."""

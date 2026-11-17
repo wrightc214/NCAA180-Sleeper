@@ -168,8 +168,7 @@ def field_announcement(field, year, smap, league_cfg):
 
 
 def _wk_label(week, lc):
-    ccg = int(lc["schedule"]["ccg_week"])
-    return f"Postseason Week {int(week) - ccg}" if int(week) > ccg else f"Week {week}"
+    return lcfg.week_label(week)
 
 
 def guillotine_announcements(gdf, year, smap, lc):

@@ -20,8 +20,7 @@
     try{const r=await fetch(url,{signal:abort.signal,cache:'no-cache'});if(!r.ok)throw Error(`HTTP ${r.status}`);return await r.json();}
     finally{clearTimeout(t);signal?.removeEventListener('abort',cancel);}
   }
-  const ccg=()=>cfg.schedule.ccg_week;
-  const wkName=w=>w>ccg()?`Postseason Week ${w-ccg()}`:`Week ${w}`;
+  const wkName=(w,short)=>ScoreboardCore.weekLabel(cfg,w,short);
   const lname=id=>index.leagues[id]?.label||index.leagues[id]?.name||'';
   const ident=t=>index.leagues[t.l]?.teams?.[String(t.r)]||{name:t.team};
   const darkBg=h=>{const m=/^#?([0-9a-f]{6})$/i.exec(String(h||''));if(!m)return false;const c=[0,2,4].map(i=>parseInt(m[1].slice(i,i+2),16)/255).map(v=>v<=.03928?v/12.92:((v+.055)/1.055)**2.4);return .2126*c[0]+.7152*c[1]+.0722*c[2]<.18;};
@@ -64,14 +63,14 @@
     const ws=(gd.weeks||[]).map(x=>x.week),lw=liveWeek();
     if(lw&&!ws.includes(lw))ws.push(lw);
     if(ws.length<2)return '';
-    return `<nav class="weeks sub gl-weeks" aria-label="Weeks"><span>Week</span>${ws.map(w=>`<a href="?week=${w}"${w===week?' aria-current="page"':''}>${esc(wkName(w).replace('Postseason Week','PW'))}</a>`).join('')}</nav>`;
+    return `<nav class="weeks sub gl-weeks" aria-label="Weeks"><span>Week</span>${ws.map(w=>`<a href="?week=${w}"${w===week?' aria-current="page"':''}>${esc(wkName(w,true))}</a>`).join('')}</nav>`;
   }
   function outList(){
     const out=gd.teams.filter(t=>t.status==='out').sort((a,b)=>b.out-a.out||(b.scores[b.out]??0)-(a.scores[a.out]??0));
     if(!out.length)return '';
     return `<details class="gl-out sec-d" open><summary><h3 class="sec">Eliminated <small>${out.length} team${out.length===1?'':'s'}</small></h3></summary>
       <div class="gl-table out-t"><div class="gl-h"><span></span><span>Team</span><span>Out</span><span>Score</span></div>
-      ${out.map(t=>`<div class="gl-r${isMine(t)?' mine':''}">${icon(t)}<span class="gl-t">${esc(ident(t).name)}<small>${esc(lname(t.l))} · ${esc(t.owner)}</small></span><span class="gl-w">${esc(wkName(t.out).replace('Postseason Week','PW'))}</span><span class="gl-n">${Number(t.scores[t.out]??0).toFixed(2)}</span></div>`).join('')}</div></details>`;
+      ${out.map(t=>`<div class="gl-r${isMine(t)?' mine':''}">${icon(t)}<span class="gl-t">${esc(ident(t).name)}<small>${esc(lname(t.l))} · ${esc(t.owner)}</small></span><span class="gl-w">${esc(wkName(t.out,true))}</span><span class="gl-n">${Number(t.scores[t.out]??0).toFixed(2)}</span></div>`).join('')}</div></details>`;
   }
   function liveRows(){
     const field=gd.status==='final'?[]:alive();
