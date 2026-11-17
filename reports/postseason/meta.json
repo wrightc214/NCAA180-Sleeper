@@ -1,225 +1,220 @@
 {
  "year": 2026,
- "after_week": 9,
+ "after_week": 10,
  "playoff_field": 32,
  "notes": [
-  "bowl order: week-9 BotConsensus poll rank - 25 x wins"
+  "bowl order: week-10 BotConsensus poll rank - 25 x wins"
  ],
  "seeds": {
   "1331775106527006720|4": 1,
   "1316899936696016896|11": 2,
-  "1316899756005412864|12": 3,
-  "1331774695346823168|7": 4,
-  "1331774880181399552|5": 5,
-  "1331775206619885568|7": 6,
-  "1331774454493122560|10": 7,
-  "1331774741488369664|1": 8,
-  "1331774915392577536|12": 9,
-  "1331774599196585984|1": 10,
-  "1331775170712444928|8": 11,
-  "1331774741488369664|5": 12,
-  "1331775106527006720|8": 13,
-  "1331774599196585984|6": 14,
-  "1331774846710849536|9": 15,
-  "1331775106527006720|7": 16,
-  "1331774804222545920|8": 17,
-  "1331774544905510912|2": 18,
+  "1331774741488369664|1": 3,
+  "1331774880181399552|5": 4,
+  "1331775206619885568|7": 5,
+  "1331774695346823168|7": 6,
+  "1331774915392577536|12": 7,
+  "1316899756005412864|3": 8,
+  "1331774599196585984|1": 9,
+  "1331775106527006720|7": 10,
+  "1331774804222545920|8": 11,
+  "1331775170712444928|8": 12,
+  "1331774454493122560|10": 13,
+  "1331774846710849536|9": 14,
+  "1316899756005412864|12": 15,
+  "1331774599196585984|6": 16,
+  "1331774544905510912|2": 17,
+  "1331775106527006720|8": 18,
   "1331774599196585984|11": 19,
-  "1331774630620332032|4": 20,
-  "1331774915392577536|10": 21,
-  "1331774630620332032|1": 22,
-  "1316899936696016896|10": 23,
+  "1331774915392577536|10": 20,
+  "1331774630620332032|1": 21,
+  "1331774741488369664|11": 22,
+  "1331774741488369664|5": 23,
   "1331774880181399552|7": 24,
-  "1331774846710849536|6": 25,
-  "1331774741488369664|11": 26,
-  "1331774880181399552|3": 27,
-  "1331774846710849536|1": 28,
-  "1331774846710849536|8": 29,
-  "1331775206619885568|8": 30,
+  "1331774454493122560|1": 25,
+  "1331774630620332032|4": 26,
+  "1331774846710849536|6": 27,
+  "1331774846710849536|8": 28,
+  "1331774846710849536|1": 29,
+  "1331774454493122560|12": 30,
   "1331775170712444928|2": 31,
-  "1331774454493122560|12": 32
+  "1331775206619885568|8": 32
  },
  "games": {
   "Prestige Bowls": [
    [
     "Citrus Bowl",
-    "William & Mary",
-    "Chattanooga"
-   ],
-   [
-    "Sun Bowl",
     "Portland State",
     "Georgia State"
    ],
    [
+    "Sun Bowl",
+    "Minnesota",
+    "Cornell"
+   ],
+   [
     "Gator Bowl",
-    "Auburn",
-    "Minnesota"
+    "Chattanooga",
+    "Auburn"
    ],
    [
     "Liberty Bowl",
-    "Pittsburgh",
-    "James Madison"
+    "Fresno State",
+    "UCONN"
    ],
    [
     "Alamo Bowl",
-    "Davidson",
-    "UCONN"
+    "UCLA",
+    "Davidson"
    ]
   ],
   "Marquee Bowls": [
    [
     "Tangerine Bowl",
-    "Georgia Tech",
-    "UTSA"
+    "UT Martin",
+    "Georgia Tech"
    ],
    [
     "Independence Bowl",
-    "Montana",
-    "Texas A&M"
+    "Montana State",
+    "Missouri"
    ],
    [
     "New Orleans Bowl",
-    "South Carolina",
-    "UT Martin"
+    "James Madison",
+    "South Carolina"
    ],
    [
     "Holiday Bowl",
-    "UCLA",
-    "Monmouth"
+    "Colorado State",
+    "Colgate"
    ],
    [
     "Music City Bowl",
-    "Cornell",
-    "Belmont"
+    "North Alabama",
+    "Illinois"
    ],
    [
     "Aloha Bowl",
-    "Colorado State",
-    "Arkansas State"
+    "Georgia Southern",
+    "USC"
    ],
    [
     "Gasparilla Bowl",
-    "Coastal Carolina",
-    "Nebraska"
+    "Pittsburgh",
+    "Belmont"
    ],
    [
     "Celebration Bowl",
-    "Tuskegee",
-    "Montana State"
+    "Arkansas State",
+    "Tuskegee"
    ]
   ],
   "Showcase Bowls": [
    [
     "Poinsettia Bowl",
-    "Fresno State",
-    "Columbia"
+    "Monmouth",
+    "Boston College"
    ],
    [
     "Armed Forces Bowl",
-    "Citadel",
-    "Texas State"
+    "Mississippi State",
+    "Michigan"
    ],
    [
     "Military Bowl",
-    "West Virginia",
-    "USC"
+    "Texas A&M",
+    "Ohio State"
    ],
    [
     "Bahamas Bowl",
-    "Eastern Washington",
-    "Florida Atlantic"
+    "West Virginia",
+    "Nebraska"
    ],
    [
     "Bacardi Bowl",
-    "Delaware State",
-    "Purdue"
+    "Texas",
+    "Wyoming"
    ],
    [
     "Mirage Bowl",
     "FSU",
-    "North Alabama"
+    "Coastal Carolina"
    ],
    [
     "International Bowl",
-    "Michigan",
-    "Boston College"
+    "Florida Atlantic",
+    "Eastern Washington"
    ]
   ],
   "Opening Bowls": [
    [
     "Vulcan Bowl",
-    "Alcorn State",
-    "Texas"
+    "Delaware State",
+    "Butler"
    ],
    [
     "Bluebonnet Bowl",
-    "Georgia",
-    "Ohio State"
+    "Delaware",
+    "Alcorn State"
    ],
    [
     "Idaho Potato Bowl",
-    "Rutgers",
-    "Georgia Southern"
+    "Florida A&M",
+    "Texas State"
    ],
    [
     "Copper Bowl",
-    "Mississippi State",
-    "North Carolina Central"
+    "Purdue",
+    "Murray State"
    ],
    [
     "Camellia Bowl",
-    "Holy Cross",
-    "Stony Brook"
+    "Howard",
+    "Western Kentucky"
    ],
    [
     "Motor City Bowl",
-    "Austin Peay",
-    "Wyoming"
+    "Columbia",
+    "Villanova"
    ],
    [
     "Zia Bowl",
-    "Troy",
-    "Mississippi Valley State"
+    "Dayton",
+    "Stony Brook"
    ],
    [
     "Gotham Bowl",
-    "Central Michigan",
-    "Dayton"
+    "Arkansas",
+    "Troy"
    ],
    [
     "Pelican Bowl",
-    "Florida A&M",
-    "Delaware"
+    "Mississippi Valley State",
+    "UTSA"
    ],
    [
     "Freedom Bowl",
-    "Howard",
-    "Colgate"
-   ],
-   [
-    "Palm Bowl",
-    "Murray State",
-    "Villanova"
+    "Holy Cross",
+    "Georgia"
    ]
   ]
  },
  "last_in": [
-  "Memphis",
   "LSU",
   "UNC Charlotte",
-  "Army"
+  "Army",
+  "Georgetown"
  ],
  "first_out": [
-  "William & Mary",
   "Portland State",
   "Minnesota",
-  "Chattanooga"
+  "Chattanooga",
+  "Georgia State"
  ],
  "bubble": [
   [
-   "1331774915392577536",
-   "10",
+   "1331774846710849536",
+   "8",
    -5
   ],
   [
@@ -228,102 +223,102 @@
    -4
   ],
   [
-   "1331774846710849536",
-   "8",
-   -3
-  ],
-  [
    "1331775170712444928",
    "2",
-   -2
+   -3
   ],
   [
    "1331774454493122560",
    "12",
-   -1
+   -2
   ],
   [
    "1331775206619885568",
    "8",
+   -1
+  ],
+  [
+   "1331774741488369664",
+   "5",
    0
   ],
   [
    "1316899756005412864",
-   "3",
-   1
-  ],
-  [
-   "1316899756005412864",
    "8",
-   2
+   1
   ],
   [
    "1316899936696016896",
    "7",
-   3
+   2
   ],
   [
    "1331774544905510912",
    "4",
-   4
+   3
   ],
   [
    "1331774695346823168",
    "5",
-   5
+   4
   ],
   [
    "1331775170712444928",
    "4",
+   5
+  ],
+  [
+   "1331775206619885568",
+   "5",
    6
   ]
  ],
  "impact_playoff": [
   {
-   "team": "Army",
-   "opp": "Notre Dame",
-   "league": "Big East",
-   "LeagueID": "1331775206619885568",
-   "RosterID": "8",
-   "with_win": 0.724,
-   "with_loss": 0.01,
-   "swing": 0.714,
-   "pwin": 0.6388
+   "team": "Temple",
+   "opp": "Tulane",
+   "league": "Sun Belt",
+   "LeagueID": "1331774846710849536",
+   "RosterID": "1",
+   "with_win": 0.9992,
+   "with_loss": 0.004,
+   "swing": 0.9952,
+   "pwin": 0.624
   },
   {
-   "team": "Pittsburgh",
-   "opp": "Syracuse",
-   "league": "Big East",
-   "LeagueID": "1331775206619885568",
-   "RosterID": "4",
-   "with_win": 0.8509,
-   "with_loss": 0.1857,
-   "swing": 0.6653,
-   "pwin": 0.1194
+   "team": "UCLA",
+   "opp": "Washington State",
+   "league": "Pac-12",
+   "LeagueID": "1331775106527006720",
+   "RosterID": "12",
+   "with_win": 0.9947,
+   "with_loss": 0.0,
+   "swing": 0.9947,
+   "pwin": 0.3011
   }
  ],
  "impact_bowl": [
   {
-   "team": "Penn State",
-   "opp": "Iowa",
-   "league": "Big Ten",
-   "LeagueID": "1316899936696016896",
-   "RosterID": "5",
-   "with_win": 0.814,
+   "team": "Arkansas",
+   "opp": "Tennessee",
+   "league": "SEC",
+   "LeagueID": "1331775170712444928",
+   "RosterID": "12",
+   "with_win": 1.0,
    "with_loss": 0.0,
-   "swing": 0.814,
-   "pwin": 0.1532
+   "swing": 1.0,
+   "pwin": 0.5163
   },
   {
-   "team": "Citadel",
-   "opp": "Wichita State",
-   "league": "Wild",
-   "LeagueID": "1331774454493122560",
-   "RosterID": "8",
-   "with_win": 0.7836,
-   "with_loss": 0.0028,
-   "swing": 0.7808,
-   "pwin": 0.6802
+   "team": "Virginia Tech",
+   "opp": "Boston College",
+   "league": "ACC",
+   "LeagueID": "1331774915392577536",
+   "RosterID": "4",
+   "with_win": 1.0,
+   "with_loss": 0.0,
+   "swing": 1.0,
+   "pwin": 0.4321
   }
  ]
 }

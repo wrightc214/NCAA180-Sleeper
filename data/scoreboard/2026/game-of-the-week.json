@@ -11,5 +11,13 @@
     ],
     "reason": "William & Mary: projected first team out of the playoff",
     "source": "auto"
+  },
+  "11": {
+    "teams": [
+      "Dartmouth",
+      "Cornell"
+    ],
+    "reason": "rivalry",
+    "source": "auto"
   }
 }

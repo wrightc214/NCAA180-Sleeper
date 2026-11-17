@@ -1,0 +1,324 @@
+{
+ "year": 2026,
+ "after_week": 10,
+ "playoff_field": 32,
+ "notes": [
+  "bowl order: week-10 BotConsensus poll rank - 25 x wins"
+ ],
+ "seeds": {
+  "1331775106527006720|4": 1,
+  "1316899936696016896|11": 2,
+  "1331774741488369664|1": 3,
+  "1331774880181399552|5": 4,
+  "1331775206619885568|7": 5,
+  "1331774695346823168|7": 6,
+  "1331774915392577536|12": 7,
+  "1316899756005412864|3": 8,
+  "1331774599196585984|1": 9,
+  "1331775106527006720|7": 10,
+  "1331774804222545920|8": 11,
+  "1331775170712444928|8": 12,
+  "1331774454493122560|10": 13,
+  "1331774846710849536|9": 14,
+  "1316899756005412864|12": 15,
+  "1331774599196585984|6": 16,
+  "1331774544905510912|2": 17,
+  "1331775106527006720|8": 18,
+  "1331774599196585984|11": 19,
+  "1331774915392577536|10": 20,
+  "1331774630620332032|1": 21,
+  "1331774741488369664|11": 22,
+  "1331774741488369664|5": 23,
+  "1331774880181399552|7": 24,
+  "1331774454493122560|1": 25,
+  "1331774630620332032|4": 26,
+  "1331774846710849536|6": 27,
+  "1331774846710849536|8": 28,
+  "1331774846710849536|1": 29,
+  "1331774454493122560|12": 30,
+  "1331775170712444928|2": 31,
+  "1331775206619885568|8": 32
+ },
+ "games": {
+  "Prestige Bowls": [
+   [
+    "Citrus Bowl",
+    "Portland State",
+    "Georgia State"
+   ],
+   [
+    "Sun Bowl",
+    "Minnesota",
+    "Cornell"
+   ],
+   [
+    "Gator Bowl",
+    "Chattanooga",
+    "Auburn"
+   ],
+   [
+    "Liberty Bowl",
+    "Fresno State",
+    "UCONN"
+   ],
+   [
+    "Alamo Bowl",
+    "UCLA",
+    "Davidson"
+   ]
+  ],
+  "Marquee Bowls": [
+   [
+    "Tangerine Bowl",
+    "UT Martin",
+    "Georgia Tech"
+   ],
+   [
+    "Independence Bowl",
+    "Montana State",
+    "Missouri"
+   ],
+   [
+    "New Orleans Bowl",
+    "James Madison",
+    "South Carolina"
+   ],
+   [
+    "Holiday Bowl",
+    "Colorado State",
+    "Colgate"
+   ],
+   [
+    "Music City Bowl",
+    "North Alabama",
+    "Illinois"
+   ],
+   [
+    "Aloha Bowl",
+    "Georgia Southern",
+    "USC"
+   ],
+   [
+    "Gasparilla Bowl",
+    "Pittsburgh",
+    "Belmont"
+   ],
+   [
+    "Celebration Bowl",
+    "Arkansas State",
+    "Tuskegee"
+   ]
+  ],
+  "Showcase Bowls": [
+   [
+    "Poinsettia Bowl",
+    "Monmouth",
+    "Boston College"
+   ],
+   [
+    "Armed Forces Bowl",
+    "Mississippi State",
+    "Michigan"
+   ],
+   [
+    "Military Bowl",
+    "Texas A&M",
+    "Ohio State"
+   ],
+   [
+    "Bahamas Bowl",
+    "West Virginia",
+    "Nebraska"
+   ],
+   [
+    "Bacardi Bowl",
+    "Texas",
+    "Wyoming"
+   ],
+   [
+    "Mirage Bowl",
+    "FSU",
+    "Coastal Carolina"
+   ],
+   [
+    "International Bowl",
+    "Florida Atlantic",
+    "Eastern Washington"
+   ]
+  ],
+  "Opening Bowls": [
+   [
+    "Vulcan Bowl",
+    "Delaware State",
+    "Butler"
+   ],
+   [
+    "Bluebonnet Bowl",
+    "Delaware",
+    "Alcorn State"
+   ],
+   [
+    "Idaho Potato Bowl",
+    "Florida A&M",
+    "Texas State"
+   ],
+   [
+    "Copper Bowl",
+    "Purdue",
+    "Murray State"
+   ],
+   [
+    "Camellia Bowl",
+    "Howard",
+    "Western Kentucky"
+   ],
+   [
+    "Motor City Bowl",
+    "Columbia",
+    "Villanova"
+   ],
+   [
+    "Zia Bowl",
+    "Dayton",
+    "Stony Brook"
+   ],
+   [
+    "Gotham Bowl",
+    "Arkansas",
+    "Troy"
+   ],
+   [
+    "Pelican Bowl",
+    "Mississippi Valley State",
+    "UTSA"
+   ],
+   [
+    "Freedom Bowl",
+    "Holy Cross",
+    "Georgia"
+   ]
+  ]
+ },
+ "last_in": [
+  "LSU",
+  "UNC Charlotte",
+  "Army",
+  "Georgetown"
+ ],
+ "first_out": [
+  "Portland State",
+  "Minnesota",
+  "Chattanooga",
+  "Georgia State"
+ ],
+ "bubble": [
+  [
+   "1331774846710849536",
+   "8",
+   -5
+  ],
+  [
+   "1331774846710849536",
+   "1",
+   -4
+  ],
+  [
+   "1331775170712444928",
+   "2",
+   -3
+  ],
+  [
+   "1331774454493122560",
+   "12",
+   -2
+  ],
+  [
+   "1331775206619885568",
+   "8",
+   -1
+  ],
+  [
+   "1331774741488369664",
+   "5",
+   0
+  ],
+  [
+   "1316899756005412864",
+   "8",
+   1
+  ],
+  [
+   "1316899936696016896",
+   "7",
+   2
+  ],
+  [
+   "1331774544905510912",
+   "4",
+   3
+  ],
+  [
+   "1331774695346823168",
+   "5",
+   4
+  ],
+  [
+   "1331775170712444928",
+   "4",
+   5
+  ],
+  [
+   "1331775206619885568",
+   "5",
+   6
+  ]
+ ],
+ "impact_playoff": [
+  {
+   "team": "Temple",
+   "opp": "Tulane",
+   "league": "Sun Belt",
+   "LeagueID": "1331774846710849536",
+   "RosterID": "1",
+   "with_win": 0.9992,
+   "with_loss": 0.004,
+   "swing": 0.9952,
+   "pwin": 0.624
+  },
+  {
+   "team": "UCLA",
+   "opp": "Washington State",
+   "league": "Pac-12",
+   "LeagueID": "1331775106527006720",
+   "RosterID": "12",
+   "with_win": 0.9947,
+   "with_loss": 0.0,
+   "swing": 0.9947,
+   "pwin": 0.3011
+  }
+ ],
+ "impact_bowl": [
+  {
+   "team": "Arkansas",
+   "opp": "Tennessee",
+   "league": "SEC",
+   "LeagueID": "1331775170712444928",
+   "RosterID": "12",
+   "with_win": 1.0,
+   "with_loss": 0.0,
+   "swing": 1.0,
+   "pwin": 0.5163
+  },
+  {
+   "team": "Virginia Tech",
+   "opp": "Boston College",
+   "league": "ACC",
+   "LeagueID": "1331774915392577536",
+   "RosterID": "4",
+   "with_win": 1.0,
+   "with_loss": 0.0,
+   "swing": 1.0,
+   "pwin": 0.4321
+  }
+ ]
+}
