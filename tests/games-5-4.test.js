@@ -41,19 +41,30 @@ test('50 percent is neutral and favorites remain bold without relying on color',
   assert.equal(h.winStrength(90),0.8);
   assert.match(h.chanceStyle(50),/--win-mix:0.0%/);
   assert.match(h.chanceStyle(90),/--win-mix:80.0%/);
+  assert.match(h.chanceStyle(90),/--win-final-mix:24.0%/);
+  assert.match(h.chanceStyle(50),/--win-final-mix:0.0%/);
   assert.match(css,/\.r3\.favorite \.chance\{font-weight:800\}/);
   assert.match(css,/var\(--good,var\(--neutral,var\(--mute\)\)\)/);
   assert.match(css,/var\(--bad,var\(--neutral,var\(--mute\)\)\)/);
   const probabilityRules=css.slice(css.indexOf('/* 5.4: probability diverges'));
-  assert.equal((probabilityRules.match(/color-mix\(in oklab,/g)||[]).length,4);
+  assert.equal((probabilityRules.match(/color-mix\(in oklab,/g)||[]).length,6);
   assert.equal((probabilityRules.match(/color-mix\(in srgb,/g)||[]).length,0);
   assert.match(probabilityRules,/\.r3 \.chance\{color:var\(--neutral,var\(--mute\)\)/);
   assert.match(probabilityRules,/var\(--win-pre-mix,0%\)/);
   assert.match(probabilityRules,/var\(--win-mix,0%\)/);
+  assert.match(probabilityRules,/var\(--win-final-mix,0%\)/);
+  assert.match(probabilityRules,/\.r3\.final-odds \.chance\{font-weight:500\}/);
+  assert.match(source,/s\.final\?' final-odds'/);
+  assert.match(source,/s\.final\?'Pregame %'/);
   assert.match(menu,/var TOKENS_LIGHT = \{"--good":/);
   assert.match(menu,/var TOKENS_DARK = \{"--good":/);
 });
 test('accessible card label follows visible row order',()=>{
   assert.match(source,/match\[order\[0\]\]\.roster_id/);
   assert.match(source,/match\[order\[1\]\]\.roster_id/);
+});
+
+test('live pregame summary follows the displayed top team',()=>{
+  assert.match(source,/match\[order\[0\]\]\.roster_id/);
+  assert.match(source,/order\[0\]===0\?s\.pregame:100-s\.pregame/);
 });
