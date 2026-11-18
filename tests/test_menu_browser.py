@@ -51,7 +51,7 @@ class MenuBrowser(unittest.TestCase):
                 self.assertEqual([x[0] for x in t][:3], ["Awards", "Roster Map", "Standings"])
                 self.assertEqual(t[-1][0], "bell")
                 self.assertEqual([x[0] for x in t if x[1]], [lit])
-                self.assertNotIn("About", [x[0] for x in t])
+                self.assertEqual([x[0] for x in t][-3:], ["Records", "About", "bell"])  # About public since #106
                 self.assertEqual(self.errors, [])
                 pg.close()
 

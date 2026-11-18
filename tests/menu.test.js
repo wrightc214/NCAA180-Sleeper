@@ -88,7 +88,7 @@ test('generated reports/assets/menu.js parses and carries no hidden tabs', () =>
   const tabs = m.exports.data.tabs;
   assert.ok(tabs.length > 0);
   assert.ok(!tabs.some((t) => t.state === 'hidden'));
-  assert.ok(!src.includes('about.html'), 'hidden About page must not appear in the public menu file');
+  assert.ok(tabs.some((t) => t.id === 'about'), 'About is public since 2026-11-17 (#106)');
 });
 
 // Colour tokens (Project Manager 5.8): hard-coded Standard set + the win % diverging scale.
