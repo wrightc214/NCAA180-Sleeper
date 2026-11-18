@@ -13,6 +13,8 @@ on:
       - 'data/PlayerValues_Season.csv'
       - 'data/PickValues_Season.csv'
       - 'reports/transactions.html'
+      - 'reports/assets/menu.js'
+      - 'templates/menu.js'
       - '.github/workflows/update-leagues.yml'
       - '.github/workflows/transactions-pr-check.yml'
 permissions:
@@ -26,8 +28,10 @@ jobs:
         with:
           python-version: '3.11'
       - run: pip install -r requirements.txt pytest
-      - name: Regenerate menu for configuration-consistency tests (checkout only)
-        run: python3 scripts/menu_build.py
+      - name: Check the committed menu is current
+        run: |
+          python3 scripts/menu_build.py
+          git diff --exit-code -- reports/assets/menu.js
       - name: Python tests
         run: python3 -m pytest -q tests
       - uses: actions/setup-node@v4

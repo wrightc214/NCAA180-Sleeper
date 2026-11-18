@@ -65,7 +65,6 @@ DEFAULTS = {
         "receives": "Receives",
         "most_added": "Most added",
         "most_dropped": "Most dropped",
-        "week": "Week",
         "team": "Team",
         "pick": "Pick",
         "pick_swap": "Pick swap",

@@ -170,6 +170,7 @@ def test_surplus_appears_in_winning_team_panel_only():
     row = {"LeagueName": "NCAA SEC", "Week": "5", "Created": "1791331200000", "TransactionID": "t1"}
     rendered = trade_card(row, sides, TEAMS, {}, result, {"NCAA SEC": "SEC"})
     assert rendered.count('class="tx-surplus"') == 1
+    assert 'Experimental consolidation adjustment (KTC-style)' in rendered
     winner_panel, other = rendered.split('<div class="tx-center">', 1)
     assert "tx-surplus" in winner_panel
     assert "tx-surplus" not in other
@@ -330,3 +331,27 @@ def test_task_511_missing_transactions_nav_settings_remain_preview_only(monkeypa
     assert site_common.menu_data()["tabs"] == [
         {"id": "transactions", "label": "Transactions", "href": "transactions.html", "state": "hidden-dev"},
     ]
+
+
+def test_ccg_week_uses_shared_labels_in_card_selectors_and_summary(monkeypatch, tmp_path):
+    import re
+    import transactions_page as page
+
+    ccg_week = str(page.lcfg.cfg()["schedule"]["ccg_week"])
+    assert page.lcfg.week_label(ccg_week) == "CCG Week"
+    row = tx(Week=ccg_week, Year=str(page.lcfg.season()), Status="complete",
+             Created="1794000000000", TransactionID="ccg-trade", Type="trade")
+    sources = {page.TRANSACTIONS: [row], page.PLAYERS: [
+        {"player_id": pid, **player} for pid, player in PLAYERS.items()
+    ]}
+    report = tmp_path / "transactions.html"
+    monkeypatch.setattr(page, "read_rows", lambda path: sources.get(path, []))
+    monkeypatch.setattr(page, "OUT", str(report))
+    page.main()
+    rendered = report.read_text(encoding="utf-8")
+    assert f'data-week="{ccg_week}"' in rendered
+    assert re.search(r'<div class="tx-head">[^<]* · CCG Week · ', rendered)
+    for selector in ("tx-week", "tx-move-week"):
+        options = re.search(fr'<select id="{selector}">(.*?)</select>', rendered, re.S).group(1)
+        assert re.search(fr'<option value="{ccg_week}"(?: selected)?>CCG Week</option>', options)
+    assert '<h3>Trades by week</h3><div class="tx-bar"><span>CCG Week</span>' in rendered

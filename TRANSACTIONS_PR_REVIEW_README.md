@@ -1,18 +1,18 @@
 # Task 5.11 Transactions — developer / auditor handoff (TEMPORARY; DELETE BEFORE MERGE)
 
-> **Status:** Implementation and review materials are ready for independent review on draft PR #111; **Team Fit and projected-win/odds context NOT implemented** because historical counterfactuals are not yet reliable. This file is intentionally committed for collaborators and independent review. Delete it and its three review-only mockups in a final PR commit **before merge**, after recording follow-ups in the permanent project doc. Do **not** merge this PR automatically.
+> **Status:** Implementation and review materials are ready for independent review on draft PR #111; **Team Fit and projected-win/odds context NOT implemented** because historical counterfactuals are not yet reliable. This file is intentionally committed for collaborators and independent review. Keep this README and all three mockups on the review branch. At merge time, the merge agent pins review links to the reviewed SHA, removes the temporary files, and reruns checks on the exact landing commit. Do **not** merge this PR automatically.
 
 ## Current implementation / review checkpoint
 
 - Generator: `scripts/transactions_page.py`; generated preview: `reports/transactions.html` (regenerated and committed **only to the feature branch**).
 - Pure grade/slot approximation engine: `scripts/transactions_grades.py`; configurable thresholds and KTC-style fallback: `config/league.json` under `transactions`. The final site must not imply exact KTC calibration.
 - Historical picks: `data/PickValues_Season.csv` backfilled from eight verified Git commit revisions on Oct 2, 6, 13, 20, 27 and Nov 3, 10, 17. Future capture: `scripts/player_values.py`; workflow step in `.github/workflows/update-leagues.yml`.
-- Nav: `config/nav.json` entry `hidden-dev`; menu compiled by the existing weekly `scripts/menu_build.py`. **Do not gratuitously edit `templates/menu.js` or `reports/assets/menu.js` during accessibility PR #109.** Temporary CI regenerates menu only in Actions checkout before assertions.
+- Nav: `config/nav.json` entry `hidden-dev`; menu compiled by the existing weekly `scripts/menu_build.py`. **Do not gratuitously edit `templates/menu.js` or `reports/assets/menu.js` during accessibility PR #109.** The generated menu is committed. Read-only CI regenerates it and requires no diff before testing normal vs. Dev navigation.
 - Tests: `tests/test_transactions_page.py` and `tests/transactions_browser.py`. PR CI `.github/workflows/transactions-pr-check.yml` is read-only: runs the full Python suite, every Node test, static generation, and Chromium desktop/light and mobile/dark smoke checks, then uploads HTML + two viewport screenshots as the Actions artifact `transactions-preview`.
 - Final review build contains **113 trades, 34 Rebuild-graded, 11 weeks, 15 conferences, and 4 Blockbuster badges**. Check the latest read-only Actions run on this draft PR for the full test and browser results.
 - PR description includes three **actual** transaction IDs and rounded raw/credit/adjusted totals and grades, including 3-for-1, 1-for-2, 4-for-1.
 - **Known limitation:** card Team Fit displays unavailable, not fictional numbers; ROS wins, contender title/playoff odds and rebuilder bowl/1.01 odds are *not yet calculated*. No narrative explanation is generated (user explicitly deferred that section). Do not present these as complete.
-- **Review risk:** fallback consolidation adjustment can produce large balancing credits in uneven trades. Validate desired trade-economics direction before publicizing results; zero-valued contender pick sides receive **no** phantom credit. Exact slot values are not stored, so pick equivalents are interpolated and visually tagged approximate.
+- **Review risk:** fallback consolidation adjustment can produce large balancing credits in uneven trades. Validate desired trade-economics direction before publicizing results; zero-valued contender pick sides receive **no** phantom credit. Credit is labeled **Experimental consolidation adjustment (KTC-style)** on the card. Exact slot values are not stored, so pick equivalents are interpolated and visually tagged approximate.
 - The generated preview page embeds dated trade data. Rerun the generator when upstream snapshots change; do not silently treat the committed preview as live data.
 
 ## Task 5.11 owner settings
@@ -47,7 +47,6 @@ The existing shared brand, conference terminology, and semantic colour tokens ar
 | `config/league.json` | `transactions.labels.receives` | `"Receives"` |
 | `config/league.json` | `transactions.labels.most_added` | `"Most added"` |
 | `config/league.json` | `transactions.labels.most_dropped` | `"Most dropped"` |
-| `config/league.json` | `transactions.labels.week` | `"Week"` |
 | `config/league.json` | `transactions.labels.team` | `"Team"` |
 | `config/league.json` | `transactions.labels.pick` | `"Pick"` |
 | `config/league.json` | `transactions.labels.pick_swap` | `"Pick swap"` |
@@ -108,7 +107,7 @@ The [Transactions project doc](docs/transactions.md) is the lasting record of th
 >
 > Reproduce the three real trades and inspect both raw and adjusted values. Check Bass's historical 725-point 4.12 proxy in both grades, its exclusion from consolidation and blockbuster math, the distinction between unlisted known players and unresolved IDs, and that zero-versus-zero never gets an Even grade. Verify Oregon displays +372 and an approximate 4.12 → 3.05 swap with no year in the surplus badge, while actual traded picks retain their years. Reproduce the four [expected Blockbusters](#blockbuster-acceptance-set), including Walker–Achane at 1.45× combined and a 63% headliner. On Montana–Old Dominion, verify the yearless multi-pick surplus starts at 1.01 and the next slot is distinct. Verify the [Task 5.11 settings inventory](#task-511-owner-settings), including a partial owner config and the missing-section and missing-preview-state defaults. Compare the default trade cards and badge set with the prior validated build. Check the inclusive 1.40× volume and 60% single-player thresholds against the full historical snapshot. Verify the two unmarked mockup trades, a third-for-two-fourths deal, and a pile of mid-tier assets without a headliner do not qualify. Picks can count toward volume only. Confirm the badge does not imply a winner.
 >
-> Check Playwright and the latest read-only CI run, then spot-check filtering, sections, mobile overflow, light/dark badge legibility, and the hidden-dev nav. Re-examine the fallback on Montana–South Dakota, where a large credit almost erases the raw Contender gap. Confirm the permanent doc carries the missing work, especially a sourced “Why this trade makes sense” for each side, plus Team Fit, projected wins and odds. Report findings by severity, give a ready/not-ready recommendation, and list any scope or calibration decisions needed. Remove the temporary README and the three review images only after the handoff is accepted and before merging.
+> Check Playwright and the latest read-only CI run. Confirm a synthetic CCG Week uses the shared schedule label on the card, both selectors (numeric option values), and summary. Then spot-check filtering, sections, mobile overflow, light/dark badge legibility, and the hidden-dev nav. Re-examine the fallback on Montana–South Dakota, where a large credit almost erases the raw Contender gap. Confirm the permanent doc carries the missing work, especially a sourced “Why this trade makes sense” for each side, plus Team Fit, projected wins and odds. Report findings by severity, give a ready/not-ready recommendation, and list any scope or calibration decisions needed. Leave the temporary README and all three review images for the merge agent to remove at merge time.
 
 ### Review commands
 
@@ -126,7 +125,7 @@ python3 scripts/menu_build.py
 2. **Team identity:** pick recipient roster from `owner_id`, original `via` owner from `roster_id`; confirm `NCAA180.myTeam()` matches conference short label + roster slot. No historical manager misattribution via `OwnerIDs`.
 3. **UI:** compare current generated HTML + screenshots against user-approved dark-card concept. Desktop/mobile, keyboard, independent section folding, Save image, filter combinations, accessibility semantic colors `--good`, `--bad`, `--neutral`, neutral **grey**.
 4. **Production safety:** hidden-dev menu, no Discord action, no main commits. The one-time preview publisher must **not** remain on branch; PR test workflow remains read-only.
-5. **Merge gate:** remove **this temporary README**, resolve open substantive audit issues, and independently approve. No automatic merge.
+5. **Merge gate:** resolve substantive audit issues and independently approve. The merge agent owns temporary file cleanup and exact-landing-commit validation. No automatic merge.
 
 
 ## Scope and boundaries
@@ -188,7 +187,7 @@ where t = best traded asset and v = maximum asset value in that historical snaps
 5. Audit availability of historical projectable rosters, standings, projections and postseason odds **before** implementing team-fit/ROS-wins/odds. No retroactive leakage or fictional calculations.
 6. Apply user-approved UI and shared accessibility colors; generate hidden-dev menu; wire weekly workflow.
 7. Run/repair tests and inspect sample output; add **three actual 2026 trades**, including an uneven 3-for-1/2-for-1, to the PR description with raw totals, adjustments and both grades; never fabricate transactions or numbers.
-8. Independent code/data/visual/a11y audit; remove this temporary README in final branch commit **before merge**. Do not merge yourself.
+8. Independent code/data/visual/a11y audit. Keep the review material on the branch for merge-agent cleanup. Do not merge yourself.
 
 ## Mandatory tests / review gates
 

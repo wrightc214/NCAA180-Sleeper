@@ -246,14 +246,14 @@ def trade_card(r, sides, names, colors, result, shorts, config=None):
         for rid in ids:
             amt = dyn["credit"].get(rid, 0)
             if amt > 0.01:
-                credit = f'<div class="tx-credit">+{amt:,.0f} consolidation credit to {esc(team[rid])} (KTC-style)</div>'
+                credit = f'<div class="tx-credit">Experimental consolidation adjustment (KTC-style) · +{amt:,.0f} points to {esc(team[rid])}</div>'
     blockbuster = result.get("blockbuster")
     flag = (f'<span class="tx-flag" title="{blockbuster["points"]:,.0f} combined raw dynasty market points'
             f' ({blockbuster["multiple"]:.2f}× snapshot leader). Top traded player: '
             f'{blockbuster["headliner_points"]:,.0f} points ({blockbuster["headliner_share"]:.0%} of leader).">'
             f'{labels["blockbuster"]}</span>' if blockbuster else "")
     card_class = "tx-card tx-blockbuster" if blockbuster else "tx-card"
-    meta = (f'<div class="tx-head">{esc(short)} · {labels["week"]} {esc(r["Week"])} · {esc(day(r["Created"]))}{flag}</div>'
+    meta = (f'<div class="tx-head">{esc(short)} · {esc(lcfg.week_label(r["Week"]))} · {esc(day(r["Created"]))}{flag}</div>'
             f'<span class="tx-muted">Trade {esc(r["TransactionID"])}</span>')
     return (f'<article class="{card_class}" data-conference="{esc(league)}" data-week="{esc(r["Week"])}" '
             f'data-teams="{esc("|".join(team.values()))}" data-identity="{esc(short)}:{esc(ids[0])}|{esc(short)}:{esc(ids[1])}"><header>{meta}</header>'
@@ -318,14 +318,14 @@ def main():
     filters = (f'<div class="tx-controls"><label>{esc(lcfg.term(cap=True))}<select id="tx-conference">'
                f'<option value="">All {esc(units)}</option>' +
                ''.join(f'<option value="{esc(k)}">{esc(short.get(k, k))}</option>' for k in lg) +
-               f'</select></label><label>{labels["week"]}<select id="tx-week"><option value="">All weeks</option>' +
-               ''.join(f'<option value="{w}">{labels["week"]} {w}</option>' for w in weeks) +
+               f'</select></label><label>Week<select id="tx-week"><option value="">All weeks</option>' +
+               ''.join(f'<option value="{w}">{esc(lcfg.week_label(w))}</option>' for w in weeks) +
                f'</select></label><label>{labels["team"]}<select id="tx-team"><option value="">All teams</option>' +
                ''.join(f'<option value="{esc(n)}">{esc(n)}</option>' for n in sorted(set(names.values()))) +
                '</select></label></div>')
     bars_l = "".join(f'<div class="tx-bar"><span>{esc(short.get(k, k))}</span><meter min="0" max="{max(summ_lg.values(), default=1)}" value="{v}"></meter><b>{v}</b></div>'
                      for k, v in sorted(summ_lg.items(), key=lambda x: (-x[1], x[0])))
-    bars_w = "".join(f'<div class="tx-bar"><span>{labels["week"]} {w}</span><meter min="0" max="{max(summ_wk.values(), default=1)}" value="{summ_wk[w]}"></meter><b>{summ_wk[w]}</b></div>'
+    bars_w = "".join(f'<div class="tx-bar"><span>{esc(lcfg.week_label(w))}</span><meter min="0" max="{max(summ_wk.values(), default=1)}" value="{summ_wk[w]}"></meter><b>{summ_wk[w]}</b></div>'
                      for w in sorted(summ_wk))
     latest_stamp = day(max((r["Created"] for r in rows), default="0")) if rows else "N/A"
     generated = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
@@ -344,8 +344,8 @@ await a validated historical context model.</p>
 <p class="tx-note">{covered} of {len(cards)} trades have a {labels["rebuild"]} grade under the historical valuation rules.</p>
 </section>
 <section><h2>{labels["movement"]}</h2>
-<div class="tx-controls"><label>{labels["week"]}<select id="tx-move-week">{
-''.join(f'<option value="{w}"{" selected" if w == last else ""}>{labels["week"]} {w}</option>' for w in weeks)}</select></label></div>
+<div class="tx-controls"><label>Week<select id="tx-move-week">{
+''.join(f'<option value="{w}"{" selected" if w == last else ""}>{esc(lcfg.week_label(w))}</option>' for w in weeks)}</select></label></div>
 <p class="tx-note">Distinct {esc(units)} with an eligible completed player move;
 trades excluded. Ownership and availability are from the current roster snapshot.</p>
 <div class="tx-movement"><div><h3>{labels["most_added"]}</h3><div id="tx-adds"></div></div>
