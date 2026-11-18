@@ -45,3 +45,18 @@ Append each significant code change with: affected paths, necessity, rejected al
 **Validation limitations:** repository clone was attempted but this execution environment could not resolve github.com. Connector reads confirmed the branch content and matching bridge snippets. No full Node test run, browser run, screenshot comparison, or CI pass is claimed. GitHub commit combined-status endpoint returned no statuses for the latest commit. Independent validator must execute the existing suite and browser checks.
 
 **Remaining concern:** verify CSS cascade in actual browsers, including old report pages, explicit dark mode, automatic dark mode, and a future custom palette. Also check whether the weekly report's original `--up`/`--dn` values should be migrated in its template for newly generated pages, while preserving old-page support.
+
+## PR-only testing and main-branch protection — 2026-11-17
+
+**Workflow committed:** `.github/workflows/pr-safety-tests.yml` on `feature/accessibility-5-8` in PR #109, commit `62d77bd29b4add4a0411d3ba7d30bff4c1db0926`.
+
+**Safety configuration (as committed):**
+- Event: `pull_request` (opened, synchronize, reopened), scoped to menu files, `tests/**`, and the workflow file. **No `push`, `pull_request_target`, `workflow_dispatch`, or deployment event.**
+- Explicit `permissions: contents: read`; `actions/checkout@v4` with `persist-credentials: false`.
+- No secrets, deployment credentials, publishing steps, production-data writes, or auto-merge.
+- Job restricted to PRs whose head repository equals this repository; 10-minute timeout; concurrency cancels superseded PR runs.
+- Node.js 22 executes `node --test tests/*.test.js`. This is **only the Node test suite**, not Python, Playwright, visual, or accessibility browser validation.
+
+**Verification performed:** PR #109 was confirmed open, draft, and unmerged; head commit `62d77bd` at the time of inspection. GitHub's commit-workflow-runs query returned **zero runs**, so **no passing CI result is claimed**. Whether a newly introduced workflow runs from this PR must be confirmed in GitHub Actions. Do not alter `main` merely to enable it without owner approval.
+
+**Important boundary:** This workflow itself is read-only and has no deployment steps. That does not by itself establish that *other* workflows triggered by PR events are safe; the reviewer should separately audit existing workflows and repository branch protection. PR changes must not be merged or deployed by the author. A green CI result is necessary but does not replace independent validation.
