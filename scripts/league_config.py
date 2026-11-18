@@ -100,3 +100,9 @@ def standard_settings(scoring, overrides=None):
     if count <= len(scoring) / 2:
         raise ValueError("No majority scoring ruleset; review standard settings before building")
     return {**json.loads(key), **(cfg()["scoring"]["overrides"] if overrides is None else overrides)}
+
+
+def accessibility():
+    """Validated config/accessibility.json settings (separate approved subsystem)."""
+    from accessibility_config import accessibility_config
+    return accessibility_config()
