@@ -74,3 +74,14 @@ Append each significant code change with: affected paths, necessity, rejected al
 **Still unverified:** full Node test runner, GitHub Actions, browser UI, mobile layouts, actual dark-panel colours, snapshot image propagation, all hard-coded colour consumers, service worker caching, motion override, no-colour cue completeness. Do not mark this PR ready for merge. Also check whether the page's bespoke markup should be migrated to the standard `page_head` generator, and regenerate the shared menu using `scripts/menu_build.py` before merge.
 
 **Critical bug fixed during this pass:** literal `\\n` sequences had been inserted between JavaScript statements in the previous bridge commit, breaking parsing. Replaced them with real newlines in both source and generated files before adding the new settings engine.
+
+## Additional development and validation pass
+
+- Normalized invalid `save()` values (mode, motion, custom hex) before storage. Previously malformed values could be saved even though `read()` returned fallbacks.
+- No-colour mode now overrides the shared solid-fill tokens `--good-fill` and `--bad-fill` with monochrome values. This is still not a complete no-colour audit: inline and unrelated page-specific colours remain.
+- Replaced hard-coded positive/negative performance colours in `reports/assets/scoreboard.js` with `var(--good)`/`var(--bad)`.
+- Added unit assertions for invalid inputs and monochrome fill tokens.
+- Executed an isolated JavaScript parse/logic smoke test against the latest template using a mock module and localStorage: **passed** mode persistence, no-colour fill CSS, and invalid-value normalization. This is not a browser or full Node suite run.
+- Queried GitHub Actions for latest test commit `170993483`: **zero workflow runs returned**. CI remains unverified.
+
+**Additional risks for auditor:** the standalone Accessibility HTML currently does not use `site_common.page_head` and does not fully inherit normal page chrome; its CSS has not been visually validated. `motion=off` does not force animations on when the OS requests reduced motion, and the motion override needs specification-level testing. Custom colour contrast uses assumed panel backgrounds; actual pages may differ. Saved images and Discord image isolation remain untested. No claim of complete WCAG compliance.
