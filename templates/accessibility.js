@@ -147,9 +147,10 @@ function createNCAA180Accessibility() {
       });
     }
     // Solid fills must follow the selected palette too; white labels need 4.5:1 contrast.
-    // Standard keeps its exact historical fills for visual compatibility.
+    // Even owner-configured Standard fills must be legible with white labels.
+    // Contrast-safe existing defaults retain their historical values.
     if(o.mode==="none") both={"--good-fill":"#3c3c3c","--bad-fill":"#656565"};
-    else if(o.mode!=="standard") both={"--good-fill":accessibleHex(m.light[0],"#ffffff"),
+    else both={"--good-fill":accessibleHex(m.light[0],"#ffffff"),
       "--bad-fill":accessibleHex(m.light[1],"#ffffff")};
     var css=tokensCss(Object.assign({},TOKENS_LIGHT,light),Object.assign({},TOKENS_DARK,dark),
       Object.assign({},TOKENS_BOTH,both));
