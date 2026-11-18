@@ -9,7 +9,9 @@ const Module = require('node:module');
 function load(data) {
   const src = fs.readFileSync(path.join(__dirname, '..', 'templates', 'menu.js'), 'utf8')
     .replace('/*__DATA__*/null', JSON.stringify(data))
-    .replace('/*__ACCESSIBILITY__*/', fs.readFileSync(path.join(__dirname, '..', 'templates', 'accessibility.js'), 'utf8'));
+    .replace('/*__ACCESSIBILITY__*/', fs.readFileSync(path.join(__dirname, '..', 'templates', 'accessibility.js'), 'utf8')
+      .replace('/*__OWNER_ACCESSIBILITY_COLORS__*/null', JSON.stringify(JSON.parse(
+        fs.readFileSync(path.join(__dirname, '..', 'config', 'league.json'), 'utf8')).accessibility_colors)));
   const m = new Module('menu-fixture');
   m._compile(src, 'menu-fixture.js');
   return m.exports;
@@ -134,7 +136,9 @@ test('generated menu matches source template exactly except embedded navigation 
   const built = fs.readFileSync(path.join(__dirname, '..', 'reports', 'assets', 'menu.js'), 'utf8');
   const embedded = built.match(/var D = (\{.*?\});\n  var DEV_KEY/s);
   assert.ok(embedded, 'generated menu embeds nav JSON');
-  const a11y = fs.readFileSync(path.join(__dirname, '..', 'templates', 'accessibility.js'), 'utf8');
+  const a11y = fs.readFileSync(path.join(__dirname, '..', 'templates', 'accessibility.js'), 'utf8')
+    .replace('/*__OWNER_ACCESSIBILITY_COLORS__*/null', JSON.stringify(JSON.parse(
+      fs.readFileSync(path.join(__dirname, '..', 'config', 'league.json'), 'utf8')).accessibility_colors));
   assert.strictEqual(template.replace('/*__ACCESSIBILITY__*/', a11y)
     .replace('/*__DATA__*/null', embedded[1]), built);
   assert.ok(JSON.parse(embedded[1]).tabs.some(t => t.id === 'access' && t.state === 'hidden-dev'));
