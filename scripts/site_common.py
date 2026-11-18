@@ -153,9 +153,10 @@ def write_menu(out_dir=None):
     # Bundle the standalone accessibility source into the synchronous menu entrypoint.
     # Existing static reports only reference assets/menu.js; do not introduce a flash
     # or require rebuilding historical HTML just to load an additional script.
-    with open("templates/accessibility.js", encoding="utf-8") as a11y_file:
+    with open(ROOT / "templates" / "accessibility.js", encoding="utf-8") as a11y_file:
         accessibility_source = a11y_file.read()
-    owner_colors = json.load(open("config/league.json", encoding="utf-8"))["accessibility_colors"]
+    with open(ROOT / "config" / "league.json", encoding="utf-8") as config_file:
+        owner_colors = json.load(config_file)["accessibility_colors"]
     for theme in ("light", "dark"):
         for role in ("positive", "negative", "neutral"):
             value = owner_colors[theme][role]
