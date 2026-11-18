@@ -146,7 +146,7 @@ def test_epoch_is_utc():
 
 def test_config_controls_both_thresholds_and_fallback_parameters():
     config = load_config()
-    assert config["blockbuster_min_multiple"] == 1.5
+    assert config["blockbuster_min_multiple"] == 1.4
     assert config["blockbuster_min_headliner_share"] == .60
     assert config["proxy_pick_slot"] == "4.12"
     assert config["consolidation"]["method"] == "ktc-style-fallback"
@@ -227,7 +227,7 @@ def test_small_surplus_uses_closest_meaningful_swap_and_not_future_round():
 
 @pytest.mark.parametrize("trade_id,marked", [
     ("1414580639092518912", True), ("1412325964028899328", True),
-    ("1426656560473452544", True), ("1425957598431035392", False),
+    ("1426656560473452544", True), ("1425957598431035392", True),
     ("1426733052746272768", False),
     ("1423799198175739904", False),
 ])
@@ -253,9 +253,9 @@ def test_real_trade_results_and_blockbuster_rendering(trade_id, marked):
 @pytest.mark.parametrize("player_values,pick_value,marked", [
     ([1000, 750, 750], 0, False),     # third-for-two-fourths
     ([4000, 4000, 4000, 4500], 0, False),  # enough volume, no headliner
-    ([6600, 4000], 5899, False),      # headliner exactly qualifies; one point short on volume
-    ([6599, 4000], 5901, False),      # volume exactly qualifies; one point short on headliner
-    ([6600, 4000], 5900, True),       # both thresholds qualify exactly; picks count for volume
+    ([6600, 4000], 4799, False),      # headliner exactly qualifies; one point short on volume
+    ([6599, 4000], 4801, False),      # volume exactly qualifies; one point short on headliner
+    ([6600, 4000], 4800, True),       # both thresholds qualify exactly; picks count for volume
     ([2000, 2000], 13000, False),     # a big pick cannot be the headliner
     ([], 17000, False),               # picks-only trade
 ])
@@ -277,5 +277,5 @@ def test_blockbuster_uses_two_snapshot_relative_raw_thresholds(player_values, pi
     if marked:
         assert "blockbuster" not in evaluate_trade(
             sides, day, players, picks, 2026, {"blockbuster_min_headliner_share": .61})
-        assert out["blockbuster"] == {"points": 16500, "multiple": 1.5,
+        assert out["blockbuster"] == {"points": 15400, "multiple": 1.4,
                                      "headliner_points": 6600, "headliner_share": .60}

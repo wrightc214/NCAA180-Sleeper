@@ -1065,7 +1065,7 @@
         "F"
       ]
     ],
-    "blockbuster_min_multiple": 1.5,
+    "blockbuster_min_multiple": 1.4,
     "blockbuster_min_headliner_share": 0.6,
     "proxy_pick_slot": "4.12",
     "surplus_swap_max_relative_error": 0.25

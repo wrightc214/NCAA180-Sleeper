@@ -38,10 +38,10 @@ def main():
                 shot.mkdir(parents=True, exist_ok=True)
                 page.screenshot(path=str(shot / f"transactions-{width}-{theme}.png"), full_page=False)
                 featured = page.locator(".tx-card.tx-blockbuster")
-                assert featured.count() == 3
-                for trade_id in ("1414580639092518912", "1412325964028899328", "1426656560473452544"):
+                assert featured.count() == 4
+                for trade_id in ("1414580639092518912", "1412325964028899328", "1426656560473452544",
+                                 "1425957598431035392"):
                     assert featured.filter(has_text=trade_id).get_by_text("Blockbuster", exact=True).count() == 1
-                assert featured.filter(has_text="1425957598431035392").count() == 0
                 assert featured.filter(has_text="1426733052746272768").count() == 0
                 montana_od = page.locator(".tx-card").filter(has_text="1426656560473452544")
                 assert "≈ Pick 1.01 + ≈ Pick 1.02" in montana_od.locator(".tx-surplus").inner_text()
