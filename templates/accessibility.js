@@ -14,14 +14,33 @@ function createNCAA180Accessibility() {
   // Diverging scale (win %): NCAA180.colors.scale(p) -> colour for p in 0..1 (bad -> neutral -> good,
   // blended in OKLab so the middle stays grey). Kept in a <style> element, not inline on <html>,
   // so saved images (snapshot.js copies style elements) carry the viewer's colours.
-  var OWNER_COLORS = /*__OWNER_ACCESSIBILITY_COLORS__*/null;
+  var SETTINGS = /*__OWNER_ACCESSIBILITY_COLORS__*/null;
+  // Safe runtime defaults also protect manually loaded templates and older bundles.
+  var P = SETTINGS && SETTINGS.palettes || {};
+  var A = SETTINGS && SETTINGS.appearance || {};
+  var C = SETTINGS && SETTINGS.contrast || {};
+  var D = SETTINGS && SETTINGS.defaults || {};
+  var L = SETTINGS && SETTINGS.labels || {};
+  function settingHex(value, fallback) { return typeof value==="string" && /^#[0-9a-fA-F]{6}$/.test(value)?value:fallback; }
+  function palette(mode,theme,role,fallback) {
+    return settingHex(P[mode]&&P[mode][theme]&&P[mode][theme][role],fallback);
+  }
+  function appearance(section,theme,role,fallback) {
+    return settingHex(A[section]&&A[section][theme]&&A[section][theme][role],fallback);
+  }
+  var LIGHT_BG = settingHex(C.light_background,"#ffffff");
+  var DARK_BG = settingHex(C.dark_background,"#171b22");
+  var FILL_TEXT = settingHex(A.fill_text,"#ffffff");
+  var MIN_CONTRAST = typeof C.minimum_ratio==="number" && C.minimum_ratio>=1 && C.minimum_ratio<=21?C.minimum_ratio:4.5;
+  var DISTINGUISH_RATIO = typeof C.distinguishability_ratio==="number" && C.distinguishability_ratio>=1 && C.distinguishability_ratio<=21?C.distinguishability_ratio:1.5;
   var TOKENS_ID = "n180-tokens";
-  var TOKENS_LIGHT = {"--good": OWNER_COLORS.light.positive, "--bad": OWNER_COLORS.light.negative,
-    "--neutral": OWNER_COLORS.light.neutral, "--good-soft": "#e3f3e8", "--bad-soft": "#fbe4e1"};
-  var TOKENS_DARK = {"--good": OWNER_COLORS.dark.positive, "--bad": OWNER_COLORS.dark.negative,
-    "--neutral": OWNER_COLORS.dark.neutral, "--good-soft": "#173a2a", "--bad-soft": "#4a2024"};
-  var TOKENS_BOTH = {"--good-fill": OWNER_COLORS.light.positive,
-    "--bad-fill": OWNER_COLORS.light.negative, "--on-fill": "#ffffff"};
+  var TOKENS_LIGHT = {"--good":palette("standard","light","positive","#1a7f37"),"--bad":palette("standard","light","negative","#b42318"),
+    "--neutral":palette("standard","light","neutral","#6b7484"),
+    "--good-soft":appearance("soft","light","positive","#e3f3e8"),"--bad-soft":appearance("soft","light","negative","#fbe4e1")};
+  var TOKENS_DARK = {"--good":palette("standard","dark","positive","#4fc785"),"--bad":palette("standard","dark","negative","#ff7b72"),
+    "--neutral":palette("standard","dark","neutral","#8a96ab"),
+    "--good-soft":appearance("soft","dark","positive","#173a2a"),"--bad-soft":appearance("soft","dark","negative","#4a2024")};
+  var TOKENS_BOTH = {"--good-fill":TOKENS_LIGHT["--good"],"--bad-fill":TOKENS_LIGHT["--bad"],"--on-fill":FILL_TEXT};
   function decl(o) { var s = ""; for (var k in o) s += k + ":" + o[k] + ";"; return s; }
   function tokensCss(light, dark, both) {
     var d = decl(dark);
@@ -95,12 +114,17 @@ function createNCAA180Accessibility() {
     ":root[data-theme=dark]{--up:var(--good);--dn:var(--bad)}";
   // Accessibility preferences are device-local. Invalid or inaccessible storage is harmless.
   var ACCESS_KEY = "ncaa180.access";
-  var ACCESS_DEFAULTS = {mode:"standard",custom:{bad:OWNER_COLORS.light.negative,good:OWNER_COLORS.light.positive},motion:"system",emphasis:false,autoContrast:true};
+  var ACCESS_DEFAULTS = {
+    mode:["standard","rg","by","none","custom"].includes(D.mode)?D.mode:"standard",
+    custom:{bad:TOKENS_LIGHT["--bad"],good:TOKENS_LIGHT["--good"]},
+    motion:["system","on","off"].includes(D.motion)?D.motion:"system",
+    emphasis:D.emphasis===true,autoContrast:D.auto_contrast!==false
+  };
   var ACCESS_MODES = {
-    standard:{light:[OWNER_COLORS.light.positive,OWNER_COLORS.light.negative],dark:[OWNER_COLORS.dark.positive,OWNER_COLORS.dark.negative]},
-    rg:{light:["#0758a8","#a65300"],dark:["#79b9ff","#ffb45d"]},
-    by:{light:["#007b73","#b42318"],dark:["#65d4c6","#ff7b72"]},
-    none:{light:["#252525","#595959"],dark:["#f2f2f2","#c5c5c5"]}
+    standard:{light:[TOKENS_LIGHT["--good"],TOKENS_LIGHT["--bad"]],dark:[TOKENS_DARK["--good"],TOKENS_DARK["--bad"]]},
+    rg:{light:[palette("rg","light","positive","#0758a8"),palette("rg","light","negative","#a65300")],dark:[palette("rg","dark","positive","#79b9ff"),palette("rg","dark","negative","#ffb45d")]},
+    by:{light:[palette("by","light","positive","#007b73"),palette("by","light","negative","#b42318")],dark:[palette("by","dark","positive","#65d4c6"),palette("by","dark","negative","#ff7b72")]},
+    none:{light:[palette("none","light","positive","#252525"),palette("none","light","negative","#595959")],dark:[palette("none","dark","positive","#f2f2f2"),palette("none","dark","negative","#c5c5c5")]}
   };
   function validHex(x) { return typeof x==="string" && /^#[0-9a-fA-F]{6}$/.test(x); }
   function accessRead() {
@@ -108,10 +132,10 @@ function createNCAA180Accessibility() {
     try { o=JSON.parse(localStorage.getItem(ACCESS_KEY)||"null"); } catch(e) { o=null; }
     if(!o || typeof o!=="object" || Array.isArray(o)) o={};
     return {
-      mode: ["standard","rg","by","none","custom"].indexOf(o.mode)>=0?o.mode:"standard",
+      mode: ["standard","rg","by","none","custom"].indexOf(o.mode)>=0?o.mode:ACCESS_DEFAULTS.mode,
       custom:{bad:validHex(o.custom&&o.custom.bad)?o.custom.bad:ACCESS_DEFAULTS.custom.bad,
               good:validHex(o.custom&&o.custom.good)?o.custom.good:ACCESS_DEFAULTS.custom.good},
-      motion:["system","on","off"].indexOf(o.motion)>=0?o.motion:"system",
+      motion:["system","on","off"].indexOf(o.motion)>=0?o.motion:ACCESS_DEFAULTS.motion,
       emphasis:o.emphasis===true,autoContrast:o.autoContrast!==false
     };
   }
@@ -121,12 +145,12 @@ function createNCAA180Accessibility() {
   }
   function accessibleHex(h,bg) {
     var bgLum=contrast("#000000",bg)>contrast("#ffffff",bg)?"#000000":"#ffffff";
-    if(contrast(h,bg)>=4.5) return h;
+    if(contrast(h,bg)>=MIN_CONTRAST) return h;
     var lo=0,hi=1,answer=bgLum;
     for(var i=0;i<22;i++) {
       var mid=(lo+hi)/2, candidate=mix(h,bgLum,mid), nums=candidate.match(/\d+/g).map(Number);
       var hex="#"+nums.map(function(n){return n.toString(16).padStart(2,"0");}).join("");
-      if(contrast(hex,bg)>=4.5){answer=hex;hi=mid;}else lo=mid;
+      if(contrast(hex,bg)>=MIN_CONTRAST){answer=hex;hi=mid;}else lo=mid;
     }
     return answer;
   }
@@ -136,23 +160,23 @@ function createNCAA180Accessibility() {
       m={light:[o.custom.good,o.custom.bad],dark:[o.custom.good,o.custom.bad]};
     }
     if(m) {
-      [["light",light,"#ffffff"],["dark",dark,"#171b22"]].forEach(function(row) {
+      [["light",light,LIGHT_BG],["dark",dark,DARK_BG]].forEach(function(row) {
         var pair=m[row[0]];
         row[1]["--good"]=o.mode==="custom"&&!o.autoContrast?pair[0]:accessibleHex(pair[0],row[2]);
         row[1]["--bad"]=o.mode==="custom"&&!o.autoContrast?pair[1]:accessibleHex(pair[1],row[2]);
         if(o.mode!=="standard") {
-          row[1]["--good-soft"]=row[0]==="light"?"#e9eef2":"#26313a";
-          row[1]["--bad-soft"]=row[0]==="light"?"#f1edf0":"#342c32";
+          row[1]["--good-soft"]=appearance("alternate_soft",row[0],"positive",row[0]==="light"?"#e9eef2":"#26313a");
+          row[1]["--bad-soft"]=appearance("alternate_soft",row[0],"negative",row[0]==="light"?"#f1edf0":"#342c32");
         }
       });
     }
     // Solid fills must follow the selected palette too; white labels need 4.5:1 contrast.
     // Even owner-configured Standard fills must be legible with white labels.
     // Contrast-safe existing defaults retain their historical values.
-    if(o.mode==="none") both={"--good-fill":"#3c3c3c","--bad-fill":"#656565"};
+    if(o.mode==="none") both={"--good-fill":settingHex(A.monochrome_fills&&A.monochrome_fills.positive,"#3c3c3c"),"--bad-fill":settingHex(A.monochrome_fills&&A.monochrome_fills.negative,"#656565")};
     else if(o.mode==="custom"&&!o.autoContrast) both={"--good-fill":m.light[0],"--bad-fill":m.light[1]};
-    else both={"--good-fill":accessibleHex(m.light[0],"#ffffff"),
-      "--bad-fill":accessibleHex(m.light[1],"#ffffff")};
+    else both={"--good-fill":accessibleHex(m.light[0],FILL_TEXT),
+      "--bad-fill":accessibleHex(m.light[1],FILL_TEXT)};
     var css=tokensCss(Object.assign({},TOKENS_LIGHT,light),Object.assign({},TOKENS_DARK,dark),
       Object.assign({},TOKENS_BOTH,both));
     css+=":root{--up:var(--good);--dn:var(--bad)}"+
@@ -193,7 +217,7 @@ function createNCAA180Accessibility() {
     return o;
   }
   var access={read:accessRead,save:accessSave,reset:accessReset,apply:accessApply,
-    contrast:contrast,adjust:accessibleHex,defaults:ACCESS_DEFAULTS,modes:ACCESS_MODES};
+    contrast:contrast,adjust:accessibleHex,defaults:ACCESS_DEFAULTS,modes:ACCESS_MODES,settings:{contrast:{minimum_ratio:MIN_CONTRAST,distinguishability_ratio:DISTINGUISH_RATIO,light_background:LIGHT_BG,dark_background:DARK_BG,fill_text:FILL_TEXT},labels:L}};
 
   accessApply();  // before the menu draws: no flash
 
