@@ -86,6 +86,27 @@ test('owner Standard fills are contrast-adjusted when owner chooses pale colours
   assert.ok(m.access.contrast(fill[2], '#ffffff') >= 4.5);
 });
 
+test('user custom colours remain exact even with poor contrast', () => {
+  const old = global.localStorage;
+  const stored = {};
+  global.localStorage = {
+    getItem: k => stored[k] || null,
+    setItem: (k, v) => { stored[k] = v; },
+    removeItem: k => { delete stored[k]; }
+  };
+  try {
+    const m = load(DATA);
+    m.access.save({mode:'custom',custom:{good:'#ffffff',bad:'#fffffe'}});
+    assert.strictEqual(m.access.read().custom.good, '#ffffff');
+    assert.strictEqual(m.access.read().custom.bad, '#fffffe');
+    assert.match(m.colors.css, /--good:#ffffff;--bad:#fffffe;/);
+    assert.match(m.colors.css, /--good-fill:#ffffff;--bad-fill:#fffffe;/);
+    assert.ok(m.access.contrast('#ffffff','#fffffe') < 1.5);
+  } finally {
+    global.localStorage = old;
+  }
+});
+
 test('colour tokens: css carries light, dark and fill sets', () => {
   const c = load(DATA).colors;
   assert.match(c.css, /^:root\{--good:#1a7f37;--bad:#b42318;--neutral:#6b7484;/);
