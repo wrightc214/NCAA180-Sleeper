@@ -60,3 +60,17 @@ Append each significant code change with: affected paths, necessity, rejected al
 **Verification performed:** PR #109 was confirmed open, draft, and unmerged; head commit `62d77bd` at the time of inspection. GitHub's commit-workflow-runs query returned **zero runs**, so **no passing CI result is claimed**. Whether a newly introduced workflow runs from this PR must be confirmed in GitHub Actions. Do not alter `main` merely to enable it without owner approval.
 
 **Important boundary:** This workflow itself is read-only and has no deployment steps. That does not by itself establish that *other* workflows triggered by PR events are safe; the reviewer should separately audit existing workflows and repository branch protection. PR changes must not be merged or deployed by the author. A green CI result is necessary but does not replace independent validation.
+
+## Implementation progress — subsequent development pass
+
+- Added `NCAA180.access` in shared menu source and generated menu: `read()`, `save(partial)`, `reset()`, `apply()`, `contrast()`, `adjust()`, `defaults`, `modes`. Preferences stored only under `ncaa180.access`. Existing `NCAA180.colors` remains available.
+- Added Standard, red-green (blue/orange), blue-yellow (teal/red), no-colour and custom palettes, with per-theme WCAG text-colour adjustment. Existing `--good`, `--bad`, `--up`, `--dn` tokens remain the integration contract.
+- Added `templates/access.html`, generated `reports/access.html`, `scripts/access_page.py`, and `reports/assets/access.js`. UI includes native pickers, live previews, individual custom restore, full reset, motion and emphasis.
+- Registered hidden-dev Accessibility tab in `config/nav.json` and updated generated `reports/assets/menu.js`; added offline precache in `reports/sw.js` (v4).
+- Added Node unit tests for persistence, reset, malformed storage, and contrast.
+
+**Checks actually executed in connector-backed JavaScript runtime:** parsed and executed both menu scripts with mocked `module` and `localStorage`; verified all five modes persist, custom colours save, reset removes the key, malformed JSON falls back safely. Checked preset foreground colours against white and dark (#171b22) panels; all inspected pairs exceed 4.5:1. Verified contrast adjustment of white-on-white yields #767676 at approximately 4.54:1.
+
+**Still unverified:** full Node test runner, GitHub Actions, browser UI, mobile layouts, actual dark-panel colours, snapshot image propagation, all hard-coded colour consumers, service worker caching, motion override, no-colour cue completeness. Do not mark this PR ready for merge. Also check whether the page's bespoke markup should be migrated to the standard `page_head` generator, and regenerate the shared menu using `scripts/menu_build.py` before merge.
+
+**Critical bug fixed during this pass:** literal `\\n` sequences had been inserted between JavaScript statements in the previous bridge commit, breaking parsing. Replaced them with real newlines in both source and generated files before adding the new settings engine.
