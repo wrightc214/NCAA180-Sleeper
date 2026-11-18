@@ -43,7 +43,8 @@ def read_rows(path):
 
 DEFAULTS = {
     "consolidation": {"method": "ktc-style-fallback", "exponent_low": 1.04,
-                      "exponent_elite": 1.4, "elite_threshold": .7},
+                      "exponent_elite": 1.4, "elite_threshold": .7,
+                      "dynasty_concentration_rate": .60},
     "grade_bands": [[60, "A"], [55, "B+"], [52, "B"], [48, "Even"], [45, "C"], [40, "D"], [0, "F"]],
     "blockbuster_min_multiple": 1.4,
     "blockbuster_min_headliner_share": .6,

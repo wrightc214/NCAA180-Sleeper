@@ -15,6 +15,42 @@
 - **Review risk:** fallback consolidation adjustment can produce large balancing credits in uneven trades. Validate desired trade-economics direction before publicizing results; zero-valued contender pick sides receive **no** phantom credit. Credit is labeled **Experimental consolidation adjustment (KTC-style)** on the card. Exact slot values are not stored, so pick equivalents are interpolated and visually tagged approximate.
 - The generated preview page embeds dated trade data. Rerun the generator when upstream snapshots change; do not silently treat the committed preview as live data.
 
+## Dynasty consolidation decision — approved, pending implementation
+
+**Use a 60% concentration adjustment for dynasty grades.** This is a replacement design for the current experimental balancing credit, not a change to the grades in this commit. The approved rate is stored in `config/transactions.json` at `transactions.consolidation.dynasty_concentration_rate` (`0.60`). It is not used by the current `ktc-style-fallback` method. No Contender rate was selected.
+
+For each side, take the nonnegative trade-date market values `v_i` of the assets it receives. Let `P` be any K/DST proxy points. They still count toward the total but are excluded from the concentration calculation.
+
+```text
+Market total          T = sum(v_i)
+Concentrated value    C = sqrt(sum(v_i^2))
+Spread penalty        D = T - C
+Raw value             R = T + P
+Adjusted value        A = R - rate * D
+                        = P + (1 - rate) * T + rate * C
+```
+
+Compare the two independently adjusted totals. The consolidation edge is the difference between the applied penalties, in favor of the side with the smaller penalty. It is not a separate bonus to add to the already adjusted score. No elite cutoff, asset-count cutoff, or waiver-spot credit is used. For a rate from 0 to 1, adding a nonnegative asset cannot lower either the sum or the square-root term, so it cannot lower that side's adjusted value or change the other side's score. A single asset has no spread penalty.
+
+At 60%, one 90-point asset stays at 90. Three 30-point assets also total 90 raw, but their concentrated value is about 52, so their adjusted total is about 67. Adding a 2-point throw-in to the single asset raises its adjusted total to about 90.8. The throw-in never erases the consolidation edge just because the piece count changes.
+
+### Why 60%
+
+We treated every completed deal as if it were fair for calibration, then minimized the **mean absolute adjusted gap** across the **34 of 113** two-sided completed trades with usable trade-date dynasty snapshots. The loss was `mean(abs(A_side_1 - A_side_2))`. Measuring absolute gaps prevents gains and losses from canceling. The fit used the dated snapshots rather than the live calculator screenshots, including Maye's pre-injury valuation.
+
+| Rate | Mean absolute gap from even |
+| --- | ---: |
+| 0% | 996 points |
+| 25% | 919 points |
+| 50% | 876 points |
+| 53.2% (best fit) | 872 points |
+| **60% (selected)** | **879 points** |
+| 70% | 890 points |
+
+60% gives more weight to concentrated value than the mathematical optimum and costs only about seven points per trade in average fit. We preferred that stronger effect to claiming false precision from a small sample and a deliberately imperfect equal-trade assumption. At 60%, on the historical inputs, Walker's side leads by about 270, the Maye pick package leads by about 581, and the Rice/Swift package leads Puka by about 963.
+
+FantasyCalc's live waiver adjustment was a comparison, not a calibration target. Adding three positive-value throw-ins to Puka removed the waiver credit and widened the live calculator's gap. Keep that before/after as a regression case for the replacement model. Raw Blockbuster thresholds are separate and should not change.
+
 ## Task 5.11 owner settings
 
 This lists every owner setting introduced or moved by this PR, including the settings already present in the earlier draft. The dedicated config has two sections, `transactions` and `fantasycalc`. Defaults apply when the file, a section, or an individual key is absent. The static generator embeds the resolved settings in the generated page. Rebuild it after changes. If the tab is removed entirely it is omitted from the menu, and the direct page remains a Dev preview. Menu visibility is not access control. No new secrets or external repo variables are required.
@@ -27,6 +63,7 @@ The existing shared brand, conference terminology, and semantic colour tokens ar
 | `config/transactions.json` | `transactions.consolidation.exponent_low` | `1.04` |
 | `config/transactions.json` | `transactions.consolidation.exponent_elite` | `1.4` |
 | `config/transactions.json` | `transactions.consolidation.elite_threshold` | `0.7` |
+| `config/transactions.json` | `transactions.consolidation.dynasty_concentration_rate` | `0.60` (pending dynasty model) |
 | `config/transactions.json` | `transactions.grade_bands` | `[[60, "A"], [55, "B+"], [52, "B"], [48, "Even"], [45, "C"], [40, "D"], [0, "F"]]` |
 | `config/transactions.json` | `transactions.blockbuster_min_multiple` | `1.4` |
 | `config/transactions.json` | `transactions.blockbuster_min_headliner_share` | `0.6` |
