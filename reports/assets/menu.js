@@ -44,19 +44,12 @@ function createNCAA180Accessibility() {
   // so saved images (snapshot.js copies style elements) carry the viewer's colours.
   var OWNER_COLORS = {"_note":"Repo-owner Standard palette. Positive/negative are outcomes; neutral is the probability midpoint (grey by default). The build embeds these into the browser accessibility module. User-selected modes remain device-local.","light":{"positive":"#1a7f37","negative":"#b42318","neutral":"#6b7484"},"dark":{"positive":"#4fc785","negative":"#ff7b72","neutral":"#8a96ab"}};
   var TOKENS_ID = "n180-tokens";
-  var TOKENS_LIGHT = {"--good": "#1a7f37", "--bad": "#b42318", "--neutral": "#6b7484",
-    "--good-soft": "#e3f3e8", "--bad-soft": "#fbe4e1"};
-  var TOKENS_DARK = {"--good": "#4fc785", "--bad": "#ff7b72", "--neutral": "#8a96ab",
-    "--good-soft": "#173a2a", "--bad-soft": "#4a2024"};
-  var TOKENS_BOTH = {"--good-fill": "#1a7f37", "--bad-fill": "#b42318", "--on-fill": "#ffffff"};
-  TOKENS_LIGHT["--good"] = OWNER_COLORS.light.positive;
-  TOKENS_LIGHT["--bad"] = OWNER_COLORS.light.negative;
-  TOKENS_LIGHT["--neutral"] = OWNER_COLORS.light.neutral;
-  TOKENS_DARK["--good"] = OWNER_COLORS.dark.positive;
-  TOKENS_DARK["--bad"] = OWNER_COLORS.dark.negative;
-  TOKENS_DARK["--neutral"] = OWNER_COLORS.dark.neutral;
-  TOKENS_BOTH["--good-fill"] = OWNER_COLORS.light.positive;
-  TOKENS_BOTH["--bad-fill"] = OWNER_COLORS.light.negative;
+  var TOKENS_LIGHT = {"--good": OWNER_COLORS.light.positive, "--bad": OWNER_COLORS.light.negative,
+    "--neutral": OWNER_COLORS.light.neutral, "--good-soft": "#e3f3e8", "--bad-soft": "#fbe4e1"};
+  var TOKENS_DARK = {"--good": OWNER_COLORS.dark.positive, "--bad": OWNER_COLORS.dark.negative,
+    "--neutral": OWNER_COLORS.dark.neutral, "--good-soft": "#173a2a", "--bad-soft": "#4a2024"};
+  var TOKENS_BOTH = {"--good-fill": OWNER_COLORS.light.positive,
+    "--bad-fill": OWNER_COLORS.light.negative, "--on-fill": "#ffffff"};
   function decl(o) { var s = ""; for (var k in o) s += k + ":" + o[k] + ";"; return s; }
   function tokensCss(light, dark, both) {
     var d = decl(dark);
