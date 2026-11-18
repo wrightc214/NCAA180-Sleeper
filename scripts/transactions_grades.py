@@ -74,8 +74,8 @@ DEFAULTS = {
 
 
 def load_config(overrides=None):
-    """Resolve the public owner settings and keep existing behavior for absent keys."""
-    return lcfg.section_settings("transactions", DEFAULTS, overrides)
+    """Resolve the dedicated owner settings and keep existing behavior for absent keys."""
+    return lcfg.transaction_settings("transactions", DEFAULTS, overrides)
 
 
 def grade(share, bands=None):

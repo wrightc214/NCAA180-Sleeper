@@ -5,7 +5,7 @@
 ## Current implementation / review checkpoint
 
 - Generator: `scripts/transactions_page.py`; generated preview: `reports/transactions.html` (regenerated and committed **only to the feature branch**).
-- Pure grade/slot approximation engine: `scripts/transactions_grades.py`; configurable thresholds and KTC-style fallback: `config/league.json` under `transactions`. The final site must not imply exact KTC calibration.
+- Pure grade/slot approximation engine: `scripts/transactions_grades.py`; configurable thresholds and KTC-style fallback: `config/transactions.json` under `transactions`. The final site must not imply exact KTC calibration.
 - Historical picks: `data/PickValues_Season.csv` backfilled from eight verified Git commit revisions on Oct 2, 6, 13, 20, 27 and Nov 3, 10, 17. Future capture: `scripts/player_values.py`; workflow step in `.github/workflows/update-leagues.yml`.
 - Nav: `config/nav.json` entry `hidden-dev`; menu compiled by the existing weekly `scripts/menu_build.py`. **Do not gratuitously edit `templates/menu.js` or `reports/assets/menu.js` during accessibility PR #109.** The generated menu is committed. Read-only CI regenerates it and requires no diff before testing normal vs. Dev navigation.
 - Tests: `tests/test_transactions_page.py` and `tests/transactions_browser.py`. PR CI `.github/workflows/transactions-pr-check.yml` is read-only: runs the full Python suite, every Node test, static generation, and Chromium desktop/light and mobile/dark smoke checks, then uploads HTML + two viewport screenshots as the Actions artifact `transactions-preview`.
@@ -17,47 +17,47 @@
 
 ## Task 5.11 owner settings
 
-This lists every owner setting introduced or moved by this PR, including the settings already present in the earlier draft. Defaults are used per key, including within nested sections. The static generator embeds the resolved settings in the generated page. Rebuild it after changes. If the tab is removed entirely it is omitted from the menu, and the direct page remains a Dev preview. Menu visibility is not access control. No new secrets or external repo variables are required.
+This lists every owner setting introduced or moved by this PR, including the settings already present in the earlier draft. The dedicated config has two sections, `transactions` and `fantasycalc`. Defaults apply when the file, a section, or an individual key is absent. The static generator embeds the resolved settings in the generated page. Rebuild it after changes. If the tab is removed entirely it is omitted from the menu, and the direct page remains a Dev preview. Menu visibility is not access control. No new secrets or external repo variables are required.
 
 The existing shared brand, conference terminology, and semantic colour tokens are reused. Team colours and names still come from CSV data. No separate transaction-specific theme or release switch is introduced. When changing FantasyCalc scoring format, check that the stored history remains comparable. If the draft field size changes, select a proxy slot that exists in that field.
 
 | File | Key | Default |
 | --- | --- | --- |
-| `config/league.json` | `transactions.consolidation.method` | `"ktc-style-fallback"` |
-| `config/league.json` | `transactions.consolidation.exponent_low` | `1.04` |
-| `config/league.json` | `transactions.consolidation.exponent_elite` | `1.4` |
-| `config/league.json` | `transactions.consolidation.elite_threshold` | `0.7` |
-| `config/league.json` | `transactions.grade_bands` | `[[60, "A"], [55, "B+"], [52, "B"], [48, "Even"], [45, "C"], [40, "D"], [0, "F"]]` |
-| `config/league.json` | `transactions.blockbuster_min_multiple` | `1.4` |
-| `config/league.json` | `transactions.blockbuster_min_headliner_share` | `0.6` |
-| `config/league.json` | `transactions.proxy_pick_slot` | `"4.12"` |
-| `config/league.json` | `transactions.surplus_swap_max_relative_error` | `0.25` |
-| `config/league.json` | `transactions.draft_slots_per_round` | `12` |
-| `config/league.json` | `transactions.draft_tier_anchors` | `[2, 6, 10]` |
-| `config/league.json` | `transactions.movement_types` | `["free_agent", "waiver", "commissioner"]` |
-| `config/league.json` | `transactions.labels.rebuild` | `"Rebuild"` |
-| `config/league.json` | `transactions.labels.contender` | `"Contender"` |
-| `config/league.json` | `transactions.labels.blockbuster` | `"Blockbuster"` |
-| `config/league.json` | `transactions.labels.surplus` | `"Dynasty surplus"` |
-| `config/league.json` | `transactions.labels.team_fit` | `"Team Fit"` |
-| `config/league.json` | `transactions.labels.evaluation` | `"Trade evaluation"` |
-| `config/league.json` | `transactions.labels.trades` | `"Trades"` |
-| `config/league.json` | `transactions.labels.movement` | `"Player movement"` |
-| `config/league.json` | `transactions.labels.summary` | `"Season summary"` |
-| `config/league.json` | `transactions.labels.receives` | `"Receives"` |
-| `config/league.json` | `transactions.labels.most_added` | `"Most added"` |
-| `config/league.json` | `transactions.labels.most_dropped` | `"Most dropped"` |
-| `config/league.json` | `transactions.labels.team` | `"Team"` |
-| `config/league.json` | `transactions.labels.pick` | `"Pick"` |
-| `config/league.json` | `transactions.labels.pick_swap` | `"Pick swap"` |
-| `config/league.json` | `transactions.labels.trades_by_week` | `"Trades by week"` |
-| `config/league.json` | `fantasycalc.url` | `"https://api.fantasycalc.com/values/current"` |
-| `config/league.json` | `fantasycalc.dynasty` | `true` |
-| `config/league.json` | `fantasycalc.num_qbs` | `1` |
-| `config/league.json` | `fantasycalc.num_teams` | `12` |
-| `config/league.json` | `fantasycalc.ppr` | `1` |
-| `config/league.json` | `fantasycalc.timeout_seconds` | `30` |
-| `config/league.json` | `fantasycalc.minimum_player_rows` | `100` |
+| `config/transactions.json` | `transactions.consolidation.method` | `"ktc-style-fallback"` |
+| `config/transactions.json` | `transactions.consolidation.exponent_low` | `1.04` |
+| `config/transactions.json` | `transactions.consolidation.exponent_elite` | `1.4` |
+| `config/transactions.json` | `transactions.consolidation.elite_threshold` | `0.7` |
+| `config/transactions.json` | `transactions.grade_bands` | `[[60, "A"], [55, "B+"], [52, "B"], [48, "Even"], [45, "C"], [40, "D"], [0, "F"]]` |
+| `config/transactions.json` | `transactions.blockbuster_min_multiple` | `1.4` |
+| `config/transactions.json` | `transactions.blockbuster_min_headliner_share` | `0.6` |
+| `config/transactions.json` | `transactions.proxy_pick_slot` | `"4.12"` |
+| `config/transactions.json` | `transactions.surplus_swap_max_relative_error` | `0.25` |
+| `config/transactions.json` | `transactions.draft_slots_per_round` | `12` |
+| `config/transactions.json` | `transactions.draft_tier_anchors` | `[2, 6, 10]` |
+| `config/transactions.json` | `transactions.movement_types` | `["free_agent", "waiver", "commissioner"]` |
+| `config/transactions.json` | `transactions.labels.rebuild` | `"Rebuild"` |
+| `config/transactions.json` | `transactions.labels.contender` | `"Contender"` |
+| `config/transactions.json` | `transactions.labels.blockbuster` | `"Blockbuster"` |
+| `config/transactions.json` | `transactions.labels.surplus` | `"Dynasty surplus"` |
+| `config/transactions.json` | `transactions.labels.team_fit` | `"Team Fit"` |
+| `config/transactions.json` | `transactions.labels.evaluation` | `"Trade evaluation"` |
+| `config/transactions.json` | `transactions.labels.trades` | `"Trades"` |
+| `config/transactions.json` | `transactions.labels.movement` | `"Player movement"` |
+| `config/transactions.json` | `transactions.labels.summary` | `"Season summary"` |
+| `config/transactions.json` | `transactions.labels.receives` | `"Receives"` |
+| `config/transactions.json` | `transactions.labels.most_added` | `"Most added"` |
+| `config/transactions.json` | `transactions.labels.most_dropped` | `"Most dropped"` |
+| `config/transactions.json` | `transactions.labels.team` | `"Team"` |
+| `config/transactions.json` | `transactions.labels.pick` | `"Pick"` |
+| `config/transactions.json` | `transactions.labels.pick_swap` | `"Pick swap"` |
+| `config/transactions.json` | `transactions.labels.trades_by_week` | `"Trades by week"` |
+| `config/transactions.json` | `fantasycalc.url` | `"https://api.fantasycalc.com/values/current"` |
+| `config/transactions.json` | `fantasycalc.dynasty` | `true` |
+| `config/transactions.json` | `fantasycalc.num_qbs` | `1` |
+| `config/transactions.json` | `fantasycalc.num_teams` | `12` |
+| `config/transactions.json` | `fantasycalc.ppr` | `1` |
+| `config/transactions.json` | `fantasycalc.timeout_seconds` | `30` |
+| `config/transactions.json` | `fantasycalc.minimum_player_rows` | `100` |
 | `config/nav.json` | `tabs[id=transactions].label` | `Transactions` |
 | `config/nav.json` | `tabs[id=transactions].href` | `transactions.html` |
 | `config/nav.json` | `tabs[id=transactions].state` | `hidden-dev` |

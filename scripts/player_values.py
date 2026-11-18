@@ -2,7 +2,7 @@
 player_values.py -- dynasty + redraft player values from FantasyCalc (free public API).
 
 One request returns every valued player with both numbers, keyed to Sleeper player IDs.
-Default request matches NCAA 180: 1 QB, 12 teams, full PPR. See config/league.json.
+Default request matches NCAA 180: 1 QB, 12 teams, full PPR. See config/transactions.json.
 
 Writes:
   data/PlayerValues_Current.csv  overwritten each run
@@ -52,7 +52,7 @@ def current_week():
 
 
 def fantasycalc_request():
-    settings = lcfg.section_settings("fantasycalc", FANTASYCALC_DEFAULTS)
+    settings = lcfg.transaction_settings("fantasycalc", FANTASYCALC_DEFAULTS)
     params = {"isDynasty": str(settings["dynasty"]).lower(), "numQbs": settings["num_qbs"],
               "numTeams": settings["num_teams"], "ppr": settings["ppr"]}
     return settings, params

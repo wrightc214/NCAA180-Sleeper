@@ -1,0 +1,86 @@
+{
+  "transactions": {
+    "_note": "Trade valuation and display. grade_bands are descending [adjusted share percent, label] pairs. blockbuster_min_multiple and blockbuster_min_headliner_share are inclusive ratios to the snapshot leader. proxy_pick_slot sets the K/DST proxy and swap anchor. surplus_swap_max_relative_error is the maximum fractional swap error. draft_slots_per_round is the field size. draft_tier_anchors is the early/mid/late pivot triplet on a 12-slot reference scale, rescaled for other field sizes. movement_types lists Sleeper transaction types counted in weekly adds/drops, excluding trades.",
+    "consolidation": {
+      "_note": "Use ktc-style-fallback for the experimental model or none for raw grades. Low/elite exponents and elite_threshold control how much value is concentrated in premium assets.",
+      "method": "ktc-style-fallback",
+      "exponent_low": 1.04,
+      "exponent_elite": 1.4,
+      "elite_threshold": 0.7
+    },
+    "grade_bands": [
+      [
+        60,
+        "A"
+      ],
+      [
+        55,
+        "B+"
+      ],
+      [
+        52,
+        "B"
+      ],
+      [
+        48,
+        "Even"
+      ],
+      [
+        45,
+        "C"
+      ],
+      [
+        40,
+        "D"
+      ],
+      [
+        0,
+        "F"
+      ]
+    ],
+    "blockbuster_min_multiple": 1.4,
+    "blockbuster_min_headliner_share": 0.6,
+    "proxy_pick_slot": "4.12",
+    "surplus_swap_max_relative_error": 0.25,
+    "draft_slots_per_round": 12,
+    "draft_tier_anchors": [
+      2,
+      6,
+      10
+    ],
+    "movement_types": [
+      "free_agent",
+      "waiver",
+      "commissioner"
+    ],
+    "labels": {
+      "_note": "Public headings and valuation labels. Plain text only.",
+      "rebuild": "Rebuild",
+      "contender": "Contender",
+      "blockbuster": "Blockbuster",
+      "surplus": "Dynasty surplus",
+      "team_fit": "Team Fit",
+      "evaluation": "Trade evaluation",
+      "trades": "Trades",
+      "movement": "Player movement",
+      "summary": "Season summary",
+      "receives": "Receives",
+      "most_added": "Most added",
+      "most_dropped": "Most dropped",
+      "team": "Team",
+      "pick": "Pick",
+      "pick_swap": "Pick swap",
+      "trades_by_week": "Trades by week"
+    }
+  },
+  "fantasycalc": {
+    "_note": "Public FantasyCalc request settings. dynasty, num_qbs, num_teams and ppr must match the scoring format. timeout_seconds sets the request timeout. minimum_player_rows prevents incomplete responses from overwriting snapshots.",
+    "url": "https://api.fantasycalc.com/values/current",
+    "dynasty": true,
+    "num_qbs": 1,
+    "num_teams": 12,
+    "ppr": 1,
+    "timeout_seconds": 30,
+    "minimum_player_rows": 100
+  }
+}

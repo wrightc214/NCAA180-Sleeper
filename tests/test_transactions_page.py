@@ -3,6 +3,7 @@
 No API calls; fixtures are deliberately synthetic to isolate valuation logic.
 """
 import datetime as dt
+import json
 import sys
 from pathlib import Path
 
@@ -282,11 +283,15 @@ def test_blockbuster_uses_two_snapshot_relative_raw_thresholds(player_values, pi
                                      "headliner_points": 6600, "headliner_share": .60}
 
 
-def test_task_511_settings_have_safe_defaults_when_sections_are_missing(monkeypatch):
+@pytest.mark.parametrize("file_present", [False, True])
+def test_task_511_settings_have_safe_defaults_when_sections_are_missing(monkeypatch, tmp_path, file_present):
     import league_config as lcfg
     from player_values import fantasycalc_request
 
-    monkeypatch.setattr(lcfg, "cfg", lambda: {})
+    config = tmp_path / "transactions.json"
+    if file_present:
+        config.write_text("{}", encoding="utf-8")
+    monkeypatch.setattr(lcfg, "TRANSACTIONS_CONFIG", config)
     settings = load_config()
     assert (settings["blockbuster_min_multiple"], settings["blockbuster_min_headliner_share"]) == (1.4, .6)
     assert settings["labels"]["blockbuster"] == "Blockbuster"
@@ -295,21 +300,21 @@ def test_task_511_settings_have_safe_defaults_when_sections_are_missing(monkeypa
     assert fantasycalc_request()[1] == {"isDynasty": "true", "numQbs": 1, "numTeams": 12, "ppr": 1}
 
 
-def test_task_511_partial_owner_settings_change_only_selected_behavior(monkeypatch):
+def test_task_511_partial_owner_settings_change_only_selected_behavior(monkeypatch, tmp_path):
     import league_config as lcfg
     from player_values import fantasycalc_request
     from transactions_grades import pick_slot_values
 
-    shared = lcfg.cfg()
-    monkeypatch.setattr(lcfg, "cfg", lambda: {
-        **shared,
+    config = tmp_path / "transactions.json"
+    config.write_text(json.dumps({
         "transactions": {
             "draft_slots_per_round": 10, "proxy_pick_slot": "4.10",
             "consolidation": {"method": "none"},
             "labels": {"blockbuster": "Big <trade>"}, "movement_types": ["waiver", "trade"],
         },
         "fantasycalc": {"num_teams": 10},
-    })
+    }), encoding="utf-8")
+    monkeypatch.setattr(lcfg, "TRANSACTIONS_CONFIG", config)
     settings = load_config()
     assert settings["consolidation"]["exponent_low"] == 1.04
     assert settings["labels"]["rebuild"] == "Rebuild"
