@@ -6,12 +6,13 @@ const fs = require('node:fs');
 const path = require('node:path');
 const Module = require('node:module');
 
-function load(data) {
+function load(data, ownerOverride) {
   const src = fs.readFileSync(path.join(__dirname, '..', 'templates', 'menu.js'), 'utf8')
     .replace('/*__DATA__*/null', JSON.stringify(data))
     .replace('/*__ACCESSIBILITY__*/', fs.readFileSync(path.join(__dirname, '..', 'templates', 'accessibility.js'), 'utf8')
       .replace('/*__OWNER_ACCESSIBILITY_COLORS__*/null', JSON.stringify(JSON.parse(
-        fs.readFileSync(path.join(__dirname, '..', 'config', 'league.json'), 'utf8')).accessibility_colors)));
+        fs.readFileSync(path.join(__dirname, '..', 'config', 'league.json'), 'utf8')).accessibility_colors && (ownerOverride || JSON.parse(
+        fs.readFileSync(path.join(__dirname, '..', 'config', 'league.json'), 'utf8')).accessibility_colors))));
   const m = new Module('menu-fixture');
   m._compile(src, 'menu-fixture.js');
   return m.exports;
@@ -45,6 +46,31 @@ const M = load(DATA);
 const cur = (list) => list.filter((x) => x.current).map((x) => x.label);
 
 // Colour tokens (Project Manager 5.8): hard-coded Standard set + the win % diverging scale.
+test('owner palette overrides propagate to Standard, neutral, custom defaults and reset', () => {
+  const original = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'config', 'league.json'), 'utf8')).accessibility_colors;
+  const changed = JSON.parse(JSON.stringify(original));
+  changed.light.positive = '#125c39';
+  changed.light.negative = '#852f32';
+  changed.light.neutral = '#596a7b';
+  changed.dark.positive = '#8adeb0';
+  changed.dark.negative = '#ff9898';
+  changed.dark.neutral = '#b5bbc5';
+  const m = load(DATA, changed);
+  assert.strictEqual(m.colors.defaults.light['--good'], changed.light.positive);
+  assert.strictEqual(m.colors.defaults.light['--bad'], changed.light.negative);
+  assert.strictEqual(m.colors.defaults.light['--neutral'], changed.light.neutral);
+  assert.strictEqual(m.colors.defaults.dark['--good'], changed.dark.positive);
+  assert.strictEqual(m.colors.defaults.dark['--bad'], changed.dark.negative);
+  assert.strictEqual(m.colors.defaults.dark['--neutral'], changed.dark.neutral);
+  assert.strictEqual(m.colors.tokens().neutral, changed.light.neutral);
+  assert.strictEqual(m.access.modes.standard.light[0], changed.light.positive);
+  assert.strictEqual(m.access.modes.standard.dark[1], changed.dark.negative);
+  assert.strictEqual(m.access.defaults.custom.good, changed.light.positive);
+  assert.strictEqual(m.access.defaults.custom.bad, changed.light.negative);
+  assert.strictEqual(m.access.read().custom.good, changed.light.positive);
+  assert.strictEqual(m.access.read().custom.bad, changed.light.negative);
+});
+
 test('colour tokens: css carries light, dark and fill sets', () => {
   const c = load(DATA).colors;
   assert.match(c.css, /^:root\{--good:#1a7f37;--bad:#b42318;--neutral:#6b7484;/);
