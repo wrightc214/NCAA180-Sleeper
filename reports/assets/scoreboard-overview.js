@@ -85,13 +85,13 @@
     return g.match.map((_,i)=>i).sort((a,b)=>rankFor(g,a)-rankFor(g,b));
   };
   const winStrength=p=>p==null||!Number.isFinite(Number(p))?0:Math.min(1,Math.abs(Number(p)-50)/50);
-  const chanceStyle=p=>p==null?'':` style="--win-mix:${(winStrength(p)*100).toFixed(1)}%;--win-pre-mix:${(winStrength(p)*60).toFixed(1)}%"`;
+  const chanceStyle=p=>p==null?'':` style="--win-mix:${(winStrength(p)*100).toFixed(1)}%;--win-pre-mix:${(winStrength(p)*60).toFixed(1)}%;--win-final-mix:${(winStrength(p)*30).toFixed(1)}%"`;
   // One row: logo | team (+ record) | Score | Proj | Win %. Same columns in every state (Chris, 2026-10-30).
   function row(r,model,proj,probability,s,winner,info){
     const t=index.leagues[r.leagueId].teams[String(r.roster_id)]||{name:`Roster ${r.roster_id}`};
     const changed=Math.abs(model.actual-model.official)>.011;
     const score=model.played||s.final?`${model.actual.toFixed(2)}${changed?'†':''}`:'–';
-    return `<div class="score-row r3${s.live?' live-odds':' pre-odds'}${probability!=null&&probability>50?' favorite':''}${probability!=null&&probability<50?' underdog':''}${s.final&&winner?' winner':''}"><span class="team-icon" style="background:${esc(t.primary)}">${t.logo?(()=>{const dk=darkBg(t.primary);return `<img src="${esc(dk&&t.logo_dark||t.logo)}" alt="" onerror="this.hidden=true">`;})():''}</span><span class="school">${info.seed?`<b class="rk seed">${esc(info.seed)}</b> `:''}${info.rank?`<b class="rk">#${esc(info.rank)}</b> `:''}${esc(t.name)}${info.tag?`<b class="ldtag ${info.tag[0]}">${esc(info.tag[1])}</b>`:''}${info.rec?`<small class="rec">${esc(info.rec)}</small>`:''}</span><span class="score${model.played||s.final?'':' dash'}" title="${changed?`Sleeper: ${model.official.toFixed(2)}`:'Standard score'}">${score}</span><span class="proj">${proj.toFixed(1)}</span><span class="chance"${chanceStyle(probability)}>${esc(pct(probability))}</span></div>`;
+    return `<div class="score-row r3${s.final?' final-odds':s.live?' live-odds':' pre-odds'}${!s.final&&probability!=null&&probability>50?' favorite':''}${probability!=null&&probability<50?' underdog':''}${s.final&&winner?' winner':''}"><span class="team-icon" style="background:${esc(t.primary)}">${t.logo?(()=>{const dk=darkBg(t.primary);return `<img src="${esc(dk&&t.logo_dark||t.logo)}" alt="" onerror="this.hidden=true">`;})():''}</span><span class="school">${info.seed?`<b class="rk seed">${esc(info.seed)}</b> `:''}${info.rank?`<b class="rk">#${esc(info.rank)}</b> `:''}${esc(t.name)}${info.tag?`<b class="ldtag ${info.tag[0]}">${esc(info.tag[1])}</b>`:''}${info.rec?`<small class="rec">${esc(info.rec)}</small>`:''}</span><span class="score${model.played||s.final?'':' dash'}" title="${changed?`Sleeper: ${model.official.toFixed(2)}`:'Standard score'}">${score}</span><span class="proj">${proj.toFixed(1)}</span><span class="chance"${chanceStyle(probability)}>${esc(pct(probability))}</span></div>`;
   }
   // Game of the Week (Chris, 2026-11-04): one game per regular-season week, picked in data/scoreboard/<season>/game-of-the-week.json
   // Blue badge in the regular season, gold ("GOTW Postseason") from CCG week on.
@@ -115,18 +115,18 @@
       // (a team behind in its group can still be a lucky dog while games are live).
       const out=raceTag.size?s.final&&!tag:(s.final?s.models[i].actual<top:ch[i]!=null&&ch[i]<0.1&&s.started);
       return row(match[i],s.models[i],s.proj[i],ch[i]??null,s,s.final&&!out,{rec:x.Rec,tag:raceTag.get(`${match[i].leagueId}|${match[i].roster_id}`)}).replace('class="score-row r3',`class="score-row r3${out?' out':''}`);}).join('');
-    return `<a class="mini-match grp" href="${esc(href)}" aria-label="${esc(gLabel(post))}"><div class="ptitle">${esc(gLabel(post))}</div><div class="hdr3"><span></span><span class="match-status${s.active?' is-live':''}">${esc(status)}</span><span>Score</span><span>${s.live?'Live proj':'Proj'}</span><span>${s.live?'Live adv':'Adv %'}</span></div>${rows}</a>`;
+    return `<a class="mini-match grp" href="${esc(href)}" aria-label="${esc(gLabel(post))}"><div class="ptitle">${esc(gLabel(post))}</div><div class="hdr3"><span></span><span class="match-status${s.active?' is-live':''}">${esc(status)}</span><span>Score</span><span>${s.live?'Live proj':'Proj'}</span><span>${s.final?'Pregame %':s.live?'Live adv':'Adv %'}</span></div>${rows}</a>`;
   }
   function card(g){
     if(g.post&&g.match.length>2)return groupCard(g);
     const {id,game,match,s,o}=g,league=index.leagues[id];
     const p=s.probability===null?null:Math.round(s.probability),href=`scoreboard.html?${new URLSearchParams(g.post?{season,week,post:g.post.id,overview:$('league').value||'all'}:{season,week,league:id,game,overview:$('league').value||'all'})}`;
     const status=s.active?`● Live · ${s.active} playing`:s.final?'Final':s.started?'In progress':s.next?kickTxt(s.next.kickoff):s.status;
-    const pre=s.live&&s.pregame!=null?`<div class="ew">Pregame: ${esc(league.teams[String(match[0].roster_id)]?.name)} ${esc(pct(s.pregame))}</div>`:'';
+    const order=cardOrder(g);
+    const pre=s.live&&s.pregame!=null?`<div class="ew">Pregame: ${esc(league.teams[String(match[order[0]].roster_id)]?.name)} ${esc(pct(order[0]===0?s.pregame:100-s.pregame))}</div>`:'';
     const ew=!s.started&&o?.EveryWeek?`<div class="ew">If they'd played every week: ${esc(o.EveryWeekLeader?o.EveryWeekLeader+' ':'')}${esc(o.EveryWeek)}</div>`:'';
     const pt=g.post?`<div class="ptitle">${esc(gLabel(g.post))}</div>`:'';
-    const order=cardOrder(g);
-    return `<a class="mini-match" href="${esc(href)}" aria-label="${esc(league.teams[String(match[order[0]].roster_id)]?.name)} versus ${esc(league.teams[String(match[order[1]].roster_id)]?.name)} — player details">${pt}<div class="hdr3"><span>${isGotw(g)?`<img class="gotw-mini" src="${featBadge(g)}" alt="${featAlt(g)}" title="${featAlt(g)}">`:''}</span><span class="match-status${s.active?' is-live':''}">${esc(status)}</span><span>Score</span><span>${s.live?'Live proj':'Proj'}</span><span>${s.live?'Live %':'Pre %'}</span></div>${order.map(i=>row(match[i],s.models[i],s.proj[i],p===null?null:i===0?p:100-p,s,s.models[i].actual>s.models[1-i].actual,g.post?pside(g,i):side(o,match[i].roster_id))).join('')}${pre}${ew}</a>`;
+    return `<a class="mini-match" href="${esc(href)}" aria-label="${esc(league.teams[String(match[order[0]].roster_id)]?.name)} versus ${esc(league.teams[String(match[order[1]].roster_id)]?.name)} — player details">${pt}<div class="hdr3"><span>${isGotw(g)?`<img class="gotw-mini" src="${featBadge(g)}" alt="${featAlt(g)}" title="${featAlt(g)}">`:''}</span><span class="match-status${s.active?' is-live':''}">${esc(status)}</span><span>Score</span><span>${s.live?'Live proj':'Proj'}</span><span>${s.final?'Pregame %':s.live?'Live %':'Pre %'}</span></div>${order.map(i=>row(match[i],s.models[i],s.proj[i],p===null?null:i===0?p:100-p,s,s.models[i].actual>s.models[1-i].actual,g.post?pside(g,i):side(o,match[i].roster_id))).join('')}${pre}${ew}</a>`;
   }
   function pside(g,i){const r=g.match[i],x=g.post.sides.find(y=>String(y.RosterID)===String(r.roster_id)&&String(y.LeagueID)===String(r.leagueId))||{};return {rec:x.Rec,seed:g.post.round==='Playoff'?x.Seed:''};}
   // Lucky dog race (Chris, 2026-11-06): realigned NIT group stages advance every group leader plus the
