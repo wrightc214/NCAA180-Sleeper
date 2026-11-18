@@ -300,7 +300,9 @@ def test_task_511_partial_owner_settings_change_only_selected_behavior(monkeypat
     from player_values import fantasycalc_request
     from transactions_grades import pick_slot_values
 
+    shared = lcfg.cfg()
     monkeypatch.setattr(lcfg, "cfg", lambda: {
+        **shared,
         "transactions": {
             "draft_slots_per_round": 10, "proxy_pick_slot": "4.10",
             "consolidation": {"method": "none"},
