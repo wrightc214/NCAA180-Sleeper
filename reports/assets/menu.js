@@ -197,14 +197,14 @@
     try { localStorage.setItem(ACCESS_KEY,JSON.stringify(o)); }catch(e){}
     accessApply();
     if (typeof window !== "undefined" && typeof window.CustomEvent === "function")
-      window.dispatchEvent(new CustomEvent("ncaa180:accesschange", {detail:accessRead()}));
+      window.dispatchEvent(new window.CustomEvent("ncaa180:accesschange", {detail:accessRead()}));
     return accessRead();
   }
   function accessReset() {
     try {localStorage.removeItem(ACCESS_KEY);}catch(e){}
     var o=accessApply();
     if (typeof window !== "undefined" && typeof window.CustomEvent === "function")
-      window.dispatchEvent(new CustomEvent("ncaa180:accesschange", {detail:o}));
+      window.dispatchEvent(new window.CustomEvent("ncaa180:accesschange", {detail:o}));
     return o;
   }
   var access={read:accessRead,save:accessSave,reset:accessReset,apply:accessApply,
@@ -350,7 +350,7 @@
     if (e.key === ACCESS_KEY || e.key === null) {
       accessApply();
       if (typeof window.CustomEvent === "function")
-        window.dispatchEvent(new CustomEvent("ncaa180:accesschange", {detail:accessRead()}));
+        window.dispatchEvent(new window.CustomEvent("ncaa180:accesschange", {detail:accessRead()}));
     }
   });
   render(false);
