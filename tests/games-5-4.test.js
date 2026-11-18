@@ -55,6 +55,8 @@ test('50 percent is neutral and favorites remain bold without relying on color',
   assert.match(probabilityRules,/var\(--win-final-mix,0%\)/);
   assert.match(probabilityRules,/\.r3\.final-odds \.chance\{font-weight:500\}/);
   assert.match(source,/s\.final\?' final-odds'/);
+  assert.match(source,/probability!=null&&probability>50\?' favorite'/); // final still gets green, but not bold
+  assert.match(probabilityRules,/\.r3\.final-odds\.favorite \.chance\{/);
   assert.match(source,/s\.final\?'Pregame %'/);
   assert.match(menu,/var TOKENS_LIGHT = \{"--good":/);
   assert.match(menu,/var TOKENS_DARK = \{"--good":/);
