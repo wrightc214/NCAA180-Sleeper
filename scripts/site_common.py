@@ -158,17 +158,13 @@ def write_menu(out_dir=None):
     # or require rebuilding historical HTML just to load an additional script.
     with open(ROOT / "templates" / "accessibility.js", encoding="utf-8") as a11y_file:
         accessibility_source = a11y_file.read()
-    with open(ROOT / "config" / "league.json", encoding="utf-8") as config_file:
-        owner_colors = json.load(config_file)["accessibility_colors"]
-    for theme in ("light", "dark"):
-        for role in ("positive", "negative", "neutral"):
-            value = owner_colors[theme][role]
-            if not isinstance(value, str) or not re.fullmatch(r"#[0-9a-fA-F]{6}", value):
-                raise ValueError(f"Invalid accessibility_colors.{theme}.{role}: {value!r}")
+    from accessibility_config import accessibility_config
+    owner_settings = accessibility_config()
     if "/*__OWNER_ACCESSIBILITY_COLORS__*/null" not in accessibility_source:
-        raise ValueError("accessibility template missing owner-colours placeholder")
+        raise ValueError("accessibility template missing owner-settings placeholder")
     accessibility_source = accessibility_source.replace(
-        "/*__OWNER_ACCESSIBILITY_COLORS__*/null", json.dumps(owner_colors, separators=(",", ":")))
+        "/*__OWNER_ACCESSIBILITY_COLORS__*/null",
+        json.dumps(owner_settings, separators=(",", ":")))
     if "/*__ACCESSIBILITY__*/" not in tpl:
         raise ValueError("menu template missing accessibility bundle placeholder")
     js = tpl.replace("/*__ACCESSIBILITY__*/", accessibility_source).replace(
