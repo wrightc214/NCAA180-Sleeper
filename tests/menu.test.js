@@ -224,3 +224,22 @@ test('Accessibility page includes shared site CSS, dev navigation and accessible
   assert.match(html,/id="restore-custom"/);
   assert.match(html,/id="reset-all"/);
 });
+
+test('accessibility resets preserve other settings and blocked storage never crashes', () => {
+  const old=global.localStorage;
+  const values={'ncaa180.dev':'1','ncaa180.push':'saved','ncaa180.team':'saved'};
+  try {
+    global.localStorage={getItem:k=>values[k]??null,setItem:(k,v)=>{values[k]=v;},removeItem:k=>{delete values[k];}};
+    const a=load(DATA).access;
+    a.save({mode:'rg'});
+    a.reset();
+    assert.strictEqual(values['ncaa180.dev'],'1');
+    assert.strictEqual(values['ncaa180.push'],'saved');
+    assert.strictEqual(values['ncaa180.team'],'saved');
+    global.localStorage={getItem(){throw Error('blocked');},setItem(){throw Error('blocked');},removeItem(){throw Error('blocked');}};
+    const blocked=load(DATA).access;
+    assert.strictEqual(blocked.read().mode,'standard');
+    assert.doesNotThrow(()=>blocked.save({mode:'custom'}));
+    assert.doesNotThrow(()=>blocked.reset());
+  } finally {if(old===undefined)delete global.localStorage;else global.localStorage=old;}
+});
