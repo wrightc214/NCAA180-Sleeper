@@ -165,8 +165,13 @@
         }
       });
     }
+    // Solid fills must follow the selected palette too; white labels need 4.5:1 contrast.
+    // Standard keeps its exact historical fills for visual compatibility.
+    if(o.mode==="none") both={"--good-fill":"#3c3c3c","--bad-fill":"#656565"};
+    else if(o.mode!=="standard") both={"--good-fill":accessibleHex(m.light[0],"#ffffff"),
+      "--bad-fill":accessibleHex(m.light[1],"#ffffff")};
     var css=tokensCss(Object.assign({},TOKENS_LIGHT,light),Object.assign({},TOKENS_DARK,dark),
-      o.mode==="none"?Object.assign({},TOKENS_BOTH,{"--good-fill":"#3c3c3c","--bad-fill":"#656565"}):TOKENS_BOTH);
+      Object.assign({},TOKENS_BOTH,both));
     css+=":root{--up:var(--good);--dn:var(--bad)}"+
       "@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--up:var(--good);--dn:var(--bad)}}"+
       ":root[data-theme=dark]{--up:var(--good);--dn:var(--bad)}";
