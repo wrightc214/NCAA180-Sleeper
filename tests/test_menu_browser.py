@@ -75,7 +75,7 @@ class MenuBrowser(unittest.TestCase):
         self.assertTrue(pg.locator("#devpanel").is_visible())
         self.assertEqual(pg.locator(".n180-devbar").count(), 0)
         pg.check("#dev-view")
-        self.assertEqual(pg.locator(".n180-devbar").count(), 1)  # About is hidden: not public
+        self.assertEqual(pg.locator(".n180-devbar").count(), 0)  # About is public: no "not public" bar
         pg.evaluate("""() => { NCAA180.menu.data.tabs.splice(1, 0, {id: 'wip', label: 'WIP', href: 'wip.html', state: 'hidden-dev'});
                               NCAA180.menu.render(true); }""")
         dev = pg.locator('nav.weeks[aria-label="Pages"] a.n180-dev')
