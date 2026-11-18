@@ -5,4 +5,4 @@ Attempting to create a public dashboard for NCAA 180 that doesn't require user l
 
 link to site: http://ncaa180.short.gy/home
 
-
+[Transactions dashboard rules and follow-ups](docs/transactions.md)

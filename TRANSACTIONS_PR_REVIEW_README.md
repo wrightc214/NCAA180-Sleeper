@@ -1,15 +1,15 @@
 # Transactions — developer / auditor handoff (TEMPORARY; DELETE BEFORE MERGE)
 
-> **Status:** Stages 1 and 2A implemented on draft PR #111; **Team Fit and projected-win/odds context NOT implemented** because historical counterfactuals are not yet reliable. This file is intentionally committed for collaborators and independent review. Delete it and its three review-only mockups in a final PR commit **before merge**, after recording follow-ups in the permanent project doc. Do **not** merge this PR automatically.
+> **Status:** Implementation and review materials are ready for independent review on draft PR #111; **Team Fit and projected-win/odds context NOT implemented** because historical counterfactuals are not yet reliable. This file is intentionally committed for collaborators and independent review. Delete it and its three review-only mockups in a final PR commit **before merge**, after recording follow-ups in the permanent project doc. Do **not** merge this PR automatically.
 
 ## Current implementation / review checkpoint
 
-- Generator: `scripts/transactions_page.py`; generated preview: `reports/transactions.html` (committed **only to the feature branch** by a one-time branch-guarded CI workflow, which was then removed).
+- Generator: `scripts/transactions_page.py`; generated preview: `reports/transactions.html` (regenerated and committed **only to the feature branch**).
 - Pure grade/slot approximation engine: `scripts/transactions_grades.py`; configurable thresholds and KTC-style fallback: `config/transactions.json`. The final site must not imply exact KTC calibration.
 - Historical picks: `data/PickValues_Season.csv` backfilled from eight verified Git commit revisions on Oct 2, 6, 13, 20, 27 and Nov 3, 10, 17. Future capture: `scripts/player_values.py`; workflow step in `.github/workflows/update-leagues.yml`.
 - Nav: `config/nav.json` entry `hidden-dev`; menu compiled by the existing weekly `scripts/menu_build.py`. **Do not gratuitously edit `templates/menu.js` or `reports/assets/menu.js` during accessibility PR #109.** Temporary CI regenerates menu only in Actions checkout before assertions.
 - Tests: `tests/test_transactions_page.py` and `tests/transactions_browser.py`. PR CI `.github/workflows/transactions-pr-check.yml` is read-only: runs the full Python suite, every Node test, static generation, and Chromium desktop/light and mobile/dark smoke checks, then uploads HTML + two viewport screenshots as the Actions artifact `transactions-preview`.
-- A green earlier run produced **113 real trades (31 with historical Dynasty grades), 11 weeks, 15 conferences**, and **117 Python passed / 10 skipped** with Node tests green. Check the **latest** run in PR #111, because later changes added configuration tests and screenshot artifacts.
+- Final review build contains **113 trades, 34 Rebuild-graded, 11 weeks, 15 conferences, and 3 Blockbuster badges**. Check the latest read-only Actions run on this draft PR for the full test and browser results.
 - PR description includes three **actual** transaction IDs and rounded raw/credit/adjusted totals and grades, including 3-for-1, 1-for-2, 4-for-1.
 - **Known limitation:** card Team Fit displays unavailable, not fictional numbers; ROS wins, contender title/playoff odds and rebuilder bowl/1.01 odds are *not yet calculated*. No narrative explanation is generated (user explicitly deferred that section). Do not present these as complete.
 - **Review risk:** fallback consolidation adjustment can produce large balancing credits in uneven trades. Validate desired trade-economics direction before publicizing results; zero-valued contender pick sides receive **no** phantom credit. Exact slot values are not stored, so pick equivalents are interpolated and visually tagged approximate.
@@ -23,7 +23,7 @@ These three mockups use real completed trades. They are **design references, not
 
 ![Montana receives Puka Nacua. Old Dominion receives Rice, Swift and two firsts, with the draft model showing a 9,809-point dynasty surplus.](./docs/transactions-review-mockups/montana-old-dominion.png)
 
-Trade `1426656560473452544`. The two early firsts are an approximate price comparison, not two distinct quoted slot values. Old Dominion leads both raw totals before the fallback credit.
+Trade `1426656560473452544`. **Blockbuster** at 18,798 combined raw dynasty points. The two early firsts are an approximate price comparison, not two distinct quoted slot values. Old Dominion leads both raw totals before the fallback credit.
 
 ### Montana–South Dakota · Nov. 12, 2026
 
@@ -33,24 +33,21 @@ Trade `1426733052746272768`. Use this as a consolidation stress test. Montana's 
 
 ### Arizona State–Oregon · Nov. 4, 2026
 
-![Arizona State receives Tyler Bass, Rachaad White and Devin Singletary. Oregon receives Reggie Virgil and three picks. Oregon's 372-point dynasty surplus is shown as an estimated 2027 pick swap from 4.12 to 3.05.](./docs/transactions-review-mockups/arizona-state-oregon.png)
+![Arizona State receives Tyler Bass, Rachaad White and Devin Singletary. Oregon receives Reggie Virgil and three picks. Oregon's 372-point dynasty surplus is shown as an estimated pick swap from 4.12 to 3.05.](./docs/transactions-review-mockups/arizona-state-oregon.png)
 
-Trade `1423799198175739904`. The current generator withholds both grades because Bass is absent from the Nov. 3 FantasyCalc snapshot. The mockup applies the **725-point NCAA 180 proxy** in both modes, excludes proxy points from the consolidation calculation, and shows Oregon's **+372 adjusted dynasty points** as **≈ 2027 pick swap · 4.12 → 3.05**. The estimated swap is worth 376 points. It is an illustration of the value gap, not another term of the trade.
+Trade `1423799198175739904`. Bass is absent from the Nov. 3 FantasyCalc snapshot. The generator applies the **725-point NCAA 180 proxy** in both modes, excludes proxy points from the consolidation calculation, and shows Oregon's **+372 adjusted dynasty points** as **≈ Pick swap · 4.12 → 3.05**. The estimated swap is worth 376 points. It is an illustration of the value gap, not another term of the trade.
 
-## Project-doc follow-up requested
+## Permanent project notes
 
-**Project owner / reviewer:** Please carry these items into the permanent NCAA 180 project doc before this temporary README and its review-only mockups are removed. Track implementation status separately from design approval.
+The [Transactions project doc](docs/transactions.md) is the lasting record of the implemented scoring and display decisions, review examples, and open work. Keep it when removing this temporary README and its three design images. In particular, retain **“Why this trade makes sense”** as a deliverable for both teams, with roster context backed by evidence and inferred intent marked as such. Team Fit, projected wins, title/playoff/bowl/1.01 odds and this narrative are **not implemented** here.
 
-| Item | Status and acceptance criteria |
-| --- | --- |
-| **“Why this trade makes sense”** | **Deferred, not implemented.** Make this an explicit follow-up deliverable. Add a short, evidence-based explanation for **each team** that separates market price from roster strategy. Explain what the team gains, what it gives up, and what makes the deal reasonable for its competitive window. Use verified context such as a lineup vacancy, positional scarcity, depth, or pick timing. Label inferred intent, acknowledge if the move does not look favorable, and do not invent manager motivations, wins, or odds. Bass filling a scarce kicker slot is the motivating example. |
-| **Team Fit** | **Not implemented.** Grade each team's strategy independently of the market grades using historically defensible rosters, standings and lineup context. Display Not rated when those inputs cannot be reconstructed. |
-| **Rest-of-season wins and team outlooks** | **Not implemented.** Validate a historical with-trade vs. without-trade model before rendering projected win deltas. For contenders, track title and playoff odds. For rebuilders, track bowl and 1.01 odds. Use the actual league schedule and rules, with trade-date inputs, replacement starters and byes. |
-| **Unlisted assets and league scarcity** | **Agreed design, not implemented in this PR revision.** For identified unlisted K/DST, use historical next-draft 4.12 in both modes, visibly labeled as a proxy and excluded from consolidation. For identified unlisted skill-position players, use zero when the snapshot is otherwise valid. Do not default unresolved IDs or missing snapshots to zero. |
-| **Small dynasty surplus** | **Proposed, previewed here.** Below the next draft's 4.12 value, show the closest documented same-draft upgrade anchored at 4.12 when it is a meaningful approximation. Keep the exact point surplus and label estimated slot values. |
-| **Consolidation calibration** | **Fallback only.** Preserve raw and adjusted totals, audit cases where credit reverses or nearly erases a large raw gap, and calibrate with real samples before treating the fallback as a reliable verdict. |
+## Reviewer handoff prompt
 
-The mockups intentionally leave Team Fit unrated and omit forecast numbers and narrative text. Those omissions are scope gaps, not design decisions to drop the features.
+> Independently review draft PR #111 against main. Do not merge it or deploy. Open the generated Transactions page and all three [design references](#trade-card-design-references), then use [the permanent Transactions doc](docs/transactions.md) as the specification.
+>
+> Reproduce the three real trades and inspect both raw and adjusted values. Check Bass's historical 725-point 4.12 proxy in both grades, its exclusion from consolidation and blockbuster math, the distinction between unlisted known players and unresolved IDs, and that zero-versus-zero never gets an Even grade. Verify Oregon displays +372 and an approximate 4.12 → 3.05 swap with no year in the surplus badge, while actual traded picks retain their years. Verify the Puka trade is marked Blockbuster and the other two examples are not. Confirm the marker uses combined raw market dynasty value and does not imply a winner.
+>
+> Check Playwright and the latest read-only CI run, then spot-check filtering, sections, mobile overflow, light/dark badge legibility, and the hidden-dev nav. Re-examine the fallback on Montana–South Dakota, where a large credit almost erases the raw Contender gap. Confirm the permanent doc carries the missing work, especially a sourced “Why this trade makes sense” for each side, plus Team Fit, projected wins and odds. Report findings by severity, give a ready/not-ready recommendation, and list any scope or calibration decisions needed. Remove the temporary README and the three review images only after the handoff is accepted and before merging.
 
 ### Review commands
 
@@ -85,7 +82,7 @@ Build `reports/transactions.html` using `scripts/transactions_page.py`, from exi
 - `data/Players.csv`: player identification. `data/Rosters_Current.csv`: **current** player ownership only, for movement availability. Team names, logos, colors and short conference names come from established `site_common` / site helpers.
 - `data/PlayerValues_Season.csv`: `Date, Week, SleeperID, Name, Position, NFLTeam, DynastyValue, RedraftValue`; weekly FantasyCalc values back to **2026-10-02**. For a transaction choose latest snapshot with `Date <= transaction date` (UTC conversion from `Created` milliseconds, with a documented consistent date convention); **never** use later/current values as replacements.
 - `data/PickValues_Current.csv`: `Season, Round, Value, Early, Mid, Late`. Backfill `data/PickValues_Season.csv` from dated historical Git versions of Current (starting on/after 2026-10-02, only where historical commit evidence exists), adding `Date`. Change `scripts/player_values.py` to append a dated pick snapshot on scheduled runs under the same date/week and manual-run safeguards as player snapshots. Ensure repeat runs are idempotent.
-- If trade precedes all available snapshots, card states **“No values from that week”**, and **NO GRADE**. Do not silently use later snapshots, extrapolated historical values, or today's picks. If a required historical asset is missing, expose incomplete coverage rather than presenting a confident false grade.
+- If trade precedes all available snapshots, card states **“No values from that week”**, and **NO GRADE**. Do not silently use later snapshots, extrapolated historical values, or today's picks. Apply the explicit unlisted-asset rules in the permanent Transactions doc. If a required historical asset remains unresolved, expose incomplete coverage rather than presenting a confident false grade.
 
 ## Page layout / interaction
 
@@ -109,7 +106,7 @@ Use these exact accessible light/dark tokens, by reference: light good #1a7f37, 
 3. **Contender Value** (small): historical `RedraftValue`; exchanged picks valued zero; separate from starting-lineup impact.
 4. **Dynasty value surplus**, **only shown on the gaining team’s side**, including adjusted point surplus and **nearest next-draft rookie pick equivalent**. Clearly identify the recipient with logo/team name and arrow. No duplicate +/- surplus box on losing side.
 
-**Draft-equivalent convention:** always the *next draft relative to trade date* (2026 trades→2027). If surplus fits within a high first, use **one** nearest individual pick and accept rounding error. For surplus **above the value of a high first**, show a high first plus additional pick(s) as necessary. In a combination, the **main pick must be the highest-valued pick that fits** the surplus, even when a smaller initial pick plus a later pick would yield a numerically closer sum. Preserve exact FantasyCalc individual pick-slot data if the API returns it; currently stored historical/current pick CSV only retains round generic and early/mid/late tier values. If exact slots aren't available, interpolating within tiers is acceptable **only when visibly labeled approximate**; do not misrepresent inferred `2.07` as an observed FantasyCalc quote. If no meaningful pick match, report value delta without invented precision.
+**Draft-equivalent convention:** always the *upcoming draft relative to trade date* (2026 trades → 2027), with the year omitted from surplus labels. Below 4.12, show the closest meaningful same-draft swap anchored at 4.12, or points only. If surplus fits within a high first, use **one** nearest individual pick and accept rounding error. For surplus **above the value of a high first**, show a high first plus additional pick(s) as necessary. In a combination, the **main pick must be the highest-valued pick that fits** the surplus, even when a smaller initial pick plus a later pick would yield a numerically closer sum. Preserve exact FantasyCalc individual pick-slot data if the API returns it; currently stored historical/current pick CSV only retains round generic and early/mid/late tier values. If exact slots aren't available, interpolating within tiers is acceptable **only when visibly labeled approximate**; do not misrepresent inferred `2.07` as an observed FantasyCalc quote. If no meaningful pick match, report value delta without invented precision.
 
 **Rebuild / contender math:** use historical FantasyCalc, never KTC valuations. The user prefers FantasyCalc's stronger dataset. A KTC-*style* consolidation mechanism can be calibrated with future KTC sample trades:
 `raw(p) = p * [a*(p/t)^1.3 + b*(p/v)^8 + c*(p/(v+2000))^1.28]`,

@@ -1,9 +1,10 @@
 {
   "_doc": [
-    "Transaction valuation configuration. FantasyCalc is the ONLY asset value source.",
+    "Market values and the NCAA 180 K/DST proxy are sourced from historical FantasyCalc snapshots.",
     "Consolidation fallback is KTC-style, NOT fitted to KTC samples. Replace coefficients only after calibration.",
     "Grade bands are percent share of adjusted total for comparative Rebuild/Contender grades.",
-    "Team Fit is separate and is withheld until defensible historical context exists."
+    "Team Fit is separate and is withheld until defensible historical context exists.",
+    "Blockbuster uses combined raw market dynasty points, excluding proxies and consolidation, divided by the snapshot’s top player value."
   ],
   "consolidation": {
     "method": "ktc-style-fallback",
@@ -40,5 +41,6 @@
       0,
       "F"
     ]
-  ]
+  ],
+  "blockbuster_min_multiple": 1.5
 }

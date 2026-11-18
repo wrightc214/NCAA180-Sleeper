@@ -32,6 +32,8 @@ CSS = """
 .tx-controls select{min-width:125px;max-width:100%;padding:8px;border-radius:7px;background:var(--panel);color:var(--ink);border:1px solid var(--line);font:inherit}
 .tx-cards{display:grid;gap:16px}
 .tx-card{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--panel);box-shadow:0 3px 14px #0001}
+.tx-card.tx-blockbuster{border-top:2px solid var(--gold,var(--accent))}
+.tx-flag{display:inline-block;margin-left:6px;padding:2px 6px;border:1px solid currentColor;border-radius:4px;color:var(--ink);font-weight:800;text-transform:uppercase;font-size:10px;letter-spacing:.07em}
 .tx-card.mine{outline:2px solid var(--accent);outline-offset:2px}
 .tx-card header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0;padding:10px 15px;background:var(--bg);border-bottom:1px solid var(--line)}
 .tx-card .tx-head{font-size:12px;font-weight:800;letter-spacing:.04em}
@@ -45,6 +47,8 @@ CSS = """
 .tx-pick{font-size:.95em}
 .tx-grade{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--line);font-weight:700;font-size:12px}
 .tx-grade strong{font:bold 20px var(--num,sans-serif);color:var(--neutral)}
+.tx-grade .tx-side-value{min-width:0;text-align:center}
+.tx-grade .tx-side-value small{display:block;font-size:11px;color:var(--mute);font-variant-numeric:tabular-nums}
 .tx-grade strong[data-score]{color:var(--neutral)}
 .tx-center{text-align:center;display:flex;flex-direction:column;justify-content:center;gap:6px}
 .tx-center h3{font-size:12px;letter-spacing:.07em;text-transform:uppercase;margin:0}
@@ -167,19 +171,31 @@ def render_team(team, colors):
     return f'<div class="tx-team" style="--team-bg:{esc(bg)};--team-ink:{esc(fg)}">{logo}<span>{esc(team)}</span></div>'
 
 
-def render_assets(assets):
+def render_assets(assets, proxies=None):
     if not assets:
         return '<p class="tx-muted">No assets recorded</p>'
+    proxies = proxies or {}
     return "".join(f'<div class="tx-asset{" tx-pick" if a["kind"] == "pick" else ""}">'
                    + (f'<span class="tx-muted">{esc(a["position"])} · </span>' if a.get("position") else "")
-                   + esc(a["label"]) + "</div>" for a in assets)
+                   + esc(a["label"])
+                   + (f'<small class="tx-muted"> · +{proxies[a["id"]]:,.0f} pts (4.12 proxy)</small>'
+                      if a.get("id") in proxies else "")
+                   + "</div>" for a in assets)
 
 
 def render_grade(g, name):
     if not g:
         return '<strong title="Historical valuation unavailable">—</strong>'
     score = g["score"][name]
-    return f'<strong data-score="{score:.4f}" title="Score {score:.1f}/100">{esc(g["grade"][name])}</strong>'
+    if score is None:
+        return '<strong title="Both sides have zero measured value">—</strong>'
+    raw, credit = g["raw"][name], g["credit"][name]
+    points = f"{raw:,.0f} raw"
+    if credit > 0.01:
+        points += f" + {credit:,.0f} consolidation"
+    return (f'<span class="tx-side-value" title="{points}">'
+            f'<strong data-score="{score:.4f}">{esc(g["grade"][name])}</strong>'
+            f'<small>{g["adjusted"][name]:,.0f} pts</small></span>')
 
 
 def trade_card(r, sides, names, colors, result, shorts):
@@ -192,25 +208,35 @@ def trade_card(r, sides, names, colors, result, shorts):
     pairs = [(rid, team[rid], sides[rid]) for rid in ids]
     dyn, con = result.get("dynasty"), result.get("contender")
     surplus = dyn.get("surplus") if dyn else None
+    proxies = result.get("proxies", {})
     def panel(info):
         rid, name, assets = info
         badge = ""
         if surplus and surplus["team"] == rid:
-            equivalents = " + ".join(("≈ " if p[2] else "") + p[1] for p in surplus["picks"])
-            label = equivalents or "No comparable rookie pick"
-            badge = (f'<div class="tx-surplus">+ Dynasty surplus · {esc(label)}<br>'
-                     f'<small>+{surplus["value"]:,.0f} adjusted FantasyCalc points'
-                     f'{" · estimated slots" if any(p[2] for p in surplus["picks"]) else ""}</small></div>')
+            swap = surplus.get("swap")
+            picks = surplus["picks"]
+            if swap:
+                label = f'≈ Pick swap · {swap["from"]} → {swap["to"]}'
+            else:
+                label = " + ".join(("≈ " if estimated else "") + f"Pick {slot}"
+                                   for _, slot, estimated in picks)
+            suffix = f' · {esc(label)}' if label else ""
+            badge = (f'<div class="tx-surplus">Dynasty surplus{suffix}<br>'
+                     f'<small>+{surplus["value"]:,.0f} adjusted points'
+                     f'{" · estimated slots" if swap or any(p[2] for p in picks) else ""}</small></div>')
         return (f'<div class="tx-side">{render_team(name, colors)}<div class="tx-assets">'
-                f'<div class="tx-receives">Receives</div>{render_assets(assets)}</div>{badge}</div>')
+                f'<div class="tx-receives">Receives</div>{render_assets(assets, proxies.get(rid))}</div>{badge}</div>')
     status = result.get("status")
     grade_rows = ""
     for key, label in ((dyn, "Rebuild value"), (con, "Contender value")):
-        grade_rows += (f'<div class="tx-grade">{render_grade(key, ids[0])}<span>{label}</span>'
+        note = " · No measurable value" if key and key["score"][ids[0]] is None else ""
+        grade_rows += (f'<div class="tx-grade">{render_grade(key, ids[0])}<span>{label}{note}</span>'
                        f'{render_grade(key, ids[1])}</div>')
     fit = '<div class="tx-muted">Team Fit: historical context model pending validation</div>'
+    missing_label = ("No values from that week" if not result.get("player_date")
+                     else "Historical values unavailable")
     center = (f'<div class="tx-center"><h3>Trade evaluation</h3>{fit}{grade_rows}'
-              + ('<div class="tx-muted">No values from that week</div>' if status != "complete" else
+              + (f'<div class="tx-muted">{missing_label}</div>' if status != "complete" else
                  f'<div class="tx-muted">FantasyCalc snapshot {esc(result.get("player_date"))}</div>')
               + '</div>')
     credit = ""
@@ -219,9 +245,13 @@ def trade_card(r, sides, names, colors, result, shorts):
             amt = dyn["credit"].get(rid, 0)
             if amt > 0.01:
                 credit = f'<div class="tx-credit">+{amt:,.0f} consolidation credit to {esc(team[rid])} (KTC-style)</div>'
-    meta = (f'<div class="tx-head">{esc(short)} · Week {esc(r["Week"])} · {esc(day(r["Created"]))}</div>'
+    blockbuster = result.get("blockbuster")
+    flag = (f'<span class="tx-flag" title="{blockbuster["points"]:,.0f} combined raw dynasty market points">'
+            'Blockbuster</span>' if blockbuster else "")
+    card_class = "tx-card tx-blockbuster" if blockbuster else "tx-card"
+    meta = (f'<div class="tx-head">{esc(short)} · Week {esc(r["Week"])} · {esc(day(r["Created"]))}{flag}</div>'
             f'<span class="tx-muted">Trade {esc(r["TransactionID"])}</span>')
-    return (f'<article class="tx-card" data-conference="{esc(league)}" data-week="{esc(r["Week"])}" '
+    return (f'<article class="{card_class}" data-conference="{esc(league)}" data-week="{esc(r["Week"])}" '
             f'data-teams="{esc("|".join(team.values()))}" data-identity="{esc(short)}:{esc(ids[0])}|{esc(short)}:{esc(ids[1])}"><header>{meta}</header>'
             f'<div class="tx-grid">{panel(pairs[0])}{center}{panel(pairs[1])}</div>'
             f'{credit}</article>')
@@ -264,7 +294,7 @@ def main():
             print(f'WARN: skipping non-two-party trade {r["TransactionID"]}')
             continue
         result = evaluate_trade(sides, day(r["Created"]), player_hist, pick_hist, int(r["Year"]), grading_config)
-        if result["dynasty"]:
+        if result["dynasty"] and any(g is not None for g in result["dynasty"]["grade"].values()):
             covered += 1
         cards.append(trade_card(r, sides, names, colors, result, short))
     lg = sorted({r["LeagueName"] for r in rows})
@@ -298,11 +328,11 @@ def main():
 <section><h2>Trades <small>({len(cards)})</small></h2>
 {filters}
 <p class="tx-note">Grades use FantasyCalc values available at trade time — not a verdict.
-Rebuild includes rookie picks; Contender values picks at zero. Team Fit and projected wins/odds
+Rebuild includes rookie picks. Contender values traded picks at zero. Unlisted kickers and D/ST use a 4.12 proxy in both grades. Surplus pick comparisons use the upcoming draft at trade time. Blockbuster marks high combined raw dynasty market value, not a trade winner. Team Fit and projected wins/odds
 await a validated historical context model.</p>
 <div class="tx-cards" id="tx-trades">{''.join(cards)}</div>
 <p class="tx-empty" id="tx-no-trades" hidden>No trades match these filters.</p>
-<p class="tx-note">{covered} of {len(cards)} trades have complete historical dynasty valuation coverage.</p>
+<p class="tx-note">{covered} of {len(cards)} trades have a Rebuild grade under the historical valuation rules.</p>
 </section>
 <section><h2>Player movement</h2>
 <div class="tx-controls"><label>Week<select id="tx-move-week">{

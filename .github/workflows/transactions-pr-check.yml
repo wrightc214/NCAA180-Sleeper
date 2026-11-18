@@ -7,6 +7,9 @@ on:
       - 'tests/test_transactions_page.py'
       - 'tests/transactions_browser.py'
       - 'config/nav.json'
+      - 'config/transactions.json'
+      - 'data/PickValues_Season.csv'
+      - 'reports/transactions.html'
       - '.github/workflows/update-leagues.yml'
       - '.github/workflows/transactions-pr-check.yml'
 permissions:

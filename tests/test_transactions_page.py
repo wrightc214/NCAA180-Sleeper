@@ -11,7 +11,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from transactions_page import build_teams, day, movement, parse, summary, trade_assets, trade_card
 from transactions_grades import (compare, consolidation, evaluate_trade, grade, load_config,
-                                 historical, nearest_pick)
+                                 historical, nearest_pick, pick_swap, read_rows)
 
 
 TEAMS = build_teams([
@@ -102,10 +102,10 @@ def test_nearest_pick_one_then_two_and_primary_highest_fitting():
              {"Season": "2027", "Round": "3", "Value": "1000", "Early": "1200",
               "Mid": "1000", "Late": "900"}]
     small = nearest_pick(1600, 2027, picks)
-    assert len(small) == 1 and small[0][1].startswith("2027 Pick 2.")
+    assert len(small) == 1 and small[0][1].startswith("2.")
     large = nearest_pick(5200, 2027, picks)
     assert len(large) == 2
-    assert large[0][1].startswith("2027 Pick 1.")
+    assert large[0][1].startswith("1.")
     assert large[0][0] <= 5200
 
 
@@ -157,7 +157,7 @@ def test_surplus_appears_in_winning_team_panel_only():
     sides = {"1": [{"kind": "player", "id": "100", "label": "Alpha Runner"}],
              "2": [{"kind": "player", "id": "200", "label": "Beta Receiver"}]}
     dyn = compare({"1": [7000], "2": [2000]}, 11000)
-    dyn["surplus"] = {"team": "1", "value": 2000, "picks": [(1980, "2027 Pick 2.07", True)]}
+    dyn["surplus"] = {"team": "1", "value": 2000, "picks": [(1980, "2.07", True)]}
     result = {"dynasty": dyn, "contender": None, "status": "complete", "player_date": "2026-10-06"}
     row = {"LeagueName": "NCAA SEC", "Week": "5", "Created": "1791331200000", "TransactionID": "t1"}
     rendered = trade_card(row, sides, TEAMS, {}, result, {"NCAA SEC": "SEC"})
@@ -165,4 +165,72 @@ def test_surplus_appears_in_winning_team_panel_only():
     winner_panel, other = rendered.split('<div class="tx-center">', 1)
     assert "tx-surplus" in winner_panel
     assert "tx-surplus" not in other
-    assert "2027 Pick 2.07" in rendered
+    assert "Pick 2.07" in rendered
+    assert "2027" not in rendered
+
+@pytest.mark.parametrize("position", ["K", "DEF", "D/ST"])
+def test_league_proxy_excluded_from_credit_but_counted_in_both_modes(position):
+    pd = "2026-11-03"
+    players = [
+        {"Date": pd, "SleeperID": "1", "DynastyValue": "4000", "RedraftValue": "6000"},
+        {"Date": pd, "SleeperID": "2", "DynastyValue": "2000", "RedraftValue": "3000"},
+    ]
+    picks = [{"Date": pd, "Season": "2027", "Round": "4", "Early": "861",
+              "Mid": "784", "Late": "725", "Value": "773"}]
+    sides = {"A": [{"kind": "player", "id": "1"}], "B": [{"kind": "player", "id": "2"}]}
+    base = evaluate_trade(sides, pd, players, picks, 2026)
+    sides["A"].append({"kind": "player", "id": "3", "position": position})
+    got = evaluate_trade(sides, pd, players, picks, 2026)
+    assert got["proxies"] == {"A": {"3": 725}, "B": {}}
+    for mode in ("dynasty", "contender"):
+        assert got[mode]["raw"]["A"] == base[mode]["raw"]["A"] + 725
+        assert got[mode]["credit"] == base[mode]["credit"]
+    assert got["blockbuster"] == base["blockbuster"] == {"points": 6000, "multiple": 1.5}
+    assert "blockbuster" not in evaluate_trade(
+        sides, pd, players, picks, 2026, {"blockbuster_min_multiple": 1.6})
+    assert evaluate_trade(sides, pd, players, [], 2026)["dynasty"] is None
+
+
+def test_unlisted_skill_player_zero_unknown_id_ungraded_and_all_zero_not_even():
+    pd = "2026-11-03"
+    p = [{"Date": pd, "SleeperID": "sky", "DynastyValue": "100", "RedraftValue": "100"}]
+    a = {"A": [{"kind": "player", "id": "1", "position": "RB"}],
+         "B": [{"kind": "player", "id": "2", "position": "TE"}]}
+    out = evaluate_trade(a, pd, p, [], 2026)
+    assert out["dynasty"]["raw"] == {"A": 0, "B": 0}
+    assert out["dynasty"]["grade"] == {"A": None, "B": None}
+    assert "blockbuster" not in out
+    a["B"][0].pop("position")
+    assert evaluate_trade(a, pd, p, [], 2026)["dynasty"] is None
+
+
+def test_small_surplus_uses_closest_meaningful_swap_and_not_future_round():
+    p = [
+        {"Season": "2027", "Round": "3", "Early": "1206", "Mid": "1066", "Late": "953"},
+        {"Season": "2027", "Round": "4", "Early": "861", "Mid": "784", "Late": "725"},
+        {"Season": "2029", "Round": "4", "Early": "400", "Mid": "300", "Late": "200"},
+    ]
+    assert pick_swap(372, 2027, p) == {"from": "4.12", "to": "3.05", "value": 376}
+    assert pick_swap(7, 2027, p) is None
+    assert pick_swap(725, 2027, p) is None
+
+
+@pytest.mark.parametrize("trade_id,marked", [
+    ("1426656560473452544", True), ("1426733052746272768", False),
+    ("1423799198175739904", False),
+])
+def test_real_trade_results_and_blockbuster_rendering(trade_id, marked):
+    from transactions_page import TRANSACTIONS, TEAMS as TEAM_FILE, PLAYERS as PLAYER_FILE
+    row = next(r for r in read_rows(TRANSACTIONS) if r["TransactionID"] == trade_id)
+    teams = build_teams(read_rows(TEAM_FILE))
+    players = {p["player_id"]: p for p in read_rows(PLAYER_FILE)}
+    sides = trade_assets(row, teams, players)
+    out = evaluate_trade(sides, day(row["Created"]), read_rows("data/PlayerValues_Season.csv"),
+                         read_rows("data/PickValues_Season.csv"), int(row["Year"]), load_config())
+    rendered = trade_card(row, sides, teams, {}, out, {})
+    assert ('>Blockbuster</span>' in rendered) is marked
+    if trade_id == "1423799198175739904":
+        assert out["dynasty"]["surplus"]["value"] == pytest.approx(372.294, abs=.001)
+        assert "+725 pts (4.12 proxy)" in rendered
+        assert "4.12 → 3.05" in rendered
+        assert "2027" not in rendered.split('class="tx-surplus"', 1)[1]

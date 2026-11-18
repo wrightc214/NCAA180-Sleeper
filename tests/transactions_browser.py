@@ -37,6 +37,12 @@ def main():
                 shot = ROOT / "work" / "transactions-preview"
                 shot.mkdir(parents=True, exist_ok=True)
                 page.screenshot(path=str(shot / f"transactions-{width}-{theme}.png"), full_page=False)
+                featured = page.locator(".tx-card.tx-blockbuster").filter(has_text="1426656560473452544")
+                assert featured.get_by_text("Blockbuster", exact=True).count() == 1
+                oregon = page.locator(".tx-card").filter(has_text="1423799198175739904")
+                assert oregon.get_by_text("4.12 → 3.05", exact=False).count() == 1
+                assert "2027" not in oregon.locator(".tx-surplus").inner_text()
+                assert oregon.get_by_text("+725 pts (4.12 proxy)", exact=False).count() == 1
                 # Filter to a team on the first trade. Revert filter.
                 first = page.locator(".tx-card").first
                 team = first.get_attribute("data-teams").split("|")[0]

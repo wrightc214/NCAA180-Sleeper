@@ -1,10 +1,8 @@
 """Historical FantasyCalc trade valuation; no future data leakage.
 
-All monetary values are FantasyCalc points. KTC-style fallback is NOT calibrated KTC.
+Market values and NCAA 180 pick proxies use FantasyCalc points. KTC-style fallback is NOT calibrated KTC.
 """
-import bisect
 import csv
-import datetime as dt
 import math
 import json
 from collections import defaultdict
@@ -13,6 +11,7 @@ from pathlib import Path
 DEFAULT_CONFIG = {
     "consolidation": {"method": "ktc-style-fallback", "exponent_low": 1.04,
                       "exponent_elite": 1.40, "elite_threshold": 0.7},
+    "blockbuster_min_multiple": 1.5,
     "grade_bands": [[60, "A"], [55, "B+"], [52, "B"], [48, "Even"],
                     [45, "C"], [40, "D"], [0, "F"]],
 }
@@ -28,7 +27,7 @@ def number(value):
 
 def historical(rows, day, date_col="Date"):
     """Latest recorded snapshot on/before the event date; never look forward."""
-    valid = sorted({str(r.get(date_col, "")) for r in rows if str(r.get(date_col, "")) <= day})
+    valid = sorted({str(r[date_col]) for r in rows if r.get(date_col) and str(r[date_col]) <= day})
     return valid[-1] if valid else None
 
 
@@ -69,7 +68,7 @@ def fallback_raw(value, top_trade, top_snapshot, config=None):
     """Elite concentration premium, increasing with elite-ness of trade's top asset.
 
     Raw adjustment per asset = p * (p/t)**e, with e in [1.04, 1.40].
-    Its inverse is solved analytically for the side balancing credit. Draft picks
+    Its inverse is approximated by bisection for the side balancing credit. Draft picks
     and players share the same unit. This is documented KTC-*style*, not KTC math.
     """
     if value <= 0 or top_trade <= 0:
@@ -118,51 +117,67 @@ def consolidation(sides, top_snapshot, config=None):
     return adjustment, raw
 
 
-def compare(sides, top_snapshot, config=None):
+def compare(sides, top_snapshot, config=None, proxy=None):
     """Grade the value *received* by each team; adjusted point totals retained."""
     keys = list(sides)
     raw_totals = {k: sum(max(0.0, number(v)) for v in vals) for k, vals in sides.items()}
     credit, adjustments = consolidation(sides, top_snapshot, config)
+    raw_totals = {k: v + (proxy or {}).get(k, 0) for k, v in raw_totals.items()}
     adjusted = {k: raw_totals[k] + credit.get(k, 0) for k in keys}
     total = sum(adjusted.values())
-    shares = {k: adjusted[k] / total if total else 0.5 for k in keys}
+    shares = {k: adjusted[k] / total if total else None for k in keys}
     return {"raw": raw_totals, "credit": credit, "adjustment_sums": adjustments,
             "adjusted": adjusted, "share": shares,
             "grade": {k: grade(shares[k], (config or DEFAULT_CONFIG).get("grade_bands")) for k in keys},
             "score": {k: grade_score(shares[k]) for k in keys}}
 
 
-def nearest_pick(delta, season, pick_rows):
-    """One nearest pick through early-first cap; larger delta anchors at highest
-    fitting pick and uses a second pick only for the leftover. Exact slot picks
-    aren't in historical CSV; interpolate between early/mid/late anchor points.
-    All slot prices are estimates; return 'estimated' marker.
-    """
-    delta = abs(number(delta))
-    rows = [r for r in pick_rows if str(r.get("Season")) == str(season)]
-    if not rows or delta <= 0:
-        return []
-    candidates = []
-    for r in rows:
-        rnd = int(r["Round"])
-        points = [(2, number(r.get("Early"))), (6, number(r.get("Mid"))),
-                  (10, number(r.get("Late")))]
-        if all(v > 0 for _, v in points):
+def pick_slot_values(pick_rows, season):
+    """Yield (value, yearless slot label, estimated) from a single snapshot."""
+    for row in pick_rows:
+        if str(row.get("Season")) != str(season):
+            continue
+        rnd = int(row["Round"])
+        early, mid, late = (number(row.get(col)) for col in ("Early", "Mid", "Late"))
+        if min(early, mid, late) > 0:
             for slot in range(1, 13):
                 if slot <= 2:
-                    v = points[0][1]
+                    value = early
                 elif slot >= 10:
-                    v = points[-1][1]
+                    value = late
+                elif slot <= 6:
+                    value = early + (mid - early) * (slot - 2) / 4
                 else:
-                    a, b = (points[0], points[1]) if slot <= 6 else (points[1], points[2])
-                    v = a[1] + (b[1] - a[1]) * (slot - a[0]) / (b[0] - a[0])
-                candidates.append((v, f"{season} Pick {rnd}.{slot:02d}", True))
-        else:
-            candidates.append((number(r.get("Value")), f"{season} R{rnd}", False))
-    candidates = sorted((x for x in candidates if x[0] > 0), reverse=True)
+                    value = mid + (late - mid) * (slot - 6) / 4
+                yield value, f"{rnd}.{slot:02d}", True
+        elif number(row.get("Value")) > 0:
+            yield number(row["Value"]), f"R{rnd}", False
+
+
+def pick_swap(delta, season, pick_rows):
+    """For sub-4.12 margins, find a close upgrade starting at 4.12."""
+    slots = [(v, label) for v, label, estimated in pick_slot_values(pick_rows, season) if estimated]
+    anchor = next((v for v, label in slots if label == "4.12"), 0)
+    if not 0 < delta < anchor:
+        return None
+    upgrades = [(v - anchor, label) for v, label in slots if v > anchor]
+    if not upgrades:
+        return None
+    value, label = min(upgrades, key=lambda pair: (abs(pair[0] - delta), pair[0], pair[1]))
+    if abs(value - delta) > delta * 0.25:
+        return None
+    return {"from": "4.12", "to": label, "value": value}
+
+
+def nearest_pick(delta, season, pick_rows):
+    """Use one pick through the early-first cap or up to two above it."""
+    delta = abs(number(delta))
+    candidates = sorted(pick_slot_values(pick_rows, season), reverse=True)
+    if not delta:
+        return []
     if not candidates:
         return []
-    early_first = max((v for v, label, _ in candidates if "Pick 1." in label or label.endswith(" R1")),
+    early_first = max((v for v, label, _ in candidates if label.startswith("1.") or label == "R1"),
                       default=candidates[0][0])
     if delta <= early_first:
         return [min(candidates, key=lambda x: (abs(x[0] - delta), -x[0]))]
@@ -175,11 +190,7 @@ def nearest_pick(delta, season, pick_rows):
 
 
 def evaluate_trade(assets, trade_day, player_history, pick_history, trade_year, config=None):
-    """assets: {team: [{kind:'player', id:'...' } or {kind:'pick',season,round}]}.
-    If any traded asset lacks a recorded historic value, withhold that grade.
-    Historic player snapshot date and pick snapshot date may differ; both must
-    precede the trade. Players lacking FantasyCalc coverage are not silently 0.
-    """
+    """Score known historical values and explicit, position-specific fallbacks."""
     by_p = group_dates(player_history)
     by_k = group_dates(pick_history)
     pd = historical(player_history, trade_day)
@@ -188,18 +199,34 @@ def evaluate_trade(assets, trade_day, player_history, pick_history, trade_year, 
         return {"status": "No values from that week", "dynasty": None, "contender": None}
     players = {str(r["SleeperID"]): r for r in by_p[pd]}
     picks = {(str(r["Season"]), str(r["Round"])): r for r in by_k.get(kd, [])}
+    draft_rows = by_k.get(kd, [])
+    draft = trade_year + 1
+    late_fourth = next((v for v, label, estimated in pick_slot_values(draft_rows, draft)
+                        if label == "4.12" and estimated), None)
     sides = {k: {"dynasty": [], "contender": []} for k in assets}
     problems = {"dynasty": [], "contender": []}
+    proxies = {k: {} for k in assets}
     for team, traded in assets.items():
         for asset in traded:
             if asset["kind"] == "player":
                 p = players.get(str(asset["id"]))
                 if p is None:
-                    problems["dynasty"].append(asset["id"])
-                    problems["contender"].append(asset["id"])
+                    pos = str(asset.get("position") or "").strip().upper()
+                    if pos in {"K", "PK", "DEF", "DST", "D/ST"} and late_fourth is not None:
+                        proxies[team][str(asset["id"])] = late_fourth
+                    elif pos not in {"QB", "RB", "WR", "TE", "FB"}:
+                        for mode in problems:
+                            problems[mode].append(asset["id"])
                     continue
                 for col, mode in (("DynastyValue", "dynasty"), ("RedraftValue", "contender")):
-                    sides[team][mode].append(number(p.get(col)))
+                    try:
+                        value = float(p[col])
+                    except (KeyError, ValueError, TypeError):
+                        value = -1
+                    if not math.isfinite(value) or value < 0:
+                        problems[mode].append(asset["id"])
+                    else:
+                        sides[team][mode].append(value)
             else:
                 # Contender value of picks is explicitly zero, regardless of pick snapshot.
                 sides[team]["contender"].append(0)
@@ -208,21 +235,31 @@ def evaluate_trade(assets, trade_day, player_history, pick_history, trade_year, 
                     problems["dynasty"].append(f'{asset["season"]} R{asset["round"]}')
                 else:
                     sides[team]["dynasty"].append(number(p["Value"]))
-    top_d = max((number(r["DynastyValue"]) for r in players.values()), default=1)
-    top_r = max((number(r["RedraftValue"]) for r in players.values()), default=1)
+    top_d = max((number(r.get("DynastyValue")) for r in players.values()), default=1)
+    top_r = max((number(r.get("RedraftValue")) for r in players.values()), default=1)
     result = {"status": "complete", "player_date": pd, "pick_date": kd,
-              "dynasty": None, "contender": None, "missing": problems}
+              "dynasty": None, "contender": None, "missing": problems, "proxies": proxies}
+    proxy_totals = {team: sum(values.values()) for team, values in proxies.items()}
     for mode, top in (("dynasty", top_d), ("contender", top_r)):
         if not problems[mode]:
-            result[mode] = compare({k: v[mode] for k, v in sides.items()}, top, config)
+            result[mode] = compare({k: v[mode] for k, v in sides.items()}, top, config,
+                                   proxy=proxy_totals)
     if not result["dynasty"] and not result["contender"]:
         result["status"] = "No values from that week"
-    if result["dynasty"] and kd:
+    if result["dynasty"] and len(assets) == 2:
+        market_total = sum(sum(side["dynasty"]) for side in sides.values())
+        multiple = (config or DEFAULT_CONFIG).get("blockbuster_min_multiple",
+                                                   DEFAULT_CONFIG["blockbuster_min_multiple"])
+        if top_d > 0 and market_total >= top_d * multiple:
+            result["blockbuster"] = {"points": market_total, "multiple": market_total / top_d}
         val = result["dynasty"]
-        if len(val["adjusted"]) == 2:
-            winner = max(val["adjusted"], key=lambda k: val["adjusted"][k])
-            surplus = val["adjusted"][winner] - min(val["adjusted"].values())
-            if surplus > 1e-6:
-                val["surplus"] = {"team": winner, "value": surplus, "picks": nearest_pick(
-                    surplus, trade_year + 1, by_k[kd])}
+        winner = max(val["adjusted"], key=val["adjusted"].get)
+        surplus = val["adjusted"][winner] - min(val["adjusted"].values())
+        if surplus >= 0.5:  # Do not render "+0" at whole-point precision.
+            small = late_fourth is not None and surplus < late_fourth
+            val["surplus"] = {
+                "team": winner, "value": surplus, "draft": draft,
+                "swap": pick_swap(surplus, draft, draft_rows) if small else None,
+                "picks": [] if small else nearest_pick(surplus, draft, draft_rows),
+            }
     return result
