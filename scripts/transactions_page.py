@@ -222,7 +222,7 @@ def trade_card(r, sides, names, colors, result, shorts):
     meta = (f'<div class="tx-head">{esc(short)} · Week {esc(r["Week"])} · {esc(day(r["Created"]))}</div>'
             f'<span class="tx-muted">Trade {esc(r["TransactionID"])}</span>')
     return (f'<article class="tx-card" data-conference="{esc(league)}" data-week="{esc(r["Week"])}" '
-            f'data-teams="{esc("|".join(team.values()))}"><header>{meta}</header>'
+            f'data-teams="{esc("|".join(team.values()))}" data-identity="{esc(short)}:{esc(ids[0])}|{esc(short)}:{esc(ids[1])}"><header>{meta}</header>'
             f'<div class="tx-grid">{panel(pairs[0])}{center}{panel(pairs[1])}</div>'
             f'{credit}{surplus_html}</article>')
 
@@ -366,8 +366,9 @@ trades excluded. Ownership and availability are from the current roster snapshot
     if(typeof fn !== 'function') return;
     try {
       const mine = fn();
-      const name = typeof mine === 'string' ? mine : (mine && (mine.team || mine.Team || mine.name));
-      if(name) for(const c of cards) c.classList.toggle('mine',c.dataset.teams.split('|').includes(name));
+      if(mine && mine.conf && mine.roster){
+        for(const c of cards) c.classList.toggle('mine',c.dataset.identity.split('|').includes(mine.conf+':'+mine.roster));
+      }
     } catch(e){ console.warn('myTeam unavailable',e); }
   }
   myTeam();
