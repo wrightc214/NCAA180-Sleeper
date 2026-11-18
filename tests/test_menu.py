@@ -7,6 +7,7 @@ import re
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "scripts"))
@@ -38,7 +39,7 @@ class Config(unittest.TestCase):
         """Every tab the site showed before the rebuild stays visible, in the same order."""
         vis = [t["label"] for t in CFG["tabs"] if t.get("state", "visible") == "visible"]
         self.assertEqual(vis, ["Awards", "Roster Map", "Standings", "Games", "Poll", "Postseason",
-                               "Special Events", "Managers", "Records", "Notification settings"])
+                               "Special Events", "Managers", "Records", "About", "Notification settings"])
 
 
 class Pages(unittest.TestCase):
@@ -103,8 +104,13 @@ class Rows(unittest.TestCase):
         self.assertTrue(os.path.exists(os.path.join(self.tmp.name, "assets", "menu.js")))
 
     def test_hidden_left_out(self):
-        d = sc.menu_data(self.tmp.name)
-        self.assertNotIn("about", [t["id"] for t in d["tabs"]])
+        cfg = sc.nav_config()
+        cfg["tabs"].append({"id": "wip", "label": "WIP", "href": "wip.html", "state": "hidden"})
+        with mock.patch.object(sc, "nav_config", return_value=cfg):
+            d = sc.menu_data(self.tmp.name)
+        ids = [t["id"] for t in d["tabs"]]
+        self.assertNotIn("wip", ids)
+        self.assertIn("about", ids)  # public since 2026-11-17
 
 
 class Markup(unittest.TestCase):
@@ -114,7 +120,11 @@ class Markup(unittest.TestCase):
         self.assertIn('aria-label="Seasons" data-row="awards-seasons"', h)
         self.assertIn('aria-label="Weeks" data-row="awards-weeks-2026"', h)
         self.assertTrue(h.index("data-row") < h.index("assets/menu.js"))  # rows exist before the script runs
-        self.assertIn('data-state="hidden"', sc.menu_html("about"))
+        cfg = sc.nav_config()
+        cfg["tabs"].append({"id": "wip", "label": "WIP", "href": "wip.html", "state": "hidden"})
+        with mock.patch.object(sc, "nav_config", return_value=cfg):
+            self.assertIn('data-state="hidden"', sc.menu_html("wip"))
+        self.assertNotIn("data-state", sc.menu_html("about"))
         self.assertNotIn("data-state", sc.menu_html("standings"))
 
     def test_convert_baked_page(self):

@@ -17,7 +17,7 @@
     {"id": "special", "label": "Special Events", "href": "special.html"},
     {"id": "managers", "label": "Managers", "href": "managers.html"},
     {"id": "records", "label": "Records", "href": "records.html"},
-    {"id": "about", "label": "About", "href": "about.html", "state": "hidden"},
+    {"id": "about", "label": "About", "href": "about.html"},
     {"id": "app", "label": "Notification settings", "href": "app.html", "icon": "bell"}
   ],
   "rows": {
