@@ -79,3 +79,13 @@ details.conference>summary:focus-visible{outline:2px solid #38638b;outline-offse
 .r3.pre-odds.underdog .chance{
   color:color-mix(in oklab,var(--bad,var(--neutral,var(--mute))) var(--win-pre-mix,0%),var(--neutral,var(--mute)))
 }
+
+/* Final cards retain historical probabilities without competing with the winner.
+   Specificity deliberately overrides the regular favorite rule. */
+.r3.final-odds .chance{font-weight:500}
+.r3.final-odds.favorite .chance{
+  color:color-mix(in oklab,var(--good,var(--neutral,var(--mute))) var(--win-final-mix,0%),var(--neutral,var(--mute)))
+}
+.r3.final-odds.underdog .chance{
+  color:color-mix(in oklab,var(--bad,var(--neutral,var(--mute))) var(--win-final-mix,0%),var(--neutral,var(--mute)))
+}
