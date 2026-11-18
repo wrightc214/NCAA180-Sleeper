@@ -121,7 +121,7 @@ test('automatic contrast defaults on, persists, and resets to on', () => {
     assert.match(m.colors.css,/--good:#ffffff;--bad:#eeeeee;/);
     assert.match(m.colors.css,/--good-fill:#ffffff;--bad-fill:#eeeeee;/);
     a.save({autoContrast:true});
-    assert.ok(!m.colors.css.includes('--good:#ffffff;--bad:#eeeeee;'));
+    assert.ok(!m.colors.css.match(/^:root\\{--good:#ffffff;--bad:#eeeeee;/));
     a.reset();
     assert.strictEqual(a.read().autoContrast,true);
   } finally {if(old===undefined)delete global.localStorage;else global.localStorage=old;}
