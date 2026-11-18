@@ -217,11 +217,11 @@ test('accessibility emits change events when settings are saved or reset', () =>
 
 test('saved-image renderer carries live accessibility token styles', () => {
   const snapshot=fs.readFileSync(path.join(__dirname,'..','reports','assets','snapshot.js'),'utf8');
-  const menu=fs.readFileSync(path.join(__dirname,'..','templates','menu.js'),'utf8');
+  const accessibility=fs.readFileSync(path.join(__dirname,'..','templates','accessibility.js'),'utf8');
   assert.match(snapshot,/querySelectorAll\('style,link\[rel="stylesheet"\]'\)/,
     'snapshot copies current document style elements');
-  assert.match(menu,/var TOKENS_ID = "n180-tokens"/);
-  assert.match(menu,/st\.textContent = css/,'accessibility colours are written to a style element');
+  assert.match(accessibility,/var TOKENS_ID = "n180-tokens"/);
+  assert.match(accessibility,/st\.textContent = css/,'accessibility colours are written to a style element');
 });
 
 test('Accessibility controls update and reset preferences without a browser', () => {
