@@ -70,3 +70,12 @@ test('live pregame summary follows the displayed top team',()=>{
   assert.match(source,/match\[order\[0\]\]\.roster_id/);
   assert.match(source,/order\[0\]===0\?s\.pregame:100-s\.pregame/);
 });
+
+test('final NIT group headers retain explicit pregame labeling',()=>{
+  const a=source.indexOf('  function groupCard(g)');
+  const b=source.indexOf('  function card(g)',a);
+  assert.ok(a>=0&&b>a);
+  const group=source.slice(a,b);
+  assert.match(group,/s\.final\?'Pregame %':s\.live\?'Live adv':'Adv %'/);
+  assert.match(group,/return row\(match\[i\]/); // same row renderer and final color rules
+});
