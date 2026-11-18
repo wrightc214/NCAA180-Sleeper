@@ -178,7 +178,7 @@ def build():
              f'<li><b>Common scoring:</b> {terms} have used different scoring settings over the years, so the site rescores every game '
              f'on one standard scheme to compare across {terms}. From 2026, results are decided on it; a † marks a game where Sleeper\'s '
              f'own number differs.</li>'
-             f'<li><b>No waiver wire</b> (except briefly after rookie drafts): free agents are first come, first served.</li>'
+             f'<li><b>No waiver wire</b>: free agents are first come, first served.</li>'
              f'<li><b>Trades</b> can be vetoed by the {term} manager or by a 7 of 10 vote (the two teams in the trade don\'t vote; '
              f'6 of 9 for three-team trades, and so on).</li>'
              f'<li><b>Draft picks</b> can be traded two seasons out; the season "resets" after each rookie draft.</li>'
