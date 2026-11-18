@@ -185,7 +185,8 @@ def test_league_proxy_excluded_from_credit_but_counted_in_both_modes(position):
     for mode in ("dynasty", "contender"):
         assert got[mode]["raw"]["A"] == base[mode]["raw"]["A"] + 725
         assert got[mode]["credit"] == base[mode]["credit"]
-    assert got["blockbuster"] == base["blockbuster"] == {"points": 6000, "multiple": 1.5}
+    assert got["blockbuster"] == base["blockbuster"] == {"points": 6000, "multiple": 1.5,
+                                                            "headliner_points": 4000, "headliner_share": 1.0}
     assert "blockbuster" not in evaluate_trade(
         sides, pd, players, picks, 2026, {"blockbuster_min_multiple": 1.6})
     assert evaluate_trade(sides, pd, players, [], 2026)["dynasty"] is None
@@ -216,7 +217,9 @@ def test_small_surplus_uses_closest_meaningful_swap_and_not_future_round():
 
 
 @pytest.mark.parametrize("trade_id,marked", [
-    ("1426656560473452544", True), ("1426733052746272768", False),
+    ("1414580639092518912", True), ("1412325964028899328", True),
+    ("1426656560473452544", True), ("1425957598431035392", True),
+    ("1426733052746272768", False),
     ("1423799198175739904", False),
 ])
 def test_real_trade_results_and_blockbuster_rendering(trade_id, marked):
@@ -234,3 +237,32 @@ def test_real_trade_results_and_blockbuster_rendering(trade_id, marked):
         assert "+725 pts (4.12 proxy)" in rendered
         assert "4.12 → 3.05" in rendered
         assert "2027" not in rendered.split('class="tx-surplus"', 1)[1]
+
+
+@pytest.mark.parametrize("player_values,pick_value,marked", [
+    ([1000, 750, 750], 0, False),     # third-for-two-fourths
+    ([4000, 4000, 4000, 4000], 0, False),  # enough volume, no headliner
+    ([6600, 4000], 4799, False),      # headliner exactly qualifies; one point short on volume
+    ([6599, 4000], 4801, False),      # volume exactly qualifies; one point short on headliner
+    ([6600, 4000], 4800, True),       # both thresholds qualify exactly; picks count for volume
+    ([2000, 2000], 12000, False),     # a big pick cannot be the headliner
+    ([], 16000, False),               # picks-only trade
+])
+def test_blockbuster_uses_two_snapshot_relative_raw_thresholds(player_values, pick_value, marked):
+    day = "2026-11-03"
+    players = [
+        {"Date": day, "SleeperID": str(i), "DynastyValue": str(v), "RedraftValue": str(v)}
+        for i, v in enumerate([11000, *player_values])  # benchmark player is not traded
+    ]
+    sides = {"A": [], "B": []}
+    for i in range(1, len(players)):
+        sides["A" if i % 2 else "B"].append({"kind": "player", "id": str(i)})
+    picks = []
+    if pick_value:
+        sides["B"].append({"kind": "pick", "season": 2027, "round": 1})
+        picks.append({"Date": day, "Season": "2027", "Round": "1", "Value": str(pick_value)})
+    out = evaluate_trade(sides, day, players, picks, 2026)
+    assert ("blockbuster" in out) is marked
+    if marked:
+        assert out["blockbuster"] == {"points": 15400, "multiple": 1.4,
+                                     "headliner_points": 6600, "headliner_share": .60}

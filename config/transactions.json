@@ -4,7 +4,7 @@
     "Consolidation fallback is KTC-style, NOT fitted to KTC samples. Replace coefficients only after calibration.",
     "Grade bands are percent share of adjusted total for comparative Rebuild/Contender grades.",
     "Team Fit is separate and is withheld until defensible historical context exists.",
-    "Blockbuster uses combined raw market dynasty points, excluding proxies and consolidation, divided by the snapshot’s top player value."
+    "Blockbuster requires both combined raw dynasty market value and an individually qualifying traded player, each measured against the snapshot’s top player. Picks count toward volume only. Proxy points and consolidation count toward neither."
   ],
   "consolidation": {
     "method": "ktc-style-fallback",
@@ -42,5 +42,6 @@
       "F"
     ]
   ],
-  "blockbuster_min_multiple": 1.5
+  "blockbuster_min_multiple": 1.4,
+  "blockbuster_min_headliner_share": 0.60
 }

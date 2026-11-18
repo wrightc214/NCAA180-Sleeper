@@ -246,7 +246,9 @@ def trade_card(r, sides, names, colors, result, shorts):
             if amt > 0.01:
                 credit = f'<div class="tx-credit">+{amt:,.0f} consolidation credit to {esc(team[rid])} (KTC-style)</div>'
     blockbuster = result.get("blockbuster")
-    flag = (f'<span class="tx-flag" title="{blockbuster["points"]:,.0f} combined raw dynasty market points">'
+    flag = (f'<span class="tx-flag" title="{blockbuster["points"]:,.0f} combined raw dynasty market points'
+            f' ({blockbuster["multiple"]:.2f}× snapshot leader). Top traded player: '
+            f'{blockbuster["headliner_points"]:,.0f} points ({blockbuster["headliner_share"]:.0%} of leader).">'
             'Blockbuster</span>' if blockbuster else "")
     card_class = "tx-card tx-blockbuster" if blockbuster else "tx-card"
     meta = (f'<div class="tx-head">{esc(short)} · Week {esc(r["Week"])} · {esc(day(r["Created"]))}{flag}</div>'
@@ -328,7 +330,7 @@ def main():
 <section><h2>Trades <small>({len(cards)})</small></h2>
 {filters}
 <p class="tx-note">Grades use FantasyCalc values available at trade time — not a verdict.
-Rebuild includes rookie picks. Contender values traded picks at zero. Unlisted kickers and D/ST use a 4.12 proxy in both grades. Surplus pick comparisons use the upcoming draft at trade time. Blockbuster marks high combined raw dynasty market value, not a trade winner. Team Fit and projected wins/odds
+Rebuild includes rookie picks. Contender values traded picks at zero. Unlisted kickers and D/ST use a 4.12 proxy in both grades. Surplus pick comparisons use the upcoming draft at trade time. Blockbuster marks a large raw dynasty deal with a high-value player, both measured against the snapshot’s top player. It does not indicate a winner. Team Fit and projected wins/odds
 await a validated historical context model.</p>
 <div class="tx-cards" id="tx-trades">{''.join(cards)}</div>
 <p class="tx-empty" id="tx-no-trades" hidden>No trades match these filters.</p>

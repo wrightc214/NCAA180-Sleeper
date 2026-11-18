@@ -8,10 +8,13 @@ import json
 from collections import defaultdict
 from pathlib import Path
 
+TEAM_DEFENSE_POSITIONS = {"DEF", "DST", "D/ST"}
+
 DEFAULT_CONFIG = {
     "consolidation": {"method": "ktc-style-fallback", "exponent_low": 1.04,
                       "exponent_elite": 1.40, "elite_threshold": 0.7},
-    "blockbuster_min_multiple": 1.5,
+    "blockbuster_min_multiple": 1.4,
+    "blockbuster_min_headliner_share": 0.60,
     "grade_bands": [[60, "A"], [55, "B+"], [52, "B"], [48, "Even"],
                     [45, "C"], [40, "D"], [0, "F"]],
 }
@@ -206,6 +209,7 @@ def evaluate_trade(assets, trade_day, player_history, pick_history, trade_year, 
     sides = {k: {"dynasty": [], "contender": []} for k in assets}
     problems = {"dynasty": [], "contender": []}
     proxies = {k: {} for k in assets}
+    headliner_points = 0.0
     for team, traded in assets.items():
         for asset in traded:
             if asset["kind"] == "player":
@@ -227,6 +231,9 @@ def evaluate_trade(assets, trade_day, player_history, pick_history, trade_year, 
                         problems[mode].append(asset["id"])
                     else:
                         sides[team][mode].append(value)
+                        pos = str(p.get("Position") or asset.get("position") or "").strip().upper()
+                        if mode == "dynasty" and pos not in TEAM_DEFENSE_POSITIONS:
+                            headliner_points = max(headliner_points, value)
             else:
                 # Contender value of picks is explicitly zero, regardless of pick snapshot.
                 sides[team]["contender"].append(0)
@@ -248,10 +255,21 @@ def evaluate_trade(assets, trade_day, player_history, pick_history, trade_year, 
         result["status"] = "No values from that week"
     if result["dynasty"] and len(assets) == 2:
         market_total = sum(sum(side["dynasty"]) for side in sides.values())
-        multiple = (config or DEFAULT_CONFIG).get("blockbuster_min_multiple",
-                                                   DEFAULT_CONFIG["blockbuster_min_multiple"])
-        if top_d > 0 and market_total >= top_d * multiple:
-            result["blockbuster"] = {"points": market_total, "multiple": market_total / top_d}
+        market_leader = max(
+            (number(row.get("DynastyValue")) for row in players.values()
+             if str(row.get("Position") or "").strip().upper() not in TEAM_DEFENSE_POSITIONS),
+            default=0,
+        )
+        if market_leader > 0:
+            settings = DEFAULT_CONFIG | (config or {})
+            multiple = market_total / market_leader
+            headliner_share = headliner_points / market_leader
+            if (multiple >= settings["blockbuster_min_multiple"]
+                    and headliner_share >= settings["blockbuster_min_headliner_share"]):
+                result["blockbuster"] = {
+                    "points": market_total, "multiple": multiple,
+                    "headliner_points": headliner_points, "headliner_share": headliner_share,
+                }
         val = result["dynasty"]
         winner = max(val["adjusted"], key=val["adjusted"].get)
         surplus = val["adjusted"][winner] - min(val["adjusted"].values())

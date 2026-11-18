@@ -9,7 +9,7 @@
 - Historical picks: `data/PickValues_Season.csv` backfilled from eight verified Git commit revisions on Oct 2, 6, 13, 20, 27 and Nov 3, 10, 17. Future capture: `scripts/player_values.py`; workflow step in `.github/workflows/update-leagues.yml`.
 - Nav: `config/nav.json` entry `hidden-dev`; menu compiled by the existing weekly `scripts/menu_build.py`. **Do not gratuitously edit `templates/menu.js` or `reports/assets/menu.js` during accessibility PR #109.** Temporary CI regenerates menu only in Actions checkout before assertions.
 - Tests: `tests/test_transactions_page.py` and `tests/transactions_browser.py`. PR CI `.github/workflows/transactions-pr-check.yml` is read-only: runs the full Python suite, every Node test, static generation, and Chromium desktop/light and mobile/dark smoke checks, then uploads HTML + two viewport screenshots as the Actions artifact `transactions-preview`.
-- Final review build contains **113 trades, 34 Rebuild-graded, 11 weeks, 15 conferences, and 3 Blockbuster badges**. Check the latest read-only Actions run on this draft PR for the full test and browser results.
+- Final review build contains **113 trades, 34 Rebuild-graded, 11 weeks, 15 conferences, and 4 Blockbuster badges**. Check the latest read-only Actions run on this draft PR for the full test and browser results.
 - PR description includes three **actual** transaction IDs and rounded raw/credit/adjusted totals and grades, including 3-for-1, 1-for-2, 4-for-1.
 - **Known limitation:** card Team Fit displays unavailable, not fictional numbers; ROS wins, contender title/playoff odds and rebuilder bowl/1.01 odds are *not yet calculated*. No narrative explanation is generated (user explicitly deferred that section). Do not present these as complete.
 - **Review risk:** fallback consolidation adjustment can produce large balancing credits in uneven trades. Validate desired trade-economics direction before publicizing results; zero-valued contender pick sides receive **no** phantom credit. Exact slot values are not stored, so pick equivalents are interpolated and visually tagged approximate.
@@ -37,6 +37,19 @@ Trade `1426733052746272768`. Use this as a consolidation stress test. Montana's 
 
 Trade `1423799198175739904`. Bass is absent from the Nov. 3 FantasyCalc snapshot. The generator applies the **725-point NCAA 180 proxy** in both modes, excludes proxy points from the consolidation calculation, and shows Oregon's **+372 adjusted dynasty points** as **≈ Pick swap · 4.12 → 3.05**. The estimated swap is worth 376 points. It is an illustration of the value gap, not another term of the trade.
 
+## Blockbuster acceptance set
+
+Both tests use raw dynasty points measured against the most valuable player in the full historical FantasyCalc snapshot, not against the assets inside a deal. A trade must reach **1.40× combined** and include **one traded player at 60% or more**. Picks count toward volume, not the headliner. Consolidation and K/DST proxies count toward neither.
+
+| Expected badge | Trade | Raw total | Headliner |
+| --- | --- | ---: | --- |
+| Yes | Brown–Penn (`1414580639092518912`) | 25,172 · 2.28× | Jaxon Smith-Njigba · 88% |
+| Yes | Brown–Bucknell (`1412325964028899328`) | 21,283 · 1.93× | Jahmyr Gibbs · 100% |
+| Yes | Montana–Old Dominion (`1426656560473452544`) | 18,798 · 1.71× | Puka Nacua · 66% |
+| Yes | Citadel–UNC Charlotte (`1425957598431035392`) | 15,922 · 1.45× | Kenneth Walker III · 63% |
+
+Montana–South Dakota and Arizona State–Oregon are still unmarked. The synthetic third-for-two-fourths case fails both tests. Another fixture passes the volume requirement with mid-tier players but fails the headliner requirement.
+
 ## Permanent project notes
 
 The [Transactions project doc](docs/transactions.md) is the lasting record of the implemented scoring and display decisions, review examples, and open work. Keep it when removing this temporary README and its three design images. In particular, retain **“Why this trade makes sense”** as a deliverable for both teams, with roster context backed by evidence and inferred intent marked as such. Team Fit, projected wins, title/playoff/bowl/1.01 odds and this narrative are **not implemented** here.
@@ -45,7 +58,7 @@ The [Transactions project doc](docs/transactions.md) is the lasting record of th
 
 > Independently review draft PR #111 against main. Do not merge it or deploy. Open the generated Transactions page and all three [design references](#trade-card-design-references), then use [the permanent Transactions doc](docs/transactions.md) as the specification.
 >
-> Reproduce the three real trades and inspect both raw and adjusted values. Check Bass's historical 725-point 4.12 proxy in both grades, its exclusion from consolidation and blockbuster math, the distinction between unlisted known players and unresolved IDs, and that zero-versus-zero never gets an Even grade. Verify Oregon displays +372 and an approximate 4.12 → 3.05 swap with no year in the surplus badge, while actual traded picks retain their years. Verify the Puka trade is marked Blockbuster and the other two examples are not. Confirm the marker uses combined raw market dynasty value and does not imply a winner.
+> Reproduce the three real trades and inspect both raw and adjusted values. Check Bass's historical 725-point 4.12 proxy in both grades, its exclusion from consolidation and blockbuster math, the distinction between unlisted known players and unresolved IDs, and that zero-versus-zero never gets an Even grade. Verify Oregon displays +372 and an approximate 4.12 → 3.05 swap with no year in the surplus badge, while actual traded picks retain their years. Reproduce the four [expected Blockbusters](#blockbuster-acceptance-set), including the newly flagged Walker–Achane deal. Check the inclusive 1.40× volume and 60% single-player thresholds against the full historical snapshot. Verify the two unmarked mockup trades, a third-for-two-fourths deal, and a pile of mid-tier assets without a headliner do not qualify. Picks can count toward volume only. Confirm the badge does not imply a winner.
 >
 > Check Playwright and the latest read-only CI run, then spot-check filtering, sections, mobile overflow, light/dark badge legibility, and the hidden-dev nav. Re-examine the fallback on Montana–South Dakota, where a large credit almost erases the raw Contender gap. Confirm the permanent doc carries the missing work, especially a sourced “Why this trade makes sense” for each side, plus Team Fit, projected wins and odds. Report findings by severity, give a ready/not-ready recommendation, and list any scope or calibration decisions needed. Remove the temporary README and the three review images only after the handoff is accepted and before merging.
 

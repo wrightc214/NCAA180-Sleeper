@@ -37,8 +37,10 @@ def main():
                 shot = ROOT / "work" / "transactions-preview"
                 shot.mkdir(parents=True, exist_ok=True)
                 page.screenshot(path=str(shot / f"transactions-{width}-{theme}.png"), full_page=False)
-                featured = page.locator(".tx-card.tx-blockbuster").filter(has_text="1426656560473452544")
-                assert featured.get_by_text("Blockbuster", exact=True).count() == 1
+                featured = page.locator(".tx-card.tx-blockbuster")
+                for trade_id in ("1426656560473452544", "1425957598431035392"):
+                    assert featured.filter(has_text=trade_id).get_by_text("Blockbuster", exact=True).count() == 1
+                assert featured.filter(has_text="1426733052746272768").count() == 0
                 oregon = page.locator(".tx-card").filter(has_text="1423799198175739904")
                 assert oregon.get_by_text("4.12 → 3.05", exact=False).count() == 1
                 assert "2027" not in oregon.locator(".tx-surplus").inner_text()
