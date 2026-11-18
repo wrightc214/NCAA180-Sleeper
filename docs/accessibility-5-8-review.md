@@ -12,9 +12,9 @@ Contrast target: 4.5:1 for semantic text on actual light/dark panels, including 
 
 | Area | Implementation | Caveat |
 | --- | --- | --- |
-| Settings API | `templates/menu.js` → `reports/assets/menu.js`; `NCAA180.access.read/save/reset/apply/contrast/adjust/defaults/modes` | Browser integration needs validation |
+| Settings API | `templates/accessibility.js` independently owns `NCAA180.access.read/save/reset/apply/contrast/adjust/defaults/modes`; bundled into `reports/assets/menu.js` | Browser integration needs validation |
 | Persistence | `ncaa180.access` JSON with safe malformed/denied-storage fallback and input validation | No `text` field: zoom deliberately omitted |
-| Palette tokens | `--good`, `--bad`, `--up`, `--dn`, soft and fill variants; light/dark modes; contrast-adjusted custom colours | Uses representative white and #171b22 backgrounds; audit real surfaces |
+| Palette tokens | `templates/accessibility.js`: `--good`, `--bad`, `--up`, `--dn`, soft and fill variants; light/dark modes; contrast-adjusted custom colours | Uses representative white and #171b22 backgrounds; audit real surfaces |
 | Modes | Standard, `rg`, `by`, `none`, `custom` | No-colour semantics not complete across every page |
 | UI | `templates/access.html`, `scripts/access_page.py`, `reports/access.html`, `reports/assets/access.js`; previews, native pickers, resets, motion, emphasis | Verify mobile, dark mode, keyboard and focus |
 | Navigation | `config/nav.json` `access` tab is `hidden-dev`; generated menu includes it | Do not make public without approval |
@@ -22,15 +22,17 @@ Contrast target: 4.5:1 for semantic text on actual light/dark panels, including 
 | Other tabs | Browser `storage` listener and `ncaa180:accesschange` event | Test in two real tabs |
 | Colour migration | `reports/assets/scoreboard.js` and `scripts/bowl_projection.py` use semantic outcome tokens | Generated bowl pages not rebuilt; remaining consumers un-audited |
 | Saved images | `reports/assets/snapshot.js` already clones page `<style>` nodes, including shared `#n180-tokens` | Structural assertion only; PNG output not visually tested |
-| Tests | `tests/menu.test.js` plus read-only PR workflow | No confirmed GitHub Actions execution |
+| Tests | `tests/menu.test.js` (navigation) and `tests/accessibility.test.js` (settings/colours/UI/bundle), plus read-only PR workflow | No confirmed GitHub Actions execution |
 
 Standard mode preserves historical soft/fill colours. The shared `--up/--dn` bridge overrides old hard-coded report CSS for light, automatic dark, and explicit dark selectors without regenerating all historical reports. This is deliberately compatible with the existing `NCAA180.colors` API. New code should consume semantic tokens, not hard-code outcome red/green.
 
 ## 3. Testing — accurately separated
 
-**Executed:** The GitHub-connected JavaScript harness fetched the current test suite and its dependent files, emulated the Node test/assert/fs/path/Module interfaces, and executed **18 of 18 test callbacks successfully**. Separate mocked tests checked all five modes' contrast against white and #171b22, solid-fill contrast against white labels, malformed/blocked localStorage, preservation of unrelated storage keys, change events, and simulated UI control interactions. Source and generated menu content matched exactly when substituting embedded navigation data. Syntax parsing succeeded for inspected JS assets.
+**Executed:** The GitHub-connected JavaScript harness fetched the current test suite and its dependent files, emulated the Node test/assert/fs/path/Module interfaces, and executed **18 of 18 test callbacks successfully**. Separate mocked tests checked all five modes' contrast against white and #171b22, solid-fill contrast against white labels, malformed/blocked localStorage, preservation of unrelated storage keys, change events, and simulated UI control interactions. Source and generated menu content matched exactly when substituting both the standalone accessibility source and embedded navigation data. Syntax parsing succeeded for inspected JS assets.
 
 **Not executed or not confirmed:** Native `node --test`, GitHub Actions (last head check returned **zero** workflow runs), actual browser/Playwright, visual snapshots, real screen-reader/keyboard audit, offline PWA, actual saved PNG output, generated bowl pages, and site-wide semantic-colour audit. No claim of CI green, WCAG certification, or production readiness is made.
+
+**Module architecture (post-review refactor):** The settings and semantic-colour engine now lives in `templates/accessibility.js`, independent of the navigation renderer in `templates/menu.js`. `scripts/site_common.py::write_menu` bundles the accessibility source into the generated `reports/assets/menu.js` using `/*__ACCESSIBILITY__*/` before embedding navigation JSON. This deliberately preserves synchronous first-paint token application, all existing static pages that only reference `assets/menu.js`, the `NCAA180.colors` and `NCAA180.access` APIs, and snapshot CSS inheritance. There is **no extra browser request or separate runtime accessibility.js**; the module is separate at source/build time. Test fixtures substitute the same source, and a generated-bundle equality assertion prevents drift. `tests/accessibility.test.js` contains 12 accessibility tests; `tests/menu.test.js` contains 6 navigation tests.
 
 **Historical defects corrected while developing:** invalid literal `\\n` tokens broke JavaScript parsing; dark-theme CSS specificity initially defeated the alias bridge; Standard soft colours were unintentionally changed; event dispatch initially used unqualified `CustomEvent`; and a stale test incorrectly expected the now-public About page to be hidden. All were corrected on this branch; regression tests cover relevant behavior. Recheck independently.
 
@@ -41,6 +43,7 @@ Run in a local checkout of the PR branch. **Do not run deployment/publishing/rep
 ```sh
 git checkout feature/accessibility-5-8
 node --test tests/*.test.js
+node --check templates/accessibility.js
 node --check templates/menu.js
 node --check reports/assets/menu.js
 node --check reports/assets/access.js
@@ -86,7 +89,7 @@ git diff --exit-code -- reports/assets/menu.js
 
 ## 7. Decisions and guardrails
 
-Reviewer may propose fixes and update this PR branch as authorized, but **must not merge PR #109, modify main, or deploy**. Keep it draft until the owner and independent auditor agree it meets acceptance criteria. Treat unverified work as unverified. Do not block unrelated fixes on unavailable CI, but record the limitation precisely. Prefer source changes followed by controlled generation, not direct edits to generated assets. The reviewer should deliver a PASS / PASS WITH FIXES / BLOCKED decision with evidence and explicit remaining issues.
+Reviewer may propose fixes and update this PR branch as authorized, but **must not merge PR #109, modify main, or deploy**. Keep it draft until the owner and independent auditor agree it meets acceptance criteria. Treat unverified work as unverified. Do not block unrelated fixes on unavailable CI, but record the limitation precisely. Prefer source changes followed by controlled generation, not direct edits to generated assets. The accessibility module is a source file, not a separate runtime asset. The reviewer should deliver a PASS / PASS WITH FIXES / BLOCKED decision with evidence and explicit remaining issues.
 
 ## 8. Development chronology (summary, not current status)
 
