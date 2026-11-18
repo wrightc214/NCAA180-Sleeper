@@ -1,0 +1,34 @@
+name: One-time Transactions HTML branch preview (remove before merge)
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/transactions-branch-preview.yml'
+permissions:
+  contents: write
+jobs:
+  preview:
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'feat/transactions-stage1-stage2'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/transactions-stage1-stage2
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements.txt
+      - name: Generate branch-only static preview
+        run: |
+          python scripts/transactions_page.py
+          test -s reports/transactions.html
+      - name: Commit only the preview page to feature branch
+        run: |
+          test "$(git branch --show-current)" = "feat/transactions-stage1-stage2"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- reports/transactions.html
+          if ! git diff --cached --quiet; then
+            git commit -m "build: refresh draft Transactions preview after recipient-side surplus change"
+            git push origin HEAD:refs/heads/feat/transactions-stage1-stage2
+          fi
