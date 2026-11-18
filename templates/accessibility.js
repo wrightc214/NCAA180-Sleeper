@@ -95,7 +95,7 @@ function createNCAA180Accessibility() {
     ":root[data-theme=dark]{--up:var(--good);--dn:var(--bad)}";
   // Accessibility preferences are device-local. Invalid or inaccessible storage is harmless.
   var ACCESS_KEY = "ncaa180.access";
-  var ACCESS_DEFAULTS = {mode:"standard",custom:{bad:OWNER_COLORS.light.negative,good:OWNER_COLORS.light.positive},motion:"system",emphasis:false};
+  var ACCESS_DEFAULTS = {mode:"standard",custom:{bad:OWNER_COLORS.light.negative,good:OWNER_COLORS.light.positive},motion:"system",emphasis:false,autoContrast:true};
   var ACCESS_MODES = {
     standard:{light:[OWNER_COLORS.light.positive,OWNER_COLORS.light.negative],dark:[OWNER_COLORS.dark.positive,OWNER_COLORS.dark.negative]},
     rg:{light:["#0758a8","#a65300"],dark:["#79b9ff","#ffb45d"]},
@@ -112,7 +112,7 @@ function createNCAA180Accessibility() {
       custom:{bad:validHex(o.custom&&o.custom.bad)?o.custom.bad:ACCESS_DEFAULTS.custom.bad,
               good:validHex(o.custom&&o.custom.good)?o.custom.good:ACCESS_DEFAULTS.custom.good},
       motion:["system","on","off"].indexOf(o.motion)>=0?o.motion:"system",
-      emphasis:o.emphasis===true
+      emphasis:o.emphasis===true,autoContrast:o.autoContrast!==false
     };
   }
   function contrast(a,b) {
@@ -138,8 +138,8 @@ function createNCAA180Accessibility() {
     if(m) {
       [["light",light,"#ffffff"],["dark",dark,"#171b22"]].forEach(function(row) {
         var pair=m[row[0]];
-        row[1]["--good"]=o.mode==="custom"?pair[0]:accessibleHex(pair[0],row[2]);
-        row[1]["--bad"]=o.mode==="custom"?pair[1]:accessibleHex(pair[1],row[2]);
+        row[1]["--good"]=o.mode==="custom"&&!o.autoContrast?pair[0]:accessibleHex(pair[0],row[2]);
+        row[1]["--bad"]=o.mode==="custom"&&!o.autoContrast?pair[1]:accessibleHex(pair[1],row[2]);
         if(o.mode!=="standard") {
           row[1]["--good-soft"]=row[0]==="light"?"#e9eef2":"#26313a";
           row[1]["--bad-soft"]=row[0]==="light"?"#f1edf0":"#342c32";
@@ -150,7 +150,7 @@ function createNCAA180Accessibility() {
     // Even owner-configured Standard fills must be legible with white labels.
     // Contrast-safe existing defaults retain their historical values.
     if(o.mode==="none") both={"--good-fill":"#3c3c3c","--bad-fill":"#656565"};
-    else if(o.mode==="custom") both={"--good-fill":m.light[0],"--bad-fill":m.light[1]};
+    else if(o.mode==="custom"&&!o.autoContrast) both={"--good-fill":m.light[0],"--bad-fill":m.light[1]};
     else both={"--good-fill":accessibleHex(m.light[0],"#ffffff"),
       "--bad-fill":accessibleHex(m.light[1],"#ffffff")};
     var css=tokensCss(Object.assign({},TOKENS_LIGHT,light),Object.assign({},TOKENS_DARK,dark),
@@ -171,12 +171,14 @@ function createNCAA180Accessibility() {
       if(partial.mode!==undefined)o.mode=partial.mode;
       if(partial.motion!==undefined)o.motion=partial.motion;
       if(partial.emphasis!==undefined)o.emphasis=partial.emphasis;
+      if(partial.autoContrast!==undefined)o.autoContrast=partial.autoContrast;
       if(partial.custom)o.custom=Object.assign({},o.custom,partial.custom);
     }
     o={mode:["standard","rg","by","none","custom"].includes(o.mode)?o.mode:"standard",
       custom:{good:validHex(o.custom&&o.custom.good)?o.custom.good:ACCESS_DEFAULTS.custom.good,
               bad:validHex(o.custom&&o.custom.bad)?o.custom.bad:ACCESS_DEFAULTS.custom.bad},
-      motion:["system","on","off"].includes(o.motion)?o.motion:"system",emphasis:o.emphasis===true};
+      motion:["system","on","off"].includes(o.motion)?o.motion:"system",emphasis:o.emphasis===true,
+      autoContrast:o.autoContrast!==false};
     try { localStorage.setItem(ACCESS_KEY,JSON.stringify(o)); }catch(e){}
     accessApply();
     if (typeof window !== "undefined" && typeof window.CustomEvent === "function")
