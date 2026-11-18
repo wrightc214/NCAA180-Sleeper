@@ -48,37 +48,37 @@ const cur = (list) => list.filter((x) => x.current).map((x) => x.label);
 
 // Colour tokens (Project Manager 5.8): hard-coded Standard set + the win % diverging scale.
 test('owner palette overrides propagate to Standard, neutral, custom defaults and reset', () => {
-  const original = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'config', 'league.json'), 'utf8')).accessibility_colors;
+  const original = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'config', 'accessibility.json'), 'utf8'));
   const changed = JSON.parse(JSON.stringify(original));
-  changed.light.positive = '#125c39';
-  changed.light.negative = '#852f32';
-  changed.light.neutral = '#596a7b';
-  changed.dark.positive = '#8adeb0';
-  changed.dark.negative = '#ff9898';
-  changed.dark.neutral = '#b5bbc5';
+  changed.palettes.standard.light.positive = '#125c39';
+  changed.palettes.standard.light.negative = '#852f32';
+  changed.palettes.standard.light.neutral = '#596a7b';
+  changed.palettes.standard.dark.positive = '#8adeb0';
+  changed.palettes.standard.dark.negative = '#ff9898';
+  changed.palettes.standard.dark.neutral = '#b5bbc5';
   const m = load(DATA, changed);
-  assert.strictEqual(m.colors.defaults.light['--good'], changed.light.positive);
-  assert.strictEqual(m.colors.defaults.light['--bad'], changed.light.negative);
-  assert.strictEqual(m.colors.defaults.light['--neutral'], changed.light.neutral);
-  assert.strictEqual(m.colors.defaults.dark['--good'], changed.dark.positive);
-  assert.strictEqual(m.colors.defaults.dark['--bad'], changed.dark.negative);
-  assert.strictEqual(m.colors.defaults.dark['--neutral'], changed.dark.neutral);
-  assert.strictEqual(m.colors.tokens().neutral, changed.light.neutral);
-  assert.strictEqual(m.access.modes.standard.light[0], changed.light.positive);
-  assert.strictEqual(m.access.modes.standard.dark[1], changed.dark.negative);
-  assert.strictEqual(m.access.defaults.custom.good, changed.light.positive);
-  assert.strictEqual(m.access.defaults.custom.bad, changed.light.negative);
-  assert.strictEqual(m.access.read().custom.good, changed.light.positive);
-  assert.strictEqual(m.access.read().custom.bad, changed.light.negative);
+  assert.strictEqual(m.colors.defaults.light['--good'], changed.palettes.standard.light.positive);
+  assert.strictEqual(m.colors.defaults.light['--bad'], changed.palettes.standard.light.negative);
+  assert.strictEqual(m.colors.defaults.light['--neutral'], changed.palettes.standard.light.neutral);
+  assert.strictEqual(m.colors.defaults.dark['--good'], changed.palettes.standard.dark.positive);
+  assert.strictEqual(m.colors.defaults.dark['--bad'], changed.palettes.standard.dark.negative);
+  assert.strictEqual(m.colors.defaults.dark['--neutral'], changed.palettes.standard.dark.neutral);
+  assert.strictEqual(m.colors.tokens().neutral, changed.palettes.standard.light.neutral);
+  assert.strictEqual(m.access.modes.standard.light[0], changed.palettes.standard.light.positive);
+  assert.strictEqual(m.access.modes.standard.dark[1], changed.palettes.standard.dark.negative);
+  assert.strictEqual(m.access.defaults.custom.good, changed.palettes.standard.light.positive);
+  assert.strictEqual(m.access.defaults.custom.bad, changed.palettes.standard.light.negative);
+  assert.strictEqual(m.access.read().custom.good, changed.palettes.standard.light.positive);
+  assert.strictEqual(m.access.read().custom.bad, changed.palettes.standard.light.negative);
 });
 
 test('owner Standard fills are contrast-adjusted when owner chooses pale colours', () => {
-  const colors = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'config', 'league.json'), 'utf8')).accessibility_colors;
+  const colors = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'config', 'accessibility.json'), 'utf8'));
   const changed = JSON.parse(JSON.stringify(colors));
-  changed.light.positive = '#ffffcc';
-  changed.light.negative = '#ffdddd';
+  changed.palettes.standard.light.positive = '#ffffcc';
+  changed.palettes.standard.light.negative = '#ffdddd';
   const m = load(DATA, changed);
-  const css = m.access.apply && m.colors.css;
+  const css = m.colors.css;
   // Browserless mode applies its Standard palette on initial load.
   const fill = m.colors.css.match(/--good-fill:(#[0-9a-f]{6});--bad-fill:(#[0-9a-f]{6})/i);
   assert.ok(fill, 'Standard fill tokens present');
@@ -316,7 +316,7 @@ test('Accessibility controls update and reset preferences without a browser', ()
   const script=fs.readFileSync(path.join(__dirname,'..','reports','assets','access.js'),'utf8');
   let state={mode:'standard',custom:{good:'#1a7f37',bad:'#b42318'},motion:'system',emphasis:false,autoContrast:true};
   const handlers={},nodes={};
-  for(const id of ['mode','good','bad','motion','emphasis','auto-contrast','contrast-option','good-value','bad-value','warnings','restore-custom','reset-all']){
+  for(const id of ['mode','good','bad','motion','emphasis','auto-contrast','auto-contrast-label','contrast-option','good-value','bad-value','warnings','restore-custom','reset-all']){
     nodes[id]={value:'',checked:false,disabled:false,textContent:'',
       addEventListener(type,fn){handlers[id+':'+type]=fn;}};
   }
