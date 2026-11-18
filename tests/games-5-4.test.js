@@ -53,11 +53,11 @@ test('50 percent is neutral and favorites remain bold without relying on color',
   assert.match(probabilityRules,/var\(--win-pre-mix,0%\)/);
   assert.match(probabilityRules,/var\(--win-mix,0%\)/);
   assert.match(probabilityRules,/var\(--win-final-mix,0%\)/);
-  assert.match(probabilityRules,/\.r3\.final-odds \.chance\{font-weight:500\}/);
+  assert.match(probabilityRules,/\.r3\.final-odds\.favorite \.chance\{font-weight:500\}/); // outranks .r3.favorite regardless of order
   assert.match(source,/s\.final\?' final-odds'/);
   assert.match(source,/probability!=null&&probability>50\?' favorite'/); // final still gets green, but not bold
   assert.match(probabilityRules,/\.r3\.final-odds\.favorite \.chance\{/);
-  assert.match(source,/s\.final\?'Pregame %'/);
+  assert.doesNotMatch(source,/Pregame %/); // does not fit the 38-44px column; finals use 'Pre %' (Chris, 2026-11-17)
   assert.match(menu,/var TOKENS_LIGHT = \{"--good":/);
   assert.match(menu,/var TOKENS_DARK = \{"--good":/);
 });
@@ -71,11 +71,11 @@ test('live pregame summary follows the displayed top team',()=>{
   assert.match(source,/order\[0\]===0\?s\.pregame:100-s\.pregame/);
 });
 
-test('final NIT group headers retain explicit pregame labeling',()=>{
+test('final NIT group headers show Pre % (pregame advancement odds)',()=>{
   const a=source.indexOf('  function groupCard(g)');
   const b=source.indexOf('  function card(g)',a);
   assert.ok(a>=0&&b>a);
   const group=source.slice(a,b);
-  assert.match(group,/s\.final\?'Pregame %':s\.live\?'Live adv':'Adv %'/);
+  assert.match(group,/s\.final\?'Pre %':s\.live\?'Live adv':'Adv %'/);
   assert.match(group,/return row\(match\[i\]/); // same row renderer and final color rules
 });

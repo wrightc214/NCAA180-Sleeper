@@ -115,7 +115,7 @@
       // (a team behind in its group can still be a lucky dog while games are live).
       const out=raceTag.size?s.final&&!tag:(s.final?s.models[i].actual<top:ch[i]!=null&&ch[i]<0.1&&s.started);
       return row(match[i],s.models[i],s.proj[i],ch[i]??null,s,s.final&&!out,{rec:x.Rec,tag:raceTag.get(`${match[i].leagueId}|${match[i].roster_id}`)}).replace('class="score-row r3',`class="score-row r3${out?' out':''}`);}).join('');
-    return `<a class="mini-match grp" href="${esc(href)}" aria-label="${esc(gLabel(post))}"><div class="ptitle">${esc(gLabel(post))}</div><div class="hdr3"><span></span><span class="match-status${s.active?' is-live':''}">${esc(status)}</span><span>Score</span><span>${s.live?'Live proj':'Proj'}</span><span>${s.final?'Pregame %':s.live?'Live adv':'Adv %'}</span></div>${rows}</a>`;
+    return `<a class="mini-match grp" href="${esc(href)}" aria-label="${esc(gLabel(post))}"><div class="ptitle">${esc(gLabel(post))}</div><div class="hdr3"><span></span><span class="match-status${s.active?' is-live':''}">${esc(status)}</span><span>Score</span><span>${s.live?'Live proj':'Proj'}</span><span>${s.final?'Pre %':s.live?'Live adv':'Adv %'}</span></div>${rows}</a>`;
   }
   function card(g){
     if(g.post&&g.match.length>2)return groupCard(g);
@@ -126,7 +126,7 @@
     const pre=s.live&&s.pregame!=null?`<div class="ew">Pregame: ${esc(league.teams[String(match[order[0]].roster_id)]?.name)} ${esc(pct(order[0]===0?s.pregame:100-s.pregame))}</div>`:'';
     const ew=!s.started&&o?.EveryWeek?`<div class="ew">If they'd played every week: ${esc(o.EveryWeekLeader?o.EveryWeekLeader+' ':'')}${esc(o.EveryWeek)}</div>`:'';
     const pt=g.post?`<div class="ptitle">${esc(gLabel(g.post))}</div>`:'';
-    return `<a class="mini-match" href="${esc(href)}" aria-label="${esc(league.teams[String(match[order[0]].roster_id)]?.name)} versus ${esc(league.teams[String(match[order[1]].roster_id)]?.name)} — player details">${pt}<div class="hdr3"><span>${isGotw(g)?`<img class="gotw-mini" src="${featBadge(g)}" alt="${featAlt(g)}" title="${featAlt(g)}">`:''}</span><span class="match-status${s.active?' is-live':''}">${esc(status)}</span><span>Score</span><span>${s.live?'Live proj':'Proj'}</span><span>${s.final?'Pregame %':s.live?'Live %':'Pre %'}</span></div>${order.map(i=>row(match[i],s.models[i],s.proj[i],p===null?null:i===0?p:100-p,s,s.models[i].actual>s.models[1-i].actual,g.post?pside(g,i):side(o,match[i].roster_id))).join('')}${pre}${ew}</a>`;
+    return `<a class="mini-match" href="${esc(href)}" aria-label="${esc(league.teams[String(match[order[0]].roster_id)]?.name)} versus ${esc(league.teams[String(match[order[1]].roster_id)]?.name)} — player details">${pt}<div class="hdr3"><span>${isGotw(g)?`<img class="gotw-mini" src="${featBadge(g)}" alt="${featAlt(g)}" title="${featAlt(g)}">`:''}</span><span class="match-status${s.active?' is-live':''}">${esc(status)}</span><span>Score</span><span>${s.live?'Live proj':'Proj'}</span><span>${s.live?'Live %':'Pre %'}</span></div>${order.map(i=>row(match[i],s.models[i],s.proj[i],p===null?null:i===0?p:100-p,s,s.models[i].actual>s.models[1-i].actual,g.post?pside(g,i):side(o,match[i].roster_id))).join('')}${pre}${ew}</a>`;
   }
   function pside(g,i){const r=g.match[i],x=g.post.sides.find(y=>String(y.RosterID)===String(r.roster_id)&&String(y.LeagueID)===String(r.leagueId))||{};return {rec:x.Rec,seed:g.post.round==='Playoff'?x.Seed:''};}
   // Lucky dog race (Chris, 2026-11-06): realigned NIT group stages advance every group leader plus the
