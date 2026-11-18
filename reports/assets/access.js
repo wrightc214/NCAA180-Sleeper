@@ -8,5 +8,7 @@ el("motion").addEventListener("change",function(){a.save({motion:this.value});re
 el("emphasis").addEventListener("change",function(){a.save({emphasis:this.checked});render();});
 ["good","bad"].forEach(function(k){el(k).addEventListener("input",function(){var o={};o[k]=this.value;a.save({mode:"custom",custom:o});render();});});
 el("restore-custom").addEventListener("click",function(){a.save({custom:{bad:a.defaults.custom.bad,good:a.defaults.custom.good}});render();});
-el("reset-all").addEventListener("click",function(){a.reset();render();});render();
+el("reset-all").addEventListener("click",function(){a.reset();render();});
+window.addEventListener("ncaa180:accesschange",render);
+render();
 })();
