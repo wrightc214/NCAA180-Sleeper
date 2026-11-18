@@ -1,0 +1,35 @@
+# PR-only, read-only test runner. Never runs on push or main deployment events.
+name: PR safety tests
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'templates/menu.js'
+      - 'reports/assets/menu.js'
+      - 'tests/**'
+      - '.github/workflows/pr-safety-tests.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-safety-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  node-tests:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout PR code (read only)
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run existing Node tests
+        run: node --test tests/*.test.js
