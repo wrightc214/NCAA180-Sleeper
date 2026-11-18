@@ -114,3 +114,14 @@ node --check reports/assets/access.js
 python -m py_compile scripts/access_page.py scripts/bowl_projection.py
 ```
 Do not execute the report publication or Discord posting commands during validation.
+
+## Test harness discovery and current status
+
+A connector-backed JavaScript harness fetched the six files needed by `tests/menu.test.js`, emulated the Node test/FS/Module APIs, and executed all registered test callbacks. **17/17 tests passed in this emulated harness** after correcting one stale assertion: the About page is now public in `config/nav.json`, so the previous test incorrectly expected it to be absent from the generated menu. This result is stronger than a parse-only smoke test, but **it is not a native Node.js `node --test` execution** and cannot substitute for CI.
+
+- Added same-device cross-tab synchronisation via the browser `storage` event. Local saves and resets emit `ncaa180:accesschange`; `reports/assets/access.js` listens and refreshes its controls. Isolated event tests caught and corrected a constructor-reference issue; mocked event dispatch now passes.
+- Added structural saved-image regression assertion: `snapshot.js` clones current document `<style>` elements, including `#n180-tokens`. This supports viewer-specific image colours but is **not** an actual screenshot comparison.
+- PR workflow now also regenerates `reports/access.html` and checks `git diff --exit-code`, with no publishing.
+- GitHub Actions workflow execution remains unconfirmed; do not report CI green without an actual run.
+
+**Reviewer priorities:** run native Node tests, check actual rendered Accessibility page (including mobile and dark mode), verify reduced motion and keyboard access, verify images in browser, inspect generated bowl projection output, and check that no-colour semantics remain clear without hue.
