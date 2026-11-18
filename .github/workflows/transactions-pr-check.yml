@@ -48,4 +48,5 @@ jobs:
           name: transactions-preview
           path: |
             reports/transactions.html
+            work/transactions-preview/*.png
           if-no-files-found: ignore
