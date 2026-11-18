@@ -47,6 +47,15 @@ const M = load(DATA);
 const cur = (list) => list.filter((x) => x.current).map((x) => x.label);
 
 // Colour tokens (Project Manager 5.8): hard-coded Standard set + the win % diverging scale.
+test('partial owner accessibility settings use safe browser defaults', () => {
+  const m = load(DATA, {palettes:{standard:{light:{positive:'#135724'}}},contrast:{minimum_ratio:5}});
+  assert.strictEqual(m.colors.defaults.light['--good'], '#135724');
+  assert.strictEqual(m.colors.defaults.light['--bad'], '#b42318');
+  assert.strictEqual(m.colors.defaults.dark['--good'], '#4fc785');
+  assert.strictEqual(m.access.settings.contrast.minimum_ratio, 5);
+  assert.strictEqual(m.access.read().autoContrast, true);
+});
+
 test('owner palette overrides propagate to Standard, neutral, custom defaults and reset', () => {
   const original = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'config', 'accessibility.json'), 'utf8'));
   const changed = JSON.parse(JSON.stringify(original));
