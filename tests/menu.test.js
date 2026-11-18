@@ -243,3 +243,21 @@ test('accessibility resets preserve other settings and blocked storage never cra
     assert.doesNotThrow(()=>blocked.reset());
   } finally {if(old===undefined)delete global.localStorage;else global.localStorage=old;}
 });
+
+test('accessibility emits change events when settings are saved or reset', () => {
+  const oldWindow=global.window,oldStorage=global.localStorage, events=[],values={};
+  global.window={CustomEvent:class CustomEvent {constructor(type,options){this.type=type;this.detail=options.detail;}},
+    dispatchEvent:event=>events.push(event)};
+  global.localStorage={getItem:k=>values[k]??null,setItem:(k,v)=>{values[k]=v;},removeItem:k=>{delete values[k];}};
+  try {
+    const access=load(DATA).access;
+    access.save({mode:'rg'});
+    assert.strictEqual(events.at(-1).type,'ncaa180:accesschange');
+    assert.strictEqual(events.at(-1).detail.mode,'rg');
+    access.reset();
+    assert.strictEqual(events.at(-1).detail.mode,'standard');
+  } finally {
+    if(oldWindow===undefined)delete global.window;else global.window=oldWindow;
+    if(oldStorage===undefined)delete global.localStorage;else global.localStorage=oldStorage;
+  }
+});
