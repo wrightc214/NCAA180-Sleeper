@@ -47,3 +47,7 @@ jobs:
           node --check reports/sw.js
       - name: Check page generator syntax
         run: python -m py_compile scripts/access_page.py scripts/bowl_projection.py
+      - name: Check generated Accessibility page matches template
+        run: |
+          python scripts/access_page.py
+          git diff --exit-code -- reports/access.html
