@@ -1,0 +1,44 @@
+{
+  "_doc": [
+    "Transaction valuation configuration. FantasyCalc is the ONLY asset value source.",
+    "Consolidation fallback is KTC-style, NOT fitted to KTC samples. Replace coefficients only after calibration.",
+    "Grade bands are percent share of adjusted total for comparative Rebuild/Contender grades.",
+    "Team Fit is separate and is withheld until defensible historical context exists."
+  ],
+  "consolidation": {
+    "method": "ktc-style-fallback",
+    "exponent_low": 1.04,
+    "exponent_elite": 1.4,
+    "elite_threshold": 0.7
+  },
+  "grade_bands": [
+    [
+      60,
+      "A"
+    ],
+    [
+      55,
+      "B+"
+    ],
+    [
+      52,
+      "B"
+    ],
+    [
+      48,
+      "Even"
+    ],
+    [
+      45,
+      "C"
+    ],
+    [
+      40,
+      "D"
+    ],
+    [
+      0,
+      "F"
+    ]
+  ]
+}
