@@ -171,14 +171,14 @@ def render_team(team, colors):
     return f'<div class="tx-team" style="--team-bg:{esc(bg)};--team-ink:{esc(fg)}">{logo}<span>{esc(team)}</span></div>'
 
 
-def render_assets(assets, proxies=None):
+def render_assets(assets, proxies=None, proxy_slot=None):
     if not assets:
         return '<p class="tx-muted">No assets recorded</p>'
     proxies = proxies or {}
     return "".join(f'<div class="tx-asset{" tx-pick" if a["kind"] == "pick" else ""}">'
                    + (f'<span class="tx-muted">{esc(a["position"])} · </span>' if a.get("position") else "")
                    + esc(a["label"])
-                   + (f'<small class="tx-muted"> · +{proxies[a["id"]]:,.0f} pts (4.12 proxy)</small>'
+                   + (f'<small class="tx-muted"> · +{proxies[a["id"]]:,.0f} pts ({esc(proxy_slot)} proxy)</small>'
                       if a.get("id") in proxies else "")
                    + "</div>" for a in assets)
 
@@ -209,6 +209,7 @@ def trade_card(r, sides, names, colors, result, shorts):
     dyn, con = result.get("dynasty"), result.get("contender")
     surplus = dyn.get("surplus") if dyn else None
     proxies = result.get("proxies", {})
+    proxy_slot = result.get("proxy_pick_slot")
     def panel(info):
         rid, name, assets = info
         badge = ""
@@ -225,7 +226,7 @@ def trade_card(r, sides, names, colors, result, shorts):
                      f'<small>+{surplus["value"]:,.0f} adjusted points'
                      f'{" · estimated slots" if swap or any(p[2] for p in picks) else ""}</small></div>')
         return (f'<div class="tx-side">{render_team(name, colors)}<div class="tx-assets">'
-                f'<div class="tx-receives">Receives</div>{render_assets(assets, proxies.get(rid))}</div>{badge}</div>')
+                f'<div class="tx-receives">Receives</div>{render_assets(assets, proxies.get(rid), proxy_slot)}</div>{badge}</div>')
     status = result.get("status")
     grade_rows = ""
     for key, label in ((dyn, "Rebuild value"), (con, "Contender value")):
@@ -330,7 +331,7 @@ def main():
 <section><h2>Trades <small>({len(cards)})</small></h2>
 {filters}
 <p class="tx-note">Grades use FantasyCalc values available at trade time — not a verdict.
-Rebuild includes rookie picks. Contender values traded picks at zero. Unlisted kickers and D/ST use a 4.12 proxy in both grades. Surplus pick comparisons use the upcoming draft at trade time. Blockbuster marks a large raw dynasty deal with a high-value player, both measured against the snapshot’s top player. It does not indicate a winner. Team Fit and projected wins/odds
+Rebuild includes rookie picks. Contender values traded picks at zero. Unlisted kickers and D/ST use a {esc(grading_config["proxy_pick_slot"])} proxy in both grades. Surplus pick comparisons use the upcoming draft at trade time. Blockbuster marks a large raw dynasty deal with a high-value player, both measured against the snapshot’s top player. It does not indicate a winner. Team Fit and projected wins/odds
 await a validated historical context model.</p>
 <div class="tx-cards" id="tx-trades">{''.join(cards)}</div>
 <p class="tx-empty" id="tx-no-trades" hidden>No trades match these filters.</p>

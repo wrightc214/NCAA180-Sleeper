@@ -1026,5 +1026,48 @@
       "sleeper": "wrightc214",
       "discord": "Wrightc214"
     }
+  },
+  "transactions": {
+    "_note": "Trade valuation owner settings. Grade bands are descending percentages of adjusted value. Consolidation is KTC-style, not calibrated to KTC. Both Blockbuster cutoffs are inclusive ratios of the historical market leader. Proxy slot also anchors surplus swaps, which must fit within the configured relative error.",
+    "consolidation": {
+      "method": "ktc-style-fallback",
+      "exponent_low": 1.04,
+      "exponent_elite": 1.4,
+      "elite_threshold": 0.7
+    },
+    "grade_bands": [
+      [
+        60,
+        "A"
+      ],
+      [
+        55,
+        "B+"
+      ],
+      [
+        52,
+        "B"
+      ],
+      [
+        48,
+        "Even"
+      ],
+      [
+        45,
+        "C"
+      ],
+      [
+        40,
+        "D"
+      ],
+      [
+        0,
+        "F"
+      ]
+    ],
+    "blockbuster_min_multiple": 1.5,
+    "blockbuster_min_headliner_share": 0.6,
+    "proxy_pick_slot": "4.12",
+    "surplus_swap_max_relative_error": 0.25
   }
 }

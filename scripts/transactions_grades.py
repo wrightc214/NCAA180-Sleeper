@@ -4,20 +4,12 @@ Market values and NCAA 180 pick proxies use FantasyCalc points. KTC-style fallba
 """
 import csv
 import math
-import json
 from collections import defaultdict
 from pathlib import Path
 
-TEAM_DEFENSE_POSITIONS = {"DEF", "DST", "D/ST"}
+import league_config as lcfg
 
-DEFAULT_CONFIG = {
-    "consolidation": {"method": "ktc-style-fallback", "exponent_low": 1.04,
-                      "exponent_elite": 1.40, "elite_threshold": 0.7},
-    "blockbuster_min_multiple": 1.4,
-    "blockbuster_min_headliner_share": 0.60,
-    "grade_bands": [[60, "A"], [55, "B+"], [52, "B"], [48, "Even"],
-                    [45, "C"], [40, "D"], [0, "F"]],
-}
+TEAM_DEFENSE_POSITIONS = {"DEF", "DST", "D/ST"}
 
 
 def number(value):
@@ -49,16 +41,19 @@ def read_rows(path):
         return list(csv.DictReader(f))
 
 
-def load_config(path="config/transactions.json"):
-    """Read explicit adjustable coefficients/bands; defaults used for pure unit fixtures."""
-    p = Path(path)
-    return json.loads(p.read_text(encoding="utf-8")) if p.exists() else DEFAULT_CONFIG
+def load_config():
+    """Read the owner settings from the shared league configuration."""
+    return lcfg.cfg()["transactions"]
+
+
+def settings_with(overrides):
+    return load_config() | (overrides or {})
 
 
 def grade(share, bands=None):
     if share is None or not math.isfinite(share):
         return None
-    bands = bands or DEFAULT_CONFIG["grade_bands"]
+    bands = load_config()["grade_bands"] if bands is None else bands
     return next((label for bound, label in bands if share * 100 >= bound), "F")
 
 
@@ -76,11 +71,12 @@ def fallback_raw(value, top_trade, top_snapshot, config=None):
     """
     if value <= 0 or top_trade <= 0:
         return 0.0
-    cfg = (config or DEFAULT_CONFIG).get("consolidation", config or DEFAULT_CONFIG["consolidation"])
-    threshold = max(0.01, number(cfg.get("elite_threshold", 0.7)))
+    defaults = load_config()["consolidation"]
+    cfg = defaults | (config or {}).get("consolidation", {})
+    threshold = max(0.01, number(cfg["elite_threshold"]))
     elite = min(1.0, max(0.0, top_trade / max(top_snapshot, 1) / threshold))
-    e = number(cfg.get("exponent_low", 1.04)) + elite * (
-        number(cfg.get("exponent_elite", 1.40)) - number(cfg.get("exponent_low", 1.04)))
+    e = number(cfg["exponent_low"]) + elite * (
+        number(cfg["exponent_elite"]) - number(cfg["exponent_low"]))
     return value * (value / top_trade) ** e
 
 
@@ -131,7 +127,7 @@ def compare(sides, top_snapshot, config=None, proxy=None):
     shares = {k: adjusted[k] / total if total else None for k in keys}
     return {"raw": raw_totals, "credit": credit, "adjustment_sums": adjustments,
             "adjusted": adjusted, "share": shares,
-            "grade": {k: grade(shares[k], (config or DEFAULT_CONFIG).get("grade_bands")) for k in keys},
+            "grade": {k: grade(shares[k], settings_with(config)["grade_bands"]) for k in keys},
             "score": {k: grade_score(shares[k]) for k in keys}}
 
 
@@ -157,19 +153,21 @@ def pick_slot_values(pick_rows, season):
             yield number(row["Value"]), f"R{rnd}", False
 
 
-def pick_swap(delta, season, pick_rows):
-    """For sub-4.12 margins, find a close upgrade starting at 4.12."""
+def pick_swap(delta, season, pick_rows, config=None):
+    """For small margins, find a close upgrade starting at the proxy slot."""
+    settings = settings_with(config)
+    anchor_slot = settings["proxy_pick_slot"]
     slots = [(v, label) for v, label, estimated in pick_slot_values(pick_rows, season) if estimated]
-    anchor = next((v for v, label in slots if label == "4.12"), 0)
+    anchor = next((v for v, label in slots if label == anchor_slot), 0)
     if not 0 < delta < anchor:
         return None
     upgrades = [(v - anchor, label) for v, label in slots if v > anchor]
     if not upgrades:
         return None
     value, label = min(upgrades, key=lambda pair: (abs(pair[0] - delta), pair[0], pair[1]))
-    if abs(value - delta) > delta * 0.25:
+    if abs(value - delta) > delta * settings["surplus_swap_max_relative_error"]:
         return None
-    return {"from": "4.12", "to": label, "value": value}
+    return {"from": anchor_slot, "to": label, "value": value}
 
 
 def nearest_pick(delta, season, pick_rows):
@@ -184,12 +182,16 @@ def nearest_pick(delta, season, pick_rows):
                       default=candidates[0][0])
     if delta <= early_first:
         return [min(candidates, key=lambda x: (abs(x[0] - delta), -x[0]))]
-    primary = next((x for x in candidates if x[0] <= delta), candidates[0])
+    primary = next((x for x in candidates if x[1] == "1.01" and x[0] <= delta), None)
+    if primary is None:
+        primary = next((x for x in candidates if x[0] <= delta), candidates[0])
     remain = delta - primary[0]
     if remain <= 0:
         return [primary]
-    secondary = min(candidates, key=lambda x: (abs(x[0] - remain), -x[0]))
-    return [primary, secondary]
+    # One draft cannot contain two copies of the same slot.
+    others = (x for x in candidates if x[1] != primary[1])
+    secondary = min(others, key=lambda x: (abs(x[0] - remain), -x[0]), default=None)
+    return [primary, secondary] if secondary else [primary]
 
 
 def evaluate_trade(assets, trade_day, player_history, pick_history, trade_year, config=None):
@@ -204,8 +206,10 @@ def evaluate_trade(assets, trade_day, player_history, pick_history, trade_year, 
     picks = {(str(r["Season"]), str(r["Round"])): r for r in by_k.get(kd, [])}
     draft_rows = by_k.get(kd, [])
     draft = trade_year + 1
-    late_fourth = next((v for v, label, estimated in pick_slot_values(draft_rows, draft)
-                        if label == "4.12" and estimated), None)
+    settings = settings_with(config)
+    proxy_slot = settings["proxy_pick_slot"]
+    proxy_value = next((v for v, label, estimated in pick_slot_values(draft_rows, draft)
+                        if label == proxy_slot and estimated), None)
     sides = {k: {"dynasty": [], "contender": []} for k in assets}
     problems = {"dynasty": [], "contender": []}
     proxies = {k: {} for k in assets}
@@ -216,8 +220,8 @@ def evaluate_trade(assets, trade_day, player_history, pick_history, trade_year, 
                 p = players.get(str(asset["id"]))
                 if p is None:
                     pos = str(asset.get("position") or "").strip().upper()
-                    if pos in {"K", "PK", "DEF", "DST", "D/ST"} and late_fourth is not None:
-                        proxies[team][str(asset["id"])] = late_fourth
+                    if pos in {"K", "PK", "DEF", "DST", "D/ST"} and proxy_value is not None:
+                        proxies[team][str(asset["id"])] = proxy_value
                     elif pos not in {"QB", "RB", "WR", "TE", "FB"}:
                         for mode in problems:
                             problems[mode].append(asset["id"])
@@ -245,7 +249,8 @@ def evaluate_trade(assets, trade_day, player_history, pick_history, trade_year, 
     top_d = max((number(r.get("DynastyValue")) for r in players.values()), default=1)
     top_r = max((number(r.get("RedraftValue")) for r in players.values()), default=1)
     result = {"status": "complete", "player_date": pd, "pick_date": kd,
-              "dynasty": None, "contender": None, "missing": problems, "proxies": proxies}
+              "dynasty": None, "contender": None, "missing": problems, "proxies": proxies,
+              "proxy_pick_slot": proxy_slot}
     proxy_totals = {team: sum(values.values()) for team, values in proxies.items()}
     for mode, top in (("dynasty", top_d), ("contender", top_r)):
         if not problems[mode]:
@@ -261,7 +266,6 @@ def evaluate_trade(assets, trade_day, player_history, pick_history, trade_year, 
             default=0,
         )
         if market_leader > 0:
-            settings = DEFAULT_CONFIG | (config or {})
             multiple = market_total / market_leader
             headliner_share = headliner_points / market_leader
             if (multiple >= settings["blockbuster_min_multiple"]
@@ -274,10 +278,10 @@ def evaluate_trade(assets, trade_day, player_history, pick_history, trade_year, 
         winner = max(val["adjusted"], key=val["adjusted"].get)
         surplus = val["adjusted"][winner] - min(val["adjusted"].values())
         if surplus >= 0.5:  # Do not render "+0" at whole-point precision.
-            small = late_fourth is not None and surplus < late_fourth
+            small = proxy_value is not None and surplus < proxy_value
             val["surplus"] = {
                 "team": winner, "value": surplus, "draft": draft,
-                "swap": pick_swap(surplus, draft, draft_rows) if small else None,
+                "swap": pick_swap(surplus, draft, draft_rows, settings) if small else None,
                 "picks": [] if small else nearest_pick(surplus, draft, draft_rows),
             }
     return result
