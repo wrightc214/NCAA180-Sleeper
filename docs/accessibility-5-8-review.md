@@ -15,7 +15,7 @@ Contrast target: 4.5:1 for semantic text on actual light/dark panels, including 
 | Settings API | `templates/accessibility.js` independently owns `NCAA180.access.read/save/reset/apply/contrast/adjust/defaults/modes`; bundled into `reports/assets/menu.js` | Browser integration needs validation |
 | Persistence | `ncaa180.access` JSON with safe malformed/denied-storage fallback and input validation | No `text` field: zoom deliberately omitted |
 | Palette tokens | `templates/accessibility.js`: `--good`, `--bad`, `--up`, `--dn`, soft and fill variants; light/dark modes; contrast-adjusted custom colours | Uses representative white and #171b22 backgrounds; audit real surfaces |
-| Modes | Standard, `rg`, `by`, `none`, `custom` | No-colour semantics not complete across every page |
+| Modes | Standard, `rg`, `by`, `none`, `custom` | No colour is intentionally partial; full implementation deferred per project-manager decision in §8 |
 | UI | `templates/access.html`, `scripts/access_page.py`, `reports/access.html`, `reports/assets/access.js`; previews, native pickers, resets, motion, emphasis | Verify mobile, dark mode, keyboard and focus |
 | Navigation | `config/nav.json` `access` tab is `hidden-dev`; generated menu includes it | Do not make public without approval |
 | PWA | `reports/sw.js` cache version v4; precaches access page and JS | Real offline behavior untested |
@@ -91,6 +91,22 @@ git diff --exit-code -- reports/assets/menu.js
 
 Reviewer may propose fixes and update this PR branch as authorized, but **must not merge PR #109, modify main, or deploy**. Keep it draft until the owner and independent auditor agree it meets acceptance criteria. Treat unverified work as unverified. Do not block unrelated fixes on unavailable CI, but record the limitation precisely. Prefer source changes followed by controlled generation, not direct edits to generated assets. The accessibility module is a source file, not a separate runtime asset. The reviewer should deliver a PASS / PASS WITH FIXES / BLOCKED decision with evidence and explicit remaining issues.
 
-## 8. Development chronology (summary, not current status)
+## 8. Project-manager decision: No colour mode is deferred, not cancelled (2026-11-18)
+
+**Product direction:** NCAA 180 is currently a 180-manager dashboard with a predominantly male audience. The longer-term goal is to package the complete system as a reusable **super-league template**. Prioritize finishing the full dashboard and maintaining clean, responsibility-based modules over polishing a specialized mode unlikely to see substantial immediate use. This is a sequencing decision, **not** a decision that accessibility is unimportant or that no user could benefit.
+
+**Current PR scope:** Retain the existing `none` / No colour preference and baseline monochrome palette; do not remove the mode or its stored-settings compatibility. Do **not** expand PR #109 into a site-wide monochrome redesign, pattern library, or component-by-component symbol retrofit. Treat current No colour as **basic/partial**, not fully supported or validated. This deferral is approved and should not by itself block PR #109; unrelated core accessibility defects and colour-only meaning in essential workflows still warrant review. Continue prioritizing red-green CVD, contrast, motion, emphasis, and stable shared settings.
+
+**Future project backlog (project manager: copy into project plan):**
+- **Feature:** Complete No colour / monochrome accessibility mode for the reusable super-league template.
+- **Status:** Deferred / planned; **not cancelled**. Implement after core dashboard build-out and before claiming full accessibility readiness for the packaged template.
+- **Scope:** Audit every dashboard page and generated graphic; distinguish positive/negative/neutral and game states without hue, using meaningful text, symbols, shape, border or pattern as appropriate. Ensure graphs, probability bars, standings, odds, live/final status, mobile views, saved images, light/dark themes and print remain interpretable.
+- **Acceptance:** No critical distinction depends on colour alone; complete keyboard and screen-reader labels where visual markers are introduced; test grayscale/high-contrast/light/dark/mobile, saved PNG and public/Discord isolation; no regression to Standard, RG/BY or Custom modes.
+- **Architecture:** Build semantic cues in the responsible components, with shared tokens/helpers only where multiple consumers need them. Avoid a monolithic global CSS workaround or adding modules with no clear ownership.
+- **Reason for deferral:** Scope and opportunity cost, not an assumption that only people with achromatopsia could benefit. Achromatopsia prevalence is **not** a valid estimate of all users who might use No colour (including low vision, situational needs, or preference).
+
+**Architecture direction for current PR:** Keep `templates/accessibility.js` responsible for settings, resolution, semantic palette, persistence and events; keep `templates/menu.js` responsible for navigation. Bundle the former synchronously for backward compatibility with static pages. Next consider (a) one canonical validation/normalization boundary for preferences, (b) explicit separation between saved motion preference and resolved effective motion behavior, and (c) a concise semantic token contract, without building a general-purpose settings framework. Add focused tests for these changes. Defer a new framework, TypeScript conversion, bundler, broad settings platform, or full No colour UI retrofit.
+
+## 9. Development chronology (summary, not current status)
 
 The work began with a light/dark `--up/--dn` bridge, then added local settings, presets, custom pickers, page generation, offline precache, colour migrations, motion, cross-tab events and expanded tests. Multiple defects were caught in smoke checks and fixed. The PR-only workflow was added but has not produced a confirmed run. This consolidated document replaces the earlier append-only notes, some of which described features as not yet implemented or the page as not using the shared site head; those descriptions are historical and no longer current.
