@@ -212,3 +212,15 @@ test('accessible fill and foreground contrast for all palettes in both themes', 
     }
   } finally {if(old===undefined)delete global.localStorage;else global.localStorage=old;}
 });
+
+test('Accessibility page includes shared site CSS, dev navigation and accessible controls', () => {
+  const html=fs.readFileSync(path.join(__dirname,'..','reports','access.html'),'utf8');
+  const weekly=fs.readFileSync(path.join(__dirname,'..','templates','weekly_report.html'),'utf8');
+  const shared=weekly.match(/<style>[\s\S]*?<\/style>/)[0];
+  assert.ok(html.includes(shared),'shared site stylesheet embedded');
+  assert.match(html,/data-current="access" data-state="hidden-dev"/);
+  assert.match(html,/src="assets\/menu\.js"/);
+  assert.match(html,/src="assets\/access\.js"/);
+  assert.match(html,/id="restore-custom"/);
+  assert.match(html,/id="reset-all"/);
+});
