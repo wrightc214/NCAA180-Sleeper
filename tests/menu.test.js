@@ -161,3 +161,19 @@ test('accessibility settings: presets, custom, reset and malformed storage', () 
     else global.localStorage = old;
   }
 });
+
+test('accessibility: no-colour uses monochrome fills and invalid settings are normalized', () => {
+  const old=global.localStorage, store={};
+  global.localStorage={getItem:k=>store[k]||null,setItem:(k,v)=>{store[k]=v;},removeItem:k=>{delete store[k];}};
+  try {
+    const m=load(DATA);
+    m.access.save({mode:'none'});
+    assert.match(m.colors.css, /--good-fill:#3c3c3c/);
+    assert.match(m.colors.css, /--bad-fill:#656565/);
+    assert.match(m.colors.css, /--n180-emphasis:1/);
+    m.access.save({mode:'unrecognized',motion:'bogus',custom:{good:'red'}});
+    assert.strictEqual(m.access.read().mode,'standard');
+    assert.strictEqual(m.access.read().motion,'system');
+    assert.strictEqual(m.access.read().custom.good,m.access.defaults.custom.good);
+  } finally { if(old===undefined) delete global.localStorage; else global.localStorage=old; }
+});
