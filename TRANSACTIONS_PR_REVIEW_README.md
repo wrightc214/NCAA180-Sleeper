@@ -1,6 +1,6 @@
 # Transactions — developer / auditor handoff (TEMPORARY; DELETE BEFORE MERGE)
 
-> **Status:** Stages 1 and 2A implemented on draft PR #111; **Team Fit and projected-win/odds context NOT implemented** because historical counterfactuals are not yet reliable. This file is intentionally committed for collaborators and independent review. Delete it in a final PR commit **before merge**. Do **not** merge this PR automatically.
+> **Status:** Stages 1 and 2A implemented on draft PR #111; **Team Fit and projected-win/odds context NOT implemented** because historical counterfactuals are not yet reliable. This file is intentionally committed for collaborators and independent review. Delete it and its three review-only mockups in a final PR commit **before merge**, after recording follow-ups in the permanent project doc. Do **not** merge this PR automatically.
 
 ## Current implementation / review checkpoint
 
@@ -14,6 +14,43 @@
 - **Known limitation:** card Team Fit displays unavailable, not fictional numbers; ROS wins, contender title/playoff odds and rebuilder bowl/1.01 odds are *not yet calculated*. No narrative explanation is generated (user explicitly deferred that section). Do not present these as complete.
 - **Review risk:** fallback consolidation adjustment can produce large balancing credits in uneven trades. Validate desired trade-economics direction before publicizing results; zero-valued contender pick sides receive **no** phantom credit. Exact slot values are not stored, so pick equivalents are interpolated and visually tagged approximate.
 - The generated preview page embeds dated trade data. Rerun the generator when upstream snapshots change; do not silently treat the committed preview as live data.
+
+## Trade-card design references
+
+These three mockups use real completed trades. They are **design references, not screenshots of the current generator**. The two Montana cards use the existing draft grades. The Arizona State–Oregon card previews the agreed kicker/D/ST proxy and the proposed small-surplus pick-swap display.
+
+### Montana–Old Dominion · Nov. 12, 2026
+
+![Montana receives Puka Nacua. Old Dominion receives Rice, Swift and two firsts, with the draft model showing a 9,809-point dynasty surplus.](./docs/transactions-review-mockups/montana-old-dominion.png)
+
+Trade `1426656560473452544`. The two early firsts are an approximate price comparison, not two distinct quoted slot values. Old Dominion leads both raw totals before the fallback credit.
+
+### Montana–South Dakota · Nov. 12, 2026
+
+![Montana receives McConkey and Hampton. South Dakota receives McCaffrey and Kittle. The draft model calls the Contender grade Even after a large credit.](./docs/transactions-review-mockups/montana-south-dakota.png)
+
+Trade `1426733052746272768`. Use this as a consolidation stress test. Montana's **9,178-point** Contender credit makes a **9,603-point raw gap** look Even. Review the adjustment before treating the result as a fair-value signal.
+
+### Arizona State–Oregon · Nov. 4, 2026
+
+![Arizona State receives Tyler Bass, Rachaad White and Devin Singletary. Oregon receives Reggie Virgil and three picks. Oregon's 372-point dynasty surplus is shown as an estimated 2027 pick swap from 4.12 to 3.05.](./docs/transactions-review-mockups/arizona-state-oregon.png)
+
+Trade `1423799198175739904`. The current generator withholds both grades because Bass is absent from the Nov. 3 FantasyCalc snapshot. The mockup applies the **725-point NCAA 180 proxy** in both modes, excludes proxy points from the consolidation calculation, and shows Oregon's **+372 adjusted dynasty points** as **≈ 2027 pick swap · 4.12 → 3.05**. The estimated swap is worth 376 points. It is an illustration of the value gap, not another term of the trade.
+
+## Project-doc follow-up requested
+
+**Project owner / reviewer:** Please carry these items into the permanent NCAA 180 project doc before this temporary README and its review-only mockups are removed. Track implementation status separately from design approval.
+
+| Item | Status and acceptance criteria |
+| --- | --- |
+| **“Why this trade makes sense”** | **Deferred, not implemented.** Make this an explicit follow-up deliverable. Add a short, evidence-based explanation for **each team** that separates market price from roster strategy. Explain what the team gains, what it gives up, and what makes the deal reasonable for its competitive window. Use verified context such as a lineup vacancy, positional scarcity, depth, or pick timing. Label inferred intent, acknowledge if the move does not look favorable, and do not invent manager motivations, wins, or odds. Bass filling a scarce kicker slot is the motivating example. |
+| **Team Fit** | **Not implemented.** Grade each team's strategy independently of the market grades using historically defensible rosters, standings and lineup context. Display Not rated when those inputs cannot be reconstructed. |
+| **Rest-of-season wins and team outlooks** | **Not implemented.** Validate a historical with-trade vs. without-trade model before rendering projected win deltas. For contenders, track title and playoff odds. For rebuilders, track bowl and 1.01 odds. Use the actual league schedule and rules, with trade-date inputs, replacement starters and byes. |
+| **Unlisted assets and league scarcity** | **Agreed design, not implemented in this PR revision.** For identified unlisted K/DST, use historical next-draft 4.12 in both modes, visibly labeled as a proxy and excluded from consolidation. For identified unlisted skill-position players, use zero when the snapshot is otherwise valid. Do not default unresolved IDs or missing snapshots to zero. |
+| **Small dynasty surplus** | **Proposed, previewed here.** Below the next draft's 4.12 value, show the closest documented same-draft upgrade anchored at 4.12 when it is a meaningful approximation. Keep the exact point surplus and label estimated slot values. |
+| **Consolidation calibration** | **Fallback only.** Preserve raw and adjusted totals, audit cases where credit reverses or nearly erases a large raw gap, and calibrate with real samples before treating the fallback as a reliable verdict. |
+
+The mockups intentionally leave Team Fit unrated and omit forecast numbers and narrative text. Those omissions are scope gaps, not design decisions to drop the features.
 
 ### Review commands
 
