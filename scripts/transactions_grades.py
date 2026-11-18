@@ -1,6 +1,6 @@
 """Historical FantasyCalc trade valuation; no future data leakage.
 
-Market values and NCAA 180 pick proxies use FantasyCalc points. KTC-style fallback is NOT calibrated KTC.
+Dynasty values optionally discount spread. Rest-of-season market grades use raw values.
 """
 import csv
 import math
@@ -42,9 +42,7 @@ def read_rows(path):
 
 
 DEFAULTS = {
-    "consolidation": {"method": "ktc-style-fallback", "exponent_low": 1.04,
-                      "exponent_elite": 1.4, "elite_threshold": .7,
-                      "dynasty_concentration_rate": .60},
+    "consolidation": {"method": "asset-concentration", "dynasty_concentration_rate": .60},
     "grade_bands": [[60, "A"], [55, "B+"], [52, "B"], [48, "Even"], [45, "C"], [40, "D"], [0, "F"]],
     "blockbuster_min_multiple": 1.4,
     "blockbuster_min_headliner_share": .6,
@@ -91,75 +89,28 @@ def grade_score(share):
     return max(0, min(100, 100 * share)) if share is not None and math.isfinite(share) else None
 
 
-def fallback_raw(value, top_trade, top_snapshot, cfg):
-    """Elite concentration premium, increasing with elite-ness of trade's top asset.
-
-    Raw adjustment per asset = p * (p/t)**e, with e in [1.04, 1.40].
-    Its inverse is approximated by bisection for the side balancing credit. Draft picks
-    and players share the same unit. This is documented KTC-*style*, not KTC math.
-    """
-    if value <= 0 or top_trade <= 0:
-        return 0.0
-    threshold = max(0.01, number(cfg["elite_threshold"]))
-    elite = min(1.0, max(0.0, top_trade / max(top_snapshot, 1) / threshold))
-    e = number(cfg["exponent_low"]) + elite * (
-        number(cfg["exponent_elite"]) - number(cfg["exponent_low"]))
-    return value * (value / top_trade) ** e
+def spread_penalty(values, rate):
+    """Discount spread-out value, with no piece count, headliner or market-cap gate."""
+    return rate * max(0.0, math.fsum(values) - math.hypot(*values))
 
 
-def consolidation(sides, top_snapshot, config=None):
-    """Return (adjustment per side, summed raw adjustments).
-
-    Sides is {team: [nonnegative asset values]}. Single-sided or zero-value
-    transactions do not create an adjustment.
-    """
-    keys = list(sides)
-    if len(keys) != 2:
-        return {k: 0.0 for k in keys}, {k: 0.0 for k in keys}
-    settings = load_config(config)["consolidation"]
-    if settings["method"] == "none":
-        return {k: 0.0 for k in keys}, {k: 0.0 for k in keys}
-    values = [max(0.0, number(v)) for group in sides.values() for v in group]
-    top = max(values, default=0.0)
-    if not top or any(not any(number(v) > 0 for v in sides[k]) for k in keys):
-        # Picks carry zero contender value. They must not gain a fictional
-        # balancing asset that turns a 0-for-starter deal into an 'Even' grade.
-        raw = {k: sum(fallback_raw(max(0.0, number(v)), top, top_snapshot, settings)
-                      for v in sides[k]) for k in keys}
-        return {k: 0.0 for k in keys}, raw
-    raw = {k: sum(fallback_raw(max(0.0, number(v)), top, top_snapshot, settings)
-                  for v in sides[k]) for k in keys}
-    lo, hi = sorted(keys, key=lambda k: raw[k])
-    diff = raw[hi] - raw[lo]
-    adjustment = {k: 0.0 for k in keys}
-    if diff > 1e-9:
-        low, high = 0.0, max(top, diff)
-        while fallback_raw(high, top, top_snapshot, settings) < diff:
-            high *= 2
-        for _ in range(70):
-            mid = (low + high) / 2
-            if fallback_raw(mid, top, top_snapshot, settings) < diff:
-                low = mid
-            else:
-                high = mid
-        adjustment[lo] = (low + high) / 2
-    return adjustment, raw
-
-
-def compare(sides, top_snapshot, config=None, proxy=None):
-    """Grade the value *received* by each team; adjusted point totals retained."""
-    keys = list(sides)
-    raw_totals = {k: sum(max(0.0, number(v)) for v in vals) for k, vals in sides.items()}
-    credit, adjustments = consolidation(sides, top_snapshot, config)
-    raw_totals = {k: v + (proxy or {}).get(k, 0) for k, v in raw_totals.items()}
-    adjusted = {k: raw_totals[k] + credit.get(k, 0) for k in keys}
-    total = sum(adjusted.values())
-    shares = {k: adjusted[k] / total if total else None for k in keys}
-    bands = load_config(config)["grade_bands"]
-    return {"raw": raw_totals, "credit": credit, "adjustment_sums": adjustments,
+def compare(sides, config=None, *, proxy=None, mode="dynasty"):
+    """Grade each bundle independently. K/DST proxies are added without a discount."""
+    config = load_config(config)
+    settings = config["consolidation"]
+    rate = (min(1., max(0., number(settings["dynasty_concentration_rate"])))
+            if mode == "dynasty" and settings["method"] == "asset-concentration" else 0.)
+    clean = {k: [max(0., number(v)) for v in vals] for k, vals in sides.items()}
+    raw_totals = {k: math.fsum(vals) + (proxy or {}).get(k, 0) for k, vals in clean.items()}
+    penalties = {k: spread_penalty(vals, rate) for k, vals in clean.items()}
+    adjusted = {k: raw - penalties[k] for k, raw in raw_totals.items()}
+    total = math.fsum(adjusted.values())
+    shares = {k: adjusted[k] / total if total else None for k in adjusted}
+    bands = config["grade_bands"]
+    return {"raw": raw_totals, "spread_penalty": penalties, "concentration_rate": rate,
             "adjusted": adjusted, "share": shares,
-            "grade": {k: grade(shares[k], bands) for k in keys},
-            "score": {k: grade_score(shares[k]) for k in keys}}
+            "grade": {k: grade(s, bands) for k, s in shares.items()},
+            "score": {k: grade_score(s) for k, s in shares.items()}}
 
 
 def pick_slot_values(pick_rows, season, config=None):
@@ -288,16 +239,14 @@ def evaluate_trade(assets, trade_day, player_history, pick_history, trade_year, 
                     problems["dynasty"].append(f'{asset["season"]} R{asset["round"]}')
                 else:
                     sides[team]["dynasty"].append(number(p["Value"]))
-    top_d = max((number(r.get("DynastyValue")) for r in players.values()), default=1)
-    top_r = max((number(r.get("RedraftValue")) for r in players.values()), default=1)
     result = {"status": "complete", "player_date": pd, "pick_date": kd,
               "dynasty": None, "contender": None, "missing": problems, "proxies": proxies,
               "proxy_pick_slot": proxy_slot}
     proxy_totals = {team: sum(values.values()) for team, values in proxies.items()}
-    for mode, top in (("dynasty", top_d), ("contender", top_r)):
+    for mode in ("dynasty", "contender"):
         if not problems[mode]:
-            result[mode] = compare({k: v[mode] for k, v in sides.items()}, top, config,
-                                   proxy=proxy_totals)
+            result[mode] = compare({k: v[mode] for k, v in sides.items()}, settings,
+                                   proxy=proxy_totals, mode=mode)
     if not result["dynasty"] and not result["contender"]:
         result["status"] = "No values from that week"
     if result["dynasty"] and len(assets) == 2:

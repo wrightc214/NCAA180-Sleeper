@@ -4,6 +4,7 @@ No API calls; fixtures are deliberately synthetic to isolate valuation logic.
 """
 import datetime as dt
 import json
+import math
 import sys
 from pathlib import Path
 
@@ -11,7 +12,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from transactions_page import build_teams, day, movement, parse, summary, trade_assets, trade_card
-from transactions_grades import (compare, consolidation, evaluate_trade, grade, load_config,
+from transactions_grades import (compare, evaluate_trade, grade, load_config,
                                  historical, nearest_pick, pick_swap, read_rows)
 
 
@@ -83,16 +84,38 @@ def test_grade_boundaries(share, label):
     assert grade(share) == label
 
 
-def test_consolidation_credit_inverse_and_no_phantom():
-    sides = {"A": [6000], "B": [2200, 2000, 1800]}
-    credit, raw = consolidation(sides, 11000)
-    lo = min(raw, key=raw.get)
-    assert credit[lo] > 0
-    assert credit[max(raw, key=raw.get)] == 0
-    assert consolidation({"A": [0], "B": [0]}, 10000)[0] == {"A": 0.0, "B": 0.0}
-    x = compare({"A": [5000], "B": [5000]}, 11000)
-    assert x["credit"] == {"A": 0, "B": 0}
-    assert x["grade"] == {"A": "Even", "B": "Even"}
+def test_concentration_compares_equal_total_bundles_without_fake_credit():
+    out = compare({"Single": [6000], "Package": [2200, 2000, 1800]})
+    assert out["raw"] == {"Single": 6000, "Package": 6000}
+    assert out["spread_penalty"]["Single"] == 0
+    assert out["adjusted"]["Package"] == pytest.approx(.4 * 6000 + .6 * math.hypot(2200, 2000, 1800))
+    assert out["adjusted"]["Single"] == 6000
+    same = compare({"A": [5000, 1000], "B": [1000, 5000]})
+    assert same["spread_penalty"]["A"] == same["spread_penalty"]["B"]
+    assert same["grade"] == {"A": "Even", "B": "Even"}
+    assert compare({"A": [0], "B": [0]})["grade"] == {"A": None, "B": None}
+
+
+@pytest.mark.parametrize("rate", [0, .6, 1])
+def test_puka_throw_ins_never_make_his_bundle_less_valuable(rate):
+    other = [2107, 2701, 2793, 3261]
+    cfg = {"consolidation": {"dynasty_concentration_rate": rate}}
+    base = compare({"Puka": [7075], "Package": other}, cfg)
+    after = compare({"Puka": [7075, 645, 121, 575], "Package": other}, cfg)
+    assert base["adjusted"]["Puka"] == 7075
+    assert after["adjusted"]["Puka"] > base["adjusted"]["Puka"]
+    assert after["score"]["Puka"] > base["score"]["Puka"]
+    assert after["adjusted"]["Package"] == base["adjusted"]["Package"]
+
+
+def test_modes_and_rate_bounds():
+    sides = {"A": [100, 100], "B": [170]}
+    assert compare(sides, mode="contender")["adjusted"] == {"A": 200, "B": 170}
+    for cfg in ({"method": "none"}, {"method": "ktc-style-fallback"}, {"dynasty_concentration_rate": -1}):
+        assert compare(sides, {"consolidation": cfg})["adjusted"] == {"A": 200, "B": 170}
+    out = compare(sides, {"consolidation": {"dynasty_concentration_rate": 1.5}}, proxy={"A": 10})
+    assert out["concentration_rate"] == 1
+    assert out["adjusted"] == pytest.approx({"A": 10 + math.hypot(100, 100), "B": 170})
 
 
 def test_nearest_pick_one_then_two_and_primary_highest_fitting():
@@ -145,19 +168,20 @@ def test_epoch_is_utc():
     assert day(0) == "1970-01-01"
 
 
-def test_config_controls_both_thresholds_and_fallback_parameters():
+def test_config_controls_both_thresholds_and_spread_rate():
     config = load_config()
     assert config["blockbuster_min_multiple"] == 1.4
     assert config["blockbuster_min_headliner_share"] == .60
     assert config["proxy_pick_slot"] == "4.12"
-    assert config["consolidation"]["method"] == "ktc-style-fallback"
+    assert config["consolidation"]["method"] == "asset-concentration"
+    assert config["consolidation"]["dynasty_concentration_rate"] == .60
     assert config["grade_bands"][0] == [60, "A"]
-    assert compare({"A": [4900], "B": [4900]}, 11000, config)["grade"]["A"] == "Even"
+    assert compare({"A": [4900], "B": [4900]}, config)["grade"]["A"] == "Even"
 
 
 def test_zero_contender_value_never_receives_phantom_consolidation_credit():
-    result = compare({"Win": [5000], "Picks": [0, 0]}, 11000)
-    assert result["credit"] == {"Win": 0.0, "Picks": 0.0}
+    result = compare({"Win": [5000], "Picks": [0, 0]}, mode="contender")
+    assert result["spread_penalty"] == {"Win": 0.0, "Picks": 0.0}
     assert result["grade"]["Win"] == "A"
     assert result["grade"]["Picks"] == "F"
 
@@ -165,13 +189,13 @@ def test_zero_contender_value_never_receives_phantom_consolidation_credit():
 def test_surplus_appears_in_winning_team_panel_only():
     sides = {"1": [{"kind": "player", "id": "100", "label": "Alpha Runner"}],
              "2": [{"kind": "player", "id": "200", "label": "Beta Receiver"}]}
-    dyn = compare({"1": [7000], "2": [2000]}, 11000)
+    dyn = compare({"1": [7000], "2": [1000, 1000]})
     dyn["surplus"] = {"team": "1", "value": 2000, "picks": [(1980, "2.07", True)]}
     result = {"dynasty": dyn, "contender": None, "status": "complete", "player_date": "2026-10-06"}
     row = {"LeagueName": "NCAA SEC", "Week": "5", "Created": "1791331200000", "TransactionID": "t1"}
     rendered = trade_card(row, sides, TEAMS, {}, result, {"NCAA SEC": "SEC"})
     assert rendered.count('class="tx-surplus"') == 1
-    assert 'Experimental consolidation adjustment (KTC-style)' in rendered
+    assert 'Dynasty concentration edge' in rendered
     winner_panel, other = rendered.split('<div class="tx-center">', 1)
     assert "tx-surplus" in winner_panel
     assert "tx-surplus" not in other
@@ -179,7 +203,7 @@ def test_surplus_appears_in_winning_team_panel_only():
     assert "2027" not in rendered
 
 @pytest.mark.parametrize("position", ["K", "DEF", "D/ST"])
-def test_league_proxy_excluded_from_credit_but_counted_in_both_modes(position):
+def test_league_proxy_excluded_from_spread_but_counted_in_both_modes(position):
     pd = "2026-11-03"
     players = [
         {"Date": pd, "SleeperID": "1", "DynastyValue": "4000", "RedraftValue": "6000"},
@@ -194,7 +218,7 @@ def test_league_proxy_excluded_from_credit_but_counted_in_both_modes(position):
     assert got["proxies"] == {"A": {"3": 725}, "B": {}}
     for mode in ("dynasty", "contender"):
         assert got[mode]["raw"]["A"] == base[mode]["raw"]["A"] + 725
-        assert got[mode]["credit"] == base[mode]["credit"]
+        assert got[mode]["spread_penalty"] == base[mode]["spread_penalty"]
     assert got["blockbuster"] == base["blockbuster"] == {"points": 6000, "multiple": 1.5,
                                                             "headliner_points": 4000, "headliner_share": 1.0}
     assert "blockbuster" not in evaluate_trade(
@@ -244,12 +268,32 @@ def test_real_trade_results_and_blockbuster_rendering(trade_id, marked):
     rendered = trade_card(row, sides, teams, {}, out, {})
     assert ('>Blockbuster</span>' in rendered) is marked
     if trade_id == "1426656560473452544":
-        assert "≈ Pick 1.01 + ≈ Pick 1.02" in rendered
+        assert "≈ Pick 3.12" in rendered
     if trade_id == "1423799198175739904":
-        assert out["dynasty"]["surplus"]["value"] == pytest.approx(372.294, abs=.001)
+        assert out["dynasty"]["surplus"]["value"] == pytest.approx(597.836, abs=.001)
         assert "+725 pts (4.12 proxy)" in rendered
-        assert "4.12 → 3.05" in rendered
-        assert "2027" not in rendered.split('class="tx-surplus"', 1)[1]
+        assert "4.12 → 2.10" in rendered
+        assert "2027" not in rendered.split('class="tx-surplus"', 1)[1].split("</div>", 1)[0]
+
+
+@pytest.mark.parametrize("tid, dynasty_grade, contender_grade, surplus", [
+    ("1426087744886558720", ("A", "F"), ("A", "F"), 3328.710),
+    ("1426733052746272768", ("D", "B+"), ("F", "A"), 1365.431),
+    ("1425929791147610112", ("B", "C"), ("F", "A"), 580.968),
+    ("1425957598431035392", ("Even", "Even"), ("F", "A"), 269.680),
+])
+def test_historical_market_regressions(tid, dynasty_grade, contender_grade, surplus):
+    from transactions_page import TRANSACTIONS, TEAMS as TEAM_FILE, PLAYERS as PLAYER_FILE
+    row = next(r for r in read_rows(TRANSACTIONS) if r["TransactionID"] == tid)
+    teams = build_teams(read_rows(TEAM_FILE))
+    players = {p["player_id"]: p for p in read_rows(PLAYER_FILE)}
+    sides = trade_assets(row, teams, players)
+    out = evaluate_trade(sides, day(row["Created"]), read_rows("data/PlayerValues_Season.csv"),
+                         read_rows("data/PickValues_Season.csv"), int(row["Year"]))
+    assert tuple(out["dynasty"]["grade"].values()) == dynasty_grade
+    assert tuple(out["contender"]["grade"].values()) == contender_grade
+    assert out["contender"]["raw"] == out["contender"]["adjusted"]
+    assert out["dynasty"]["surplus"]["value"] == pytest.approx(surplus, abs=.001)
 
 
 @pytest.mark.parametrize("player_values,pick_value,marked", [
@@ -316,11 +360,11 @@ def test_task_511_partial_owner_settings_change_only_selected_behavior(monkeypat
     }), encoding="utf-8")
     monkeypatch.setattr(lcfg, "TRANSACTIONS_CONFIG", config)
     settings = load_config()
-    assert settings["consolidation"]["exponent_low"] == 1.04
+    assert settings["consolidation"]["dynasty_concentration_rate"] == .60
     assert settings["labels"]["rebuild"] == "Rebuild"
     assert settings["proxy_pick_slot"] == "4.10"
     assert fantasycalc_request()[1]["numTeams"] == 10
-    assert compare({"1": [7000], "2": [3000]}, 11000)["credit"] == {"1": 0, "2": 0}
+    assert compare({"1": [7000], "2": [1500, 1500]})["spread_penalty"] == {"1": 0, "2": 0}
     slots = pick_slot_values([{"Season": "2027", "Round": "4", "Early": 900, "Mid": 800, "Late": 700}], 2027)
     assert list(slots)[-1] == (700, "4.10", True)
     row = tx(Week="1", Status="complete", Created="1794000000000", TransactionID="1", Type="trade")

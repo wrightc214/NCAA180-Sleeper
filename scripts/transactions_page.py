@@ -59,7 +59,7 @@ CSS = """
 .tx-muted{color:var(--mute);font-size:12px}
 .tx-center .tx-main-grades{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .tx-main-grades strong{font:900 33px var(--num,sans-serif);padding:9px 0;border:1px solid var(--line);border-radius:8px}
-.tx-credit{font-size:12px;color:var(--mute);margin:5px 0}
+.tx-concentration{font-size:12px;color:var(--mute);margin:5px 0}
 .tx-surplus{margin:8px;padding:9px 11px;border:1px solid var(--good);border-radius:9px;font-weight:800;color:var(--good);text-align:center;font-size:12px}
 .tx-surplus small{font-size:11px;font-weight:600}
 .tx-note{font-size:12px;color:var(--mute);margin:6px 0}
@@ -193,10 +193,10 @@ def render_grade(g, name):
     score = g["score"][name]
     if score is None:
         return '<strong title="Both sides have zero measured value">—</strong>'
-    raw, credit = g["raw"][name], g["credit"][name]
+    raw, discount = g["raw"][name], g["spread_penalty"][name]
     points = f"{raw:,.0f} raw"
-    if credit > 0.01:
-        points += f" + {credit:,.0f} consolidation"
+    if discount > 0.01:
+        points += f" − {discount:,.0f} spread penalty"
     return (f'<span class="tx-side-value" title="{points}">'
             f'<strong data-score="{score:.4f}">{esc(g["grade"][name])}</strong>'
             f'<small>{g["adjusted"][name]:,.0f} pts</small></span>')
@@ -263,12 +263,13 @@ def trade_card(r, sides, names, colors, result, shorts, config=None, team_fit=No
               + (f'<div class="tx-muted">{missing_label}</div>' if status != "complete" else
                  f'<div class="tx-muted">FantasyCalc snapshot {esc(result.get("player_date"))}</div>')
               + '</div>')
-    credit = ""
-    if dyn:
-        for rid in ids:
-            amt = dyn["credit"].get(rid, 0)
-            if amt > 0.01:
-                credit = f'<div class="tx-credit">Experimental consolidation adjustment (KTC-style) · +{amt:,.0f} points to {esc(team[rid])}</div>'
+    concentration = ""
+    if dyn and dyn["concentration_rate"]:
+        low, high = sorted(ids, key=dyn["spread_penalty"].get)
+        edge = dyn["spread_penalty"][high] - dyn["spread_penalty"][low]
+        if edge >= 0.5:
+            concentration = (f'<div class="tx-concentration">Dynasty concentration edge · '
+                             f'{esc(team[low])} by {edge:,.0f} points · already included</div>')
     blockbuster = result.get("blockbuster")
     flag = (f'<span class="tx-flag" title="{blockbuster["points"]:,.0f} combined raw dynasty market points'
             f' ({blockbuster["multiple"]:.2f}× snapshot leader). Top traded player: '
@@ -280,7 +281,7 @@ def trade_card(r, sides, names, colors, result, shorts, config=None, team_fit=No
     return (f'<article class="{card_class}" data-conference="{esc(league)}" data-week="{esc(r["Week"])}" '
             f'data-teams="{esc("|".join(team.values()))}" data-identity="{esc(short)}:{esc(ids[0])}|{esc(short)}:{esc(ids[1])}"><header>{meta}</header>'
             f'<div class="tx-grid">{panel(pairs[0])}{center}{panel(pairs[1])}</div>'
-            f'{credit}</article>')
+            f'{concentration}</article>')
 
 
 def render_movement(rows, short):
@@ -360,7 +361,7 @@ def main():
 <section><h2>{labels["trades"]} <small>({len(cards)})</small></h2>
 {filters}
 <p class="tx-note">Grades use FantasyCalc values available at trade time — not a verdict.
-{labels["rebuild"]} includes rookie picks. {labels["contender"]} values traded picks at zero. Unlisted kickers and D/ST use a {esc(grading_config["proxy_pick_slot"])} proxy in both grades. Surplus pick comparisons use the upcoming draft at trade time. {labels["blockbuster"]} marks a large raw dynasty deal with a high-value player, both measured against the snapshot’s top player. It does not indicate a winner. {labels["team_fit"]} compares lineup gains and future value versus holding for each team. A hyphen means the required history could not be verified. Projected wins and before/after odds are unavailable.</p>
+{labels["rebuild"]} includes rookie picks and can discount value spread across assets. {labels["contender"]} uses raw rest-of-season values and values traded picks at zero. Unlisted kickers and D/ST use a {esc(grading_config["proxy_pick_slot"])} proxy in both grades. Surplus pick comparisons use the upcoming draft at trade time. {labels["blockbuster"]} marks a large raw dynasty deal with a high-value player, both measured against the snapshot’s top player. It does not indicate a winner. {labels["team_fit"]} compares lineup gains and future value versus holding for each team. A hyphen means the required history could not be verified. Projected wins and before/after odds are unavailable.</p>
 <div class="tx-cards" id="tx-trades">{''.join(cards)}</div>
 <p class="tx-empty" id="tx-no-trades" hidden>No trades match these filters.</p>
 <p class="tx-note">{covered} of {len(cards)} trades have a {labels["rebuild"]} grade under the historical valuation rules.</p>

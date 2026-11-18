@@ -2,11 +2,8 @@
   "transactions": {
     "_note": "Trade valuation and display. grade_bands are descending [adjusted share percent, label] pairs. blockbuster_min_multiple and blockbuster_min_headliner_share are inclusive ratios to the snapshot leader. proxy_pick_slot sets the K/DST proxy and swap anchor. surplus_swap_max_relative_error is the maximum fractional swap error. draft_slots_per_round is the field size. draft_tier_anchors is the early/mid/late pivot triplet on a 12-slot reference scale, rescaled for other field sizes. movement_types lists Sleeper transaction types counted in weekly adds/drops, excluding trades.",
     "consolidation": {
-      "_note": "Use ktc-style-fallback for the experimental model or none for raw grades. Low/elite exponents and elite_threshold control the existing fallback. dynasty_concentration_rate is the approved fraction of the spread penalty for the pending dynasty model and does not affect the current fallback.",
-      "method": "ktc-style-fallback",
-      "exponent_low": 1.04,
-      "exponent_elite": 1.4,
-      "elite_threshold": 0.7,
+      "_note": "asset-concentration discounts spread-out dynasty value only. Use none for raw dynasty grades. The rate is the fraction of the spread penalty applied (0–1). Contender always uses raw values until a separate rate is approved.",
+      "method": "asset-concentration",
       "dynasty_concentration_rate": 0.60
     },
     "grade_bands": [

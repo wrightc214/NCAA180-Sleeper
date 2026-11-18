@@ -63,11 +63,14 @@ def main():
                                  "1425957598431035392"):
                     assert featured.filter(has_text=trade_id).get_by_text("Blockbuster", exact=True).count() == 1
                 assert featured.filter(has_text="1426733052746272768").count() == 0
-                assert page.get_by_text("Experimental consolidation adjustment (KTC-style)", exact=False).count() > 0
+                assert page.get_by_text("Dynasty concentration edge", exact=False).count() > 0
+                tech = page.locator(".tx-card").filter(has_text="1426087744886558720")
+                assert tech.get_by_text("Georgia Tech by 583 points", exact=False).count() == 1
+                assert tech.locator(".tx-fit strong").all_text_contents() == ["A", "F"]
                 montana_od = page.locator(".tx-card").filter(has_text="1426656560473452544")
-                assert "≈ Pick 1.01 + ≈ Pick 1.02" in montana_od.locator(".tx-surplus").inner_text()
+                assert "≈ Pick 3.12" in montana_od.locator(".tx-surplus").inner_text()
                 oregon = page.locator(".tx-card").filter(has_text="1423799198175739904")
-                assert oregon.get_by_text("4.12 → 3.05", exact=False).count() == 1
+                assert oregon.get_by_text("4.12 → 2.10", exact=False).count() == 1
                 assert "2027" not in oregon.locator(".tx-surplus").inner_text()
                 assert oregon.get_by_text("+725 pts (4.12 proxy)", exact=False).count() == 1
                 # Filter to a team on the first trade. Revert filter.

@@ -1,12 +1,12 @@
 # Task 5.11 Transactions — developer / auditor handoff (TEMPORARY; DELETE BEFORE MERGE)
 
-> **Status:** Draft PR #111 is blocked on the consolidation replacement. Team Fit v1 is implemented for review. The current preview and mockups are review baselines, not final grading results. Keep this README and all three mockups on the review branch. At merge time, the merge agent pins review links, removes the temporary files, and reruns checks on the exact landing commit. Do **not** merge or deploy from this branch.
+> **Status:** Draft PR #111 has the dynasty concentration replacement and Team Fit v1 implemented for review. The three mockups are historical design references, not current grading results. Keep this README and all three mockups on the review branch. At merge time, the merge agent pins review links, removes the temporary files, and reruns checks on the exact landing commit. Do **not** merge or deploy from this branch.
 
 ## Active review working list
 
-This list reconciles the earlier review with subsequent owner decisions. It takes precedence over the original brief and the earlier review examples below where they conflict. Unchecked tasks remain open. The tests below describe Team Fit validation only.
+This list reconciles the earlier review with subsequent owner decisions. It takes precedence over the original brief and the earlier review examples below where they conflict. Unchecked tasks remain open. The model and market regression checks are recorded below.
 
-- [ ] **Blocking — replace the consolidation calculation.** The old `adjustment[lo]` credit is the problem the reviewer identified. **Superseded fix:** do not move the same balancing credit to the high side. Implement the [approved 60% dynasty concentration design](#dynasty-consolidation-decision--approved-pending-implementation) using the configured rate. It compares independently adjusted bundles, without an elite threshold or a piece-count cutoff. Do not silently retain the faulty credit or apply 60% in Contender without a separate decision. Recompute the grades, surplus badges and pick equivalents once the applicable method is settled, and refresh the README examples. Recheck Maine–Youngstown State (Maye), Citadel–UNC Charlotte (Walker), Montana–Old Dominion (Puka and the surplus), and Montana–South Dakota (the Contender gap). Add tests for a concentration-favoring one-for-three, an equal-piece two-for-two with no edge, no loss from adding a nonnegative throw-in (the Puka before/after case), and the configured bound on how much the adjustment can change a raw gap. The reviewer did not specify a numerical value for the separate “more than X” winner-flip guard. Raw Blockbuster eligibility stays separate.
+- [x] **Replace the inverted consolidation credit.** Dynasty now uses the approved [60% concentration model](#dynasty-concentration-decision), Contender uses raw totals, and grades and pick-equivalent surpluses were regenerated. Raw Blockbuster eligibility and Team Fit were not changed. The model bounds each side’s penalty by 60% of its eligible raw value. No additional fixed winner-flip limit was selected.
 
 - [x] **Build Team Fit v1.** See [the model and review cases](#team-fit-v1). It uses independently calibrated goal-based units rather than the draft 50/50 market-grade normalization. Wins/odds projections and the narrative remain unavailable.
 
@@ -25,19 +25,19 @@ This list reconciles the earlier review with subsequent owner decisions. It take
 ## Current implementation / review checkpoint
 
 - Generator: `scripts/transactions_page.py`; generated preview: `reports/transactions.html` (regenerated and committed **only to the feature branch**).
-- Pure grade/slot approximation engine: `scripts/transactions_grades.py`; configurable thresholds and KTC-style fallback: `config/transactions.json` under `transactions`. The final site must not imply exact KTC calibration.
+- Pure grade/slot approximation engine: `scripts/transactions_grades.py`; configurable thresholds and dynasty concentration: `config/transactions.json` under `transactions`.
 - Historical picks: `data/PickValues_Season.csv` backfilled from eight verified Git commit revisions on Oct 2, 6, 13, 20, 27 and Nov 3, 10, 17. Future capture: `scripts/player_values.py`; workflow step in `.github/workflows/update-leagues.yml`.
 - Nav: `config/nav.json` entry `hidden-dev`; menu compiled by the existing weekly `scripts/menu_build.py`. **Do not gratuitously edit `templates/menu.js` or `reports/assets/menu.js` during accessibility PR #109.** The generated menu is committed. Read-only CI regenerates it and requires no diff before testing normal vs. Dev navigation.
 - Tests: `tests/test_transactions_page.py` and `tests/transactions_browser.py`. PR CI `.github/workflows/transactions-pr-check.yml` is read-only: runs the full Python suite, every Node test, static generation, and Chromium desktop/light and mobile/dark smoke checks, then uploads HTML + two viewport screenshots as the Actions artifact `transactions-preview`.
 - Final review build contains **113 trades, 34 Rebuild-graded, 11 weeks, 15 conferences, and 4 Blockbuster badges**. Check the latest read-only Actions run on this draft PR for the full test and browser results.
-- PR description includes three **actual** transaction IDs and rounded raw/credit/adjusted totals and grades, including 3-for-1, 1-for-2, 4-for-1.
-- **Known limitation:** Team Fit uses a hyphen when trade-time evidence is insufficient; ROS wins, contender title/playoff odds and rebuilder bowl/1.01 odds are *not yet calculated*. No narrative explanation is generated (user explicitly deferred that section). Do not present these as complete.
-- **Review risk:** fallback consolidation adjustment can produce large balancing credits in uneven trades. Validate desired trade-economics direction before publicizing results; zero-valued contender pick sides receive **no** phantom credit. Credit is labeled **Experimental consolidation adjustment (KTC-style)** on the card. Exact slot values are not stored, so pick equivalents are interpolated and visually tagged approximate.
+- The [review data](#reproduced-review-grades) lists current market grades, Team Fit and why each team's results check out.
+- **Known limitation:** Team Fit uses a hyphen when trade-time evidence is insufficient. Projected wins and before/after odds are not calculated. The explanations here are reviewer notes, not a new site feature.
+- Cards disclose raw market totals and the spread penalty. Pick equivalents are interpolated, not exact FantasyCalc slot quotes.
 - The generated preview page embeds dated trade data. Rerun the generator when upstream snapshots change; do not silently treat the committed preview as live data.
 
-## Dynasty consolidation decision — approved, pending implementation
+## Dynasty concentration decision
 
-**Use a 60% concentration adjustment for dynasty grades.** This is a replacement design for the current experimental balancing credit, not a change to the grades in this commit. The approved rate is stored in `config/transactions.json` at `transactions.consolidation.dynasty_concentration_rate` (`0.60`). It is not used by the current `ktc-style-fallback` method. No Contender rate was selected.
+**Use a 60% concentration adjustment for dynasty grades.** The owner setting is `config/transactions.json` → `transactions.consolidation.dynasty_concentration_rate` (default `0.60`), used by the `asset-concentration` method. This replaces the experimental KTC-style balancing credit. Set the method to `none` to use raw totals. Contender always uses raw rest-of-season values, with draft picks worth zero and no concentration adjustment.
 
 For each side, take the nonnegative trade-date market values `v_i` of the assets it receives. Let `P` be any K/DST proxy points. They still count toward the total but are excluded from the concentration calculation.
 
@@ -69,7 +69,7 @@ We treated every completed deal as if it were fair for calibration, then minimiz
 
 60% gives more weight to concentrated value than the mathematical optimum and costs only about seven points per trade in average fit. We preferred that stronger effect to claiming false precision from a small sample and a deliberately imperfect equal-trade assumption. At 60%, on the historical inputs, Walker's side leads by about 270, the Maye pick package leads by about 581, and the Rice/Swift package leads Puka by about 963.
 
-FantasyCalc's live waiver adjustment was a comparison, not a calibration target. Adding three positive-value throw-ins to Puka removed the waiver credit and widened the live calculator's gap. Keep that before/after as a regression case for the replacement model. Raw Blockbuster thresholds are separate and should not change.
+FantasyCalc's live waiver adjustment was a comparison, not a calibration target. Adding three positive-value throw-ins to Puka removed the waiver credit and widened the live calculator's gap. The regression test uses that before/after to guard the replacement model. Raw Blockbuster thresholds are separate and should not change.
 
 ## Task 5.11 owner settings
 
@@ -79,11 +79,8 @@ The existing shared brand, conference terminology, and semantic colour tokens ar
 
 | File | Key | Default |
 | --- | --- | --- |
-| `config/transactions.json` | `transactions.consolidation.method` | `"ktc-style-fallback"` |
-| `config/transactions.json` | `transactions.consolidation.exponent_low` | `1.04` |
-| `config/transactions.json` | `transactions.consolidation.exponent_elite` | `1.4` |
-| `config/transactions.json` | `transactions.consolidation.elite_threshold` | `0.7` |
-| `config/transactions.json` | `transactions.consolidation.dynasty_concentration_rate` | `0.60` (pending dynasty model) |
+| `config/transactions.json` | `transactions.consolidation.method` | `"asset-concentration"` |
+| `config/transactions.json` | `transactions.consolidation.dynasty_concentration_rate` | `0.60` |
 | `config/transactions.json` | `transactions.grade_bands` | `[[60, "A"], [55, "B+"], [52, "B"], [48, "Even"], [45, "C"], [40, "D"], [0, "F"]]` |
 | `config/transactions.json` | `transactions.blockbuster_min_multiple` | `1.4` |
 | `config/transactions.json` | `transactions.blockbuster_min_headliner_share` | `0.6` |
@@ -142,7 +139,7 @@ Team Fit is not the market trade grade. Each team is evaluated independently aga
 | Bass / White / Singletary | Arizona State | 70% | 45,143 → 45,392 | 90,786 → 91,045 | B · 52.2 |
 | Bass / White / Singletary | Oregon | 10% | 10,837 → 9,826 | 50,688 → 50,429 | B+ · 55.1 |
 
-**Tests written:** age curves and the RB cliff, valid below-market sales versus holding, relative bowl weight, hyphen for missing coverage, and the five archived reference grades. **Tests run locally:** full Python suite (152 passed, 10 skipped), full Node suite, deterministic menu rebuild, and report generation. The model produced 68 team-side grades and 158 ungraded sides. The modal letter remains Even (27 of 68 scored sides). The market consolidation replacement, workflow-policy question and menu cleanup remain separate working-list items.
+**Tests written:** age curves and the RB cliff, valid below-market sales versus holding, relative bowl weight, hyphen for missing coverage, and the five archived reference grades. **Tests run locally:** full Python suite (152 passed, 10 skipped), full Node suite, deterministic menu rebuild, and report generation. The model produced 68 team-side grades and 158 ungraded sides. The modal letter remains Even (27 of 68 scored sides). Those are the preceding Fit-only test results. The market recheck below did not change the Fit output.
 
 ### Team Fit owner defaults
 
@@ -170,6 +167,49 @@ Team Fit is not the market trade grade. Each team is evaluated independently aga
 | `config/transactions.json` | `team_fit.specialist_needs_points` | `2600` |
 | `config/transactions.json` | `team_fit.age_curves` | `{"QB": [31, 0.07, 35, 0.2], "RB": [27.5, 0.15, 30.5, 0.4], "WR": [28, 0.1, 31, 0.28], "TE": [29, 0.09, 32, 0.25]}` |
 
+## Reproduced review grades
+
+Dynasty shows raw → adjusted points with the market grade. Contender shows raw rest-of-season points and its market grade. Team Fit is the independent grade vs. holding. Values are rounded for display. The rationale describes what the teams gained or gave up using trade-time evidence, not what their managers intended.
+
+| Trade (Sleeper ID) | Team receiving | Dynasty raw → adjusted | Contender raw | Team Fit |
+| --- | --- | ---: | ---: | ---: |
+| Lamb `1426087744886558720` | Georgia Tech | 9,467 → 8,503 (A) | 9,235 (A) | 68.49 (A) |
+| | Virginia Tech | 6,721 → 5,175 (F) | 777 (F) | 37.26 (F) |
+| Maye `1425929791147610112` | Maine | 6,334 → 4,791 (B) | 0 (F) | 69.68 (A) |
+| | Youngstown State | 4,210 → 4,210 (C) | 3,047 (A) | 50.73 (Even) |
+| Gibbs `1412325964028899328` | Brown | 11,017 → 11,017 (A) | 10,825 (A) | 65.63 (A) |
+| | Bucknell | 10,266 → 7,325 (F) | 5,371 (F) | 52.85 (B) |
+| JSN / A.J. Brown `1414580639092518912` | Brown | 14,328 → 11,848 (A) | 12,912 (A) | 68.20 (A) |
+| | Penn | 10,844 → 7,104 (F) | 424 (F) | 50.74 (Even) |
+| Walker `1425239682513420288` | ETSU | 6,869 → 6,869 (B+) | 9,421 (A) | 64.60 (A) |
+| | Charleston Southern | 7,424 → 5,347 (D) | 0 (F) | 61.01 (A) |
+| Bass / White / Singletary `1423799198175739904` | Arizona State | 2,771 → 2,463 (B+) | 1,613 (A) | 52.16 (B) |
+| | Oregon | 2,512 → 1,866 (D) | 0 (F) | 55.07 (B+) |
+| Walker / Achane `1425957598431035392` | Citadel | 9,015 → 6,637 (Even) | 0 (F) | 51.05 (Even) |
+| | UNC Charlotte | 6,907 → 6,907 (Even) | 9,310 (A) | 63.20 (A) |
+| Puka `1426656560473452544` | Montana | 7,217 → 7,217 (C) | 6,455 (D) | 45.03 (C) |
+| | Old Dominion | 11,581 → 8,180 (B) | 8,098 (B+) | 55.50 (B+) |
+| McCaffrey / Kittle `1426733052746272768` | Montana | 5,600 → 4,624 (D) | 2,888 (F) | 32.70 (F) |
+| | South Dakota | 7,077 → 5,990 (B+) | 12,491 (A) | 48.27 (Even) |
+
+### Why the grades check out
+
+- **Georgia Tech** gained 7,818 in best-lineup value and 2,746 in raw dynasty value, making Lamb a strong move for a playoff push. **Virginia Tech** was 5–4 and still had a meaningful bowl chance. It lost 6,106 in lineup value, and its return fell short of holding at both future horizons. That is why the F in Fit agrees with the market result. Georgia Tech has a 3,329-point adjusted surplus, about 1.05. The concentration edge is 583 points and is already included, not a bonus on top. The previous model wrongly showed Virginia Tech ahead by 6,555.
+- **Maine** was 2–5 and turned Maye into three picks while giving up just 114 in best-lineup value. The package beats holding in the future model and leads adjusted dynasty by 581 despite adding no current production. **Youngstown State** was 7–0 and gained 1,890 in lineup value, but surrendered enough future capital to make the move close to neutral in Fit. This uses historical inputs before Maye's later injury, not current calculator values. The market grade and Fit use their respective eligible November 10 and November 3 snapshots.
+- **Brown** bought Gibbs and added 6,923 in lineup value, so the A in Fit agrees with the single-asset market win. **Bucknell** was 0–3 and acquired younger pass-catching talent and a second. That helps its nearer future even though the concentrated market price favors Brown and holding Gibbs remains competitive at two years.
+- **Brown** added 6,688 in lineup value and 3,484 in raw dynasty value in the JSN/A.J. Brown trade, a strong return for a 3–1 team. **Penn** was 1–3 and got three firsts, a second, and younger depth. That creates flexibility, but keeping JSN was a credible rebuild option too. An Even in Fit can coexist with an F in market value.
+- **ETSU** gained 8,033 in starting-lineup value with Walker and paid with future capital. The timing makes that an A in Fit. **Charleston Southern** got two firsts, a second, and a third. Its package loses on adjusted market price, but beats holding at both rebuild horizons, giving it an A in Fit too.
+- **Arizona State** was 6–2 and filled an immediate kicker need with Bass while adding veteran depth. The market credits Bass at the 725-point 4.12 proxy, while Fit measures his coverage on this roster. **Oregon** was 1–7 and turned veterans and a spare kicker into future picks and a young player. It was 259 behind on raw dynasty price but improved versus holding. Arizona State leads adjusted dynasty by 598, about a 4.12 → 2.10 swap.
+- **Citadel** got the larger raw dynasty package, but its current lineup lost 8,826 in value while it still had roughly a 53% bowl chance. Achane and Bell contribute zero in the trade-date rest-of-season snapshot. The future gain balances that cost in Fit. **UNC Charlotte** was 8–1 and gained 7,620 in lineup value by buying Walker. The A in Fit recognizes that improvement despite the future cost. The 270-point adjusted dynasty gap leaves both market grades Even, and the raw Blockbuster badge still applies.
+- **Montana** added Puka but gained only 261 in best-lineup value and gave up 4,364 in raw dynasty value. That is a modest lineup gain for the price, hence the C in Fit. **Old Dominion** gained 399 in lineup value and took back two firsts, which gives it the better balance. Its 963-point adjusted dynasty surplus is about 3.12, not the two early firsts pictured in the old mockup.
+- **Montana** was 5–4 with roughly a 50% playoff chance. McConkey and Hampton bring future upside, but giving up 10,090 in lineup value at that point makes this a poor trade-time fit. **South Dakota** gained 8,760 in lineup value, explaining the A in Contender. The return looks better than holding over one year than over two, making the overall Fit close to neutral. The actual raw Contender gap is 9,603 in South Dakota's favor, not Even.
+
+### Market recheck on this revision
+
+**Added coverage:** equal packages, one-for-many concentration, raw Contender and method-off defaults, penalty bounds, nonnegative throw-ins, proxy exclusion, real review fixtures, and browser regression checks for prominent market and Fit grades.
+
+**Ran locally:** `python3 -m pytest -q tests` (160 passed, 10 skipped), all five `tests/*.test.js` files (29 passed), `python3 scripts/transactions_page.py` (113 trades, 34 graded), and `python3 scripts/menu_build.py` followed immediately by `git diff --exit-code -- reports/assets/menu.js` (clean). Regenerated cards retained identical Team Fit markup and the same four Blockbusters. Local Chromium could not start in the execution environment. Check the read-only Actions run for browser evidence on the review SHA.
+
 ## Trade-card design references
 
 These three mockups use real completed trades. They are **design references, not screenshots of the current generator**. The two Montana cards use the existing draft grades. The Arizona State–Oregon card previews the agreed kicker/D/ST proxy and the proposed small-surplus pick-swap display.
@@ -178,19 +218,19 @@ These three mockups use real completed trades. They are **design references, not
 
 ![Montana receives Puka Nacua. Old Dominion receives Rice, Swift and two firsts, with the draft model showing a 9,809-point dynasty surplus.](./docs/transactions-review-mockups/montana-old-dominion.png)
 
-Trade `1426656560473452544`. **Blockbuster** at 18,798 combined raw dynasty points. The generated card shows **≈ Pick 1.01 + ≈ Pick 1.02**, two distinct estimated slots. The mockup uses the earlier “two early firsts” shorthand. Old Dominion leads both raw totals before the fallback credit.
+Trade `1426656560473452544`. **Blockbuster** at 18,798 combined raw dynasty points. The current card shows Old Dominion +963 (≈ Pick 3.12). The earlier mockup shows the superseded 9,809-point surplus.
 
 ### Montana–South Dakota · Nov. 12, 2026
 
 ![Montana receives McConkey and Hampton. South Dakota receives McCaffrey and Kittle. The draft model calls the Contender grade Even after a large credit.](./docs/transactions-review-mockups/montana-south-dakota.png)
 
-Trade `1426733052746272768`. Use this as a consolidation stress test. Montana's **9,178-point** Contender credit makes a **9,603-point raw gap** look Even. Review the adjustment before treating the result as a fair-value signal.
+Trade `1426733052746272768`. The current card shows a 9,603-point Contender advantage for South Dakota. The earlier mockup shows the superseded Even grade.
 
 ### Arizona State–Oregon · Nov. 4, 2026
 
 ![Arizona State receives Tyler Bass, Rachaad White and Devin Singletary. Oregon receives Reggie Virgil and three picks. Oregon's 372-point dynasty surplus is shown as an estimated pick swap from 4.12 to 3.05.](./docs/transactions-review-mockups/arizona-state-oregon.png)
 
-Trade `1423799198175739904`. Bass is absent from the Nov. 3 FantasyCalc snapshot. The generator applies the **725-point NCAA 180 proxy** in both modes, excludes proxy points from the consolidation calculation, and shows Oregon's **+372 adjusted dynasty points** as **≈ Pick swap · 4.12 → 3.05**. The estimated swap is worth 376 points. It is an illustration of the value gap, not another term of the trade.
+Trade `1423799198175739904`. Bass is absent from the Nov. 3 market snapshot. He gets the historical **725-point 4.12 proxy** in both modes, excluded from the spread penalty. The current card shows **Arizona State +598**, approximately **4.12 → 2.10**, a value comparison rather than another term of the trade.
 
 ## Blockbuster acceptance set
 
@@ -213,9 +253,7 @@ The [Transactions project doc](docs/transactions.md) is the lasting record of th
 
 > Independently review draft PR #111 against main. Do not merge it or deploy. Open the generated Transactions page and all three [design references](#trade-card-design-references), then use [the permanent Transactions doc](docs/transactions.md) as the specification.
 >
-> Reproduce the three real trades and inspect both raw and adjusted values. Check Bass's historical 725-point 4.12 proxy in both grades, its exclusion from consolidation and blockbuster math, the distinction between unlisted known players and unresolved IDs, and that zero-versus-zero never gets an Even grade. Verify Oregon displays +372 and an approximate 4.12 → 3.05 swap with no year in the surplus badge, while actual traded picks retain their years. Reproduce the four [expected Blockbusters](#blockbuster-acceptance-set), including Walker–Achane at 1.45× combined and a 63% headliner. On Montana–Old Dominion, verify the yearless multi-pick surplus starts at 1.01 and the next slot is distinct. Verify the [Task 5.11 settings inventory](#task-511-owner-settings), including a partial owner config and the missing-section and missing-preview-state defaults. Compare the default trade cards and badge set with the prior validated build. Check the inclusive 1.40× volume and 60% single-player thresholds against the full historical snapshot. Verify the two unmarked mockup trades, a third-for-two-fourths deal, and a pile of mid-tier assets without a headliner do not qualify. Picks can count toward volume only. Confirm the badge does not imply a winner.
->
-> Check Playwright and the latest read-only CI run. Confirm a synthetic CCG Week uses the shared schedule label on the card, both selectors (numeric option values), and summary. Then spot-check filtering, sections, mobile overflow, light/dark badge legibility, and the hidden-dev nav. Re-examine the fallback on Montana–South Dakota, where a large credit almost erases the raw Contender gap. Confirm the permanent doc carries the missing work, especially a sourced “Why this trade makes sense” for each side, plus Team Fit, projected wins and odds. Report findings by severity, give a ready/not-ready recommendation, and list any scope or calibration decisions needed. Leave the temporary README and all three review images for the merge agent to remove at merge time.
+> Reproduce the [review grades](#reproduced-review-grades), especially Tech–Tech, both Montana trades, Maye, Walker–Achane and Arizona State–Oregon. Verify each dynasty penalty independently and that positive throw-ins never reduce a side’s own adjusted value. Check raw Contender, the historical 725-point Bass proxy, the yearless Arizona State 4.12 → 2.10 surplus swap, and the four [expected Blockbusters](#blockbuster-acceptance-set). Confirm the grade labels and read the team-by-team rationale separately from the market prices.
 
 ### Review commands
 
@@ -276,9 +314,7 @@ Use these exact accessible light/dark tokens, by reference: light good #1a7f37, 
 
 **Draft-equivalent convention:** always the *upcoming draft relative to trade date* (2026 trades → 2027), with the year omitted from surplus labels. Below 4.12, show the closest meaningful same-draft swap anchored at 4.12, or points only. If surplus fits within a high first, use **one** nearest individual pick and accept rounding error. For surplus **above the value of a high first**, show a high first plus additional pick(s) as necessary. In a combination, the **main pick must be the highest-valued pick that fits** the surplus, even when a smaller initial pick plus a later pick would yield a numerically closer sum. Preserve exact FantasyCalc individual pick-slot data if the API returns it; currently stored historical/current pick CSV only retains round generic and early/mid/late tier values. If exact slots aren't available, interpolating within tiers is acceptable **only when visibly labeled approximate**; do not misrepresent inferred `2.07` as an observed FantasyCalc quote. If no meaningful pick match, report value delta without invented precision.
 
-**Rebuild / contender math:** use historical FantasyCalc, never KTC valuations. The user prefers FantasyCalc's stronger dataset. A KTC-*style* consolidation mechanism can be calibrated with future KTC sample trades:
-`raw(p) = p * [a*(p/t)^1.3 + b*(p/v)^8 + c*(p/(v+2000))^1.28]`,
-where t = best traded asset and v = maximum asset value in that historical snapshot. Sum adjustment per side; solve the inverse for the balancing adjustment and credit to side with lower raw adjustment. Calibrate `a,b,c` when examples are supplied, rescale for FantasyCalc. If none supplied, implement/document a safe fallback elite-weighting formulation and **label it “KTC-style”**, not exact KTC. Constants, thresholds and method in config. Show the consolidation adjustment (“+N consolidation credit to TEAM”), raw totals, adjusted totals and grades. Guard zero assets, ties and monotonicity.
+**Rebuild / contender math:** Use historical FantasyCalc, with the [approved concentration formula](#dynasty-concentration-decision) for dynasty and raw rest-of-season totals for Contender. Do not reuse the retired KTC-style credit.
 
 **Projected wins:** user wants projected **rest-of-season wins gained/lost** from new players, not generic raw contender points. It must reflect replacement starters / lineup, byes and schedule, including a possible Week 13 RB2 hole that can make a seemingly unfavorable market-value RB trade critical. Preserve losses as negative values. For top-end contenders, meaningful title-odds change may justify an apparent overpay. For rebuilding teams, outlook should show **Bowl odds, 1.01 odds, and Projected Wins (ROS)** instead of title/playoff odds. For contenders, **Title odds, Playoff odds, and Projected Wins (ROS)**. Percentages are before→after with pp change; wins before→after with win difference. **Only render numeric claims when supported by reproducible historical matchup/roster/projection data and a validated forecast model**. Do not invent odds or wins to fill a layout. If historical source support is insufficient, defer/mark unavailable, and call out the limitation in the PR.
 
@@ -303,14 +339,14 @@ Run and report actual outcomes, not assumptions:
 
 ```bash
 python3 -m pytest -q tests
-node tests/*.test.js
+for test in tests/*.test.js; do node "$test" || exit; done
 ```
 
 New tests must cover:
 - Bidirectional players+picks attribution; 3-for-1 and 2-for-1 trades; original owner `via` label; no historical manager misattribution.
 - Distinct-league movement add/drop counts; trade exclusion; `available in` short conference labels based on current roster.
 - Snapshot on/before trade date (including same-day, missing before first snapshot, no future leakage); historical pick snapshot backfill and append idempotence.
-- Grade boundaries/config mapping, symmetric comparative grading, zero-value assets, inverse consolidation adjustment and recipient selection.
+- Grade boundaries/config mapping, symmetric comparative grading, zero-value assets, independent concentration penalties, monotonicity, and raw Contender.
 - One next-draft pick only through high-first cap, highest-valued-fitting primary pick for larger surplus, approximate slot labeling.
 - Team Fit independence and no fabricated odds/win improvements; deadline/Week 11 draft-order rule where applicable.
 - Theme responsiveness, grade color from numeric score, keyboard navigation, fold and save-image controls.
@@ -323,7 +359,6 @@ PR #109 (Accessibility 5.8) is **draft and independently reviewed before merging
 
 ## Pending / future work
 
-- KTC samples from Chris to calibrate KTC-style coefficients; FantasyCalc player values remain canonical.
 - Narrative explanations (“why it works”) expressly **deferred to future PR**.
 - Discord integration **not in scope**.
 - If audited historic data cannot support honest Team Fit / +wins / title, playoff, bowl and pick odds, document gap and plan a separate defensible model; do not substitute fantasy numbers.
