@@ -7,7 +7,7 @@ link to site: http://ncaa180.short.gy/home
 
 ## Accessibility 5.8 — development review (PR #109)
 
-Accessibility 5.8 is being developed on `feature/accessibility-5-8`. **It is not released, validated, or approved for merge.** The proposed settings page is `reports/access.html` (developer-only navigation), and device-local preferences are stored at `localStorage["ncaa180.access"]`.
+Accessibility 5.8 is being developed on `feature/accessibility-5-8`. **It is not released, validated, or approved for merge.** The shared accessibility engine lives in `templates/accessibility.js` and is bundled synchronously into `reports/assets/menu.js` by `scripts/site_common.py`, so existing static pages need no extra script tag. The proposed settings page is `reports/access.html` (developer-only navigation), and device-local preferences are stored at `localStorage["ncaa180.access"]`.
 
 **Reviewer / developer starting point:** [Accessibility 5.8 independent review handoff](docs/accessibility-5-8-review.md). That document contains the complete current implementation inventory, acceptance criteria, exact safe test commands, confirmed vs. unconfirmed test results, known gaps, and no-merge guardrails. The test suite has passed an emulated JavaScript harness (18/18); native Node/CI/browser testing is **not yet confirmed**.
 
