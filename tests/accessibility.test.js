@@ -7,10 +7,10 @@ const path = require('node:path');
 const Module = require('node:module');
 
 function load(data, ownerOverride) {
-  const ownerColors = ownerOverride || JSON.parse(
-    fs.readFileSync(path.join(__dirname, '..', 'config', 'league.json'), 'utf8')).accessibility_colors;
+  const config = ownerOverride || JSON.parse(
+    fs.readFileSync(path.join(__dirname, '..', 'config', 'accessibility.json'), 'utf8'));
   const accessibilitySource = fs.readFileSync(path.join(__dirname, '..', 'templates', 'accessibility.js'), 'utf8')
-    .replace('/*__OWNER_ACCESSIBILITY_COLORS__*/null', JSON.stringify(ownerColors));
+    .replace('/*__OWNER_ACCESSIBILITY_COLORS__*/null', JSON.stringify(config));
   const src = fs.readFileSync(path.join(__dirname, '..', 'templates', 'menu.js'), 'utf8')
     .replace('/*__DATA__*/null', JSON.stringify(data))
     .replace('/*__ACCESSIBILITY__*/', accessibilitySource);
