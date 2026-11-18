@@ -5,8 +5,12 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
     paths:
-      - 'templates/menu.js'
-      - 'reports/assets/menu.js'
+      - 'templates/**'
+      - 'reports/assets/**'
+      - 'reports/access.html'
+      - 'reports/sw.js'
+      - 'config/nav.json'
+      - 'scripts/access_page.py'
       - 'tests/**'
       - '.github/workflows/pr-safety-tests.yml'
 
@@ -33,3 +37,12 @@ jobs:
           node-version: '22'
       - name: Run existing Node tests
         run: node --test tests/*.test.js
+      - name: Check browser script syntax
+        run: |
+          node --check templates/menu.js
+          node --check reports/assets/menu.js
+          node --check reports/assets/access.js
+          node --check reports/assets/scoreboard.js
+          node --check reports/sw.js
+      - name: Check page generator syntax
+        run: python -m py_compile scripts/access_page.py
