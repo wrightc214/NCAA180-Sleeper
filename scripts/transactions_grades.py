@@ -6,6 +6,7 @@ import bisect
 import csv
 import datetime as dt
 import math
+import json
 from collections import defaultdict
 from pathlib import Path
 
@@ -46,6 +47,12 @@ def read_rows(path):
         return list(csv.DictReader(f))
 
 
+def load_config(path="config/transactions.json"):
+    """Read explicit adjustable coefficients/bands; defaults used for pure unit fixtures."""
+    p = Path(path)
+    return json.loads(p.read_text(encoding="utf-8")) if p.exists() else DEFAULT_CONFIG
+
+
 def grade(share, bands=None):
     if share is None or not math.isfinite(share):
         return None
@@ -67,7 +74,7 @@ def fallback_raw(value, top_trade, top_snapshot, config=None):
     """
     if value <= 0 or top_trade <= 0:
         return 0.0
-    cfg = config or DEFAULT_CONFIG["consolidation"]
+    cfg = (config or DEFAULT_CONFIG).get("consolidation", config or DEFAULT_CONFIG["consolidation"])
     threshold = max(0.01, number(cfg.get("elite_threshold", 0.7)))
     elite = min(1.0, max(0.0, top_trade / max(top_snapshot, 1) / threshold))
     e = number(cfg.get("exponent_low", 1.04)) + elite * (
@@ -121,7 +128,7 @@ def compare(sides, top_snapshot, config=None):
     shares = {k: adjusted[k] / total if total else 0.5 for k in keys}
     return {"raw": raw_totals, "credit": credit, "adjustment_sums": adjustments,
             "adjusted": adjusted, "share": shares,
-            "grade": {k: grade(shares[k]) for k in keys},
+            "grade": {k: grade(shares[k], (config or DEFAULT_CONFIG).get("grade_bands")) for k in keys},
             "score": {k: grade_score(shares[k]) for k in keys}}
 
 
