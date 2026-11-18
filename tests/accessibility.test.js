@@ -1,4 +1,4 @@
-// Shared site menu renderer (templates/menu.js -> reports/assets/menu.js), 2026-11-17.
+// Accessibility 5.8 regression tests for standalone source module and generated menu bundle.
 // Loads the template with fixture data and checks the pure models the DOM step draws from.
 const test = require('node:test');
 const assert = require('node:assert');
@@ -134,7 +134,9 @@ test('generated menu matches source template exactly except embedded navigation 
   const built = fs.readFileSync(path.join(__dirname, '..', 'reports', 'assets', 'menu.js'), 'utf8');
   const embedded = built.match(/var D = (\{.*?\});\n  var DEV_KEY/s);
   assert.ok(embedded, 'generated menu embeds nav JSON');
-  assert.strictEqual(template.replace('/*__DATA__*/null', embedded[1]), built);
+  const a11y = fs.readFileSync(path.join(__dirname, '..', 'templates', 'accessibility.js'), 'utf8');
+  assert.strictEqual(template.replace('/*__ACCESSIBILITY__*/', a11y)
+    .replace('/*__DATA__*/null', embedded[1]), built);
   assert.ok(JSON.parse(embedded[1]).tabs.some(t => t.id === 'access' && t.state === 'hidden-dev'));
 });
 
