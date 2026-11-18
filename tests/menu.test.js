@@ -118,3 +118,11 @@ test('colour scale: ends are the tokens, 50% is neutral, monotonic, clamps', () 
   for (const [a, b] of [[0.55, 0.7], [0.7, 0.85], [0.85, 1], [0.45, 0.3], [0.3, 0.15], [0.15, 0]])
     assert.ok(d(a) < d(b), `${a} vs ${b}`);
 });
+
+
+test('legacy movement tokens bridge to good/bad in light and both dark theme selectors', () => {
+  const css = load(DATA).colors.css;
+  assert.match(css, /:root\\{--up:var\\(--good\\);--dn:var\\(--bad\\)\\}/);
+  assert.match(css, /@media \\(prefers-color-scheme:dark\\)\\{:root:not\\(\\[data-theme=light\\]\\)\\{--up:var\\(--good\\);--dn:var\\(--bad\\)\\}\\}/);
+  assert.match(css, /:root\\[data-theme=dark\\]\\{--up:var\\(--good\\);--dn:var\\(--bad\\)\\}/);
+});
