@@ -11,6 +11,7 @@ on:
       - 'reports/sw.js'
       - 'config/nav.json'
       - 'scripts/access_page.py'
+      - 'scripts/bowl_projection.py'
       - 'tests/**'
       - '.github/workflows/pr-safety-tests.yml'
 
@@ -45,4 +46,4 @@ jobs:
           node --check reports/assets/scoreboard.js
           node --check reports/sw.js
       - name: Check page generator syntax
-        run: python -m py_compile scripts/access_page.py
+        run: python -m py_compile scripts/access_page.py scripts/bowl_projection.py
