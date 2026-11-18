@@ -50,9 +50,22 @@ Commit only the intended generated `reports/scoreboard.html` change. Check the d
 ## Validation history and remaining risks
 - Independent reviewer previously reported: pytest **95 passed, 10 skipped**; four existing Node suites passed; browser suites **3 passed / 8 subchecks**. The reviewer also measured sRGB colors with adequate contrast.
 - Those results **predate** the latest OKLab and regression-test changes. They must not be presented as current passing results.
-- Developer targeted checks executed against the production JavaScript fetched from the feature branch: **6 passed** (ranked game order, ranked side first, neutral 50%, 90% live mix, 90% final mix, final favorite color-class retention). These are targeted runtime assertions, **not** the full Node test suite. A separate static source/CSS inspection confirmed six OKLab probability rules and the final-state selectors; it is not a rendered browser check.
-- Developer verification identified a defect: removing the `favorite` class on final cards also removed the final green color. Corrected by retaining the class and overriding font-weight through `.r3.final-odds .chance`; added a regression assertion. Fix commits: `692f19b`, `bc0e9cb`. The full regression suite has **not** been run after this correction.
+- Developer targeted checks executed against the production JavaScript fetched from the feature branch: **6 passed** (ranked game order, ranked side first, neutral 50%, 90% live mix, 90% final mix, final favorite color-class retention). After adding NIT final-header coverage, **all 7 cases** in `tests/games-5-4.test.js` passed in an isolated JavaScript compatibility harness (not the native Node test runner). These are targeted runtime assertions, **not** the full Node test suite. A separate static source/CSS inspection confirmed six OKLab probability rules and the final-state selectors; it is not a rendered browser check.
+- Developer verification identified a defect: removing the `favorite` class on final cards also removed the final green color. Corrected by retaining the class and overriding font-weight through `.r3.final-odds .chance`; added a regression assertion. Fix commits: `692f19b`, `bc0e9cb`. The native Node regression suite has **not** been run after this correction; the feature-specific cases were executed in a compatibility harness.
 - No GitHub Actions workflow runs were found for `bc0e9cb` at the time of inspection. This does not establish that tests passed or failed.
-- **Incomplete:** generator and generated HTML diff/commit; full pytest; all Node suites; browser suites; mobile light/dark header fit; computed OKLab contrast at 30% in both themes; manual NIT and winner emphasis review. These remain mandatory before acceptance.
+- **30% final-state contrast calculated:** using OKLab interpolation, the committed standard `--good`, `--bad`, `--neutral` theme tokens and `--panel` backgrounds (`#ffffff` light, `#16213a` dark). WCAG contrast ratios (rounded to 2 decimals):
+
+  | Pregame probability | Light | Dark |
+  | ---: | ---: | ---: |
+  | 0% | 5.18:1 | 5.65:1 |
+  | 10% | 5.08:1 | 5.59:1 |
+  | 40% | 4.80:1 | 5.41:1 |
+  | 50% | 4.71:1 | 5.36:1 |
+  | 60% | 4.73:1 | 5.47:1 |
+  | 90% | 4.79:1 | 5.83:1 |
+  | 100% | 4.81:1 | 5.95:1 |
+
+  All sampled values exceed **4.5:1** mathematically. This is a source-token calculation, **not** a computed-style browser measurement; accessibility presets/custom colors can change the result. Independent browser measurements remain mandatory.
+- **Incomplete:** generator and generated HTML diff/commit; full pytest; all native Node suites; browser suites; mobile light/dark header fit; browser-computed OKLab contrast at 30% in both themes; manual NIT and winner emphasis review. These remain mandatory before acceptance.
 - Local testing is partially possible via extracted production helpers, but a complete repository checkout and browser test environment were not available for these checks. Do not describe the targeted checks as full-suite validation.
 - Before merging, compare against current `main` and resolve any divergence. **The assistant must not merge this PR.**
