@@ -24,6 +24,13 @@
     ".n180-devbar{background:var(--dev);color:var(--panel,#fff);font:700 12px/1.2 var(--num,sans-serif);letter-spacing:.04em;text-align:center;padding:5px 8px;margin:0 0 8px;border-radius:3px}" +
     "@media print{.n180-devbar{display:none}}";
 
+  // Accessibility is independently maintained in templates/accessibility.js.
+  // scripts/site_common.py bundles it here so existing static pages stay synchronous.
+  // NCAA 180 Accessibility 5.8: independent palette and device-preference module.
+// Bundled into generated reports/assets/menu.js at build time to keep old static pages
+// compatible and apply tokens synchronously before the menu draws (no extra network fetch).
+// This module owns only semantic colours, accessibility storage and motion/emphasis.
+function createNCAA180Accessibility() {
   // ---- Colour tokens (Project Manager 5.8; todo-ranked-odds-colorblind.md) ----------------
   // Shared good/bad colours for every page. Hard-coded Standard (red/green) for now; the
   // accessibility page will replace this style element's text per device (colour-blind presets,
@@ -62,7 +69,7 @@
   // OKLab blend (sRGB hex in, rgb() out).
   function hexRgb(h) {
     h = String(h).trim().replace(/^#/, "");
-    if (h.length === 3) h = h.replace(/./g, "$&$&");
+    if (h.length === 3) h = h.replace(/./g, "/*__ACCESSIBILITY__*//*__ACCESSIBILITY__*/");
     var n = parseInt(h, 16);
     return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
   }
@@ -212,6 +219,12 @@
 
   accessApply();  // before the menu draws: no flash
 
+  return {colors:colors, access:access, key:ACCESS_KEY};
+}
+
+  var a11y = createNCAA180Accessibility();
+  var colors = a11y.colors, access = a11y.access;
+  var ACCESS_KEY = a11y.key;
   function devOn() { try { return localStorage.getItem(DEV_KEY) === "1"; } catch (e) { return false; } }
   function setDev(on) {
     try { if (on) localStorage.setItem(DEV_KEY, "1"); else localStorage.removeItem(DEV_KEY); } catch (e) {}
@@ -348,9 +361,9 @@
   // Keep open tabs on the same device in sync without touching unrelated storage keys.
   window.addEventListener("storage", function (e) {
     if (e.key === ACCESS_KEY || e.key === null) {
-      accessApply();
+      access.apply();
       if (typeof window.CustomEvent === "function")
-        window.dispatchEvent(new window.CustomEvent("ncaa180:accesschange", {detail:accessRead()}));
+        window.dispatchEvent(new window.CustomEvent("ncaa180:accesschange", {detail:access.read()}));
     }
   });
   render(false);
