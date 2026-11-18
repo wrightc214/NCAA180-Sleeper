@@ -5,6 +5,7 @@ on:
       - 'scripts/transactions_*.py'
       - 'scripts/player_values.py'
       - 'tests/test_transactions_page.py'
+      - 'tests/transactions_browser.py'
       - 'config/nav.json'
       - '.github/workflows/update-leagues.yml'
       - '.github/workflows/transactions-pr-check.yml'
@@ -35,6 +36,12 @@ jobs:
           python3 scripts/menu_build.py
           test -s reports/transactions.html
           grep -q 'transactions.html' reports/assets/menu.js
+      - name: Install Chromium for browser smoke checks
+        run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Browser smoke checks (desktop light, mobile dark)
+        run: python tests/transactions_browser.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
