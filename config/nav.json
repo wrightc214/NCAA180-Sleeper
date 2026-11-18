@@ -8,26 +8,101 @@
     "rows: fixed sub-rows (a page asks for one with data-row). Data-driven rows (seasons, weeks, projection archive) are built from the pages in reports/."
   ],
   "tabs": [
-    {"id": "awards", "label": "Awards", "href": "@awards"},
-    {"id": "map", "label": "Roster Map", "href": "roster-map.html"},
-    {"id": "standings", "label": "Standings", "href": "standings.html"},
-    {"id": "scoreboard", "label": "Games", "href": "scoreboard.html"},
-    {"id": "poll", "label": "Poll", "href": "poll.html", "aliases": ["poll-how", "poll-bots"]},
-    {"id": "postseason", "label": "Postseason", "href": "postseason.html"},
-    {"id": "special", "label": "Special Events", "href": "special.html"},
-    {"id": "managers", "label": "Managers", "href": "managers.html"},
-    {"id": "records", "label": "Records", "href": "records.html"},
-    {"id": "about", "label": "About", "href": "about.html"},
-    {"id": "app", "label": "Notification settings", "href": "app.html", "icon": "bell"}
+    {
+      "id": "awards",
+      "label": "Awards",
+      "href": "@awards"
+    },
+    {
+      "id": "map",
+      "label": "Roster Map",
+      "href": "roster-map.html"
+    },
+    {
+      "id": "standings",
+      "label": "Standings",
+      "href": "standings.html"
+    },
+    {
+      "id": "scoreboard",
+      "label": "Games",
+      "href": "scoreboard.html"
+    },
+    {
+      "id": "poll",
+      "label": "Poll",
+      "href": "poll.html",
+      "aliases": [
+        "poll-how",
+        "poll-bots"
+      ]
+    },
+    {
+      "id": "postseason",
+      "label": "Postseason",
+      "href": "postseason.html"
+    },
+    {
+      "id": "special",
+      "label": "Special Events",
+      "href": "special.html"
+    },
+    {
+      "id": "managers",
+      "label": "Managers",
+      "href": "managers.html"
+    },
+    {
+      "id": "records",
+      "label": "Records",
+      "href": "records.html"
+    },
+    {
+      "id": "about",
+      "label": "About",
+      "href": "about.html"
+    },
+    {
+      "id": "access",
+      "label": "Accessibility",
+      "href": "access.html",
+      "state": "hidden-dev"
+    },
+    {
+      "id": "app",
+      "label": "Notification settings",
+      "href": "app.html",
+      "icon": "bell"
+    }
   ],
   "rows": {
-    "poll": {"label": "", "items": [
-      {"label": "Latest poll", "href": "poll.html", "match": "^poll(-top25-wk\\d+)?\\.html$"},
-      {"label": "How the poll works", "href": "poll-how.html"},
-      {"label": "Bot ballots", "href": "poll-bots.html"}
-    ]},
-    "special": {"label": "Event", "items": [
-      {"label": "The Guillotine", "href": "special.html", "icon": "../assets/logos/Guillotine/Guillotine%20G.png"}
-    ]}
+    "poll": {
+      "label": "",
+      "items": [
+        {
+          "label": "Latest poll",
+          "href": "poll.html",
+          "match": "^poll(-top25-wk\\d+)?\\.html$"
+        },
+        {
+          "label": "How the poll works",
+          "href": "poll-how.html"
+        },
+        {
+          "label": "Bot ballots",
+          "href": "poll-bots.html"
+        }
+      ]
+    },
+    "special": {
+      "label": "Event",
+      "items": [
+        {
+          "label": "The Guillotine",
+          "href": "special.html",
+          "icon": "../assets/logos/Guillotine/Guillotine%20G.png"
+        }
+      ]
+    }
   }
 }
