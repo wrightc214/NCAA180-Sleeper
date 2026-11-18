@@ -19,6 +19,8 @@ jobs:
         with:
           python-version: '3.11'
       - run: pip install -r requirements.txt pytest
+      - name: Regenerate menu for configuration-consistency tests (checkout only)
+        run: python3 scripts/menu_build.py
       - name: Python tests
         run: python3 -m pytest -q tests
       - uses: actions/setup-node@v4
