@@ -61,3 +61,32 @@ details.conference>summary:focus-visible{outline:2px solid #38638b;outline-offse
 /* My team board (2026-11-14) */
 .my-board iframe{display:block;width:100%;height:520px;border:0;background:transparent}
 .my-board[hidden]{display:none}
+
+/* 5.4: probability diverges from neutral at 50%. The endpoint tokens are owned by
+   the shared theme and can be replaced by accessibility modes without JS changes.
+   Mix against the shared neutral token; fall back to muted grey when unavailable. */
+.r3 .chance{color:var(--neutral,var(--mute));font-weight:500}
+.r3.favorite .chance{font-weight:800}
+.r3.live-odds.favorite .chance{
+  color:color-mix(in oklab,var(--good,var(--neutral,var(--mute))) var(--win-mix,0%),var(--neutral,var(--mute)))
+}
+.r3.live-odds.underdog .chance{
+  color:color-mix(in oklab,var(--bad,var(--neutral,var(--mute))) var(--win-mix,0%),var(--neutral,var(--mute)))
+}
+.r3.pre-odds.favorite .chance{
+  color:color-mix(in oklab,var(--good,var(--neutral,var(--mute))) var(--win-pre-mix,0%),var(--neutral,var(--mute)))
+}
+.r3.pre-odds.underdog .chance{
+  color:color-mix(in oklab,var(--bad,var(--neutral,var(--mute))) var(--win-pre-mix,0%),var(--neutral,var(--mute)))
+}
+
+/* Final cards keep the pregame probability (30% colour strength) without competing with the winner.
+   .favorite is kept for the colour; the 4-class selector outranks .r3.favorite .chance (3 classes),
+   so finals stay normal weight wherever this rule sits in the file. */
+.r3.final-odds .chance,.r3.final-odds.favorite .chance{font-weight:500}
+.r3.final-odds.favorite .chance{
+  color:color-mix(in oklab,var(--good,var(--neutral,var(--mute))) var(--win-final-mix,0%),var(--neutral,var(--mute)))
+}
+.r3.final-odds.underdog .chance{
+  color:color-mix(in oklab,var(--bad,var(--neutral,var(--mute))) var(--win-final-mix,0%),var(--neutral,var(--mute)))
+}
