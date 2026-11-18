@@ -85,3 +85,15 @@ Append each significant code change with: affected paths, necessity, rejected al
 - Queried GitHub Actions for latest test commit `170993483`: **zero workflow runs returned**. CI remains unverified.
 
 **Additional risks for auditor:** the standalone Accessibility HTML currently does not use `site_common.page_head` and does not fully inherit normal page chrome; its CSS has not been visually validated. `motion=off` does not force animations on when the OS requests reduced motion, and the motion override needs specification-level testing. Custom colour contrast uses assumed panel backgrounds; actual pages may differ. Saved images and Discord image isolation remain untested. No claim of complete WCAG compliance.
+
+## Further autonomous development — verification and integration notes
+
+- **Standard-mode regression corrected:** Standard now retains the original `--good-soft` and `--bad-soft` tokens instead of replacing them with generic grey tints.
+- **Motion:** `system` now emits a `prefers-reduced-motion: reduce` rule; `on` forces reduced animation; `off` no longer incorrectly forces reduced motion. Browser checks are still necessary to establish override behavior against page-specific rules.
+- **All palette fills:** Non-Standard presets and Custom now derive `--good-fill` and `--bad-fill` from the selected colours, adjusted to at least 4.5:1 against white `--on-fill` labels. Standard retains historical fills; No-colour uses distinct dark greys.
+- **Bowl projection source:** Migrated hard-coded outcome/movement green/red in `scripts/bowl_projection.py` to `var(--good)`/`var(--bad)`. Existing generated bowl pages have **not** been rebuilt, and the generator must be verified in a controlled non-publishing run.
+- **Tests:** Added assertions for exact generated-menu/source equivalence and for both-theme foreground and fill contrast across all five modes. The generated menu was directly compared to the source with embedded nav JSON and was an **exact match** at the time of checking.
+- **Checks actually run:** Connector-backed JavaScript smoke tests passed for all five modes' light/dark foreground contrast and white-on-fill contrast, unrelated storage key preservation, blocked localStorage exceptions, and script parsing of access.js/scoreboard.js. These are **not** GitHub Actions/Node/browser results.
+- **CI:** Expanded the PR-only workflow's path filters to cover feature assets, config, generated page, service worker, and bowl source. Added Node `--check` and Python `py_compile` steps; execution still unconfirmed.
+
+**Outstanding blockers and review risks:** no confirmed CI runs; no actual browser/screenshot/mobile validation; no full semantic-colour inventory; no proven image export behaviour; the Accessibility page remains standalone rather than sharing the full `page_head` layout; custom colour contrast assumes a representative panel background; no-colour meaning cues are not audited across every page. Do not merge without independent validation.
