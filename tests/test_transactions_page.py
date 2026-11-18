@@ -10,7 +10,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from transactions_page import build_teams, day, movement, parse, summary, trade_assets
-from transactions_grades import (compare, consolidation, evaluate_trade, grade,
+from transactions_grades import (compare, consolidation, evaluate_trade, grade, load_config,
                                  historical, nearest_pick)
 
 
@@ -137,3 +137,17 @@ def test_complete_only_summaries():
 
 def test_epoch_is_utc():
     assert day(0) == "1970-01-01"
+
+
+def test_config_controls_both_thresholds_and_fallback_parameters():
+    config = load_config()
+    assert config["consolidation"]["method"] == "ktc-style-fallback"
+    assert config["grade_bands"][0] == [60, "A"]
+    assert compare({"A": [4900], "B": [4900]}, 11000, config)["grade"]["A"] == "Even"
+
+
+def test_zero_contender_value_never_receives_phantom_consolidation_credit():
+    result = compare({"Win": [5000], "Picks": [0, 0]}, 11000)
+    assert result["credit"] == {"Win": 0.0, "Picks": 0.0}
+    assert result["grade"]["Win"] == "A"
+    assert result["grade"]["Picks"] == "F"
