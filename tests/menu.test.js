@@ -81,14 +81,15 @@ test('DEV bar: only with Dev view, only on non-public pages', () => {
   assert.strictEqual(M.needsBar('standings', 'hidden', true), false);  // promoted to visible: menu wins over a stale page
 });
 
-test('generated reports/assets/menu.js parses and carries no hidden tabs', () => {
+test('generated reports/assets/menu.js parses and excludes fully hidden tabs', () => {
   const src = fs.readFileSync(path.join(__dirname, '..', 'reports', 'assets', 'menu.js'), 'utf8');
   const m = new Module('menu-built');
   m._compile(src, 'menu-built.js');
   const tabs = m.exports.data.tabs;
   assert.ok(tabs.length > 0);
   assert.ok(!tabs.some((t) => t.state === 'hidden'));
-  assert.ok(!src.includes('about.html'), 'hidden About page must not appear in the public menu file');
+  assert.ok(tabs.some(t => t.id === 'about' && t.href === 'about.html'), 'public About page remains in menu');
+  assert.ok(tabs.some(t => t.id === 'access' && t.state === 'hidden-dev'), 'Accessibility remains developer-only');
 });
 
 // Colour tokens (Project Manager 5.8): hard-coded Standard set + the win % diverging scale.
