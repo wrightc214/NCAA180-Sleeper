@@ -34,3 +34,14 @@
 
 ## Architectural change log
 Append each significant code change with: affected paths, necessity, rejected alternatives, tests run, and remaining risks. The author must never merge this PR.
+
+## Review pass — 2026-11-17
+**Actual scope currently implemented:** documentation and the legacy movement-colour bridge only. The Accessibility page, settings persistence, preset palettes, custom picker, motion/emphasis controls, offline precache, and browser tests are **not implemented**.
+
+**Bug found and corrected:** the first bridge added `--up`/`--dn` only under `:root`. Existing dark-mode template selectors (`:root[data-theme=dark]` and `:root:not([data-theme=light])` inside the dark media query) have greater specificity and would retain the hard-coded dark colours. The bridge now repeats the alias declaration in those selectors. A regression test was added to `tests/menu.test.js` to assert all three selector cases.
+
+**Generated-file consistency:** both `templates/menu.js` and `reports/assets/menu.js` were updated with the same bridge. The generated asset must be checked against a fresh `python scripts/menu_build.py` run before merge; rebuilding might also change unrelated dynamic menu data.
+
+**Validation limitations:** repository clone was attempted but this execution environment could not resolve github.com. Connector reads confirmed the branch content and matching bridge snippets. No full Node test run, browser run, screenshot comparison, or CI pass is claimed. GitHub commit combined-status endpoint returned no statuses for the latest commit. Independent validator must execute the existing suite and browser checks.
+
+**Remaining concern:** verify CSS cascade in actual browsers, including old report pages, explicit dark mode, automatic dark mode, and a future custom palette. Also check whether the weekly report's original `--up`/`--dn` values should be migrated in its template for newly generated pages, while preserving old-page support.
