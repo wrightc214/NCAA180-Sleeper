@@ -158,8 +158,8 @@ def write_menu(out_dir=None):
     # or require rebuilding historical HTML just to load an additional script.
     with open(ROOT / "templates" / "accessibility.js", encoding="utf-8") as a11y_file:
         accessibility_source = a11y_file.read()
-    from accessibility_config import accessibility_config
-    owner_settings = accessibility_config()
+    from league_config import accessibility
+    owner_settings = accessibility()
     if "/*__OWNER_ACCESSIBILITY_COLORS__*/null" not in accessibility_source:
         raise ValueError("accessibility template missing owner-settings placeholder")
     accessibility_source = accessibility_source.replace(
