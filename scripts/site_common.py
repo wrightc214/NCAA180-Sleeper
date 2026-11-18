@@ -14,6 +14,9 @@ import os
 import re
 import urllib.parse
 import json
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
 
 TEMPLATE = "templates/weekly_report.html"
 OUT_DIR = "reports"
