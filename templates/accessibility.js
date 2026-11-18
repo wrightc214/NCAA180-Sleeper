@@ -4,8 +4,8 @@
 // This module owns only semantic colours, accessibility storage and motion/emphasis.
 function createNCAA180Accessibility() {
   // ---- Colour tokens (Project Manager 5.8; todo-ranked-odds-colorblind.md) ----------------
-  // Shared good/bad colours for every page. Hard-coded Standard (red/green) for now; the
-  // accessibility page will replace this style element's text per device (colour-blind presets,
+  // Shared semantic colours for every page. Standard colours are injected from
+  // config/league.json during menu generation; user presets and custom pickers
   // custom pickers). Use the tokens, never hex, for anything that means good/bad:
   //   --good / --bad      text and lines (>= 4.5:1 on --panel, light and dark)
   //   --neutral           the 50% midpoint of the win % scale (grey, text-safe)
@@ -14,12 +14,21 @@ function createNCAA180Accessibility() {
   // Diverging scale (win %): NCAA180.colors.scale(p) -> colour for p in 0..1 (bad -> neutral -> good,
   // blended in OKLab so the middle stays grey). Kept in a <style> element, not inline on <html>,
   // so saved images (snapshot.js copies style elements) carry the viewer's colours.
+  var OWNER_COLORS = /*__OWNER_ACCESSIBILITY_COLORS__*/null;
   var TOKENS_ID = "n180-tokens";
   var TOKENS_LIGHT = {"--good": "#1a7f37", "--bad": "#b42318", "--neutral": "#6b7484",
     "--good-soft": "#e3f3e8", "--bad-soft": "#fbe4e1"};
   var TOKENS_DARK = {"--good": "#4fc785", "--bad": "#ff7b72", "--neutral": "#8a96ab",
     "--good-soft": "#173a2a", "--bad-soft": "#4a2024"};
   var TOKENS_BOTH = {"--good-fill": "#1a7f37", "--bad-fill": "#b42318", "--on-fill": "#ffffff"};
+  TOKENS_LIGHT["--good"] = OWNER_COLORS.light.positive;
+  TOKENS_LIGHT["--bad"] = OWNER_COLORS.light.negative;
+  TOKENS_LIGHT["--neutral"] = OWNER_COLORS.light.neutral;
+  TOKENS_DARK["--good"] = OWNER_COLORS.dark.positive;
+  TOKENS_DARK["--bad"] = OWNER_COLORS.dark.negative;
+  TOKENS_DARK["--neutral"] = OWNER_COLORS.dark.neutral;
+  TOKENS_BOTH["--good-fill"] = OWNER_COLORS.light.positive;
+  TOKENS_BOTH["--bad-fill"] = OWNER_COLORS.light.negative;
   function decl(o) { var s = ""; for (var k in o) s += k + ":" + o[k] + ";"; return s; }
   function tokensCss(light, dark, both) {
     var d = decl(dark);
@@ -93,9 +102,9 @@ function createNCAA180Accessibility() {
     ":root[data-theme=dark]{--up:var(--good);--dn:var(--bad)}";
   // Accessibility preferences are device-local. Invalid or inaccessible storage is harmless.
   var ACCESS_KEY = "ncaa180.access";
-  var ACCESS_DEFAULTS = {mode:"standard",custom:{bad:"#b42318",good:"#1a7f37"},motion:"system",emphasis:false};
+  var ACCESS_DEFAULTS = {mode:"standard",custom:{bad:OWNER_COLORS.light.negative,good:OWNER_COLORS.light.positive},motion:"system",emphasis:false};
   var ACCESS_MODES = {
-    standard:{light:["#1a7f37","#b42318"],dark:["#4fc785","#ff7b72"]},
+    standard:{light:[OWNER_COLORS.light.positive,OWNER_COLORS.light.negative],dark:[OWNER_COLORS.dark.positive,OWNER_COLORS.dark.negative]},
     rg:{light:["#0758a8","#a65300"],dark:["#79b9ff","#ffb45d"]},
     by:{light:["#007b73","#b42318"],dark:["#65d4c6","#ff7b72"]},
     none:{light:["#252525","#595959"],dark:["#f2f2f2","#c5c5c5"]}
