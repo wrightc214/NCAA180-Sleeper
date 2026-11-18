@@ -218,9 +218,11 @@ test('generated menu matches source template exactly except embedded navigation 
   const built = fs.readFileSync(path.join(__dirname, '..', 'reports', 'assets', 'menu.js'), 'utf8');
   const embedded = built.match(/var D = (\{.*?\});\n  var DEV_KEY/s);
   assert.ok(embedded, 'generated menu embeds nav JSON');
+  const stripNotes = x => Array.isArray(x) ? x.map(stripNotes) : x && typeof x === 'object'
+    ? Object.fromEntries(Object.entries(x).filter(([k]) => !k.startsWith('_')).map(([k,v]) => [k,stripNotes(v)])) : x;
+  const config = stripNotes(JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'config', 'accessibility.json'), 'utf8')));
   const a11y = fs.readFileSync(path.join(__dirname, '..', 'templates', 'accessibility.js'), 'utf8')
-    .replace('/*__OWNER_ACCESSIBILITY_COLORS__*/null', JSON.stringify(JSON.parse(
-      fs.readFileSync(path.join(__dirname, '..', 'config', 'league.json'), 'utf8')).accessibility_colors));
+    .replace('/*__OWNER_ACCESSIBILITY_COLORS__*/null', JSON.stringify(config));
   assert.strictEqual(template.replace('/*__ACCESSIBILITY__*/', a11y)
     .replace('/*__DATA__*/null', embedded[1]), built);
   assert.ok(JSON.parse(embedded[1]).tabs.some(t => t.id === 'access' && t.state === 'hidden-dev'));
