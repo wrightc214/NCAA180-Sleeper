@@ -33,6 +33,10 @@ def main():
                 assert page.locator("section.fold .snap-btn").count() == 3
                 page.evaluate("(theme) => document.documentElement.setAttribute('data-theme', theme)", theme)
                 assert page.locator("[data-score]").count() > 0
+                # Reviewer-facing visual evidence, captured without altering the repository.
+                shot = ROOT / "work" / "transactions-preview"
+                shot.mkdir(parents=True, exist_ok=True)
+                page.screenshot(path=str(shot / f"transactions-{width}-{theme}.png"), full_page=False)
                 # Filter to a team on the first trade. Revert filter.
                 first = page.locator(".tx-card").first
                 team = first.get_attribute("data-teams").split("|")[0]
