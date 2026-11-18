@@ -1,0 +1,42 @@
+name: Transactions PR validation (read-only)
+on:
+  pull_request:
+    paths:
+      - 'scripts/transactions_*.py'
+      - 'scripts/player_values.py'
+      - 'tests/test_transactions_page.py'
+      - 'config/nav.json'
+      - '.github/workflows/update-leagues.yml'
+      - '.github/workflows/transactions-pr-check.yml'
+permissions:
+  contents: read
+jobs:
+  transactions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements.txt pytest
+      - name: Python tests
+        run: python3 -m pytest -q tests
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: JavaScript tests
+        run: |
+          for file in tests/*.test.js; do node "$file"; done
+      - name: Generate transactions page
+        run: |
+          python3 scripts/transactions_page.py
+          python3 scripts/menu_build.py
+          test -s reports/transactions.html
+          grep -q 'transactions.html' reports/assets/menu.js
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: transactions-preview
+          path: |
+            reports/transactions.html
+          if-no-files-found: ignore
