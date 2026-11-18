@@ -164,7 +164,8 @@ function createNCAA180Accessibility() {
       custom:{bad:validHex(o.custom&&o.custom.bad)?o.custom.bad:ACCESS_DEFAULTS.custom.bad,
               good:validHex(o.custom&&o.custom.good)?o.custom.good:ACCESS_DEFAULTS.custom.good},
       motion:["system","on","off"].indexOf(o.motion)>=0?o.motion:ACCESS_DEFAULTS.motion,
-      emphasis:o.emphasis===true,autoContrast:o.autoContrast!==false
+      emphasis:typeof o.emphasis==="boolean"?o.emphasis:ACCESS_DEFAULTS.emphasis,
+      autoContrast:typeof o.autoContrast==="boolean"?o.autoContrast:ACCESS_DEFAULTS.autoContrast
     };
   }
   function contrast(a,b) {
