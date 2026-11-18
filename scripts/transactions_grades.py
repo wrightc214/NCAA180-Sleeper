@@ -86,8 +86,12 @@ def consolidation(sides, top_snapshot, config=None):
         return {k: 0.0 for k in keys}, {k: 0.0 for k in keys}
     values = [max(0.0, number(v)) for group in sides.values() for v in group]
     top = max(values, default=0.0)
-    if not top:
-        return {k: 0.0 for k in keys}, {k: 0.0 for k in keys}
+    if not top or any(not any(number(v) > 0 for v in sides[k]) for k in keys):
+        # Picks carry zero contender value. They must not gain a fictional
+        # balancing asset that turns a 0-for-starter deal into an 'Even' grade.
+        raw = {k: sum(fallback_raw(max(0.0, number(v)), top, top_snapshot, config)
+                      for v in sides[k]) for k in keys}
+        return {k: 0.0 for k in keys}, raw
     raw = {k: sum(fallback_raw(max(0.0, number(v)), top, top_snapshot, config)
                   for v in sides[k]) for k in keys}
     lo, hi = sorted(keys, key=lambda k: raw[k])
