@@ -52,7 +52,7 @@ CSS = """
 .tx-center .tx-main-grades{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .tx-main-grades strong{font:900 33px var(--num,sans-serif);padding:9px 0;border:1px solid var(--line);border-radius:8px}
 .tx-credit{font-size:12px;color:var(--mute);margin:5px 0}
-.tx-surplus{margin:0 12px 12px;padding:10px 14px;border:1px solid var(--good);border-radius:9px;font-weight:800;color:var(--good);text-align:center}
+.tx-surplus{margin:8px;padding:9px 11px;border:1px solid var(--good);border-radius:9px;font-weight:800;color:var(--good);text-align:center;font-size:12px}
 .tx-surplus small{font-size:11px;font-weight:600}
 .tx-note{font-size:12px;color:var(--mute);margin:6px 0}
 .tx-movement{display:grid;grid-template-columns:1fr 1fr;gap:18px}
@@ -190,10 +190,19 @@ def trade_card(r, sides, names, colors, result, shorts):
         return ""  # Non-two-sided transactions need separate multi-team visual treatment.
     team = {rid: names.get((league, rid), f"Roster {rid}") for rid in ids}
     pairs = [(rid, team[rid], sides[rid]) for rid in ids]
+    dyn, con = result.get("dynasty"), result.get("contender")
+    surplus = dyn.get("surplus") if dyn else None
     def panel(info):
         rid, name, assets = info
-        return f'<div class="tx-side">{render_team(name, colors)}<div class="tx-assets"><div class="tx-receives">Receives</div>{render_assets(assets)}</div></div>'
-    dyn, con = result.get("dynasty"), result.get("contender")
+        badge = ""
+        if surplus and surplus["team"] == rid:
+            equivalents = " + ".join(("≈ " if p[2] else "") + p[1] for p in surplus["picks"])
+            label = equivalents or "No comparable rookie pick"
+            badge = (f'<div class="tx-surplus">+ Dynasty surplus · {esc(label)}<br>'
+                     f'<small>+{surplus["value"]:,.0f} adjusted FantasyCalc points'
+                     f'{" · estimated slots" if any(p[2] for p in surplus["picks"]) else ""}</small></div>')
+        return (f'<div class="tx-side">{render_team(name, colors)}<div class="tx-assets">'
+                f'<div class="tx-receives">Receives</div>{render_assets(assets)}</div>{badge}</div>')
     status = result.get("status")
     grade_rows = ""
     for key, label in ((dyn, "Rebuild value"), (con, "Contender value")):
@@ -210,21 +219,12 @@ def trade_card(r, sides, names, colors, result, shorts):
             amt = dyn["credit"].get(rid, 0)
             if amt > 0.01:
                 credit = f'<div class="tx-credit">+{amt:,.0f} consolidation credit to {esc(team[rid])} (KTC-style)</div>'
-    surplus = dyn.get("surplus") if dyn else None
-    surplus_html = ""
-    if surplus:
-        winner = team[surplus["team"]]
-        equivalents = " + ".join(("≈ " if p[2] else "") + p[1] for p in surplus["picks"])
-        label = equivalents or "No comparable rookie pick"
-        surplus_html = (f'<div class="tx-surplus">Dynasty value surplus to {esc(winner)} · '
-                        f'{esc(label)} <small>(+{surplus["value"]:,.0f} adjusted FantasyCalc points; '
-                        f'{"estimated pick slots" if any(p[2] for p in surplus["picks"]) else "generic pick values"})</small></div>')
     meta = (f'<div class="tx-head">{esc(short)} · Week {esc(r["Week"])} · {esc(day(r["Created"]))}</div>'
             f'<span class="tx-muted">Trade {esc(r["TransactionID"])}</span>')
     return (f'<article class="tx-card" data-conference="{esc(league)}" data-week="{esc(r["Week"])}" '
             f'data-teams="{esc("|".join(team.values()))}" data-identity="{esc(short)}:{esc(ids[0])}|{esc(short)}:{esc(ids[1])}"><header>{meta}</header>'
             f'<div class="tx-grid">{panel(pairs[0])}{center}{panel(pairs[1])}</div>'
-            f'{credit}{surplus_html}</article>')
+            f'{credit}</article>')
 
 
 def render_movement(rows, short):
