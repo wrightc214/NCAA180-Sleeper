@@ -40,6 +40,7 @@ jobs:
         run: node --test tests/*.test.js
       - name: Check browser script syntax
         run: |
+          node --check templates/accessibility.js
           node --check templates/menu.js
           node --check reports/assets/menu.js
           node --check reports/assets/access.js
