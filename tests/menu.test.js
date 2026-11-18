@@ -177,3 +177,38 @@ test('accessibility: no-colour uses monochrome fills and invalid settings are no
     assert.strictEqual(m.access.read().custom.good,m.access.defaults.custom.good);
   } finally { if(old===undefined) delete global.localStorage; else global.localStorage=old; }
 });
+
+test('generated menu matches source template exactly except embedded navigation data', () => {
+  const template = fs.readFileSync(path.join(__dirname, '..', 'templates', 'menu.js'), 'utf8');
+  const built = fs.readFileSync(path.join(__dirname, '..', 'reports', 'assets', 'menu.js'), 'utf8');
+  const embedded = built.match(/var D = (\{.*?\});\n  var DEV_KEY/s);
+  assert.ok(embedded, 'generated menu embeds nav JSON');
+  assert.strictEqual(template.replace('/*__DATA__*/null', embedded[1]), built);
+  assert.ok(JSON.parse(embedded[1]).tabs.some(t => t.id === 'access' && t.state === 'hidden-dev'));
+});
+
+test('accessible fill and foreground contrast for all palettes in both themes', () => {
+  const old = global.localStorage, values = {};
+  global.localStorage = {getItem:k=>values[k]||null,setItem:(k,v)=>{values[k]=v;},removeItem:k=>{delete values[k];}};
+  try {
+    const m=load(DATA),a=m.access;
+    for(const mode of ['standard','rg','by','none','custom']){
+      a.save({mode,custom:{good:'#ffffff',bad:'#eeeeee'}});
+      const css=m.colors.css;
+      for(const name of ['good-fill','bad-fill']){
+        const match=css.match(new RegExp('--'+name+':(#[0-9a-f]{6})'));
+        assert.ok(match,mode+' '+name);
+        assert.ok(a.contrast(match[1],'#ffffff')>=4.5,mode+' '+name+' contrast');
+      }
+      const light=css.match(/^:root\{([^}]*)\}/)[1];
+      const dark=css.match(/:root\[data-theme=dark\]\{([^}]*)\}/)[1];
+      for(const [text,bg] of [[light,'#ffffff'],[dark,'#171b22']]){
+        for(const name of ['good','bad']){
+          const match=text.match(new RegExp('--'+name+':(#[0-9a-f]{6})'));
+          assert.ok(match,mode+' '+name);
+          assert.ok(a.contrast(match[1],bg)>=4.5,mode+' '+name+' text contrast');
+        }
+      }
+    }
+  } finally {if(old===undefined)delete global.localStorage;else global.localStorage=old;}
+});
