@@ -72,6 +72,20 @@ test('owner palette overrides propagate to Standard, neutral, custom defaults an
   assert.strictEqual(m.access.read().custom.bad, changed.light.negative);
 });
 
+test('owner Standard fills are contrast-adjusted when owner chooses pale colours', () => {
+  const colors = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'config', 'league.json'), 'utf8')).accessibility_colors;
+  const changed = JSON.parse(JSON.stringify(colors));
+  changed.light.positive = '#ffffcc';
+  changed.light.negative = '#ffdddd';
+  const m = load(DATA, changed);
+  const css = m.access.apply && m.colors.css;
+  // Browserless mode applies its Standard palette on initial load.
+  const fill = m.colors.css.match(/--good-fill:(#[0-9a-f]{6});--bad-fill:(#[0-9a-f]{6})/i);
+  assert.ok(fill, 'Standard fill tokens present');
+  assert.ok(m.access.contrast(fill[1], '#ffffff') >= 4.5);
+  assert.ok(m.access.contrast(fill[2], '#ffffff') >= 4.5);
+});
+
 test('colour tokens: css carries light, dark and fill sets', () => {
   const c = load(DATA).colors;
   assert.match(c.css, /^:root\{--good:#1a7f37;--bad:#b42318;--neutral:#6b7484;/);
