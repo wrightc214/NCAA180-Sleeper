@@ -96,7 +96,7 @@ test('user custom colours remain exact even with poor contrast', () => {
   };
   try {
     const m = load(DATA);
-    m.access.save({mode:'custom',custom:{good:'#ffffff',bad:'#fffffe'}});
+    m.access.save({mode:'custom',autoContrast:false,custom:{good:'#ffffff',bad:'#fffffe'}});
     assert.strictEqual(m.access.read().custom.good, '#ffffff');
     assert.strictEqual(m.access.read().custom.bad, '#fffffe');
     assert.match(m.colors.css, /--good:#ffffff;--bad:#fffffe;/);
@@ -105,6 +105,26 @@ test('user custom colours remain exact even with poor contrast', () => {
   } finally {
     global.localStorage = old;
   }
+});
+
+test('automatic contrast defaults on, persists, and resets to on', () => {
+  const old = global.localStorage, values = {};
+  global.localStorage = {getItem:k=>values[k]||null,setItem:(k,v)=>{values[k]=v;},removeItem:k=>{delete values[k];}};
+  try {
+    const m=load(DATA),a=m.access;
+    assert.strictEqual(a.read().autoContrast,true);
+    a.save({mode:'custom',custom:{good:'#ffffff',bad:'#eeeeee'}});
+    assert.strictEqual(a.read().autoContrast,true);
+    assert.ok(!m.colors.css.includes('--good:#ffffff;--bad:#eeeeee;'));
+    a.save({autoContrast:false});
+    assert.strictEqual(a.read().autoContrast,false);
+    assert.match(m.colors.css,/--good:#ffffff;--bad:#eeeeee;/);
+    assert.match(m.colors.css,/--good-fill:#ffffff;--bad-fill:#eeeeee;/);
+    a.save({autoContrast:true});
+    assert.ok(!m.colors.css.includes('--good:#ffffff;--bad:#eeeeee;'));
+    a.reset();
+    assert.strictEqual(a.read().autoContrast,true);
+  } finally {if(old===undefined)delete global.localStorage;else global.localStorage=old;}
 });
 
 test('colour tokens: css carries light, dark and fill sets', () => {
@@ -242,6 +262,8 @@ test('Accessibility page includes shared site CSS, dev navigation and accessible
   assert.match(html,/src="assets\/access\.js"/);
   assert.match(html,/id="restore-custom"/);
   assert.match(html,/id="reset-all"/);
+  assert.match(html,/id="auto-contrast"/);
+  assert.match(html,/id="contrast-option"/);
 });
 
 test('accessibility resets preserve other settings and blocked storage never crashes', () => {
