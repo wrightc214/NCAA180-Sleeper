@@ -125,3 +125,13 @@ A connector-backed JavaScript harness fetched the six files needed by `tests/men
 - GitHub Actions workflow execution remains unconfirmed; do not report CI green without an actual run.
 
 **Reviewer priorities:** run native Node tests, check actual rendered Accessibility page (including mobile and dark mode), verify reduced motion and keyboard access, verify images in browser, inspect generated bowl projection output, and check that no-colour semantics remain clear without hue.
+
+## Latest autonomous validation pass
+
+- Added same-device cross-tab settings propagation and a unit test for the `ncaa180:accesschange` event. An isolated event smoke test initially caught a `CustomEvent` reference error; corrected to `new window.CustomEvent(...)` in both menu files and reran successfully.
+- Added DOM-mocked test of Accessibility page controls: selecting a preset, editing a custom colour, restoring only custom colours, resetting all accessibility settings, and reflecting another tab's change.
+- Fetched current test suite and dependencies through the GitHub connector and executed all registered test callbacks in a custom JavaScript harness emulating Node `test`, `assert`, `fs`, `path`, and `Module` APIs. **18/18 passed** in this environment. This is not a native Node test runner and does not cover actual DOM rendering or browser APIs.
+- Current PR remains **draft and unmerged**. Latest commit checked: `62b05f8`. GitHub Actions still returned **zero** runs associated with the head commit.
+- No production or `main` changes were made.
+
+**Remaining block:** native CI/browser validation is unavailable in the current execution environment. Reviewer should run the documented commands, visually inspect all presets on mobile/light/dark, test real screenshots, and assess the incomplete semantic/no-colour audit. Do not merge based solely on the emulated test pass.
