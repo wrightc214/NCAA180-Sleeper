@@ -2,7 +2,7 @@
 player_values.py -- dynasty + redraft player values from FantasyCalc (free public API).
 
 One request returns every valued player with both numbers, keyed to Sleeper player IDs.
-Settings match NCAA 180: 1 QB, 12 teams, full PPR. Kickers/DEF are not valued.
+Default request matches NCAA 180: 1 QB, 12 teams, full PPR. See config/league.json.
 
 Writes:
   data/PlayerValues_Current.csv  overwritten each run
@@ -29,11 +29,14 @@ import sys
 import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import league_config as lcfg  # noqa: E402
 from week_status import current_week as cw  # noqa: E402
 import requests
 
-URL = "https://api.fantasycalc.com/values/current"
-PARAMS = {"isDynasty": "true", "numQbs": 1, "numTeams": 12, "ppr": 1}
+FANTASYCALC_DEFAULTS = {
+    "url": "https://api.fantasycalc.com/values/current", "dynasty": True,
+    "num_qbs": 1, "num_teams": 12, "ppr": 1, "timeout_seconds": 30, "minimum_player_rows": 100,
+}
 CURRENT = "data/PlayerValues_Current.csv"
 SEASON = "data/PlayerValues_Season.csv"
 PICKS = "data/PickValues_Current.csv"
@@ -48,9 +51,17 @@ def current_week():
     return cw(m["Year"].iloc[0])
 
 
+def fantasycalc_request():
+    settings = lcfg.section_settings("fantasycalc", FANTASYCALC_DEFAULTS)
+    params = {"isDynasty": str(settings["dynasty"]).lower(), "numQbs": settings["num_qbs"],
+              "numTeams": settings["num_teams"], "ppr": settings["ppr"]}
+    return settings, params
+
+
 def main():
+    settings, params = fantasycalc_request()
     try:
-        r = requests.get(URL, params=PARAMS, timeout=30,
+        r = requests.get(settings["url"], params=params, timeout=settings["timeout_seconds"],
                          headers={"User-Agent": "NCAA180-Sleeper/1.0"})
         r.raise_for_status()
         data = r.json()
@@ -83,7 +94,7 @@ def main():
                      "NFLTeam": p.get("maybeTeam") or "",
                      "DynastyValue": d.get("value", 0) or 0,
                      "RedraftValue": d.get("redraftValue", 0) or 0})
-    if len(rows) < 100:
+    if len(rows) < settings["minimum_player_rows"]:
         print(f"ERROR: only {len(rows)} valued players returned; not overwriting files")
         sys.exit(1)
     if picks:

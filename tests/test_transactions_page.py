@@ -279,3 +279,54 @@ def test_blockbuster_uses_two_snapshot_relative_raw_thresholds(player_values, pi
             sides, day, players, picks, 2026, {"blockbuster_min_headliner_share": .61})
         assert out["blockbuster"] == {"points": 15400, "multiple": 1.4,
                                      "headliner_points": 6600, "headliner_share": .60}
+
+
+def test_task_511_settings_have_safe_defaults_when_sections_are_missing(monkeypatch):
+    import league_config as lcfg
+    from player_values import fantasycalc_request
+
+    monkeypatch.setattr(lcfg, "cfg", lambda: {})
+    settings = load_config()
+    assert (settings["blockbuster_min_multiple"], settings["blockbuster_min_headliner_share"]) == (1.4, .6)
+    assert settings["labels"]["blockbuster"] == "Blockbuster"
+    assert settings["draft_slots_per_round"] == 12
+    assert grade(.50) == "Even"
+    assert fantasycalc_request()[1] == {"isDynasty": "true", "numQbs": 1, "numTeams": 12, "ppr": 1}
+
+
+def test_task_511_partial_owner_settings_change_only_selected_behavior(monkeypatch):
+    import league_config as lcfg
+    from player_values import fantasycalc_request
+    from transactions_grades import pick_slot_values
+
+    monkeypatch.setattr(lcfg, "cfg", lambda: {
+        "transactions": {
+            "draft_slots_per_round": 10, "proxy_pick_slot": "4.10",
+            "consolidation": {"method": "none"},
+            "labels": {"blockbuster": "Big <trade>"}, "movement_types": ["waiver", "trade"],
+        },
+        "fantasycalc": {"num_teams": 10},
+    })
+    settings = load_config()
+    assert settings["consolidation"]["exponent_low"] == 1.04
+    assert settings["labels"]["rebuild"] == "Rebuild"
+    assert settings["proxy_pick_slot"] == "4.10"
+    assert fantasycalc_request()[1]["numTeams"] == 10
+    assert compare({"1": [7000], "2": [3000]}, 11000)["credit"] == {"1": 0, "2": 0}
+    slots = pick_slot_values([{"Season": "2027", "Round": "4", "Early": 900, "Mid": 800, "Late": 700}], 2027)
+    assert list(slots)[-1] == (700, "4.10", True)
+    row = tx(Week="1", Status="complete", Created="1794000000000", TransactionID="1", Type="trade")
+    sides = {"1": [], "2": []}
+    result = {"blockbuster": {"points": 20000, "multiple": 2, "headliner_points": 9000, "headliner_share": .9}}
+    assert "Big &lt;trade&gt;" in trade_card(row, sides, TEAMS, {}, result, {})
+    assert movement([row, {**row, "Type": "free_agent"}], [], PLAYERS, {"NCAA SEC"}, 1)["adds"] == []
+
+
+def test_task_511_missing_transactions_nav_settings_remain_preview_only(monkeypatch):
+    import site_common
+
+    monkeypatch.setattr(site_common, "nav_config", lambda: {"tabs": [{"id": "transactions"}]})
+    assert site_common.page_state("transactions") == "hidden-dev"
+    assert site_common.menu_data()["tabs"] == [
+        {"id": "transactions", "label": "Transactions", "href": "transactions.html", "state": "hidden-dev"},
+    ]

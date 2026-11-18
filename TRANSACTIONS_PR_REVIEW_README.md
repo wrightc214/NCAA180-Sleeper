@@ -1,4 +1,4 @@
-# Transactions — developer / auditor handoff (TEMPORARY; DELETE BEFORE MERGE)
+# Task 5.11 Transactions — developer / auditor handoff (TEMPORARY; DELETE BEFORE MERGE)
 
 > **Status:** Implementation and review materials are ready for independent review on draft PR #111; **Team Fit and projected-win/odds context NOT implemented** because historical counterfactuals are not yet reliable. This file is intentionally committed for collaborators and independent review. Delete it and its three review-only mockups in a final PR commit **before merge**, after recording follow-ups in the permanent project doc. Do **not** merge this PR automatically.
 
@@ -14,6 +14,54 @@
 - **Known limitation:** card Team Fit displays unavailable, not fictional numbers; ROS wins, contender title/playoff odds and rebuilder bowl/1.01 odds are *not yet calculated*. No narrative explanation is generated (user explicitly deferred that section). Do not present these as complete.
 - **Review risk:** fallback consolidation adjustment can produce large balancing credits in uneven trades. Validate desired trade-economics direction before publicizing results; zero-valued contender pick sides receive **no** phantom credit. Exact slot values are not stored, so pick equivalents are interpolated and visually tagged approximate.
 - The generated preview page embeds dated trade data. Rerun the generator when upstream snapshots change; do not silently treat the committed preview as live data.
+
+## Task 5.11 owner settings
+
+This lists every owner setting introduced or moved by this PR, including the settings already present in the earlier draft. Defaults are used per key, including within nested sections. The static generator embeds the resolved settings in the generated page. Rebuild it after changes. If the tab is removed entirely it is omitted from the menu, and the direct page remains a Dev preview. Menu visibility is not access control. No new secrets or external repo variables are required.
+
+The existing shared brand, conference terminology, and semantic colour tokens are reused. Team colours and names still come from CSV data. No separate transaction-specific theme or release switch is introduced. When changing FantasyCalc scoring format, check that the stored history remains comparable. If the draft field size changes, select a proxy slot that exists in that field.
+
+| File | Key | Default |
+| --- | --- | --- |
+| `config/league.json` | `transactions.consolidation.method` | `"ktc-style-fallback"` |
+| `config/league.json` | `transactions.consolidation.exponent_low` | `1.04` |
+| `config/league.json` | `transactions.consolidation.exponent_elite` | `1.4` |
+| `config/league.json` | `transactions.consolidation.elite_threshold` | `0.7` |
+| `config/league.json` | `transactions.grade_bands` | `[[60, "A"], [55, "B+"], [52, "B"], [48, "Even"], [45, "C"], [40, "D"], [0, "F"]]` |
+| `config/league.json` | `transactions.blockbuster_min_multiple` | `1.4` |
+| `config/league.json` | `transactions.blockbuster_min_headliner_share` | `0.6` |
+| `config/league.json` | `transactions.proxy_pick_slot` | `"4.12"` |
+| `config/league.json` | `transactions.surplus_swap_max_relative_error` | `0.25` |
+| `config/league.json` | `transactions.draft_slots_per_round` | `12` |
+| `config/league.json` | `transactions.draft_tier_anchors` | `[2, 6, 10]` |
+| `config/league.json` | `transactions.movement_types` | `["free_agent", "waiver", "commissioner"]` |
+| `config/league.json` | `transactions.labels.rebuild` | `"Rebuild"` |
+| `config/league.json` | `transactions.labels.contender` | `"Contender"` |
+| `config/league.json` | `transactions.labels.blockbuster` | `"Blockbuster"` |
+| `config/league.json` | `transactions.labels.surplus` | `"Dynasty surplus"` |
+| `config/league.json` | `transactions.labels.team_fit` | `"Team Fit"` |
+| `config/league.json` | `transactions.labels.evaluation` | `"Trade evaluation"` |
+| `config/league.json` | `transactions.labels.trades` | `"Trades"` |
+| `config/league.json` | `transactions.labels.movement` | `"Player movement"` |
+| `config/league.json` | `transactions.labels.summary` | `"Season summary"` |
+| `config/league.json` | `transactions.labels.receives` | `"Receives"` |
+| `config/league.json` | `transactions.labels.most_added` | `"Most added"` |
+| `config/league.json` | `transactions.labels.most_dropped` | `"Most dropped"` |
+| `config/league.json` | `transactions.labels.week` | `"Week"` |
+| `config/league.json` | `transactions.labels.team` | `"Team"` |
+| `config/league.json` | `transactions.labels.pick` | `"Pick"` |
+| `config/league.json` | `transactions.labels.pick_swap` | `"Pick swap"` |
+| `config/league.json` | `transactions.labels.trades_by_week` | `"Trades by week"` |
+| `config/league.json` | `fantasycalc.url` | `"https://api.fantasycalc.com/values/current"` |
+| `config/league.json` | `fantasycalc.dynasty` | `true` |
+| `config/league.json` | `fantasycalc.num_qbs` | `1` |
+| `config/league.json` | `fantasycalc.num_teams` | `12` |
+| `config/league.json` | `fantasycalc.ppr` | `1` |
+| `config/league.json` | `fantasycalc.timeout_seconds` | `30` |
+| `config/league.json` | `fantasycalc.minimum_player_rows` | `100` |
+| `config/nav.json` | `tabs[id=transactions].label` | `Transactions` |
+| `config/nav.json` | `tabs[id=transactions].href` | `transactions.html` |
+| `config/nav.json` | `tabs[id=transactions].state` | `hidden-dev` |
 
 ## Trade-card design references
 
@@ -58,7 +106,7 @@ The [Transactions project doc](docs/transactions.md) is the lasting record of th
 
 > Independently review draft PR #111 against main. Do not merge it or deploy. Open the generated Transactions page and all three [design references](#trade-card-design-references), then use [the permanent Transactions doc](docs/transactions.md) as the specification.
 >
-> Reproduce the three real trades and inspect both raw and adjusted values. Check Bass's historical 725-point 4.12 proxy in both grades, its exclusion from consolidation and blockbuster math, the distinction between unlisted known players and unresolved IDs, and that zero-versus-zero never gets an Even grade. Verify Oregon displays +372 and an approximate 4.12 → 3.05 swap with no year in the surplus badge, while actual traded picks retain their years. Reproduce the four [expected Blockbusters](#blockbuster-acceptance-set), including Walker–Achane at 1.45× combined and a 63% headliner. On Montana–Old Dominion, verify the yearless multi-pick surplus starts at 1.01 and the next slot is distinct. Confirm the settings come from `config/league.json`. Check the inclusive 1.40× volume and 60% single-player thresholds against the full historical snapshot. Verify the two unmarked mockup trades, a third-for-two-fourths deal, and a pile of mid-tier assets without a headliner do not qualify. Picks can count toward volume only. Confirm the badge does not imply a winner.
+> Reproduce the three real trades and inspect both raw and adjusted values. Check Bass's historical 725-point 4.12 proxy in both grades, its exclusion from consolidation and blockbuster math, the distinction between unlisted known players and unresolved IDs, and that zero-versus-zero never gets an Even grade. Verify Oregon displays +372 and an approximate 4.12 → 3.05 swap with no year in the surplus badge, while actual traded picks retain their years. Reproduce the four [expected Blockbusters](#blockbuster-acceptance-set), including Walker–Achane at 1.45× combined and a 63% headliner. On Montana–Old Dominion, verify the yearless multi-pick surplus starts at 1.01 and the next slot is distinct. Verify the [Task 5.11 settings inventory](#task-511-owner-settings), including a partial owner config and the missing-section and missing-preview-state defaults. Compare the default trade cards and badge set with the prior validated build. Check the inclusive 1.40× volume and 60% single-player thresholds against the full historical snapshot. Verify the two unmarked mockup trades, a third-for-two-fourths deal, and a pile of mid-tier assets without a headliner do not qualify. Picks can count toward volume only. Confirm the badge does not imply a winner.
 >
 > Check Playwright and the latest read-only CI run, then spot-check filtering, sections, mobile overflow, light/dark badge legibility, and the hidden-dev nav. Re-examine the fallback on Montana–South Dakota, where a large credit almost erases the raw Contender gap. Confirm the permanent doc carries the missing work, especially a sourced “Why this trade makes sense” for each side, plus Team Fit, projected wins and odds. Report findings by severity, give a ready/not-ready recommendation, and list any scope or calibration decisions needed. Remove the temporary README and the three review images only after the handoff is accepted and before merging.
 

@@ -18,6 +18,15 @@ def cfg():
     return json.loads((ROOT / "config" / "league.json").read_text(encoding="utf-8"))
 
 
+def section_settings(name, defaults, overrides=None):
+    """Return a fresh section with per-key fallbacks, including nested options."""
+    def merge(base, values):
+        values = values if isinstance(values, dict) else {}
+        return {key: merge(default, values.get(key)) if isinstance(default, dict)
+                else values.get(key, default) for key, default in base.items()}
+    return merge(merge(defaults, cfg().get(name)), overrides)
+
+
 def brand():
     return cfg()["brand"]
 

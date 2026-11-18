@@ -15,7 +15,7 @@ from pathlib import Path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import league_config as lcfg
 import team_names as tn
-from site_common import SECTIONS_JS, logo_html, menu_html, page_head, team_colors
+from site_common import SECTIONS_JS, logo_html, menu_html, nav_config, page_head, team_colors
 from transactions_grades import evaluate_trade, load_config, read_rows
 
 TRANSACTIONS = "data/Transactions_Season.csv"
@@ -127,9 +127,9 @@ def trade_assets(row, teams, players):
     return sides
 
 
-def movement(rows, roster_rows, players, leagues, week):
+def movement(rows, roster_rows, players, leagues, week, config=None):
     """League-level pickup/drop frequency, excluding trades; current ownership."""
-    kinds = ("free_agent", "waiver", "commissioner")
+    kinds = set(load_config(config)["movement_types"]) - {"trade"}
     counts = {"adds": collections.defaultdict(set), "drops": collections.defaultdict(set)}
     for r in rows:
         if r.get("Status") != "complete" or r.get("Type") not in kinds or int(r["Week"]) != week:
@@ -198,7 +198,8 @@ def render_grade(g, name):
             f'<small>{g["adjusted"][name]:,.0f} pts</small></span>')
 
 
-def trade_card(r, sides, names, colors, result, shorts):
+def trade_card(r, sides, names, colors, result, shorts, config=None):
+    labels = {key: esc(value) for key, value in load_config(config)["labels"].items()}
     league = r["LeagueName"]
     short = shorts.get(league, league.replace("NCAA ", ""))
     ids = list(sides)
@@ -217,26 +218,26 @@ def trade_card(r, sides, names, colors, result, shorts):
             swap = surplus.get("swap")
             picks = surplus["picks"]
             if swap:
-                label = f'≈ Pick swap · {swap["from"]} → {swap["to"]}'
+                label = f'≈ {labels["pick_swap"]} · {esc(swap["from"])} → {esc(swap["to"])}'
             else:
-                label = " + ".join(("≈ " if estimated else "") + f"Pick {slot}"
+                label = " + ".join(("≈ " if estimated else "") + f'{labels["pick"]} {esc(slot)}'
                                    for _, slot, estimated in picks)
-            suffix = f' · {esc(label)}' if label else ""
-            badge = (f'<div class="tx-surplus">Dynasty surplus{suffix}<br>'
+            suffix = f' · {label}' if label else ""
+            badge = (f'<div class="tx-surplus">{labels["surplus"]}{suffix}<br>'
                      f'<small>+{surplus["value"]:,.0f} adjusted points'
                      f'{" · estimated slots" if swap or any(p[2] for p in picks) else ""}</small></div>')
         return (f'<div class="tx-side">{render_team(name, colors)}<div class="tx-assets">'
-                f'<div class="tx-receives">Receives</div>{render_assets(assets, proxies.get(rid), proxy_slot)}</div>{badge}</div>')
+                f'<div class="tx-receives">{labels["receives"]}</div>{render_assets(assets, proxies.get(rid), proxy_slot)}</div>{badge}</div>')
     status = result.get("status")
     grade_rows = ""
-    for key, label in ((dyn, "Rebuild value"), (con, "Contender value")):
+    for key, label in ((dyn, labels["rebuild"]), (con, labels["contender"])):
         note = " · No measurable value" if key and key["score"][ids[0]] is None else ""
-        grade_rows += (f'<div class="tx-grade">{render_grade(key, ids[0])}<span>{label}{note}</span>'
+        grade_rows += (f'<div class="tx-grade">{render_grade(key, ids[0])}<span>{label} value{note}</span>'
                        f'{render_grade(key, ids[1])}</div>')
-    fit = '<div class="tx-muted">Team Fit: historical context model pending validation</div>'
+    fit = f'<div class="tx-muted">{labels["team_fit"]}: historical context model pending validation</div>'
     missing_label = ("No values from that week" if not result.get("player_date")
                      else "Historical values unavailable")
-    center = (f'<div class="tx-center"><h3>Trade evaluation</h3>{fit}{grade_rows}'
+    center = (f'<div class="tx-center"><h3>{labels["evaluation"]}</h3>{fit}{grade_rows}'
               + (f'<div class="tx-muted">{missing_label}</div>' if status != "complete" else
                  f'<div class="tx-muted">FantasyCalc snapshot {esc(result.get("player_date"))}</div>')
               + '</div>')
@@ -250,9 +251,9 @@ def trade_card(r, sides, names, colors, result, shorts):
     flag = (f'<span class="tx-flag" title="{blockbuster["points"]:,.0f} combined raw dynasty market points'
             f' ({blockbuster["multiple"]:.2f}× snapshot leader). Top traded player: '
             f'{blockbuster["headliner_points"]:,.0f} points ({blockbuster["headliner_share"]:.0%} of leader).">'
-            'Blockbuster</span>' if blockbuster else "")
+            f'{labels["blockbuster"]}</span>' if blockbuster else "")
     card_class = "tx-card tx-blockbuster" if blockbuster else "tx-card"
-    meta = (f'<div class="tx-head">{esc(short)} · Week {esc(r["Week"])} · {esc(day(r["Created"]))}{flag}</div>'
+    meta = (f'<div class="tx-head">{esc(short)} · {labels["week"]} {esc(r["Week"])} · {esc(day(r["Created"]))}{flag}</div>'
             f'<span class="tx-muted">Trade {esc(r["TransactionID"])}</span>')
     return (f'<article class="{card_class}" data-conference="{esc(league)}" data-week="{esc(r["Week"])}" '
             f'data-teams="{esc("|".join(team.values()))}" data-identity="{esc(short)}:{esc(ids[0])}|{esc(short)}:{esc(ids[1])}"><header>{meta}</header>'
@@ -287,6 +288,11 @@ def main():
         if c is not None:
             colors[name] = dict(c)
     grading_config = load_config()
+    labels = {key: esc(value) for key, value in grading_config["labels"].items()}
+    page_label = next((tab.get("label", "Transactions") for tab in nav_config().get("tabs", [])
+                       if tab.get("id") == "transactions"), "Transactions")
+    unit = lcfg.term()
+    units = lcfg.term(plural=True)
     trades = sorted((r for r in rows if r["Type"] == "trade"),
                     key=lambda r: int(r["Created"]), reverse=True)
     cards = []
@@ -299,27 +305,27 @@ def main():
         result = evaluate_trade(sides, day(r["Created"]), player_hist, pick_hist, int(r["Year"]), grading_config)
         if result["dynasty"] and any(g is not None for g in result["dynasty"]["grade"].values()):
             covered += 1
-        cards.append(trade_card(r, sides, names, colors, result, short))
+        cards.append(trade_card(r, sides, names, colors, result, short, grading_config))
     lg = sorted({r["LeagueName"] for r in rows})
     weeks = sorted({int(r["Week"]) for r in rows})
     last = max(weeks, default=1)
-    mv = {str(w): movement(rows, rosters, players, set(lg), w) for w in weeks}
+    mv = {str(w): movement(rows, rosters, players, set(lg), w, grading_config) for w in weeks}
     for m in mv.values():
         for kind in ("adds", "drops"):
             for r in m[kind]:
                 r["_type"] = kind
     summ_lg, summ_wk = summary(trades)
-    filters = (f'<div class="tx-controls"><label>Conference<select id="tx-conference">'
-               '<option value="">All conferences</option>' +
+    filters = (f'<div class="tx-controls"><label>{esc(lcfg.term(cap=True))}<select id="tx-conference">'
+               f'<option value="">All {esc(units)}</option>' +
                ''.join(f'<option value="{esc(k)}">{esc(short.get(k, k))}</option>' for k in lg) +
-               '</select></label><label>Week<select id="tx-week"><option value="">All weeks</option>' +
-               ''.join(f'<option value="{w}">Week {w}</option>' for w in weeks) +
-               '</select></label><label>Team<select id="tx-team"><option value="">All teams</option>' +
+               f'</select></label><label>{labels["week"]}<select id="tx-week"><option value="">All weeks</option>' +
+               ''.join(f'<option value="{w}">{labels["week"]} {w}</option>' for w in weeks) +
+               f'</select></label><label>{labels["team"]}<select id="tx-team"><option value="">All teams</option>' +
                ''.join(f'<option value="{esc(n)}">{esc(n)}</option>' for n in sorted(set(names.values()))) +
                '</select></label></div>')
     bars_l = "".join(f'<div class="tx-bar"><span>{esc(short.get(k, k))}</span><meter min="0" max="{max(summ_lg.values(), default=1)}" value="{v}"></meter><b>{v}</b></div>'
                      for k, v in sorted(summ_lg.items(), key=lambda x: (-x[1], x[0])))
-    bars_w = "".join(f'<div class="tx-bar"><span>Week {w}</span><meter min="0" max="{max(summ_wk.values(), default=1)}" value="{summ_wk[w]}"></meter><b>{summ_wk[w]}</b></div>'
+    bars_w = "".join(f'<div class="tx-bar"><span>{labels["week"]} {w}</span><meter min="0" max="{max(summ_wk.values(), default=1)}" value="{summ_wk[w]}"></meter><b>{summ_wk[w]}</b></div>'
                      for w in sorted(summ_wk))
     latest_stamp = day(max((r["Created"] for r in rows), default="0")) if rows else "N/A"
     generated = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
@@ -327,25 +333,25 @@ def main():
 <div class="wrap">
 {menu_html("transactions")}
 <header><div><div class="eyebrow">{lcfg.season()} season · generated {esc(generated)} · latest transaction {esc(latest_stamp)}</div>
-<h1>{esc(lcfg.brand())} <em>Transactions</em></h1></div></header>
-<section><h2>Trades <small>({len(cards)})</small></h2>
+<h1>{esc(lcfg.brand())} <em>{esc(page_label)}</em></h1></div></header>
+<section><h2>{labels["trades"]} <small>({len(cards)})</small></h2>
 {filters}
 <p class="tx-note">Grades use FantasyCalc values available at trade time — not a verdict.
-Rebuild includes rookie picks. Contender values traded picks at zero. Unlisted kickers and D/ST use a {esc(grading_config["proxy_pick_slot"])} proxy in both grades. Surplus pick comparisons use the upcoming draft at trade time. Blockbuster marks a large raw dynasty deal with a high-value player, both measured against the snapshot’s top player. It does not indicate a winner. Team Fit and projected wins/odds
+{labels["rebuild"]} includes rookie picks. {labels["contender"]} values traded picks at zero. Unlisted kickers and D/ST use a {esc(grading_config["proxy_pick_slot"])} proxy in both grades. Surplus pick comparisons use the upcoming draft at trade time. {labels["blockbuster"]} marks a large raw dynasty deal with a high-value player, both measured against the snapshot’s top player. It does not indicate a winner. {labels["team_fit"]} and projected wins/odds
 await a validated historical context model.</p>
 <div class="tx-cards" id="tx-trades">{''.join(cards)}</div>
 <p class="tx-empty" id="tx-no-trades" hidden>No trades match these filters.</p>
-<p class="tx-note">{covered} of {len(cards)} trades have a Rebuild grade under the historical valuation rules.</p>
+<p class="tx-note">{covered} of {len(cards)} trades have a {labels["rebuild"]} grade under the historical valuation rules.</p>
 </section>
-<section><h2>Player movement</h2>
-<div class="tx-controls"><label>Week<select id="tx-move-week">{
-''.join(f'<option value="{w}"{" selected" if w == last else ""}>Week {w}</option>' for w in weeks)}</select></label></div>
-<p class="tx-note">Distinct conferences with a completed free-agent, waiver or commissioner move;
+<section><h2>{labels["movement"]}</h2>
+<div class="tx-controls"><label>{labels["week"]}<select id="tx-move-week">{
+''.join(f'<option value="{w}"{" selected" if w == last else ""}>{labels["week"]} {w}</option>' for w in weeks)}</select></label></div>
+<p class="tx-note">Distinct {esc(units)} with an eligible completed player move;
 trades excluded. Ownership and availability are from the current roster snapshot.</p>
-<div class="tx-movement"><div><h3>Most added</h3><div id="tx-adds"></div></div>
-<div><h3>Most dropped</h3><div id="tx-drops"></div></div></div></section>
-<section><h2>Season summary</h2><div class="tx-bars"><div><h3>Trades by conference</h3>{bars_l}</div>
-<div><h3>Trades by week</h3>{bars_w}</div></div></section>
+<div class="tx-movement"><div><h3>{labels["most_added"]}</h3><div id="tx-adds"></div></div>
+<div><h3>{labels["most_dropped"]}</h3><div id="tx-drops"></div></div></div></section>
+<section><h2>{labels["summary"]}</h2><div class="tx-bars"><div><h3>{labels["trades"]} by {esc(unit)}</h3>{bars_l}</div>
+<div><h3>{labels["trades_by_week"]}</h3>{bars_w}</div></div></section>
 </div>"""
     js = """
 <script>
@@ -353,6 +359,7 @@ trades excluded. Ownership and availability are from the current roster snapshot
   'use strict';
   const m = __MOVEMENT__;
   const labels = __LABELS__;
+  const [unit, units] = __UNIT_WORDS__;
   const cards = [...document.querySelectorAll('#tx-trades .tx-card')];
   const conference = document.getElementById('tx-conference');
   const week = document.getElementById('tx-week');
@@ -375,7 +382,7 @@ trades excluded. Ownership and availability are from the current roster snapshot
       const root = document.getElementById('tx-'+key);
       const list = d[key] || [];
       root.innerHTML = list.length ? list.map(p => '<div class="tx-move"><strong>'+esc(p.name)+'</strong> '+
-        (key==='adds'?'picked up in ':'dropped in ')+p.count+' '+(p.count===1?'conference':'conferences')+
+        (key==='adds'?'picked up in ':'dropped in ')+p.count+' '+(p.count===1?esc(unit):esc(units))+
         ' · now owned in '+p.owned+'/'+p.total+(p.available.length?' (available in '+
         p.available.map(x=>esc(labels[x] || x.replace('NCAA ',''))).join(', ')+')':' (none available)')+'</div>').join('')
         : '<p class="tx-empty">No '+key+' this week.</p>';
@@ -411,7 +418,8 @@ trades excluded. Ownership and availability are from the current roster snapshot
 </script>"""
     js = js.replace("__MOVEMENT__", json.dumps(mv, ensure_ascii=False).replace("</", "<\\/"))
     js = js.replace("__LABELS__", json.dumps(short, ensure_ascii=False).replace("</", "<\\/"))
-    html_out = page_head("Transactions — NCAA 180", CSS) + body + js + SECTIONS_JS + "</body></html>"
+    js = js.replace("__UNIT_WORDS__", json.dumps([unit, units]).replace("</", "<\\/"))
+    html_out = page_head(f"{page_label} — {lcfg.brand()}", CSS) + body + js + SECTIONS_JS + "</body></html>"
     Path(OUT).parent.mkdir(parents=True, exist_ok=True)
     Path(OUT).write_text(html_out, encoding="utf-8")
     print(f"Wrote {OUT}: {len(cards)} trades, {covered} graded, {len(weeks)} weeks, {len(lg)} conferences")

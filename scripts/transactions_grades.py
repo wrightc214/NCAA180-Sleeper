@@ -41,13 +41,42 @@ def read_rows(path):
         return list(csv.DictReader(f))
 
 
-def load_config():
-    """Read the owner settings from the shared league configuration."""
-    return lcfg.cfg()["transactions"]
+DEFAULTS = {
+    "consolidation": {"method": "ktc-style-fallback", "exponent_low": 1.04,
+                      "exponent_elite": 1.4, "elite_threshold": .7},
+    "grade_bands": [[60, "A"], [55, "B+"], [52, "B"], [48, "Even"], [45, "C"], [40, "D"], [0, "F"]],
+    "blockbuster_min_multiple": 1.4,
+    "blockbuster_min_headliner_share": .6,
+    "proxy_pick_slot": "4.12",
+    "surplus_swap_max_relative_error": .25,
+    "draft_slots_per_round": 12,
+    "draft_tier_anchors": [2, 6, 10],
+    "movement_types": ["free_agent", "waiver", "commissioner"],
+    "labels": {
+        "rebuild": "Rebuild",
+        "contender": "Contender",
+        "blockbuster": "Blockbuster",
+        "surplus": "Dynasty surplus",
+        "team_fit": "Team Fit",
+        "evaluation": "Trade evaluation",
+        "trades": "Trades",
+        "movement": "Player movement",
+        "summary": "Season summary",
+        "receives": "Receives",
+        "most_added": "Most added",
+        "most_dropped": "Most dropped",
+        "week": "Week",
+        "team": "Team",
+        "pick": "Pick",
+        "pick_swap": "Pick swap",
+        "trades_by_week": "Trades by week",
+    },
+}
 
 
-def settings_with(overrides):
-    return load_config() | (overrides or {})
+def load_config(overrides=None):
+    """Resolve the public owner settings and keep existing behavior for absent keys."""
+    return lcfg.section_settings("transactions", DEFAULTS, overrides)
 
 
 def grade(share, bands=None):
@@ -62,7 +91,7 @@ def grade_score(share):
     return max(0, min(100, 100 * share)) if share is not None and math.isfinite(share) else None
 
 
-def fallback_raw(value, top_trade, top_snapshot, config=None):
+def fallback_raw(value, top_trade, top_snapshot, cfg):
     """Elite concentration premium, increasing with elite-ness of trade's top asset.
 
     Raw adjustment per asset = p * (p/t)**e, with e in [1.04, 1.40].
@@ -71,8 +100,6 @@ def fallback_raw(value, top_trade, top_snapshot, config=None):
     """
     if value <= 0 or top_trade <= 0:
         return 0.0
-    defaults = load_config()["consolidation"]
-    cfg = defaults | (config or {}).get("consolidation", {})
     threshold = max(0.01, number(cfg["elite_threshold"]))
     elite = min(1.0, max(0.0, top_trade / max(top_snapshot, 1) / threshold))
     e = number(cfg["exponent_low"]) + elite * (
@@ -89,26 +116,29 @@ def consolidation(sides, top_snapshot, config=None):
     keys = list(sides)
     if len(keys) != 2:
         return {k: 0.0 for k in keys}, {k: 0.0 for k in keys}
+    settings = load_config(config)["consolidation"]
+    if settings["method"] == "none":
+        return {k: 0.0 for k in keys}, {k: 0.0 for k in keys}
     values = [max(0.0, number(v)) for group in sides.values() for v in group]
     top = max(values, default=0.0)
     if not top or any(not any(number(v) > 0 for v in sides[k]) for k in keys):
         # Picks carry zero contender value. They must not gain a fictional
         # balancing asset that turns a 0-for-starter deal into an 'Even' grade.
-        raw = {k: sum(fallback_raw(max(0.0, number(v)), top, top_snapshot, config)
+        raw = {k: sum(fallback_raw(max(0.0, number(v)), top, top_snapshot, settings)
                       for v in sides[k]) for k in keys}
         return {k: 0.0 for k in keys}, raw
-    raw = {k: sum(fallback_raw(max(0.0, number(v)), top, top_snapshot, config)
+    raw = {k: sum(fallback_raw(max(0.0, number(v)), top, top_snapshot, settings)
                   for v in sides[k]) for k in keys}
     lo, hi = sorted(keys, key=lambda k: raw[k])
     diff = raw[hi] - raw[lo]
     adjustment = {k: 0.0 for k in keys}
     if diff > 1e-9:
         low, high = 0.0, max(top, diff)
-        while fallback_raw(high, top, top_snapshot, config) < diff:
+        while fallback_raw(high, top, top_snapshot, settings) < diff:
             high *= 2
         for _ in range(70):
             mid = (low + high) / 2
-            if fallback_raw(mid, top, top_snapshot, config) < diff:
+            if fallback_raw(mid, top, top_snapshot, settings) < diff:
                 low = mid
             else:
                 high = mid
@@ -125,29 +155,41 @@ def compare(sides, top_snapshot, config=None, proxy=None):
     adjusted = {k: raw_totals[k] + credit.get(k, 0) for k in keys}
     total = sum(adjusted.values())
     shares = {k: adjusted[k] / total if total else None for k in keys}
+    bands = load_config(config)["grade_bands"]
     return {"raw": raw_totals, "credit": credit, "adjustment_sums": adjustments,
             "adjusted": adjusted, "share": shares,
-            "grade": {k: grade(shares[k], settings_with(config)["grade_bands"]) for k in keys},
+            "grade": {k: grade(shares[k], bands) for k in keys},
             "score": {k: grade_score(shares[k]) for k in keys}}
 
 
-def pick_slot_values(pick_rows, season):
+def pick_slot_values(pick_rows, season, config=None):
     """Yield (value, yearless slot label, estimated) from a single snapshot."""
+    settings = load_config(config)
+    slots = settings["draft_slots_per_round"]
+    if type(slots) is not int or slots < 1:
+        slots = DEFAULTS["draft_slots_per_round"]
+    anchors = settings["draft_tier_anchors"]
+    if not (isinstance(anchors, list) and len(anchors) == 3
+            and all(type(x) in (int, float) for x in anchors)
+            and 0 < anchors[0] < anchors[1] < anchors[2] <= 12):
+        anchors = DEFAULTS["draft_tier_anchors"]
+    first, middle, last = anchors
     for row in pick_rows:
         if str(row.get("Season")) != str(season):
             continue
         rnd = int(row["Round"])
         early, mid, late = (number(row.get(col)) for col in ("Early", "Mid", "Late"))
         if min(early, mid, late) > 0:
-            for slot in range(1, 13):
-                if slot <= 2:
+            for slot in range(1, slots + 1):
+                reference_slot = slot * 12 / slots
+                if reference_slot <= first:
                     value = early
-                elif slot >= 10:
+                elif reference_slot >= last:
                     value = late
-                elif slot <= 6:
-                    value = early + (mid - early) * (slot - 2) / 4
+                elif reference_slot <= middle:
+                    value = early + (mid - early) * (reference_slot - first) / (middle - first)
                 else:
-                    value = mid + (late - mid) * (slot - 6) / 4
+                    value = mid + (late - mid) * (reference_slot - middle) / (last - middle)
                 yield value, f"{rnd}.{slot:02d}", True
         elif number(row.get("Value")) > 0:
             yield number(row["Value"]), f"R{rnd}", False
@@ -155,9 +197,9 @@ def pick_slot_values(pick_rows, season):
 
 def pick_swap(delta, season, pick_rows, config=None):
     """For small margins, find a close upgrade starting at the proxy slot."""
-    settings = settings_with(config)
+    settings = load_config(config)
     anchor_slot = settings["proxy_pick_slot"]
-    slots = [(v, label) for v, label, estimated in pick_slot_values(pick_rows, season) if estimated]
+    slots = [(v, label) for v, label, estimated in pick_slot_values(pick_rows, season, settings) if estimated]
     anchor = next((v for v, label in slots if label == anchor_slot), 0)
     if not 0 < delta < anchor:
         return None
@@ -170,10 +212,10 @@ def pick_swap(delta, season, pick_rows, config=None):
     return {"from": anchor_slot, "to": label, "value": value}
 
 
-def nearest_pick(delta, season, pick_rows):
+def nearest_pick(delta, season, pick_rows, config=None):
     """Use one pick through the early-first cap or up to two above it."""
     delta = abs(number(delta))
-    candidates = sorted(pick_slot_values(pick_rows, season), reverse=True)
+    candidates = sorted(pick_slot_values(pick_rows, season, config), reverse=True)
     if not delta:
         return []
     if not candidates:
@@ -206,9 +248,9 @@ def evaluate_trade(assets, trade_day, player_history, pick_history, trade_year, 
     picks = {(str(r["Season"]), str(r["Round"])): r for r in by_k.get(kd, [])}
     draft_rows = by_k.get(kd, [])
     draft = trade_year + 1
-    settings = settings_with(config)
+    settings = load_config(config)
     proxy_slot = settings["proxy_pick_slot"]
-    proxy_value = next((v for v, label, estimated in pick_slot_values(draft_rows, draft)
+    proxy_value = next((v for v, label, estimated in pick_slot_values(draft_rows, draft, settings)
                         if label == proxy_slot and estimated), None)
     sides = {k: {"dynasty": [], "contender": []} for k in assets}
     problems = {"dynasty": [], "contender": []}
@@ -282,6 +324,6 @@ def evaluate_trade(assets, trade_day, player_history, pick_history, trade_year, 
             val["surplus"] = {
                 "team": winner, "value": surplus, "draft": draft,
                 "swap": pick_swap(surplus, draft, draft_rows, settings) if small else None,
-                "picks": [] if small else nearest_pick(surplus, draft, draft_rows),
+                "picks": [] if small else nearest_pick(surplus, draft, draft_rows, settings),
             }
     return result

@@ -4,6 +4,8 @@ on:
     paths:
       - 'scripts/transactions_*.py'
       - 'scripts/player_values.py'
+      - 'scripts/league_config.py'
+      - 'scripts/site_common.py'
       - 'tests/test_transactions_page.py'
       - 'tests/transactions_browser.py'
       - 'config/nav.json'
