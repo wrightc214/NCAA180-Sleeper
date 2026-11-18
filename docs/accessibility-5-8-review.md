@@ -97,3 +97,20 @@ Append each significant code change with: affected paths, necessity, rejected al
 - **CI:** Expanded the PR-only workflow's path filters to cover feature assets, config, generated page, service worker, and bowl source. Added Node `--check` and Python `py_compile` steps; execution still unconfirmed.
 
 **Outstanding blockers and review risks:** no confirmed CI runs; no actual browser/screenshot/mobile validation; no full semantic-colour inventory; no proven image export behaviour; the Accessibility page remains standalone rather than sharing the full `page_head` layout; custom colour contrast assumes a representative panel background; no-colour meaning cues are not audited across every page. Do not merge without independent validation.
+
+## Site chrome and generated page integration
+
+The Accessibility page generator now uses `site_common.page_head(..., totop=False)` and `menu_html("access")` rather than copying the entire standalone HTML document. `templates/access.html` remains the editable source for the page-specific CSS and `<main>` content; `scripts/access_page.py` writes `reports/access.html` with the shared site CSS, fonts, app metadata, and dev-only menu. A generated-page structural regression test checks these elements. The committed HTML was rebuilt from the same template and shared head ingredients; **an actual Python generator execution has not been run in this environment**, so the auditor must run `python scripts/access_page.py` and check for a clean diff.
+
+**Generator/asset validation commands for independent reviewer:**
+```sh
+python scripts/access_page.py
+python scripts/menu_build.py
+git diff --exit-code -- reports/access.html reports/assets/menu.js
+node --test tests/*.test.js
+node --check templates/menu.js
+node --check reports/assets/menu.js
+node --check reports/assets/access.js
+python -m py_compile scripts/access_page.py scripts/bowl_projection.py
+```
+Do not execute the report publication or Discord posting commands during validation.
