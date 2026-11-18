@@ -115,7 +115,7 @@ test('automatic contrast defaults on, persists, and resets to on', () => {
     assert.strictEqual(a.read().autoContrast,true);
     a.save({mode:'custom',custom:{good:'#ffffff',bad:'#eeeeee'}});
     assert.strictEqual(a.read().autoContrast,true);
-    assert.ok(!m.colors.css.includes('--good:#ffffff;--bad:#eeeeee;'));
+    assert.ok(!m.colors.css.match(/^:root\\{--good:#ffffff;--bad:#eeeeee;/));
     a.save({autoContrast:false});
     assert.strictEqual(a.read().autoContrast,false);
     assert.match(m.colors.css,/--good:#ffffff;--bad:#eeeeee;/);
@@ -314,9 +314,9 @@ test('saved-image renderer carries live accessibility token styles', () => {
 
 test('Accessibility controls update and reset preferences without a browser', () => {
   const script=fs.readFileSync(path.join(__dirname,'..','reports','assets','access.js'),'utf8');
-  let state={mode:'standard',custom:{good:'#1a7f37',bad:'#b42318'},motion:'system',emphasis:false};
+  let state={mode:'standard',custom:{good:'#1a7f37',bad:'#b42318'},motion:'system',emphasis:false,autoContrast:true};
   const handlers={},nodes={};
-  for(const id of ['mode','good','bad','motion','emphasis','good-value','bad-value','warnings','restore-custom','reset-all']){
+  for(const id of ['mode','good','bad','motion','emphasis','auto-contrast','contrast-option','good-value','bad-value','warnings','restore-custom','reset-all']){
     nodes[id]={value:'',checked:false,disabled:false,textContent:'',
       addEventListener(type,fn){handlers[id+':'+type]=fn;}};
   }
@@ -332,6 +332,8 @@ test('Accessibility controls update and reset preferences without a browser', ()
   nodes.good.value='#123456';handlers['good:input'].call(nodes.good);
   assert.strictEqual(state.mode,'custom');
   assert.strictEqual(state.custom.good,'#123456');
+  nodes['auto-contrast'].checked=false;handlers['auto-contrast:change'].call(nodes['auto-contrast']);
+  assert.strictEqual(state.autoContrast,false);
   handlers['restore-custom:click']();
   assert.strictEqual(state.custom.good,'#1a7f37');
   assert.strictEqual(state.mode,'custom');
