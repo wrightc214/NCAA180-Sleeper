@@ -47,6 +47,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Confirm historical Team Fit snapshots and their publication order.
 
       - name: Set up Python
         uses: actions/setup-python@v5

@@ -83,5 +83,62 @@
     "ppr": 1,
     "timeout_seconds": 30,
     "minimum_player_rows": 100
+  },
+  "team_fit": {
+    "_note": "Historical Team Fit is separate from market price. Only verified archived pre-trade data is used. Scores describe a modeled goal, not observed manager intent.",
+    "_scale_note": "meaningful_*_points set the size of one fit unit. score_points_per_unit converts one unit to score points around neutral 50.",
+    "_situation_note": "record_weight blends win fraction with the existing contender index. Available odds from odds_first_week blend in at playoff_context_weight. An eligible bowl chance matters less than playoff odds via bowl_weight. win_now_ceiling preserves some future weight for contenders.",
+    "_rebuild_note": "Below rebuild_max_weight treat picks as flexible capital with pick_flexibility as a proportional utility allowance, not a market price. Rebuild starter coverage adds rebuild_starter_weight of capped above-floor future starter capacity. With net new pick capital, don't assume lost starter capacity goes unfilled. Pre-deadline negative lineup impact fades from fully waived at rebuild_lineup_no_weight_at to fully counted at rebuild_lineup_full_weight_at, through the configured deadline week only.",
+    "_age_note": "For each horizon, age_curves entries are [gradual onset age, annual gradual decline, steep onset age, annual steep decline]. Discount only newly elapsed time above each onset. Missing birth date leaves the market value flat, not guessed.",
+    "_specialist_note": "Known K/DST without market prices use the historical proxy. Starting coverage uses specialist_lookback_weeks of prior scores, scaled to specialist_target_ppg. specialist_needs_points determines how much that scarce slot matters to fit. No future injury or starter data is used.",
+    "meaningful_lineup_points": 6500,
+    "meaningful_future_points": 4500,
+    "score_points_per_unit": 20,
+    "record_weight": 0.7,
+    "playoff_context_weight": 0.25,
+    "bowl_weight": 0.15,
+    "odds_first_week": 8,
+    "win_now_ceiling": 0.7,
+    "rebuild_lineup_grace_through_week": 10,
+    "rebuild_lineup_full_weight_at": 0.48,
+    "rebuild_lineup_no_weight_at": 0.28,
+    "rebuild_starter_weight": 0.9,
+    "future_starter_floor": 1300,
+    "future_starter_cap": 4500,
+    "rebuild_max_weight": 0.38,
+    "growth_horizon_years": [
+      1,
+      2
+    ],
+    "pick_flexibility": 0.42,
+    "specialist_lookback_weeks": 4,
+    "specialist_target_ppg": 8,
+    "specialist_needs_points": 2600,
+    "age_curves": {
+      "QB": [
+        31,
+        0.07,
+        35,
+        0.2
+      ],
+      "RB": [
+        27.5,
+        0.15,
+        30.5,
+        0.4
+      ],
+      "WR": [
+        28,
+        0.1,
+        31,
+        0.28
+      ],
+      "TE": [
+        29,
+        0.09,
+        32,
+        0.25
+      ]
+    }
   }
 }

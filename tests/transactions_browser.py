@@ -45,6 +45,14 @@ def main():
                 assert page.locator("section.fold .snap-btn").count() == 3
                 page.evaluate("(theme) => document.documentElement.setAttribute('data-theme', theme)", theme)
                 assert page.locator("[data-score]").count() > 0
+                assert page.locator('.tx-fit strong[aria-label="Team Fit unavailable"]').first.text_content() == "-"
+                fit_card = page.locator(".tx-card").filter(has_text="1425957598431035392")
+                fits = fit_card.locator(".tx-fit")
+                assert fits.locator("strong").all_text_contents() == ["Even", "A"]
+                disclosure = fits.get_by_text("Fit details", exact=True).first
+                disclosure.click()
+                assert fits.get_by_text("Projected hold comparison:", exact=False).first.is_visible()
+                disclosure.click()
                 # Reviewer-facing visual evidence, captured without altering the repository.
                 shot = ROOT / "work" / "transactions-preview"
                 shot.mkdir(parents=True, exist_ok=True)

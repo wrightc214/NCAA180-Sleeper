@@ -1,21 +1,16 @@
 # Task 5.11 Transactions — developer / auditor handoff (TEMPORARY; DELETE BEFORE MERGE)
 
-> **Status:** Draft PR #111 is blocked on the consolidation replacement and Team Fit v1. The current preview and mockups are review baselines, not final grading results. Keep this README and all three mockups on the review branch. At merge time, the merge agent pins review links, removes the temporary files, and reruns checks on the exact landing commit. Do **not** merge or deploy from this branch.
+> **Status:** Draft PR #111 is blocked on the consolidation replacement. Team Fit v1 is implemented for review. The current preview and mockups are review baselines, not final grading results. Keep this README and all three mockups on the review branch. At merge time, the merge agent pins review links, removes the temporary files, and reruns checks on the exact landing commit. Do **not** merge or deploy from this branch.
 
 ## Active review working list
 
-This list reconciles the earlier review with subsequent owner decisions. It takes precedence over the original brief and the earlier review examples below where they conflict. The checklist is documentation only. None of the open fixes or new tests below has been implemented or run by adding it.
+This list reconciles the earlier review with subsequent owner decisions. It takes precedence over the original brief and the earlier review examples below where they conflict. Unchecked tasks remain open. The tests below describe Team Fit validation only.
 
 - [ ] **Blocking — replace the consolidation calculation.** The old `adjustment[lo]` credit is the problem the reviewer identified. **Superseded fix:** do not move the same balancing credit to the high side. Implement the [approved 60% dynasty concentration design](#dynasty-consolidation-decision--approved-pending-implementation) using the configured rate. It compares independently adjusted bundles, without an elite threshold or a piece-count cutoff. Do not silently retain the faulty credit or apply 60% in Contender without a separate decision. Recompute the grades, surplus badges and pick equivalents once the applicable method is settled, and refresh the README examples. Recheck Maine–Youngstown State (Maye), Citadel–UNC Charlotte (Walker), Montana–Old Dominion (Puka and the surplus), and Montana–South Dakota (the Contender gap). Add tests for a concentration-favoring one-for-three, an equal-piece two-for-two with no edge, no loss from adding a nonnegative throw-in (the Puka before/after case), and the configured bound on how much the adjustment can change a raw gap. The reviewer did not specify a numerical value for the separate “more than X” winner-flip guard. Raw Blockbuster eligibility stays separate.
 
-- [ ] **Blocking — build Team Fit v1 before merge.** Score each team's own trade impact on a 0–100 scale, with 50 neutral and letters drawn from the existing grade bands. Keep weights and cutoffs in `config/transactions.json` with `_note` explanations and document each default.
-  - **Situation:** use the latest `data/RosterValues_Season.csv` snapshot known before the trade, including W/L/T, PPG, DynastyTotal, LineupRedraft, and Contender index. From Week 8 onward use available, eligible pre-trade Playoff/Bowl/Natty odds from `reports/postseason/odds-wkNN.json`. Produce a contender weight `w` between 0 and 1. Weekly filenames and week numbers alone don't establish what was available at a trade's timestamp.
-  - **Rewind:** reconstruct the immediate post-trade roster from `data/Rosters_Current.csv` by undoing later completed transactions in `data/Transactions_Season.csv`, then undo the target trade to get the pre-trade roster. Validate against a known RosterValues week. The current transaction export supplies `Created` but no explicit completion timestamp. Check what ordering can be established and withhold Fit when the point-in-time roster cannot be reconstructed reliably.
-  - **Impacts:** compare before/after legal starting lineups using trade-date RedraftValue, `data/Lineup.csv` slots, and `roster_map.py`'s existing `best_lineup` logic. Apply the K/DST proxy. Compare before/after dynasty totals from players plus picks at the same snapshots.
-  - **Fit:** normalize each component like the market grades, then calculate `w × lineup score + (1 − w) × future score`. Protect a pre-deadline rebuilder from being penalized for shedding lineup value. Withhold Team Fit when trade-date values or a valid prior roster-value row are missing, including the early-week coverage gap. Never use post-trade results, player values, standings, or odds as inputs.
-  - **Review evidence:** add three completed Team Fit examples to this README, with both teams' `w`, pre/post lineup values, pre/post dynasty values, and Fit scores/letters. Include at least a contender buying and a rebuilder selling.
+- [x] **Build Team Fit v1.** See [the model and review cases](#team-fit-v1). It uses independently calibrated goal-based units rather than the draft 50/50 market-grade normalization. Wins/odds projections and the narrative remain unavailable.
 
-- [ ] **Refresh the Sleeper player list.** UNC Charlotte's roster includes Sleeper player ID `1348` before and after the Walker–Achane trade. It is absent from the player catalog and market snapshots. An archived projection shows `DEF` only because its exporter defaults unknown IDs to that position. Refresh `data/Players.csv` from the authoritative player list and recheck the ID without rewriting historical market values. Per the owner, unresolved roster player IDs count as zero in both Team Fit value components and do not block a grade on their own. Use the 4.12 proxy only for confirmed K/DST entries. Use a plain hyphen (`-`) in the grade slot when the roster or required historical snapshots cannot be established.
+- [ ] **Refresh the Sleeper player list.** UNC Charlotte's roster includes Sleeper player ID `1348` before and after the Walker–Achane trade. It is absent from the traded-player catalog and market snapshots. The official Sleeper player feed confirmed it is Dustin Hopkins, a kicker. The dedicated biography table now resolves his position without rewriting historical market values. Refresh the main `data/Players.csv` as separate maintenance if needed. Per the owner, unresolved roster player IDs count as zero in both Team Fit value components and do not block a grade on their own. Use the 4.12 proxy only for confirmed K/DST entries. Use a plain hyphen (`-`) in the grade slot when the roster or required historical snapshots cannot be established.
 
 - [ ] **Keep approved scope and clarify the K/DST rationale.** Keep Team Fit, the wins/odds rows, Blockbuster, pick-equivalent surplus, the 4.12 K/DST proxy, and the dark card design. Projected ROS wins and before/after odds stay **unavailable**, with no made-up numbers, while the Phase 1 Fit work proceeds. The “Why this trade makes sense” narrative is for a later PR. Update `docs/transactions.md` to record the owner's reason for 4.12: NCAA 180's K/DST pool is fully rostered, undrafted rookie kickers are claimed quickly, and a weak rookie kicker generally costs about a fourth. This is a league scarcity proxy, not a FantasyCalc kicker/DST price.
 
@@ -36,7 +31,7 @@ This list reconciles the earlier review with subsequent owner decisions. It take
 - Tests: `tests/test_transactions_page.py` and `tests/transactions_browser.py`. PR CI `.github/workflows/transactions-pr-check.yml` is read-only: runs the full Python suite, every Node test, static generation, and Chromium desktop/light and mobile/dark smoke checks, then uploads HTML + two viewport screenshots as the Actions artifact `transactions-preview`.
 - Final review build contains **113 trades, 34 Rebuild-graded, 11 weeks, 15 conferences, and 4 Blockbuster badges**. Check the latest read-only Actions run on this draft PR for the full test and browser results.
 - PR description includes three **actual** transaction IDs and rounded raw/credit/adjusted totals and grades, including 3-for-1, 1-for-2, 4-for-1.
-- **Known limitation:** card Team Fit displays unavailable, not fictional numbers; ROS wins, contender title/playoff odds and rebuilder bowl/1.01 odds are *not yet calculated*. No narrative explanation is generated (user explicitly deferred that section). Do not present these as complete.
+- **Known limitation:** Team Fit uses a hyphen when trade-time evidence is insufficient; ROS wins, contender title/playoff odds and rebuilder bowl/1.01 odds are *not yet calculated*. No narrative explanation is generated (user explicitly deferred that section). Do not present these as complete.
 - **Review risk:** fallback consolidation adjustment can produce large balancing credits in uneven trades. Validate desired trade-economics direction before publicizing results; zero-valued contender pick sides receive **no** phantom credit. Credit is labeled **Experimental consolidation adjustment (KTC-style)** on the card. Exact slot values are not stored, so pick equivalents are interpolated and visually tagged approximate.
 - The generated preview page embeds dated trade data. Rerun the generator when upstream snapshots change; do not silently treat the committed preview as live data.
 
@@ -78,7 +73,7 @@ FantasyCalc's live waiver adjustment was a comparison, not a calibration target.
 
 ## Task 5.11 owner settings
 
-This lists every owner setting introduced or moved by this PR, including the settings already present in the earlier draft. The dedicated config has two sections, `transactions` and `fantasycalc`. Defaults apply when the file, a section, or an individual key is absent. The static generator embeds the resolved settings in the generated page. Rebuild it after changes. If the tab is removed entirely it is omitted from the menu, and the direct page remains a Dev preview. Menu visibility is not access control. No new secrets or external repo variables are required.
+This lists every owner setting introduced or moved by this PR, including the settings already present in the earlier draft. The dedicated config has three sections, `transactions`, `fantasycalc`, and `team_fit`. Defaults apply when the file, a section, or an individual key is absent. The static generator embeds the resolved settings in the generated page. Rebuild it after changes. If the tab is removed entirely it is omitted from the menu, and the direct page remains a Dev preview. Menu visibility is not access control. No new secrets or external repo variables are required.
 
 The existing shared brand, conference terminology, and semantic colour tokens are reused. Team colours and names still come from CSV data. No separate transaction-specific theme or release switch is introduced. When changing FantasyCalc scoring format, check that the stored history remains comparable. If the draft field size changes, select a proxy slot that exists in that field.
 
@@ -124,6 +119,57 @@ The existing shared brand, conference terminology, and semantic colour tokens ar
 | `config/nav.json` | `tabs[id=transactions].href` | `transactions.html` |
 | `config/nav.json` | `tabs[id=transactions].state` | `hidden-dev` |
 
+## Team Fit v1
+
+Team Fit is not the market trade grade. Each team is evaluated independently against keeping its pre-trade roster. It uses the latest eligible pre-trade weekly context, pre-trade FantasyCalc values, and an archived roster/pick rewind checked by forward replay. A later archive is used only to verify ownership, never to supply forecasts or prices. Git publication time bounds what can be known. The most recent trades may remain ungraded until a second archive corroborates them. Insufficient evidence displays a hyphen. Unknown IDs otherwise count as zero.
+
+- Win now measures change in the best legal starting lineup. The specialist input recognises scarce starter coverage from prior scoring. It does not change the 4.12 market proxy.
+- Future value compares the return with holding through both rebuild windows. Projected retention applies incremental, position-specific age decline (gradual and steep stages). For rebuilders, picks are flexible capital at a configurable utility premium, not guaranteed starters. Future lineup capacity rewards usable players at multiple slots. When pick capital increases, do not also charge the seller as if that capital were guaranteed to go unused.
+- Before the deadline week ends, negative lineup changes are progressively neutralised for teams with weak contender evidence. The weight blends pre-trade record, contender index and eligible published playoff/bowl odds. Bowl odds count less and even a strong contender retains some future weight. No permanent team tag or manager intent is inferred.
+- Fit = 50 + 20 × weighted net gain in meaningful-impact units, clipped to 0–100. Use the existing grade bands. The team-details disclosure shows trade-date lineup and dynasty totals, hold-comparison points for both horizons, and differing horizon letters. The archive contains no verified pre-trade bids, so no hypothetical offer counts.
+- These settings were calibrated on the review examples, not fitted to force the league-wide score distribution toward 70 or independently validated. The roster biography seed comes from the [Sleeper player catalog](https://api.sleeper.app/v1/players/nfl). It stores IDs, position and birth dates, not current injury flags.
+
+| Review case | Team | Win-now weight | Lineup before → after | Raw dynasty before → after | Fit |
+| --- | --- | ---: | ---: | ---: | ---: |
+| Gibbs | Brown | 65% | 33,464 → 40,387 | 87,700 → 88,451 | A · 65.6 |
+| Gibbs | Bucknell | 9% | 25,335 → 19,610 | 57,369 → 56,618 | B · 52.9 |
+| JSN / A.J. Brown | Brown | 70% | 41,036 → 47,724 | 88,988 → 92,472 | A · 68.2 |
+| JSN / A.J. Brown | Penn | 22% | 19,804 → 7,316 | 57,119 → 53,635 | Even · 50.7 |
+| Walker–Achane | Citadel | 39% | 27,151 → 18,325 | 65,901 → 68,009 | Even · 51.1 |
+| Walker–Achane | UNC Charlotte | 70% | 28,972 → 36,592 | 65,463 → 63,355 | A · 63.2 |
+| Puka | Montana | 64% | 49,525 → 49,786 | 90,763 → 86,399 | C · 45.0 |
+| Puka | Old Dominion | 70% | 47,078 → 47,477 | 89,821 → 94,185 | B+ · 55.5 |
+| Bass / White / Singletary | Arizona State | 70% | 45,143 → 45,392 | 90,786 → 91,045 | B · 52.2 |
+| Bass / White / Singletary | Oregon | 10% | 10,837 → 9,826 | 50,688 → 50,429 | B+ · 55.1 |
+
+**Tests written:** age curves and the RB cliff, valid below-market sales versus holding, relative bowl weight, hyphen for missing coverage, and the five archived reference grades. **Tests run locally:** full Python suite (152 passed, 10 skipped), full Node suite, deterministic menu rebuild, and report generation. The model produced 68 team-side grades and 158 ungraded sides. The modal letter remains Even (27 of 68 scored sides). The market consolidation replacement, workflow-policy question and menu cleanup remain separate working-list items.
+
+### Team Fit owner defaults
+
+| File | Setting | Default |
+| --- | --- | --- |
+| `config/transactions.json` | `team_fit.meaningful_lineup_points` | `6500` |
+| `config/transactions.json` | `team_fit.meaningful_future_points` | `4500` |
+| `config/transactions.json` | `team_fit.score_points_per_unit` | `20` |
+| `config/transactions.json` | `team_fit.record_weight` | `0.7` |
+| `config/transactions.json` | `team_fit.playoff_context_weight` | `0.25` |
+| `config/transactions.json` | `team_fit.bowl_weight` | `0.15` |
+| `config/transactions.json` | `team_fit.odds_first_week` | `8` |
+| `config/transactions.json` | `team_fit.win_now_ceiling` | `0.7` |
+| `config/transactions.json` | `team_fit.rebuild_lineup_grace_through_week` | `10` |
+| `config/transactions.json` | `team_fit.rebuild_lineup_full_weight_at` | `0.48` |
+| `config/transactions.json` | `team_fit.rebuild_lineup_no_weight_at` | `0.28` |
+| `config/transactions.json` | `team_fit.rebuild_starter_weight` | `0.9` |
+| `config/transactions.json` | `team_fit.future_starter_floor` | `1300` |
+| `config/transactions.json` | `team_fit.future_starter_cap` | `4500` |
+| `config/transactions.json` | `team_fit.rebuild_max_weight` | `0.38` |
+| `config/transactions.json` | `team_fit.growth_horizon_years` | `[1, 2]` |
+| `config/transactions.json` | `team_fit.pick_flexibility` | `0.42` |
+| `config/transactions.json` | `team_fit.specialist_lookback_weeks` | `4` |
+| `config/transactions.json` | `team_fit.specialist_target_ppg` | `8` |
+| `config/transactions.json` | `team_fit.specialist_needs_points` | `2600` |
+| `config/transactions.json` | `team_fit.age_curves` | `{"QB": [31, 0.07, 35, 0.2], "RB": [27.5, 0.15, 30.5, 0.4], "WR": [28, 0.1, 31, 0.28], "TE": [29, 0.09, 32, 0.25]}` |
+
 ## Trade-card design references
 
 These three mockups use real completed trades. They are **design references, not screenshots of the current generator**. The two Montana cards use the existing draft grades. The Arizona State–Oregon card previews the agreed kicker/D/ST proxy and the proposed small-surplus pick-swap display.
@@ -161,7 +207,7 @@ Montana–South Dakota and Arizona State–Oregon are still unmarked. The synthe
 
 ## Permanent project notes
 
-The [Transactions project doc](docs/transactions.md) is the lasting record of the implemented scoring and display decisions, review examples, and open work. Keep it when removing this temporary README and its three design images. In particular, retain **“Why this trade makes sense”** as a deliverable for both teams, with roster context backed by evidence and inferred intent marked as such. Team Fit, projected wins, title/playoff/bowl/1.01 odds and this narrative are **not implemented** here.
+The [Transactions project doc](docs/transactions.md) is the lasting record of the implemented scoring and display decisions, review examples, and open work. Keep it when removing this temporary README and its three design images. In particular, retain **“Why this trade makes sense”** as a deliverable for both teams, with roster context backed by evidence and inferred intent marked as such. The Team Fit grade is in review. Projected wins, before/after title/playoff/bowl/1.01 odds, and this narrative are **not implemented** here.
 
 ## Reviewer handoff prompt
 

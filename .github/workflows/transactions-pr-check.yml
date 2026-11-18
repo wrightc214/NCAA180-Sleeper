@@ -7,6 +7,9 @@ on:
       - 'scripts/league_config.py'
       - 'scripts/site_common.py'
       - 'tests/test_transactions_page.py'
+      - 'tests/test_transactions_fit.py'
+      - 'scripts/players.py'
+      - 'data/PlayerBirthDates.csv'
       - 'tests/transactions_browser.py'
       - 'config/nav.json'
       - 'config/league.json'
@@ -25,6 +28,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'

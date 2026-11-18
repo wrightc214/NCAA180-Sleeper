@@ -17,6 +17,7 @@ import league_config as lcfg
 import team_names as tn
 from site_common import SECTIONS_JS, logo_html, menu_html, nav_config, page_head, team_colors
 from transactions_grades import evaluate_trade, load_config, read_rows
+from transactions_fit import TeamFit
 
 TRANSACTIONS = "data/Transactions_Season.csv"
 PLAYERS = "data/Players.csv"
@@ -51,6 +52,9 @@ CSS = """
 .tx-grade .tx-side-value small{display:block;font-size:11px;color:var(--mute);font-variant-numeric:tabular-nums}
 .tx-grade strong[data-score]{color:var(--neutral)}
 .tx-center{text-align:center;display:flex;flex-direction:column;justify-content:center;gap:6px}
+.tx-grade.tx-fit strong{font-size:25px}
+.tx-fit details{font-size:10px;font-weight:500;color:var(--mute)}
+.tx-fit summary{cursor:pointer}
 .tx-center h3{font-size:12px;letter-spacing:.07em;text-transform:uppercase;margin:0}
 .tx-muted{color:var(--mute);font-size:12px}
 .tx-center .tx-main-grades{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -198,7 +202,23 @@ def render_grade(g, name):
             f'<small>{g["adjusted"][name]:,.0f} pts</small></span>')
 
 
-def trade_card(r, sides, names, colors, result, shorts, config=None):
+def render_fit(values):
+    if not values:
+        return '<strong aria-label="Team Fit unavailable">-</strong>'
+    l0, l1 = values["lineup_before"], values["lineup_after"]
+    d0, d1 = values["dynasty_before"], values["dynasty_after"]
+    future = " · ".join(f"{years}y {points:+,.0f}" for years, points, _ in values["horizon_gaps"])
+    horizons = values["horizon_gaps"]
+    sensitivity = ("<br>Horizon-sensitive: " + esc(" · ".join(f"{years}y {letter}" for years, _, letter in horizons))
+                   if len({letter for _, _, letter in horizons}) > 1 else "")
+    return (f'<div class="tx-side-value"><strong data-score="{values["score"]:.4f}">{esc(values["letter"])}</strong>'
+            f'<small>{values["score"]:.1f}/100</small>'
+            f'<details><summary>Fit details</summary>Lineup {l0:,.0f} → {l1:,.0f}<br>'
+            f'Dynasty {d0:,.0f} → {d1:,.0f}<br>Projected hold comparison: {esc(future)}{sensitivity}<br>'
+            f'Win-now weight {values["fit_weight"]:.0%} · {esc(values["date"])}</details></div>')
+
+
+def trade_card(r, sides, names, colors, result, shorts, config=None, team_fit=None):
     labels = {key: esc(value) for key, value in load_config(config)["labels"].items()}
     league = r["LeagueName"]
     short = shorts.get(league, league.replace("NCAA ", ""))
@@ -234,7 +254,9 @@ def trade_card(r, sides, names, colors, result, shorts, config=None):
         note = " · No measurable value" if key and key["score"][ids[0]] is None else ""
         grade_rows += (f'<div class="tx-grade">{render_grade(key, ids[0])}<span>{label} value{note}</span>'
                        f'{render_grade(key, ids[1])}</div>')
-    fit = f'<div class="tx-muted">{labels["team_fit"]}: historical context model pending validation</div>'
+    team_fit = team_fit or {}
+    fit = (f'<div class="tx-grade tx-fit">{render_fit(team_fit.get(ids[0]))}'
+           f'<span>{labels["team_fit"]}</span>{render_fit(team_fit.get(ids[1]))}</div>')
     missing_label = ("No values from that week" if not result.get("player_date")
                      else "Historical values unavailable")
     center = (f'<div class="tx-center"><h3>{labels["evaluation"]}</h3>{fit}{grade_rows}'
@@ -288,6 +310,7 @@ def main():
         if c is not None:
             colors[name] = dict(c)
     grading_config = load_config()
+    fit_model = TeamFit(rows, players, player_hist, pick_hist, grading_config)
     labels = {key: esc(value) for key, value in grading_config["labels"].items()}
     page_label = next((tab.get("label", "Transactions") for tab in nav_config().get("tabs", [])
                        if tab.get("id") == "transactions"), "Transactions")
@@ -305,7 +328,7 @@ def main():
         result = evaluate_trade(sides, day(r["Created"]), player_hist, pick_hist, int(r["Year"]), grading_config)
         if result["dynasty"] and any(g is not None for g in result["dynasty"]["grade"].values()):
             covered += 1
-        cards.append(trade_card(r, sides, names, colors, result, short, grading_config))
+        cards.append(trade_card(r, sides, names, colors, result, short, grading_config, fit_model.evaluate(r, sides)))
     lg = sorted({r["LeagueName"] for r in rows})
     weeks = sorted({int(r["Week"]) for r in rows})
     last = max(weeks, default=1)
@@ -337,8 +360,7 @@ def main():
 <section><h2>{labels["trades"]} <small>({len(cards)})</small></h2>
 {filters}
 <p class="tx-note">Grades use FantasyCalc values available at trade time — not a verdict.
-{labels["rebuild"]} includes rookie picks. {labels["contender"]} values traded picks at zero. Unlisted kickers and D/ST use a {esc(grading_config["proxy_pick_slot"])} proxy in both grades. Surplus pick comparisons use the upcoming draft at trade time. {labels["blockbuster"]} marks a large raw dynasty deal with a high-value player, both measured against the snapshot’s top player. It does not indicate a winner. {labels["team_fit"]} and projected wins/odds
-await a validated historical context model.</p>
+{labels["rebuild"]} includes rookie picks. {labels["contender"]} values traded picks at zero. Unlisted kickers and D/ST use a {esc(grading_config["proxy_pick_slot"])} proxy in both grades. Surplus pick comparisons use the upcoming draft at trade time. {labels["blockbuster"]} marks a large raw dynasty deal with a high-value player, both measured against the snapshot’s top player. It does not indicate a winner. {labels["team_fit"]} compares lineup gains and future value versus holding for each team. A hyphen means the required history could not be verified. Projected wins and before/after odds are unavailable.</p>
 <div class="tx-cards" id="tx-trades">{''.join(cards)}</div>
 <p class="tx-empty" id="tx-no-trades" hidden>No trades match these filters.</p>
 <p class="tx-note">{covered} of {len(cards)} trades have a {labels["rebuild"]} grade under the historical valuation rules.</p>
