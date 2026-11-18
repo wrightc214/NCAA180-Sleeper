@@ -261,3 +261,12 @@ test('accessibility emits change events when settings are saved or reset', () =>
     if(oldStorage===undefined)delete global.localStorage;else global.localStorage=oldStorage;
   }
 });
+
+test('saved-image renderer carries live accessibility token styles', () => {
+  const snapshot=fs.readFileSync(path.join(__dirname,'..','reports','assets','snapshot.js'),'utf8');
+  const menu=fs.readFileSync(path.join(__dirname,'..','templates','menu.js'),'utf8');
+  assert.match(snapshot,/querySelectorAll\('style,link\[rel="stylesheet"\]'\)/,
+    'snapshot copies current document style elements');
+  assert.match(menu,/var TOKENS_ID = "n180-tokens"/);
+  assert.match(menu,/st\.textContent = css/,'accessibility colours are written to a style element');
+});
