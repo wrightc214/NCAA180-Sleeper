@@ -1,6 +1,38 @@
 # Transactions — developer / auditor handoff (TEMPORARY; DELETE BEFORE MERGE)
 
-> **Status:** implementation specification and audit checklist, **not proof of completed implementation**. This file is intentionally committed on the feature branch to aid collaborators and independent review. Remove this file in a final PR commit **before merging**, but preserve substantive decisions in permanent code/config comments or tests. Do **not** merge this PR automatically.
+> **Status:** Stages 1 and 2A implemented on draft PR #111; **Team Fit and projected-win/odds context NOT implemented** because historical counterfactuals are not yet reliable. This file is intentionally committed for collaborators and independent review. Delete it in a final PR commit **before merge**. Do **not** merge this PR automatically.
+
+## Current implementation / review checkpoint
+
+- Generator: `scripts/transactions_page.py`; generated preview: `reports/transactions.html` (committed **only to the feature branch** by a one-time branch-guarded CI workflow, which was then removed).
+- Pure grade/slot approximation engine: `scripts/transactions_grades.py`; configurable thresholds and KTC-style fallback: `config/transactions.json`. The final site must not imply exact KTC calibration.
+- Historical picks: `data/PickValues_Season.csv` backfilled from eight verified Git commit revisions on Oct 2, 6, 13, 20, 27 and Nov 3, 10, 17. Future capture: `scripts/player_values.py`; workflow step in `.github/workflows/update-leagues.yml`.
+- Nav: `config/nav.json` entry `hidden-dev`; menu compiled by the existing weekly `scripts/menu_build.py`. **Do not gratuitously edit `templates/menu.js` or `reports/assets/menu.js` during accessibility PR #109.** Temporary CI regenerates menu only in Actions checkout before assertions.
+- Tests: `tests/test_transactions_page.py` and `tests/transactions_browser.py`. PR CI `.github/workflows/transactions-pr-check.yml` is read-only: runs the full Python suite, every Node test, static generation, and Chromium desktop/light and mobile/dark smoke checks, then uploads HTML + two viewport screenshots as the Actions artifact `transactions-preview`.
+- A green earlier run produced **113 real trades (31 with historical Dynasty grades), 11 weeks, 15 conferences**, and **117 Python passed / 10 skipped** with Node tests green. Check the **latest** run in PR #111, because later changes added configuration tests and screenshot artifacts.
+- PR description includes three **actual** transaction IDs and rounded raw/credit/adjusted totals and grades, including 3-for-1, 1-for-2, 4-for-1.
+- **Known limitation:** card Team Fit displays unavailable, not fictional numbers; ROS wins, contender title/playoff odds and rebuilder bowl/1.01 odds are *not yet calculated*. No narrative explanation is generated (user explicitly deferred that section). Do not present these as complete.
+- **Review risk:** fallback consolidation adjustment can produce large balancing credits in uneven trades. Validate desired trade-economics direction before publicizing results; zero-valued contender pick sides receive **no** phantom credit. Exact slot values are not stored, so pick equivalents are interpolated and visually tagged approximate.
+- The generated preview page embeds dated trade data. Rerun the generator when upstream snapshots change; do not silently treat the committed preview as live data.
+
+### Review commands
+
+```bash
+python3 -m pytest -q tests
+for f in tests/*.test.js; do node "$f"; done
+python3 scripts/transactions_page.py
+python3 scripts/menu_build.py
+# Browser CI also runs: python tests/transactions_browser.py (requires Playwright + Chromium)
+```
+
+### Audit priority
+
+1. **Valuation integrity:** explain every missing-history grade and every offset before Oct 2; inspect example 3's surprising zero RedraftValue player entries. Any historical trade without matching date snapshots stays ungraded.
+2. **Team identity:** pick recipient roster from `owner_id`, original `via` owner from `roster_id`; confirm `NCAA180.myTeam()` matches conference short label + roster slot. No historical manager misattribution via `OwnerIDs`.
+3. **UI:** compare current generated HTML + screenshots against user-approved dark-card concept. Desktop/mobile, keyboard, independent section folding, Save image, filter combinations, accessibility semantic colors `--good`, `--bad`, `--neutral`, neutral **grey**.
+4. **Production safety:** hidden-dev menu, no Discord action, no main commits. The one-time preview publisher must **not** remain on branch; PR test workflow remains read-only.
+5. **Merge gate:** remove **this temporary README**, resolve open substantive audit issues, and independently approve. No automatic merge.
+
 
 ## Scope and boundaries
 
