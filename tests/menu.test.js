@@ -271,3 +271,32 @@ test('saved-image renderer carries live accessibility token styles', () => {
   assert.match(menu,/var TOKENS_ID = "n180-tokens"/);
   assert.match(menu,/st\.textContent = css/,'accessibility colours are written to a style element');
 });
+
+test('Accessibility controls update and reset preferences without a browser', () => {
+  const script=fs.readFileSync(path.join(__dirname,'..','reports','assets','access.js'),'utf8');
+  let state={mode:'standard',custom:{good:'#1a7f37',bad:'#b42318'},motion:'system',emphasis:false};
+  const handlers={},nodes={};
+  for(const id of ['mode','good','bad','motion','emphasis','good-value','bad-value','warnings','restore-custom','reset-all']){
+    nodes[id]={value:'',checked:false,disabled:false,textContent:'',
+      addEventListener(type,fn){handlers[id+':'+type]=fn;}};
+  }
+  const copy=()=>JSON.parse(JSON.stringify(state));
+  const api={read:copy,save(patch){state={...state,...patch,custom:{...state.custom,...(patch.custom||{})}};return copy();},
+    reset(){state={mode:'standard',custom:{good:'#1a7f37',bad:'#b42318'},motion:'system',emphasis:false};return copy();},
+    defaults:{custom:{good:'#1a7f37',bad:'#b42318'}},contrast(){return 5;}};
+  const w={NCAA180:{access:api},addEventListener(type,fn){handlers['window:'+type]=fn;}};
+  const d={getElementById:id=>nodes[id]};
+  new Function('window','document',script)(w,d);
+  nodes.mode.value='rg';handlers['mode:change'].call(nodes.mode);
+  assert.strictEqual(state.mode,'rg');
+  nodes.good.value='#123456';handlers['good:input'].call(nodes.good);
+  assert.strictEqual(state.mode,'custom');
+  assert.strictEqual(state.custom.good,'#123456');
+  handlers['restore-custom:click']();
+  assert.strictEqual(state.custom.good,'#1a7f37');
+  assert.strictEqual(state.mode,'custom');
+  handlers['reset-all:click']();
+  assert.strictEqual(state.mode,'standard');
+  state.mode='none';handlers['window:ncaa180:accesschange']();
+  assert.strictEqual(nodes.mode.value,'none');
+});
