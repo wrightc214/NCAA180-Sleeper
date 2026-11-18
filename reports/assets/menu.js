@@ -107,7 +107,7 @@
   }
   var colors = {tokens: tokens, scale: scale, mix: mix, css: tokensCss(TOKENS_LIGHT, TOKENS_DARK, TOKENS_BOTH),
                 defaults: {light: TOKENS_LIGHT, dark: TOKENS_DARK, both: TOKENS_BOTH}, buildCss: tokensCss, apply: applyTokens};
-  applyTokens(colors.css);  // before the menu draws: no flash
+  // Legacy report CSS defines --up/--dn directly. Override it in the later-loaded shared\n  // token style so historical reports respond without rebuilding ~100 static pages.\n  colors.css += ":root{--up:var(--good);--dn:var(--bad)}";\n  applyTokens(colors.css);  // before the menu draws: no flash
 
   function devOn() { try { return localStorage.getItem(DEV_KEY) === "1"; } catch (e) { return false; } }
   function setDev(on) {
