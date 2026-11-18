@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
-from transactions_page import build_teams, day, movement, parse, summary, trade_assets
+from transactions_page import build_teams, day, movement, parse, summary, trade_assets, trade_card
 from transactions_grades import (compare, consolidation, evaluate_trade, grade, load_config,
                                  historical, nearest_pick)
 
@@ -151,3 +151,18 @@ def test_zero_contender_value_never_receives_phantom_consolidation_credit():
     assert result["credit"] == {"Win": 0.0, "Picks": 0.0}
     assert result["grade"]["Win"] == "A"
     assert result["grade"]["Picks"] == "F"
+
+
+def test_surplus_appears_in_winning_team_panel_only():
+    sides = {"1": [{"kind": "player", "id": "100", "label": "Alpha Runner"}],
+             "2": [{"kind": "player", "id": "200", "label": "Beta Receiver"}]}
+    dyn = compare({"1": [7000], "2": [2000]}, 11000)
+    dyn["surplus"] = {"team": "1", "value": 2000, "picks": [(1980, "2027 Pick 2.07", True)]}
+    result = {"dynasty": dyn, "contender": None, "status": "complete", "player_date": "2026-10-06"}
+    row = {"LeagueName": "NCAA SEC", "Week": "5", "Created": "1791331200000", "TransactionID": "t1"}
+    rendered = trade_card(row, sides, TEAMS, {}, result, {"NCAA SEC": "SEC"})
+    assert rendered.count('class="tx-surplus"') == 1
+    winner_panel, other = rendered.split('<div class="tx-center">', 1)
+    assert "tx-surplus" in winner_panel
+    assert "tx-surplus" not in other
+    assert "2027 Pick 2.07" in rendered
