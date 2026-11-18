@@ -166,8 +166,8 @@ function createNCAA180Accessibility() {
     if(m) {
       [["light",light,"#ffffff"],["dark",dark,"#171b22"]].forEach(function(row) {
         var pair=m[row[0]];
-        row[1]["--good"]=accessibleHex(pair[0],row[2]);
-        row[1]["--bad"]=accessibleHex(pair[1],row[2]);
+        row[1]["--good"]=o.mode==="custom"?pair[0]:accessibleHex(pair[0],row[2]);
+        row[1]["--bad"]=o.mode==="custom"?pair[1]:accessibleHex(pair[1],row[2]);
         if(o.mode!=="standard") {
           row[1]["--good-soft"]=row[0]==="light"?"#e9eef2":"#26313a";
           row[1]["--bad-soft"]=row[0]==="light"?"#f1edf0":"#342c32";
@@ -178,6 +178,7 @@ function createNCAA180Accessibility() {
     // Even owner-configured Standard fills must be legible with white labels.
     // Contrast-safe existing defaults retain their historical values.
     if(o.mode==="none") both={"--good-fill":"#3c3c3c","--bad-fill":"#656565"};
+    else if(o.mode==="custom") both={"--good-fill":m.light[0],"--bad-fill":m.light[1]};
     else both={"--good-fill":accessibleHex(m.light[0],"#ffffff"),
       "--bad-fill":accessibleHex(m.light[1],"#ffffff")};
     var css=tokensCss(Object.assign({},TOKENS_LIGHT,light),Object.assign({},TOKENS_DARK,dark),
