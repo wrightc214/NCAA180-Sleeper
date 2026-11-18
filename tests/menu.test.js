@@ -127,3 +127,37 @@ test('legacy movement tokens bridge to good/bad in light and both dark theme sel
   assert.ok(css.includes('@media (prefers-color-scheme:dark){:root:not([data-theme=light]){' + pair + '}}'));
   assert.ok(css.includes(':root[data-theme=dark]{' + pair + '}'));
 });
+
+test('accessibility settings: presets, custom, reset and malformed storage', () => {
+  const old = global.localStorage;
+  const values = {};
+  global.localStorage = {
+    getItem: k => values[k] ?? null,
+    setItem: (k, v) => { values[k] = String(v); },
+    removeItem: k => { delete values[k]; },
+  };
+  try {
+    const access = load(DATA).access;
+    assert.strictEqual(access.read().mode, 'standard');
+    for (const mode of ['rg', 'by', 'none', 'custom', 'standard']) {
+      access.save({mode});
+      assert.strictEqual(access.read().mode, mode);
+    }
+    access.save({custom: {good: '#ffffff', bad: '#000000'}, motion: 'on', emphasis: true});
+    assert.strictEqual(access.read().custom.good, '#ffffff');
+    assert.strictEqual(access.read().motion, 'on');
+    assert.strictEqual(access.read().emphasis, true);
+    access.save({custom: {good: access.defaults.custom.good, bad: access.defaults.custom.bad}});
+    assert.strictEqual(access.read().motion, 'on', 'custom restore does not reset motion');
+    assert.ok(access.contrast('#000000', '#ffffff') >= 21 - 0.01);
+    assert.ok(access.contrast(access.adjust('#ffffff', '#ffffff'), '#ffffff') >= 4.5);
+    access.reset();
+    assert.strictEqual(values['ncaa180.access'], undefined);
+    assert.strictEqual(access.read().mode, 'standard');
+    values['ncaa180.access'] = '{invalid';
+    assert.strictEqual(access.read().mode, 'standard');
+  } finally {
+    if (old === undefined) delete global.localStorage;
+    else global.localStorage = old;
+  }
+});
