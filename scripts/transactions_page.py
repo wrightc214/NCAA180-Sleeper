@@ -16,7 +16,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import league_config as lcfg
 import team_names as tn
 from site_common import SECTIONS_JS, logo_html, menu_html, page_head, team_colors
-from transactions_grades import evaluate_trade, read_rows
+from transactions_grades import evaluate_trade, load_config, read_rows
 
 TRANSACTIONS = "data/Transactions_Season.csv"
 PLAYERS = "data/Players.csv"
@@ -253,6 +253,7 @@ def main():
         c = tn.colors_row(name)
         if c is not None:
             colors[name] = dict(c)
+    grading_config = load_config()
     trades = sorted((r for r in rows if r["Type"] == "trade"),
                     key=lambda r: int(r["Created"]), reverse=True)
     cards = []
@@ -262,7 +263,7 @@ def main():
         if len(sides) != 2:
             print(f'WARN: skipping non-two-party trade {r["TransactionID"]}')
             continue
-        result = evaluate_trade(sides, day(r["Created"]), player_hist, pick_hist, int(r["Year"]))
+        result = evaluate_trade(sides, day(r["Created"]), player_hist, pick_hist, int(r["Year"]), grading_config)
         if result["dynasty"]:
             covered += 1
         cards.append(trade_card(r, sides, names, colors, result, short))
@@ -288,10 +289,11 @@ def main():
     bars_w = "".join(f'<div class="tx-bar"><span>Week {w}</span><meter min="0" max="{max(summ_wk.values(), default=1)}" value="{summ_wk[w]}"></meter><b>{summ_wk[w]}</b></div>'
                      for w in sorted(summ_wk))
     latest_stamp = day(max((r["Created"] for r in rows), default="0")) if rows else "N/A"
+    generated = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     body = f"""
 <div class="wrap">
 {menu_html("transactions")}
-<header><div><div class="eyebrow">{lcfg.season()} season · updated through {esc(latest_stamp)} UTC (transaction data)</div>
+<header><div><div class="eyebrow">{lcfg.season()} season · generated {esc(generated)} · latest transaction {esc(latest_stamp)}</div>
 <h1>{esc(lcfg.brand())} <em>Transactions</em></h1></div></header>
 <section><h2>Trades <small>({len(cards)})</small></h2>
 {filters}
