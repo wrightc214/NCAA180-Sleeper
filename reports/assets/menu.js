@@ -195,9 +195,18 @@
               bad:validHex(o.custom&&o.custom.bad)?o.custom.bad:ACCESS_DEFAULTS.custom.bad},
       motion:["system","on","off"].includes(o.motion)?o.motion:"system",emphasis:o.emphasis===true};
     try { localStorage.setItem(ACCESS_KEY,JSON.stringify(o)); }catch(e){}
-    accessApply(); return accessRead();
+    accessApply();
+    if (typeof window !== "undefined" && typeof window.CustomEvent === "function")
+      window.dispatchEvent(new CustomEvent("ncaa180:accesschange", {detail:accessRead()}));
+    return accessRead();
   }
-  function accessReset() { try {localStorage.removeItem(ACCESS_KEY);}catch(e){} return accessApply(); }
+  function accessReset() {
+    try {localStorage.removeItem(ACCESS_KEY);}catch(e){}
+    var o=accessApply();
+    if (typeof window !== "undefined" && typeof window.CustomEvent === "function")
+      window.dispatchEvent(new CustomEvent("ncaa180:accesschange", {detail:o}));
+    return o;
+  }
   var access={read:accessRead,save:accessSave,reset:accessReset,apply:accessApply,
     contrast:contrast,adjust:accessibleHex,defaults:ACCESS_DEFAULTS,modes:ACCESS_MODES};
 
@@ -336,6 +345,14 @@
   window.NCAA180.menu = api;
   window.NCAA180.colors = colors;
   window.NCAA180.access = access;
+  // Keep open tabs on the same device in sync without touching unrelated storage keys.
+  window.addEventListener("storage", function (e) {
+    if (e.key === ACCESS_KEY || e.key === null) {
+      accessApply();
+      if (typeof window.CustomEvent === "function")
+        window.dispatchEvent(new CustomEvent("ncaa180:accesschange", {detail:accessRead()}));
+    }
+  });
   render(false);
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", function () { render(false); });
 })();
