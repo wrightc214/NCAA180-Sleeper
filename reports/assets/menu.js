@@ -159,8 +159,10 @@
         var pair=m[row[0]];
         row[1]["--good"]=accessibleHex(pair[0],row[2]);
         row[1]["--bad"]=accessibleHex(pair[1],row[2]);
-        row[1]["--good-soft"]=row[0]==="light"?"#e9eef2":"#26313a";
-        row[1]["--bad-soft"]=row[0]==="light"?"#f1edf0":"#342c32";
+        if(o.mode!=="standard") {
+          row[1]["--good-soft"]=row[0]==="light"?"#e9eef2":"#26313a";
+          row[1]["--bad-soft"]=row[0]==="light"?"#f1edf0":"#342c32";
+        }
       });
     }
     var css=tokensCss(Object.assign({},TOKENS_LIGHT,light),Object.assign({},TOKENS_DARK,dark),
@@ -169,7 +171,8 @@
       "@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--up:var(--good);--dn:var(--bad)}}"+
       ":root[data-theme=dark]{--up:var(--good);--dn:var(--bad)}";
     if(o.motion==="on") css+="html *,html *::before,html *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}";
-    if(o.motion==="off") css+="html{scroll-behavior:auto}";
+    if(o.motion==="system") css+="@media (prefers-reduced-motion:reduce){html *,html *::before,html *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}";
+    if(o.motion==="off") css+="html{scroll-behavior:smooth}";
     if(o.emphasis||o.mode==="none") css+=":root{--n180-emphasis:1} .up,.dn,[class*=win],[class*=loss]{outline-offset:2px} a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid currentColor!important;outline-offset:3px}";
     return css;
   }
