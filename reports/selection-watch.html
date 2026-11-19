@@ -80,6 +80,12 @@ footer{font-size:12px;color:var(--mute)}
 .sw-page>header>*{min-width:0;overflow-wrap:anywhere}
 .sw-status>*,.sw-actions>*{min-width:0;max-width:100%;overflow-wrap:anywhere}
 .sw-odds th,.sw-odds td{white-space:normal;overflow-wrap:anywhere}
+.sw-season{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.sw-season[hidden]{display:none}
+.sw-season select,.sw-season button{border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:7px 10px}
+.sw-final .sw-odds{table-layout:fixed}.sw-final .sw-odds th:first-child{width:22%}
+.sw-final .sw-odds td:last-child{font:inherit;text-align:left}
+.sw-final .sw-field{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%, 155px),1fr));gap:6px 22px;padding-left:30px}
 .sw-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
 .sw-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .sw-actions button,.sw-actions select{border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:7px 10px}
@@ -125,9 +131,19 @@ footer{font-size:12px;color:var(--mute)}
 </head><body><a href="#" class="totop" aria-label="Back to top" hidden>&#8593;</a><script>(function(){var b=document.currentScript.previousElementSibling;function f(){b.hidden=window.scrollY<window.innerHeight*0.9;}window.addEventListener("scroll",f,{passive:true});window.addEventListener("load",f);b.addEventListener("click",function(ev){ev.preventDefault();var r=window.matchMedia("(prefers-reduced-motion: reduce)").matches;window.scrollTo({top:0,behavior:r?"auto":"smooth"});});})();</script>
 <main class="wrap sw-page">
 <header><h1><span id="sw-brand">NCAA 180</span> <em data-sw-label="title">Selection Watch</em></h1>
-<p class="sw-muted">Exact playoff probabilities during conference championship week · Unofficial</p></header>
+<p id="sw-intro" class="sw-muted">Exact playoff probabilities during conference championship week · Unofficial</p></header>
 <nav class="weeks" aria-label="Pages" data-current="selection-watch" data-state="hidden-dev"></nav><script src="assets/menu.js"></script><noscript><a href="index.html">Home</a></noscript>
+<form id="sw-season-picker" class="sw-season" method="get" hidden>
+<label for="sw-season">Season</label><select id="sw-season" name="season"><option value="">Current season</option><option value="2025">2025 · Final</option><option value="2024">2024 · Final</option><option value="2023">2023 · Final</option><option value="2022">2022 · Final</option><option value="2021">2021 · Final</option><option value="2020">2020 · Final</option><option value="2019">2019 · Final</option></select>
+<button type="submit">View season</button>
+</form>
+
 <div id="sw-error" role="status" class="sw-alert" hidden></div>
+<div id="sw-final" class="sw-final" hidden>
+<div id="sw-final-status" class="sw-status"></div>
+<section class="sw-section"><h2>Conference championship finals</h2><div id="sw-final-ccg"></div></section>
+<section class="sw-section"><h2>Final playoff field</h2><div id="sw-final-field"></div></section>
+</div>
 <div id="sw-content" hidden>
 <div class="sw-top"><div class="sw-actions">
 <label for="sw-sort">Steal Board order</label><select id="sw-sort"><option value="chance">Win chance</option><option value="margin">If it ended now · margin</option></select>

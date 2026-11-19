@@ -4,7 +4,9 @@
   const $ = id => document.getElementById(id);
   const E = x => String(x ?? '').replace(/[&<>"']/g,c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const C = window.ScoreboardCore, S = window.ScoreboardOverview, W = window.SelectionWatchCore;
-  const previewQuery = new URLSearchParams(location.search).get('preview');
+  const route = new URLSearchParams(location.search);
+  const previewQuery = route.get('preview');
+  const archiveYear = route.get('season');
   const stringSetting = (value, fallback='') =>
     typeof value==='string' && value.trim() ? value.trim() : fallback;
   let preview=null;
@@ -263,6 +265,28 @@
       });
     });
   }
+  function showFinals(year, archive) {
+    const season=archive[year];
+    if(!season?.ccg?.length || !season.field?.length)throw Error('No final results available for '+year);
+    content('sw-final-status','<b class="sw-flag">FINAL RESULTS</b><strong>'+E(year)+' season</strong>'+
+      '<span>'+season.ccg.length+' conference championships</span><span>'+season.field.length+' playoff teams</span>'+
+      '<span>National champion: '+E(season.champion)+'</span>');
+    const side=(name,score,winner)=>{
+      const result=E(name)+' · '+dollar(score);
+      return winner?'<strong>'+result+' (winner)</strong>':result;
+    };
+    content('sw-final-ccg','<table class="sw-odds"><thead><tr><th scope="col">Conference</th>'+
+      '<th scope="col">Team and score</th><th scope="col">Team and score</th></tr></thead><tbody>'+
+      season.ccg.map(g=>'<tr><th scope="row">'+E(g.conference)+'</th><td>'+side(g.a,g.score_a,g.winner===g.a)+
+        '</td><td>'+side(g.b,g.score_b,g.winner===g.b)+'</td></tr>').join('')+'</tbody></table>');
+    const seeded=season.field.every(t=>Number.isInteger(t.seed));
+    content('sw-final-field','<'+(seeded?'ol':'ul')+' class="sw-field">'+
+      season.field.map(t=>'<li'+(seeded?' value="'+t.seed+'"':'')+'>'+E(t.team)+
+        (!seeded&&Number.isInteger(t.seed)?' (#'+t.seed+')':'')+'</li>').join('')+(seeded?'</ol>':'</ul>'));
+    $('sw-intro').textContent='Recorded conference championship scores and the final playoff field.';
+    $('sw-final').hidden=false;
+    $('sw-season').value=year;
+  }
   try {
     const nav=await get('../config/nav.json');
     const tab=nav.tabs?.find(t=>t.id==='selection-watch');
@@ -283,6 +307,12 @@
     });
     document.title=featureName+' | '+brand;
     exportPrefix=stringSetting(settings?.export_filename_prefix,'ncaa180-selection-watch');
+    $('sw-season-picker').hidden=false;
+    if(archiveYear){
+      if(previewQuery!==null || !/^\d{4}$/.test(archiveYear))throw Error('Choose a season from the archive');
+      showFinals(archiveYear,await get('postseason/selection-watch-history.json'));
+      return;
+    }
     let dataURL='postseason/selection-watch.json';
     if(previewQuery!==null){
       const matches=['historical','provisional'].filter(mode=>{
