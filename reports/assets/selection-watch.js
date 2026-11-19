@@ -244,14 +244,14 @@
   }
   function fold(finalYear=null){
     const region=finalYear?'#sw-final':'#sw-content';
-    if(!finalYear){
-      const details=[...document.querySelectorAll(region+' details.sw-section')], collapse=$('sw-collapse');
-      const label=()=>{collapse.textContent=details.some(d=>d.open)?'Collapse all':'Expand all';};
-      collapse.addEventListener('click',()=>{
-        const open=!details.some(d=>d.open); details.forEach(d=>{d.open=open;}); label();
-      });
-      details.forEach(d=>d.addEventListener('toggle',label));
-    }
+    const details=[...document.querySelectorAll(region+' details.sw-section')];
+    const collapse=$(finalYear?'sw-final-collapse':'sw-collapse');
+    const label=()=>{collapse.textContent=details.some(d=>d.open)?'Collapse all':'Expand all';};
+    collapse.addEventListener('click',()=>{
+      const open=!details.some(d=>d.open); details.forEach(d=>{d.open=open;}); label();
+    });
+    details.forEach(d=>d.addEventListener('toggle',label));
+    label();
     document.querySelectorAll(region+' button.sw-save').forEach(btn=>{
       btn.disabled=!finalYear;
       btn.addEventListener('click',async e=>{

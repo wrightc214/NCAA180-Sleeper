@@ -102,6 +102,7 @@ def main():
     html += """
 <div id="sw-error" role="status" class="sw-alert" hidden></div>
 <div id="sw-final" class="sw-final" hidden>
+<div class="sw-actions"><button id="sw-final-collapse" type="button">Collapse all</button></div>
 <div id="sw-final-status" class="sw-status"></div>
 <details id="sw-final-ccg-section" class="sw-section sw-archive-section" open><summary>Conference championship finals <button class="sw-save" type="button" data-save="sw-final-ccg-section">Save image</button></summary>
 <div class="sw-inner" id="sw-final-ccg"></div></details>
