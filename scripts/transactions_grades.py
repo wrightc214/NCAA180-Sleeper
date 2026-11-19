@@ -66,6 +66,7 @@ DEFAULTS = {
         "surplus": "Dynasty surplus",
         "team_fit": "Team Fit",
         "evaluation": "Trade evaluation",
+        "grade_explainer": "How trade grades work",
         "trades": "Trades",
         "movement": "Player movement",
         "summary": "Season summary",

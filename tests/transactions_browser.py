@@ -44,6 +44,21 @@ def main():
                 assert page.locator("section.fold").count() == 3
                 assert page.locator("section.fold .snap-btn").count() == 3
                 page.evaluate("(theme) => document.documentElement.setAttribute('data-theme', theme)", theme)
+                explainer = page.locator("details.tx-explainer")
+                toggle = explainer.get_by_text("How trade grades work", exact=True)
+                explanation = explainer.locator(".tx-note")
+                assert toggle.is_visible()
+                assert explainer.get_attribute("open") is None
+                assert not explanation.is_visible()
+                if width == 390:
+                    toggle.click()
+                else:
+                    toggle.focus()
+                    page.keyboard.press("Enter")
+                assert explanation.is_visible()
+                assert "FantasyCalc" in explanation.inner_text()
+                toggle.click()
+                assert not explanation.is_visible()
                 assert page.locator("[data-score]").count() > 0
                 assert page.locator('.tx-fit strong[aria-label="Team Fit unavailable"]').first.text_content() == "-"
                 fit_card = page.locator(".tx-card").filter(has_text="1425957598431035392")

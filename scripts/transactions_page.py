@@ -64,6 +64,9 @@ CSS = """
 .tx-surplus{margin:8px;padding:9px 11px;border:1px solid var(--good);border-radius:9px;font-weight:800;color:var(--good);text-align:center;font-size:12px}
 .tx-surplus small{font-size:11px;font-weight:600}
 .tx-note{font-size:12px;color:var(--mute);margin:6px 0}
+.tx-explainer{margin:0 0 10px}
+.tx-explainer>summary{display:list-item;width:fit-content;max-width:100%;padding:6px 0;cursor:pointer;color:var(--ink);font-size:12px;font-weight:700;text-decoration:underline;text-underline-offset:2px}
+.tx-explainer>summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .tx-movement{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 .tx-move{padding:9px 0;border-bottom:1px solid var(--line);font-size:13px}
 .tx-move strong{font-size:14px}
@@ -374,8 +377,10 @@ def main():
 <h1>{esc(lcfg.brand())} <em>{esc(page_label)}</em></h1></div></header>
 <section><h2>{labels["trades"]} <small>({len(cards)})</small></h2>
 {filters}
+<details class="tx-explainer"><summary>{labels["grade_explainer"]}</summary>
 <p class="tx-note">Grades use FantasyCalc values available at trade time — not a verdict.
 {labels["rebuild"]} includes rookie picks and can discount value spread across assets. For smaller trades, displayed grade ranges narrow based on combined raw value relative to the snapshot leader for that grade. Point totals don’t change. {labels["contender"]} uses raw rest-of-season values and values traded picks at zero. Unlisted kickers and D/ST use a {esc(grading_config["proxy_pick_slot"])} proxy in both grades. Surplus pick comparisons use the upcoming draft at trade time. {labels["blockbuster"]} marks a large raw dynasty deal with a high-value player, both measured against the snapshot’s top player. It does not indicate a winner. {labels["team_fit"]} compares lineup gains and future value versus holding for each team. A hyphen means evidence is missing or an after-trade snapshot is still pending. Projected wins and before/after odds are unavailable.</p>
+</details>
 <div class="tx-cards" id="tx-trades">{''.join(cards)}</div>
 <p class="tx-empty" id="tx-no-trades" hidden>No trades match these filters.</p>
 <p class="tx-note">{covered} of {len(cards)} trades have a {labels["rebuild"]} grade under the historical valuation rules.</p>
