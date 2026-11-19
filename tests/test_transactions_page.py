@@ -252,11 +252,17 @@ def test_small_surplus_uses_closest_meaningful_swap_and_not_future_round():
     assert pick_swap(725, 2027, p) is None
 
 
-@pytest.mark.parametrize("setting", ["rebuild_grade_caps", "contender_grade_caps"])
-@pytest.mark.parametrize("pct,expected", [
-    (9.999, ("C+", "C-")), (10, ("B-", "D+")), (19.999, ("B-", "D+")),
-    (20, ("B", "D")), (29.999, ("B", "D")), (30, ("B+", "D-")),
-    (39.999, ("B+", "D-")), (40, ("A", "F")), (None, ("A", "F")),
+@pytest.mark.parametrize("setting,pct,expected", [
+    *[("rebuild_grade_caps", pct, expected) for pct, expected in [
+        (9.999, ("C+", "C-")), (10, ("B-", "D+")), (19.999, ("B-", "D+")),
+        (20, ("B", "D")), (29.999, ("B", "D")), (30, ("B+", "D-")),
+        (39.999, ("B+", "D-")), (40, ("A", "F")), (None, ("A", "F")),
+    ]],
+    *[("contender_grade_caps", pct, expected) for pct, expected in [
+        (4.999, ("C+", "C-")), (5, ("B-", "D+")), (9.999, ("B-", "D+")),
+        (10, ("B", "D")), (14.999, ("B", "D")), (15, ("B+", "D-")),
+        (19.999, ("B+", "D-")), (20, ("A", "F")), (None, ("A", "F")),
+    ]],
 ])
 def test_market_grade_cap_exclusive_boundaries(setting, pct, expected):
     caps = load_config()[setting]
@@ -297,7 +303,7 @@ def test_market_color_score_uses_each_team_fit_weight_without_changing_grade_sco
 
 @pytest.mark.parametrize("kicker,expected_total,expected_display", [
     (False, 128, "C+"),
-    (True, 853, "B-"),
+    (True, 853, "B+"),
 ])
 def test_contender_cap_uses_same_snapshot_redraft_leader_and_keeps_points(kicker, expected_total, expected_display):
     date = "2026-11-10"
@@ -321,7 +327,7 @@ def test_contender_cap_uses_same_snapshot_redraft_leader_and_keeps_points(kicker
 
     card = trade_card(row, sides, TEAMS, {}, out, {})
     uncapped = trade_card(row, sides, TEAMS, {}, out, {}, {"contender_grade_caps": []})
-    low = "D+" if kicker else "C-"
+    low = "D-" if kicker else "C-"
     assert f'>{expected_display}</strong><small>{expected_total} pts</small>' in card
     assert f'>{low}</strong><small>0 pts</small>' in card
     assert 'Grade capped from A' in card and 'Grade capped from F' in card

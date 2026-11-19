@@ -9,7 +9,7 @@
     "rebuild_grade_caps_note": "Display-only Rebuild caps, first matching row wins. Each row is [exclusive upper percent of snapshot leader, lowest label, highest label], using the combined raw dynasty total including K/DST proxies. Omit a higher band to leave it uncapped. Use [] to disable. Even and unavailable are unchanged.",
     "rebuild_grade_caps": [[10, "C-", "C+"], [20, "D+", "B-"], [30, "D", "B"], [40, "D-", "B+"]],
     "contender_grade_caps_note": "Display-only Contender caps, first matching row wins. Each row is [exclusive upper percent of snapshot redraft leader, lowest label, highest label], using combined raw redraft value including K/DST proxies. Use [] to disable. Even and unavailable are unchanged.",
-    "contender_grade_caps": [[10, "C-", "C+"], [20, "D+", "B-"], [30, "D", "B"], [40, "D-", "B+"]],
+    "contender_grade_caps": [[5, "C-", "C+"], [10, "D+", "B-"], [15, "D", "B"], [20, "D-", "B+"]],
     "market_grade_color_strength_note": "Maximum distance from neutral for Rebuild and Contender grade colors (0–1), scaled per team by its future or win-now Team Fit weight. 0 uses neutral colors. Changes color only.",
     "market_grade_color_strength": 0.5,
     "grade_bands": [
