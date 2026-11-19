@@ -68,7 +68,9 @@
               const pA=winner?(winner===g.a?1:0):summary.final?finalP:
                 liveP??frozenProbability(baseline,lid,a,b);
               if(pA===null)throw Error('CCG win chance unavailable: '+g.id);
-              nextScores[g.id]={scoreA,scoreB,pA,final:!!winner||summary.final,
+              const source=winner?'Final result':summary.final?(scoreA===scoreB&&tied?'Coin toss pending':'Final result'):
+                liveP!==null?'Live odds':summary.live?'Pregame fallback · live odds unavailable':'Pregame odds';
+              nextScores[g.id]={scoreA,scoreB,pA,source,live:summary.live&&!winner,final:!!winner||summary.final,
                 leader:winner || (summary.final ? (tied&&scoreA===scoreB?null:(finalP===1?g.a:g.b)) :
                   (summary.started ? scoreA>scoreB?g.a:scoreB>scoreA?g.b:null : null)),
                 status:summary.status};

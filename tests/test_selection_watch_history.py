@@ -32,6 +32,9 @@ def test_rescored_ccgs_keep_as_played_scores_and_winners():
 
 def test_modern_final_steal_labels_are_verified_against_actual_field():
     data = history.build()
-    assert {g["winner"] for g in data["2025"]["ccg"] if g.get("steal") == "Stolen"} == {"Kansas State", "Nevada"}
+    assert {g["winner"] for g in data["2025"]["ccg"] if g.get("label") == "Stolen"} == {"Kansas State", "Nevada"}
+    assert {g["winner"] for g in data["2024"]["ccg"] if g.get("label") == "Stolen"} == {"Jackson State", "UAB"}
+    assert {g["winner"] for g in data["2025"]["ccg"] if g.get("label") == "Play-in winner"} == {"Georgia Southern"}
+    assert {g["winner"] for g in data["2024"]["ccg"] if g.get("label") == "Play-in winner"} == {"Eastern Kentucky"}
     for year in ("2019", "2020", "2022"):
-        assert not any(g.get("steal") for g in data[year]["ccg"])
+        assert not any(g.get("label") for g in data[year]["ccg"])

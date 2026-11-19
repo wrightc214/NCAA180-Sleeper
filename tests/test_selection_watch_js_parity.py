@@ -20,8 +20,8 @@ BRIDGE = """
 const C=require(process.argv[1]),fs=require('fs');
 const a=JSON.parse(fs.readFileSync(0,'utf8'));
 const p=C.odds(a.d,a.p);
-const b=C.board(a.d,a.leaders);
-process.stdout.write(JSON.stringify({odds:p,board:b,locks:C.locks(a.d)}));
+const b=C.cutBoard(a.d,a.leaders,a.p,a.leaders);
+process.stdout.write(JSON.stringify({odds:p,labels:b.labels,playIns:b.playIns.map(g=>g.g.id),steals:b.steals,cut:b.cut,locks:C.locks(a.d)}));
 """
 
 
@@ -34,8 +34,8 @@ def js(d, p, leaders):
 
 
 @pytest.mark.skipif(NODE is None, reason="Node.js not installed")
-@pytest.mark.parametrize("year,expected_rows,expected_steals", [(2024, 5, 3), (2025, 6, 2)])
-def test_js_equals_python_on_real_seasons(year, expected_rows, expected_steals):
+@pytest.mark.parametrize("year,expected_cut,expected_steals", [(2024, 27, 2), (2025, 29, 2)])
+def test_js_equals_python_on_real_seasons(year, expected_cut, expected_steals):
     os.chdir(ROOT)
     d = sw.build(year)
     assert len(d["order"]) == 180 and len(d["ccg"]) == 15
@@ -47,12 +47,10 @@ def test_js_equals_python_on_real_seasons(year, expected_rows, expected_steals):
     assert set(actual["odds"]) == set(expected)
     for k, share in expected.items():
         assert actual["odds"][k] == pytest.approx(share, abs=1e-9)
-    pyrows, pyrisk, k = sw.board(d, leaders)
-    board = actual["board"]
-    assert len(board["thieves"]) == expected_rows == len(pyrows)
-    assert board["k"] == expected_steals == k
-    assert board["atRisk"] == pyrisk
-    assert board["thieves"] == pyrows
+    assert actual["labels"] == sw.final_labels(d, leaders)
+    assert actual["playIns"] == d["play_ins"]
+    assert actual["steals"] == expected_steals
+    assert actual["cut"] == expected_cut
     # Frozen final historical results still reproduce the *actual* field.
     frozen = {g["id"]: int(g["winner"] == g["a"]) for g in d["ccg"]}
     fixed = js(d, frozen, leaders)
@@ -73,3 +71,16 @@ def test_js_equals_python_on_exact_coin_toss_at_cut():
         assert actual["odds"].get(k, 0) == pytest.approx(expected.get(k, 0), abs=1e-12)
     assert actual["odds"]["t2"] == pytest.approx(.5)
     assert actual["odds"]["t3"] == pytest.approx(.5)
+
+def test_builder_reuses_frozen_play_ins_after_kickoff():
+    pregame = {"year": 2026, "field_size": 2,
+               "ccg": [{"id": "g", "a": "B", "b": "D", "winner": ""}],
+               "order": [{"k": k, "rank": i + 1} for i, k in enumerate("ABCD")]}
+    sw.freeze_play_ins(pregame)
+    assert pregame["play_ins"] == ["g"]
+    later = {**pregame, "order": [{"k": k, "rank": i + 1} for i, k in enumerate("BACD")],
+             "ccg": [{**pregame["ccg"][0], "winner": "D"}]}
+    sw.freeze_play_ins(later)
+    assert later["play_ins"] == []
+    sw.freeze_play_ins(later, previous=pregame)
+    assert later["play_ins"] == ["g"]

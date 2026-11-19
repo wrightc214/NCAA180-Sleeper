@@ -12,10 +12,8 @@ field out live in the browser:
   tie     groups of teams still exactly tied (only matter if they straddle the cut)
 Field rule: the CCG winners (auto bids) + the top (field_size - #CCGs) of everyone else.
 
-Steal Board (Chris's view): a THIEF is a CCG team that can only get in by winning = every CCG
-team outside the natural top field_size. With k thieves winning, exactly the bottom k at-large
-teams of the natural field are out. board() builds it; field() and odds() are the exact rule and
-the full 2^15 enumeration -- the reference the page's JavaScript is tested against.
+Steal Board: an outside-natural-field CCG win is a steal unless its game is a play-in.
+Play-in tags come from the all-open enumeration and are stored before live results.
 
   python scripts/selection_watch.py [--year Y] [--check]   (--check: past season, compare to the
                                                             actual playoff field; writes nothing)
@@ -71,7 +69,7 @@ def ccg_pairs(year, st):
     return out
 
 
-def build(year):
+def build(year, *, previous=None):
     st = ps.standings(year)
     order, tied, _ = ps.rank_ties(st, real_toss=True)
     lg = {v.strip(): k for k, v in ps.league_short().items()}  # league name -> short name
@@ -98,24 +96,27 @@ def build(year):
                             "logo_html": logo_html(t["team"], bg="#ffffff") if li else ""}
     pc = ps.cfg_postseason()["playoff"]
     games = [{"id": g, "a": a, "b": b, "winner": w, "pa": sa, "pb": sb} for g, a, b, w, sa, sb in ccg_pairs(year, order)]
-    return {"year": int(year), "field_size": int(pc["field_size"]), "ccg_week": ps.ccg_week(),
+    d = {"year": int(year), "field_size": int(pc["field_size"]), "ccg_week": ps.ccg_week(),
             "order": teams, "ccg": games, "tie": ties, "style": style,
             "generated": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
             "note": "Unofficial. Field = CCG winners + top (field_size - #CCGs) of everyone else, by win %, "
                     "points for, points against; a tie that decides the last spot goes to a real coin toss."}
 
+    freeze_play_ins(d, previous)
+    return d
+
 
 # ---------- the rule, the board and the odds (reference for the page) ----------
 
 def _tie_of(d):
-    return {k: i for i, g in enumerate(d["tie"]) for k in g}
+    return {k: i for i, g in enumerate(d.get("tie", [])) for k in g}
 
 
-def field(d, winners):
+def field(d, winners, extra_at_large=0):
     """{key: share in the field} for one set of CCG winners. 1 = in; a tie group straddling the
     cut splits its remaining spots evenly (a real coin toss decides it)."""
     win = set(winners)
-    n_at = d["field_size"] - len(d["ccg"])
+    n_at = d["field_size"] - len(d["ccg"]) + extra_at_large
     tie = _tie_of(d)
     res = {k: 1.0 for k in win}
     left, i, order = n_at, 0, [t["k"] for t in d["order"] if t["k"] not in win]
@@ -132,26 +133,61 @@ def field(d, winners):
     return res
 
 
-def board(d, leaders):
-    """Steal Board for one moment. leaders: {game id: key currently ahead / winner}.
-    Returns (thief rows sorted by the caller's order, at-risk list (first out first), k)."""
-    nat = {t["k"]: t["rank"] for t in d["order"]}
-    N = d["field_size"]
-    thieves, protected = [], set()
-    for g in d["ccg"]:
-        a_out, b_out = nat[g["a"]] > N, nat[g["b"]] > N
-        lead = leaders.get(g["id"])
-        if a_out and b_out:  # one steal certain: one row, whoever leads
-            thieves.append({"game": g["id"], "team": lead or g["a"], "both_out": True, "leading": True})
-        elif a_out or b_out:
-            th = g["a"] if a_out else g["b"]
-            thieves.append({"game": g["id"], "team": th, "both_out": False, "leading": lead == th})
-        if lead and nat[lead] <= N:
-            protected.add(lead)
-    k = sum(t["leading"] for t in thieves)
-    inside = [t["k"] for t in d["order"][:N] if t["k"] not in protected]
-    at_risk = list(reversed(inside))[:len(thieves)]  # first out first
-    return thieves, at_risk, k
+def freeze_play_ins(d, previous=None):
+    """Any qualification share on a losing path disqualifies that game as a play-in."""
+    games = d["ccg"]
+    pairs = lambda src: {g["id"]: frozenset((g["a"], g["b"])) for g in src.get("ccg", [])}
+    if (previous and previous.get("year") == d["year"] and "play_ins" in previous
+            and pairs(previous) == pairs(d)):
+        d["play_ins"] = previous["play_ins"]
+        return
+    possible_play_ins = set(range(len(games)))
+    # Enumerate all outcomes regardless of published winners or probabilities.
+    for bits in itertools.product((0, 1), repeat=len(games)):
+        if not possible_play_ins:
+            break
+        win = [g["a"] if b else g["b"] for g, b in zip(games, bits)]
+        qualifying = field(d, win)
+        possible_play_ins.difference_update([
+            i for i in possible_play_ins if qualifying.get(games[i]["b" if bits[i] else "a"], 0) > 0
+        ])
+    d["play_ins"] = [g["id"] for i, g in enumerate(games) if i in possible_play_ins]
+
+
+def final_labels(d, leaders):
+    """Archive labels use the same rule and counterfactual as the live board."""
+    tags = set(d["play_ins"])
+    ranks = {t["k"]: t["rank"] for t in d["order"]}
+    outside = lambda k: ranks[k] > d["field_size"]
+    games = d["ccg"]
+    winners = [leaders[g["id"]] for g in games]
+    def opponent(game, team):
+        return game["b"] if team == game["a"] else game["a"]
+
+    no_steals = [opponent(g, k) if g["id"] not in tags and outside(k) else k for g, k in zip(games, winners)]
+    labels = {}
+    for i, (g, winner) in enumerate(zip(games, winners)):
+        other = opponent(g, winner)
+        if g["id"] in tags:
+            label = "Play-in winner"
+        elif outside(winner):
+            label = "Stolen"
+        else:
+            alternate = [other if j == i else k for j, k in enumerate(winners)]
+            # Isolate the OTHER steals: don't charge an outside opponent's own steal
+            # when asking whether this natural team already needed its CCG win.
+            loss = field(d, alternate)
+            own_bid = int(outside(other))
+            neutral_loss = field(d, alternate, own_bid) if own_bid and loss.get(winner, 0) < 1 else loss
+            earlier = [other if j == i else k for j, k in enumerate(no_steals)]
+            if neutral_loss.get(winner, 0) < 1 and field(d, earlier, own_bid).get(winner) == 1:
+                label = "Saved"
+            elif outside(other) and loss.get(winner) == 1:
+                label = "Held"
+            else:
+                label = "Final"
+        labels[g["id"]] = label
+    return labels
 
 
 def odds(d, p):
@@ -257,18 +293,11 @@ def check(year):
     name = {t["team"]: t["k"] for t in d["order"]}
     actual = {name[t.strip()] for c in ("TeamA", "TeamB") for t in po[c]}
     leaders = {g["id"]: g["winner"] for g in d["ccg"]}
-    margin = {g["id"]: abs((g["pa"] or 0) - (g["pb"] or 0)) * (1 if g["winner"] else 0) for g in d["ccg"]}
-    thieves, at_risk, k = board(d, leaders)
-    thieves.sort(key=lambda t: (not t["leading"], -margin[t["game"]] if t["leading"] else margin[t["game"]]))
+    labels = final_labels(d, leaders)
     tm = {t["k"]: t for t in d["order"]}
     print(f"{year}: field by rule {len(f)} / actual {len(actual)} -- {'MATCH' if f == actual else 'DIFFERENT'}")
-    for i, t in enumerate(thieves):
-        if i == k:
-            print("  " + "-" * 30 + " cut " + "-" * 30)
-        ar = tm[at_risk[i]] if i < len(at_risk) else None
-        th = tm[t["team"]]
-        print(f"  {'IN ' if t['leading'] else 'out'} {(th['short'] or th['team']):<18} #{th['rank']:<3} | "
-              f"{((ar['short'] or ar['team']) + ' #' + str(ar['rank'])) if ar else '':<22} {'out' if t['leading'] else 'IN'}")
+    for g in d["ccg"]:
+        print(f"  {labels[g['id']]}: {tm[g['winner']]['team']} (#{tm[g['winner']]['rank']})")
     return f == actual, d
 
 
@@ -313,6 +342,8 @@ def main():
             d["note"] = "PROVISIONAL — based on incomplete regular-season standings and hypothetical CCG pairings. Unofficial."
             for g in d["ccg"]:
                 g.update(winner="", pa=None, pb=None)
+        if d["ccg"] and d["ccg"][0]["id"].startswith("provisional-"):
+            freeze_play_ins(d)
         os.makedirs(os.path.dirname(a.output) or ".", exist_ok=True)
         with open(a.output, "w", encoding="utf-8") as f:
             json.dump(d, f, indent=1)
@@ -322,7 +353,8 @@ def main():
     if missing:
         print(f"Selection Watch {year}: regular season not finished (weeks {missing[0]}-{missing[-1]} to go); nothing written")
         return
-    d = build(year)
+    old = json.load(open(OUT)) if enabled and os.path.exists(OUT) else {}
+    d = build(year, previous=old)
     toss_alert(year, toss_risks(year, d))  # Stage 1 private alerts are independent of page publication.
     if not enabled:
         print("Selection Watch disabled; no live data written")
@@ -331,7 +363,6 @@ def main():
         print(f"Selection Watch {year}: no CCG pairings yet (conference_championships.py); nothing written")
         return
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
-    old = json.load(open(OUT)) if os.path.exists(OUT) else {}
     if {k: v for k, v in old.items() if k != "generated"} == {k: v for k, v in d.items() if k != "generated"}:
         print(f"Selection Watch {year}: unchanged")
         return

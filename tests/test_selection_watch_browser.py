@@ -2,6 +2,7 @@
 RUN_SCOREBOARD_BROWSER_TESTS=1 python -m pytest tests/test_selection_watch_browser.py
 Uses only local static assets; 2025 and provisional 2026 previews make no Sleeper/ESPN requests.
 """
+import itertools
 import json
 import os
 from pathlib import Path
@@ -28,10 +29,10 @@ class SelectionWatchBrowser(unittest.TestCase):
             with sync_playwright() as pw:
                 browser = pw.chromium.launch(headless=True, args=["--no-sandbox", "--disable-dev-shm-usage"])
                 for preview, rows in (("2025", 6), ("provisional", None)):
-                    for width in (1150, 390):
-                        with self.subTest(preview=preview, width=width):
+                    for width, theme in itertools.product((320, 390, 1280), ("light", "dark")):
+                        with self.subTest(preview=preview, width=width, theme=theme):
                             page = browser.new_page(viewport={"width": width, "height": 1100},
-                                                    service_workers="block")
+                                                    service_workers="block", color_scheme=theme)
                             errors = []
                             page.on("pageerror", lambda ex: errors.append(str(ex)))
                             page.route("https://api.sleeper.app/**", lambda r: r.abort())
@@ -44,33 +45,39 @@ class SelectionWatchBrowser(unittest.TestCase):
                                 arg="Historical replay" if preview == "2025" else "Updated", timeout=60000,
                             )
                             self.assertEqual(errors, [])
+                            before = page.locator("#sw-board").evaluate("""board => [0,1].map(i =>
+                                [...board.querySelectorAll('.sw-cut-row')].map(r => r.children[i].textContent))""")
+                            page.locator("#sw-sort").click()
+                            self.assertEqual(page.locator("#sw-sort").get_attribute("aria-pressed"), "true")
+                            after = page.locator("#sw-board").evaluate("""board => [0,1].map(i =>
+                                [...board.querySelectorAll('.sw-cut-row')].map(r => r.children[i].textContent))""")
+                            self.assertEqual(after, [column[::-1] for column in before])
                             self.assertIn("UNOFFICIAL", page.locator("#sw-status").inner_text().upper())
                             if preview == "provisional":
                                 self.assertIn("PROVISIONAL", page.locator("#sw-status").inner_text().upper())
                                 self.assertEqual(page.get_by_role("link", name="View game").count(), 0)
                             if rows:
-                                self.assertEqual(page.locator(".sw-pair").count(), rows)
-                                self.assertIn("2 steals", page.locator("#sw-status").inner_text())
-                                self.assertEqual(page.locator(".sw-pair.cut").count(), 1)
-                                self.assertGreater(page.locator(".sw-pair .sw-team.admitted").count(), 0)
+                                self.assertGreater(page.locator(".sw-cut-row").count(), 0)
+                                self.assertIn("steals confirmed", page.locator("#sw-status").inner_text())
+                                self.assertEqual(page.locator(".sw-cut-line").count(), 1)
+                                self.assertGreater(page.locator(".sw-cut-row .sw-team.admitted").count(), 0)
+                                self.assertTrue(page.evaluate("""() => [...document.querySelectorAll('#sw-board .sw-cut-row')]
+                                    .every(row => row.querySelectorAll('.sw-team.admitted').length <= 1)"""))
                                 self.assertNotIn("Updated", page.locator("#sw-status").inner_text())
-                            for sort in ("chance", "margin"):
-                                page.select_option("#sw-sort", sort)
-                                layout = page.evaluate("""() => ({
-                                    viewport: innerWidth,
-                                    page: document.documentElement.scrollWidth,
-                                    boardRight: Math.max(...[...document.querySelectorAll(
-                                        '.sw-page header, #sw-status, .sw-head > :last-child, .sw-pair > :last-child'
-                                    )].map(el => el.getBoundingClientRect().right))
-                                })""")
-                                self.assertLessEqual(layout["page"], layout["viewport"], layout)
-                                self.assertLessEqual(layout["boardRight"], layout["viewport"], layout)
-                            self.assertEqual(page.locator(".sw-pair.cut").count(), 1 if rows else page.locator(".sw-pair.cut").count())
+                            layout = page.evaluate("""() => ({
+                                viewport: innerWidth,
+                                page: document.documentElement.scrollWidth,
+                                boardRight: Math.max(...[...document.querySelectorAll(
+                                    '.sw-page header, #sw-status, .sw-head > :last-child, .sw-cut-row > :last-child'
+                                )].map(el => el.getBoundingClientRect().right))
+                            })""")
+                            self.assertLessEqual(layout["page"], layout["viewport"], layout)
+                            self.assertLessEqual(layout["boardRight"], layout["viewport"], layout)
                             self.assertTrue(page.locator("#sw-noimpact").count())
                             page.click("#sw-collapse")
-                            self.assertEqual(page.evaluate("[...document.querySelectorAll('#sw-content details.sw-section')].filter(d => d.open).length"), 0)
+                            self.assertEqual(page.evaluate("[...document.querySelectorAll('#sw-content details.sw-section')].filter(d => !d.hidden && d.open).length"), 0)
                             page.click("#sw-collapse")
-                            self.assertEqual(page.evaluate("[...document.querySelectorAll('#sw-content details.sw-section')].filter(d => !d.hidden && d.open).length"), 5 if preview == "2025" else 6)
+                            self.assertEqual(page.evaluate("[...document.querySelectorAll('#sw-content details.sw-section')].filter(d => !d.hidden && d.open).length"), (5 if preview == "2025" else 6) + int(page.locator("#sw-playins").is_visible()))
                             if preview == "provisional":
                                 pick = page.locator("#sw-picks select").first
                                 pick.select_option(index=1)
@@ -79,6 +86,10 @@ class SelectionWatchBrowser(unittest.TestCase):
                                 self.assertFalse(page.locator("#sw-whatif-banner").is_visible())
                             if preview == "2025" and width == 390:
                                 self.assertTrue(page.locator("#sw-board button.sw-save").is_visible())
+                            if preview == "2025":
+                                page.goto(f"http://127.0.0.1:{server.server_port}/reports/selection-watch.html?season=2025")
+                                page.locator("#sw-final-playins").wait_for(state="visible")
+                                self.assertFalse(page.evaluate("document.documentElement.scrollWidth > innerWidth"))
                             page.close()
                 page = browser.new_page(viewport={"width": 390, "height": 1100}, service_workers="block")
                 page.route("https://fonts.googleapis.com/**", lambda r: r.abort())
@@ -96,12 +107,12 @@ class SelectionWatchBrowser(unittest.TestCase):
                 self.assertEqual(page.locator("#sw-final-ccg tbody tr").count(), 15)
                 self.assertFalse(page.locator("#sw-refresh").is_visible())
                 archive = page.locator("#sw-final")
-                open_sections = archive.locator("details[open]")
-                self.assertEqual(open_sections.count(), 2)
+                open_sections = archive.locator("details[open]:not([hidden])")
+                self.assertEqual(open_sections.count(), 3)
                 archive.get_by_role("button", name="Collapse all").click()
                 self.assertEqual(open_sections.count(), 0)
                 archive.get_by_role("button", name="Expand all").click()
-                self.assertEqual(open_sections.count(), 2)
+                self.assertEqual(open_sections.count(), 3)
                 self.assertTrue(archive.get_by_role("button", name="Collapse all").is_visible())
                 self.assertTrue(page.get_by_text("Conf.", exact=True).is_visible())
                 big_sky = page.locator("#sw-final-ccg tbody tr").filter(has_text="Big Sky")
@@ -130,8 +141,52 @@ class SelectionWatchBrowser(unittest.TestCase):
                 page.locator("#sw-final").wait_for(state="visible")
                 self.assertIn("SAMPLE TIMELINE", page.locator("#sw-final-field").inner_text())
                 self.assertIn("UNLV", page.locator(".sw-timeline").inner_text())
+                board_text = page.locator("#sw-final-cut").inner_text()
+                self.assertIn("BID THIEVES", board_text)
+                self.assertIn("Final at-large cut after rank #29", board_text)
+                self.assertIn("Cut starts at #31 · 1 play-in below", board_text)
+                self.assertNotIn("Georgia Southern", board_text)
+                self.assertNotIn("UTEP", board_text)
+                playin = page.locator("#sw-final-playins")
+                self.assertIn("Georgia Southern", playin.inner_text())
+                self.assertIn("UTEP", playin.inner_text())
+                self.assertIn("Play-in winner", playin.inner_text())
+                self.assertTrue(playin.get_by_role("button", name="Save image").is_enabled())
+                playin.locator("summary").click(position={"x": 12, "y": 12})
+                self.assertIsNone(playin.get_attribute("open"))
+                with page.expect_download(timeout=30000) as pending:
+                    playin.get_by_role("button", name="Save image").click()
+                self.assertIn("2025-sw-final-playins", pending.value.suggested_filename)
+                self.assertIsNone(playin.get_attribute("open"))
+                page.goto(f"http://127.0.0.1:{server.server_port}/reports/selection-watch.html?season=2024")
+                page.locator("#sw-final").wait_for(state="visible")
+                self.assertIn("Final at-large cut after rank #27", page.locator("#sw-final-cut").inner_text())
+                self.assertIn("Eastern Kentucky", page.locator("#sw-final-playins").inner_text())
+                self.assertIn("Chattanooga", page.locator("#sw-final-playins").inner_text())
+                self.assertTrue(page.evaluate("""() => document.querySelector('.sw-page nav').compareDocumentPosition(
+                    document.querySelector('.sw-page header')) & Node.DOCUMENT_POSITION_FOLLOWING"""))
                 self.assertFalse(page.locator("#sw-discord-draft").is_visible())
                 self.assertFalse(any("api.sleeper.app" in url or "site.api.espn.com" in url for url in requests))
+                page.close()
+                page = browser.new_page(viewport={"width": 390, "height": 1100}, service_workers="block")
+                page.route("https://fonts.googleapis.com/**", lambda r: r.abort())
+                page.route("https://fonts.gstatic.com/**", lambda r: r.abort())
+                replay = json.loads((ROOT / "reports/postseason/selection-watch-2025.json").read_text())
+                play_id, = replay["play_ins"]
+                play_game = next(g for g in replay["ccg"] if g["id"] == play_id)
+                play_game["winner"] = ""
+                ute = next(t["k"] for t in replay["order"] if t["team"] == "UTEP")
+                page.route("**/postseason/selection-watch-2025.json",
+                           lambda r: r.fulfill(content_type="application/json", body=json.dumps(replay)))
+                page.goto(f"http://127.0.0.1:{server.server_port}/reports/selection-watch.html?preview=2025")
+                page.locator("#sw-playins").wait_for(state="visible")
+                board_before = page.locator("#sw-board-rows").inner_html()
+                page.locator("#sw-whatif summary").click(position={"x": 10, "y": 10})
+                page.locator("#sw-picks select").select_option(ute)
+                self.assertIn("UTEP wins", page.locator("#sw-whatif-banner").inner_text())
+                self.assertIn("Play-in winner", page.locator("#sw-playin-rows").get_by_text("UTEP").locator("..").inner_text())
+                self.assertIn("2 steals confirmed", page.locator("#sw-status").inner_text())
+                self.assertEqual(board_before, page.locator("#sw-board-rows").inner_html())
                 page.close()
                 browser.close()
         finally:
@@ -212,9 +267,7 @@ class SelectionWatchBrowser(unittest.TestCase):
                 page.goto(f"http://127.0.0.1:{server.server_port}/reports/selection-watch.html")
                 page.wait_for_function("document.getElementById('sw-error').textContent.includes('CCG win chance unavailable')")
                 self.assertIn("no verified current probabilities", page.locator("#sw-error").inner_text())
-                self.assertEqual(page.locator("#sw-board .sw-pair").count(), 0)
-                page.select_option("#sw-sort", "margin")
-                self.assertEqual(page.locator("#sw-board .sw-pair").count(), 0)
+                self.assertEqual(page.locator("#sw-board .sw-cut-row").count(), 0)
                 self.assertTrue(page.locator("#sw-board button.sw-save").is_disabled())
 
                 active_base = base
@@ -222,7 +275,7 @@ class SelectionWatchBrowser(unittest.TestCase):
                 page.wait_for_function("document.getElementById('sw-updated').textContent.startsWith('Updated')", timeout=90000)
                 self.assertEqual(errors, [])
                 self.assertEqual(len(fetched), 15)
-                self.assertEqual(page.locator("#sw-board .sw-pair").count() > 0, True)
+                self.assertEqual(page.locator("#sw-board .sw-cut-row").count() > 0, True)
                 self.assertIn("UNOFFICIAL", page.locator("#sw-status").inner_text().upper())
                 self.assertNotIn("PROVISIONAL", page.locator("#sw-status").inner_text().upper())
                 self.assertTrue(page.locator("#sw-board button.sw-save").is_enabled())

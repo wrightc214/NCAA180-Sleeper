@@ -15,7 +15,7 @@ def verified_steals(year, games, entrants):
     # 2019–2020 used different formats. Older-format or incomplete data must not imply a result.
     if len(games) != 15 or len(entrants) != 32 or year <= 2020:
         return
-    from selection_watch import build as build_board, field
+    from selection_watch import build as build_board, field, final_labels
     previous = Path.cwd()
     try:
         os.chdir(ROOT)
@@ -29,10 +29,21 @@ def verified_steals(year, games, entrants):
     actual = {by_key[key]["team"] for key, share in field(board, winners).items() if share == 1}
     if actual != set(entrants):
         return
-    ranks = {team["team"]: team["rank"] for team in board["order"]}
-    for game in games:
-        if max(ranks[game["a"]], ranks[game["b"]]) > board["field_size"]:
-            game["steal"] = "Stolen" if ranks[game["winner"]] > board["field_size"] else "Held"
+    labels = final_labels(board, {g["id"]: g["winner"] for g in board["ccg"]})
+    names = {key: team["team"] for key, team in by_key.items()}
+    recorded = {frozenset((g["a"], g["b"])): g for g in games}
+    for g in board["ccg"]:
+        recorded[frozenset((names[g["a"]], names[g["b"]]))]["label"] = labels[g["id"]]
+    return {
+        "field_size": board["field_size"],
+        "order": [{"k": t["team"], "team": t["team"], "rank": t["rank"], "conf": t["conf"]}
+                  for t in board["order"]],
+        "ccg": [{"id": g["id"], **{k: names[g[k]] for k in ("a", "b", "winner")}}
+                for g in board["ccg"]],
+        "play_ins": board["play_ins"],
+        "tie": [[names[k] for k in group] for group in board["tie"]],
+        "colors": {name: style["background"] for name, style in board["style"].items() if style["background"]},
+    }
 
 
 def build(source=SOURCE):
@@ -71,9 +82,9 @@ def build(source=SOURCE):
                         entrants[name] = seed
                     elif seed is not None and entrants[name] != seed:
                         raise ValueError(f"{year} has conflicting seeds for {name}")
-        if source == SOURCE:
-            verified_steals(year, games, entrants)
+        board = verified_steals(year, games, entrants) if source == SOURCE else None
         history[str(year)] = {
+            **({"cut_board": board} if board else {}),
             "champion": final["Winner"].strip(),
             "ccg": sorted(games, key=lambda g: g["conference"]),
             "field": [{"team": name, "seed": seed} for name, seed in

@@ -34,6 +34,22 @@ CSS = """
 .sw-toss{font-weight:800;border:1px dashed var(--neutral);padding:1px 4px}
 .sw-track{margin:8px 0}.sw-track>div{display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:4px}
 .sw-track span{border:1px solid var(--line);padding:4px}.sw-track small{display:block}
+.sw-cut-note{margin:6px 0;font-weight:700}.sw-cut-line{border-top:2px dashed var(--accent);margin:5px 0}
+.sw-order{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.sw-order button{border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:6px 9px}
+.sw-order button[aria-pressed=true]{border-color:var(--accent)}
+.sw-placard{border:1px dashed var(--line);border-radius:6px;color:var(--mute);padding:6px;overflow-wrap:anywhere}
+.sw-playin-game p{margin:8px 0 0}.sw-playin-game .sw-pair>div{min-width:0;overflow-wrap:anywhere}
+.sw-playin-winner{display:block;font-weight:800}
+.sw-metrics{display:flex;align-items:baseline;gap:4px 8px;flex-wrap:wrap}
+.sw-team .sw-number .sw-margin,.sw-metrics .sw-margin{color:var(--mute);white-space:nowrap}
+.sw-team.admitted .sw-number .sw-margin{color:inherit;opacity:.85}
+.sw-team .sw-number{display:flex;gap:5px;justify-content:flex-end;align-items:baseline;flex-wrap:wrap}
+.sw-cut-row[data-held=pair] [data-thief] .sw-team{border-color:var(--neutral)}
+.sw-cut-row .sw-team strong{min-width:0}
+.sw-playin-game .sw-metrics small{font:600 11px var(--num)}
+.sw-cut-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:4px 0}
+.sw-cut-row>*{min-width:0;overflow-wrap:anywhere}
 .sw-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
 .sw-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .sw-actions button,.sw-actions select{border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:7px 10px}
@@ -74,7 +90,7 @@ CSS = """
 .sw-pair,.sw-head{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px;padding-left:2px;padding-right:2px}
 .sw-team{gap:4px;padding:4px;border-left-width:3px;font-size:11px;flex-wrap:wrap}
 .sw-team .sw-logo{width:30px;height:30px}.sw-logo img{max-width:27px;max-height:27px}
-.sw-team .sw-number{margin-left:0}.sw-team small{font-size:9px}}
+.sw-team .sw-number{margin-left:auto}.sw-team small{font-size:9px}}
 """
 
 def main():
@@ -92,10 +108,12 @@ def main():
     html = page_head(f"{title} | {brand}", CSS)
     html += f"""
 <main class="wrap sw-page">
+"""
+    html += menu_html("selection-watch")
+    html += f"""
 <header><h1><span id="sw-brand">{escape(brand)}</span> <em data-sw-label="title">{escape(title)}</em></h1>
 <p id="sw-intro" class="sw-muted">Exact playoff probabilities during conference championship week · Unofficial</p></header>
 """
-    html += menu_html("selection-watch")
     seasons = json.loads(HISTORY.read_text(encoding="utf-8")) if HISTORY.exists() else {}
     options = "".join(f'<option value="{year}">{year} · Final</option>'
                       for year in sorted(seasons, key=int, reverse=True))
@@ -110,6 +128,11 @@ def main():
 <div id="sw-final" class="sw-final" hidden>
 <div class="sw-actions"><button id="sw-final-collapse" type="button">Collapse all</button></div>
 <div id="sw-final-status" class="sw-status"></div>
+<details id="sw-final-cut-section" class="sw-section" open><summary>Steal Board · Final <button class="sw-save" type="button" data-save="sw-final-cut-section">Save image</button></summary>
+<div class="sw-inner"><div class="sw-order"><button id="sw-final-sort" type="button" aria-pressed="false">Ranking order</button></div>
+<div id="sw-final-cut"></div></div></details>
+<details id="sw-final-playins" class="sw-section" open hidden><summary>Play-in games <button class="sw-save" type="button" data-save="sw-final-playins">Save image</button></summary>
+<div class="sw-inner" id="sw-final-playin-rows"></div></details>
 <details id="sw-final-ccg-section" class="sw-section sw-archive-section" open><summary>Conference championship finals <button class="sw-save" type="button" data-save="sw-final-ccg-section">Save image</button></summary>
 <div class="sw-inner" id="sw-final-ccg"></div></details>
 <details id="sw-final-field-section" class="sw-section sw-archive-section" open><summary>Final playoff field <button class="sw-save" type="button" data-save="sw-final-field-section">Save image</button></summary>
@@ -118,12 +141,14 @@ def main():
 <div id="sw-content" hidden>
 <p id="sw-whatif-banner" class="sw-whatif-banner" role="status" hidden></p>
 <div class="sw-top"><div class="sw-actions">
-<label for="sw-sort">Steal Board order</label><select id="sw-sort"><option value="chance">Win chance</option><option value="margin">If it ended now · margin</option></select>
 <button id="sw-collapse" type="button">Collapse all</button><button id="sw-refresh" type="button">Refresh</button><button id="sw-discord-draft" type="button" hidden>Save Discord draft</button></div>
 <span id="sw-updated" class="sw-progress">Loading…</span></div>
 <details id="sw-status-section" class="sw-section" open><summary>Status <button class="sw-save" type="button" data-save="sw-status-section">Save image</button></summary><div id="sw-status" class="sw-status" aria-live="polite">Loading selection data…</div></details>
 <details id="sw-board" class="sw-section" open><summary>Steal Board <button class="sw-save" type="button" data-save="sw-board">Save image</button></summary>
-<div class="sw-inner"><p class="sw-muted">One row per potential steal. The at-large team opposite the thief is the team whose place is threatened.</p><div id="sw-board-rows"></div></div></details>
+<div class="sw-inner"><div class="sw-order"><button id="sw-sort" type="button" aria-pressed="false">Ranking order</button></div>
+<div id="sw-board-rows"></div></div></details>
+<details id="sw-playins" class="sw-section" open hidden><summary>Play-in games <button class="sw-save" type="button" data-save="sw-playins">Save image</button></summary>
+<div class="sw-inner" id="sw-playin-rows"></div></details>
 <details id="sw-bubble" class="sw-section" open><summary>Bubble odds <button class="sw-save" type="button" data-save="sw-bubble">Save image</button></summary><div class="sw-inner" id="sw-bubble-rows"></div></details>
 <details id="sw-locks" class="sw-section" open><summary>Locks <button class="sw-save" type="button" data-save="sw-locks">Save image</button></summary><div class="sw-inner" id="sw-lock-rows"></div></details>
 <details id="sw-noimpact" class="sw-section"><summary>No-impact CCGs <button class="sw-save" type="button" data-save="sw-noimpact">Save image</button></summary><div class="sw-inner" id="sw-noimpact-rows"></div></details>

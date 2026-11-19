@@ -15,3 +15,25 @@ The job fetches and rebases and retries the push once. A second rejection or an 
 After checking the season and checkpoint, restore the artifact's unchanged point through a reviewable patch to `reports/postseason/selection-watch-timeline-YYYY.json`, **only if that checkpoint is still absent**. Never overwrite the first published point or record later odds as if they were captured in the missed window. Without a verified original artifact, leave the checkpoint unrecorded.
 
 Discord image drafts are available only in Dev view. Generating an image never posts to Discord.
+
+### Steal Board v2
+
+The Selection Watch publisher stores the `play_ins` game IDs in its season JSON. It classifies
+them from every CCG outcome with all games open, including paths where an at-large tie awards a
+fractional spot. A subsequent publication with the same season and pairings retains the stored
+IDs. Live scores and What-if change the displayed result, not the tag. A play-in uses one spot at
+the starting cut but never counts as a steal.
+
+A non-play-in CCG win outside the natural field is a steal. A natural-field team that would be
+displaced by the other steals can save its spot by winning its own CCG. The board skips that
+team's held row when pairing the thieves with the teams they displace. The order switch reverses
+both columns together and leaves those pairings intact.
+
+After changing archive inputs or the page shell, run these commands from the repository root:
+
+```sh
+python3 scripts/selection_watch_history.py
+python3 scripts/selection_watch_page.py
+python3 scripts/menu_build.py
+git diff --exit-code -- reports/assets/menu.js
+```
