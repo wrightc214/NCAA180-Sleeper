@@ -405,6 +405,9 @@ def main():
             for r in m[kind]:
                 r["_type"] = kind
     summ_lg, summ_wk = summary(trades)
+    teams_by_conference = collections.defaultdict(set)
+    for (conference, _), name in names.items():
+        teams_by_conference[conference].add(name)
     filters = (f'<div class="tx-controls"><label>{esc(lcfg.term(cap=True))}<select id="tx-conference">'
                f'<option value="">All {esc(units)}</option>' +
                ''.join(f'<option value="{esc(k)}">{esc(short.get(k, k))}</option>' for k in lg) +
@@ -450,11 +453,22 @@ trades excluded. Ownership and availability are from the current roster snapshot
   'use strict';
   const m = __MOVEMENT__;
   const labels = __LABELS__;
+  const teamsByConference = __TEAMS_BY_CONFERENCE__;
   const [unit, units] = __UNIT_WORDS__;
   const cards = [...document.querySelectorAll('#tx-trades .tx-card')];
   const conference = document.getElementById('tx-conference');
   const week = document.getElementById('tx-week');
   const team = document.getElementById('tx-team');
+  const allTeamOptions = [...team.options];
+  function updateTeams(){
+    const previous = team.value;
+    const members = new Set(teamsByConference[conference.value] || []);
+    const options = conference.value
+      ? allTeamOptions.filter(option => !option.value || members.has(option.value))
+      : allTeamOptions;
+    team.replaceChildren(...options);
+    team.value = options.some(option => option.value === previous) ? previous : '';
+  }
   function filter(){
     let count = 0;
     for(const c of cards){
@@ -465,7 +479,10 @@ trades excluded. Ownership and availability are from the current roster snapshot
     }
     document.getElementById('tx-no-trades').hidden = !!count;
   }
-  [conference,week,team].forEach(el => el.addEventListener('change',filter));
+  conference.addEventListener('change', () => { updateTeams(); filter(); });
+  [week,team].forEach(el => el.addEventListener('change',filter));
+  updateTeams();
+  filter();
   const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function renderMove(){
     const d = m[document.getElementById('tx-move-week').value] || {adds:[],drops:[]};
@@ -511,6 +528,8 @@ trades excluded. Ownership and availability are from the current roster snapshot
 </script>"""
     js = js.replace("__MOVEMENT__", json.dumps(mv, ensure_ascii=False).replace("</", "<\\/"))
     js = js.replace("__LABELS__", json.dumps(short, ensure_ascii=False).replace("</", "<\\/"))
+    members = {conference: sorted(teams) for conference, teams in sorted(teams_by_conference.items())}
+    js = js.replace("__TEAMS_BY_CONFERENCE__", json.dumps(members, ensure_ascii=False).replace("</", "<\\/"))
     js = js.replace("__UNIT_WORDS__", json.dumps([unit, units]).replace("</", "<\\/"))
     css = CSS + position_badge_css(lcfg.cfg().get("position_colors"))
     html_out = page_head(f"{page_label} — {lcfg.brand()}", css) + body + js + SECTIONS_JS + "</body></html>"

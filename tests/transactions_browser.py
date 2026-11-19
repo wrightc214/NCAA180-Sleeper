@@ -3,6 +3,7 @@
 Called explicitly by PR CI after generating reports/transactions.html.
 No network calls or production deployment.
 """
+from csv import DictReader
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -14,6 +15,8 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def main():
+    with (ROOT / "data" / "Teams.csv").open(encoding="utf-8-sig", newline="") as file:
+        pac_teams = sorted({r["Team"].strip() for r in DictReader(file) if r["League"].strip() == "NCAA PAC 12"})
     handler = partial(SimpleHTTPRequestHandler, directory=str(ROOT))
     server = ThreadingHTTPServer(("127.0.0.1", 0), handler)
     thread = Thread(target=server.serve_forever, daemon=True)
@@ -120,6 +123,25 @@ def main():
                 assert 0 < page.locator(".tx-card:visible").count() <= count
                 page.locator("#tx-team").select_option("")
                 assert page.locator(".tx-card:visible").count() == count
+                conference_filter = page.locator("#tx-conference")
+                team_filter = page.locator("#tx-team")
+                all_teams = team_filter.locator("option").evaluate_all("(os) => os.map(o => o.value)")
+                team_filter.select_option("Oregon")
+                conference_filter.select_option("NCAA PAC 12")
+                assert team_filter.locator("option").evaluate_all("(os) => os.map(o => o.value)") == ["", *pac_teams]
+                assert team_filter.input_value() == "Oregon"  # Still a valid selection.
+                filtered = page.locator(".tx-card:visible")
+                assert filtered.count() > 0
+                assert all("Oregon" in names.split("|") for names in
+                           filtered.evaluate_all("(cards) => cards.map(c => c.dataset.teams)"))
+                conference_filter.select_option("NCAA BIG 10")
+                assert team_filter.input_value() == ""  # Oregon is no longer valid.
+                assert team_filter.locator("option[value=Oregon]").count() == 0
+                assert filtered.count() > 0
+                assert set(filtered.evaluate_all("(cards) => cards.map(c => c.dataset.conference)")) == {"NCAA BIG 10"}
+                conference_filter.select_option("")
+                assert team_filter.locator("option").evaluate_all("(os) => os.map(o => o.value)") == all_teams
+                assert filtered.count() == count
                 # Fold and restore without losing page state.
                 sec = page.locator("section.fold").first
                 sec.locator("h2").click()
