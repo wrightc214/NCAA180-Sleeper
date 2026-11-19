@@ -1,0 +1,32 @@
+{
+  "thu-fri": {
+    "odds": {
+      "UNLV": 67,
+      "Columbia": 88
+    }
+  },
+  "sun-early": {
+    "odds": {
+      "UNLV": 54,
+      "Columbia": 78
+    }
+  },
+  "sun-late": {
+    "odds": {
+      "UNLV": 38,
+      "Columbia": 72
+    }
+  },
+  "snf": {
+    "odds": {
+      "UNLV": 22,
+      "Columbia": 91
+    }
+  },
+  "final": {
+    "odds": {
+      "UNLV": 0,
+      "Columbia": 100
+    }
+  }
+}

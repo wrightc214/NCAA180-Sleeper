@@ -1,10 +1,18 @@
 name: Live Scoreboard Refresh
+# Each season, update the dated holiday cron overrides and the Eastern checkpoint windows
+# in config/selection_watch.json together. See docs/selection-watch-operations.md.
 
 on:
   # 🏈 Schedule (UTC times)
   schedule:
     # Thursday nights (8 PM–Midnight ET → Fri 00–04 UTC), every 15 minutes
     - cron: "*/15 0-3 * * FRI"
+
+    # 2026 Thanksgiving and Black Friday daytime; update dates each CCG week (UTC).
+    - cron: "*/15 17-23 26,27 11 *"
+    - cron: "*/15 0-7 28 11 *"
+    - cron: "*/15 4-7 30 11 *"
+    - cron: "*/15 4-7 1 12 *"
 
     # Sunday (1 PM–Midnight ET → Sun 17–23 UTC, Mon 00–04 UTC)
     - cron: "*/30 17-23 * * SUN"
@@ -27,7 +35,7 @@ env:
 
 concurrency:
   group: live-scoreboard-refresh
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   refresh:
@@ -151,26 +159,43 @@ jobs:
         run: python scripts/update_lastmodified.py
 
       # --------------------------------------------------------
-      # 💾 Step 7: Commit updated CSV + timestamp
+      # Capture even when the window's last game is no longer active.
       # --------------------------------------------------------
+      - name: Capture verified Selection Watch checkpoint
+        if: env.IN_SEASON == 'true'
+        continue-on-error: true
+        env:
+          SELECTION_WATCH_RECOVERY_DIR: ${{ runner.temp }}/selection-watch-recovery
+        run: node scripts/selection_watch_timeline.js
+
       - name: Commit updated data
-        if: env.GAMES_ACTIVE == 'true'
+        if: env.IN_SEASON == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          if git diff --quiet --exit-code data/Scores_Season.csv data/Scores_Week.csv data/LastUpdate.csv; then
+          git add data/Scores_Season.csv data/Scores_Week.csv data/LastUpdate.csv
+          git add 'reports/postseason/selection-watch-timeline-[0-9][0-9][0-9][0-9].json' 2>/dev/null || true
+          if git diff --cached --quiet --exit-code; then
             echo "No data changes detected."
             echo "DATA_CHANGED=false" >> $GITHUB_ENV
           else
             echo "📈 New data detected — committing update."
-            git add data/Scores_Season.csv data/Scores_Week.csv data/LastUpdate.csv || true
-            git commit -m "Auto update live scores (Week $WEEK_NUM)" || echo "No changes to commit"
-            git push || echo "Nothing to push"
+            git commit -m "Auto update live scores (Week $WEEK_NUM)"
+            node scripts/publish_live_refresh.js
             echo "DATA_CHANGED=true" >> $GITHUB_ENV
           fi
 
       # --------------------------------------------------------
+      # Keep the original checkpoint if publication failed after capture.
+      - name: Retain unpublished Selection Watch checkpoint
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: selection-watch-checkpoint-recovery
+          path: ${{ runner.temp }}/selection-watch-recovery/*.json
+          if-no-files-found: ignore
+
       # 📋 Step 8: Run summary
       # --------------------------------------------------------
       - name: Run summary

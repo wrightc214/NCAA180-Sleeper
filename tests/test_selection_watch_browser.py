@@ -70,7 +70,13 @@ class SelectionWatchBrowser(unittest.TestCase):
                             page.click("#sw-collapse")
                             self.assertEqual(page.evaluate("[...document.querySelectorAll('#sw-content details.sw-section')].filter(d => d.open).length"), 0)
                             page.click("#sw-collapse")
-                            self.assertEqual(page.evaluate("[...document.querySelectorAll('#sw-content details.sw-section')].filter(d => d.open).length"), 5)
+                            self.assertEqual(page.evaluate("[...document.querySelectorAll('#sw-content details.sw-section')].filter(d => !d.hidden && d.open).length"), 5 if preview == "2025" else 6)
+                            if preview == "provisional":
+                                pick = page.locator("#sw-picks select").first
+                                pick.select_option(index=1)
+                                self.assertIn("WHAT-IF", page.locator("#sw-whatif-banner").inner_text())
+                                page.locator("#sw-reset-picks").click()
+                                self.assertFalse(page.locator("#sw-whatif-banner").is_visible())
                             if preview == "2025" and width == 390:
                                 self.assertTrue(page.locator("#sw-board button.sw-save").is_visible())
                             page.close()
@@ -119,6 +125,12 @@ class SelectionWatchBrowser(unittest.TestCase):
                     summary.click(position={"x": 12, "y": 12})
                     self.assertIsNotNone(section.get_attribute("open"))
                 self.assertFalse(page.evaluate("document.documentElement.scrollWidth > innerWidth"))
+                self.assertIn("No checkpoints recorded", page.locator("#sw-final-field").inner_text())
+                page.goto(f"http://127.0.0.1:{server.server_port}/reports/selection-watch.html?season=2025&timeline=sample")
+                page.locator("#sw-final").wait_for(state="visible")
+                self.assertIn("SAMPLE TIMELINE", page.locator("#sw-final-field").inner_text())
+                self.assertIn("UNLV", page.locator(".sw-timeline").inner_text())
+                self.assertFalse(page.locator("#sw-discord-draft").is_visible())
                 self.assertFalse(any("api.sleeper.app" in url or "site.api.espn.com" in url for url in requests))
                 page.close()
                 browser.close()
@@ -214,6 +226,14 @@ class SelectionWatchBrowser(unittest.TestCase):
                 self.assertIn("UNOFFICIAL", page.locator("#sw-status").inner_text().upper())
                 self.assertNotIn("PROVISIONAL", page.locator("#sw-status").inner_text().upper())
                 self.assertTrue(page.locator("#sw-board button.sw-save").is_enabled())
+                draft = page.locator("#sw-discord-draft")
+                self.assertFalse(draft.is_visible())
+                for enabled in (True, False):
+                    page.evaluate("""enabled => {
+                        window.NCAA180.menu.setDev(enabled);
+                        window.dispatchEvent(new StorageEvent('storage', {key: 'ncaa180.dev'}));
+                    }""", enabled)
+                    self.assertEqual(draft.is_visible(), enabled)
                 verified = page.locator("#sw-board-rows").inner_html()
                 verified_timestamp = page.locator("body").get_attribute("data-snap-time")
 
