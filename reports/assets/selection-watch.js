@@ -85,6 +85,12 @@
   }
   const picks=new Map();
   let discordDraft=null;
+  const devView=()=>window.NCAA180?.menu?.dev?.()===true;
+  function syncDraftButton() {
+    const button=$('sw-discord-draft');
+    button.hidden=Boolean(preview)||!devView();
+    button.disabled=button.hidden||!discordDraft;
+  }
   const pickText=()=>[...picks.values()].map(k=>team(k).name+' wins');
   function paintPicks() {
     const controls=$('sw-whatif'), options=[];
@@ -160,8 +166,6 @@
     content('sw-board-rows',html);
     const bubble=[...new Set([...b.atRisk,...toss])].filter(k=>!locked.has(k));
     discordDraft=null;
-    const draftButton=$('sw-discord-draft');
-    draftButton.hidden=Boolean(preview);
     if(!preview&&!picks.size){
       const complete=d.ccg.every(g=>settled[g.id])&&!toss.size;
       const title=complete?'Projected field locked — pending committee approval':featureName;
@@ -171,7 +175,7 @@
         (bubble.length?'<ul>'+bubble.slice(0,6).map(k=>'<li>'+E(team(k).name)+' · '+percent(odds[k]||0)+'</li>').join('')+'</ul>':'')+
         '<p>DRAFT · Held for owner approval</p></section>'};
     }
-    draftButton.disabled=!discordDraft;
+    syncDraftButton();
     const bubbleReason=k=>{
       if(toss.has(k))return 'COIN TOSS · Tied at the projected cut.';
       const index=b.atRisk.indexOf(k)+1;
@@ -258,10 +262,10 @@
         copy.open=true;copy.querySelectorAll('.sw-save').forEach(b=>b.remove());
         try {await NCAASnap.save({html:copy.outerHTML,title:brand+' '+featureName,name:exportPrefix+'-'+(finalYear?finalYear+'-':'')+btn.dataset.save,
           stamp:finalYear?null:{state:'projection',time:preview==='historical'?null:updated,
-            note:(preview==='historical'?d.year+' CCG finals · Historical replay · ':
-              preview==='provisional'?'PROVISIONAL · ':'')+'Unofficial'},
+            note:preview==='historical'?d.year+' CCG finals · Historical replay':
+              preview==='provisional'?'PROVISIONAL':''},
           whatif:finalYear?[]:pickText(),
-          footer:brand+' '+featureName+(finalYear?' · '+finalYear+' final results':' · Unofficial'),width:650});}
+          footer:brand+' '+featureName+(finalYear?' · '+finalYear+' final results':''),width:650});}
         catch(err){alert('Could not save image: '+err.message);}
         finally{btn.disabled=false;}
       });
@@ -368,14 +372,17 @@
       paint();
     });
     $('sw-reset-picks').addEventListener('click',()=>{picks.clear();paint();});
+    window.addEventListener?.('storage',event=>{
+      if(event.key==='ncaa180.dev'||event.key===null)syncDraftButton();
+    });
     $('sw-discord-draft').addEventListener('click',async()=>{
-      if(!discordDraft)return;
+      if(!devView()||!discordDraft)return;
       const button=$('sw-discord-draft');button.disabled=true;
       try {await NCAASnap.save({...discordDraft,name:exportPrefix+'-discord-draft',
         stamp:{state:'projection',time:updated,note:'Draft · held for approval'},
-        footer:brand+' · Unofficial',width:500});}
+        footer:brand,width:500});}
       catch(error){alert('Could not save draft: '+error.message);}
-      finally{button.disabled=!discordDraft;}
+      finally{syncDraftButton();}
     });
     if(!preview)document.addEventListener('visibilitychange',()=>{if(document.hidden)clearTimeout(timer);else refresh();});
     await refresh();

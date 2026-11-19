@@ -1,4 +1,6 @@
 name: Live Scoreboard Refresh
+# Each season, update the dated holiday cron overrides and the Eastern checkpoint windows
+# in config/selection_watch.json together. See docs/selection-watch-operations.md.
 
 on:
   # 🏈 Schedule (UTC times)
@@ -33,7 +35,7 @@ env:
 
 concurrency:
   group: live-scoreboard-refresh
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   refresh:
@@ -162,6 +164,8 @@ jobs:
       - name: Capture verified Selection Watch checkpoint
         if: env.IN_SEASON == 'true'
         continue-on-error: true
+        env:
+          SELECTION_WATCH_RECOVERY_DIR: ${{ runner.temp }}/selection-watch-recovery
         run: node scripts/selection_watch_timeline.js
 
       - name: Commit updated data
@@ -171,18 +175,27 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           git add data/Scores_Season.csv data/Scores_Week.csv data/LastUpdate.csv
-          git add 'reports/postseason/selection-watch-timeline-*.json' 2>/dev/null || true
+          git add 'reports/postseason/selection-watch-timeline-[0-9][0-9][0-9][0-9].json' 2>/dev/null || true
           if git diff --cached --quiet --exit-code; then
             echo "No data changes detected."
             echo "DATA_CHANGED=false" >> $GITHUB_ENV
           else
             echo "📈 New data detected — committing update."
-            git commit -m "Auto update live scores (Week $WEEK_NUM)" || echo "No changes to commit"
-            git push || echo "Nothing to push"
+            git commit -m "Auto update live scores (Week $WEEK_NUM)"
+            node scripts/publish_live_refresh.js
             echo "DATA_CHANGED=true" >> $GITHUB_ENV
           fi
 
       # --------------------------------------------------------
+      # Keep the original checkpoint if publication failed after capture.
+      - name: Retain unpublished Selection Watch checkpoint
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: selection-watch-checkpoint-recovery
+          path: ${{ runner.temp }}/selection-watch-recovery/*.json
+          if-no-files-found: ignore
+
       # 📋 Step 8: Run summary
       # --------------------------------------------------------
       - name: Run summary

@@ -55,7 +55,7 @@ function setup(baseline, settings = {}, {search='', fixtureURL, fixtureData={}, 
   let summary = {live: false, probability: null, pregame: null, final: false, status: 'Upcoming',
     models: [{actual: 0}, {actual: 0}]};
   const ready = vm.runInNewContext(page, {
-    window: {SelectionWatchGames: Games, ScoreboardCore: {statsMap: x => x}, ScoreboardOverview: {summarize: () => summary},
+    window: {NCAA180: {menu: {dev: () => settings.dev === true}}, SelectionWatchGames: Games, ScoreboardCore: {statsMap: x => x}, ScoreboardOverview: {summarize: () => summary},
       SelectionWatchCore: {...Core, odds(d, p) { seen.push(p.ccg); return Core.odds(d, p); }}},
     document, location: {search}, URLSearchParams, AbortController,
     NCAASnap: {async save(options) { exports.push(options); }},
@@ -128,7 +128,7 @@ test('league settings control the live refresh cadence and the page and export b
   assert.equal(h.document.title, 'Playoff Tracker | New League & Co.');
   assert.equal(h.element('sw-brand').textContent, 'New League & Co.');
   await h.save.listeners.click({stopPropagation() {}});
-  assert.equal(h.exports[0].footer, 'New League & Co. Playoff Tracker · Unofficial');
+  assert.equal(h.exports[0].footer, 'New League & Co. Playoff Tracker');
   assert.equal(h.exports[0].name, 'tracker-sw-board');
 });
 
@@ -173,7 +173,8 @@ test('provisional disclosures survive relabeling and the live and historical rou
   assert.doesNotMatch(h.element('sw-board-rows').innerHTML, /View game|scoreboard\.html/);
   assert.doesNotMatch(h.element('sw-noimpact-rows').innerHTML, /View game|scoreboard\.html/);
   await h.save.listeners.click({stopPropagation() {}});
-  assert.equal(h.exports[0].stamp.note, 'PROVISIONAL · Unofficial');
+  assert.equal(h.exports[0].stamp.note, 'PROVISIONAL');
+  assert.doesNotMatch(h.exports[0].footer, /Unofficial/i);
 
   for (const [search, fixtureURL, pattern] of [
     ['', 'postseason/selection-watch.json', /Provisional data.*live page/],
@@ -210,9 +211,16 @@ test('the unpublished live board has a friendly configurable message', async () 
 
 
 test('what-if uses a reversible probability and stamps it into saves', async () => {
-  const h=setup({odds:[]});
+  const settings={dev:false};
+  const h=setup({odds:[]},settings);
   h.setBaseline({odds:[h.odds(60)]});
   await h.ready;
+  assert.equal(h.element('sw-discord-draft').hidden,true);
+  await h.element('sw-discord-draft').listeners.click();
+  assert.equal(h.exports.length,0);
+  settings.dev=true;
+  await h.refresh();
+  assert.equal(h.element('sw-discord-draft').hidden,false);
   h.element('sw-picks').listeners.change({target:{dataset:{game:'ccg'},value:'conf|4'}});
   assert.equal(h.seen.at(-1),0);
   assert.match(h.element('sw-whatif-banner').textContent,/WHAT-IF.*Team 4 wins/);
@@ -224,4 +232,8 @@ test('what-if uses a reversible probability and stamps it into saves', async () 
   assert.equal(h.element('sw-whatif-banner').hidden,true);
   await h.element('sw-discord-draft').listeners.click();
   assert.match(h.exports.at(-1).html,/Held for owner approval/);
+  settings.dev=false;
+  const count=h.exports.length;
+  await h.element('sw-discord-draft').listeners.click();
+  assert.equal(h.exports.length,count);
 });

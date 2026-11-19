@@ -226,6 +226,14 @@ class SelectionWatchBrowser(unittest.TestCase):
                 self.assertIn("UNOFFICIAL", page.locator("#sw-status").inner_text().upper())
                 self.assertNotIn("PROVISIONAL", page.locator("#sw-status").inner_text().upper())
                 self.assertTrue(page.locator("#sw-board button.sw-save").is_enabled())
+                draft = page.locator("#sw-discord-draft")
+                self.assertFalse(draft.is_visible())
+                for enabled in (True, False):
+                    page.evaluate("""enabled => {
+                        window.NCAA180.menu.setDev(enabled);
+                        window.dispatchEvent(new StorageEvent('storage', {key: 'ncaa180.dev'}));
+                    }""", enabled)
+                    self.assertEqual(draft.is_visible(), enabled)
                 verified = page.locator("#sw-board-rows").inner_html()
                 verified_timestamp = page.locator("body").get_attribute("data-snap-time")
 
