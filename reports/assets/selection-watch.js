@@ -175,7 +175,10 @@
       '<span><b>'+confirmed+'</b> steals confirmed</span>'+
       '<span><b>'+pendingLeads+'</b> additional currently leading</span>'+
       '<span><b>'+potential+'</b> additional possible</span>';
-    content('sw-board-rows',cutHTML(board,k=>team(k).name,false,odds,tile,t=>gameLinks(games[t.game])));
+    content('sw-board-rows',cutHTML(board,k=>team(k).name,false,odds,tile,t=>{
+      const source=picks.has(t.game)?'What-if pick':liveScores[t.game]?.source;
+      return (source?' · '+E(source):'')+gameLinks(games[t.game]);
+    }));
     const bubble=[...new Set([...board.atLarge.map(t=>t.k),...toss])];
     discordDraft=null;
     if(!preview&&!picks.size){
@@ -224,13 +227,13 @@
       if(preview==='historical'){
         for(const g of d.ccg){
           nextScores[g.id]={scoreA:g.pa,scoreB:g.pb,final:!!g.winner,status:'Final',
-            leader:g.winner || (g.pa>g.pb?g.a:g.b),pA:g.winner?(g.winner===g.a?1:0):.5};
+            source:'Final result',leader:g.winner || (g.pa>g.pb?g.a:g.b),pA:g.winner?(g.winner===g.a?1:0):.5};
         }
       } else if(preview==='provisional') {
         // The CCG baseline does not exist until the real weekly run. Explicitly labeled
         // provisional 50/50 placeholders allow the entire page to render beforehand.
         for(const g of d.ccg){
-          nextScores[g.id]={pA:.5,final:false,leader:null,status:'PROVISIONAL · 50/50 placeholder'};
+          nextScores[g.id]={pA:.5,final:false,leader:null,source:'Provisional 50/50',status:'PROVISIONAL · 50/50 placeholder'};
         }
       } else {
         const verified=await window.SelectionWatchGames.load(d,cfg,index,metadata,{get,C,S,modelCache});

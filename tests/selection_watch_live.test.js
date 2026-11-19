@@ -109,13 +109,16 @@ test('live odds, modern frozen odds and reversed legacy fallback retain their pr
   h.setBaseline({games: [{sides}], odds: [reverse]});
   await h.ready;
   assert.equal(h.seen.at(-1), .3);
+  assert.match(h.element('sw-board-rows').innerHTML,/Pregame odds/);
   h.setSummary({live: true, probability: 0});
   await h.refresh();
   assert.equal(h.seen.at(-1), 0);
+  assert.match(h.element('sw-board-rows').innerHTML,/Live odds/);
   h.setSummary({probability: null});
   sides[1].WinPct = null;
   await h.refresh();
   assert.equal(h.seen.at(-1), .25);
+  assert.match(h.element('sw-board-rows').innerHTML,/Pregame fallback · live odds unavailable/);
 });
 
 test('league settings control the live refresh cadence and the page and export brand', async () => {
