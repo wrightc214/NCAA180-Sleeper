@@ -36,6 +36,16 @@ def transaction_settings(name, defaults, overrides=None):
     return merge(merge(defaults, _transactions_cfg(TRANSACTIONS_CONFIG).get(name)), overrides)
 
 
+def selection_watch():
+    """Return Selection Watch presentation and preview settings."""
+    path = ROOT / "config" / "selection_watch.json"
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
 def brand():
     return cfg()["brand"]
 
