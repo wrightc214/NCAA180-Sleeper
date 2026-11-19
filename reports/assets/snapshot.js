@@ -49,6 +49,25 @@
     return out;
   }
 
+  // html2canvas walks the DOM, including the contents of a native disclosure
+  // that the browser did not lay out. Snapshot only the disclosure as seen.
+  function prepareDetails(w, root) {
+    for (const details of root.querySelectorAll('details')) {
+      const summary = details.querySelector(':scope > summary');
+      if (!details.open) {
+        for (const child of [...details.childNodes]) if (child !== summary) child.remove();
+      }
+      if (summary && w.getComputedStyle(summary).display === 'list-item') {
+        // Drawing a native summary as a list item can produce numbered markers.
+        const marker = w.document.createElement('span');
+        marker.setAttribute('aria-hidden', 'true');
+        marker.textContent = details.open ? '▾ ' : '▸ ';
+        summary.style.display = 'block';
+        summary.prepend(marker);
+      }
+    }
+  }
+
   async function render(html, footer, top = '', width = 400) {
     const css = [...document.querySelectorAll('style,link[rel="stylesheet"]')].map(n => n.outerHTML).join('');
     const de = document.documentElement;
@@ -74,6 +93,7 @@
       await w.document.fonts.ready;
       await Promise.all([...w.document.images].map(im => im.complete ? 0 : new Promise(r => { im.onload = im.onerror = r; })));
       const el = w.document.getElementById('snap');
+      prepareDetails(w, el);
       plainColors(w, el);
       const canvas = await w.html2canvas(el, {scale: 2, windowWidth: width, useCORS: true, logging: false,
         backgroundColor: w.getComputedStyle(w.document.body).backgroundColor});
@@ -83,6 +103,7 @@
 
   async function save({html, name, footer, title, stamp, whatif, width}) {
     const blob = await render(html, footer ?? `${location.host}${location.pathname.replace(/[^/]*$/, '')}`, labels(stamp, whatif), width || 400);
+    if (!blob || !blob.size) throw new Error('Image is too large; narrow the view or save a smaller section');
     const file = new File([blob], `${name || 'ncaa180'}.png`.replace(/[^\w .-]+/g, '').replace(/\s+/g, '-'), {type: 'image/png'});
     if (navigator.canShare && navigator.canShare({files: [file]})) {
       try { await navigator.share({files: [file], title: title || name}); } catch (e) { if (e?.name !== 'AbortError') throw e; }
