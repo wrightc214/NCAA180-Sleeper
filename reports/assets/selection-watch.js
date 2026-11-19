@@ -4,7 +4,9 @@
   const $ = id => document.getElementById(id);
   const E = x => String(x ?? '').replace(/[&<>"']/g,c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const C = window.ScoreboardCore, S = window.ScoreboardOverview, W = window.SelectionWatchCore;
-  const previewQuery = new URLSearchParams(location.search).get('preview');
+  const route = new URLSearchParams(location.search);
+  const previewQuery = route.get('preview');
+  const archiveYear = route.get('season');
   const stringSetting = (value, fallback='') =>
     typeof value==='string' && value.trim() ? value.trim() : fallback;
   let preview=null;
@@ -231,7 +233,7 @@
       liveScores=nextScores;
       const firstVerified=!lastGood;
       updated=new Date();lastGood={...liveScores};alert('');paint();
-      if(firstVerified)document.querySelectorAll('button.sw-save').forEach(btn=>{btn.disabled=false;});
+      if(firstVerified)document.querySelectorAll('#sw-content button.sw-save').forEach(btn=>{btn.disabled=false;});
     }catch(err){
       if(lastGood){liveScores=lastGood;paint();alert('Live refresh failed. Showing last verified data: '+err.message);}
       else {alert('Live data unavailable: '+err.message+' · no verified current probabilities.');$('sw-updated').textContent='Live data unavailable · Unofficial';}
@@ -240,28 +242,61 @@
       if(!document.hidden && !preview && refreshMs)timer=setTimeout(refresh,refreshMs);
     }
   }
-  function fold(){
-    const details=[...document.querySelectorAll('details.sw-section')];
-    const all=()=>{const opened=details.some(d=>d.open);details.forEach(d=>d.open=!opened);$('sw-collapse').textContent=opened?'Expand all':'Collapse all';};
-    $('sw-collapse').addEventListener('click',all);
-    details.forEach(d=>d.addEventListener('toggle',()=>{$('sw-collapse').textContent=details.some(x=>x.open)?'Collapse all':'Expand all';}));
-    document.querySelectorAll('button.sw-save').forEach(btn=>{
-      btn.disabled=true;
+  function fold(finalYear=null){
+    const region=finalYear?'#sw-final':'#sw-content';
+    const details=[...document.querySelectorAll(region+' details.sw-section')];
+    const collapse=$(finalYear?'sw-final-collapse':'sw-collapse');
+    const label=()=>{collapse.textContent=details.some(d=>d.open)?'Collapse all':'Expand all';};
+    collapse.addEventListener('click',()=>{
+      const open=!details.some(d=>d.open); details.forEach(d=>{d.open=open;}); label();
+    });
+    details.forEach(d=>d.addEventListener('toggle',label));
+    label();
+    document.querySelectorAll(region+' button.sw-save').forEach(btn=>{
+      btn.disabled=!finalYear;
       btn.addEventListener('click',async e=>{
         e.stopPropagation();
-        if(!lastGood)return;
+        if(!lastGood&&!finalYear)return;
         btn.disabled=true;
         const el=$(btn.dataset.save),copy=el.cloneNode(true);
         copy.open=true;copy.querySelectorAll('.sw-save').forEach(b=>b.remove());
-        try {await NCAASnap.save({html:copy.outerHTML,title:brand+' '+featureName,name:exportPrefix+'-'+btn.dataset.save,
-          stamp:{state:'projection',time:preview==='historical'?null:updated,
+        try {await NCAASnap.save({html:copy.outerHTML,title:brand+' '+featureName,name:exportPrefix+'-'+(finalYear?finalYear+'-':'')+btn.dataset.save,
+          stamp:finalYear?null:{state:'projection',time:preview==='historical'?null:updated,
             note:(preview==='historical'?d.year+' CCG finals · Historical replay · ':
               preview==='provisional'?'PROVISIONAL · ':'')+'Unofficial'},
-          footer:brand+' '+featureName+' · Unofficial',width:650});}
+          footer:brand+' '+featureName+(finalYear?' · '+finalYear+' final results':' · Unofficial'),width:650});}
         catch(err){alert('Could not save image: '+err.message);}
         finally{btn.disabled=false;}
       });
     });
+  }
+  function showFinals(year, archive) {
+    const season=archive[year];
+    if(!season?.ccg?.length || !season.field?.length)throw Error('No final results available for '+year);
+    content('sw-final-status','<b class="sw-flag">FINAL RESULTS</b><strong>'+E(year)+' season</strong>'+
+      '<span>'+season.ccg.length+' conference championships</span><span>'+season.field.length+' playoff teams</span>'+
+      '<span>National champion: '+E(season.champion)+'</span>');
+    const side=(name,score,winner,standard)=>{
+      const rescored=Number.isFinite(standard);
+      const result=E(name)+' · '+dollar(score)+(rescored?'<sup>†</sup>':'');
+      return (winner?'<strong>'+result+' (winner)</strong>':result)+
+        (rescored?'<small class="sw-score-note">Standard scoring: '+dollar(standard)+'</small>':'');
+    };
+    const hasStandard=season.ccg.some(g=>Number.isFinite(g.standard_a)||Number.isFinite(g.standard_b));
+    content('sw-final-ccg','<table class="sw-odds"><thead><tr><th scope="col">'+
+      '<span class="sw-conf-full">Conference</span><abbr class="sw-conf-short" title="Conference">Conf.</abbr></th>'+
+      '<th scope="col">Team and score</th><th scope="col">Team and score</th></tr></thead><tbody>'+
+      season.ccg.map(g=>'<tr><th scope="row">'+E(g.conference)+'</th><td>'+side(g.a,g.score_a,g.winner===g.a,g.standard_a)+
+        '</td><td>'+side(g.b,g.score_b,g.winner===g.b,g.standard_b)+'</td></tr>').join('')+'</tbody></table>'+
+      (hasStandard?'<p class="sw-muted">† As played. Standard scoring differs. Recorded results stand.</p>':''));
+    const seeded=season.field.every(t=>Number.isInteger(t.seed));
+    content('sw-final-field','<'+(seeded?'ol':'ul')+' class="sw-field">'+
+      season.field.map(t=>'<li'+(seeded?' value="'+t.seed+'"':'')+'>'+E(t.team)+
+        (!seeded&&Number.isInteger(t.seed)?' (#'+t.seed+')':'')+'</li>').join('')+(seeded?'</ol>':'</ul>'));
+    $('sw-intro').textContent='Recorded conference championship scores and the final playoff field.';
+    $('sw-final').hidden=false;
+    $('sw-season').value=year;
+    fold(year);
   }
   try {
     const nav=await get('../config/nav.json');
@@ -283,6 +318,12 @@
     });
     document.title=featureName+' | '+brand;
     exportPrefix=stringSetting(settings?.export_filename_prefix,'ncaa180-selection-watch');
+    $('sw-season-picker').hidden=false;
+    if(archiveYear){
+      if(previewQuery!==null || !/^\d{4}$/.test(archiveYear))throw Error('Choose a season from the archive');
+      showFinals(archiveYear,await get('postseason/selection-watch-history.json'));
+      return;
+    }
     let dataURL='postseason/selection-watch.json';
     if(previewQuery!==null){
       const matches=['historical','provisional'].filter(mode=>{

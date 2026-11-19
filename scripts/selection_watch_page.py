@@ -4,11 +4,13 @@ The page is a prebuilt shell; the data and live scores are retrieved in the brow
 Generated output is reports/selection-watch.html. Never edit it directly.
 """
 from html import escape
+import json
 import os
 import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import league_config as lcfg
 from site_common import menu_html, page_head
+from selection_watch_history import OUTPUT as HISTORY
 
 PAGE = "reports/selection-watch.html"
 CSS = """
@@ -17,6 +19,15 @@ CSS = """
 .sw-page>header>*{min-width:0;overflow-wrap:anywhere}
 .sw-status>*,.sw-actions>*{min-width:0;max-width:100%;overflow-wrap:anywhere}
 .sw-odds th,.sw-odds td{white-space:normal;overflow-wrap:anywhere}
+.sw-season{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.sw-season[hidden]{display:none}
+.sw-season select,.sw-season button{border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:7px 10px}
+.sw-archive-section .sw-odds{table-layout:fixed}.sw-archive-section .sw-odds th:first-child{width:22%}
+.sw-archive-section .sw-odds td:last-child{font:inherit;text-align:left}
+.sw-archive-section .sw-field{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%, 155px),1fr));gap:6px 22px;padding-left:30px}
+.sw-conf-short{display:none}
+.sw-score-note{display:block;font-weight:400}
+@media(max-width:600px){.sw-conf-full{display:none}.sw-conf-short{display:inline;white-space:nowrap}}
 .sw-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
 .sw-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .sw-actions button,.sw-actions select{border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:7px 10px}
@@ -76,11 +87,28 @@ def main():
     html += f"""
 <main class="wrap sw-page">
 <header><h1><span id="sw-brand">{escape(brand)}</span> <em data-sw-label="title">{escape(title)}</em></h1>
-<p class="sw-muted">Exact playoff probabilities during conference championship week · Unofficial</p></header>
+<p id="sw-intro" class="sw-muted">Exact playoff probabilities during conference championship week · Unofficial</p></header>
 """
     html += menu_html("selection-watch")
+    seasons = json.loads(HISTORY.read_text(encoding="utf-8")) if HISTORY.exists() else {}
+    options = "".join(f'<option value="{year}">{year} · Final</option>'
+                      for year in sorted(seasons, key=int, reverse=True))
+    html += f"""
+<form id="sw-season-picker" class="sw-season" method="get" hidden>
+<label for="sw-season">Season</label><select id="sw-season" name="season"><option value="">Current season</option>{options}</select>
+<button type="submit">View season</button>
+</form>
+"""
     html += """
 <div id="sw-error" role="status" class="sw-alert" hidden></div>
+<div id="sw-final" class="sw-final" hidden>
+<div class="sw-actions"><button id="sw-final-collapse" type="button">Collapse all</button></div>
+<div id="sw-final-status" class="sw-status"></div>
+<details id="sw-final-ccg-section" class="sw-section sw-archive-section" open><summary>Conference championship finals <button class="sw-save" type="button" data-save="sw-final-ccg-section">Save image</button></summary>
+<div class="sw-inner" id="sw-final-ccg"></div></details>
+<details id="sw-final-field-section" class="sw-section sw-archive-section" open><summary>Final playoff field <button class="sw-save" type="button" data-save="sw-final-field-section">Save image</button></summary>
+<div class="sw-inner" id="sw-final-field"></div></details>
+</div>
 <div id="sw-content" hidden>
 <div class="sw-top"><div class="sw-actions">
 <label for="sw-sort">Steal Board order</label><select id="sw-sort"><option value="chance">Win chance</option><option value="margin">If it ended now · margin</option></select>

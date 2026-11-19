@@ -49,7 +49,7 @@ function setup(baseline, settings = {}, {search='', fixtureURL, fixtureData={}, 
   if (missingLive) delete payloads['postseason/selection-watch.json'];
   const document = {
     getElementById: element, body: element('body'), hidden: false, addEventListener() {},
-    querySelectorAll(selector) { return selector === 'button.sw-save' ? [save] : selector === '[data-sw-label]' ? labels : []; },
+    querySelectorAll(selector) { return selector === '#sw-content button.sw-save' ? [save] : selector === '[data-sw-label]' ? labels : []; },
   };
   let summary = {live: false, probability: null, pregame: null, final: false, status: 'Upcoming',
     models: [{actual: 0}, {actual: 0}]};
