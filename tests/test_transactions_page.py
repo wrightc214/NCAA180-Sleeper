@@ -374,14 +374,23 @@ def test_task_511_partial_owner_settings_change_only_selected_behavior(monkeypat
     assert movement([row, {**row, "Type": "free_agent"}], [], PLAYERS, {"NCAA SEC"}, 1)["adds"] == []
 
 
-def test_task_511_missing_transactions_nav_settings_remain_preview_only(monkeypatch):
+def test_transactions_uses_declared_nav_settings(monkeypatch):
     import site_common
 
-    monkeypatch.setattr(site_common, "nav_config", lambda: {"tabs": [{"id": "transactions"}]})
-    assert site_common.page_state("transactions") == "hidden-dev"
-    assert site_common.menu_data()["tabs"] == [
-        {"id": "transactions", "label": "Transactions", "href": "transactions.html", "state": "hidden-dev"},
-    ]
+    real = next(t for t in site_common.nav_config()["tabs"] if t["id"] == "transactions")
+    assert any(t["id"] == "transactions" and t["state"] == "hidden-dev"
+               for t in site_common.menu_data()["tabs"])
+    assert 'data-state="hidden-dev"' in site_common.menu_html("transactions")
+
+    for tabs in ([], [{"id": "transactions"}]):
+        monkeypatch.setattr(site_common, "nav_config", lambda: {"tabs": tabs})
+        assert site_common.menu_data()["tabs"] == []
+        assert site_common.page_state("transactions") == "visible"
+
+    tab = {"id": real["id"], "label": "Trade Log", "href": "trade-log.html"}
+    monkeypatch.setattr(site_common, "nav_config", lambda: {"tabs": [tab]})
+    assert site_common.menu_data()["tabs"] == [tab]
+    assert site_common.page_state("transactions") == "visible"
 
 
 def test_ccg_week_uses_shared_labels_in_card_selectors_and_summary(monkeypatch, tmp_path):

@@ -17,7 +17,7 @@ The Transactions page is configured as hidden-dev. It shows completed trades, we
 - `config/transactions.json` → `transactions` controls the grade bands, consolidation method (`asset-concentration`) and dynasty rate (`0.60`), Blockbuster cutoffs, proxy and small-swap settings, draft field size and interpolation anchors, movement types, and visible feature labels. A missing file, section, or key keeps the NCAA 180 defaults. The report generator embeds the resolved values in the static page. To disable consolidation and grade raw totals, set `consolidation.method` to `none`.
 - `config/transactions.json` → `fantasycalc` controls the public API endpoint, scoring format, timeout and minimum acceptable response size. Changing the format affects new snapshots only. Do not mix formats in historical comparisons without checking comparability.
 - Transaction cards, both week selectors, and the summary share the site’s schedule and week-label settings via `league_config.week_label()`. Week filter values stay numeric.
-- `config/nav.json` owns the menu label, link and visibility. Missing state defaults to `hidden-dev`; removing the tab omits it from the menu. Dev visibility is not access control. Shared site colour tokens and CSV team colours remain the sources for styling.
+- `config/nav.json` owns the menu label, link and visibility. The Transactions entry explicitly sets `hidden-dev`. Like any tab, a complete entry without a state defaults to `visible`. Removing the entry omits its link and does not block the direct URL. Dev visibility is not access control. Shared site colour tokens and CSV team colours remain the sources for styling.
 
 ## Team Fit
 

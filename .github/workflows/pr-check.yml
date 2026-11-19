@@ -1,30 +1,9 @@
-name: Transactions PR validation (read-only)
-on:
-  pull_request:
-    paths:
-      - 'scripts/transactions_*.py'
-      - 'scripts/player_values.py'
-      - 'scripts/league_config.py'
-      - 'scripts/site_common.py'
-      - 'tests/test_transactions_page.py'
-      - 'tests/test_transactions_fit.py'
-      - 'scripts/players.py'
-      - 'data/PlayerBirthDates.csv'
-      - 'tests/transactions_browser.py'
-      - 'config/nav.json'
-      - 'config/league.json'
-      - 'config/transactions.json'
-      - 'data/PlayerValues_Season.csv'
-      - 'data/PickValues_Season.csv'
-      - 'reports/transactions.html'
-      - 'reports/assets/menu.js'
-      - 'templates/menu.js'
-      - '.github/workflows/update-leagues.yml'
-      - '.github/workflows/transactions-pr-check.yml'
+name: PR validation (read-only)
+on: pull_request
 permissions:
   contents: read
 jobs:
-  transactions:
+  checks:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -45,13 +24,11 @@ jobs:
           node-version: '22'
       - name: JavaScript tests
         run: |
-          for file in tests/*.test.js; do node "$file"; done
+          for file in tests/*.test.js; do node "$file" || exit; done
       - name: Generate transactions page
         run: |
           python3 scripts/transactions_page.py
-          python3 scripts/menu_build.py
           test -s reports/transactions.html
-          grep -q 'transactions.html' reports/assets/menu.js
       - name: Install Chromium for browser smoke checks
         run: |
           pip install playwright

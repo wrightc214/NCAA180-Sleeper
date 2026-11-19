@@ -49,15 +49,15 @@ def _row_aria(key):
 
 
 def tab_state(tab):
-    return tab.get("state", "hidden-dev" if tab.get("id") == "transactions" else "visible")
+    return tab.get("state", "visible")
 
 
 def page_state(current):
-    """Return the menu state for a page, keeping the Transactions preview hidden by default."""
-    for t in nav_config()["tabs"]:
+    """Return the configured state for a page or alias, or visible when unconfigured."""
+    for t in nav_config().get("tabs", []):
         if t.get("id") == current or current in t.get("aliases", []):
             return tab_state(t)
-    return tab_state({"id": current})
+    return tab_state({})
 
 
 def menu_html(current, rows=()):
@@ -136,10 +136,8 @@ def menu_data(out_dir=None):
     rows, awards = menu_rows(out_dir)
     tabs = []
     for t in cfg.get("tabs", []):
-        if not t.get("id"):
+        if not all(t.get(key) for key in ("id", "label", "href")):
             continue
-        if t["id"] == "transactions":
-            t = {"label": "Transactions", "href": "transactions.html", **t}
         state = tab_state(t)
         if state == "hidden":
             continue
