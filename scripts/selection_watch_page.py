@@ -22,9 +22,12 @@ CSS = """
 .sw-season{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
 .sw-season[hidden]{display:none}
 .sw-season select,.sw-season button{border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:7px 10px}
-.sw-final .sw-odds{table-layout:fixed}.sw-final .sw-odds th:first-child{width:22%}
-.sw-final .sw-odds td:last-child{font:inherit;text-align:left}
-.sw-final .sw-field{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%, 155px),1fr));gap:6px 22px;padding-left:30px}
+.sw-archive-section .sw-odds{table-layout:fixed}.sw-archive-section .sw-odds th:first-child{width:22%}
+.sw-archive-section .sw-odds td:last-child{font:inherit;text-align:left}
+.sw-archive-section .sw-field{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%, 155px),1fr));gap:6px 22px;padding-left:30px}
+.sw-conf-short{display:none}
+.sw-score-note{display:block;font-weight:400}
+@media(max-width:600px){.sw-conf-full{display:none}.sw-conf-short{display:inline;white-space:nowrap}}
 .sw-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
 .sw-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .sw-actions button,.sw-actions select{border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:7px 10px}
@@ -100,8 +103,10 @@ def main():
 <div id="sw-error" role="status" class="sw-alert" hidden></div>
 <div id="sw-final" class="sw-final" hidden>
 <div id="sw-final-status" class="sw-status"></div>
-<section class="sw-section"><h2>Conference championship finals</h2><div id="sw-final-ccg"></div></section>
-<section class="sw-section"><h2>Final playoff field</h2><div id="sw-final-field"></div></section>
+<details id="sw-final-ccg-section" class="sw-section sw-archive-section" open><summary>Conference championship finals <button class="sw-save" type="button" data-save="sw-final-ccg-section">Save image</button></summary>
+<div class="sw-inner" id="sw-final-ccg"></div></details>
+<details id="sw-final-field-section" class="sw-section sw-archive-section" open><summary>Final playoff field <button class="sw-save" type="button" data-save="sw-final-field-section">Save image</button></summary>
+<div class="sw-inner" id="sw-final-field"></div></details>
 </div>
 <div id="sw-content" hidden>
 <div class="sw-top"><div class="sw-actions">

@@ -27,8 +27,13 @@ def build(source=SOURCE):
             a, b, winner = (r[key].strip() for key in ("TeamA", "TeamB", "Winner"))
             if not a or not b or winner not in (a, b):
                 raise ValueError(f"{year} {r['Bowl']} CCG has no recorded winner")
-            games.append({"conference": r["Bowl"].strip(), "a": a, "b": b, "winner": winner,
-                          "score_a": float(r["ScoreA"]), "score_b": float(r["ScoreB"])})
+            game = {"conference": r["Bowl"].strip(), "a": a, "b": b, "winner": winner,
+                    "score_a": float(r["ScoreA"]), "score_b": float(r["ScoreB"])}
+            for side in ("A", "B"):
+                standard = r["OfficialScore" + side].strip()
+                if standard and float(standard) != game["score_" + side.lower()]:
+                    game["standard_" + side.lower()] = float(standard)
+            games.append(game)
         entrants = {}
         for r in playoff:
             for side in ("A", "B"):
