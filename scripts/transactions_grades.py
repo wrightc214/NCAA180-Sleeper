@@ -52,6 +52,7 @@ DEFAULTS = {
     "grade_bands": [[60, "A"], [55, "B+"], [52, "B"], [48, "Even"], [45, "C"], [40, "D"], [0, "F"]],
     "rebuild_grade_caps": DEFAULT_MARKET_GRADE_CAPS,
     "contender_grade_caps": DEFAULT_MARKET_GRADE_CAPS,
+    "market_grade_color_strength": .5,
     "blockbuster_min_multiple": 1.4,
     "blockbuster_min_headliner_share": .6,
     "proxy_pick_slot": "4.12",

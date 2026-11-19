@@ -12,7 +12,7 @@ from pathlib import Path
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
-from transactions_page import build_teams, day, movement, parse, summary, trade_assets, trade_card
+from transactions_page import build_teams, day, market_color_score, movement, parse, summary, trade_assets, trade_card
 from transactions_grades import (cap_market_grade, compare, evaluate_trade, grade, load_config,
                                  historical, nearest_pick, pick_swap, read_rows)
 
@@ -264,6 +264,16 @@ def test_market_grade_cap_exclusive_boundaries(setting, pct, expected):
     assert cap_market_grade("Even", pct, caps) == "Even"
     assert cap_market_grade(None, pct, caps) is None
     assert cap_market_grade("A", pct, []) == "A"
+
+
+def test_market_color_score_uses_each_team_fit_weight_without_changing_grade_score():
+    strength = load_config()["market_grade_color_strength"]
+    assert market_color_score(0, {"fit_weight": .1}, True, strength) == 47.5
+    assert market_color_score(0, {"fit_weight": .7}, True, strength) == 32.5
+    assert market_color_score(0, {"fit_weight": .1}, False, strength) == 27.5
+    assert market_color_score(100, None, True, strength) == 50
+    assert market_color_score(100, {"fit_weight": .7}, True, 0) == 50
+    assert market_color_score(50, {"fit_weight": 1}, True, strength) == 50
 
 
 @pytest.mark.parametrize("kicker,expected_total,expected_display", [

@@ -97,6 +97,18 @@ def main():
                 contender = boston_miami.locator(".tx-grade").filter(has_text="Contender value")
                 assert contender.locator("strong").all_text_contents() == ["C-", "C+"]
                 assert contender.locator("small").all_text_contents() == ["0 pts", "128 pts"]
+                asu_oregon_fit = oregon.locator(".tx-fit strong")
+                market = oregon.locator(".tx-grade").filter(has_text="Contender value").locator("strong")
+                assert asu_oregon_fit.all_text_contents() == ["B", "B+"]
+                assert float(market.last.get_attribute("data-score")) == 0
+                assert float(market.last.get_attribute("data-color-score")) > 45
+                assert market.last.evaluate(
+                    "el => getComputedStyle(el).color === "
+                    "NCAA180.colors.scale(Number(el.dataset.colorScore) / 100).replaceAll(',', ', ')"
+                )
+                assert asu_oregon_fit.last.evaluate("el => parseFloat(getComputedStyle(el).fontSize)") > (
+                    1.8 * market.last.evaluate("el => parseFloat(getComputedStyle(el).fontSize)")
+                )
                 # Filter to a team on the first trade. Revert filter.
                 first = page.locator(".tx-card").first
                 team = first.get_attribute("data-teams").split("|")[0]

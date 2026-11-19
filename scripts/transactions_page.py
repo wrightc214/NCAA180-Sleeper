@@ -16,7 +16,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import league_config as lcfg
 import team_names as tn
 from site_common import SECTIONS_JS, logo_html, menu_html, nav_config, page_head, team_colors
-from transactions_grades import cap_market_grade, evaluate_trade, load_config, read_rows
+from transactions_grades import cap_market_grade, evaluate_trade, load_config, number, read_rows
 from trade_fit_store import FileArchive, FitLedger
 from transactions_fit import event_key
 
@@ -48,12 +48,15 @@ CSS = """
 .tx-asset{padding:6px 8px;margin:4px 0;border:1px solid var(--line);border-radius:6px;font-weight:600}
 .tx-pick{font-size:.95em}
 .tx-grade{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--line);font-weight:700;font-size:12px}
-.tx-grade strong{font:bold 20px var(--num,sans-serif);color:var(--neutral)}
+.tx-grade strong{font:bold 15px var(--num,sans-serif);color:var(--neutral)}
 .tx-grade .tx-side-value{min-width:0;text-align:center}
 .tx-grade .tx-side-value small{display:block;font-size:11px;color:var(--mute);font-variant-numeric:tabular-nums}
 .tx-grade strong[data-score]{color:var(--neutral)}
 .tx-center{text-align:center;display:flex;flex-direction:column;justify-content:center;gap:6px}
-.tx-grade.tx-fit strong{font-size:25px}
+.tx-grade:not(.tx-fit)>span:nth-child(2){font-weight:600;color:var(--mute)}
+.tx-grade.tx-fit{padding:10px 8px;background:var(--bg);border:1px solid var(--line);border-radius:8px}
+.tx-grade.tx-fit strong{font-size:32px;font-weight:900;line-height:1.1}
+.tx-grade.tx-fit>span:nth-child(2){font-size:14px;font-weight:800;color:var(--ink)}
 .tx-fit details{font-size:10px;font-weight:500;color:var(--mute)}
 .tx-fit summary{cursor:pointer}
 .tx-center h3{font-size:12px;letter-spacing:.07em;text-transform:uppercase;margin:0}
@@ -191,7 +194,17 @@ def render_assets(assets, proxies=None, proxy_slot=None):
                    + "</div>" for a in assets)
 
 
-def render_grade(g, name, caps=None):
+def market_color_score(score, fit, contender, strength):
+    """Visual emphasis only. Unavailable Team Fit leaves market letters neutral."""
+    weight = (fit or {}).get("fit_weight")
+    if weight is None:
+        return 50.
+    win_now = min(1., max(0., number(weight)))
+    relevance = win_now if contender else 1 - win_now
+    return 50 + (score - 50) * relevance * min(1., max(0., number(strength)))
+
+
+def render_grade(g, name, caps=None, *, color_score=None):
     if not g:
         return '<strong title="Historical valuation unavailable">—</strong>'
     score = g["score"][name]
@@ -206,8 +219,9 @@ def render_grade(g, name, caps=None):
     shown = cap_market_grade(letter, trade_percent, caps)
     if shown != letter:
         points += f" · Grade capped from {letter} ({trade_percent:.1f}% of snapshot leader)"
+    color = f' data-color-score="{color_score:.4f}"' if color_score is not None else ""
     return (f'<span class="tx-side-value" title="{esc(points)}">'
-            f'<strong data-score="{score:.4f}">{esc(shown)}</strong>'
+            f'<strong data-score="{score:.4f}"{color}>{esc(shown)}</strong>'
             f'<small>{g["adjusted"][name]:,.0f} pts</small></span>')
 
 
@@ -262,12 +276,19 @@ def trade_card(r, sides, names, colors, result, shorts, config=None, team_fit=No
                 f'<div class="tx-receives">{labels["receives"]}</div>{render_assets(assets, proxies.get(rid), proxy_slot)}</div>{badge}</div>')
     status = result.get("status")
     grade_rows = ""
-    for key, label, caps in ((dyn, labels["rebuild"], settings["rebuild_grade_caps"]),
-                             (con, labels["contender"], settings["contender_grade_caps"])):
-        note = " · No measurable value" if key and key["score"][ids[0]] is None else ""
-        grade_rows += (f'<div class="tx-grade">{render_grade(key, ids[0], caps)}<span>{label} value{note}</span>'
-                       f'{render_grade(key, ids[1], caps)}</div>')
     team_fit = team_fit or {}
+    for contender, key, label, caps in (
+        (False, dyn, labels["rebuild"], settings["rebuild_grade_caps"]),
+        (True, con, labels["contender"], settings["contender_grade_caps"]),
+    ):
+        note = " · No measurable value" if key and key["score"][ids[0]] is None else ""
+        rendered = []
+        for rid in ids:
+            score = key["score"][rid] if key else None
+            color = (market_color_score(score, team_fit.get(rid), contender, settings["market_grade_color_strength"])
+                     if score is not None else None)
+            rendered.append(render_grade(key, rid, caps, color_score=color))
+        grade_rows += f'<div class="tx-grade">{rendered[0]}<span>{label} value{note}</span>{rendered[1]}</div>'
     fit = (f'<div class="tx-grade tx-fit">{render_fit(team_fit.get(ids[0]), fit_pending)}'
            f'<span>{labels["team_fit"]}</span>{render_fit(team_fit.get(ids[1]), fit_pending)}</div>')
     missing_label = ("No values from that week" if not result.get("player_date")
@@ -379,7 +400,7 @@ def main():
 {filters}
 <details class="tx-explainer"><summary>{labels["grade_explainer"]}</summary>
 <p class="tx-note">Grades use FantasyCalc values available at trade time — not a verdict.
-{labels["rebuild"]} includes rookie picks and can discount value spread across assets. For smaller trades, displayed grade ranges narrow based on combined raw value relative to the snapshot leader for that grade. Point totals don’t change. {labels["contender"]} uses raw rest-of-season values and values traded picks at zero. Unlisted kickers and D/ST use a {esc(grading_config["proxy_pick_slot"])} proxy in both grades. Surplus pick comparisons use the upcoming draft at trade time. {labels["blockbuster"]} marks a large raw dynasty deal with a high-value player, both measured against the snapshot’s top player. It does not indicate a winner. {labels["team_fit"]} compares lineup gains and future value versus holding for each team. A hyphen means evidence is missing or an after-trade snapshot is still pending. Projected wins and before/after odds are unavailable.</p>
+{labels["rebuild"]} includes rookie picks and can discount value spread across assets. For smaller trades, displayed grade ranges narrow based on combined raw value relative to the snapshot leader for that grade. Point totals don’t change. {labels["contender"]} uses raw rest-of-season values and values traded picks at zero. Unlisted kickers and D/ST use a {esc(grading_config["proxy_pick_slot"])} proxy in both grades. Surplus pick comparisons use the upcoming draft at trade time. {labels["blockbuster"]} marks a large raw dynasty deal with a high-value player, both measured against the snapshot’s top player. It does not indicate a winner. {labels["team_fit"]} compares lineup gains and future value versus holding for each team. It is the primary grade. The two market grades use quieter colors based on each team’s win-now weight, without changing their letters or points. A hyphen means evidence is missing or an after-trade snapshot is still pending. Projected wins and before/after odds are unavailable.</p>
 </details>
 <div class="tx-cards" id="tx-trades">{''.join(cards)}</div>
 <p class="tx-empty" id="tx-no-trades" hidden>No trades match these filters.</p>
@@ -432,12 +453,12 @@ trades excluded. Ownership and availability are from the current roster snapshot
   }
   document.getElementById('tx-move-week').addEventListener('change',renderMove);
   renderMove();
-  // Shared semantic grade scale; colors follow user-selected tokens without depending on
-  // an unimplemented accessibility settings API. Grades and colors use the SAME score.
+  // Paint with the shared theme tokens. Market color scores are display-only;
+  // Team Fit uses the full scale and all actual scores and letters stay intact.
   function paint(){
     for(const el of document.querySelectorAll('[data-score]')){
       const scale = window.NCAA180 && NCAA180.colors && NCAA180.colors.scale;
-      if(scale) el.style.color = scale(Number(el.dataset.score)/100);
+      if(scale) el.style.color = scale(Number(el.dataset.colorScore ?? el.dataset.score)/100);
       else el.style.color = 'var(--neutral)';
     }
   }
@@ -445,6 +466,8 @@ trades excluded. Ownership and availability are from the current roster snapshot
   const observer = new MutationObserver(paint);
   const token = document.getElementById('n180-tokens');
   if(token) observer.observe(token,{childList:true,characterData:true,subtree:true});
+  observer.observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',paint);
   function myTeam(){
     const fn = window.NCAA180 && NCAA180.myTeam;
     if(typeof fn !== 'function') return;
