@@ -18,7 +18,7 @@ DEFAULTS = {
         "fill_text": "#ffffff",
         "monochrome_fills": {"positive": "#3c3c3c", "negative": "#656565"},
     },
-    "contrast": {"minimum_ratio": 4.5, "distinguishability_ratio": 1.5, "light_background": "#ffffff", "dark_background": "#171b22"},
+    "contrast": {"minimum_ratio": 4.5, "distinguishability_ratio": 1.5, "light_background": "#ffffff", "dark_background": "#16213a"},
     "defaults": {"mode": "standard", "motion": "system", "emphasis": False, "auto_contrast": True},
     "labels": {
         "auto_contrast": "Automatically improve contrast",
