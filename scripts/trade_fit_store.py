@@ -92,8 +92,8 @@ class FileArchive:
         return {}, {}
 
     def pending(self, timestamp):
-        # A pre-trade observation exists but no capture has ended after this trade.
-        return bool(self.bounds and self.bounds[0] < timestamp and self.bounds[-1] <= timestamp)
+        # A spanning observation does not count as after-trade evidence.
+        return next(self.before(timestamp), None) is not None and next(self.after(timestamp), None) is None
 
 
 def trade_key(row, roster):

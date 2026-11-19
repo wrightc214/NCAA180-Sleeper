@@ -127,10 +127,13 @@ def test_file_observations_grade_new_trades_without_later_market_inputs(tmp_path
     publish_snapshot(tmp_path, 1999, 2100, tables(True), {})
     archive = FileArchive(tmp_path)
     assert list(archive.after(2000)) == []
+    assert archive.pending(2000)
     assert TeamFit([row], {}, load_config(), archive).evaluate(row, sides) == {}
 
     publish_snapshot(tmp_path, 2200, 2300, tables(True), {})
-    out = TeamFit([row], {}, load_config(), FileArchive(tmp_path)).evaluate(row, sides)
+    archive = FileArchive(tmp_path)
+    assert not archive.pending(2000)
+    out = TeamFit([row], {}, load_config(), archive).evaluate(row, sides)
     assert set(out) == {"1", "2"}
     assert out["1"]["date"] == "2026-10-05"
     assert out["1"]["dynasty_before"] == 1100
