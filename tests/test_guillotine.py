@@ -192,7 +192,7 @@ class DiscordTests(unittest.TestCase):
 
     def test_round_posts_only_the_cut(self):
         a = PushTests.ann(PushTests())
-        self.assertEqual(self.posted(a), ["**The Guillotine: Week 13 · Postseason Week 1 cut**",
+        self.assertEqual(self.posted(a), ["**The Guillotine: Round 1 cut**",
                                           "🪓 The Guillotine, Round 1: 3 of 6 survive · cut line 98.00"])
 
     def test_folded_round_adds_the_cut_line_to_the_results_post(self):

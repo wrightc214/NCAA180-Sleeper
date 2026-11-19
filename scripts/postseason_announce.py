@@ -167,10 +167,6 @@ def field_announcement(field, year, smap, league_cfg):
             "url": "standings.html", "summary": summary, "items": items}
 
 
-def _wk_label(week, lc):
-    return lcfg.week_label(week)
-
-
 def guillotine_announcements(gdf, year, smap, lc):
     """The Guillotine (Chris, 2026-11-14): one announcement per finished week (who survived the cut,
     who was eliminated) and one for the champion. Per-team lines are "quiet": only phones following
@@ -198,7 +194,7 @@ def guillotine_announcements(gdf, year, smap, lc):
                               "slots": [notify.slot_key(sh, r["RosterID"])], "leagues": [sh]})
             rnd = f"Round {week - int(g['first_week']) + 1}"
             out.append({"id": f"{year}-w{week}-guillotine", "event": "guillotine", "fold_into": f"{year}-w{week}-results",
-                        "title": f"{name}: {_wk_label(week, lc)} cut", "url": "special.html",
+                        "title": f"{name}: {rnd} cut", "url": "special.html",  # rounds, not weeks (Chris, 2026-11-19)
                         "summary": f"{n_adv} of {len(wk)} survive · cut line {line}", "items": items,  # event followers see the summary
                         # league channel: just the cut (Chris, 2026-11-14)
                         "discord_extra": [f"🪓 {name}, {rnd}: {n_adv} of {len(wk)} survive · cut line {line}"]})
