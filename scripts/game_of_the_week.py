@@ -87,7 +87,7 @@ def score_week(year, week, bubble=None, R=None, O=None):
     teams = pd.read_csv("data/Teams.csv", dtype=str, encoding="utf-8-sig")
     lid = dict(zip(m["LeagueName"].str.strip(), m["LeagueID"].astype(str)))
     name = {(lid.get(r["League"].strip(), ""), str(r["Roster ID"])): r["Team"] for _, r in teams.iterrows()}
-    div = {(lid.get(r["League"].strip(), ""), str(r["Roster ID"])): str(r["Division Name"]).strip() for _, r in teams.iterrows()}
+    div = {(lid.get(r["League"].strip(), ""), str(r["Roster ID"])): str(r["Division Name"]).strip().upper() for _, r in teams.iterrows()}  # case-insensitive, like standings.py
     # games behind the division leader (wins minus losses), before this week
     lead = {}
     for k, d in div.items():

@@ -51,12 +51,16 @@ def _row_aria(key):
     return ROW_ARIA.get(key) or ("Weeks" if key.startswith("awards-weeks") else key)
 
 
+def tab_state(tab):
+    return tab.get("state", "visible")
+
+
 def page_state(current):
-    """menu state of the page whose tab key is `current` (visible when not in the menu list)."""
-    for t in nav_config()["tabs"]:
-        if t["id"] == current or current in t.get("aliases", []):
-            return t.get("state", "visible")
-    return "visible"
+    """Return the configured state for a page or alias, or visible when unconfigured."""
+    for t in nav_config().get("tabs", []):
+        if t.get("id") == current or current in t.get("aliases", []):
+            return tab_state(t)
+    return tab_state({})
 
 
 def menu_html(current, rows=()):
@@ -134,10 +138,15 @@ def menu_data(out_dir=None):
     cfg = nav_config()
     rows, awards = menu_rows(out_dir)
     tabs = []
-    for t in cfg["tabs"]:
-        if t.get("state", "visible") == "hidden":
+    for t in cfg.get("tabs", []):
+        if not all(t.get(key) for key in ("id", "label", "href")):
             continue
-        t = {k: v for k, v in t.items() if not (k == "state" and v == "visible")}
+        state = tab_state(t)
+        if state == "hidden":
+            continue
+        t = {k: v for k, v in t.items() if not k.startswith("_") and k != "state"}
+        if state != "visible":
+            t["state"] = state
         if t["href"] == "@awards":
             if not awards:
                 continue

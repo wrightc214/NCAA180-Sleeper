@@ -213,8 +213,10 @@ def build():
     confs = ""
     for lg, g in sorted(teams.groupby("League"), key=lambda x: short.get(x[0].strip(), x[0])):
         name = short.get(lg.strip(), lg.strip())
+        # Group divisions case-insensitively (Teams.csv has "NorthEast" and "Northeast" in the Big East), like standings.py.
+        g = g.assign(_div=g["Division Name"].astype(str).str.strip().str.upper())
         divs = "".join(f'<div class="dv"><p>{e(str(d).title())}</p>{"".join(chip(t, col) for t in sorted(dg["Team"]))}</div>'
-                       for d, dg in g.groupby("Division Name"))
+                       for d, dg in g.groupby("_div"))
         confs += f'<details class="cf"><summary>{e(name)} <small>{len(g)} teams</small></summary><div class="dvs">{divs}</div></details>'
 
     site = ('<ul class="rl">'

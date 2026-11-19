@@ -51,7 +51,7 @@ class MenuBrowser(unittest.TestCase):
                 self.assertEqual([x[0] for x in t][:3], ["Awards", "Roster Map", "Standings"])
                 self.assertEqual(t[-1][0], "bell")
                 self.assertEqual([x[0] for x in t if x[1]], [lit])
-                self.assertNotIn("About", [x[0] for x in t])
+                self.assertEqual([x[0] for x in t][-3:], ["Records", "About", "bell"])  # About public since #106
                 self.assertEqual(self.errors, [])
                 pg.close()
 
@@ -78,7 +78,8 @@ class MenuBrowser(unittest.TestCase):
         self.assertEqual(pg.locator(".n180-devbar").count(), 0)  # About is public: no "not public" bar
         pg.evaluate("""() => { NCAA180.menu.data.tabs.splice(1, 0, {id: 'wip', label: 'WIP', href: 'wip.html', state: 'hidden-dev'});
                               NCAA180.menu.render(true); }""")
-        dev = pg.locator('nav.weeks[aria-label="Pages"] a.n180-dev')
+        # Count the injected tab by name: other real tabs may also be hidden-dev (e.g. Transactions).
+        dev = pg.locator('nav.weeks[aria-label="Pages"] a.n180-dev', has_text="WIP")
         self.assertEqual(dev.count(), 1)
         self.assertIn("DEV", dev.inner_text())
         pg.uncheck("#dev-view")

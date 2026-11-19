@@ -10,10 +10,11 @@ function load(data, ownerOverride) {
   const config = ownerOverride || JSON.parse(
     fs.readFileSync(path.join(__dirname, '..', 'config', 'accessibility.json'), 'utf8'));
   const accessibilitySource = fs.readFileSync(path.join(__dirname, '..', 'templates', 'accessibility.js'), 'utf8')
-    .replace('/*__OWNER_ACCESSIBILITY_COLORS__*/null', JSON.stringify(config));
+    .replace('/*__OWNER_ACCESSIBILITY_COLORS__*/null', () => JSON.stringify(config));
+  // Function replacers throughout: the accessibility source contains "$&", which string replacements expand.
   const src = fs.readFileSync(path.join(__dirname, '..', 'templates', 'menu.js'), 'utf8')
-    .replace('/*__DATA__*/null', JSON.stringify(data))
-    .replace('/*__ACCESSIBILITY__*/', accessibilitySource);
+    .replace('/*__DATA__*/null', () => JSON.stringify(data))
+    .replace('/*__ACCESSIBILITY__*/', () => accessibilitySource);
   const m = new Module('menu-fixture');
   m._compile(src, 'menu-fixture.js');
   return m.exports;
@@ -231,10 +232,14 @@ test('generated menu matches source template exactly except embedded navigation 
     ? Object.fromEntries(Object.entries(x).filter(([k]) => !k.startsWith('_')).map(([k,v]) => [k,stripNotes(v)])) : x;
   const config = stripNotes(JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'config', 'accessibility.json'), 'utf8')));
   const a11y = fs.readFileSync(path.join(__dirname, '..', 'templates', 'accessibility.js'), 'utf8')
-    .replace('/*__OWNER_ACCESSIBILITY_COLORS__*/null', JSON.stringify(config));
-  assert.strictEqual(template.replace('/*__ACCESSIBILITY__*/', a11y)
-    .replace('/*__DATA__*/null', embedded[1]), built);
+    .replace('/*__OWNER_ACCESSIBILITY_COLORS__*/null', () => JSON.stringify(config));
+  // Function replacers: the accessibility source contains "$&", which a string replacement would expand.
+  assert.strictEqual(template.replace('/*__ACCESSIBILITY__*/', () => a11y)
+    .replace('/*__DATA__*/null', () => embedded[1]), built);
   assert.ok(JSON.parse(embedded[1]).tabs.some(t => t.id === 'access' && t.state === 'hidden-dev'));
+  // Regression (#109 review): a JS string replacement once turned this "$&$&" into the placeholder text.
+  assert.ok(built.includes('h.replace(/./g, "$&$&")'), '3-digit hex expansion intact in the built bundle');
+  assert.ok(!built.includes('__ACCESSIBILITY__'), 'no unexpanded or duplicated placeholder in the built bundle');
 });
 
 test('accessible fill and foreground contrast for all palettes in both themes', () => {

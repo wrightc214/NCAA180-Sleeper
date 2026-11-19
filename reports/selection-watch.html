@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Selection Watch | NCAA 180</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Barlow:wght@400;600;700&family=Barlow+Condensed:wght@500;600&display=swap">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="../assets/app/apple-touch-icon.png">
+<meta name="theme-color" content="#14213a"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Dynasty Data"><script src="assets/app.js" defer></script>
+<style>
+/* Layout: stadium-scoreboard header, then a two-column stat sheet (poll left, week detail right) that stacks on phones */
+:root{--bg:#eef1f5;--panel:#ffffff;--ink:#14213a;--mute:#5d6a80;--line:#d5dbe5;--accent:#c8102e;--gold:#b8860b;--up:#1d7a43;--dn:#b3261e;
+--disp:"Big Shoulders Display",Impact,"Arial Narrow",sans-serif;--body:"Barlow",system-ui,sans-serif;--num:"Barlow Condensed","Arial Narrow",sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1526;--panel:#16213a;--ink:#e8edf6;--mute:#9aa7bd;--line:#2a3756;--accent:#ff5468;--gold:#e0b44a;--up:#4fc785;--dn:#ff7b72;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0d1526;--panel:#16213a;--ink:#e8edf6;--mute:#9aa7bd;--line:#2a3756;--accent:#ff5468;--gold:#e0b44a;--up:#4fc785;--dn:#ff7b72;color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.4}
+.wrap{max-width:1100px;margin:0 auto;padding-inline:16px;padding-block:24px 40px;display:grid;gap:20px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;border-bottom:4px solid var(--accent);padding-bottom:12px}
+.eyebrow{font:600 13px/1 var(--num);letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+h1{font:900 clamp(40px,8vw,72px)/.9 var(--disp);margin:6px 0 0;letter-spacing:.01em;text-transform:uppercase;text-wrap:balance}
+h1 em{font-style:normal;color:var(--accent)}
+.kpis{display:flex;gap:22px;flex-wrap:wrap}
+.kpi b{display:block;font:600 30px/1 var(--num);font-variant-numeric:tabular-nums}
+.kpi span{font:600 11px/1.2 var(--num);letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+h2{font:700 24px/1 var(--disp);text-transform:uppercase;letter-spacing:.03em;margin:0 0 10px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+h2 small{font:500 12px var(--num);letter-spacing:.1em;color:var(--mute)}
+section{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px;min-width:0}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
+.col{display:grid;gap:20px;min-width:0}
+@media (max-width:820px){.grid{grid-template-columns:1fr}}
+.n{font-family:var(--num);font-variant-numeric:tabular-nums}
+.chip{display:inline-block;width:10px;height:22px;border-radius:2px;flex:none;margin-right:8px;vertical-align:middle;box-shadow:inset 0 0 0 1px rgba(127,127,127,.35)}
+small{color:var(--mute);font-weight:400}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{white-space:nowrap;font:600 11px var(--num);letter-spacing:.12em;text-transform:uppercase;color:var(--mute);text-align:left;padding:4px 6px;border-bottom:2px solid var(--ink)}
+th.r,td.n{text-align:right}
+td{padding:5px 6px;border-bottom:1px solid var(--line);white-space:nowrap}
+td.tm{display:flex;align-items:center;gap:0}
+@media (max-width:640px){table{font-size:13px}td.tm{flex-wrap:wrap;white-space:normal}td.tm b{flex:1;min-width:0}td.tm small{flex-basis:100%;margin-left:18px!important;font-size:11px!important}td,th{padding:5px 3px}td.mv{width:26px;font-size:12px}th{letter-spacing:.06em}}
+td.tm b{font-weight:700}td.tm small{margin-left:8px;font-size:12px}
+td.mv{text-align:center;width:34px;font:600 13px var(--num)}
+.up{color:var(--up)}.dn{color:var(--dn)}.eq{color:var(--mute)}
+tr:nth-child(-n+4) td:first-child{color:var(--accent);font-weight:600}
+.awards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.aw{background:var(--panel);padding:10px 12px;display:flex;flex-direction:column;gap:3px;text-align:center;align-items:center}
+.aw:last-child:nth-child(odd){grid-column:1/-1}
+@media (min-width:1000px){.awards{grid-template-columns:repeat(var(--cols),minmax(0,1fr))}.aw:last-child:nth-child(odd){grid-column:auto}}
+.al{font:600 11px var(--num);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.av{font-size:28px;font-weight:600;line-height:1}.av small{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin-top:3px}
+.at{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;font-size:14px}.at small{margin-left:6px}
+.ao{font-size:12px;color:var(--mute)}
+.an{font-size:12px;color:var(--mute)}
+ol,ul{list-style:none;margin:0;padding:0}
+.list li{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line)}
+.list li:last-child{border-bottom:0}
+.list .rk{width:20px;color:var(--mute)}
+.nm{flex:1;min-width:0;display:grid}.nm small{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.v{font-size:20px;font-weight:600}
+.pos{font:600 12px var(--num);letter-spacing:.08em;width:38px;text-align:center;padding:3px 0;border:1px solid var(--ink);border-radius:3px}
+.lgs li{display:grid;grid-template-columns:104px 1fr 44px;align-items:center;gap:8px;padding:3px 0;font-size:14px}
+.bar{height:12px;background:var(--bg);border-radius:2px;overflow:hidden}.bar i{display:block;height:100%;background:var(--gold)}
+.lgs .n{text-align:right}
+.note{font-size:12px;color:var(--mute);margin:8px 0 0}
+footer{font-size:12px;color:var(--mute)}
+.logo{width:56px;height:56px;object-fit:contain;flex:none;display:block;margin:4px 0 2px}
+.ls{margin-top:auto;padding-top:14px;height:98px;display:flex;align-items:flex-end;justify-content:center}
+.ls img{max-height:84px;max-width:100%;object-fit:contain}
+.weeks{display:flex;flex-wrap:wrap;gap:6px;font:600 13px var(--num)}.weeks a{color:var(--mute);text-decoration:none;padding:2px 8px;border:1px solid var(--line);border-radius:3px}.weeks a[aria-current]{color:var(--panel);background:var(--ink);border-color:var(--ink)}
+.weeks.sub{font-size:12px;margin-top:8px;align-items:center}.weeks.sub span{color:var(--mute);margin-right:2px}.weeks.sub a{padding:1px 7px}
+.totop{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:50;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--ink);color:var(--bg);font:700 18px/1 var(--num);text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);opacity:.85}
+.totop:hover,.totop:focus-visible{opacity:1}
+.totop[hidden]{display:none}
+@media print{.totop{display:none}}
+/* team logos on dark backgrounds (Chris, 2026-11-12): dark alt, else the glow file (site_common.logo_info) */@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .tl-d{display:none!important}}:root[data-theme="light"] .tl-d{display:none!important}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tl-hd{display:none!important}}:root[data-theme="dark"] .tl-hd{display:none!important}
+</style>
+<style>
+.sw-page{grid-template-columns:minmax(0,1fr)}
+.sw-page>*{min-width:0}
+.sw-page>header>*{min-width:0;overflow-wrap:anywhere}
+.sw-status>*,.sw-actions>*{min-width:0;max-width:100%;overflow-wrap:anywhere}
+.sw-odds th,.sw-odds td{white-space:normal;overflow-wrap:anywhere}
+.sw-season{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.sw-season[hidden]{display:none}
+.sw-season select,.sw-season button{border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:7px 10px}
+.sw-archive-section .sw-odds{table-layout:fixed}.sw-archive-section .sw-odds th:first-child{width:22%}
+.sw-archive-section .sw-odds td:last-child{font:inherit;text-align:left}
+.sw-archive-section .sw-field{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%, 155px),1fr));gap:6px 22px;padding-left:30px}
+.sw-conf-short{display:none}
+.sw-score-note{display:block;font-weight:400}
+@media(max-width:600px){.sw-conf-full{display:none}.sw-conf-short{display:inline;white-space:nowrap}}
+.sw-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.sw-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sw-actions button,.sw-actions select{border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:7px 10px}
+.sw-status{border:1px solid var(--line);border-radius:8px;padding:11px 14px;margin:12px 0;display:flex;flex-wrap:wrap;gap:7px 18px;align-items:center}
+.sw-flag{font:800 11px var(--num);letter-spacing:.08em;border:1px solid var(--neutral);border-radius:4px;padding:3px 6px}
+.sw-muted{color:var(--mute)}
+.sw-section{margin:14px 0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel)}
+.sw-section>summary{display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:14px;gap:12px;font-weight:800;font-size:17px}
+.sw-section>summary::marker{font-size:12px}
+.sw-inner{padding:0 14px 14px}
+.sw-save{font:600 12px var(--sans,sans-serif);padding:5px 8px;background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:5px}
+.sw-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:9px;padding:7px 10px;color:var(--mute);font:800 11px var(--num);letter-spacing:.05em}
+.sw-pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:9px;padding:7px 9px;border-bottom:1px solid var(--line)}
+.sw-pair:last-child{border-bottom:0}
+.sw-pair.cut{border-top:3px dashed var(--neutral);margin-top:3px;padding-top:11px}
+.sw-team{display:flex;align-items:center;min-width:0;gap:8px;border-radius:6px;border-left:5px solid var(--team,#889);background:var(--panel);padding:6px}
+.sw-team.admitted{background:var(--team-fill,var(--panel));color:var(--team-ink,var(--ink))}
+.sw-team.admitted small,.sw-team.admitted .sw-number{color:inherit}
+.sw-team.dim{opacity:.45;filter:grayscale(.35)}
+.sw-team .sw-logo{display:grid;place-items:center;width:42px;height:42px;flex:none;background:white;border:1px solid #ddd;border-radius:5px}
+.sw-logo img{max-width:38px;max-height:38px;object-fit:contain}
+.sw-team .sw-name{font-weight:800;overflow-wrap:anywhere}
+.sw-team small{display:block;font:600 11px var(--num);color:var(--mute);margin-top:3px}
+.sw-team .sw-number{font-weight:900;color:var(--ink);margin-left:auto;text-align:right}
+.sw-team .sw-number small{white-space:nowrap}
+.sw-inline{font:600 11px var(--num);color:var(--mute)}
+.sw-empty{color:var(--mute);padding:8px}
+.sw-odds{width:100%;border-collapse:collapse}
+.sw-odds th,.sw-odds td{padding:9px;border-bottom:1px solid var(--line);text-align:left}
+.sw-odds td:last-child{text-align:right;font:800 14px var(--num)}
+.sw-locks{display:flex;flex-wrap:wrap;gap:7px}
+.sw-lock{border:1px solid var(--line);border-left:4px solid var(--tc,var(--neutral));border-radius:5px;padding:6px 9px;font-weight:700;font-size:12px}
+.sw-good{color:var(--good)}.sw-bad{color:var(--bad)}
+.sw-alert{border:1px solid var(--bad);border-radius:6px;padding:10px;margin:12px 0}
+.sw-progress{font:600 12px var(--num);color:var(--mute)}
+@media(max-width:600px){.sw-odds{table-layout:fixed}
+.sw-odds th:first-child{width:34%}.sw-odds th:last-child{width:24%}
+.sw-pair,.sw-head{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px;padding-left:2px;padding-right:2px}
+.sw-team{gap:4px;padding:4px;border-left-width:3px;font-size:11px;flex-wrap:wrap}
+.sw-team .sw-logo{width:30px;height:30px}.sw-logo img{max-width:27px;max-height:27px}
+.sw-team .sw-number{margin-left:0}.sw-team small{font-size:9px}}
+</style>
+</head><body><a href="#" class="totop" aria-label="Back to top" hidden>&#8593;</a><script>(function(){var b=document.currentScript.previousElementSibling;function f(){b.hidden=window.scrollY<window.innerHeight*0.9;}window.addEventListener("scroll",f,{passive:true});window.addEventListener("load",f);b.addEventListener("click",function(ev){ev.preventDefault();var r=window.matchMedia("(prefers-reduced-motion: reduce)").matches;window.scrollTo({top:0,behavior:r?"auto":"smooth"});});})();</script>
+<main class="wrap sw-page">
+<header><h1><span id="sw-brand">NCAA 180</span> <em data-sw-label="title">Selection Watch</em></h1>
+<p id="sw-intro" class="sw-muted">Exact playoff probabilities during conference championship week · Unofficial</p></header>
+<nav class="weeks" aria-label="Pages" data-current="selection-watch" data-state="hidden-dev"></nav><script src="assets/menu.js"></script><noscript><a href="index.html">Home</a></noscript>
+<form id="sw-season-picker" class="sw-season" method="get" hidden>
+<label for="sw-season">Season</label><select id="sw-season" name="season"><option value="">Current season</option><option value="2025">2025 · Final</option><option value="2024">2024 · Final</option><option value="2023">2023 · Final</option><option value="2022">2022 · Final</option><option value="2021">2021 · Final</option><option value="2020">2020 · Final</option><option value="2019">2019 · Final</option></select>
+<button type="submit">View season</button>
+</form>
+
+<div id="sw-error" role="status" class="sw-alert" hidden></div>
+<div id="sw-final" class="sw-final" hidden>
+<div class="sw-actions"><button id="sw-final-collapse" type="button">Collapse all</button></div>
+<div id="sw-final-status" class="sw-status"></div>
+<details id="sw-final-ccg-section" class="sw-section sw-archive-section" open><summary>Conference championship finals <button class="sw-save" type="button" data-save="sw-final-ccg-section">Save image</button></summary>
+<div class="sw-inner" id="sw-final-ccg"></div></details>
+<details id="sw-final-field-section" class="sw-section sw-archive-section" open><summary>Final playoff field <button class="sw-save" type="button" data-save="sw-final-field-section">Save image</button></summary>
+<div class="sw-inner" id="sw-final-field"></div></details>
+</div>
+<div id="sw-content" hidden>
+<div class="sw-top"><div class="sw-actions">
+<label for="sw-sort">Steal Board order</label><select id="sw-sort"><option value="chance">Win chance</option><option value="margin">If it ended now · margin</option></select>
+<button id="sw-collapse" type="button">Collapse all</button><button id="sw-refresh" type="button">Refresh</button></div>
+<span id="sw-updated" class="sw-progress">Loading…</span></div>
+<details id="sw-status-section" class="sw-section" open><summary>Status <button class="sw-save" type="button" data-save="sw-status-section">Save image</button></summary><div id="sw-status" class="sw-status" aria-live="polite">Loading selection data…</div></details>
+<details id="sw-board" class="sw-section" open><summary>Steal Board <button class="sw-save" type="button" data-save="sw-board">Save image</button></summary>
+<div class="sw-inner"><p class="sw-muted">One row per potential steal. The at-large team opposite the thief is the team whose place is threatened.</p><div id="sw-board-rows"></div></div></details>
+<details id="sw-bubble" class="sw-section" open><summary>Bubble odds <button class="sw-save" type="button" data-save="sw-bubble">Save image</button></summary><div class="sw-inner" id="sw-bubble-rows"></div></details>
+<details id="sw-locks" class="sw-section" open><summary>Locks <button class="sw-save" type="button" data-save="sw-locks">Save image</button></summary><div class="sw-inner" id="sw-lock-rows"></div></details>
+<details id="sw-noimpact" class="sw-section"><summary>No-impact CCGs <button class="sw-save" type="button" data-save="sw-noimpact">Save image</button></summary><div class="sw-inner" id="sw-noimpact-rows"></div></details>
+<p class="sw-muted">An unofficial estimate, not a published playoff field. Ties remaining after every ranking tiebreaker await a real coin toss.</p>
+</div>
+</main>
+<script src="assets/snapshot.js"></script>
+<script src="assets/scoreboard-core.js"></script>
+<script src="assets/scoreboard-overview-model.js"></script>
+<script src="assets/selection-watch-core.js"></script>
+<script src="assets/selection-watch.js" defer></script>
+</body></html>

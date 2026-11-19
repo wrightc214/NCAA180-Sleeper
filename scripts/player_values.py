@@ -2,7 +2,7 @@
 player_values.py -- dynasty + redraft player values from FantasyCalc (free public API).
 
 One request returns every valued player with both numbers, keyed to Sleeper player IDs.
-Settings match NCAA 180: 1 QB, 12 teams, full PPR. Kickers/DEF are not valued.
+Default request matches NCAA 180: 1 QB, 12 teams, full PPR. See config/transactions.json.
 
 Writes:
   data/PlayerValues_Current.csv  overwritten each run
@@ -15,6 +15,8 @@ Columns: Date, Week, SleeperID, Name, Position, NFLTeam, DynastyValue, RedraftVa
   data/PickValues_Current.csv    future rookie-pick values: Season, Round, Value, Early, Mid,
                                  Late. Value is FantasyCalc's plain round entry ("2027 1st");
                                  the tiered entries ("2027 1st (Early)") fill Early/Mid/Late.
+  data/PickValues_Season.csv     dated pick snapshots, appended under the exact same
+                                 scheduled/manual rules as player history.
 
 On a failed request, existing files are left untouched (exit 1 so the run flags it).
 CWD must be repo root.
@@ -27,14 +29,18 @@ import sys
 import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import league_config as lcfg  # noqa: E402
 from week_status import current_week as cw  # noqa: E402
 import requests
 
-URL = "https://api.fantasycalc.com/values/current"
-PARAMS = {"isDynasty": "true", "numQbs": 1, "numTeams": 12, "ppr": 1}
+FANTASYCALC_DEFAULTS = {
+    "url": "https://api.fantasycalc.com/values/current", "dynasty": True,
+    "num_qbs": 1, "num_teams": 12, "ppr": 1, "timeout_seconds": 30, "minimum_player_rows": 100,
+}
 CURRENT = "data/PlayerValues_Current.csv"
 SEASON = "data/PlayerValues_Season.csv"
 PICKS = "data/PickValues_Current.csv"
+PICK_SEASON = "data/PickValues_Season.csv"
 ROUND_WORD = {"1st": 1, "2nd": 2, "3rd": 3, "4th": 4, "5th": 5}
 MATCHUPS = "data/Matchups_Season.csv"
 
@@ -45,9 +51,17 @@ def current_week():
     return cw(m["Year"].iloc[0])
 
 
+def fantasycalc_request():
+    settings = lcfg.transaction_settings("fantasycalc", FANTASYCALC_DEFAULTS)
+    params = {"isDynasty": str(settings["dynasty"]).lower(), "numQbs": settings["num_qbs"],
+              "numTeams": settings["num_teams"], "ppr": settings["ppr"]}
+    return settings, params
+
+
 def main():
+    settings, params = fantasycalc_request()
     try:
-        r = requests.get(URL, params=PARAMS, timeout=30,
+        r = requests.get(settings["url"], params=params, timeout=settings["timeout_seconds"],
                          headers={"User-Agent": "NCAA180-Sleeper/1.0"})
         r.raise_for_status()
         data = r.json()
@@ -80,7 +94,7 @@ def main():
                      "NFLTeam": p.get("maybeTeam") or "",
                      "DynastyValue": d.get("value", 0) or 0,
                      "RedraftValue": d.get("redraftValue", 0) or 0})
-    if len(rows) < 100:
+    if len(rows) < settings["minimum_player_rows"]:
         print(f"ERROR: only {len(rows)} valued players returned; not overwriting files")
         sys.exit(1)
     if picks:
@@ -99,6 +113,23 @@ def main():
             out[t] = [round(tiers[t].get((a, b))) if t in tiers and pd.notna(tiers[t].get((a, b)))
                       else "" for a, b in zip(out["Season"], out["Round"])]
         out.to_csv(PICKS, index=False)
+        # Pick history must be recorded independently of player-history early returns.
+        # Snapshot dates, not week labels, are authoritative for trade valuation.
+        scheduled = os.environ.get("GITHUB_EVENT_NAME") == "schedule"
+        pick_hist = pd.read_csv(PICK_SEASON) if os.path.exists(PICK_SEASON) else pd.DataFrame()
+        player_hist = pd.read_csv(SEASON) if os.path.exists(SEASON) else pd.DataFrame()
+        same_date = not pick_hist.empty and (pick_hist["Date"] == today).any()
+        same_week = not player_hist.empty and (player_hist["Week"].astype(int) == week).any()
+        if same_date:
+            print(f"Pick snapshot for {today} already saved; {PICK_SEASON} unchanged")
+        elif scheduled or not same_week:
+            dated_picks = out.copy()
+            dated_picks.insert(0, "Date", today)
+            pick_hist = pd.concat([pick_hist, dated_picks], ignore_index=True)
+            pick_hist.to_csv(PICK_SEASON, index=False)
+            print(f"Saved pick snapshot for {today} to {PICK_SEASON}")
+        else:
+            print(f"Manual run: week {week} already recorded; {PICK_SEASON} unchanged")
         print(f"Wrote {PICKS}: {len(out)} season/round values from {len(pk)} pick entries")
     else:
         print(f"WARNING: no draft-pick values in the FantasyCalc response; {PICKS} not updated")
