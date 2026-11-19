@@ -42,7 +42,7 @@ def check_trade_exports(page):
       };
     })();
     """
-    page.route("**/vendor/html2canvas-1.4.1.min.js", lambda route: route.fulfill(
+    page.context.route("**/vendor/html2canvas-1.4.1.min.js", lambda route: route.fulfill(
         body=vendor + probe, content_type="application/javascript"))
     page.evaluate("Object.defineProperty(navigator, 'canShare', {value: () => false, configurable: true})")
     team = page.locator("#tx-team")
@@ -66,6 +66,7 @@ def check_trade_exports(page):
         assert png.startswith(b"\x89PNG\r\n\x1a\n")
         assert min(struct.unpack(">II", png[16:24])) > 0
         data = page.evaluate("window.__tradeExport")
+        assert data is not None, "Did not observe the real PNG renderer"
         assert data["buttons"] == 0
         assert all(data["geometry"]), "Exported grade rows overlap"
         return data
@@ -98,7 +99,8 @@ def main():
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True)
             for width, theme in ((1280, "light"), (390, "dark")):
-                page = browser.new_page(viewport={"width": width, "height": 900})
+                # The service worker can serve the renderer from cache, bypassing the export probe.
+                page = browser.new_page(viewport={"width": width, "height": 900}, service_workers="block")
                 errors = []
                 page.on("pageerror", lambda error: errors.append(str(error)))
                 page.goto(f"http://127.0.0.1:{server.server_port}/reports/transactions.html")
