@@ -43,7 +43,7 @@ The one-time `python3 scripts/trade_fit_update.py --backfill-from-git` command r
 
 5. **Trade explorer (follow-up PR).** Default to newest first. Keep the current conference, week and team filters and allow the new controls to work in combination:
    - **Player-name search.** As the user types, show only trades containing a matching player on either side. Match full or partial names case-insensitively, not team names, pick labels or report notes.
-   - **Grade sort and filters.** Choose Team Fit, Rebuild or Contender. Use the selected team's grade when a team is selected. Otherwise, let a minimum-grade filter match either side or require both sides. Sort missing grades last.
+   - **Grade sort and filters.** Choose Team Fit, Rebuild or Contender. Use the selected team's grade when a team is selected. With no team selected, best-first ranks by the higher of the two grades and worst-first ranks by the lower. For a minimum-grade filter, match either side or require both sides. Sort trades without a comparable grade last.
    - **Total value and gap.** Sort or filter by combined raw dynasty value. Offer a “Most lopsided” sort by absolute adjusted dynasty gap or absolute raw redraft gap, with the basis labeled. Keep unavailable values distinct from zero.
    - **Blockbusters only.** Filter on the existing tag. Add projected wins added to the explorer only after that measure is validated.
 6. **One-year trade outcome grade (later PR).** At one year after acceptance, grade each team's realized return using evidence through that anniversary. Show this alongside the original trade-time grade without recalculating or replacing it. A later injury may affect the outcome grade, not the trade-time judgment.
