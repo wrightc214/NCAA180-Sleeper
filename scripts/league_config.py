@@ -37,8 +37,8 @@ def transaction_settings(name, defaults, overrides=None):
 
 
 def selection_watch():
-    """Return the owner settings for the Selection Watch page, defaulting to enabled."""
-    path = ROOT / "config" / "SelectionWatch.json"
+    """Return Selection Watch presentation and preview settings."""
+    path = ROOT / "config" / "selection_watch.json"
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
     except FileNotFoundError:

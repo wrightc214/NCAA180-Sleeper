@@ -34,7 +34,8 @@ function setup(baseline, settings = {}, {search='', fixtureURL, fixtureData={}, 
       order: [1, 2, 3, 4].map(rank => ({rank, k: 'conf|' + rank, team: 'Team ' + rank})), ccg: [CCG]},
     '../config/league.json': {data: {scoreboard: '/score'}, api: {espn: '/espn', sleeper: '/sleeper'},
       brand: settings.brand, refresh: settings.refresh},
-    '../config/SelectionWatch.json': settings.feature,
+    '../config/nav.json': {tabs: [{id: 'selection-watch', state: settings.state ?? 'hidden-dev'}]},
+    '../config/selection_watch.json': settings.feature,
     '/score/index.json': {season: 2026, weeks: [12]},
     '/score/2026/players.json': {},
     '/espn?dates=2026&week=12&seasontype=2': {
@@ -140,7 +141,7 @@ test('a configured historical route uses the fixture year and never polls the li
       ccg: [{id: 'ccg', a: 'conf|1', b: 'conf|4', winner: 'conf|4', pa: 90, pb: 100}]},
   });
   await h.ready;
-  assert.equal(h.requests[2], replay.url);
+  assert.equal(h.requests[3], replay.url);
   assert.match(h.element('sw-status').innerHTML, /2024 CCG finals · Historical replay/);
   assert.ok(!h.requests.some(url => /^\/(espn|sleeper)/.test(url)));
   assert.match(h.element('sw-updated').textContent, /Historical replay/);
@@ -159,7 +160,7 @@ test('missing, disabled and ambiguous preview settings never fetch a fixture or 
     const h = setup({}, settings, {search: '?preview=replay'});
     await h.ready;
     assert.match(h.element('sw-error').textContent, /Unknown or disabled preview/);
-    assert.deepEqual(h.requests, ['../config/SelectionWatch.json', '../config/league.json']);
+    assert.deepEqual(h.requests, ['../config/nav.json', '../config/selection_watch.json', '../config/league.json']);
   }
 });
 
@@ -181,15 +182,15 @@ test('provisional disclosures survive relabeling and the live and historical rou
     const bad = setup({}, settings, {search, fixtureURL, fixtureData: {provisional: search !== '?preview=demo'}});
     await bad.ready;
     assert.match(bad.element('sw-error').textContent, pattern);
-    assert.equal(bad.requests.length, 3);
+    assert.equal(bad.requests.length, 4);
   }
 });
 
-test('the master off switch stops direct and preview loads before any other requests', async () => {
+test('hidden nav state stops direct and preview loads before any other requests', async () => {
   for (const search of ['', '?preview=demo']) {
-    const h = setup({}, {feature: {enabled: false, previews: {provisional: demo}}}, {search});
+    const h = setup({}, {state: 'hidden', feature: {previews: {provisional: demo}}}, {search});
     await h.ready;
-    assert.deepEqual(h.requests, ['../config/SelectionWatch.json']);
+    assert.deepEqual(h.requests, ['../config/nav.json']);
     assert.equal(h.element('sw-content').hidden, true);
     assert.match(h.element('sw-error').textContent, /disabled/);
   }

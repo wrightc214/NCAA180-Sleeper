@@ -54,11 +54,19 @@ class SelectionWatchBrowser(unittest.TestCase):
                                 self.assertEqual(page.locator(".sw-pair.cut").count(), 1)
                                 self.assertGreater(page.locator(".sw-pair .sw-team.admitted").count(), 0)
                                 self.assertNotIn("Updated", page.locator("#sw-status").inner_text())
-                            original = page.evaluate("document.querySelector('.sw-pair.cut')?.previousElementSibling?.textContent || ''")
-                            page.select_option("#sw-sort", "margin")
+                            for sort in ("chance", "margin"):
+                                page.select_option("#sw-sort", sort)
+                                layout = page.evaluate("""() => ({
+                                    viewport: innerWidth,
+                                    page: document.documentElement.scrollWidth,
+                                    boardRight: Math.max(...[...document.querySelectorAll(
+                                        '.sw-page header, #sw-status, .sw-head > :last-child, .sw-pair > :last-child'
+                                    )].map(el => el.getBoundingClientRect().right))
+                                })""")
+                                self.assertLessEqual(layout["page"], layout["viewport"], layout)
+                                self.assertLessEqual(layout["boardRight"], layout["viewport"], layout)
                             self.assertEqual(page.locator(".sw-pair.cut").count(), 1 if rows else page.locator(".sw-pair.cut").count())
                             self.assertTrue(page.locator("#sw-noimpact").count())
-                            self.assertFalse(page.evaluate("document.documentElement.scrollWidth > innerWidth"))
                             page.click("#sw-collapse")
                             self.assertEqual(page.evaluate("[...document.querySelectorAll('details.sw-section')].filter(d => d.open).length"), 0)
                             page.click("#sw-collapse")

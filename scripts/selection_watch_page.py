@@ -12,6 +12,11 @@ from site_common import menu_html, page_head
 
 PAGE = "reports/selection-watch.html"
 CSS = """
+.sw-page{grid-template-columns:minmax(0,1fr)}
+.sw-page>*{min-width:0}
+.sw-page>header>*{min-width:0;overflow-wrap:anywhere}
+.sw-status>*,.sw-actions>*{min-width:0;max-width:100%;overflow-wrap:anywhere}
+.sw-odds th,.sw-odds td{white-space:normal;overflow-wrap:anywhere}
 .sw-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
 .sw-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .sw-actions button,.sw-actions select{border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:7px 10px}
@@ -47,7 +52,9 @@ CSS = """
 .sw-good{color:var(--good)}.sw-bad{color:var(--bad)}
 .sw-alert{border:1px solid var(--bad);border-radius:6px;padding:10px;margin:12px 0}
 .sw-progress{font:600 12px var(--num);color:var(--mute)}
-@media(max-width:600px){.sw-pair,.sw-head{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px;padding-left:2px;padding-right:2px}
+@media(max-width:600px){.sw-odds{table-layout:fixed}
+.sw-odds th:first-child{width:34%}.sw-odds th:last-child{width:24%}
+.sw-pair,.sw-head{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px;padding-left:2px;padding-right:2px}
 .sw-team{gap:4px;padding:4px;border-left-width:3px;font-size:11px;flex-wrap:wrap}
 .sw-team .sw-logo{width:30px;height:30px}.sw-logo img{max-width:27px;max-height:27px}
 .sw-team .sw-number{margin-left:0}.sw-team small{font-size:9px}}
@@ -67,7 +74,7 @@ def main():
     title = label("title", "Selection Watch")
     html = page_head(f"{title} | {brand}", CSS)
     html += f"""
-<main class="wrap">
+<main class="wrap sw-page">
 <header><h1><span id="sw-brand">{escape(brand)}</span> <em data-sw-label="title">{escape(title)}</em></h1>
 <p class="sw-muted">Exact playoff probabilities during conference championship week · Unofficial</p></header>
 """

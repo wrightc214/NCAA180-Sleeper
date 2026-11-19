@@ -61,17 +61,19 @@ def test_generator_uses_safe_defaults_and_escapes_owner_labels(tmp_path, monkeyp
     assert '<summary>Bubble odds <button' in html
 
 
-def test_site_menu_master_switch_hides_only_selection_watch(monkeypatch):
+def test_hidden_nav_state_hides_only_selection_watch(monkeypatch):
     monkeypatch.syspath_prepend(str(ROOT / "scripts"))
-    import league_config
     import site_common
 
     monkeypatch.chdir(ROOT)
-    for enabled in ({}, {"enabled": True}, {"enabled": False}):
-        monkeypatch.setattr(league_config, "selection_watch", lambda: enabled)
+    config = site_common.nav_config()
+    selection = next(tab for tab in config["tabs"] if tab["id"] == "selection-watch")
+    monkeypatch.setattr(site_common, "nav_config", lambda: config)
+    for state in ("hidden-dev", "hidden"):
+        selection["state"] = state
         tabs = {t["id"]: t.get("state") for t in site_common.menu_data()["tabs"]}
         assert tabs["transactions"] == "hidden-dev"
-        if enabled.get("enabled") is False:
+        if state == "hidden":
             assert "selection-watch" not in tabs
             assert site_common.page_state("selection-watch") == "hidden"
         else:
@@ -88,7 +90,11 @@ def test_disabled_publisher_leaves_existing_data_and_keeps_private_alerts(tmp_pa
     preview = tmp_path / "preview.json"
     alerts = []
     monkeypatch.setattr(selection_watch, "OUT", str(live))
-    monkeypatch.setattr(selection_watch.lcfg, "selection_watch", lambda: {"enabled": False})
+    import site_common
+
+    cfg = site_common.nav_config()
+    next(tab for tab in cfg["tabs"] if tab["id"] == "selection-watch")["state"] = "hidden"
+    monkeypatch.setattr(site_common, "nav_config", lambda: cfg)
     monkeypatch.setattr(selection_watch.ps, "last_regular_week", lambda: 11)
     monkeypatch.setattr(selection_watch.ps, "completed_weeks", lambda year: list(range(1, 12)))
     monkeypatch.setattr(selection_watch, "build", lambda year: {"ccg": [{"id": 1}]})

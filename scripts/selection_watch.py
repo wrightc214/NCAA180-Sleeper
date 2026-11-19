@@ -35,7 +35,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import _postseason_common as ps  # noqa: E402
 import league_config as lcfg  # noqa: E402
 import team_names as tn  # noqa: E402
-from site_common import logo_info, logo_html, team_colors  # noqa: E402
+from site_common import logo_info, logo_html, page_state, team_colors  # noqa: E402
 
 OUT = "reports/postseason/selection-watch.json"
 HIST = "data/Postseason_Historic.csv"
@@ -286,7 +286,7 @@ def main():
         sys.exit(0 if ok else 1)
     if a.provisional and not a.output:
         ap.error("--provisional requires --output; provisional results must never touch the live file")
-    enabled = lcfg.selection_watch().get("enabled") is not False
+    enabled = page_state("selection-watch") != "hidden"
     if a.output:
         if not enabled:
             print("Selection Watch disabled; no preview data written")

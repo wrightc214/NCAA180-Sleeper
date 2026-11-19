@@ -264,13 +264,15 @@
     });
   }
   try {
-    let settings={};
-    try {settings=await get('../config/SelectionWatch.json') || {};}
-    catch(err){if(err.status!==404)throw err;}
-    if(settings.enabled===false){
+    const nav=await get('../config/nav.json');
+    const tab=nav.tabs?.find(t=>t.id==='selection-watch');
+    if(tab?.state==='hidden'){
       alert('Selection Watch is disabled.');
       return;
     }
+    let settings={};
+    try {settings=await get('../config/selection_watch.json') || {};}
+    catch(err){if(err.status!==404)throw err;}
     cfg=await get('../config/league.json');
     const brandElement=$('sw-brand');
     brand=stringSetting(cfg.brand,brandElement.textContent.trim());

@@ -34,11 +34,10 @@ The section image-export buttons use the existing `NCAASnap.save` utility. Each 
 ### Owner settings and template-repo follow-up
 
 - Selection Watch uses `config/league.json` → `brand` for the generated title and heading, and reads it again in the browser for the displayed title, heading, and image branding. The live board uses `refresh.normal_ms` for automatic refresh. If the interval is absent or invalid, manual refresh is still available. Static previews do not poll.
-- Feature-specific settings live in `config/SelectionWatch.json`. The first key, `enabled`, defaults to on. Set it to false and rerun `python scripts/menu_build.py` to remove the tab, including from Dev view. The direct URL stops before fetching either live or preview data. The publisher leaves existing live and preview files untouched while disabled. Stage 1 private tie alerts and manual rule checks still run independently. Preview controls do not make committed fixtures private. Section headings stay in the page UI, and required disclosures remain fixed.
+- Feature-specific presentation and preview settings live in `config/selection_watch.json`. For page visibility, set the Selection Watch tab’s `state` to `hidden` in `config/nav.json`, then rerun `python scripts/menu_build.py` to remove it from the generated menu, including from Dev view. `hidden-dev` keeps it accessible in Dev view. There is no second page-level switch. The direct URL stops before fetching either live or preview data. The publisher leaves existing live and preview files untouched while disabled. Stage 1 private tie alerts and manual rule checks still run independently. Preview controls do not make committed fixtures private. Section headings stay in the page UI, and required disclosures remain fixed.
 
-| Key in `config/SelectionWatch.json` | Checked-in value | Missing-key default |
+| Key in `config/selection_watch.json` | Checked-in value | Missing-key default |
 | --- | --- | --- |
-| `enabled` | `true` | `true` |
 | `labels.title` | Selection Watch | Selection Watch |
 | `export_filename_prefix` | `ncaa180-selection-watch` | `ncaa180-selection-watch` |
 | `availability_message` | Available after the regular season is final (Tue Nov 24). | Available after the regular season is final. |
@@ -124,20 +123,17 @@ The preview JSON files are both committed separately at `reports/postseason/`. N
 
 Written:
 - `tests/selection_watch_core.test.js` — **10** Node unit cases: field rule, both-outside CCG, inside CCG team that can miss, exact odds, fractional tie, unconditional locks, sort cut invariance, trailing-margin order, 2025 real board acceptance.
-- `tests/selection_watch_live.test.js` — **9 Node regression cases** for odds, refresh, team fill, config-driven presentation, preview isolation and disclosures, the off switch, and the unpublished live page.
+- `tests/selection_watch_live.test.js` — **9 Node regression cases** for odds, refresh, team fill, config-driven presentation, preview isolation and disclosures, the hidden nav state, and the unpublished live page.
 - `tests/test_selection_watch_js_parity.py` — **3 parameterized cases** (2024, 2025, synthetic tie), full JS/Python reference comparison.
 - `tests/test_selection_watch_page.py` — **5 cases** for page shell, preview fixtures, generator fallbacks, compiled menu behavior and paused data publication.
-- `tests/test_selection_watch_browser.py` — **2 opt-in browser methods**: four preview/viewport combinations (2025 and provisional × desktop/mobile), checking status, counts, cut, sort, folds and overflow; plus one fully mocked Week 12 live refresh across 15 conferences that exercises the existing Games data model without external requests. The live browser case covers a missing first-load input, recovery, and preservation of the verified board when the frozen odds subsequently go blank.
+- `tests/test_selection_watch_browser.py` — **2 opt-in browser methods**: four preview/viewport combinations (2025 and provisional × desktop/mobile), checking status, counts, cut, sort, folds, full document width and right-column bounds at both sort settings; plus one fully mocked Week 12 live refresh across 15 conferences that exercises the existing Games data model without external requests. The live browser case covers a missing first-load input, recovery, and preservation of the verified board when the frozen odds subsequently go blank.
 
-Actually executed in this environment:
-- **19/19 native Node tests passed** (10 core plus 9 page-controller regression tests).
-- **Eight targeted Python test cases passed via a standalone runner** (five page/menu/publisher cases and three Python/Node parity cases). This workspace did not have pytest available.
-- The authoritative `selection_watch.py --year YEAR --check` returned **32/32 matches** for both 2024 and 2025.
-- **2024 and 2025 historical field and board validation passed** using the same JS core: 32/32 for each, row/count checks and 20/19 nonwinning top-32 teams.
-- **JavaScript syntax compilation passed** for client and engine.
-- The generated page and menu are committed. The base menu reproduced byte for byte before reconciliation, and the resulting bundle reproduced byte for byte on a second build from the same report filename inventory.
+Validation evidence:
 
-**Still open:** full repository-wide Python and Node suites, Playwright preview and mocked live checks, a visual PNG export check, and a real 2026 Week 12 end-to-end refresh. Chromium startup was attempted and failed because socket creation was denied in this environment. Targeted tests used a subset of files from the branch; run the full suites and asset rebuilds from a complete checkout.
+- The previous rebased commit passed the repository-wide Python and JavaScript suites and the clean-checkout menu build in GitHub Actions. That run’s browser smoke check covered Transactions only. Independent browser testing then found Selection Watch overflow at 390 px in both previews.
+- This revision constrains the page grid to the viewport and lets the Bubble Odds table wrap. Its browser acceptance command is now a separate required step in the PR validation job. Use the current PR check logs for final results rather than the earlier green run.
+- The authoritative Python checks matched **32/32 real playoff teams** in both 2024 and 2025. Historical Python/Node parity also passed for both seasons and the synthetic tie.
+- Visual PNG export and a real Week 12 end-to-end refresh remain manual follow-ups.
 
 Suggested validation commands:
 
@@ -163,8 +159,9 @@ Browser test notes: when `RUN_SCOREBOARD_BROWSER_TESTS=1`, install Playwright an
 | `reports/postseason/selection-watch-2025.json` | Unlisted real 2025 preview |
 | `reports/postseason/selection-watch-provisional-2026.json` | Unlisted provisional 2026 preview |
 | `config/nav.json` | Selection Watch entry, Dev-only alongside Transactions |
-| `config/SelectionWatch.json` | Page master switch, feature labeling, export and preview settings |
-| `scripts/league_config.py`, `scripts/site_common.py` | Load the feature settings and omit the tab when disabled |
+| `config/selection_watch.json` | Feature labeling, export and preview settings |
+| `scripts/league_config.py` | Load the feature settings |
+| `.github/workflows/pr-check.yml` | Run Selection Watch browser acceptance alongside the existing Transactions smoke check |
 | `reports/assets/menu.js` | Regenerated shared menu asset |
 | `tests/selection_watch_core.test.js` | 10 Node tests |
 | `tests/test_selection_watch_js_parity.py` | JS/Python equality and historical board |
