@@ -29,7 +29,7 @@ function createNCAA180Accessibility() {
     return settingHex(A[section]&&A[section][theme]&&A[section][theme][role],fallback);
   }
   var LIGHT_BG = settingHex(C.light_background,"#ffffff");
-  var DARK_BG = settingHex(C.dark_background,"#171b22");
+  var DARK_BG = settingHex(C.dark_background,"#16213a");
   var FILL_TEXT = settingHex(A.fill_text,"#ffffff");
   var MIN_CONTRAST = typeof C.minimum_ratio==="number" && C.minimum_ratio>=1 && C.minimum_ratio<=21?C.minimum_ratio:4.5;
   var DISTINGUISH_RATIO = typeof C.distinguishability_ratio==="number" && C.distinguishability_ratio>=1 && C.distinguishability_ratio<=21?C.distinguishability_ratio:1.5;
