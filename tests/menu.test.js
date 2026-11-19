@@ -11,7 +11,7 @@ function load(data) {
     .replace('/*__DATA__*/null', JSON.stringify(data))
     .replace('/*__ACCESSIBILITY__*/', fs.readFileSync(path.join(__dirname, '..', 'templates', 'accessibility.js'), 'utf8')
       .replace('/*__OWNER_ACCESSIBILITY_COLORS__*/null', JSON.stringify(JSON.parse(
-        fs.readFileSync(path.join(__dirname, '..', 'config', 'league.json'), 'utf8')).accessibility_colors)));
+        fs.readFileSync(path.join(__dirname, '..', 'config', 'accessibility.json'), 'utf8')))));
   const m = new Module('menu-fixture');
   m._compile(src, 'menu-fixture.js');
   return m.exports;
