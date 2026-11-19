@@ -7,7 +7,7 @@ const Core = require('../reports/assets/selection-watch-core.js');
 const Games = require('../reports/assets/selection-watch-games.js');
 const page = fs.readFileSync(require.resolve('../reports/assets/selection-watch.js'), 'utf8');
 
-function setup(baseline, settings = {}, {search='', fixtureURL, fixtureData={}, missingLive=false} = {}) {
+function setup(baseline, settings = {}, {search='', fixtureURL, fixtureData={}, missingLive=false, liveData, scores} = {}) {
   const nodes = new Map();
   const element = id => {
     if (!nodes.has(id)) nodes.set(id, {
@@ -46,6 +46,7 @@ function setup(baseline, settings = {}, {search='', fixtureURL, fixtureData={}, 
     '/sleeper/league/conf/matchups/12': [{roster_id: 1}, {roster_id: 4}],
     '/sleeper/league/conf': {scoring_settings: {}},
   };
+  if (liveData) Object.assign(payloads['postseason/selection-watch.json'], liveData);
   if (fixtureURL) payloads[fixtureURL] = {...payloads['postseason/selection-watch.json'], ...fixtureData};
   if (missingLive) delete payloads['postseason/selection-watch.json'];
   const document = {
@@ -55,7 +56,7 @@ function setup(baseline, settings = {}, {search='', fixtureURL, fixtureData={}, 
   let summary = {live: false, probability: null, pregame: null, final: false, status: 'Upcoming',
     models: [{actual: 0}, {actual: 0}]};
   const ready = vm.runInNewContext(page, {
-    window: {NCAA180: {menu: {dev: () => settings.dev === true}}, SelectionWatchGames: Games, ScoreboardCore: {statsMap: x => x}, ScoreboardOverview: {summarize: () => summary},
+    window: {NCAA180: {menu: {dev: () => settings.dev === true}}, SelectionWatchGames: scores?{load: async()=>({scores})}:Games, ScoreboardCore: {statsMap: x => x}, ScoreboardOverview: {summarize: () => summary},
       SelectionWatchCore: {...Core, odds(d, p) { seen.push(p.ccg); return Core.odds(d, p); }}},
     document, location: {search}, URLSearchParams, AbortController,
     NCAASnap: {async save(options) { exports.push(options); }},
@@ -244,4 +245,41 @@ test('what-if uses a reversible probability and stamps it into saves', async () 
   const count=h.exports.length;
   await h.element('sw-discord-draft').listeners.click();
   assert.equal(h.exports.length,count);
+});
+
+test('What-if shows a held pair or placard while the natural team is leading, then a Saved final', async () => {
+  for(const outside of [true,false]){
+    const key=i=>'conf|'+i;
+    const b=outside?6:3;
+    const scores={
+      x:{pA:.7,source:'Pregame odds'},
+      y:{pA:.7,source:'Pregame odds'},
+      ccg:{pA:.7,leader:key(4),live:true,scoreA:127.4,scoreB:115,source:'Live odds'},
+    };
+    const h=setup({}, {}, {scores,liveData:{
+      field_size:5,play_ins:[],
+      order:Array.from({length:9},(_,i)=>({k:key(i+1),rank:i+1,team:'Team '+(i+1),conf:'Example'})),
+      ccg:[{id:'x',a:key(1),b:key(8)},{id:'y',a:key(2),b:key(9)},{id:'ccg',a:key(4),b:key(b)}],
+    }});
+    await h.ready;
+    const pick=(game,value)=>h.element('sw-picks').listeners.change({target:{dataset:{game},value:key(value)}});
+    const board=()=>h.element('sw-board-rows').innerHTML;
+    assert.doesNotMatch(board(),/data-held/);
+    pick('x',8);
+    pick('y',9);
+    assert.match(h.element('sw-whatif-banner').textContent,/WHAT-IF/);
+    if(outside) {
+      assert.match(board(),/data-held="pair"[^]*data-thief="conf\|6"[^]*Example CCG · Team 4 leads</);
+    } else {
+      assert.match(board(),/data-held="placard"[^]*Example CCG · Team 4 leads — a win keeps this spot/);
+    }
+    pick('ccg',4);
+    assert.match(board(),/Saved/);
+    assert.match(board(),/Example Champion/);
+    if(outside){
+      pick('ccg',6);
+      assert.doesNotMatch(board(),/data-held="pair"/);
+      assert.match(board(),/data-thief="conf\|6"[^]*Stolen/);
+    }
+  }
 });
