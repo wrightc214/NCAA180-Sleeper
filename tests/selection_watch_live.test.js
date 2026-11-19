@@ -75,7 +75,6 @@ test('missing first-load odds cannot render or export a fabricated board', async
   const h = setup({odds: []});
   await h.ready;
   assert.match(h.element('sw-error').textContent, /no verified current probabilities/);
-  h.element('sw-sort').listeners.change({target: {value: 'margin'}});
   assert.deepEqual(h.seen, []);
   assert.equal(h.element('sw-board-rows').innerHTML, '');
   assert.equal(h.save.disabled, true);

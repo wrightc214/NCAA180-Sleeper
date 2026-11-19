@@ -49,23 +49,20 @@ class SelectionWatchBrowser(unittest.TestCase):
                                 self.assertIn("PROVISIONAL", page.locator("#sw-status").inner_text().upper())
                                 self.assertEqual(page.get_by_role("link", name="View game").count(), 0)
                             if rows:
-                                self.assertEqual(page.locator(".sw-pair").count(), rows)
-                                self.assertIn("2 steals", page.locator("#sw-status").inner_text())
-                                self.assertEqual(page.locator(".sw-pair.cut").count(), 1)
-                                self.assertGreater(page.locator(".sw-pair .sw-team.admitted").count(), 0)
+                                self.assertGreater(page.locator(".sw-cut-row").count(), 0)
+                                self.assertIn("steals confirmed", page.locator("#sw-status").inner_text())
+                                self.assertEqual(page.locator(".sw-cut-line").count(), 1)
+                                self.assertGreater(page.locator(".sw-cut-row .sw-team.admitted").count(), 0)
                                 self.assertNotIn("Updated", page.locator("#sw-status").inner_text())
-                            for sort in ("chance", "margin"):
-                                page.select_option("#sw-sort", sort)
-                                layout = page.evaluate("""() => ({
-                                    viewport: innerWidth,
-                                    page: document.documentElement.scrollWidth,
-                                    boardRight: Math.max(...[...document.querySelectorAll(
-                                        '.sw-page header, #sw-status, .sw-head > :last-child, .sw-pair > :last-child'
-                                    )].map(el => el.getBoundingClientRect().right))
-                                })""")
-                                self.assertLessEqual(layout["page"], layout["viewport"], layout)
-                                self.assertLessEqual(layout["boardRight"], layout["viewport"], layout)
-                            self.assertEqual(page.locator(".sw-pair.cut").count(), 1 if rows else page.locator(".sw-pair.cut").count())
+                            layout = page.evaluate("""() => ({
+                                viewport: innerWidth,
+                                page: document.documentElement.scrollWidth,
+                                boardRight: Math.max(...[...document.querySelectorAll(
+                                    '.sw-page header, #sw-status, .sw-head > :last-child, .sw-cut-row > :last-child'
+                                )].map(el => el.getBoundingClientRect().right))
+                            })""")
+                            self.assertLessEqual(layout["page"], layout["viewport"], layout)
+                            self.assertLessEqual(layout["boardRight"], layout["viewport"], layout)
                             self.assertTrue(page.locator("#sw-noimpact").count())
                             page.click("#sw-collapse")
                             self.assertEqual(page.evaluate("[...document.querySelectorAll('#sw-content details.sw-section')].filter(d => d.open).length"), 0)
@@ -97,11 +94,11 @@ class SelectionWatchBrowser(unittest.TestCase):
                 self.assertFalse(page.locator("#sw-refresh").is_visible())
                 archive = page.locator("#sw-final")
                 open_sections = archive.locator("details[open]")
-                self.assertEqual(open_sections.count(), 2)
+                self.assertEqual(open_sections.count(), 3)
                 archive.get_by_role("button", name="Collapse all").click()
                 self.assertEqual(open_sections.count(), 0)
                 archive.get_by_role("button", name="Expand all").click()
-                self.assertEqual(open_sections.count(), 2)
+                self.assertEqual(open_sections.count(), 3)
                 self.assertTrue(archive.get_by_role("button", name="Collapse all").is_visible())
                 self.assertTrue(page.get_by_text("Conf.", exact=True).is_visible())
                 big_sky = page.locator("#sw-final-ccg tbody tr").filter(has_text="Big Sky")
@@ -130,6 +127,10 @@ class SelectionWatchBrowser(unittest.TestCase):
                 page.locator("#sw-final").wait_for(state="visible")
                 self.assertIn("SAMPLE TIMELINE", page.locator("#sw-final-field").inner_text())
                 self.assertIn("UNLV", page.locator(".sw-timeline").inner_text())
+                self.assertIn("BID THIEVES", page.locator("#sw-final-cut").inner_text())
+                self.assertIn("Final at-large cut", page.locator("#sw-final-cut").inner_text())
+                self.assertTrue(page.evaluate("""() => document.querySelector('.sw-page nav').compareDocumentPosition(
+                    document.querySelector('.sw-page header')) & Node.DOCUMENT_POSITION_FOLLOWING"""))
                 self.assertFalse(page.locator("#sw-discord-draft").is_visible())
                 self.assertFalse(any("api.sleeper.app" in url or "site.api.espn.com" in url for url in requests))
                 page.close()
@@ -212,9 +213,7 @@ class SelectionWatchBrowser(unittest.TestCase):
                 page.goto(f"http://127.0.0.1:{server.server_port}/reports/selection-watch.html")
                 page.wait_for_function("document.getElementById('sw-error').textContent.includes('CCG win chance unavailable')")
                 self.assertIn("no verified current probabilities", page.locator("#sw-error").inner_text())
-                self.assertEqual(page.locator("#sw-board .sw-pair").count(), 0)
-                page.select_option("#sw-sort", "margin")
-                self.assertEqual(page.locator("#sw-board .sw-pair").count(), 0)
+                self.assertEqual(page.locator("#sw-board .sw-cut-row").count(), 0)
                 self.assertTrue(page.locator("#sw-board button.sw-save").is_disabled())
 
                 active_base = base
@@ -222,7 +221,7 @@ class SelectionWatchBrowser(unittest.TestCase):
                 page.wait_for_function("document.getElementById('sw-updated').textContent.startsWith('Updated')", timeout=90000)
                 self.assertEqual(errors, [])
                 self.assertEqual(len(fetched), 15)
-                self.assertEqual(page.locator("#sw-board .sw-pair").count() > 0, True)
+                self.assertEqual(page.locator("#sw-board .sw-cut-row").count() > 0, True)
                 self.assertIn("UNOFFICIAL", page.locator("#sw-status").inner_text().upper())
                 self.assertNotIn("PROVISIONAL", page.locator("#sw-status").inner_text().upper())
                 self.assertTrue(page.locator("#sw-board button.sw-save").is_enabled())

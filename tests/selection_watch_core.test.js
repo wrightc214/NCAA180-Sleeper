@@ -89,3 +89,19 @@ test('bid labels separate projected steals, possibilities and official finals', 
   assert.equal(label(.2,'D'), 'Stolen');
   assert.equal(label(.8,'A'), 'Held');
 });
+
+
+test('the exact cut moves and an inside team can be both at-large and a thief', () => {
+  const d={field_size:4,order:['A','B','C','D','E','F'].map((k,i)=>({k,rank:i+1})),
+    ccg:[{id:'upset',a:'A',b:'F'},{id:'inside',a:'B',b:'D'}]};
+  const p={upset:.8,inside:.35};
+  const before=core.cutBoard(d,{upset:'A',inside:'B'},p);
+  assert.equal(before.cut,4);
+  assert.ok(before.atLarge.some(t=>t.k==='D'&&t.status==='Above cut'));
+  assert.deepEqual(before.thieves.map(t=>t.k),['F','D']);
+  assert.equal(before.thieves[1].needsWin,false);
+  const after=core.cutBoard(d,{upset:'F',inside:'B'},{upset:0,inside:.35},{upset:'F'});
+  assert.equal(after.cut,3);
+  assert.ok(after.atLarge.some(t=>t.k==='D'&&t.status==='Below cut'));
+  assert.equal(after.thieves.find(t=>t.k==='D').needsWin,true);
+});

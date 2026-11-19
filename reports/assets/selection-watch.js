@@ -110,10 +110,37 @@
     banner.textContent=picks.size?'WHAT-IF · '+pickText().join(' · '):'';
     $('sw-reset-picks').disabled=!picks.size;
   }
+  function cutHTML(board, name, archive=false, odds={}, formatTeam=null, detail=()=> '') {
+    const {atLarge:left,thieves:right,cut}=board, n=Math.max(left.length,right.length);
+    // Spread the shorter list across the shared rows so strongest/weakest and lowest/highest
+    // stay at the two ends without implying equal list counts or independent upsets.
+    const align=list=>new Map(list.map((item,i)=>[
+      list.length===1?n-1:Math.round(i*(n-1)/(list.length-1)),item]));
+    const a=align(left),b=align(right);
+    const firstBelow=left.findIndex(t=>t.rank>cut);
+    const onCut=firstBelow<0?null:left[firstBelow].k;
+    const atTile=t=>formatTeam?formatTeam(t.k,t.status==='Below cut'||t.status==='COIN TOSS',
+      '<small>'+percent(odds[t.k]||0)+'</small>'):'<strong>#'+E(t.rank)+' '+E(name(t.k))+'</strong>';
+    const rTile=t=>formatTeam?formatTeam(t.k,t.win<.5,'<small>'+percent(t.win)+'</small>'):
+      '<strong>'+E(name(t.k))+'</strong> · '+percent(t.win);
+    let html='<p class="sw-cut-note">'+(archive?'Final':'Projected')+' at-large cut after rank #'+E(cut)+'</p>'+
+      '<div class="sw-head"><span>AT-LARGE TEAMS AT RISK</span><span>BID THIEVES · LOW TO HIGH</span></div>';
+    for(let i=0;i<n;i++){
+      const l=a.get(i),r=b.get(i);
+      html+='<div class="sw-cut-row"><div'+(l&&l.k===onCut?' class="sw-cut-line"':'')+'>'+
+        (l?atTile(l)+'<div class="sw-inline">'+E(l.status)+'</div>':'')+
+        '</div><div>'+(r?rTile(r)+'<div class="sw-inline">'+E(r.status)+
+          (r.both?' · Can also qualify at-large':'')+detail(r)+'</div>':'')+'</div></div>';
+    }
+    if(left.length&&!onCut)html+='<div class="sw-cut-row"><div class="sw-cut-line"></div><div></div></div>';
+    if(!left.length&&!right.length)html+='<p>No CCG outcomes change the cut.</p>';
+    if(archive)html+='<p class="sw-muted">100% and 0% reflect final CCG results, not historical pregame odds.</p>';
+    return html;
+  }
   function paint() {
     if(!lastGood)return;
     paintPicks();
-    const games=gameById(),leaders={},p={},margins={},settled={};
+    const games=gameById(),leaders={},p={},settled={};
     for(const g of d.ccg){
       const live=liveScores[g.id]||{},last=g.winner;
       leaders[g.id]=leading(g);
@@ -123,9 +150,8 @@
       else if(picks.has(g.id)){
         leaders[g.id]=picks.get(g.id);p[g.id]=leaders[g.id]===g.a?1:0;settled[g.id]=leaders[g.id];
       }
-      margins[g.id]=Math.abs(live.scoreA-live.scoreB)||0;
     }
-    const b=W.sortedBoard(d,leaders,p,margins,sort),odds=W.odds(d,p);
+    const board=W.cutBoard(d,leaders,p,settled),odds=W.odds(d,p);
     const locks=absoluteLocks || (absoluteLocks=W.locks(d));
     const shownLocks=picks.size?d.order.filter(t=>(odds[t.k]||0)>=1-1e-10).map(t=>t.k):locks;
     const locked=new Set(shownLocks);
@@ -133,10 +159,10 @@
     const projected=W.field(d,d.ccg.map(g=>leaders[g.id]));
     const toss=new Set(Object.entries(projected).filter(([,v])=>v>0&&v<1).map(([k])=>k));
     const tossBadge='<small class="sw-toss">COIN TOSS</small>';
-    const riskOrder=b.atRisk, status=d.ccg.filter(g=>g.winner||liveScores[g.id]?.final).length;
-    const confirmed=b.thieves.filter(t=>labels[t.game]==='Stolen'&&!picks.has(t.game)).length;
-    const pendingLeads=b.k-confirmed;
-    const potential=b.thieves.filter(t=>!(games[t.game].winner||liveScores[t.game]?.final)&&!t.leading).length;
+    const status=d.ccg.filter(g=>g.winner||liveScores[g.id]?.final).length;
+    const confirmed=board.thieves.filter(t=>t.status==='Stolen'&&!picks.has(t.game)).length;
+    const pendingLeads=board.thieves.filter(t=>!settled[t.game]&&t.needsWin&&leaders[t.game]===t.k).length;
+    const potential=board.thieves.filter(t=>!settled[t.game]&&leaders[t.game]!==t.k).length;
     const provisional=preview==='provisional'||d.provisional, historical=preview==='historical';
     const stamp=updated?updated.toLocaleString('en-US',{timeZone:'America/New_York',dateStyle:'medium',timeStyle:'short'})+' ET':'not yet refreshed';
     const freshness=historical?d.year+' CCG finals · Historical replay':'Updated '+stamp;
@@ -146,25 +172,8 @@
       '<span><b>'+confirmed+'</b> steals confirmed</span>'+
       '<span><b>'+pendingLeads+'</b> additional currently leading</span>'+
       '<span><b>'+potential+'</b> additional possible</span>';
-    let html='<div class="sw-head"><span>THIEVES</span><span>AT-LARGE TEAMS AT RISK</span></div>';
-    b.thieves.forEach((t,i)=>{
-      const g=games[t.game],lm=liveScores[g.id]||{};
-      const win=t.team===g.a?p[g.id]:1-p[g.id];
-      const score=lm.scoreA!=null&&lm.scoreB!=null?
-        'Score '+dollar(t.team===g.a?lm.scoreA:lm.scoreB)+'–'+dollar(t.team===g.a?lm.scoreB:lm.scoreA) : 'No live score';
-      const at=riskOrder[i],risk=at?odds[at]??0:null;
-      const gameToss=lm.final&&!settled[g.id];
-      const cutToss=toss.has(at)||toss.has(t.team);
-      html+='<div class="sw-pair'+(i===b.k&&b.k<b.thieves.length?' cut':'')+'">'+
-        '<div>'+tile(t.team,gameToss||cutToss||!t.leading,(toss.has(t.team)?tossBadge:'')+'<small>'+percent(win)+'</small>')+
-        '<span class="sw-inline">'+E(score)+' · '+E(lm.final?'Final':lm.status||'Projected')+
-        ' · '+(gameToss?'COIN TOSS':picks.has(g.id)?'What-if: '+labels[g.id]:labels[g.id])+gameLinks(g)+'</span></div>'+
-        '<div>'+tile(at,cutToss||gameToss||i<b.k,at?(cutToss?tossBadge:'')+'<small>'+percent(risk)+'</small>':'')+
-        '<span class="sw-inline">'+(cutToss||gameToss?'Cut depends on a coin toss':i<b.k?'Below current cut':'Holds if current leaders win')+'</span></div></div>';
-    });
-    if(!b.thieves.length)html+='<p class="sw-empty">No possible steals. No CCG participants are outside the natural field.</p>';
-    content('sw-board-rows',html);
-    const bubble=[...new Set([...b.atRisk,...toss])].filter(k=>!locked.has(k));
+    content('sw-board-rows',cutHTML(board,k=>team(k).name,false,odds,tile,t=>gameLinks(games[t.game])));
+    const bubble=[...new Set([...board.atLarge.map(t=>t.k),...toss])];
     discordDraft=null;
     if(!preview&&!picks.size){
       const complete=d.ccg.every(g=>settled[g.id])&&!toss.size;
@@ -178,11 +187,8 @@
     syncDraftButton();
     const bubbleReason=k=>{
       if(toss.has(k))return 'COIN TOSS · Tied at the projected cut.';
-      const index=b.atRisk.indexOf(k)+1;
-      const game=d.ccg.find(g=>g.a===k||g.b===k);
-      const stealCount=index===1?'one steal':index+' steals';
-      return (game?'Can qualify by winning its CCG; otherwise needs ':'Needs ')+
-        'fewer than '+stealCount+' to hold its at-large spot.';
+      const row=board.atLarge.find(t=>t.k===k);
+      return (row?.status||'At the cut')+' · Can qualify without a CCG win.';
     };
     content('sw-bubble-rows',bubble.length?
       '<table class="sw-odds"><thead><tr><th>At-large team</th><th>Why</th><th>Make field</th></tr></thead><tbody>'+
@@ -193,7 +199,7 @@
     if (checkpoints.length) $('sw-bubble-rows').insertAdjacentHTML('beforeend',renderTimeline(bubble.map(k=>team(k).name)));
     content('sw-lock-rows','<p class="sw-muted">'+shownLocks.length+' teams qualify in every '+(picks.size?'remaining':'possible')+' outcome.</p><div class="sw-locks">'+
       shownLocks.map(k=>'<span class="sw-lock" style="--tc:'+E(team(k).primary)+'">'+E(team(k).name)+'</span>').join('')+'</div>');
-    const relevant=new Set(b.thieves.map(t=>t.game));
+    const relevant=new Set(board.thieves.map(t=>t.game));
     const noimpact=d.ccg.filter(g=>!relevant.has(g.id)&&(labels[g.id]==='No bubble impact'||(locked.has(g.a)&&locked.has(g.b))));
     const otherImpact=d.ccg.filter(g=>!relevant.has(g.id)&&!noimpact.includes(g));
     if(otherImpact.length) $('sw-bubble-rows').insertAdjacentHTML('beforeend',
@@ -274,6 +280,11 @@
   function showFinals(year, archive, sample) {
     const season=archive[year];
     if(!season?.ccg?.length || !season.field?.length)throw Error('No final results available for '+year);
+    if(season.cut_board){
+      const d=season.cut_board, finals=Object.fromEntries(d.ccg.map(g=>[g.id,g.winner]));
+      const p=Object.fromEntries(d.ccg.map(g=>[g.id,g.a===g.winner?1:0]));
+      content('sw-final-cut',cutHTML(W.cutBoard(d,finals,p,finals),k=>k,true));
+    }else content('sw-final-cut','<p>A verified cut reconstruction is not available for this season. Recorded finals and the actual field are below.</p>');
     content('sw-final-status','<b class="sw-flag">FINAL RESULTS</b><strong>'+E(year)+' season</strong>'+
       '<span>'+season.ccg.length+' conference championships</span><span>'+season.field.length+' playoff teams</span>'+
       '<span>National champion: '+E(season.champion)+'</span>');
@@ -361,7 +372,7 @@
     catch(err){if(preview!=='historical')throw err;}
     $('sw-content').hidden=false;
     if(checkpoints.length&&!preview)timeline=await loadTimeline(d.year);
-    fold();$('sw-sort').addEventListener('change',e=>{sort=e.target.value;paint();});
+    fold();
     $('sw-refresh').addEventListener('click',refresh);
     $('sw-picks').addEventListener('change',event=>{
       const id=event.target.dataset.game, g=d.ccg.find(game=>game.id===id);

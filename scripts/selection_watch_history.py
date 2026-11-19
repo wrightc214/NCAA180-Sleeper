@@ -35,6 +35,16 @@ def verified_steals(year, games, entrants):
             game["steal"] = "Stolen" if ranks[game["winner"]] > board["field_size"] else "Held"
 
 
+    names = {key: team["team"] for key, team in by_key.items()}
+    return {
+        "field_size": board["field_size"],
+        "order": [{"k": t["team"], "team": t["team"], "rank": t["rank"]} for t in board["order"]],
+        "ccg": [{"id": i, **{k: names[g[k]] for k in ("a", "b", "winner")}}
+                for i, g in enumerate(board["ccg"])],
+        "tie": [[names[k] for k in group] for group in board["tie"]],
+    }
+
+
 def build(source=SOURCE):
     seasons = defaultdict(list)
     with source.open(encoding="utf-8-sig", newline="") as handle:
@@ -71,9 +81,9 @@ def build(source=SOURCE):
                         entrants[name] = seed
                     elif seed is not None and entrants[name] != seed:
                         raise ValueError(f"{year} has conflicting seeds for {name}")
-        if source == SOURCE:
-            verified_steals(year, games, entrants)
+        board = verified_steals(year, games, entrants) if source == SOURCE else None
         history[str(year)] = {
+            **({"cut_board": board} if board else {}),
             "champion": final["Winner"].strip(),
             "ccg": sorted(games, key=lambda g: g["conference"]),
             "field": [{"team": name, "seed": seed} for name, seed in

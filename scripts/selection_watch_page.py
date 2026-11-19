@@ -34,6 +34,9 @@ CSS = """
 .sw-toss{font-weight:800;border:1px dashed var(--neutral);padding:1px 4px}
 .sw-track{margin:8px 0}.sw-track>div{display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:4px}
 .sw-track span{border:1px solid var(--line);padding:4px}.sw-track small{display:block}
+.sw-cut-note{margin:6px 0;font-weight:700}.sw-cut-line{border-top:2px dashed var(--accent);margin-top:4px;padding-top:4px}
+.sw-cut-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:4px 0}
+.sw-cut-row>*{min-width:0;overflow-wrap:anywhere}
 .sw-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
 .sw-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .sw-actions button,.sw-actions select{border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:7px 10px}
@@ -92,10 +95,12 @@ def main():
     html = page_head(f"{title} | {brand}", CSS)
     html += f"""
 <main class="wrap sw-page">
+"""
+    html += menu_html("selection-watch")
+    html += f"""
 <header><h1><span id="sw-brand">{escape(brand)}</span> <em data-sw-label="title">{escape(title)}</em></h1>
 <p id="sw-intro" class="sw-muted">Exact playoff probabilities during conference championship week · Unofficial</p></header>
 """
-    html += menu_html("selection-watch")
     seasons = json.loads(HISTORY.read_text(encoding="utf-8")) if HISTORY.exists() else {}
     options = "".join(f'<option value="{year}">{year} · Final</option>'
                       for year in sorted(seasons, key=int, reverse=True))
@@ -110,6 +115,8 @@ def main():
 <div id="sw-final" class="sw-final" hidden>
 <div class="sw-actions"><button id="sw-final-collapse" type="button">Collapse all</button></div>
 <div id="sw-final-status" class="sw-status"></div>
+<details id="sw-final-cut-section" class="sw-section" open><summary>Steal Board · Final <button class="sw-save" type="button" data-save="sw-final-cut-section">Save image</button></summary>
+<div class="sw-inner" id="sw-final-cut"></div></details>
 <details id="sw-final-ccg-section" class="sw-section sw-archive-section" open><summary>Conference championship finals <button class="sw-save" type="button" data-save="sw-final-ccg-section">Save image</button></summary>
 <div class="sw-inner" id="sw-final-ccg"></div></details>
 <details id="sw-final-field-section" class="sw-section sw-archive-section" open><summary>Final playoff field <button class="sw-save" type="button" data-save="sw-final-field-section">Save image</button></summary>
@@ -118,12 +125,11 @@ def main():
 <div id="sw-content" hidden>
 <p id="sw-whatif-banner" class="sw-whatif-banner" role="status" hidden></p>
 <div class="sw-top"><div class="sw-actions">
-<label for="sw-sort">Steal Board order</label><select id="sw-sort"><option value="chance">Win chance</option><option value="margin">If it ended now · margin</option></select>
 <button id="sw-collapse" type="button">Collapse all</button><button id="sw-refresh" type="button">Refresh</button><button id="sw-discord-draft" type="button" hidden>Save Discord draft</button></div>
 <span id="sw-updated" class="sw-progress">Loading…</span></div>
 <details id="sw-status-section" class="sw-section" open><summary>Status <button class="sw-save" type="button" data-save="sw-status-section">Save image</button></summary><div id="sw-status" class="sw-status" aria-live="polite">Loading selection data…</div></details>
 <details id="sw-board" class="sw-section" open><summary>Steal Board <button class="sw-save" type="button" data-save="sw-board">Save image</button></summary>
-<div class="sw-inner"><p class="sw-muted">One row per potential steal. The at-large team opposite the thief is the team whose place is threatened.</p><div id="sw-board-rows"></div></div></details>
+<div class="sw-inner"><p class="sw-muted">At-large teams are ordered by playoff rank. Bid thieves are ordered from lowest to highest CCG win chance. Rows show the two rankings side by side, not a direct matchup.</p><div id="sw-board-rows"></div></div></details>
 <details id="sw-bubble" class="sw-section" open><summary>Bubble odds <button class="sw-save" type="button" data-save="sw-bubble">Save image</button></summary><div class="sw-inner" id="sw-bubble-rows"></div></details>
 <details id="sw-locks" class="sw-section" open><summary>Locks <button class="sw-save" type="button" data-save="sw-locks">Save image</button></summary><div class="sw-inner" id="sw-lock-rows"></div></details>
 <details id="sw-noimpact" class="sw-section"><summary>No-impact CCGs <button class="sw-save" type="button" data-save="sw-noimpact">Save image</button></summary><div class="sw-inner" id="sw-noimpact-rows"></div></details>

@@ -132,7 +132,50 @@
     });
     return labels;
   }
-  const api = {field, odds, board, locks, sortedBoard, implications};
+  // Freeze the range of roles over all CCG outcomes, including the paths that did not happen.
+  // This lets a settled board retain the same bubble and show who actually fell below the cut.
+  const roleCache=new WeakMap();
+  function bubbleRoles(d){
+    if(roleCache.has(d))return roleCache.get(d);
+    const games=d.ccg, n=games.length;
+    if(n>20)throw Error('Unexpected CCG count');
+    const possible=new Set(), full=new Map(), participants=new Set(games.flatMap(g=>[g.a,g.b]));
+    const count=2**n;
+    for(let mask=0;mask<count;mask++){
+      const winners=games.map((g,i)=>mask&(1<<i)?g.a:g.b), automatic=new Set(winners);
+      for(const [k,share] of Object.entries(field(d,winners))){
+        if(automatic.has(k))continue;
+        if(share>0)possible.add(k);
+        if(share===1)full.set(k,(full.get(k)||0)+1);
+      }
+    }
+    const canMiss=k=>(full.get(k)||0)<(participants.has(k)?count/2:count);
+    const roles={atLarge:d.order.filter(t=>possible.has(t.k)&&canMiss(t.k)),
+      thieves:games.flatMap(g=>[g.a,g.b].filter(canMiss).map(k=>({k,g}))), possible};
+    roleCache.set(d,roles);
+    return roles;
+  }
+  function cutBoard(d, leaders, probabilities, settled={}){
+    const roles=bubbleRoles(d);
+    const winners=d.ccg.map(g=>leaders[g.id]||g.winner||g.a), winnersSet=new Set(winners);
+    const projected=field(d,winners);
+    const cut=d.order.reduce((out,t)=>!winnersSet.has(t.k)&&projected[t.k]>0?Math.max(out,t.rank):out,0);
+    const ranks=new Map(d.order.map(t=>[t.k,t.rank]));
+    const thieves=roles.thieves.map(({k,g})=>{
+      const q=probabilities[g.id]??.5;
+      const loss=field(d,d.ccg.map((other,i)=>other===g?(k===g.a?g.b:g.a):winners[i]));
+      const needsWin=(loss[k]||0)<1;
+      const final=settled[g.id];
+      return {k,game:g.id,win:k===g.a?q:1-q,needsWin,
+        both:roles.possible.has(k),
+        status:final===k?(needsWin?'Stolen':'Won · at-large safe'):
+          final?'Lost':needsWin?'Needs a win at this cut':'Conditional thief'};
+    }).sort((a,b)=>a.win-b.win||ranks.get(a.k)-ranks.get(b.k)||a.k.localeCompare(b.k));
+    const atLarge=roles.atLarge.map(t=>({...t,status:winnersSet.has(t.k)?'Automatic bid in this scenario':
+      projected[t.k]===1?'Above cut':projected[t.k]>0?'COIN TOSS':'Below cut'}));
+    return {atLarge,thieves,cut,projected};
+  }
+  const api = {field, odds, board, locks, sortedBoard, implications, cutBoard};
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.SelectionWatchCore = api;
 })(typeof window === 'undefined' ? globalThis : window);
