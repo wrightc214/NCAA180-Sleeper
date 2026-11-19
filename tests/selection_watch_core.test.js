@@ -79,3 +79,13 @@ test('margin sorts trailing thieves by nearest comeback, without moving cut', ()
   assert.equal(b.k,0);
   assert.deepEqual(b.thieves.map(t=>t.game),['two','one']);
 });
+
+
+test('bid labels separate projected steals, possibilities and official finals', () => {
+  const d={field_size:2,order:['A','B','C','D'].map((k,i)=>({k,rank:i+1})),ccg:[{id:'g',a:'A',b:'D'}]};
+  const label=(p,w)=>core.implications(d,{g:p},w?{g:w}:{}).g;
+  assert.equal(label(.7), 'Possible steal');
+  assert.equal(label(.3), 'Steal');
+  assert.equal(label(.2,'D'), 'Stolen');
+  assert.equal(label(.8,'A'), 'Held');
+});

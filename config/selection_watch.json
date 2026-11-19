@@ -27,5 +27,45 @@
     }
   },
   "_availability_message_note": "Message shown when the live data file has not been published. Update or remove the date for future seasons.",
-  "availability_message": "Available after the regular season is final (Tue Nov 24)."
+  "availability_message": "Available after the regular season is final (Tue Nov 24).",
+  "timeline": {
+    "_note": "Checkpoint windows in Eastern time with explicit UTC offsets. After each opens, record its first verified refresh with all NFL games starting before through complete. Expired missing windows are never backfilled.",
+    "windows": [
+      {
+        "id": "thu-fri",
+        "label": "Thu/Fri",
+        "opens": "2026-11-27T23:00:00-05:00",
+        "closes": "2026-11-28T03:00:00-05:00",
+        "through": "2026-11-28T00:00:00-05:00"
+      },
+      {
+        "id": "sun-early",
+        "label": "Sun Early",
+        "opens": "2026-11-29T15:45:00-05:00",
+        "closes": "2026-11-29T18:00:00-05:00",
+        "through": "2026-11-29T16:00:00-05:00"
+      },
+      {
+        "id": "sun-late",
+        "label": "Sun Late",
+        "opens": "2026-11-29T19:00:00-05:00",
+        "closes": "2026-11-29T21:30:00-05:00",
+        "through": "2026-11-29T20:00:00-05:00"
+      },
+      {
+        "id": "snf",
+        "label": "SNF",
+        "opens": "2026-11-29T23:00:00-05:00",
+        "closes": "2026-11-30T03:00:00-05:00",
+        "through": "2026-11-30T00:00:00-05:00"
+      },
+      {
+        "id": "final",
+        "label": "Final",
+        "opens": "2026-11-30T23:00:00-05:00",
+        "closes": "2026-12-01T03:00:00-05:00",
+        "through": "2026-12-01T03:00:00-05:00"
+      }
+    ]
+  }
 }

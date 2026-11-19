@@ -89,6 +89,12 @@ footer{font-size:12px;color:var(--mute)}
 .sw-conf-short{display:none}
 .sw-score-note{display:block;font-weight:400}
 @media(max-width:600px){.sw-conf-full{display:none}.sw-conf-short{display:inline;white-space:nowrap}}
+.sw-whatif{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,235px),1fr));gap:10px}
+.sw-whatif label{display:grid;min-width:0;gap:3px}.sw-whatif select{max-width:100%;min-width:0}
+.sw-whatif-banner{border:2px solid var(--accent);padding:8px;margin:8px 0;overflow-wrap:anywhere}
+.sw-toss{font-weight:800;border:1px dashed var(--neutral);padding:1px 4px}
+.sw-track{margin:8px 0}.sw-track>div{display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:4px}
+.sw-track span{border:1px solid var(--line);padding:4px}.sw-track small{display:block}
 .sw-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
 .sw-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .sw-actions button,.sw-actions select{border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:7px 10px}
@@ -151,9 +157,10 @@ footer{font-size:12px;color:var(--mute)}
 <div class="sw-inner" id="sw-final-field"></div></details>
 </div>
 <div id="sw-content" hidden>
+<p id="sw-whatif-banner" class="sw-whatif-banner" role="status" hidden></p>
 <div class="sw-top"><div class="sw-actions">
 <label for="sw-sort">Steal Board order</label><select id="sw-sort"><option value="chance">Win chance</option><option value="margin">If it ended now · margin</option></select>
-<button id="sw-collapse" type="button">Collapse all</button><button id="sw-refresh" type="button">Refresh</button></div>
+<button id="sw-collapse" type="button">Collapse all</button><button id="sw-refresh" type="button">Refresh</button><button id="sw-discord-draft" type="button" hidden>Save Discord draft</button></div>
 <span id="sw-updated" class="sw-progress">Loading…</span></div>
 <details id="sw-status-section" class="sw-section" open><summary>Status <button class="sw-save" type="button" data-save="sw-status-section">Save image</button></summary><div id="sw-status" class="sw-status" aria-live="polite">Loading selection data…</div></details>
 <details id="sw-board" class="sw-section" open><summary>Steal Board <button class="sw-save" type="button" data-save="sw-board">Save image</button></summary>
@@ -161,6 +168,9 @@ footer{font-size:12px;color:var(--mute)}
 <details id="sw-bubble" class="sw-section" open><summary>Bubble odds <button class="sw-save" type="button" data-save="sw-bubble">Save image</button></summary><div class="sw-inner" id="sw-bubble-rows"></div></details>
 <details id="sw-locks" class="sw-section" open><summary>Locks <button class="sw-save" type="button" data-save="sw-locks">Save image</button></summary><div class="sw-inner" id="sw-lock-rows"></div></details>
 <details id="sw-noimpact" class="sw-section"><summary>No-impact CCGs <button class="sw-save" type="button" data-save="sw-noimpact">Save image</button></summary><div class="sw-inner" id="sw-noimpact-rows"></div></details>
+<details id="sw-whatif" class="sw-section" hidden><summary>What-if <button class="sw-save" type="button" data-save="sw-whatif">Save image</button></summary>
+<div class="sw-inner"><p>Pick winners for unfinished games. These picks change only your view.</p>
+<button id="sw-reset-picks" type="button">Reset picks</button><div id="sw-picks" class="sw-whatif"></div></div></details>
 <p class="sw-muted">An unofficial estimate, not a published playoff field. Ties remaining after every ranking tiebreaker await a real coin toss.</p>
 </div>
 </main>
@@ -168,5 +178,6 @@ footer{font-size:12px;color:var(--mute)}
 <script src="assets/scoreboard-core.js"></script>
 <script src="assets/scoreboard-overview-model.js"></script>
 <script src="assets/selection-watch-core.js"></script>
+<script src="assets/selection-watch-games.js"></script>
 <script src="assets/selection-watch.js" defer></script>
 </body></html>

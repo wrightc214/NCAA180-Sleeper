@@ -83,7 +83,56 @@
     });
     return b;
   }
-  const api = {field, odds, board, locks, sortedBoard};
+  // A possible impact must be reachable without changing games whose outcomes are locked.
+  function implications(d, p, settled, locked = []) {
+    const games = d.ccg, N = d.field_size;
+    const rank = new Map(d.order.map(t => [t.k, t.rank]));
+    const absolute = new Set(locked);
+    const likely = games.map(g => settled[g.id] || ((p[g.id] ?? .5) >= .5 ? g.a : g.b));
+    const signature = winners => JSON.stringify(Object.entries(field(d, winners)).sort());
+    const same = (winners, index) => {
+      const alternate = [...winners], g = games[index];
+      alternate[index] = winners[index] === g.a ? g.b : g.a;
+      return signature(winners) === signature(alternate);
+    };
+    const labels = {};
+    games.forEach((g, index) => {
+      const aOut = rank.get(g.a) > N, bOut = rank.get(g.b) > N;
+      const winner = settled[g.id];
+      if (winner) {
+        labels[g.id] = aOut || bOut ? (rank.get(winner) > N ? 'Stolen' : 'Held') : 'Final';
+        return;
+      }
+      if (absolute.has(g.a) && absolute.has(g.b)) {
+        labels[g.id] = 'No bubble impact';
+        return;
+      }
+      if (aOut || bOut) {
+        const q=p[g.id] ?? .5, outsidePossible=(aOut&&q>0)||(bOut&&q<1);
+        labels[g.id]=rank.get(likely[index])>N?'Steal':outsidePossible?'Possible steal':'No bubble impact';
+        return;
+      }
+      if (!same(likely, index)) {
+        labels[g.id] = 'Bubble impact';
+        return;
+      }
+      // A game whose hypothetical flip changes nothing in the likely field may still matter
+      // when other games go differently. Enumerate those alternatives, with early exit.
+      const variable = games.flatMap((other, j) => j !== index && !settled[other.id] &&
+        (p[other.id] ?? .5) > 0 && (p[other.id] ?? .5) < 1 ? [j] : []);
+      let possible = false;
+      for (let mask = 1; mask < 2 ** variable.length && !possible; mask++) {
+        const candidate = [...likely];
+        variable.forEach((j, bit) => {
+          if (mask & (1 << bit)) candidate[j] = likely[j] === games[j].a ? games[j].b : games[j].a;
+        });
+        possible = !same(candidate, index);
+      }
+      labels[g.id] = possible ? 'Possible bubble impact' : 'No bubble impact';
+    });
+    return labels;
+  }
+  const api = {field, odds, board, locks, sortedBoard, implications};
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.SelectionWatchCore = api;
 })(typeof window === 'undefined' ? globalThis : window);

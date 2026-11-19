@@ -1,12 +1,38 @@
 """Build the read-only Selection Watch archive from recorded postseason results."""
 import csv
 import json
+import os
 from collections import defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "data/Postseason_Historic.csv"
 OUTPUT = ROOT / "reports/postseason/selection-watch-history.json"
+
+
+def verified_steals(year, games, entrants):
+    # Modern Steal Board labels only when the mathematical field matches the real field.
+    # 2019–2020 used different formats. Older-format or incomplete data must not imply a result.
+    if len(games) != 15 or len(entrants) != 32 or year <= 2020:
+        return
+    from selection_watch import build as build_board, field
+    previous = Path.cwd()
+    try:
+        os.chdir(ROOT)
+        board = build_board(year)
+    finally:
+        os.chdir(previous)
+    by_key = {team["k"]: team for team in board["order"]}
+    winners = [game["winner"] for game in board["ccg"]]
+    if not all(winners):
+        return
+    actual = {by_key[key]["team"] for key, share in field(board, winners).items() if share == 1}
+    if actual != set(entrants):
+        return
+    ranks = {team["team"]: team["rank"] for team in board["order"]}
+    for game in games:
+        if max(ranks[game["a"]], ranks[game["b"]]) > board["field_size"]:
+            game["steal"] = "Stolen" if ranks[game["winner"]] > board["field_size"] else "Held"
 
 
 def build(source=SOURCE):
@@ -45,6 +71,8 @@ def build(source=SOURCE):
                         entrants[name] = seed
                     elif seed is not None and entrants[name] != seed:
                         raise ValueError(f"{year} has conflicting seeds for {name}")
+        if source == SOURCE:
+            verified_steals(year, games, entrants)
         history[str(year)] = {
             "champion": final["Winner"].strip(),
             "ccg": sorted(games, key=lambda g: g["conference"]),
@@ -55,6 +83,7 @@ def build(source=SOURCE):
 
 
 if __name__ == "__main__":
+    os.chdir(ROOT)
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT.write_text(json.dumps(build(), ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
     print(f"Built {OUTPUT.relative_to(ROOT)}")

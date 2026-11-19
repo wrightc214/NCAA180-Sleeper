@@ -4,6 +4,7 @@ const fs = require('node:fs');
 const test = require('node:test');
 const vm = require('node:vm');
 const Core = require('../reports/assets/selection-watch-core.js');
+const Games = require('../reports/assets/selection-watch-games.js');
 const page = fs.readFileSync(require.resolve('../reports/assets/selection-watch.js'), 'utf8');
 
 function setup(baseline, settings = {}, {search='', fixtureURL, fixtureData={}, missingLive=false} = {}) {
@@ -54,7 +55,7 @@ function setup(baseline, settings = {}, {search='', fixtureURL, fixtureData={}, 
   let summary = {live: false, probability: null, pregame: null, final: false, status: 'Upcoming',
     models: [{actual: 0}, {actual: 0}]};
   const ready = vm.runInNewContext(page, {
-    window: {ScoreboardCore: {statsMap: x => x}, ScoreboardOverview: {summarize: () => summary},
+    window: {SelectionWatchGames: Games, ScoreboardCore: {statsMap: x => x}, ScoreboardOverview: {summarize: () => summary},
       SelectionWatchCore: {...Core, odds(d, p) { seen.push(p.ccg); return Core.odds(d, p); }}},
     document, location: {search}, URLSearchParams, AbortController,
     NCAASnap: {async save(options) { exports.push(options); }},
@@ -205,4 +206,22 @@ test('the unpublished live board has a friendly configurable message', async () 
       availability_message || 'Available after the regular season is final.');
     assert.equal(h.requests.at(-1), 'postseason/selection-watch.json');
   }
+});
+
+
+test('what-if uses a reversible probability and stamps it into saves', async () => {
+  const h=setup({odds:[]});
+  h.setBaseline({odds:[h.odds(60)]});
+  await h.ready;
+  h.element('sw-picks').listeners.change({target:{dataset:{game:'ccg'},value:'conf|4'}});
+  assert.equal(h.seen.at(-1),0);
+  assert.match(h.element('sw-whatif-banner').textContent,/WHAT-IF.*Team 4 wins/);
+  assert.equal(h.element('sw-discord-draft').disabled,true);
+  await h.save.listeners.click({stopPropagation() {}});
+  assert.equal(h.exports.at(-1).whatif[0],'Team 4 wins');
+  h.element('sw-reset-picks').listeners.click();
+  assert.equal(h.seen.at(-1),.6);
+  assert.equal(h.element('sw-whatif-banner').hidden,true);
+  await h.element('sw-discord-draft').listeners.click();
+  assert.match(h.exports.at(-1).html,/Held for owner approval/);
 });

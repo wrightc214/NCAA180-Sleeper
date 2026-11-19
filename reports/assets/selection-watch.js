@@ -14,24 +14,7 @@
   const percent = x => !Number.isFinite(x) ? '—' :
     x < .00001 ? '0%' : x > .99999 ? '100%' : (x*100).toFixed(1)+'%';
   const clamp = x => Math.max(0,Math.min(1,x));
-  const probability = value => {
-    if(typeof value!=='number' && (typeof value!=='string' || !value.trim()))return null;
-    const n=Number(value);
-    return Number.isFinite(n)&&n>=0&&n<=100?n/100:null;
-  };
-  function frozenProbability(baseline,lid,a,b) {
-    const ids=[String(a.roster_id),String(b.roster_id)];
-    const sameLeague = side => String(side.LeagueID)===lid;
-    const game=(baseline.games||[]).find(g=>g.sides?.length===2&&
-      ids.every(id=>g.sides.some(side=>sameLeague(side)&&String(side.RosterID)===id)));
-    const modern=probability(game?.sides.find(side=>String(side.RosterID)===ids[0])?.WinPct);
-    if(modern!==null)return modern;
-    const legacy=(baseline.odds||[]).find(o=>sameLeague(o)&&
-      [String(o.RosterID),String(o.OpponentRosterID)].sort().join(',')===ids.slice().sort().join(','));
-    const fallback=probability(legacy?.WinPct);
-    return fallback===null?null:String(legacy.RosterID)===ids[0]?fallback:1-fallback;
-  }
-  let d,cfg,index,baseline,metadata,brand,featureName,exportPrefix,refreshMs,sort='chance',modelCache=new Map(),liveScores={},
+  let d,cfg,index,metadata,brand,featureName,exportPrefix,refreshMs,sort='chance',modelCache=new Map(),liveScores={},
     lastGood=null,updated=null,timer=null,loading=false,absoluteLocks=null;
   const byKey = () => Object.fromEntries(d.order.map(t=>[t.k,t]));
   const gameById = () => Object.fromEntries(d.ccg.map(g=>[g.id,g]));
@@ -85,19 +68,67 @@
     if(result?.leader)return result.leader;
     return (result?.pA??.5)>=.5?g.a:g.b;
   }
+  let timeline={}, checkpoints=[];
+  function renderTimeline(teams, sample=false) {
+    const table=teams.map(name=>'<div class="sw-track"><strong>'+E(name)+'</strong><div>'+
+      checkpoints.map(w=>{
+        const value=timeline[w.id]?.odds?.[name];
+        return '<span><b>'+E(w.label)+'</b><small>'+ (Number.isFinite(value)?E(value)+'%':'Not recorded')+'</small></span>';
+      }).join('')+'</div></div>').join('');
+    return '<div class="sw-timeline"><h3>Bubble odds timeline</h3>'+
+      (sample?'<p><b>SAMPLE TIMELINE · Illustrative, not recorded results</b></p>':'')+
+      (table||'<p>No checkpoints recorded for this season.</p>')+'</div>';
+  }
+  async function loadTimeline(year, getData=get) {
+    try {return await getData('postseason/selection-watch-timeline-'+year+'.json');}
+    catch (_) {return {};}
+  }
+  const picks=new Map();
+  let discordDraft=null;
+  const pickText=()=>[...picks.values()].map(k=>team(k).name+' wins');
+  function paintPicks() {
+    const controls=$('sw-whatif'), options=[];
+    for(const g of d.ccg){
+      if(g.winner||liveScores[g.id]?.final){picks.delete(g.id);continue;}
+      options.push('<label>'+E(team(g.a).name)+' vs '+E(team(g.b).name)+
+        '<select data-game="'+E(g.id)+'"><option value="">Use current odds</option>'+
+        [g.a,g.b].map(k=>'<option value="'+E(k)+'"'+(picks.get(g.id)===k?' selected':'')+'>'+E(team(k).name)+' wins</option>').join('')+'</select></label>');
+    }
+    controls.hidden=!options.length;
+    const box=$('sw-picks');
+    if(box.dataset.options!==options.join('')){
+      box.innerHTML=options.join('');box.dataset.options=box.innerHTML;
+    }
+    const banner=$('sw-whatif-banner');
+    banner.hidden=!picks.size;
+    banner.textContent=picks.size?'WHAT-IF · '+pickText().join(' · '):'';
+    $('sw-reset-picks').disabled=!picks.size;
+  }
   function paint() {
     if(!lastGood)return;
-    const games=gameById(),leaders={},p={},margins={};
+    paintPicks();
+    const games=gameById(),leaders={},p={},margins={},settled={};
     for(const g of d.ccg){
       const live=liveScores[g.id]||{},last=g.winner;
       leaders[g.id]=leading(g);
       p[g.id]=last?(last===g.a?1:0):clamp(live.pA??.5);
+      if(last)settled[g.id]=last;
+      else if(live.final&&live.leader)settled[g.id]=live.leader;
+      else if(picks.has(g.id)){
+        leaders[g.id]=picks.get(g.id);p[g.id]=leaders[g.id]===g.a?1:0;settled[g.id]=leaders[g.id];
+      }
       margins[g.id]=Math.abs(live.scoreA-live.scoreB)||0;
     }
     const b=W.sortedBoard(d,leaders,p,margins,sort),odds=W.odds(d,p);
-    const locks=absoluteLocks || (absoluteLocks=W.locks(d)), locked=new Set(locks);
+    const locks=absoluteLocks || (absoluteLocks=W.locks(d));
+    const shownLocks=picks.size?d.order.filter(t=>(odds[t.k]||0)>=1-1e-10).map(t=>t.k):locks;
+    const locked=new Set(shownLocks);
+    const labels=W.implications(d,p,settled,locks);
+    const projected=W.field(d,d.ccg.map(g=>leaders[g.id]));
+    const toss=new Set(Object.entries(projected).filter(([,v])=>v>0&&v<1).map(([k])=>k));
+    const tossBadge='<small class="sw-toss">COIN TOSS</small>';
     const riskOrder=b.atRisk, status=d.ccg.filter(g=>g.winner||liveScores[g.id]?.final).length;
-    const confirmed=b.thieves.filter(t=>t.leading&&(games[t.game].winner||liveScores[t.game]?.final)).length;
+    const confirmed=b.thieves.filter(t=>labels[t.game]==='Stolen'&&!picks.has(t.game)).length;
     const pendingLeads=b.k-confirmed;
     const potential=b.thieves.filter(t=>!(games[t.game].winner||liveScores[t.game]?.final)&&!t.leading).length;
     const provisional=preview==='provisional'||d.provisional, historical=preview==='historical';
@@ -116,17 +147,33 @@
       const score=lm.scoreA!=null&&lm.scoreB!=null?
         'Score '+dollar(t.team===g.a?lm.scoreA:lm.scoreB)+'–'+dollar(t.team===g.a?lm.scoreB:lm.scoreA) : 'No live score';
       const at=riskOrder[i],risk=at?odds[at]??0:null;
+      const gameToss=lm.final&&!settled[g.id];
+      const cutToss=toss.has(at)||toss.has(t.team);
       html+='<div class="sw-pair'+(i===b.k&&b.k<b.thieves.length?' cut':'')+'">'+
-        '<div>'+tile(t.team,!t.leading,'<small>'+percent(win)+'</small>')+
+        '<div>'+tile(t.team,gameToss||cutToss||!t.leading,(toss.has(t.team)?tossBadge:'')+'<small>'+percent(win)+'</small>')+
         '<span class="sw-inline">'+E(score)+' · '+E(lm.final?'Final':lm.status||'Projected')+
-        (t.both_out?' · guaranteed steal':'')+gameLinks(g)+'</span></div>'+
-        '<div>'+tile(at,i<b.k,at?'<small>'+percent(risk)+'</small>':'')+
-        '<span class="sw-inline">'+(i<b.k?'Below current cut':'Holds if current leaders win')+'</span></div></div>';
+        ' · '+(gameToss?'COIN TOSS':picks.has(g.id)?'What-if: '+labels[g.id]:labels[g.id])+gameLinks(g)+'</span></div>'+
+        '<div>'+tile(at,cutToss||gameToss||i<b.k,at?(cutToss?tossBadge:'')+'<small>'+percent(risk)+'</small>':'')+
+        '<span class="sw-inline">'+(cutToss||gameToss?'Cut depends on a coin toss':i<b.k?'Below current cut':'Holds if current leaders win')+'</span></div></div>';
     });
     if(!b.thieves.length)html+='<p class="sw-empty">No possible steals. No CCG participants are outside the natural field.</p>';
     content('sw-board-rows',html);
-    const bubble=b.atRisk.filter(k=>!locked.has(k));
+    const bubble=[...new Set([...b.atRisk,...toss])].filter(k=>!locked.has(k));
+    discordDraft=null;
+    const draftButton=$('sw-discord-draft');
+    draftButton.hidden=Boolean(preview);
+    if(!preview&&!picks.size){
+      const complete=d.ccg.every(g=>settled[g.id])&&!toss.size;
+      const title=complete?'Projected field locked — pending committee approval':featureName;
+      discordDraft={title,html:'<section><h2>'+E(title)+'</h2><p>'+status+'/'+d.ccg.length+
+        ' CCGs final · '+confirmed+' steals confirmed</p>'+
+        (toss.size?'<p>COIN TOSS pending at the cut.</p>':'')+
+        (bubble.length?'<ul>'+bubble.slice(0,6).map(k=>'<li>'+E(team(k).name)+' · '+percent(odds[k]||0)+'</li>').join('')+'</ul>':'')+
+        '<p>DRAFT · Held for owner approval</p></section>'};
+    }
+    draftButton.disabled=!discordDraft;
     const bubbleReason=k=>{
+      if(toss.has(k))return 'COIN TOSS · Tied at the projected cut.';
       const index=b.atRisk.indexOf(k)+1;
       const game=d.ccg.find(g=>g.a===k||g.b===k);
       const stealCount=index===1?'one steal':index+' steals';
@@ -139,14 +186,15 @@
         '<td class="sw-muted">'+E(bubbleReason(k))+'</td>'+
         '<td>'+percent(odds[k]||0)+'</td></tr>').join('')+'</tbody></table>':
       '<p class="sw-empty">No at-large teams currently on the bubble.</p>');
-    content('sw-lock-rows','<p class="sw-muted">'+locks.length+' teams qualify in every possible outcome.</p><div class="sw-locks">'+
-      locks.map(k=>'<span class="sw-lock" style="--tc:'+E(team(k).primary)+'">'+E(team(k).name)+'</span>').join('')+'</div>');
+    if (checkpoints.length) $('sw-bubble-rows').insertAdjacentHTML('beforeend',renderTimeline(bubble.map(k=>team(k).name)));
+    content('sw-lock-rows','<p class="sw-muted">'+shownLocks.length+' teams qualify in every '+(picks.size?'remaining':'possible')+' outcome.</p><div class="sw-locks">'+
+      shownLocks.map(k=>'<span class="sw-lock" style="--tc:'+E(team(k).primary)+'">'+E(team(k).name)+'</span>').join('')+'</div>');
     const relevant=new Set(b.thieves.map(t=>t.game));
-    const noimpact=d.ccg.filter(g=>!relevant.has(g.id)&&locked.has(g.a)&&locked.has(g.b));
-    const otherImpact=d.ccg.filter(g=>!relevant.has(g.id)&&!(locked.has(g.a)&&locked.has(g.b)));
+    const noimpact=d.ccg.filter(g=>!relevant.has(g.id)&&(labels[g.id]==='No bubble impact'||(locked.has(g.a)&&locked.has(g.b))));
+    const otherImpact=d.ccg.filter(g=>!relevant.has(g.id)&&!noimpact.includes(g));
     if(otherImpact.length) $('sw-bubble-rows').insertAdjacentHTML('beforeend',
       '<p class="sw-muted"><b>Additional CCGs affecting the bubble:</b> '+
-      otherImpact.map(g=>E(team(g.a).name)+' vs '+E(team(g.b).name)).join(' · ')+'</p>');
+      otherImpact.map(g=>E(team(g.a).name)+' vs '+E(team(g.b).name)+' ('+E(labels[g.id])+')').join(' · ')+'</p>');
     content('sw-noimpact-rows',noimpact.length?noimpact.map(g=>
       '<p>'+E(team(g.a).name)+' vs '+E(team(g.b).name)+gameLinks(g)+'</p>').join(''):
       '<p class="sw-empty">No CCG is completely without selection impact.</p>');
@@ -172,62 +220,9 @@
           nextScores[g.id]={pA:.5,final:false,leader:null,status:'PROVISIONAL · 50/50 placeholder'};
         }
       } else {
-        if(!index||Number(index.season)!==Number(d.year))throw Error('Active scoreboard does not match Selection Watch season');
-        if(!index.weeks.includes(d.ccg_week))throw Error('CCG live baseline is not yet published');
-        const baseURL=cfg.data.scoreboard+'/'+d.year+'/week-'+String(d.ccg_week).padStart(2,'0')+'.json';
-        baseline=await get(baseURL);
-        const [nfl,raw]=await Promise.all([
-          get(cfg.api.espn+'?dates='+d.year+'&week='+d.ccg_week+'&seasontype=2'),
-          get(cfg.api.sleeper+'/stats/nfl/regular/'+d.year+'/'+d.ccg_week)]);
-        const stats=C.statsMap(raw), clock={};
-        if(Number(nfl.season?.year)!==d.year||Number(nfl.week?.number)!==d.ccg_week||!nfl.events?.length)
-          throw Error('NFL feed does not match selected week');
-        for(const ev of nfl.events){
-          const s=ev.status||{},type=s.type||{};
-          const gm={state:type.state,period:Number(s.period||0),clock:s.displayClock||'',kickoff:ev.date};
-          if(type.state==='post'&&!type.completed)gm.state='unknown';
-          for(const comp of ev.competitions||[])for(const side of comp.competitors||[]){
-            const ab=side.team?.abbreviation;
-            clock[({WSH:'WAS',LA:'LAR',JAC:'JAX'})[ab]||ab]=gm;
-          }
-        }
-        const leagues=[...new Set(d.ccg.flatMap(g=>[g.a.split('|')[0],g.b.split('|')[0]]))];
-        let cursor=0;
-        async function worker(){
-          while(cursor<leagues.length){
-            const lid=leagues[cursor++];
-            const [rs,league]=await Promise.all([
-              get(cfg.api.sleeper+'/league/'+lid+'/matchups/'+d.ccg_week),
-              modelCache.has(lid)?modelCache.get(lid):get(cfg.api.sleeper+'/league/'+lid)]);
-            if(!modelCache.has(lid))modelCache.set(lid,league);
-            const byRoster=Object.fromEntries(rs.map(r=>[String(r.roster_id),{...r,leagueId:lid}]));
-            for(const g of d.ccg.filter(g=>g.a.split('|')[0]===lid)){
-              const a=byRoster[g.a.split('|')[1]],b=byRoster[g.b.split('|')[1]];
-              if(!a||!b)throw Error('CCG lineup unavailable for '+g.id);
-              if(!league.scoring_settings)throw Error('League scoring settings unavailable for '+lid);
-              const summary=S.summarize([a,b],metadata,baseline,clock,stats,league.scoring_settings,cfg,false);
-              // Winner from the real postseason file always takes precedence over a projected leader.
-              const winner=g.winner;
-              const scoreA=summary.models[0].actual,scoreB=summary.models[1].actual;
-              // CCG final ties use the better-ranked team, matching shared postseason rules.
-              // If the teams remain tied after all ranking tiebreakers, preserve uncertainty
-              // rather than silently choosing whichever the feed listed first.
-              const tied=(d.tie||[]).some(group=>group.includes(g.a)&&group.includes(g.b));
-              const finalP=scoreA===scoreB?(tied?.5:(byKey()[g.a].rank<byKey()[g.b].rank?1:0)):(scoreA>scoreB?1:0);
-              // Games coerces its pregame value to Number, so validate the original frozen
-              // input here. A blank must not masquerade as a genuine 0% probability.
-              const liveP=summary.live?probability(summary.probability):null;
-              const pA=winner?(winner===g.a?1:0):summary.final?finalP:
-                liveP??frozenProbability(baseline,lid,a,b);
-              if(pA===null)throw Error('CCG win chance unavailable: '+g.id);
-              nextScores[g.id]={scoreA,scoreB,pA,final:!!winner||summary.final,
-                leader:winner || (summary.final ? (tied&&scoreA===scoreB?null:(finalP===1?g.a:g.b)) :
-                  (summary.started ? scoreA>scoreB?g.a:scoreB>scoreA?g.b:null : null)),
-                status:summary.status};
-            }
-          }
-        }
-        await Promise.all(Array.from({length:Math.min(4,leagues.length)},worker));
+        const verified=await window.SelectionWatchGames.load(d,cfg,index,metadata,{get,C,S,modelCache});
+        Object.assign(nextScores,verified.scores);
+        if(checkpoints.length)timeline=await loadTimeline(d.year);
       }
       if(Object.keys(nextScores).length!==d.ccg.length)throw Error('Incomplete CCG update');
       liveScores=nextScores;
@@ -245,10 +240,11 @@
   function fold(finalYear=null){
     const region=finalYear?'#sw-final':'#sw-content';
     const details=[...document.querySelectorAll(region+' details.sw-section')];
+    const visible=()=>details.filter(d=>!d.hidden);
     const collapse=$(finalYear?'sw-final-collapse':'sw-collapse');
-    const label=()=>{collapse.textContent=details.some(d=>d.open)?'Collapse all':'Expand all';};
+    const label=()=>{collapse.textContent=visible().some(d=>d.open)?'Collapse all':'Expand all';};
     collapse.addEventListener('click',()=>{
-      const open=!details.some(d=>d.open); details.forEach(d=>{d.open=open;}); label();
+      const open=!visible().some(d=>d.open); visible().forEach(d=>{d.open=open;}); label();
     });
     details.forEach(d=>d.addEventListener('toggle',label));
     label();
@@ -264,13 +260,14 @@
           stamp:finalYear?null:{state:'projection',time:preview==='historical'?null:updated,
             note:(preview==='historical'?d.year+' CCG finals · Historical replay · ':
               preview==='provisional'?'PROVISIONAL · ':'')+'Unofficial'},
+          whatif:finalYear?[]:pickText(),
           footer:brand+' '+featureName+(finalYear?' · '+finalYear+' final results':' · Unofficial'),width:650});}
         catch(err){alert('Could not save image: '+err.message);}
         finally{btn.disabled=false;}
       });
     });
   }
-  function showFinals(year, archive) {
+  function showFinals(year, archive, sample) {
     const season=archive[year];
     if(!season?.ccg?.length || !season.field?.length)throw Error('No final results available for '+year);
     content('sw-final-status','<b class="sw-flag">FINAL RESULTS</b><strong>'+E(year)+' season</strong>'+
@@ -286,13 +283,18 @@
     content('sw-final-ccg','<table class="sw-odds"><thead><tr><th scope="col">'+
       '<span class="sw-conf-full">Conference</span><abbr class="sw-conf-short" title="Conference">Conf.</abbr></th>'+
       '<th scope="col">Team and score</th><th scope="col">Team and score</th></tr></thead><tbody>'+
-      season.ccg.map(g=>'<tr><th scope="row">'+E(g.conference)+'</th><td>'+side(g.a,g.score_a,g.winner===g.a,g.standard_a)+
+      season.ccg.map(g=>'<tr><th scope="row">'+E(g.conference)+(g.steal?'<small class="sw-score-note">'+E(g.steal)+'</small>':'')+'</th><td>'+side(g.a,g.score_a,g.winner===g.a,g.standard_a)+
         '</td><td>'+side(g.b,g.score_b,g.winner===g.b,g.standard_b)+'</td></tr>').join('')+'</tbody></table>'+
       (hasStandard?'<p class="sw-muted">† As played. Standard scoring differs. Recorded results stand.</p>':''));
     const seeded=season.field.every(t=>Number.isInteger(t.seed));
     content('sw-final-field','<'+(seeded?'ol':'ul')+' class="sw-field">'+
       season.field.map(t=>'<li'+(seeded?' value="'+t.seed+'"':'')+'>'+E(t.team)+
         (!seeded&&Number.isInteger(t.seed)?' (#'+t.seed+')':'')+'</li>').join('')+(seeded?'</ol>':'</ul>'));
+    if(checkpoints.length){
+      const names=[...new Set(Object.values(timeline).flatMap(point=>Object.entries(point.odds||{})
+        .filter(([,value])=>value>0&&value<100).map(([name])=>name)))];
+      $('sw-final-field').insertAdjacentHTML('beforeend',renderTimeline(names,sample));
+    }
     $('sw-intro').textContent='Recorded conference championship scores and the final playoff field.';
     $('sw-final').hidden=false;
     $('sw-season').value=year;
@@ -317,11 +319,14 @@
       if(el.dataset.swLabel==='title')featureName=el.textContent;
     });
     document.title=featureName+' | '+brand;
+    checkpoints=settings.timeline?.windows||[];
     exportPrefix=stringSetting(settings?.export_filename_prefix,'ncaa180-selection-watch');
     $('sw-season-picker').hidden=false;
     if(archiveYear){
       if(previewQuery!==null || !/^\d{4}$/.test(archiveYear))throw Error('Choose a season from the archive');
-      showFinals(archiveYear,await get('postseason/selection-watch-history.json'));
+      const sample=archiveYear==='2025'&&route.get('timeline')==='sample';
+      if(checkpoints.length)timeline=sample?await get('postseason/selection-watch-timeline-sample.json'):await loadTimeline(archiveYear);
+      showFinals(archiveYear,await get('postseason/selection-watch-history.json'),sample);
       return;
     }
     let dataURL='postseason/selection-watch.json';
@@ -351,8 +356,27 @@
     try {index=await get(cfg.data.scoreboard+'/index.json');metadata=await get(cfg.data.scoreboard+'/'+d.year+'/players.json');}
     catch(err){if(preview!=='historical')throw err;}
     $('sw-content').hidden=false;
+    if(checkpoints.length&&!preview)timeline=await loadTimeline(d.year);
     fold();$('sw-sort').addEventListener('change',e=>{sort=e.target.value;paint();});
     $('sw-refresh').addEventListener('click',refresh);
+    $('sw-picks').addEventListener('change',event=>{
+      const id=event.target.dataset.game, g=d.ccg.find(game=>game.id===id);
+      if(!g||g.winner||liveScores[id]?.final)return;
+      const value=event.target.value;
+      if(value===g.a||value===g.b)picks.set(id,value);
+      else picks.delete(id);
+      paint();
+    });
+    $('sw-reset-picks').addEventListener('click',()=>{picks.clear();paint();});
+    $('sw-discord-draft').addEventListener('click',async()=>{
+      if(!discordDraft)return;
+      const button=$('sw-discord-draft');button.disabled=true;
+      try {await NCAASnap.save({...discordDraft,name:exportPrefix+'-discord-draft',
+        stamp:{state:'projection',time:updated,note:'Draft · held for approval'},
+        footer:brand+' · Unofficial',width:500});}
+      catch(error){alert('Could not save draft: '+error.message);}
+      finally{button.disabled=!discordDraft;}
+    });
     if(!preview)document.addEventListener('visibilitychange',()=>{if(document.hidden)clearTimeout(timer);else refresh();});
     await refresh();
   } catch(err){alert('Selection Watch unavailable: '+err.message);$('sw-updated').textContent='Unavailable · Unofficial';}

@@ -28,3 +28,10 @@ def test_rescored_ccgs_keep_as_played_scores_and_winners():
     big_sky = next(g for year, g in rescored if year == "2020" and g["conference"] == "Big Sky")
     assert (big_sky["score_a"], big_sky["score_b"], big_sky["winner"]) == (222.08, 144.60, "Villanova")
     assert (big_sky["standard_a"], big_sky["standard_b"]) == (220.08, 146.60)
+
+
+def test_modern_final_steal_labels_are_verified_against_actual_field():
+    data = history.build()
+    assert {g["winner"] for g in data["2025"]["ccg"] if g.get("steal") == "Stolen"} == {"Kansas State", "Nevada"}
+    for year in ("2019", "2020", "2022"):
+        assert not any(g.get("steal") for g in data[year]["ccg"])
