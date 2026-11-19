@@ -12,7 +12,7 @@ def test_page_is_generated_and_hidden_dev():
     src = (ROOT / "scripts/selection_watch_page.py").read_text(encoding="utf-8")
     html = PAGE.read_text(encoding="utf-8")
     assert 'data-current="selection-watch" data-state="hidden-dev"' in html
-    for name in ("sw-status-section", "sw-board", "sw-bubble", "sw-locks", "sw-noimpact"):
+    for name in ("sw-status-section", "sw-board", "sw-playins", "sw-final-playins", "sw-bubble", "sw-locks", "sw-noimpact"):
         assert f'id="{name}"' in html
         assert f'data-save="{name}"' in html
     assert 'selection-watch-core.js' in html
@@ -28,6 +28,8 @@ def test_previews_do_not_replace_live_file():
     assert historical["year"] == 2025 and historical.get("provisional") is not True
     assert provisional["year"] == 2026 and provisional["provisional"] is True
     assert len(historical["ccg"]) == len(provisional["ccg"]) == 15
+    assert len(historical["play_ins"]) == 1
+    assert isinstance(provisional["play_ins"], list)
     assert len(historical["order"]) == len(provisional["order"]) == 180
     assert not (folder / "selection-watch.json").exists() or (
         "provisional" not in json.loads((folder / "selection-watch.json").read_text()))
@@ -97,7 +99,7 @@ def test_disabled_publisher_leaves_existing_data_and_keeps_private_alerts(tmp_pa
     monkeypatch.setattr(site_common, "nav_config", lambda: cfg)
     monkeypatch.setattr(selection_watch.ps, "last_regular_week", lambda: 11)
     monkeypatch.setattr(selection_watch.ps, "completed_weeks", lambda year: list(range(1, 12)))
-    monkeypatch.setattr(selection_watch, "build", lambda year: {"ccg": [{"id": 1}]})
+    monkeypatch.setattr(selection_watch, "build", lambda year, **kwargs: {"ccg": [{"id": 1}]})
     monkeypatch.setattr(selection_watch, "toss_risks", lambda year, data: ["test"])
     monkeypatch.setattr(selection_watch, "toss_alert", lambda year, risks: alerts.append((year, risks)))
     monkeypatch.setattr(sys, "argv", ["selection_watch.py", "--year", "2026"])

@@ -14,7 +14,7 @@
   const percent = x => !Number.isFinite(x) ? '—' :
     x < .00001 ? '0%' : x > .99999 ? '100%' : (x*100).toFixed(1)+'%';
   const clamp = x => Math.max(0,Math.min(1,x));
-  let d,cfg,index,metadata,brand,featureName,exportPrefix,refreshMs,sort='chance',modelCache=new Map(),liveScores={},
+  let d,cfg,index,metadata,brand,featureName,exportPrefix,refreshMs,rankingOrder=false,modelCache=new Map(),liveScores={},
     lastGood=null,updated=null,timer=null,loading=false,absoluteLocks=null;
   const byKey = () => Object.fromEntries(d.order.map(t=>[t.k,t]));
   const gameById = () => Object.fromEntries(d.ccg.map(g=>[g.id,g]));
@@ -62,7 +62,7 @@
     const url='scoreboard.html?'+new URLSearchParams({season:d.year,week:d.ccg_week,league:l});
     return preview==='provisional'?'':' · <a href="'+E(url)+'" class="sw-inline">View game ↗</a>';
   }
-  function leading(g,item) {
+  function leading(g) {
     const result=liveScores[g.id];
     if(g.winner)return g.winner;
     if(result?.leader)return result.leader;
@@ -97,6 +97,7 @@
     for(const g of d.ccg){
       if(g.winner||liveScores[g.id]?.final){picks.delete(g.id);continue;}
       options.push('<label>'+E(team(g.a).name)+' vs '+E(team(g.b).name)+
+        '<small class="sw-muted" data-game-label="'+E(g.id)+'"></small>'+
         '<select data-game="'+E(g.id)+'"><option value="">Use current odds</option>'+
         [g.a,g.b].map(k=>'<option value="'+E(k)+'"'+(picks.get(g.id)===k?' selected':'')+'>'+E(team(k).name)+' wins</option>').join('')+'</select></label>');
     }
@@ -110,43 +111,69 @@
     banner.textContent=picks.size?'WHAT-IF · '+pickText().join(' · '):'';
     $('sw-reset-picks').disabled=!picks.size;
   }
-  function cutHTML(board, name, archive=false, odds={}, formatTeam=null, detail=()=> '') {
-    const {atLarge:left,thieves:right,cut}=board, n=Math.max(left.length,right.length);
-    // Spread the shorter list across the shared rows so strongest/weakest and lowest/highest
-    // stay at the two ends without implying equal list counts or independent upsets.
-    const align=list=>new Map(list.map((item,i)=>[
-      list.length===1?n-1:Math.round(i*(n-1)/(list.length-1)),item]));
-    const a=align(left),b=align(right);
-    const firstBelow=left.findIndex(t=>t.rank>cut);
-    const onCut=firstBelow<0?null:left[firstBelow].k;
-    const atTile=(t,highlight)=>formatTeam?formatTeam(t.k,!highlight,
-      archive?'<small>#'+E(t.rank)+'</small>':'<small>'+percent(odds[t.k]||0)+'</small>'):
-      '<strong>#'+E(t.rank)+' '+E(name(t.k))+'</strong>';
-    const rTile=(t,highlight)=>formatTeam?formatTeam(t.k,!highlight,'<small>'+percent(t.win)+'</small>'):
-      '<strong>'+E(name(t.k))+'</strong> · '+percent(t.win);
-    let html='<p class="sw-cut-note">'+(archive?'Final':'Projected')+' at-large cut after rank #'+E(cut)+'</p>'+
-      '<div class="sw-head"><span>AT-LARGE TEAMS AT RISK</span><span>BID THIEVES · LOW TO HIGH</span></div>';
-    for(let i=0;i<n;i++){
-      const l=a.get(i),r=b.get(i);
-      const leftIn=l?.status==='Above cut';
-      const rightIn=!leftIn&&(!l||l.status==='Below cut')&&r?.inField;
-      html+='<div class="sw-cut-row"><div'+(l&&l.k===onCut?' class="sw-cut-line"':'')+'>'+
-        (l?atTile(l,leftIn)+'<div class="sw-inline">'+E(l.status)+'</div>':'')+
-        '</div><div>'+(r?rTile(r,rightIn)+'<div class="sw-inline">'+E(r.status)+
-          (r.both?' · Can also qualify at-large':'')+detail(r)+'</div>':'')+'</div></div>';
-    }
-    if(left.length&&!onCut)html+='<div class="sw-cut-row"><div class="sw-cut-line"></div><div></div></div>';
-    if(!left.length&&!right.length)html+='<p>No CCG outcomes change the cut.</p>';
+  function margin(g, k) {
+    const score=liveScores[g.id];
+    if(!score?.live||picks.has(g.id)||!Number.isFinite(score.scoreA)||!Number.isFinite(score.scoreB))return '';
+    const delta=(score.scoreA-score.scoreB)*(k===g.a?1:-1);
+    return '<small class="sw-margin" aria-label="Live margin '+E(delta.toFixed(1))+'">'+
+      (delta>0?'+':'')+E(delta.toFixed(1))+'</small>';
+  }
+  const winMetric=(t,extra='')=>'<small class="sw-win">'+percent(t.win)+'</small>'+extra;
+  function cutHTML(board, {archive=false,odds={},formatTeam,name,detail=()=>'',metric=winMetric}){
+    const rows=[...board.rows];
+    const afterCut=row=>row.left?.rank>board.cut;
+    const cutIndex=rows.findIndex(afterCut);
+    const line='<div class="sw-cut-line" aria-hidden="true"></div>';
+    const markup=rows.map(({left:l,right:r,hold})=>{
+      const leftIn=l&&(l.status==='Above cut'||l.status==='Saved'||hold);
+      const rightIn=!leftIn&&l?.status!=='Coin toss'&&r?.active;
+      const leftExtra=archive?'<small>#'+E(l?.rank)+'</small>':'<small>'+percent(odds[l?.k]||0)+'</small>';
+      const leftHTML=l?formatTeam(l.k,!leftIn,leftExtra)+'<div class="sw-inline">'+E(l.status)+'</div>':'';
+      const note=hold&&(hold.final?hold.conf+' Champion':
+        hold.conf+' CCG · '+name(l.k)+' leads'+(hold.pair?'':' — a win keeps this spot'));
+      const rightHTML=hold?(hold.pair?formatTeam(hold.pair.k,true,metric(hold.pair))+
+        '<div class="sw-inline">'+E(note)+'</div>':'<div class="sw-placard">'+E(note)+'</div>'):
+        r?formatTeam(r.k,!rightIn,metric(r))+'<div class="sw-inline">'+E(r.label)+detail(r)+'</div>':'';
+      return '<div class="sw-cut-row"'+(hold?' data-held="'+(hold.pair?'pair':'placard')+'"':'')+'>'+
+        '<div'+(l?' data-at-large="'+E(l.k)+'"':'')+'>'+leftHTML+'</div>'+
+        '<div'+(r||hold?.pair?' data-thief="'+E((r||hold.pair).k)+'"':'')+'>'+rightHTML+'</div></div>';
+    });
+    if(rows.length)markup.splice(cutIndex<0?markup.length:cutIndex,0,line);
+    if(!rankingOrder)markup.reverse();
+    let html='<p class="sw-cut-note">'+(archive?'Final':'Projected')+' at-large cut after rank #'+E(board.cut)+'</p>';
+    if(board.playIns.length)html+='<p class="sw-muted">Cut starts at #'+E(board.initialCut)+' · '+board.playIns.length+
+      ' play-in'+(board.playIns.length===1?'':'s')+' below</p>';
+    html+='<div class="sw-head"><span>AT-LARGE TEAMS AT RISK</span><span>BID THIEVES · '+
+      (rankingOrder?'LOW TO HIGH':'HIGH TO LOW')+'</span></div>'+markup.join('');
+    if(!rows.length)html+='<p>No CCG outcomes change the cut.</p>';
     if(archive)html+='<p class="sw-muted">100% and 0% reflect final CCG results, not historical pregame odds.</p>';
     return html;
+  }
+  function playInHTML(board,{name,conf,metric=winMetric,source=()=>''}){
+    return board.playIns.map(({g,a,b,final,label})=>{
+      const side=t=>'<div><strong>#'+E(t.rank)+' '+E(name(t.k))+'</strong><span class="sw-metrics">'+
+        metric(t)+'</span>'+(final===t.k?'<small class="sw-playin-winner">'+E(label)+'</small>':'')+'</div>';
+      return '<div class="sw-playin-game" data-play-in="'+E(g.id)+'"><p><strong>'+E(conf(g.a)||'Conference championship')+
+        '</strong>'+(final?'':' · '+E(label))+(source(g)?' · '+E(source(g)):'')+'</p><div class="sw-pair">'+side(a)+side(b)+'</div></div>';
+    }).join('');
+  }
+  function bindOrder(id, render){
+    const button=$(id);
+    if(!button)return;
+    button.addEventListener('click',()=>{
+      rankingOrder=!rankingOrder;
+      button.setAttribute('aria-pressed',String(rankingOrder));
+      render();
+    });
   }
   function paint() {
     if(!lastGood)return;
     paintPicks();
-    const games=gameById(),leaders={},p={},settled={};
+    const games=gameById(),leaders={},p={},settled={},holding={};
     for(const g of d.ccg){
       const live=liveScores[g.id]||{},last=g.winner;
       leaders[g.id]=leading(g);
+      if(live.live&&live.leader)holding[g.id]=live.leader;
       p[g.id]=last?(last===g.a?1:0):clamp(live.pA??.5);
       if(last)settled[g.id]=last;
       else if(live.final&&live.leader)settled[g.id]=live.leader;
@@ -154,18 +181,17 @@
         leaders[g.id]=picks.get(g.id);p[g.id]=leaders[g.id]===g.a?1:0;settled[g.id]=leaders[g.id];
       }
     }
-    const board=W.cutBoard(d,leaders,p,settled),odds=W.odds(d,p);
+    const board=W.cutBoard(d,leaders,p,settled,holding),odds=W.odds(d,p);
     const locks=absoluteLocks || (absoluteLocks=W.locks(d));
     const shownLocks=picks.size?d.order.filter(t=>(odds[t.k]||0)>=1-1e-10).map(t=>t.k):locks;
     const locked=new Set(shownLocks);
-    const labels=W.implications(d,p,settled,locks);
-    const projected=W.field(d,d.ccg.map(g=>leaders[g.id]));
+    const labels=board.labels;
+    document.querySelectorAll('[data-game-label]').forEach(el=>{el.textContent=labels[el.dataset.gameLabel]||'';});
+    const projected=board.projected;
     const toss=new Set(Object.entries(projected).filter(([,v])=>v>0&&v<1).map(([k])=>k));
-    const tossBadge='<small class="sw-toss">COIN TOSS</small>';
     const status=d.ccg.filter(g=>g.winner||liveScores[g.id]?.final).length;
-    const confirmed=board.thieves.filter(t=>t.status==='Stolen'&&!picks.has(t.game)).length;
-    const pendingLeads=board.thieves.filter(t=>!settled[t.game]&&t.needsWin&&leaders[t.game]===t.k).length;
-    const potential=board.thieves.filter(t=>!settled[t.game]&&leaders[t.game]!==t.k).length;
+    const confirmed=d.ccg.filter(g=>labels[g.id]==='Stolen'&&!picks.has(g.id)).length;
+    const whatIfSteals=board.steals-confirmed;
     const provisional=preview==='provisional'||d.provisional, historical=preview==='historical';
     const stamp=updated?updated.toLocaleString('en-US',{timeZone:'America/New_York',dateStyle:'medium',timeStyle:'short'})+' ET':'not yet refreshed';
     const freshness=historical?d.year+' CCG finals · Historical replay':'Updated '+stamp;
@@ -173,12 +199,18 @@
       '<span>'+E(freshness)+'</span>'+
       '<span>'+status+'/'+d.ccg.length+' CCGs final</span>'+
       '<span><b>'+confirmed+'</b> steals confirmed</span>'+
-      '<span><b>'+pendingLeads+'</b> additional currently leading</span>'+
-      '<span><b>'+potential+'</b> additional possible</span>';
-    content('sw-board-rows',cutHTML(board,k=>team(k).name,false,odds,tile,t=>{
+      (whatIfSteals?'<span><b>'+whatIfSteals+'</b> additional in What-if</span>':'')+
+      '<span><b>'+board.leading+'</b> additional currently leading</span>'+
+      '<span><b>'+board.possible+'</b> additional possible</span>';
+    const name=k=>team(k).name;
+    const metric=t=>winMetric(t,margin(games[t.game],t.k));
+    content('sw-board-rows',cutHTML(board,{odds,formatTeam:tile,name,metric,detail:t=>{
       const source=picks.has(t.game)?'What-if pick':liveScores[t.game]?.source;
-      return (source?' · '+E(source):'')+gameLinks(games[t.game]);
-    }));
+      return (source?(t.label?' · ':'')+E(source):'')+gameLinks(games[t.game]);
+    }}));
+    $('sw-playins').hidden=!board.playIns.length;
+    content('sw-playin-rows',playInHTML(board,{name,conf:k=>team(k).conf,metric,
+      source:g=>picks.has(g.id)?"What-if pick":liveScores[g.id]?.source}));
     const bubble=[...new Set([...board.atLarge.map(t=>t.k),...toss])];
     discordDraft=null;
     if(!preview&&!picks.size){
@@ -186,13 +218,13 @@
       const title=complete?'Projected field locked — pending committee approval':featureName;
       discordDraft={title,html:'<section><h2>'+E(title)+'</h2><p>'+status+'/'+d.ccg.length+
         ' CCGs final · '+confirmed+' steals confirmed</p>'+
-        (toss.size?'<p>COIN TOSS pending at the cut.</p>':'')+
+        (toss.size?'<p>Coin toss pending at the cut.</p>':'')+
         (bubble.length?'<ul>'+bubble.slice(0,6).map(k=>'<li>'+E(team(k).name)+' · '+percent(odds[k]||0)+'</li>').join('')+'</ul>':'')+
         '<p>DRAFT · Held for owner approval</p></section>'};
     }
     syncDraftButton();
     const bubbleReason=k=>{
-      if(toss.has(k))return 'COIN TOSS · Tied at the projected cut.';
+      if(toss.has(k))return 'Coin toss · Tied at the projected cut.';
       const row=board.atLarge.find(t=>t.k===k);
       return (row?.status||'At the cut')+' · Can qualify without a CCG win.';
     };
@@ -205,14 +237,15 @@
     if (checkpoints.length) $('sw-bubble-rows').insertAdjacentHTML('beforeend',renderTimeline(bubble.map(k=>team(k).name)));
     content('sw-lock-rows','<p class="sw-muted">'+shownLocks.length+' teams qualify in every '+(picks.size?'remaining':'possible')+' outcome.</p><div class="sw-locks">'+
       shownLocks.map(k=>'<span class="sw-lock" style="--tc:'+E(team(k).primary)+'">'+E(team(k).name)+'</span>').join('')+'</div>');
-    const relevant=new Set(board.thieves.map(t=>t.game));
+    const relevant=new Set([...board.thieves.map(t=>t.game),...board.playIns.map(t=>t.g.id),
+      ...board.rows.flatMap(row=>row.hold?[row.hold.game]:[])]);
     const noimpact=d.ccg.filter(g=>!relevant.has(g.id)&&(labels[g.id]==='No bubble impact'||(locked.has(g.a)&&locked.has(g.b))));
     const otherImpact=d.ccg.filter(g=>!relevant.has(g.id)&&!noimpact.includes(g));
     if(otherImpact.length) $('sw-bubble-rows').insertAdjacentHTML('beforeend',
       '<p class="sw-muted"><b>Additional CCGs affecting the bubble:</b> '+
       otherImpact.map(g=>E(team(g.a).name)+' vs '+E(team(g.b).name)+' ('+E(labels[g.id])+')').join(' · ')+'</p>');
     content('sw-noimpact-rows',noimpact.length?noimpact.map(g=>
-      '<p>'+E(team(g.a).name)+' vs '+E(team(g.b).name)+gameLinks(g)+'</p>').join(''):
+      '<p>'+E(team(g.a).name)+' vs '+E(team(g.b).name)+' · '+E(labels[g.id])+gameLinks(g)+'</p>').join(''):
       '<p class="sw-empty">No CCG is completely without selection impact.</p>');
     $('sw-updated').textContent=freshness+' · Unofficial';
     if(historical)delete document.body.dataset.snapTime;
@@ -271,7 +304,7 @@
         if(!lastGood&&!finalYear)return;
         btn.disabled=true;
         const el=$(btn.dataset.save),copy=el.cloneNode(true);
-        copy.open=true;copy.querySelectorAll('.sw-save').forEach(b=>b.remove());
+        copy.open=true;copy.querySelectorAll('.sw-save, .sw-order button').forEach(b=>b.remove());
         try {await NCAASnap.save({html:copy.outerHTML,title:brand+' '+featureName,name:exportPrefix+'-'+(finalYear?finalYear+'-':'')+btn.dataset.save,
           stamp:finalYear?null:{state:'projection',time:preview==='historical'?null:updated,
             note:preview==='historical'?d.year+' CCG finals · Historical replay':
@@ -294,8 +327,19 @@
         return '<div class="sw-team'+(dim?' dim':fill?' admitted':'')+'" style="--team:'+
           E(d.colors?.[k]||'var(--neutral)')+fill+'"><strong>'+E(k)+'</strong>'+extra+'</div>';
       };
-      content('sw-final-cut',cutHTML(W.cutBoard(d,finals,p,finals),k=>k,true,{},archivedTile));
-    }else content('sw-final-cut','<p>A verified cut reconstruction is not available for this season. Recorded finals and the actual field are below.</p>');
+      const board=W.cutBoard(d,finals,p,finals);
+      const render=()=>content('sw-final-cut',cutHTML(board,{archive:true,formatTeam:archivedTile,name:k=>k}));
+      render();
+      bindOrder('sw-final-sort',render);
+      $('sw-final-playins').hidden=!board.playIns.length;
+      const teams=new Map(d.order.map(t=>[t.k,t]));
+      content('sw-final-playin-rows',playInHTML(board,{name:k=>k,conf:k=>teams.get(k)?.conf}));
+      const label=board.steals+' steal'+(board.steals===1?'':'s');
+      $('sw-final-sort').insertAdjacentHTML('afterend',' <span class="sw-muted">'+E(label)+'</span>');
+    }else{
+      $('sw-final-sort').hidden=true;
+      content('sw-final-cut','<p>A verified cut reconstruction is not available for this season. Recorded finals and the actual field are below.</p>');
+    }
     content('sw-final-status','<b class="sw-flag">FINAL RESULTS</b><strong>'+E(year)+' season</strong>'+
       '<span>'+season.ccg.length+' conference championships</span><span>'+season.field.length+' playoff teams</span>'+
       '<span>National champion: '+E(season.champion)+'</span>');
@@ -309,7 +353,7 @@
     content('sw-final-ccg','<table class="sw-odds"><thead><tr><th scope="col">'+
       '<span class="sw-conf-full">Conference</span><abbr class="sw-conf-short" title="Conference">Conf.</abbr></th>'+
       '<th scope="col">Team and score</th><th scope="col">Team and score</th></tr></thead><tbody>'+
-      season.ccg.map(g=>'<tr><th scope="row">'+E(g.conference)+(g.steal?'<small class="sw-score-note">'+E(g.steal)+'</small>':'')+'</th><td>'+side(g.a,g.score_a,g.winner===g.a,g.standard_a)+
+      season.ccg.map(g=>'<tr><th scope="row">'+E(g.conference)+(g.label?'<small class="sw-score-note">'+E(g.label)+'</small>':'')+'</th><td>'+side(g.a,g.score_a,g.winner===g.a,g.standard_a)+
         '</td><td>'+side(g.b,g.score_b,g.winner===g.b,g.standard_b)+'</td></tr>').join('')+'</tbody></table>'+
       (hasStandard?'<p class="sw-muted">† As played. Standard scoring differs. Recorded results stand.</p>':''));
     const seeded=season.field.every(t=>Number.isInteger(t.seed));
@@ -384,6 +428,7 @@
     $('sw-content').hidden=false;
     if(checkpoints.length&&!preview)timeline=await loadTimeline(d.year);
     fold();
+    bindOrder('sw-sort',paint);
     $('sw-refresh').addEventListener('click',refresh);
     $('sw-picks').addEventListener('change',event=>{
       const id=event.target.dataset.game, g=d.ccg.find(game=>game.id===id);

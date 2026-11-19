@@ -14,17 +14,8 @@ test('field adds winners and best remaining teams', () => {
   const f = core.field(fixture(), ['A','G']);
   assert.deepEqual(Object.keys(f).sort(), ['A','B','G','C'].sort());
 });
-test('both-outside CCG guarantees exactly one steal', () => {
-  const b = core.board(fixture(), {one:'A',two:'H'});
-  assert.equal(b.k, 1);
-  assert.equal(b.thieves.length, 2);
-  assert.equal(b.thieves.find(x=>x.game==='two').both_out,true);
-});
-test('inside CCG team that can miss is not a thief', () => {
-  const b = core.board(fixture(), {one:'F',two:'G'});
-  assert.equal(b.thieves.some(x=>x.team==='A'),false);
-  assert.equal(b.thieves.find(x=>x.game==='one').team,'F');
-});
+
+
 test('exact odds match independent exhaustive weighting', () => {
   const d=fixture(), p={one:0.3,two:0.7}, actual=core.odds(d,p);
   const expected={};
@@ -43,67 +34,88 @@ test('locks include teams present under every outcome', () => {
   assert.ok(core.locks(fixture()).includes('B'));
   assert.ok(!core.locks(fixture()).includes('D'));
 });
-test('sort toggle preserves cut and paired risk order', () => {
-  const d=fixture(), lead={one:'F',two:'H'};
-  const a=core.sortedBoard(d,lead,{one:.2,two:.9},{one:8,two:2},'chance');
-  const b=core.sortedBoard(d,lead,{one:.2,two:.9},{one:8,two:2},'margin');
-  assert.equal(a.k,b.k); assert.deepEqual(a.atRisk,b.atRisk);
+
+const archive=require('../reports/postseason/selection-watch-history.json');
+function replay(d, overrides={}){
+  const final=Object.fromEntries(d.ccg.map(g=>[g.id,overrides[g.id]||g.winner]));
+  const p=Object.fromEntries(d.ccg.map(g=>[g.id,+(final[g.id]===g.a)]));
+  return core.cutBoard(d,final,p,final);
+}
+test('2025: two steals displace Youngstown State and UNLV; UTEP changes only the play-in',()=>{
+  const d=archive['2025'].cut_board, actual=replay(d);
+  assert.equal(actual.steals,2);
+  assert.equal(actual.cut,29);
+  assert.equal(actual.initialCut,31);
+  assert.deepEqual(actual.thieves.filter(t=>t.active).map(t=>t.k).sort(),['Kansas State','Nevada']);
+  assert.deepEqual(actual.rows.filter(r=>r.right?.active).map(r=>r.left.k),['Youngstown State','UNLV']);
+  assert.equal(actual.playIns.length,1);
+  const play=actual.playIns[0];
+  assert.equal(play.final,'Georgia Southern');
+  assert.equal(play.label,'Play-in winner');
+  assert.equal(actual.rows.some(r=>[r.left?.k,r.right?.k].some(k=>[play.a.k,play.b.k].includes(k))),false);
+  const whatIf=replay(d,{[play.g.id]:'UTEP'});
+  assert.equal(whatIf.playIns[0].final,'UTEP');
+  assert.equal(whatIf.playIns[0].label,'Play-in winner');
+  assert.deepEqual(whatIf.rows,actual.rows);
+  assert.equal(whatIf.cut,actual.cut);
+  assert.equal(whatIf.steals,2);
+});
+test('2024: Eastern Kentucky vs Chattanooga is a play-in, not a third steal',()=>{
+  const b=replay(archive['2024'].cut_board);
+  assert.equal(b.cut,27);
+  assert.equal(b.steals,2);
+  assert.deepEqual(b.thieves.filter(t=>t.active).map(t=>t.k).sort(),['Jackson State','UAB']);
+  assert.deepEqual(b.playIns.map(x=>[x.a.k,x.b.k].sort()),[['Chattanooga','Eastern Kentucky']]);
 });
 
-test('2025 actual Steal Board: six rows, two steals and the correct cut', () => {
-  const fs=require('node:fs'),path=require('node:path');
-  const d=JSON.parse(fs.readFileSync(path.join(__dirname,'../reports/postseason/selection-watch-2025.json'),'utf8'));
-  const leaders=Object.fromEntries(d.ccg.map(g=>[g.id,g.winner]));
-  const b=core.board(d,leaders),names=Object.fromEntries(d.order.map(t=>[t.k,t.team]));
-  assert.equal(b.thieves.length,6);
-  assert.equal(b.k,2);
-  assert.deepEqual(b.thieves.filter(t=>t.leading).map(t=>names[t.team]).sort(),['Kansas State','Nevada']);
-  assert.deepEqual(b.atRisk.slice(0,b.k).map(k=>names[k]).sort(),['UNLV','Youngstown State']);
-  assert.equal(Object.values(core.field(d,d.ccg.map(g=>g.winner))).reduce((a,n)=>a+n,0),32);
+function savedFixture(opponent){
+  return {field_size:5,play_ins:[],tie:[],
+    order:'ABCDEFGHI'.split('').map((k,i)=>({k,rank:i+1,conf:'Example'})),
+    ccg:[{id:'x',a:'A',b:'H'},{id:'y',a:'B',b:'I'},{id:'save',a:'D',b:opponent}]};
+}
+test('two steals hold the natural team with an outside opponent, then resolve to Saved',()=>{
+  const d=savedFixture('F'), leaders={x:'H',y:'I',save:'D'}, odds={x:.15,y:.25,save:.7};
+  const lead=core.cutBoard(d,leaders,odds);
+  const held=lead.rows.find(r=>r.left?.k==='D');
+  assert.equal(held.hold.pair.k,'F');
+  assert.ok(!held.right);
+  assert.ok(!lead.thieves.some(t=>t.k==='F'));
+  assert.equal(lead.labels.save,'Possible steal');
+  const saved=core.cutBoard(d,leaders,{...odds,save:1},{save:'D'});
+  assert.equal(saved.labels.save,'Saved');
+  assert.equal(saved.rows.find(r=>r.left?.k==='D').left.status,'Saved');
+  const lost=core.cutBoard(d,{...leaders,save:'F'},{...odds,save:.1});
+  assert.equal(lost.rows.find(r=>r.left?.k==='D').hold,undefined);
+  assert.equal(lost.labels.save,'Steal');
+  assert.ok(lost.thieves.some(t=>t.k==='F'&&t.active));
 });
-
-test('inside natural-field CCG team can miss without being a thief', () => {
-  const d={field_size:4,order:['A','B','C','D','E','F'].map((k,i)=>({k,rank:i+1})),
-    ccg:[{id:'inside',a:'A',b:'D'},{id:'outside',a:'E',b:'F'}],tie:[]};
-  const winnersWhenDloses=['A','E'], winnersWhenDwins=['D','E'];
-  assert.equal(core.field(d,winnersWhenDloses).D||0,0);
-  assert.equal(core.field(d,winnersWhenDwins).D,1);
-  assert.equal(core.board(d,{inside:'A',outside:'E'}).thieves.some(t=>t.team==='D'),false);
-  assert.equal(core.locks(d).includes('D'),false);
+test('a placard skips the leader’s held row against a lock or an at-risk opponent',()=>{
+  for(const opponent of ['C','E']){
+    const d=savedFixture(opponent), leaders={x:'H',y:'I',save:'D'}, odds={x:.15,y:.25,save:.7};
+    const live=core.cutBoard(d,leaders,odds,{x:'H',y:'I'});
+    const held=live.rows.find(r=>r.left?.k==='D');
+    assert.ok(held.hold);
+    assert.equal(held.hold.pair,null);
+    assert.equal(held.right,undefined);
+    assert.equal(live.rows.filter(r=>r.right?.active).length,2);
+    assert.equal(live.rows.find(r=>r.left?.k==='D').left.status,'Bubble impact');
+    const final=core.cutBoard(d,leaders,odds,{...leaders});
+    assert.equal(final.labels.save,'Saved');
+    const trailing=core.cutBoard(d,{...leaders,save:opponent},odds,{x:'H',y:'I'});
+    assert.equal(trailing.rows.find(r=>r.left?.k==='D').hold,undefined);
+    assert.equal(trailing.rows.find(r=>r.left?.k==='D').left.status,'Below cut');
+  }
 });
-test('margin sorts trailing thieves by nearest comeback, without moving cut', () => {
-  const d={field_size:4,order:'ABCDEF'.split('').map((k,i)=>({k,rank:i+1})),
-    ccg:[{id:'one',a:'A',b:'E'},{id:'two',a:'B',b:'F'}],tie:[]};
-  const leaders={one:'A',two:'B'},margins={one:20,two:3};
-  const b=core.sortedBoard(d,leaders,{one:.1,two:.1},margins,'margin');
-  assert.equal(b.k,0);
-  assert.deepEqual(b.thieves.map(t=>t.game),['two','one']);
+test('a non-play-in stays untagged when other What-if games make it win-or-out',()=>{
+  const d=savedFixture('F');
+  assert.deepEqual(core.cutBoard(d).playIns,[]);
+  const board=core.cutBoard(d,{save:'F'},{x:0,y:0,save:.1},{x:'H',y:'I'});
+  assert.deepEqual(board.playIns,[]);
+  assert.equal(board.steals,2);
+  assert.equal(board.labels.save,'Steal');
 });
-
-
-test('bid labels separate projected steals, possibilities and official finals', () => {
-  const d={field_size:2,order:['A','B','C','D'].map((k,i)=>({k,rank:i+1})),ccg:[{id:'g',a:'A',b:'D'}]};
-  const label=(p,w)=>core.implications(d,{g:p},w?{g:w}:{}).g;
-  assert.equal(label(.7), 'Possible steal');
-  assert.equal(label(.3), 'Steal');
-  assert.equal(label(.2,'D'), 'Stolen');
-  assert.equal(label(.8,'A'), 'Held');
-});
-
-
-test('the exact cut moves and an inside team can be both at-large and a thief', () => {
-  const d={field_size:4,order:['A','B','C','D','E','F'].map((k,i)=>({k,rank:i+1})),
-    ccg:[{id:'upset',a:'A',b:'F'},{id:'inside',a:'B',b:'D'}]};
-  const p={upset:.8,inside:.35};
-  const before=core.cutBoard(d,{upset:'A',inside:'B'},p);
-  assert.equal(before.cut,4);
-  assert.ok(before.atLarge.some(t=>t.k==='D'&&t.status==='Above cut'));
-  assert.deepEqual(before.thieves.map(t=>t.k),['F','D']);
-  assert.equal(before.thieves[1].needsWin,false);
-  const after=core.cutBoard(d,{upset:'F',inside:'B'},{upset:0,inside:.35},{upset:'F'});
-  assert.equal(after.cut,3);
-  assert.ok(after.atLarge.some(t=>t.k==='D'&&t.status==='Below cut'));
-  assert.equal(after.thieves.find(t=>t.k==='D').needsWin,true);
-  assert.equal(after.thieves.find(t=>t.k==='F').inField,true);
-  assert.equal(after.thieves.find(t=>t.k==='D').inField,false);
+test('a tied loser with a partial at-large path prevents a play-in tag',()=>{
+  const d={field_size:2,order:'ABCD'.split('').map((k,i)=>({k,rank:i+1})),
+    ccg:[{id:'g',a:'A',b:'D'}],tie:[['A','B']]};
+  assert.deepEqual(core.cutBoard(d).playIns,[]);
 });
