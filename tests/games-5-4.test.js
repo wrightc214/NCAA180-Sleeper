@@ -6,7 +6,7 @@ const fs=require('node:fs');
 const vm=require('node:vm');
 const source=fs.readFileSync('reports/assets/scoreboard-overview.js','utf8');
 const css=fs.readFileSync('reports/assets/scoreboard-overview.css','utf8');
-const menu=fs.readFileSync('templates/menu.js','utf8');
+const accessibility=fs.readFileSync('templates/accessibility.js','utf8');
 function helper(start,end,extra=''){
   const a=source.indexOf(start),b=source.indexOf(end,a);
   assert.ok(a>=0&&b>a,'production helper source found');
@@ -58,8 +58,8 @@ test('50 percent is neutral and favorites remain bold without relying on color',
   assert.match(source,/probability!=null&&probability>50\?' favorite'/); // final still gets green, but not bold
   assert.match(probabilityRules,/\.r3\.final-odds\.favorite \.chance\{/);
   assert.doesNotMatch(source,/Pregame %/); // does not fit the 38-44px column; finals use 'Pre %' (Chris, 2026-11-17)
-  assert.match(menu,/var TOKENS_LIGHT = \{"--good":/);
-  assert.match(menu,/var TOKENS_DARK = \{"--good":/);
+  assert.match(accessibility,/var TOKENS_LIGHT = \{"--good":/);
+  assert.match(accessibility,/var TOKENS_DARK = \{"--good":/);
 });
 test('accessible card label follows visible row order',()=>{
   assert.match(source,/match\[order\[0\]\]\.roster_id/);
