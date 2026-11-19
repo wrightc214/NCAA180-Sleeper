@@ -42,13 +42,16 @@ def read_rows(path):
 
 
 # Display-only cap labels can fall between two of the base score bands.
-REBUILD_GRADE_ORDER = ("F", "D-", "D", "D+", "C-", "C", "Even", "C+", "B-", "B", "B+", "A")
+MARKET_GRADE_ORDER = ("F", "D-", "D", "D+", "C-", "C", "Even", "C+", "B-", "B", "B+", "A")
+
+DEFAULT_MARKET_GRADE_CAPS = [[10, "C-", "C+"], [20, "D+", "B-"], [30, "D", "B"], [40, "D-", "B+"]]
 
 
 DEFAULTS = {
     "consolidation": {"method": "asset-concentration", "dynasty_concentration_rate": .60},
     "grade_bands": [[60, "A"], [55, "B+"], [52, "B"], [48, "Even"], [45, "C"], [40, "D"], [0, "F"]],
-    "rebuild_grade_caps": [[10, "C-", "C+"], [20, "D+", "B-"], [30, "D", "B"], [40, "D-", "B+"]],
+    "rebuild_grade_caps": DEFAULT_MARKET_GRADE_CAPS,
+    "contender_grade_caps": DEFAULT_MARKET_GRADE_CAPS,
     "blockbuster_min_multiple": 1.4,
     "blockbuster_min_headliner_share": .6,
     "proxy_pick_slot": "4.12",
@@ -89,9 +92,9 @@ def grade(share, bands=None):
     return next((label for bound, label in bands if share * 100 >= bound), "F")
 
 
-def cap_rebuild_grade(letter, trade_percent, bands):
+def cap_market_grade(letter, trade_percent, bands):
     """Clamp only the displayed letter. Each trade-size ceiling is exclusive."""
-    ranks = REBUILD_GRADE_ORDER
+    ranks = MARKET_GRADE_ORDER
     if letter not in ranks or letter == "Even" or trade_percent is None or not isinstance(bands, list):
         return letter
     neutral = ranks.index("Even")
@@ -272,6 +275,11 @@ def evaluate_trade(assets, trade_day, player_history, pick_history, trade_year, 
                                    proxy=proxy_totals, mode=mode)
     if not result["dynasty"] and not result["contender"]:
         result["status"] = "No values from that week"
+    contender = result["contender"]
+    if contender and len(assets) == 2:
+        redraft_leader = max((number(row.get("RedraftValue")) for row in players.values()), default=0)
+        contender["trade_size_percent"] = (100 * math.fsum(contender["raw"].values()) / redraft_leader
+                                           if redraft_leader > 0 else None)
     if result["dynasty"] and len(assets) == 2:
         market_total = sum(sum(side["dynasty"]) for side in sides.values())
         market_leader = max(

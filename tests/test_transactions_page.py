@@ -13,7 +13,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from transactions_page import build_teams, day, movement, parse, summary, trade_assets, trade_card
-from transactions_grades import (cap_rebuild_grade, compare, evaluate_trade, grade, load_config,
+from transactions_grades import (cap_market_grade, compare, evaluate_trade, grade, load_config,
                                  historical, nearest_pick, pick_swap, read_rows)
 
 
@@ -252,17 +252,55 @@ def test_small_surplus_uses_closest_meaningful_swap_and_not_future_round():
     assert pick_swap(725, 2027, p) is None
 
 
+@pytest.mark.parametrize("setting", ["rebuild_grade_caps", "contender_grade_caps"])
 @pytest.mark.parametrize("pct,expected", [
     (9.999, ("C+", "C-")), (10, ("B-", "D+")), (19.999, ("B-", "D+")),
     (20, ("B", "D")), (29.999, ("B", "D")), (30, ("B+", "D-")),
     (39.999, ("B+", "D-")), (40, ("A", "F")), (None, ("A", "F")),
 ])
-def test_rebuild_grade_cap_exclusive_boundaries(pct, expected):
-    caps = load_config()["rebuild_grade_caps"]
-    assert tuple(cap_rebuild_grade(letter, pct, caps) for letter in ("A", "F")) == expected
-    assert cap_rebuild_grade("Even", pct, caps) == "Even"
-    assert cap_rebuild_grade(None, pct, caps) is None
-    assert cap_rebuild_grade("A", pct, []) == "A"
+def test_market_grade_cap_exclusive_boundaries(setting, pct, expected):
+    caps = load_config()[setting]
+    assert tuple(cap_market_grade(letter, pct, caps) for letter in ("A", "F")) == expected
+    assert cap_market_grade("Even", pct, caps) == "Even"
+    assert cap_market_grade(None, pct, caps) is None
+    assert cap_market_grade("A", pct, []) == "A"
+
+
+@pytest.mark.parametrize("kicker,expected_total,expected_display", [
+    (False, 128, "C+"),
+    (True, 853, "B-"),
+])
+def test_contender_cap_uses_same_snapshot_redraft_leader_and_keeps_points(kicker, expected_total, expected_display):
+    date = "2026-11-10"
+    row = tx(Week="10", Created="1794355200000", TransactionID="123")
+    sides = {"1": [{"kind": "player", "id": "100", "label": "Runner", "position": "RB"}],
+             "2": [{"kind": "pick", "season": 2027, "round": 4, "label": "Fourth"}]}
+    if kicker:
+        sides["1"].append({"kind": "player", "id": "300", "label": "Kicker", "position": "K"})
+    players = [
+        {"Date": date, "SleeperID": "100", "DynastyValue": "2200", "RedraftValue": "128"},
+        {"Date": date, "SleeperID": "200", "DynastyValue": "6000", "RedraftValue": "5000"},
+        {"Date": "2026-11-12", "SleeperID": "200", "DynastyValue": "20000", "RedraftValue": "12000"},
+    ]
+    picks = [{"Date": date, "Season": "2027", "Round": "4", "Value": "784",
+              "Early": "861", "Mid": "784", "Late": "725"}]
+    out = evaluate_trade(sides, date, players, picks, 2026)
+    val = out["contender"]
+    assert val["trade_size_percent"] == pytest.approx(100 * expected_total / 5000)
+    assert val["raw"] == val["adjusted"] == {"1": expected_total, "2": 0}
+    assert val["grade"] == {"1": "A", "2": "F"}
+
+    card = trade_card(row, sides, TEAMS, {}, out, {})
+    uncapped = trade_card(row, sides, TEAMS, {}, out, {}, {"contender_grade_caps": []})
+    low = "D+" if kicker else "C-"
+    assert f'>{expected_display}</strong><small>{expected_total} pts</small>' in card
+    assert f'>{low}</strong><small>0 pts</small>' in card
+    assert 'Grade capped from A' in card and 'Grade capped from F' in card
+    assert f'>A</strong><small>{expected_total} pts</small>' in uncapped
+    normalized = re.sub(r' · Grade capped from [AF] \([^"]*\)', '', card)
+    normalized = normalized.replace(f'>{expected_display}</strong><small>{expected_total} pts', f'>A</strong><small>{expected_total} pts', 1)
+    normalized = normalized.replace(f'>{low}</strong><small>0 pts', '>F</strong><small>0 pts', 1)
+    assert normalized == uncapped
 
 
 def test_wisconsin_rebuild_cap_only_affects_rebuild_letters():

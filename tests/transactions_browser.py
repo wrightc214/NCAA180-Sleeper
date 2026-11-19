@@ -78,6 +78,10 @@ def main():
                 assert set(rebuild.locator("strong").all_text_contents()) == {"B", "D"}
                 assert set(rebuild.locator("small").all_text_contents()) == {"1,557 pts", "777 pts"}
                 assert rebuild.locator('[title*="Grade capped from A"]').count() == 1
+                boston_miami = page.locator(".tx-card").filter(has_text="1426089963417534464")
+                contender = boston_miami.locator(".tx-grade").filter(has_text="Contender value")
+                assert contender.locator("strong").all_text_contents() == ["C-", "C+"]
+                assert contender.locator("small").all_text_contents() == ["0 pts", "128 pts"]
                 # Filter to a team on the first trade. Revert filter.
                 first = page.locator(".tx-card").first
                 team = first.get_attribute("data-teams").split("|")[0]
