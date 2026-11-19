@@ -14,6 +14,7 @@
     {"id": "scoreboard", "label": "Games", "href": "scoreboard.html"},
     {"id": "poll", "label": "Poll", "href": "poll.html", "aliases": ["poll-how", "poll-bots"]},
     {"id": "postseason", "label": "Postseason", "href": "postseason.html"},
+    {"_note": "Selection Watch Dev-only until approved. The master switch in SelectionWatch.json overrides this state.", "id": "selection-watch", "label": "Selection Watch", "href": "selection-watch.html", "state": "hidden-dev"},
     {"id": "special", "label": "Special Events", "href": "special.html"},
     {"id": "managers", "label": "Managers", "href": "managers.html"},
     {"_note": "Task 5.11 Transactions tab. Keep hidden-dev for preview; use visible only after approval, or hidden to omit it from compiled nav.", "id": "transactions", "label": "Transactions", "href": "transactions.html", "state": "hidden-dev"},

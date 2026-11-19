@@ -49,6 +49,10 @@ def _row_aria(key):
 
 
 def tab_state(tab):
+    if tab.get("id") == "selection-watch":
+        import league_config as lcfg
+        if lcfg.selection_watch().get("enabled") is False:
+            return "hidden"
     return tab.get("state", "visible")
 
 

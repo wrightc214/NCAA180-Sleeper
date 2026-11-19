@@ -1,0 +1,3374 @@
+{
+  "year": 2025,
+  "field_size": 32,
+  "ccg_week": 12,
+  "order": [
+    {
+      "k": "1192383107391332352|5",
+      "team": "Baylor",
+      "short": "",
+      "conf": "BIG 12",
+      "div": "HEAT",
+      "w": 11,
+      "l": 0,
+      "t": 0,
+      "pf": 1919.48,
+      "pa": 1205.08,
+      "rank": 1
+    },
+    {
+      "k": "1192383069776863232|12",
+      "team": "Clemson",
+      "short": "",
+      "conf": "ACC",
+      "div": "ATLANTIC",
+      "w": 10,
+      "l": 1,
+      "t": 0,
+      "pf": 1774.6,
+      "pa": 1300.7,
+      "rank": 2
+    },
+    {
+      "k": "1197683812742483968|5",
+      "team": "Florida A&M",
+      "short": "",
+      "conf": "HISTORICALLY BLACK",
+      "div": "Hurricane",
+      "w": 10,
+      "l": 1,
+      "t": 0,
+      "pf": 1595.22,
+      "pa": 1334.58,
+      "rank": 3
+    },
+    {
+      "k": "1183984327853932544|4",
+      "team": "Pittsburgh",
+      "short": "",
+      "conf": "BIG EAST & CO.",
+      "div": "MIDEAST",
+      "w": 10,
+      "l": 1,
+      "t": 0,
+      "pf": 1546.28,
+      "pa": 1313.94,
+      "rank": 4
+    },
+    {
+      "k": "1192383184619986944|3",
+      "team": "Murray State",
+      "short": "",
+      "conf": "PIONEER",
+      "div": "PATRIOT",
+      "w": 10,
+      "l": 1,
+      "t": 0,
+      "pf": 1517.02,
+      "pa": 1199.62,
+      "rank": 5
+    },
+    {
+      "k": "1187162832969211904|7",
+      "team": "Minnesota",
+      "short": "",
+      "conf": "BIG 10",
+      "div": "WEST",
+      "w": 9,
+      "l": 2,
+      "t": 0,
+      "pf": 1888.38,
+      "pa": 1391.94,
+      "rank": 6
+    },
+    {
+      "k": "1197683509209083904|8",
+      "team": "Portland State",
+      "short": "",
+      "conf": "BIG SKY",
+      "div": "Frontier",
+      "w": 9,
+      "l": 2,
+      "t": 0,
+      "pf": 1873.26,
+      "pa": 1202.8,
+      "rank": 7
+    },
+    {
+      "k": "1197683891784134656|1",
+      "team": "Hawaii",
+      "short": "",
+      "conf": "MOUNTAIN WEST",
+      "div": "SAINT",
+      "w": 9,
+      "l": 2,
+      "t": 0,
+      "pf": 1836.28,
+      "pa": 1400.98,
+      "rank": 8
+    },
+    {
+      "k": "1188461140190814208|6",
+      "team": "Mississippi State",
+      "short": "",
+      "conf": "SEC",
+      "div": "WEST",
+      "w": 9,
+      "l": 2,
+      "t": 0,
+      "pf": 1793.02,
+      "pa": 1344.84,
+      "rank": 9
+    },
+    {
+      "k": "1197683625282244608|1",
+      "team": "Montana",
+      "short": "",
+      "conf": "WILD",
+      "div": "PLAINS",
+      "w": 9,
+      "l": 2,
+      "t": 0,
+      "pf": 1771.7,
+      "pa": 1243.06,
+      "rank": 10
+    },
+    {
+      "k": "1183984327853932544|7",
+      "team": "Syracuse",
+      "short": "",
+      "conf": "BIG EAST & CO.",
+      "div": "NORTHEAST",
+      "w": 9,
+      "l": 2,
+      "t": 0,
+      "pf": 1761.56,
+      "pa": 1442.08,
+      "rank": 11
+    },
+    {
+      "k": "1197683509209083904|6",
+      "team": "Montana State",
+      "short": "",
+      "conf": "BIG SKY",
+      "div": "Frontier",
+      "w": 9,
+      "l": 2,
+      "t": 0,
+      "pf": 1753.46,
+      "pa": 1335.62,
+      "rank": 12
+    },
+    {
+      "k": "1197683625282244608|10",
+      "team": "Old Dominion",
+      "short": "",
+      "conf": "WILD",
+      "div": "VALLEY",
+      "w": 9,
+      "l": 2,
+      "t": 0,
+      "pf": 1722.42,
+      "pa": 1192.5,
+      "rank": 13
+    },
+    {
+      "k": "1192383038721757184|12",
+      "team": "UCLA",
+      "short": "",
+      "conf": "PAC 12",
+      "div": "SOUTH",
+      "w": 9,
+      "l": 2,
+      "t": 0,
+      "pf": 1608.7,
+      "pa": 1426.72,
+      "rank": 14
+    },
+    {
+      "k": "1197684159036805120|4",
+      "team": "Chattanooga",
+      "short": "",
+      "conf": "OHIO VALLEY",
+      "div": "Southern",
+      "w": 9,
+      "l": 2,
+      "t": 0,
+      "pf": 1593.24,
+      "pa": 1356.76,
+      "rank": 15
+    },
+    {
+      "k": "1197684159036805120|2",
+      "team": "ETSU",
+      "short": "",
+      "conf": "OHIO VALLEY",
+      "div": "Southern",
+      "w": 9,
+      "l": 2,
+      "t": 0,
+      "pf": 1581.1,
+      "pa": 1327.78,
+      "rank": 16
+    },
+    {
+      "k": "1192383184619986944|10",
+      "team": "Furman",
+      "short": "",
+      "conf": "PIONEER",
+      "div": "FREEDOM",
+      "w": 9,
+      "l": 2,
+      "t": 0,
+      "pf": 1567.34,
+      "pa": 1111.78,
+      "rank": 17
+    },
+    {
+      "k": "1188461140190814208|10",
+      "team": "South Carolina",
+      "short": "",
+      "conf": "SEC",
+      "div": "EAST",
+      "w": 9,
+      "l": 2,
+      "t": 0,
+      "pf": 1558.32,
+      "pa": 1316.84,
+      "rank": 18
+    },
+    {
+      "k": "1197683676763148288|8",
+      "team": "Colgate",
+      "short": "",
+      "conf": "IVY",
+      "div": "SMART",
+      "w": 9,
+      "l": 2,
+      "t": 0,
+      "pf": 1486.52,
+      "pa": 1313.2,
+      "rank": 19
+    },
+    {
+      "k": "1192383069776863232|7",
+      "team": "Duke",
+      "short": "",
+      "conf": "ACC",
+      "div": "COASTAL",
+      "w": 9,
+      "l": 2,
+      "t": 0,
+      "pf": 1416.12,
+      "pa": 1385.76,
+      "rank": 20
+    },
+    {
+      "k": "1192383038721757184|7",
+      "team": "Arizona State",
+      "short": "",
+      "conf": "PAC 12",
+      "div": "SOUTH",
+      "w": 8,
+      "l": 3,
+      "t": 0,
+      "pf": 1870.44,
+      "pa": 1392.62,
+      "rank": 21
+    },
+    {
+      "k": "1197683737584746496|3",
+      "team": "Florida Atlantic",
+      "short": "",
+      "conf": "USA",
+      "div": "TWISTER",
+      "w": 8,
+      "l": 3,
+      "t": 0,
+      "pf": 1656.5,
+      "pa": 1355.9,
+      "rank": 22
+    },
+    {
+      "k": "1192383038721757184|4",
+      "team": "Washington State",
+      "short": "",
+      "conf": "PAC 12",
+      "div": "NORTH",
+      "w": 8,
+      "l": 3,
+      "t": 0,
+      "pf": 1649.7,
+      "pa": 1443.18,
+      "rank": 23
+    },
+    {
+      "k": "1197683812742483968|8",
+      "team": "Alcorn State",
+      "short": "",
+      "conf": "HISTORICALLY BLACK",
+      "div": "Mississippi River",
+      "w": 8,
+      "l": 3,
+      "t": 0,
+      "pf": 1632.98,
+      "pa": 1357.8,
+      "rank": 24
+    },
+    {
+      "k": "1197683676763148288|5",
+      "team": "Georgetown",
+      "short": "",
+      "conf": "IVY",
+      "div": "RICH",
+      "w": 8,
+      "l": 3,
+      "t": 0,
+      "pf": 1617.1,
+      "pa": 1325.18,
+      "rank": 25
+    },
+    {
+      "k": "1197683509209083904|3",
+      "team": "William & Mary",
+      "short": "",
+      "conf": "BIG SKY",
+      "div": "Colonies",
+      "w": 8,
+      "l": 3,
+      "t": 0,
+      "pf": 1608.58,
+      "pa": 1333.5,
+      "rank": 26
+    },
+    {
+      "k": "1188461140190814208|2",
+      "team": "LSU",
+      "short": "",
+      "conf": "SEC",
+      "div": "WEST",
+      "w": 8,
+      "l": 3,
+      "t": 0,
+      "pf": 1605.78,
+      "pa": 1386.52,
+      "rank": 27
+    },
+    {
+      "k": "1197683812742483968|1",
+      "team": "North Carolina A&T",
+      "short": "",
+      "conf": "HISTORICALLY BLACK",
+      "div": "Hurricane",
+      "w": 8,
+      "l": 3,
+      "t": 0,
+      "pf": 1594.38,
+      "pa": 1282.14,
+      "rank": 28
+    },
+    {
+      "k": "1197683676763148288|4",
+      "team": "Columbia",
+      "short": "",
+      "conf": "IVY",
+      "div": "SMART",
+      "w": 8,
+      "l": 3,
+      "t": 0,
+      "pf": 1560.98,
+      "pa": 1431.46,
+      "rank": 29
+    },
+    {
+      "k": "1197683509209083904|12",
+      "team": "Youngstown State",
+      "short": "",
+      "conf": "BIG SKY",
+      "div": "Frontier",
+      "w": 8,
+      "l": 3,
+      "t": 0,
+      "pf": 1544.9,
+      "pa": 1302.08,
+      "rank": 30
+    },
+    {
+      "k": "1197683891784134656|11",
+      "team": "UNLV",
+      "short": "",
+      "conf": "MOUNTAIN WEST",
+      "div": "SAINT",
+      "w": 8,
+      "l": 3,
+      "t": 0,
+      "pf": 1540.26,
+      "pa": 1307.84,
+      "rank": 31
+    },
+    {
+      "k": "1192383143762542592|7",
+      "team": "Georgia Southern",
+      "short": "",
+      "conf": "SUN BELT",
+      "div": "BIBLE",
+      "w": 8,
+      "l": 3,
+      "t": 0,
+      "pf": 1528.1,
+      "pa": 1306.44,
+      "rank": 32
+    },
+    {
+      "k": "1197683625282244608|2",
+      "team": "James Madison",
+      "short": "",
+      "conf": "WILD",
+      "div": "VALLEY",
+      "w": 8,
+      "l": 3,
+      "t": 0,
+      "pf": 1514.54,
+      "pa": 1319.06,
+      "rank": 33
+    },
+    {
+      "k": "1197683676763148288|6",
+      "team": "Lehigh",
+      "short": "",
+      "conf": "IVY",
+      "div": "SMART",
+      "w": 8,
+      "l": 3,
+      "t": 0,
+      "pf": 1512.5,
+      "pa": 1311.42,
+      "rank": 34
+    },
+    {
+      "k": "1197683891784134656|10",
+      "team": "Nevada",
+      "short": "",
+      "conf": "MOUNTAIN WEST",
+      "div": "SIN",
+      "w": 8,
+      "l": 3,
+      "t": 0,
+      "pf": 1502.54,
+      "pa": 1343.54,
+      "rank": 35
+    },
+    {
+      "k": "1192383038721757184|10",
+      "team": "California",
+      "short": "",
+      "conf": "PAC 12",
+      "div": "NORTH",
+      "w": 8,
+      "l": 3,
+      "t": 0,
+      "pf": 1491.02,
+      "pa": 1231.22,
+      "rank": 36
+    },
+    {
+      "k": "1192383184619986944|2",
+      "team": "Holy Cross",
+      "short": "",
+      "conf": "PIONEER",
+      "div": "PATRIOT",
+      "w": 8,
+      "l": 3,
+      "t": 0,
+      "pf": 1477.84,
+      "pa": 1292.7,
+      "rank": 37
+    },
+    {
+      "k": "1197683737584746496|2",
+      "team": "North Texas",
+      "short": "",
+      "conf": "USA",
+      "div": "GULF",
+      "w": 8,
+      "l": 3,
+      "t": 0,
+      "pf": 1443.18,
+      "pa": 1461.82,
+      "rank": 38
+    },
+    {
+      "k": "1197683737584746496|8",
+      "team": "Arkansas State",
+      "short": "",
+      "conf": "USA",
+      "div": "TWISTER",
+      "w": 8,
+      "l": 3,
+      "t": 0,
+      "pf": 1421.34,
+      "pa": 1195.76,
+      "rank": 39
+    },
+    {
+      "k": "1188461140190814208|11",
+      "team": "Alabama",
+      "short": "",
+      "conf": "SEC",
+      "div": "WEST",
+      "w": 8,
+      "l": 3,
+      "t": 0,
+      "pf": 1414.28,
+      "pa": 1285.24,
+      "rank": 40
+    },
+    {
+      "k": "1192383143762542592|11",
+      "team": "Louisiana Tech",
+      "short": "",
+      "conf": "SUN BELT",
+      "div": "BIBLE",
+      "w": 8,
+      "l": 3,
+      "t": 0,
+      "pf": 1350.74,
+      "pa": 1176.4,
+      "rank": 41
+    },
+    {
+      "k": "1192383143762542592|2",
+      "team": "UTEP",
+      "short": "",
+      "conf": "SUN BELT",
+      "div": "REBEL",
+      "w": 8,
+      "l": 3,
+      "t": 0,
+      "pf": 1287.76,
+      "pa": 1197.3,
+      "rank": 42
+    },
+    {
+      "k": "1183984327853932544|3",
+      "team": "South Dakota State",
+      "short": "",
+      "conf": "BIG EAST & CO.",
+      "div": "MIDEAST",
+      "w": 8,
+      "l": 3,
+      "t": 0,
+      "pf": 1224.4,
+      "pa": 1227.74,
+      "rank": 43
+    },
+    {
+      "k": "1192383184619986944|11",
+      "team": "UT Martin",
+      "short": "",
+      "conf": "PIONEER",
+      "div": "PATRIOT",
+      "w": 7,
+      "l": 4,
+      "t": 0,
+      "pf": 1698.74,
+      "pa": 1407,
+      "rank": 44
+    },
+    {
+      "k": "1187162832969211904|9",
+      "team": "Ohio State",
+      "short": "",
+      "conf": "BIG 10",
+      "div": "EAST",
+      "w": 7,
+      "l": 4,
+      "t": 0,
+      "pf": 1626.6,
+      "pa": 1433.12,
+      "rank": 45
+    },
+    {
+      "k": "1192383107391332352|4",
+      "team": "Texas A&M",
+      "short": "",
+      "conf": "BIG 12",
+      "div": "HEAT",
+      "w": 7,
+      "l": 4,
+      "t": 0,
+      "pf": 1606.96,
+      "pa": 1449.32,
+      "rank": 46
+    },
+    {
+      "k": "1183984327853932544|6",
+      "team": "Coastal Carolina",
+      "short": "",
+      "conf": "BIG EAST & CO.",
+      "div": "MIDEAST",
+      "w": 7,
+      "l": 4,
+      "t": 0,
+      "pf": 1564.98,
+      "pa": 1397.7,
+      "rank": 47
+    },
+    {
+      "k": "1197683676763148288|12",
+      "team": "Cornell",
+      "short": "",
+      "conf": "IVY",
+      "div": "SMART",
+      "w": 7,
+      "l": 4,
+      "t": 0,
+      "pf": 1558.3,
+      "pa": 1381.4,
+      "rank": 48
+    },
+    {
+      "k": "1192383038721757184|2",
+      "team": "USC",
+      "short": "",
+      "conf": "PAC 12",
+      "div": "SOUTH",
+      "w": 7,
+      "l": 4,
+      "t": 0,
+      "pf": 1549.54,
+      "pa": 1266.58,
+      "rank": 49
+    },
+    {
+      "k": "1192383069776863232|10",
+      "team": "NC State",
+      "short": "",
+      "conf": "ACC",
+      "div": "ATLANTIC",
+      "w": 7,
+      "l": 4,
+      "t": 0,
+      "pf": 1541.12,
+      "pa": 1496.92,
+      "rank": 50
+    },
+    {
+      "k": "1197683891784134656|3",
+      "team": "Wyoming",
+      "short": "",
+      "conf": "MOUNTAIN WEST",
+      "div": "SAINT",
+      "w": 7,
+      "l": 4,
+      "t": 0,
+      "pf": 1538.52,
+      "pa": 1339.86,
+      "rank": 51
+    },
+    {
+      "k": "1187162832969211904|11",
+      "team": "Iowa",
+      "short": "",
+      "conf": "BIG 10",
+      "div": "WEST",
+      "w": 7,
+      "l": 4,
+      "t": 0,
+      "pf": 1531.28,
+      "pa": 1459.94,
+      "rank": 52
+    },
+    {
+      "k": "1197684159036805120|6",
+      "team": "Charleston Southern",
+      "short": "",
+      "conf": "OHIO VALLEY",
+      "div": "Southern",
+      "w": 7,
+      "l": 4,
+      "t": 0,
+      "pf": 1521.82,
+      "pa": 1347.98,
+      "rank": 53
+    },
+    {
+      "k": "1183984327853932544|12",
+      "team": "Notre Dame",
+      "short": "",
+      "conf": "BIG EAST & CO.",
+      "div": "MIDEAST",
+      "w": 7,
+      "l": 4,
+      "t": 0,
+      "pf": 1511.2,
+      "pa": 1337.98,
+      "rank": 54
+    },
+    {
+      "k": "1197683737584746496|6",
+      "team": "Western Kentucky",
+      "short": "",
+      "conf": "USA",
+      "div": "TWISTER",
+      "w": 7,
+      "l": 4,
+      "t": 0,
+      "pf": 1503.68,
+      "pa": 1349.3,
+      "rank": 55
+    },
+    {
+      "k": "1188461140190814208|4",
+      "team": "Auburn",
+      "short": "",
+      "conf": "SEC",
+      "div": "WEST",
+      "w": 7,
+      "l": 4,
+      "t": 0,
+      "pf": 1502.04,
+      "pa": 1281.74,
+      "rank": 56
+    },
+    {
+      "k": "1192383069776863232|1",
+      "team": "Virginia",
+      "short": "",
+      "conf": "ACC",
+      "div": "COASTAL",
+      "w": 7,
+      "l": 4,
+      "t": 0,
+      "pf": 1486.22,
+      "pa": 1387.38,
+      "rank": 57
+    },
+    {
+      "k": "1197683737584746496|1",
+      "team": "Troy",
+      "short": "",
+      "conf": "USA",
+      "div": "TWISTER",
+      "w": 7,
+      "l": 4,
+      "t": 0,
+      "pf": 1479.34,
+      "pa": 1251.78,
+      "rank": 58
+    },
+    {
+      "k": "1192383143762542592|6",
+      "team": "Tulsa",
+      "short": "",
+      "conf": "SUN BELT",
+      "div": "REBEL",
+      "w": 7,
+      "l": 4,
+      "t": 0,
+      "pf": 1474.04,
+      "pa": 1288.84,
+      "rank": 59
+    },
+    {
+      "k": "1187162832969211904|12",
+      "team": "Michigan",
+      "short": "",
+      "conf": "BIG 10",
+      "div": "EAST",
+      "w": 7,
+      "l": 4,
+      "t": 0,
+      "pf": 1473.82,
+      "pa": 1422.3,
+      "rank": 60
+    },
+    {
+      "k": "1192383107391332352|11",
+      "team": "TCU",
+      "short": "",
+      "conf": "BIG 12",
+      "div": "HEAT",
+      "w": 7,
+      "l": 4,
+      "t": 0,
+      "pf": 1468,
+      "pa": 1379.74,
+      "rank": 61
+    },
+    {
+      "k": "1192383038721757184|3",
+      "team": "Oregon State",
+      "short": "",
+      "conf": "PAC 12",
+      "div": "NORTH",
+      "w": 7,
+      "l": 4,
+      "t": 0,
+      "pf": 1447.46,
+      "pa": 1383.7,
+      "rank": 62
+    },
+    {
+      "k": "1197683812742483968|12",
+      "team": "Grambling State",
+      "short": "",
+      "conf": "HISTORICALLY BLACK",
+      "div": "Mississippi River",
+      "w": 7,
+      "l": 4,
+      "t": 0,
+      "pf": 1439.94,
+      "pa": 1228.24,
+      "rank": 63
+    },
+    {
+      "k": "1192383107391332352|8",
+      "team": "West Virginia",
+      "short": "",
+      "conf": "BIG 12",
+      "div": "HEAT",
+      "w": 7,
+      "l": 4,
+      "t": 0,
+      "pf": 1423.86,
+      "pa": 1378.96,
+      "rank": 64
+    },
+    {
+      "k": "1197683625282244608|6",
+      "team": "Eastern Michigan",
+      "short": "",
+      "conf": "WILD",
+      "div": "VALLEY",
+      "w": 7,
+      "l": 4,
+      "t": 0,
+      "pf": 1422.08,
+      "pa": 1390.98,
+      "rank": 65
+    },
+    {
+      "k": "1187162832969211904|6",
+      "team": "Wisconsin",
+      "short": "",
+      "conf": "BIG 10",
+      "div": "WEST",
+      "w": 7,
+      "l": 4,
+      "t": 0,
+      "pf": 1376.24,
+      "pa": 1360.76,
+      "rank": 66
+    },
+    {
+      "k": "1197684159036805120|10",
+      "team": "Monmouth",
+      "short": "",
+      "conf": "OHIO VALLEY",
+      "div": "Yankee",
+      "w": 7,
+      "l": 4,
+      "t": 0,
+      "pf": 1371.62,
+      "pa": 1374.14,
+      "rank": 67
+    },
+    {
+      "k": "1192383143762542592|1",
+      "team": "Temple",
+      "short": "",
+      "conf": "SUN BELT",
+      "div": "REBEL",
+      "w": 7,
+      "l": 4,
+      "t": 0,
+      "pf": 1322.06,
+      "pa": 1385.54,
+      "rank": 68
+    },
+    {
+      "k": "1187162832969211904|2",
+      "team": "Nebraska",
+      "short": "",
+      "conf": "BIG 10",
+      "div": "WEST",
+      "w": 6,
+      "l": 5,
+      "t": 0,
+      "pf": 1642,
+      "pa": 1349.7,
+      "rank": 69
+    },
+    {
+      "k": "1197683676763148288|11",
+      "team": "Dartmouth",
+      "short": "",
+      "conf": "IVY",
+      "div": "RICH",
+      "w": 6,
+      "l": 5,
+      "t": 0,
+      "pf": 1620.88,
+      "pa": 1511.66,
+      "rank": 70
+    },
+    {
+      "k": "1197684159036805120|11",
+      "team": "North Alabama",
+      "short": "",
+      "conf": "OHIO VALLEY",
+      "div": "Yankee",
+      "w": 6,
+      "l": 5,
+      "t": 0,
+      "pf": 1579.12,
+      "pa": 1533.84,
+      "rank": 71
+    },
+    {
+      "k": "1192383184619986944|8",
+      "team": "Campbell",
+      "short": "",
+      "conf": "PIONEER",
+      "div": "FREEDOM",
+      "w": 6,
+      "l": 5,
+      "t": 0,
+      "pf": 1552.3,
+      "pa": 1427.66,
+      "rank": 72
+    },
+    {
+      "k": "1192383069776863232|11",
+      "team": "Louisville",
+      "short": "",
+      "conf": "ACC",
+      "div": "ATLANTIC",
+      "w": 6,
+      "l": 5,
+      "t": 0,
+      "pf": 1544.8,
+      "pa": 1505.28,
+      "rank": 73
+    },
+    {
+      "k": "1197684159036805120|12",
+      "team": "North Carolina Central",
+      "short": "",
+      "conf": "OHIO VALLEY",
+      "div": "Southern",
+      "w": 6,
+      "l": 5,
+      "t": 0,
+      "pf": 1544.36,
+      "pa": 1441.48,
+      "rank": 74
+    },
+    {
+      "k": "1192383107391332352|7",
+      "team": "Kansas State",
+      "short": "",
+      "conf": "BIG 12",
+      "div": "WIND",
+      "w": 6,
+      "l": 5,
+      "t": 0,
+      "pf": 1511.48,
+      "pa": 1382.22,
+      "rank": 75
+    },
+    {
+      "k": "1197684159036805120|5",
+      "team": "Eastern Kentucky",
+      "short": "",
+      "conf": "OHIO VALLEY",
+      "div": "Yankee",
+      "w": 6,
+      "l": 5,
+      "t": 0,
+      "pf": 1476.34,
+      "pa": 1504.7,
+      "rank": 76
+    },
+    {
+      "k": "1197683812742483968|3",
+      "team": "Delaware State",
+      "short": "",
+      "conf": "HISTORICALLY BLACK",
+      "div": "Hurricane",
+      "w": 6,
+      "l": 5,
+      "t": 0,
+      "pf": 1475.08,
+      "pa": 1430.12,
+      "rank": 77
+    },
+    {
+      "k": "1197683891784134656|9",
+      "team": "New Mexico",
+      "short": "",
+      "conf": "MOUNTAIN WEST",
+      "div": "SAINT",
+      "w": 6,
+      "l": 5,
+      "t": 0,
+      "pf": 1464.1,
+      "pa": 1447.06,
+      "rank": 78
+    },
+    {
+      "k": "1197683509209083904|7",
+      "team": "Richmond",
+      "short": "",
+      "conf": "BIG SKY",
+      "div": "Colonies",
+      "w": 6,
+      "l": 5,
+      "t": 0,
+      "pf": 1435.24,
+      "pa": 1297.84,
+      "rank": 79
+    },
+    {
+      "k": "1197683812742483968|10",
+      "team": "Jackson State",
+      "short": "",
+      "conf": "HISTORICALLY BLACK",
+      "div": "Hurricane",
+      "w": 6,
+      "l": 5,
+      "t": 0,
+      "pf": 1424.08,
+      "pa": 1417.8,
+      "rank": 80
+    },
+    {
+      "k": "1192383143762542592|8",
+      "team": "Memphis",
+      "short": "",
+      "conf": "SUN BELT",
+      "div": "REBEL",
+      "w": 6,
+      "l": 5,
+      "t": 0,
+      "pf": 1416.62,
+      "pa": 1173.8,
+      "rank": 81
+    },
+    {
+      "k": "1183984327853932544|5",
+      "team": "UCONN",
+      "short": "",
+      "conf": "BIG EAST & CO.",
+      "div": "NORTHEAST",
+      "w": 6,
+      "l": 5,
+      "t": 0,
+      "pf": 1411.82,
+      "pa": 1394.78,
+      "rank": 82
+    },
+    {
+      "k": "1197683676763148288|9",
+      "team": "Yale",
+      "short": "",
+      "conf": "IVY",
+      "div": "RICH",
+      "w": 6,
+      "l": 5,
+      "t": 0,
+      "pf": 1375.42,
+      "pa": 1302.06,
+      "rank": 83
+    },
+    {
+      "k": "1192383184619986944|9",
+      "team": "Austin Peay",
+      "short": "",
+      "conf": "PIONEER",
+      "div": "PATRIOT",
+      "w": 6,
+      "l": 5,
+      "t": 0,
+      "pf": 1362.58,
+      "pa": 1468.02,
+      "rank": 84
+    },
+    {
+      "k": "1192383143762542592|12",
+      "team": "UTSA",
+      "short": "",
+      "conf": "SUN BELT",
+      "div": "REBEL",
+      "w": 6,
+      "l": 5,
+      "t": 0,
+      "pf": 1362.44,
+      "pa": 1162.8,
+      "rank": 85
+    },
+    {
+      "k": "1187162832969211904|10",
+      "team": "Illinois",
+      "short": "",
+      "conf": "BIG 10",
+      "div": "WEST",
+      "w": 6,
+      "l": 5,
+      "t": 0,
+      "pf": 1344.28,
+      "pa": 1457.22,
+      "rank": 86
+    },
+    {
+      "k": "1197683509209083904|2",
+      "team": "Villanova",
+      "short": "",
+      "conf": "BIG SKY",
+      "div": "Colonies",
+      "w": 6,
+      "l": 5,
+      "t": 0,
+      "pf": 1333.38,
+      "pa": 1331.8,
+      "rank": 87
+    },
+    {
+      "k": "1197683509209083904|4",
+      "team": "Eastern Washington",
+      "short": "",
+      "conf": "BIG SKY",
+      "div": "Frontier",
+      "w": 6,
+      "l": 5,
+      "t": 0,
+      "pf": 1313.54,
+      "pa": 1390.56,
+      "rank": 88
+    },
+    {
+      "k": "1192383107391332352|3",
+      "team": "Missouri",
+      "short": "",
+      "conf": "BIG 12",
+      "div": "WIND",
+      "w": 6,
+      "l": 5,
+      "t": 0,
+      "pf": 1301.38,
+      "pa": 1325.62,
+      "rank": 89
+    },
+    {
+      "k": "1197683737584746496|10",
+      "team": "Florida International",
+      "short": "",
+      "conf": "USA",
+      "div": "GULF",
+      "w": 6,
+      "l": 5,
+      "t": 0,
+      "pf": 1293.36,
+      "pa": 1216.96,
+      "rank": 90
+    },
+    {
+      "k": "1192383107391332352|2",
+      "team": "Iowa State",
+      "short": "",
+      "conf": "BIG 12",
+      "div": "WIND",
+      "w": 6,
+      "l": 5,
+      "t": 0,
+      "pf": 1247.6,
+      "pa": 1383.44,
+      "rank": 91
+    },
+    {
+      "k": "1188461140190814208|5",
+      "team": "Ole Miss",
+      "short": "",
+      "conf": "SEC",
+      "div": "WEST",
+      "w": 6,
+      "l": 5,
+      "t": 0,
+      "pf": 1237.04,
+      "pa": 1331.94,
+      "rank": 92
+    },
+    {
+      "k": "1197683891784134656|2",
+      "team": "Boise State",
+      "short": "",
+      "conf": "MOUNTAIN WEST",
+      "div": "SIN",
+      "w": 5,
+      "l": 6,
+      "t": 0,
+      "pf": 1486.88,
+      "pa": 1543.46,
+      "rank": 93
+    },
+    {
+      "k": "1192383069776863232|6",
+      "team": "Wake Forest",
+      "short": "",
+      "conf": "ACC",
+      "div": "ATLANTIC",
+      "w": 5,
+      "l": 6,
+      "t": 0,
+      "pf": 1486.32,
+      "pa": 1447.74,
+      "rank": 94
+    },
+    {
+      "k": "1197684159036805120|1",
+      "team": "Belmont",
+      "short": "",
+      "conf": "OHIO VALLEY",
+      "div": "Southern",
+      "w": 5,
+      "l": 6,
+      "t": 0,
+      "pf": 1483.44,
+      "pa": 1432.68,
+      "rank": 95
+    },
+    {
+      "k": "1197683625282244608|8",
+      "team": "Citadel",
+      "short": "",
+      "conf": "WILD",
+      "div": "VALLEY",
+      "w": 5,
+      "l": 6,
+      "t": 0,
+      "pf": 1474.48,
+      "pa": 1443.62,
+      "rank": 96
+    },
+    {
+      "k": "1197683509209083904|1",
+      "team": "Rhode Island",
+      "short": "",
+      "conf": "BIG SKY",
+      "div": "Colonies",
+      "w": 5,
+      "l": 6,
+      "t": 0,
+      "pf": 1445.76,
+      "pa": 1521.26,
+      "rank": 97
+    },
+    {
+      "k": "1183984327853932544|10",
+      "team": "USF",
+      "short": "",
+      "conf": "BIG EAST & CO.",
+      "div": "MIDEAST",
+      "w": 5,
+      "l": 6,
+      "t": 0,
+      "pf": 1433.26,
+      "pa": 1359.36,
+      "rank": 98
+    },
+    {
+      "k": "1197683891784134656|12",
+      "team": "San Diego State",
+      "short": "",
+      "conf": "MOUNTAIN WEST",
+      "div": "SIN",
+      "w": 5,
+      "l": 6,
+      "t": 0,
+      "pf": 1419.46,
+      "pa": 1506.56,
+      "rank": 99
+    },
+    {
+      "k": "1197683737584746496|5",
+      "team": "Georgia State",
+      "short": "",
+      "conf": "USA",
+      "div": "TWISTER",
+      "w": 5,
+      "l": 6,
+      "t": 0,
+      "pf": 1414.42,
+      "pa": 1454.28,
+      "rank": 100
+    },
+    {
+      "k": "1197683737584746496|7",
+      "team": "Middle Tennessee State",
+      "short": "",
+      "conf": "USA",
+      "div": "TWISTER",
+      "w": 5,
+      "l": 6,
+      "t": 0,
+      "pf": 1407.64,
+      "pa": 1397.58,
+      "rank": 101
+    },
+    {
+      "k": "1197683891784134656|6",
+      "team": "BYU",
+      "short": "",
+      "conf": "MOUNTAIN WEST",
+      "div": "SIN",
+      "w": 5,
+      "l": 6,
+      "t": 0,
+      "pf": 1405.7,
+      "pa": 1364.74,
+      "rank": 102
+    },
+    {
+      "k": "1197683625282244608|3",
+      "team": "North Dakota State",
+      "short": "",
+      "conf": "WILD",
+      "div": "PLAINS",
+      "w": 5,
+      "l": 6,
+      "t": 0,
+      "pf": 1391.3,
+      "pa": 1485.14,
+      "rank": 103
+    },
+    {
+      "k": "1192383069776863232|5",
+      "team": "FSU",
+      "short": "",
+      "conf": "ACC",
+      "div": "ATLANTIC",
+      "w": 5,
+      "l": 6,
+      "t": 0,
+      "pf": 1386.6,
+      "pa": 1462.46,
+      "rank": 104
+    },
+    {
+      "k": "1197683625282244608|11",
+      "team": "South Dakota",
+      "short": "",
+      "conf": "WILD",
+      "div": "PLAINS",
+      "w": 5,
+      "l": 6,
+      "t": 0,
+      "pf": 1367.32,
+      "pa": 1449.44,
+      "rank": 105
+    },
+    {
+      "k": "1197683625282244608|12",
+      "team": "UNC Charlotte",
+      "short": "",
+      "conf": "WILD",
+      "div": "VALLEY",
+      "w": 5,
+      "l": 6,
+      "t": 0,
+      "pf": 1356.9,
+      "pa": 1390.8,
+      "rank": 106
+    },
+    {
+      "k": "1197683625282244608|5",
+      "team": "Wichita State",
+      "short": "",
+      "conf": "WILD",
+      "div": "PLAINS",
+      "w": 5,
+      "l": 6,
+      "t": 0,
+      "pf": 1355.98,
+      "pa": 1361.22,
+      "rank": 107
+    },
+    {
+      "k": "1192383184619986944|4",
+      "team": "Butler",
+      "short": "",
+      "conf": "PIONEER",
+      "div": "FREEDOM",
+      "w": 5,
+      "l": 6,
+      "t": 0,
+      "pf": 1354.72,
+      "pa": 1473.28,
+      "rank": 108
+    },
+    {
+      "k": "1192383107391332352|9",
+      "team": "Oklahoma",
+      "short": "",
+      "conf": "BIG 12",
+      "div": "WIND",
+      "w": 5,
+      "l": 6,
+      "t": 0,
+      "pf": 1342.64,
+      "pa": 1435.7,
+      "rank": 109
+    },
+    {
+      "k": "1197683737584746496|11",
+      "team": "Louisiana",
+      "short": "",
+      "conf": "USA",
+      "div": "GULF",
+      "w": 5,
+      "l": 6,
+      "t": 0,
+      "pf": 1336.62,
+      "pa": 1435.58,
+      "rank": 110
+    },
+    {
+      "k": "1197683812742483968|11",
+      "team": "Tuskegee",
+      "short": "",
+      "conf": "HISTORICALLY BLACK",
+      "div": "Mississippi River",
+      "w": 5,
+      "l": 6,
+      "t": 0,
+      "pf": 1322.76,
+      "pa": 1339.84,
+      "rank": 111
+    },
+    {
+      "k": "1197683676763148288|3",
+      "team": "Bucknell",
+      "short": "",
+      "conf": "IVY",
+      "div": "RICH",
+      "w": 5,
+      "l": 6,
+      "t": 0,
+      "pf": 1309.94,
+      "pa": 1339,
+      "rank": 112
+    },
+    {
+      "k": "1197683737584746496|9",
+      "team": "Texas State",
+      "short": "",
+      "conf": "USA",
+      "div": "GULF",
+      "w": 5,
+      "l": 6,
+      "t": 0,
+      "pf": 1308.18,
+      "pa": 1309.04,
+      "rank": 113
+    },
+    {
+      "k": "1192383038721757184|11",
+      "team": "Utah",
+      "short": "",
+      "conf": "PAC 12",
+      "div": "SOUTH",
+      "w": 5,
+      "l": 6,
+      "t": 0,
+      "pf": 1305.9,
+      "pa": 1339.6,
+      "rank": 114
+    },
+    {
+      "k": "1187162832969211904|8",
+      "team": "Indiana",
+      "short": "",
+      "conf": "BIG 10",
+      "div": "EAST",
+      "w": 5,
+      "l": 6,
+      "t": 0,
+      "pf": 1304.12,
+      "pa": 1310.72,
+      "rank": 115
+    },
+    {
+      "k": "1192383038721757184|5",
+      "team": "Stanford",
+      "short": "",
+      "conf": "PAC 12",
+      "div": "NORTH",
+      "w": 5,
+      "l": 6,
+      "t": 0,
+      "pf": 1294.5,
+      "pa": 1369.62,
+      "rank": 116
+    },
+    {
+      "k": "1197683891784134656|8",
+      "team": "Colorado State",
+      "short": "",
+      "conf": "MOUNTAIN WEST",
+      "div": "SIN",
+      "w": 5,
+      "l": 6,
+      "t": 0,
+      "pf": 1283.66,
+      "pa": 1368.08,
+      "rank": 117
+    },
+    {
+      "k": "1192383069776863232|3",
+      "team": "Georgia Tech",
+      "short": "",
+      "conf": "ACC",
+      "div": "COASTAL",
+      "w": 5,
+      "l": 6,
+      "t": 0,
+      "pf": 1261.92,
+      "pa": 1429.58,
+      "rank": 118
+    },
+    {
+      "k": "1197683812742483968|6",
+      "team": "Howard",
+      "short": "",
+      "conf": "HISTORICALLY BLACK",
+      "div": "Hurricane",
+      "w": 5,
+      "l": 6,
+      "t": 0,
+      "pf": 1237.22,
+      "pa": 1303.24,
+      "rank": 119
+    },
+    {
+      "k": "1192383038721757184|6",
+      "team": "Washington",
+      "short": "",
+      "conf": "PAC 12",
+      "div": "NORTH",
+      "w": 5,
+      "l": 6,
+      "t": 0,
+      "pf": 1230.54,
+      "pa": 1260.82,
+      "rank": 120
+    },
+    {
+      "k": "1192383143762542592|9",
+      "team": "Southern Miss",
+      "short": "",
+      "conf": "SUN BELT",
+      "div": "BIBLE",
+      "w": 5,
+      "l": 6,
+      "t": 0,
+      "pf": 1228.16,
+      "pa": 1289.92,
+      "rank": 121
+    },
+    {
+      "k": "1188461140190814208|12",
+      "team": "Arkansas",
+      "short": "",
+      "conf": "SEC",
+      "div": "WEST",
+      "w": 5,
+      "l": 6,
+      "t": 0,
+      "pf": 1203.4,
+      "pa": 1400.3,
+      "rank": 122
+    },
+    {
+      "k": "1197683891784134656|5",
+      "team": "Utah State",
+      "short": "",
+      "conf": "MOUNTAIN WEST",
+      "div": "SAINT",
+      "w": 5,
+      "l": 6,
+      "t": 0,
+      "pf": 1138.08,
+      "pa": 1421.82,
+      "rank": 123
+    },
+    {
+      "k": "1192383184619986944|7",
+      "team": "Dayton",
+      "short": "",
+      "conf": "PIONEER",
+      "div": "FREEDOM",
+      "w": 4,
+      "l": 7,
+      "t": 0,
+      "pf": 1462.9,
+      "pa": 1514.94,
+      "rank": 124
+    },
+    {
+      "k": "1197683812742483968|4",
+      "team": "Southern",
+      "short": "",
+      "conf": "HISTORICALLY BLACK",
+      "div": "Mississippi River",
+      "w": 4,
+      "l": 7,
+      "t": 0,
+      "pf": 1441.46,
+      "pa": 1492.86,
+      "rank": 125
+    },
+    {
+      "k": "1183984327853932544|8",
+      "team": "Army",
+      "short": "",
+      "conf": "BIG EAST & CO.",
+      "div": "NORTHEAST",
+      "w": 4,
+      "l": 7,
+      "t": 0,
+      "pf": 1437.04,
+      "pa": 1386.7,
+      "rank": 126
+    },
+    {
+      "k": "1197683676763148288|1",
+      "team": "Brown",
+      "short": "",
+      "conf": "IVY",
+      "div": "RICH",
+      "w": 4,
+      "l": 7,
+      "t": 0,
+      "pf": 1404.48,
+      "pa": 1464.22,
+      "rank": 127
+    },
+    {
+      "k": "1192383107391332352|12",
+      "team": "Oklahoma State",
+      "short": "",
+      "conf": "BIG 12",
+      "div": "WIND",
+      "w": 4,
+      "l": 7,
+      "t": 0,
+      "pf": 1402.54,
+      "pa": 1470.94,
+      "rank": 128
+    },
+    {
+      "k": "1183984327853932544|1",
+      "team": "Rutgers",
+      "short": "",
+      "conf": "BIG EAST & CO.",
+      "div": "NORTHEAST",
+      "w": 4,
+      "l": 7,
+      "t": 0,
+      "pf": 1399.04,
+      "pa": 1443.8,
+      "rank": 129
+    },
+    {
+      "k": "1192383069776863232|2",
+      "team": "North Carolina",
+      "short": "",
+      "conf": "ACC",
+      "div": "COASTAL",
+      "w": 4,
+      "l": 7,
+      "t": 0,
+      "pf": 1374.62,
+      "pa": 1376,
+      "rank": 130
+    },
+    {
+      "k": "1192383107391332352|6",
+      "team": "Texas",
+      "short": "",
+      "conf": "BIG 12",
+      "div": "HEAT",
+      "w": 4,
+      "l": 7,
+      "t": 0,
+      "pf": 1364.46,
+      "pa": 1380.3,
+      "rank": 131
+    },
+    {
+      "k": "1197683676763148288|7",
+      "team": "Penn",
+      "short": "",
+      "conf": "IVY",
+      "div": "RICH",
+      "w": 4,
+      "l": 7,
+      "t": 0,
+      "pf": 1308.4,
+      "pa": 1447.16,
+      "rank": 132
+    },
+    {
+      "k": "1187162832969211904|5",
+      "team": "Penn State",
+      "short": "",
+      "conf": "BIG 10",
+      "div": "EAST",
+      "w": 4,
+      "l": 7,
+      "t": 0,
+      "pf": 1298.04,
+      "pa": 1441.06,
+      "rank": 133
+    },
+    {
+      "k": "1197684159036805120|3",
+      "team": "Kennesaw State",
+      "short": "",
+      "conf": "OHIO VALLEY",
+      "div": "Southern",
+      "w": 4,
+      "l": 7,
+      "t": 0,
+      "pf": 1258.06,
+      "pa": 1274.38,
+      "rank": 134
+    },
+    {
+      "k": "1192383184619986944|6",
+      "team": "SE Missouri State",
+      "short": "",
+      "conf": "PIONEER",
+      "div": "PATRIOT",
+      "w": 4,
+      "l": 7,
+      "t": 0,
+      "pf": 1249.04,
+      "pa": 1540.88,
+      "rank": 135
+    },
+    {
+      "k": "1187162832969211904|4",
+      "team": "Michigan State",
+      "short": "",
+      "conf": "BIG 10",
+      "div": "EAST",
+      "w": 4,
+      "l": 7,
+      "t": 0,
+      "pf": 1217.72,
+      "pa": 1399.12,
+      "rank": 136
+    },
+    {
+      "k": "1197684159036805120|9",
+      "team": "Jacksonville State",
+      "short": "",
+      "conf": "OHIO VALLEY",
+      "div": "Yankee",
+      "w": 4,
+      "l": 7,
+      "t": 0,
+      "pf": 1209.76,
+      "pa": 1493.26,
+      "rank": 137
+    },
+    {
+      "k": "1188461140190814208|9",
+      "team": "Vanderbilt",
+      "short": "",
+      "conf": "SEC",
+      "div": "EAST",
+      "w": 4,
+      "l": 7,
+      "t": 0,
+      "pf": 1142.04,
+      "pa": 1324.92,
+      "rank": 138
+    },
+    {
+      "k": "1197683625282244608|4",
+      "team": "Central Michigan",
+      "short": "",
+      "conf": "WILD",
+      "div": "VALLEY",
+      "w": 4,
+      "l": 7,
+      "t": 0,
+      "pf": 1032.92,
+      "pa": 1421.82,
+      "rank": 139
+    },
+    {
+      "k": "1192383184619986944|1",
+      "team": "Wofford",
+      "short": "",
+      "conf": "PIONEER",
+      "div": "FREEDOM",
+      "w": 3,
+      "l": 8,
+      "t": 0,
+      "pf": 1414,
+      "pa": 1529.46,
+      "rank": 140
+    },
+    {
+      "k": "1192383069776863232|9",
+      "team": "Miami",
+      "short": "",
+      "conf": "ACC",
+      "div": "COASTAL",
+      "w": 3,
+      "l": 8,
+      "t": 0,
+      "pf": 1341.9,
+      "pa": 1395.58,
+      "rank": 141
+    },
+    {
+      "k": "1188461140190814208|3",
+      "team": "Tennessee",
+      "short": "",
+      "conf": "SEC",
+      "div": "EAST",
+      "w": 3,
+      "l": 8,
+      "t": 0,
+      "pf": 1340.88,
+      "pa": 1409.02,
+      "rank": 142
+    },
+    {
+      "k": "1192383143762542592|3",
+      "team": "Tulane",
+      "short": "",
+      "conf": "SUN BELT",
+      "div": "BIBLE",
+      "w": 3,
+      "l": 8,
+      "t": 0,
+      "pf": 1330.9,
+      "pa": 1353.2,
+      "rank": 143
+    },
+    {
+      "k": "1192383069776863232|8",
+      "team": "Boston College",
+      "short": "",
+      "conf": "ACC",
+      "div": "ATLANTIC",
+      "w": 3,
+      "l": 8,
+      "t": 0,
+      "pf": 1302.68,
+      "pa": 1506.16,
+      "rank": 144
+    },
+    {
+      "k": "1192383143762542592|5",
+      "team": "Marshall",
+      "short": "",
+      "conf": "SUN BELT",
+      "div": "BIBLE",
+      "w": 3,
+      "l": 8,
+      "t": 0,
+      "pf": 1256.88,
+      "pa": 1381.14,
+      "rank": 145
+    },
+    {
+      "k": "1192383107391332352|1",
+      "team": "Texas Tech",
+      "short": "",
+      "conf": "BIG 12",
+      "div": "HEAT",
+      "w": 3,
+      "l": 8,
+      "t": 0,
+      "pf": 1208.44,
+      "pa": 1352.86,
+      "rank": 146
+    },
+    {
+      "k": "1183984327853932544|9",
+      "team": "UCF",
+      "short": "",
+      "conf": "BIG EAST & CO.",
+      "div": "MIDEAST",
+      "w": 3,
+      "l": 8,
+      "t": 0,
+      "pf": 1204.48,
+      "pa": 1498.74,
+      "rank": 147
+    },
+    {
+      "k": "1187162832969211904|1",
+      "team": "Purdue",
+      "short": "",
+      "conf": "BIG 10",
+      "div": "EAST",
+      "w": 3,
+      "l": 8,
+      "t": 0,
+      "pf": 1200.1,
+      "pa": 1470.86,
+      "rank": 148
+    },
+    {
+      "k": "1197683812742483968|7",
+      "team": "Mississippi Valley State",
+      "short": "",
+      "conf": "HISTORICALLY BLACK",
+      "div": "Mississippi River",
+      "w": 3,
+      "l": 8,
+      "t": 0,
+      "pf": 1172.48,
+      "pa": 1386.94,
+      "rank": 149
+    },
+    {
+      "k": "1183984327853932544|2",
+      "team": "Maryland",
+      "short": "",
+      "conf": "BIG EAST & CO.",
+      "div": "NORTHEAST",
+      "w": 3,
+      "l": 8,
+      "t": 0,
+      "pf": 1149.4,
+      "pa": 1415.02,
+      "rank": 150
+    },
+    {
+      "k": "1192383038721757184|8",
+      "team": "Colorado",
+      "short": "",
+      "conf": "PAC 12",
+      "div": "SOUTH",
+      "w": 3,
+      "l": 8,
+      "t": 0,
+      "pf": 1142.74,
+      "pa": 1420.52,
+      "rank": 151
+    },
+    {
+      "k": "1188461140190814208|8",
+      "team": "Kentucky",
+      "short": "",
+      "conf": "SEC",
+      "div": "EAST",
+      "w": 3,
+      "l": 8,
+      "t": 0,
+      "pf": 1118.44,
+      "pa": 1364,
+      "rank": 152
+    },
+    {
+      "k": "1197683625282244608|9",
+      "team": "Central Arkansas",
+      "short": "",
+      "conf": "WILD",
+      "div": "PLAINS",
+      "w": 3,
+      "l": 8,
+      "t": 0,
+      "pf": 1082.26,
+      "pa": 1377.98,
+      "rank": 153
+    },
+    {
+      "k": "1197683509209083904|11",
+      "team": "Maine",
+      "short": "",
+      "conf": "BIG SKY",
+      "div": "Frontier",
+      "w": 3,
+      "l": 8,
+      "t": 0,
+      "pf": 1073.98,
+      "pa": 1310.04,
+      "rank": 154
+    },
+    {
+      "k": "1192383184619986944|5",
+      "team": "Tennessee State",
+      "short": "",
+      "conf": "PIONEER",
+      "div": "PATRIOT",
+      "w": 3,
+      "l": 8,
+      "t": 0,
+      "pf": 1017.9,
+      "pa": 1386.5,
+      "rank": 155
+    },
+    {
+      "k": "1192383143762542592|4",
+      "team": "Rice",
+      "short": "",
+      "conf": "SUN BELT",
+      "div": "REBEL",
+      "w": 3,
+      "l": 8,
+      "t": 0,
+      "pf": 898.1,
+      "pa": 1293.02,
+      "rank": 156
+    },
+    {
+      "k": "1197683509209083904|10",
+      "team": "Northern Iowa",
+      "short": "",
+      "conf": "BIG SKY",
+      "div": "Colonies",
+      "w": 3,
+      "l": 8,
+      "t": 0,
+      "pf": 769.94,
+      "pa": 1337.26,
+      "rank": 157
+    },
+    {
+      "k": "1197683891784134656|7",
+      "team": "Idaho",
+      "short": "",
+      "conf": "MOUNTAIN WEST",
+      "div": "SAINT",
+      "w": 2,
+      "l": 9,
+      "t": 0,
+      "pf": 1334.58,
+      "pa": 1460.7,
+      "rank": 158
+    },
+    {
+      "k": "1188461140190814208|1",
+      "team": "Florida",
+      "short": "",
+      "conf": "SEC",
+      "div": "EAST",
+      "w": 2,
+      "l": 9,
+      "t": 0,
+      "pf": 1290.6,
+      "pa": 1405.24,
+      "rank": 159
+    },
+    {
+      "k": "1192383069776863232|4",
+      "team": "Virginia Tech",
+      "short": "",
+      "conf": "ACC",
+      "div": "COASTAL",
+      "w": 2,
+      "l": 9,
+      "t": 0,
+      "pf": 1247.36,
+      "pa": 1470.7,
+      "rank": 160
+    },
+    {
+      "k": "1197684159036805120|7",
+      "team": "Delaware",
+      "short": "",
+      "conf": "OHIO VALLEY",
+      "div": "Yankee",
+      "w": 2,
+      "l": 9,
+      "t": 0,
+      "pf": 1243.02,
+      "pa": 1387.64,
+      "rank": 161
+    },
+    {
+      "k": "1197683812742483968|9",
+      "team": "Bethune - Cookman",
+      "short": "",
+      "conf": "HISTORICALLY BLACK",
+      "div": "Hurricane",
+      "w": 2,
+      "l": 9,
+      "t": 0,
+      "pf": 1084.24,
+      "pa": 1307.66,
+      "rank": 162
+    },
+    {
+      "k": "1197683737584746496|4",
+      "team": "South Alabama",
+      "short": "",
+      "conf": "USA",
+      "div": "GULF",
+      "w": 2,
+      "l": 9,
+      "t": 0,
+      "pf": 1075.94,
+      "pa": 1449.68,
+      "rank": 163
+    },
+    {
+      "k": "1188461140190814208|7",
+      "team": "Georgia",
+      "short": "",
+      "conf": "SEC",
+      "div": "EAST",
+      "w": 2,
+      "l": 9,
+      "t": 0,
+      "pf": 959.84,
+      "pa": 1315.08,
+      "rank": 164
+    },
+    {
+      "k": "1197683509209083904|9",
+      "team": "Weber State",
+      "short": "",
+      "conf": "BIG SKY",
+      "div": "Frontier",
+      "w": 2,
+      "l": 9,
+      "t": 0,
+      "pf": 955,
+      "pa": 1333.26,
+      "rank": 165
+    },
+    {
+      "k": "1192383143762542592|10",
+      "team": "UAB",
+      "short": "",
+      "conf": "SUN BELT",
+      "div": "BIBLE",
+      "w": 2,
+      "l": 9,
+      "t": 0,
+      "pf": 856.4,
+      "pa": 1303.8,
+      "rank": 166
+    },
+    {
+      "k": "1197683812742483968|2",
+      "team": "Alabama A&M",
+      "short": "",
+      "conf": "HISTORICALLY BLACK",
+      "div": "Mississippi River",
+      "w": 2,
+      "l": 9,
+      "t": 0,
+      "pf": 803.6,
+      "pa": 1342.22,
+      "rank": 167
+    },
+    {
+      "k": "1192383184619986944|12",
+      "team": "Davidson",
+      "short": "",
+      "conf": "PIONEER",
+      "div": "FREEDOM",
+      "w": 1,
+      "l": 10,
+      "t": 0,
+      "pf": 1119.3,
+      "pa": 1441.84,
+      "rank": 168
+    },
+    {
+      "k": "1192383038721757184|9",
+      "team": "Oregon",
+      "short": "",
+      "conf": "PAC 12",
+      "div": "NORTH",
+      "w": 1,
+      "l": 10,
+      "t": 0,
+      "pf": 1100.38,
+      "pa": 1610.7,
+      "rank": 169
+    },
+    {
+      "k": "1197684159036805120|8",
+      "team": "Morehead State",
+      "short": "",
+      "conf": "OHIO VALLEY",
+      "div": "Yankee",
+      "w": 1,
+      "l": 10,
+      "t": 0,
+      "pf": 1051.76,
+      "pa": 1439,
+      "rank": 170
+    },
+    {
+      "k": "1197683676763148288|2",
+      "team": "Harvard",
+      "short": "",
+      "conf": "IVY",
+      "div": "SMART",
+      "w": 1,
+      "l": 10,
+      "t": 0,
+      "pf": 1051.7,
+      "pa": 1484.04,
+      "rank": 171
+    },
+    {
+      "k": "1197683625282244608|7",
+      "team": "San Jose State",
+      "short": "",
+      "conf": "WILD",
+      "div": "PLAINS",
+      "w": 1,
+      "l": 10,
+      "t": 0,
+      "pf": 1033.72,
+      "pa": 1450,
+      "rank": 172
+    },
+    {
+      "k": "1187162832969211904|3",
+      "team": "Northwestern",
+      "short": "",
+      "conf": "BIG 10",
+      "div": "WEST",
+      "w": 1,
+      "l": 10,
+      "t": 0,
+      "pf": 1024.72,
+      "pa": 1430.56,
+      "rank": 173
+    },
+    {
+      "k": "1197683509209083904|5",
+      "team": "Stony Brook",
+      "short": "",
+      "conf": "BIG SKY",
+      "div": "Colonies",
+      "w": 1,
+      "l": 10,
+      "t": 0,
+      "pf": 1008.96,
+      "pa": 1419.98,
+      "rank": 174
+    },
+    {
+      "k": "1197683891784134656|4",
+      "team": "Air Force",
+      "short": "",
+      "conf": "MOUNTAIN WEST",
+      "div": "SIN",
+      "w": 1,
+      "l": 10,
+      "t": 0,
+      "pf": 986.2,
+      "pa": 1431.62,
+      "rank": 175
+    },
+    {
+      "k": "1183984327853932544|11",
+      "team": "Navy",
+      "short": "",
+      "conf": "BIG EAST & CO.",
+      "div": "NORTHEAST",
+      "w": 0,
+      "l": 11,
+      "t": 0,
+      "pf": 1072.94,
+      "pa": 1498.56,
+      "rank": 176
+    },
+    {
+      "k": "1197683737584746496|12",
+      "team": "Louisiana Monroe",
+      "short": "",
+      "conf": "USA",
+      "div": "GULF",
+      "w": 0,
+      "l": 11,
+      "t": 0,
+      "pf": 994.78,
+      "pa": 1457.3,
+      "rank": 177
+    },
+    {
+      "k": "1197683676763148288|10",
+      "team": "Princeton",
+      "short": "",
+      "conf": "IVY",
+      "div": "SMART",
+      "w": 0,
+      "l": 11,
+      "t": 0,
+      "pf": 983.04,
+      "pa": 1478.46,
+      "rank": 178
+    },
+    {
+      "k": "1192383038721757184|1",
+      "team": "Arizona",
+      "short": "",
+      "conf": "PAC 12",
+      "div": "SOUTH",
+      "w": 0,
+      "l": 11,
+      "t": 0,
+      "pf": 945.3,
+      "pa": 1490.94,
+      "rank": 179
+    },
+    {
+      "k": "1192383107391332352|10",
+      "team": "Kansas",
+      "short": "",
+      "conf": "BIG 12",
+      "div": "WIND",
+      "w": 0,
+      "l": 11,
+      "t": 0,
+      "pf": 788.64,
+      "pa": 1441.3,
+      "rank": 180
+    }
+  ],
+  "ccg": [
+    {
+      "id": "2025-CCG-0",
+      "a": "1197683891784134656|1",
+      "b": "1197683891784134656|10",
+      "winner": "1197683891784134656|10",
+      "pa": 132.82,
+      "pb": 139.46
+    },
+    {
+      "id": "2025-CCG-1",
+      "a": "1197684159036805120|10",
+      "b": "1197684159036805120|4",
+      "winner": "1197684159036805120|4",
+      "pa": 84.16,
+      "pb": 123.86
+    },
+    {
+      "id": "2025-CCG-2",
+      "a": "1197683812742483968|8",
+      "b": "1197683812742483968|5",
+      "winner": "1197683812742483968|5",
+      "pa": 64.3,
+      "pb": 152.84
+    },
+    {
+      "id": "2025-CCG-3",
+      "a": "1197683737584746496|2",
+      "b": "1197683737584746496|3",
+      "winner": "1197683737584746496|3",
+      "pa": 117.26,
+      "pb": 165.16
+    },
+    {
+      "id": "2025-CCG-4",
+      "a": "1197683676763148288|5",
+      "b": "1197683676763148288|8",
+      "winner": "1197683676763148288|5",
+      "pa": 128.76,
+      "pb": 113.22
+    },
+    {
+      "id": "2025-CCG-5",
+      "a": "1197683625282244608|1",
+      "b": "1197683625282244608|10",
+      "winner": "1197683625282244608|1",
+      "pa": 224.08,
+      "pb": 139.32
+    },
+    {
+      "id": "2025-CCG-6",
+      "a": "1197683509209083904|8",
+      "b": "1197683509209083904|3",
+      "winner": "1197683509209083904|3",
+      "pa": 172.12,
+      "pb": 197.46
+    },
+    {
+      "id": "2025-CCG-7",
+      "a": "1192383184619986944|3",
+      "b": "1192383184619986944|10",
+      "winner": "1192383184619986944|10",
+      "pa": 129.28,
+      "pb": 150.96
+    },
+    {
+      "id": "2025-CCG-8",
+      "a": "1192383143762542592|7",
+      "b": "1192383143762542592|2",
+      "winner": "1192383143762542592|7",
+      "pa": 125.06,
+      "pb": 99.72
+    },
+    {
+      "id": "2025-CCG-9",
+      "a": "1183984327853932544|4",
+      "b": "1183984327853932544|7",
+      "winner": "1183984327853932544|4",
+      "pa": 160.96,
+      "pb": 155.56
+    },
+    {
+      "id": "2025-CCG-10",
+      "a": "1188461140190814208|10",
+      "b": "1188461140190814208|6",
+      "winner": "1188461140190814208|6",
+      "pa": 122.98,
+      "pb": 156.96
+    },
+    {
+      "id": "2025-CCG-11",
+      "a": "1192383107391332352|5",
+      "b": "1192383107391332352|7",
+      "winner": "1192383107391332352|7",
+      "pa": 142.28,
+      "pb": 161.06
+    },
+    {
+      "id": "2025-CCG-12",
+      "a": "1192383069776863232|12",
+      "b": "1192383069776863232|7",
+      "winner": "1192383069776863232|12",
+      "pa": 221.88,
+      "pb": 151.46
+    },
+    {
+      "id": "2025-CCG-13",
+      "a": "1192383038721757184|4",
+      "b": "1192383038721757184|12",
+      "winner": "1192383038721757184|4",
+      "pa": 160.34,
+      "pb": 100.64
+    },
+    {
+      "id": "2025-CCG-14",
+      "a": "1187162832969211904|9",
+      "b": "1187162832969211904|7",
+      "winner": "1187162832969211904|7",
+      "pa": 105.58,
+      "pb": 172.92
+    }
+  ],
+  "tie": [],
+  "style": {
+    "Baylor": {
+      "background": "#154734",
+      "text": "#FFB81C",
+      "logo": "../assets/logos/teams/Baylor.png"
+    },
+    "Minnesota": {
+      "background": "#7a0019",
+      "text": "#ffcc33",
+      "logo": "../assets/logos/teams/Minnesota.png"
+    },
+    "Portland State": {
+      "background": "#154734",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Portland%20State.png"
+    },
+    "Arizona State": {
+      "background": "#8C1D40",
+      "text": "#FFC627",
+      "logo": "../assets/logos/teams/Arizona%20State.png"
+    },
+    "Hawaii": {
+      "background": "#024731",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Hawaii.png"
+    },
+    "Mississippi State": {
+      "background": "#5D1725",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Mississippi%20State.png"
+    },
+    "Clemson": {
+      "background": "#F56600",
+      "text": "#522D80",
+      "logo": "../assets/logos/teams/Clemson.png"
+    },
+    "Montana": {
+      "background": "#70002E",
+      "text": "#999999",
+      "logo": "../assets/logos/teams/Montana.png"
+    },
+    "Syracuse": {
+      "background": "#F76900",
+      "text": "#000E54",
+      "logo": "../assets/logos/teams/Syracuse.png"
+    },
+    "Montana State": {
+      "background": "#00205B",
+      "text": "#B9975C",
+      "logo": "../assets/logos/teams/Montana%20State.png"
+    },
+    "Old Dominion": {
+      "background": "#003057",
+      "text": "#828A8F",
+      "logo": "../assets/logos/teams/Old%20Dominion.png"
+    },
+    "UT Martin": {
+      "background": "#0B2341",
+      "text": "#FF8200",
+      "logo": "../assets/logos/teams/UT%20Martin.png"
+    },
+    "Florida Atlantic": {
+      "background": "#003366",
+      "text": "#CC0000",
+      "logo": "../assets/logos/teams/Florida%20Atlantic.png"
+    },
+    "Washington State": {
+      "background": "#A60F2D",
+      "text": "#4D4D4D",
+      "logo": "../assets/logos/teams/Washington%20State.png"
+    },
+    "Nebraska": {
+      "background": "#e41c38",
+      "text": "#fdf2d9",
+      "logo": "../assets/logos/teams/Nebraska.png"
+    },
+    "Alcorn State": {
+      "background": "#512D6D",
+      "text": "#CC8A00",
+      "logo": "../assets/logos/teams/Alcorn%20State.png"
+    },
+    "Ohio State": {
+      "background": "#BB0000",
+      "text": "#666666",
+      "logo": "../assets/logos/teams/Ohio%20State.png"
+    },
+    "Dartmouth": {
+      "background": "#00693E",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Dartmouth.png"
+    },
+    "Georgetown": {
+      "background": "#041E42",
+      "text": "#63666A",
+      "logo": "../assets/logos/teams/Georgetown.png"
+    },
+    "UCLA": {
+      "background": "#2774AE",
+      "text": "#FFD100",
+      "logo": "../assets/logos/teams/UCLA.png"
+    },
+    "William & Mary": {
+      "background": "#115740",
+      "text": "#F0B323",
+      "logo": "../assets/logos/teams/William%20%26%20Mary.png"
+    },
+    "Texas A&M": {
+      "background": "#500000",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Texas%20A%26M.png"
+    },
+    "LSU": {
+      "background": "#461D7C",
+      "text": "#FDD023",
+      "logo": "../assets/logos/teams/LSU.png"
+    },
+    "Florida A&M": {
+      "background": "#EE7624",
+      "text": "#1B5633",
+      "logo": "../assets/logos/teams/Florida%20A%26M.png"
+    },
+    "North Carolina A&T": {
+      "background": "#004684",
+      "text": "#FDB927",
+      "logo": "../assets/logos/teams/North%20Carolina%20A%26T.png"
+    },
+    "Chattanooga": {
+      "background": "#00386B",
+      "text": "#E0AA0F",
+      "logo": "../assets/logos/teams/Chattanooga.png"
+    },
+    "ETSU": {
+      "background": "#041E42",
+      "text": "#FFC72C",
+      "logo": "../assets/logos/teams/ETSU.png"
+    },
+    "North Alabama": {
+      "background": "#592B8A",
+      "text": "#FFB92A",
+      "logo": "../assets/logos/teams/North%20Alabama.png"
+    },
+    "Furman": {
+      "background": "#582C83",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Furman.png"
+    },
+    "Coastal Carolina": {
+      "background": "#006F71",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Coastal%20Carolina.png"
+    },
+    "Columbia": {
+      "background": "#9BCBEB",
+      "text": "#003865",
+      "logo": "../assets/logos/teams/Columbia.png"
+    },
+    "South Carolina": {
+      "background": "#73000A",
+      "text": "#000000",
+      "logo": "../assets/logos/teams/South%20Carolina.png"
+    },
+    "Cornell": {
+      "background": "#B31B1B",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Cornell.png"
+    },
+    "Campbell": {
+      "background": "#F47725",
+      "text": "#1E252B",
+      "logo": "../assets/logos/teams/Campbell.png"
+    },
+    "USC": {
+      "background": "#990000",
+      "text": "#FFCC00",
+      "logo": "../assets/logos/teams/USC.png"
+    },
+    "Pittsburgh": {
+      "background": "#003594",
+      "text": "#FFB81C",
+      "logo": "../assets/logos/teams/Pittsburgh.png"
+    },
+    "Youngstown State": {
+      "background": "#C8102E",
+      "text": "#F3D54E",
+      "logo": "../assets/logos/teams/Youngstown%20State.png"
+    },
+    "Louisville": {
+      "background": "#AD0000",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Louisville.png"
+    },
+    "North Carolina Central": {
+      "background": "#862633",
+      "text": "#A2AAAD",
+      "logo": "../assets/logos/teams/North%20Carolina%20Central.png"
+    },
+    "NC State": {
+      "background": "#CC0000",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/NC%20State.png"
+    },
+    "UNLV": {
+      "background": "#E31837",
+      "text": "#9FA1A4",
+      "logo": "../assets/logos/teams/UNLV.png"
+    },
+    "Wyoming": {
+      "background": "#492f24",
+      "text": "#ffc425",
+      "logo": "../assets/logos/teams/Wyoming.png"
+    },
+    "Iowa": {
+      "background": "#FFCD00",
+      "text": "#000000",
+      "logo": "../assets/logos/teams/Iowa.png"
+    },
+    "Georgia Southern": {
+      "background": "#041E42",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Georgia%20Southern.png"
+    },
+    "Charleston Southern": {
+      "background": "#002855",
+      "text": "#A8996E",
+      "logo": "../assets/logos/teams/Charleston%20Southern.png"
+    },
+    "Murray State": {
+      "background": "#002144",
+      "text": "#ECAC00",
+      "logo": "../assets/logos/teams/Murray%20State.png"
+    },
+    "James Madison": {
+      "background": "#450084",
+      "text": "#CBB677",
+      "logo": "../assets/logos/teams/James%20Madison.png"
+    },
+    "Lehigh": {
+      "background": "#653819",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Lehigh.png"
+    },
+    "Kansas State": {
+      "background": "#512888",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Kansas%20State.png"
+    },
+    "Notre Dame": {
+      "background": "#0C2340",
+      "text": "#C99700",
+      "logo": "../assets/logos/teams/Notre%20Dame.png"
+    },
+    "Western Kentucky": {
+      "background": "#C60C30",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Western%20Kentucky.png"
+    },
+    "Nevada": {
+      "background": "#041E42",
+      "text": "#8A8D8F",
+      "logo": "../assets/logos/teams/Nevada.png"
+    },
+    "Auburn": {
+      "background": "#0C2340",
+      "text": "#E87722",
+      "logo": "../assets/logos/teams/Auburn.png"
+    },
+    "California": {
+      "background": "#003262",
+      "text": "#FDB515",
+      "logo": "../assets/logos/teams/California.png"
+    },
+    "Boise State": {
+      "background": "#0033A0",
+      "text": "#D64309",
+      "logo": "../assets/logos/teams/Boise%20State.png"
+    },
+    "Colgate": {
+      "background": "#821019",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Colgate.png"
+    },
+    "Wake Forest": {
+      "background": "#9E7E38",
+      "text": "#000000",
+      "logo": "../assets/logos/teams/Wake%20Forest.png"
+    },
+    "Virginia": {
+      "background": "#232D4B",
+      "text": "#F84C1E",
+      "logo": "../assets/logos/teams/Virginia.png"
+    },
+    "Belmont": {
+      "background": "#002147",
+      "text": "#CC0000",
+      "logo": "../assets/logos/teams/Belmont.png"
+    },
+    "Troy": {
+      "background": "#8A2432",
+      "text": "#B3B5B8",
+      "logo": "../assets/logos/teams/Troy.png"
+    },
+    "Holy Cross": {
+      "background": "#602D89",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Holy%20Cross.png"
+    },
+    "Eastern Kentucky": {
+      "background": "#4C151E",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Eastern%20Kentucky.png"
+    },
+    "Delaware State": {
+      "background": "#EE3124",
+      "text": "#009DDC",
+      "logo": "../assets/logos/teams/Delaware%20State.png"
+    },
+    "Citadel": {
+      "background": "#002856",
+      "text": "#7BADD3",
+      "logo": "../assets/logos/teams/Citadel.png"
+    },
+    "Tulsa": {
+      "background": "#002D72",
+      "text": "#C5B783",
+      "logo": "../assets/logos/teams/Tulsa.png"
+    },
+    "Michigan": {
+      "background": "#00274c",
+      "text": "#ffcb05",
+      "logo": "../assets/logos/teams/Michigan.png"
+    },
+    "TCU": {
+      "background": "#4d1979",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/TCU.png"
+    },
+    "New Mexico": {
+      "background": "#BA0C2F",
+      "text": "#A7A8AA",
+      "logo": "../assets/logos/teams/New%20Mexico.png"
+    },
+    "Dayton": {
+      "background": "#CE1141",
+      "text": "#004B8D",
+      "logo": "../assets/logos/teams/Dayton.png"
+    },
+    "Oregon State": {
+      "background": "#D73F09",
+      "text": "#000000",
+      "logo": "../assets/logos/teams/Oregon%20State.png"
+    },
+    "Rhode Island": {
+      "background": "#68ABE8",
+      "text": "#002147",
+      "logo": "../assets/logos/teams/Rhode%20Island.png"
+    },
+    "North Texas": {
+      "background": "#00853E",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/North%20Texas.png"
+    },
+    "Southern": {
+      "background": "#69B3E7",
+      "text": "#FFC72C",
+      "logo": "../assets/logos/teams/Southern.png"
+    },
+    "Grambling State": {
+      "background": "#EAAA00",
+      "text": "#000000",
+      "logo": "../assets/logos/teams/Grambling%20State.png"
+    },
+    "Army": {
+      "background": "#000000",
+      "text": "#D3BC8D",
+      "logo": "../assets/logos/teams/Army.png"
+    },
+    "Richmond": {
+      "background": "#990000",
+      "text": "#000066",
+      "logo": "../assets/logos/teams/Richmond.png"
+    },
+    "USF": {
+      "background": "#006747",
+      "text": "#CFC493",
+      "logo": "../assets/logos/teams/USF.png"
+    },
+    "Jackson State": {
+      "background": "#002147",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Jackson%20State.png"
+    },
+    "West Virginia": {
+      "background": "#EAAA00",
+      "text": "#002855",
+      "logo": "../assets/logos/teams/West%20Virginia.png"
+    },
+    "Eastern Michigan": {
+      "background": "#006633",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Eastern%20Michigan.png"
+    },
+    "Arkansas State": {
+      "background": "#cc092f",
+      "text": "#000000",
+      "logo": "../assets/logos/teams/Arkansas%20State.png"
+    },
+    "San Diego State": {
+      "background": "#A6192E",
+      "text": "#000000",
+      "logo": "../assets/logos/teams/San%20Diego%20State.png"
+    },
+    "Memphis": {
+      "background": "#003087",
+      "text": "#898D8D",
+      "logo": "../assets/logos/teams/Memphis.png"
+    },
+    "Duke": {
+      "background": "#012169",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Duke.png"
+    },
+    "Georgia State": {
+      "background": "#0039A6",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Georgia%20State.png"
+    },
+    "Alabama": {
+      "background": "#9E1B32",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Alabama.png"
+    },
+    "Wofford": {
+      "background": "#886E4C",
+      "text": "#000000",
+      "logo": "../assets/logos/teams/Wofford.png"
+    },
+    "UCONN": {
+      "background": "#000E2F",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/UCONN.png"
+    },
+    "Middle Tennessee State": {
+      "background": "#0066CC",
+      "text": "#000000",
+      "logo": "../assets/logos/teams/Middle%20Tennessee%20State.png"
+    },
+    "BYU": {
+      "background": "#002E5D",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/BYU.png"
+    },
+    "Brown": {
+      "background": "#4E3629",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Brown.png"
+    },
+    "Oklahoma State": {
+      "background": "#FE5C00",
+      "text": "#000000",
+      "logo": "../assets/logos/teams/Oklahoma%20State.png"
+    },
+    "Rutgers": {
+      "background": "#CC0033",
+      "text": "#000000",
+      "logo": "../assets/logos/teams/Rutgers.png"
+    },
+    "North Dakota State": {
+      "background": "#005643",
+      "text": "#FFC82E",
+      "logo": "../assets/logos/teams/North%20Dakota%20State.png"
+    },
+    "FSU": {
+      "background": "#782F40",
+      "text": "#CEB888",
+      "logo": "../assets/logos/teams/FSU.png"
+    },
+    "Wisconsin": {
+      "background": "#c5050c",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Wisconsin.png"
+    },
+    "Yale": {
+      "background": "#00356B",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Yale.png"
+    },
+    "North Carolina": {
+      "background": "#7BAFD4",
+      "text": "#13294B",
+      "logo": "../assets/logos/teams/North%20Carolina.png"
+    },
+    "Monmouth": {
+      "background": "#002855",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Monmouth.png"
+    },
+    "South Dakota": {
+      "background": "#D21533",
+      "text": "#000000",
+      "logo": "../assets/logos/teams/South%20Dakota.png"
+    },
+    "Texas": {
+      "background": "#BF5700",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Texas.png"
+    },
+    "Austin Peay": {
+      "background": "#C41E3A",
+      "text": "#000000",
+      "logo": "../assets/logos/teams/Austin%20Peay.png"
+    },
+    "UTSA": {
+      "background": "#F15A22",
+      "text": "#032044",
+      "logo": "../assets/logos/teams/UTSA.png"
+    },
+    "UNC Charlotte": {
+      "background": "#005035",
+      "text": "#A49665",
+      "logo": "../assets/logos/teams/UNC%20Charlotte.png"
+    },
+    "Wichita State": {
+      "background": "#FFCD00",
+      "text": "#27251F",
+      "logo": "../assets/logos/teams/Wichita%20State.png"
+    },
+    "Butler": {
+      "background": "#13294B",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Butler.png"
+    },
+    "Louisiana Tech": {
+      "background": "#003087",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Louisiana%20Tech.png"
+    },
+    "Illinois": {
+      "background": "#FF5F05",
+      "text": "#13294B",
+      "logo": "../assets/logos/teams/Illinois.png"
+    },
+    "Oklahoma": {
+      "background": "#841617",
+      "text": "#FDF9D8",
+      "logo": "../assets/logos/teams/Oklahoma.png"
+    },
+    "Miami": {
+      "background": "#F47321",
+      "text": "#005030",
+      "logo": "../assets/logos/teams/Miami.png"
+    },
+    "Tennessee": {
+      "background": "#FF8200",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Tennessee.png"
+    },
+    "Louisiana": {
+      "background": "#CE181E",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Louisiana.png"
+    },
+    "Idaho": {
+      "background": "#B3A369",
+      "text": "#000000",
+      "logo": "../assets/logos/teams/Idaho.png"
+    },
+    "Villanova": {
+      "background": "#00205B",
+      "text": "#13B5EA",
+      "logo": "../assets/logos/teams/Villanova.png"
+    },
+    "Tulane": {
+      "background": "#006747",
+      "text": "#418FDE",
+      "logo": "../assets/logos/teams/Tulane.png"
+    },
+    "Tuskegee": {
+      "background": "#A32035",
+      "text": "#EBA900",
+      "logo": "../assets/logos/teams/Tuskegee.png"
+    },
+    "Temple": {
+      "background": "#9E1B34",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Temple.png"
+    },
+    "Eastern Washington": {
+      "background": "#B7142E",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Eastern%20Washington.png"
+    },
+    "Bucknell": {
+      "background": "#003865",
+      "text": "#E87722",
+      "logo": "../assets/logos/teams/Bucknell.png"
+    },
+    "Penn": {
+      "background": "#011F5B",
+      "text": "#990000",
+      "logo": "../assets/logos/teams/Penn.png"
+    },
+    "Texas State": {
+      "background": "#501214",
+      "text": "#AC9155",
+      "logo": "../assets/logos/teams/Texas%20State.png"
+    },
+    "Utah": {
+      "background": "#BE0000",
+      "text": "#000000",
+      "logo": "../assets/logos/teams/Utah.png"
+    },
+    "Indiana": {
+      "background": "#990000",
+      "text": "#EEEDEB",
+      "logo": "../assets/logos/teams/Indiana.png"
+    },
+    "Boston College": {
+      "background": "#910039",
+      "text": "#B38F59",
+      "logo": "../assets/logos/teams/Boston%20College.png"
+    },
+    "Missouri": {
+      "background": "#FDB719",
+      "text": "#000000",
+      "logo": "../assets/logos/teams/Missouri.png"
+    },
+    "Penn State": {
+      "background": "#041E42",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Penn%20State.png"
+    },
+    "Stanford": {
+      "background": "#8C1515",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Stanford.png"
+    },
+    "Florida International": {
+      "background": "#081E3F",
+      "text": "#D1A644",
+      "logo": "../assets/logos/teams/Florida%20International.png"
+    },
+    "Florida": {
+      "background": "#0021a5",
+      "text": "#FA4616",
+      "logo": "../assets/logos/teams/Florida.png"
+    },
+    "UTEP": {
+      "background": "#FF8200",
+      "text": "#041E42",
+      "logo": "../assets/logos/teams/UTEP.png"
+    },
+    "Colorado State": {
+      "background": "#1E4D2B",
+      "text": "#C8C372",
+      "logo": "../assets/logos/teams/Colorado%20State.png"
+    },
+    "Georgia Tech": {
+      "background": "#B39051",
+      "text": "#051E39",
+      "logo": "../assets/logos/teams/Georgia%20Tech.png"
+    },
+    "Kennesaw State": {
+      "background": "#FDBB30",
+      "text": "#0B1315",
+      "logo": "../assets/logos/teams/Kennesaw%20State.png"
+    },
+    "Marshall": {
+      "background": "#00B140",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Marshall.png"
+    },
+    "SE Missouri State": {
+      "background": "#C8102E",
+      "text": "#000000",
+      "logo": "../assets/logos/teams/SE%20Missouri%20State.png"
+    },
+    "Iowa State": {
+      "background": "#C8102E",
+      "text": "#F1BE48",
+      "logo": "../assets/logos/teams/Iowa%20State.png"
+    },
+    "Virginia Tech": {
+      "background": "#630031",
+      "text": "#CF4420",
+      "logo": "../assets/logos/teams/Virginia%20Tech.png"
+    },
+    "Delaware": {
+      "background": "#00539F",
+      "text": "#FFD200",
+      "logo": "../assets/logos/teams/Delaware.png"
+    },
+    "Howard": {
+      "background": "#003A63",
+      "text": "#E51937",
+      "logo": "../assets/logos/teams/Howard.png"
+    },
+    "Ole Miss": {
+      "background": "#14213D",
+      "text": "#CE1126",
+      "logo": "../assets/logos/teams/Ole%20Miss.png"
+    },
+    "Washington": {
+      "background": "#32006E",
+      "text": "#B7A57A",
+      "logo": "../assets/logos/teams/Washington.png"
+    },
+    "Southern Miss": {
+      "background": "#FDC737",
+      "text": "#000000",
+      "logo": "../assets/logos/teams/Southern%20Miss.png"
+    },
+    "South Dakota State": {
+      "background": "#0033A0",
+      "text": "#FFD100",
+      "logo": "../assets/logos/teams/South%20Dakota%20State.png"
+    },
+    "Michigan State": {
+      "background": "#18453B",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Michigan%20State.png"
+    },
+    "Jacksonville State": {
+      "background": "#CC0000",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Jacksonville%20State.png"
+    },
+    "Texas Tech": {
+      "background": "#CC0000",
+      "text": "#000000",
+      "logo": "../assets/logos/teams/Texas%20Tech.png"
+    },
+    "UCF": {
+      "background": "#FFC904",
+      "text": "#000000",
+      "logo": "../assets/logos/teams/UCF.png"
+    },
+    "Arkansas": {
+      "background": "#9D2235",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Arkansas.png"
+    },
+    "Purdue": {
+      "background": "#CFB991",
+      "text": "#000000",
+      "logo": "../assets/logos/teams/Purdue.png"
+    },
+    "Mississippi Valley State": {
+      "background": "#006F3C",
+      "text": "#E51836",
+      "logo": "../assets/logos/teams/Mississippi%20Valley%20State.png"
+    },
+    "Maryland": {
+      "background": "#E21833",
+      "text": "#FFD200",
+      "logo": "../assets/logos/teams/Maryland.png"
+    },
+    "Colorado": {
+      "background": "#CFB87C",
+      "text": "#000000",
+      "logo": "../assets/logos/teams/Colorado.png"
+    },
+    "Vanderbilt": {
+      "background": "#CFAE70",
+      "text": "#000000",
+      "logo": "../assets/logos/teams/Vanderbilt.png"
+    },
+    "Utah State": {
+      "background": "#0F2439",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Utah%20State.png"
+    },
+    "Davidson": {
+      "background": "#AC1A2F",
+      "text": "#000000",
+      "logo": "../assets/logos/teams/Davidson.png"
+    },
+    "Kentucky": {
+      "background": "#0033A0",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Kentucky.png"
+    },
+    "Oregon": {
+      "background": "#154733",
+      "text": "#FEE123",
+      "logo": "../assets/logos/teams/Oregon.png"
+    },
+    "Bethune - Cookman": {
+      "background": "#6F263D",
+      "text": "#F2A900",
+      "logo": "../assets/logos/teams/Bethune%20-%20Cookman.png"
+    },
+    "Central Arkansas": {
+      "background": "#582C83",
+      "text": "#7C878E",
+      "logo": "../assets/logos/teams/Central%20Arkansas.png"
+    },
+    "South Alabama": {
+      "background": "#00205B",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/South%20Alabama.png"
+    },
+    "Maine": {
+      "background": "#082E58",
+      "text": "#79BDE8",
+      "logo": "../assets/logos/teams/Maine.png"
+    },
+    "Navy": {
+      "background": "#00205b",
+      "text": "#c5b783",
+      "logo": "../assets/logos/teams/Navy.png"
+    },
+    "Morehead State": {
+      "background": "#0033A0",
+      "text": "#FFCF00",
+      "logo": "../assets/logos/teams/Morehead%20State.png"
+    },
+    "Harvard": {
+      "background": "#A31F36",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Harvard.png"
+    },
+    "San Jose State": {
+      "background": "#0055A2",
+      "text": "#E5A823",
+      "logo": "../assets/logos/teams/San%20Jose%20State.png"
+    },
+    "Central Michigan": {
+      "background": "#6a0032",
+      "text": "#ffc82e",
+      "logo": "../assets/logos/teams/Central%20Michigan.png"
+    },
+    "Northwestern": {
+      "background": "#4E2A84",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Northwestern.png"
+    },
+    "Tennessee State": {
+      "background": "#00539F",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Tennessee%20State.png"
+    },
+    "Stony Brook": {
+      "background": "#990000",
+      "text": "#16243E",
+      "logo": "../assets/logos/teams/Stony%20Brook.png"
+    },
+    "Louisiana Monroe": {
+      "background": "#800029",
+      "text": "#FDB913",
+      "logo": "../assets/logos/teams/Louisiana%20Monroe.png"
+    },
+    "Air Force": {
+      "background": "#003087",
+      "text": "#8a8d8f",
+      "logo": "../assets/logos/teams/Air%20Force.png"
+    },
+    "Princeton": {
+      "background": "#E77500",
+      "text": "#121212",
+      "logo": "../assets/logos/teams/Princeton.png"
+    },
+    "Georgia": {
+      "background": "#BA0C2F",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Georgia.png"
+    },
+    "Weber State": {
+      "background": "#4B2682",
+      "text": "#A1A1A4",
+      "logo": "../assets/logos/teams/Weber%20State.png"
+    },
+    "Arizona": {
+      "background": "#AB0520",
+      "text": "#0C234B",
+      "logo": "../assets/logos/teams/Arizona.png"
+    },
+    "Rice": {
+      "background": "#00205B",
+      "text": "#6AB3E3",
+      "logo": "../assets/logos/teams/Rice.png"
+    },
+    "UAB": {
+      "background": "#1A5632",
+      "text": "#FDB913",
+      "logo": "../assets/logos/teams/UAB.png"
+    },
+    "Alabama A&M": {
+      "background": "#61162D",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Alabama%20A%26M.png"
+    },
+    "Kansas": {
+      "background": "#0051BA",
+      "text": "#FFFFFF",
+      "logo": "../assets/logos/teams/Kansas.png"
+    },
+    "Northern Iowa": {
+      "background": "#4B116F",
+      "text": "#FFCC00",
+      "logo": "../assets/logos/teams/Northern%20Iowa.png"
+    }
+  },
+  "generated": "2026-11-18T04:29:12.337Z",
+  "note": "Historical 2025 preview — unofficial"
+}

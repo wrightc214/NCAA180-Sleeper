@@ -35,6 +35,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import _postseason_common as ps  # noqa: E402
 import league_config as lcfg  # noqa: E402
 import team_names as tn  # noqa: E402
+from site_common import logo_info, logo_html, team_colors  # noqa: E402
 
 OUT = "reports/postseason/selection-watch.json"
 HIST = "data/Postseason_Historic.csv"
@@ -82,10 +83,23 @@ def build(year):
                       "pa": float(r.PointsAgainst), "rank": i + 1})
     name_key = {t["team"]: t["k"] for t in teams}
     ties = [[name_key[n] for n in g] for g in tied]
+    colors_file = "data/Colors - Teams.csv"
+    col = {}
+    if os.path.exists(colors_file):
+        colors_df = pd.read_csv(colors_file, dtype=str, encoding="utf-8-sig").fillna("")
+        col = {r.Team: team_colors(r.Primary, r.Secondary, r.Background, r.Text, name=r.Team)
+               for r in colors_df.itertuples()}
+    style = {}
+    for t in teams:
+        bg, fg = col.get(t["team"], (None, None))
+        li = logo_info(t["team"], prefix="../")
+        style[t["team"]] = {"background": bg or "", "text": fg or "",
+                            "logo": li["src"] if li else "",
+                            "logo_html": logo_html(t["team"], bg="#ffffff") if li else ""}
     pc = ps.cfg_postseason()["playoff"]
     games = [{"id": g, "a": a, "b": b, "winner": w, "pa": sa, "pb": sb} for g, a, b, w, sa, sb in ccg_pairs(year, order)]
     return {"year": int(year), "field_size": int(pc["field_size"]), "ccg_week": ps.ccg_week(),
-            "order": teams, "ccg": games, "tie": ties,
+            "order": teams, "ccg": games, "tie": ties, "style": style,
             "generated": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
             "note": "Unofficial. Field = CCG winners + top (field_size - #CCGs) of everyone else, by win %, "
                     "points for, points against; a tie that decides the last spot goes to a real coin toss."}
@@ -262,18 +276,57 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--year", type=int)
     ap.add_argument("--check", action="store_true")
+    ap.add_argument("--output", help="Write a preview JSON to this path; never alters the live Selection Watch file")
+    ap.add_argument("--provisional", action="store_true", help="Preview only: current standings before regular season is final")
     a = ap.parse_args()
     os.chdir(lcfg.ROOT)
     year = a.year or ps.current_season()
     if a.check:
         ok, _ = check(year)
         sys.exit(0 if ok else 1)
+    if a.provisional and not a.output:
+        ap.error("--provisional requires --output; provisional results must never touch the live file")
+    enabled = lcfg.selection_watch().get("enabled") is not False
+    if a.output:
+        if not enabled:
+            print("Selection Watch disabled; no preview data written")
+            return
+        if os.path.abspath(a.output) == os.path.abspath(OUT):
+            ap.error("--output must not overwrite the live Selection Watch file")
+        d = build(year)
+        if len(d["ccg"]) == 0:
+            # Before CCG pairings are published, derive a purely hypothetical set from each
+            # conference division leader. This is a PROVISIONAL preview, not real matchups.
+            st = ps.standings(year)
+            for lg, group in st.groupby("LeagueName", sort=True):
+                leaders = []
+                for div, rows in group.groupby("Division"):
+                    ranked, _, _ = ps.rank_ties(rows, real_toss=True)
+                    if len(ranked):
+                        r = ranked.iloc[0]
+                        leaders.append(key(r.LeagueID, r.RosterID))
+                if len(leaders) == 2:
+                    d["ccg"].append({"id": f"provisional-{lg}", "a": leaders[0], "b": leaders[1],
+                                     "winner": "", "pa": None, "pb": None})
+        if a.provisional:
+            d["provisional"] = True
+            d["note"] = "PROVISIONAL — based on incomplete regular-season standings and hypothetical CCG pairings. Unofficial."
+            for g in d["ccg"]:
+                g.update(winner="", pa=None, pb=None)
+        os.makedirs(os.path.dirname(a.output) or ".", exist_ok=True)
+        with open(a.output, "w", encoding="utf-8") as f:
+            json.dump(d, f, indent=1)
+        print(f"Selection Watch preview {year}: {len(d['order'])} teams, {len(d['ccg'])} CCGs -> {a.output}")
+        return
     missing = sorted(set(range(1, ps.last_regular_week() + 1)) - set(ps.completed_weeks(year)))
     if missing:
         print(f"Selection Watch {year}: regular season not finished (weeks {missing[0]}-{missing[-1]} to go); nothing written")
         return
     d = build(year)
-    toss_alert(year, toss_risks(year, d))  # before the CCG check: a division-title tie blocks pairing
+    toss_alert(year, toss_risks(year, d))  # Stage 1 private alerts are independent of page publication.
+    if not enabled:
+        print("Selection Watch disabled; no live data written")
+        return
     if len(d["ccg"]) == 0:
         print(f"Selection Watch {year}: no CCG pairings yet (conference_championships.py); nothing written")
         return

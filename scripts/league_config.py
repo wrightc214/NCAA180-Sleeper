@@ -36,6 +36,16 @@ def transaction_settings(name, defaults, overrides=None):
     return merge(merge(defaults, _transactions_cfg(TRANSACTIONS_CONFIG).get(name)), overrides)
 
 
+def selection_watch():
+    """Return the owner settings for the Selection Watch page, defaulting to enabled."""
+    path = ROOT / "config" / "SelectionWatch.json"
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
 def brand():
     return cfg()["brand"]
 

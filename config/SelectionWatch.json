@@ -1,0 +1,33 @@
+{
+  "enabled": true,
+  "_enabled_note": "Master page switch. Set false to omit the nav tab on rebuild, block direct board loads and stop publishing live or preview data files. Private Stage 1 tie alerts remain independent.",
+  "_note": "Selection Watch owner settings. Preview fixtures are public files. Menu wording and normal tab visibility belong in nav.json.",
+  "labels": {
+    "_note": "Owner-facing feature name. Section headings and required disclosures are part of the page UI.",
+    "_title_note": "Feature name in the page title, heading and export. Change the menu label separately in nav.json.",
+    "title": "Selection Watch"
+  },
+  "_export_filename_prefix_note": "Prefix for downloaded images. The section ID and .png are appended.",
+  "export_filename_prefix": "ncaa180-selection-watch",
+  "previews": {
+    "_note": "Each mode needs enabled: true and both query and url. Use distinct query values. A missing, disabled or ambiguous mode does not load a preview.",
+    "historical": {
+      "_enabled_note": "Allow historical replay when true.",
+      "enabled": true,
+      "_query_note": "Value after ?preview= for the historical replay.",
+      "query": "2025",
+      "_url_note": "Historical fixture URL relative to the report page.",
+      "url": "postseason/selection-watch-2025.json"
+    },
+    "provisional": {
+      "_enabled_note": "Allow the explicitly marked provisional board when true.",
+      "enabled": true,
+      "_query_note": "Value after ?preview= for the provisional board.",
+      "query": "provisional",
+      "_url_note": "Provisional fixture URL relative to the report page. Its data must be marked provisional.",
+      "url": "postseason/selection-watch-provisional-2026.json"
+    }
+  },
+  "_availability_message_note": "Message shown when the live data file has not been published. Update or remove the date for future seasons.",
+  "availability_message": "Available after the regular season is final (Tue Nov 24)."
+}
