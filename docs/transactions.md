@@ -37,6 +37,9 @@ The one-time `python3 scripts/trade_fit_update.py --backfill-from-git` command r
 3. **Projected ROS wins and before/after odds.** Validate a historical lineup-aware counterfactual against known baseline forecasts. Account for schedule, injuries and byes known at the time, replacement starters, and playoff and draft-order rules. Show title/playoff odds for contenders and bowl/1.01 odds for rebuilding teams only when supported. Until validated, leave those figures unavailable.
 4. **Revisit dynasty calibration with more data.** The 60% rate was chosen after fitting mean absolute adjusted gaps on 34 dated trades, treating them as even for calibration only. It produced an 879-point average gap versus 996 with raw totals and 872 at the sample optimum (53.2%). This is not evidence that every trade was even.
 
+5. **Sortable, filterable trade explorer (later PR).** Support sorting and filtering by Rebuild, Contender and Team Fit grade, combined trade value, Blockbuster status, week, league and value gap. Identify the grade or value basis of each gap. Add projected wins added once that measure is validated. Keep unavailable values distinct from zero.
+6. **One-year trade outcome grade (later PR).** At one year after acceptance, grade each team's realized return using evidence through that anniversary. Show this alongside the original trade-time grade without recalculating or replacing it. A later injury may affect the outcome grade, not the trade-time judgment.
+
 ## Review examples
 
 | Trade ID | Check |
