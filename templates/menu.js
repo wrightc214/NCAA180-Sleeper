@@ -15,6 +15,10 @@
   var here = (typeof document !== "undefined" && document.currentScript && document.currentScript.src) || "";
   var base = here ? here.replace(/assets\/menu\.js.*$/, "") : "";
   var BELL = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" style="vertical-align:-3px"><path fill="currentColor" d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6V11a7 7 0 0 0-5.5-6.84V3.5a1.5 1.5 0 0 0-3 0v.66A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2Z"/></svg>';
+  // Built-in tab icons: config/nav.json "icon": "<name>" draws an icon-only tab (label = aria-label + tooltip).
+  // Any other "icon" value is an image path shown before the label. Solid 24px glyphs, same style as the bell.
+  function glyph(d) { return '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" style="vertical-align:-3px"><path fill="currentColor" fill-rule="evenodd" d="' + d + '"/></svg>'; }
+  var ICONS = {bell: BELL, info: glyph("M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"), accessibility: glyph("M12 2a10 10 0 1 0 0 20a10 10 0 1 0 0-20zM17.1 8.4C15.53 8.82 13.69 9 12 9s-3.54-.18-5.1-.6l-.3 1.2c1.11.3 2.4.49 3.6.6V18h1.2v-3.6h1.2V18h1.2v-7.8c1.2-.11 2.48-.3 3.6-.6l-.3-1.2zM12 8.4c.66 0 1.2-.54 1.2-1.2S12.66 6 12 6s-1.2.54-1.2 1.2.54 1.2 1.2 1.2z")};
   // --dev: its own token (not a team color, not the --good/--bad win % scale) so the accessibility page can remap it.
   // Darker amber on light pages, lighter on dark (readable text either way).
   var CSS = ":root{--dev:#a85f00}@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--dev:#f0a63a}}:root[data-theme=dark]{--dev:#f0a63a}" +
@@ -54,7 +58,7 @@
   function link(item, current) {
     var a = el("a", {href: url(item.href)});
     if (current) a.setAttribute("aria-current", "page");
-    var inner = item.icon && item.icon !== "bell"
+    var inner = item.icon && !ICONS[item.icon]
       ? '<img src="' + esc(url(item.icon)) + '" alt="" width="16" height="16" style="vertical-align:-3px;margin-right:4px">' : "";
     inner += esc(item.label);
     if (item.state === "hidden-dev") { a.className = "n180-dev"; inner += '<span class="n180-devtag">DEV</span>'; }
@@ -71,10 +75,10 @@
   }
 
   // ---- models (pure: tested in tests/menu.test.js) ----
-  // Main tabs for page key `cur`: [{label, href, current, dev, bell, icon}]
+  // Main tabs for page key `cur`: [{label, href, current, dev, bell, glyph, icon}] (glyph = built-in icon name or null)
   function mainModel(cur, dev) {
     return D.tabs.filter(function (t) { return visible(t, dev); }).map(function (t) {
-      return {label: t.label, href: t.href, icon: t.icon, bell: t.icon === "bell", state: t.state,
+      return {label: t.label, href: t.href, icon: t.icon, bell: t.icon === "bell", glyph: ICONS[t.icon] ? t.icon : null, state: t.state,
               current: t.id === cur || (t.aliases || []).indexOf(cur) >= 0};
     });
   }
@@ -106,8 +110,8 @@
     nav.innerHTML = "";
     mainModel(nav.getAttribute("data-current") || "", dev).forEach(function (t) {
       var a;
-      if (t.bell) {
-        a = el("a", {href: url(t.href), "class": "n180-bell" + (t.state === "hidden-dev" ? " n180-dev" : ""), "aria-label": t.label, title: t.label}, BELL);
+      if (t.glyph) {
+        a = el("a", {href: url(t.href), "class": "n180-icon n180-" + t.glyph + (t.state === "hidden-dev" ? " n180-dev" : ""), "aria-label": t.label, title: t.label}, ICONS[t.glyph]);
         if (t.current) a.setAttribute("aria-current", "page");
       } else {
         a = link(t, t.current);

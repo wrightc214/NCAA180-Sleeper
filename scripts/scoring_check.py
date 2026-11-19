@@ -144,4 +144,7 @@ def alert(problems, season):
         sent = r.status_code < 300
     if not sent:  # let the next run retry
         json.dump({"fingerprint": prev_fp, "checked": now, "problems": problems}, open(STATE, "w"), indent=1)
-    print(f"::error::SCORING MISMATCH ({'alert sent' if sent else 'ALERT NOT SENT'}): {summary}")
+    # Known, standing deviations are restated by standard scoring, so a delivered alert is a warning;
+    # only a failed delivery is an error (nobody was told).
+    level = "warning" if sent else "error"
+    print(f"::{level}::SCORING MISMATCH ({'alert sent' if sent else 'ALERT NOT SENT'}): {summary}")

@@ -343,7 +343,7 @@
     if(!index.leagues[leagueId])throw new Error('Unknown league in scoreboard URL.');
     if(!index.weeks.includes(week))throw new Error('No frozen pregame data for this week.');
     setOptions($('league'),Object.entries(index.leagues).map(([id,v])=>[id,v.label||v.name]),leagueId);
-    setOptions($('week'),index.weeks.map(w=>[w,wkName(w)]),week);
+    setOptions($('week'),index.weeks.map(w=>[w,ScoreboardCore.weekLabel(cfg,w,true)]),week);  // short label: dropdowns
     $('chooser').addEventListener('submit',e=>e.preventDefault());
     for(const id of ['league','week'])$(id).addEventListener('change',()=>{if(!busy)select().catch(showError);});
     $('game').addEventListener('change',()=>{if(!busy)refresh();});

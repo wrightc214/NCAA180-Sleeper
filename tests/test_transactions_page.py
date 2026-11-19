@@ -508,7 +508,7 @@ def test_ccg_week_uses_shared_labels_in_card_selectors_and_summary(monkeypatch, 
     import transactions_page as page
 
     ccg_week = str(page.lcfg.cfg()["schedule"]["ccg_week"])
-    assert page.lcfg.week_label(ccg_week) == "CCG Week"
+    assert page.lcfg.week_label(ccg_week) == f"Week {ccg_week} · CCG Week"
     row = tx(Week=ccg_week, Year=str(page.lcfg.season()), Status="complete",
              Created="1794000000000", TransactionID="ccg-trade", Type="trade")
     sources = {page.TRANSACTIONS: [row], page.PLAYERS: [
@@ -520,8 +520,8 @@ def test_ccg_week_uses_shared_labels_in_card_selectors_and_summary(monkeypatch, 
     page.main()
     rendered = report.read_text(encoding="utf-8")
     assert f'data-week="{ccg_week}"' in rendered
-    assert re.search(r'<div class="tx-head">[^<]* · CCG Week · ', rendered)
+    assert re.search(r'<div class="tx-head">[^<]* · Week \d+ · CCG Week · ', rendered)
     for selector in ("tx-week", "tx-move-week"):
         options = re.search(fr'<select id="{selector}">(.*?)</select>', rendered, re.S).group(1)
-        assert re.search(fr'<option value="{ccg_week}"(?: selected)?>CCG Week</option>', options)
-    assert '<h3>Trades by week</h3><div class="tx-bar"><span>CCG Week</span>' in rendered
+        assert re.search(fr'<option value="{ccg_week}"(?: selected)?>Wk {ccg_week} · CCG</option>', options)
+    assert f'<h3>Trades by week</h3><div class="tx-bar"><span>Week {ccg_week} · CCG Week</span>' in rendered

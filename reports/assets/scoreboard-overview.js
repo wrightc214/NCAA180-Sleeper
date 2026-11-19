@@ -30,7 +30,7 @@
       out.push({post:g,id:match[0].leagueId,match,s});}
     return out;}
   let lastGames={},lastStats={};
-  const title=()=>{document.querySelector('h1').innerHTML=`${esc(cfg.brand||'')} <em>${week===ccgW()?'Conference Championships':`${wkName(week)} Games`}</em>`;};
+  const title=()=>{document.querySelector('h1').innerHTML=`${esc(cfg.brand||'')} <em>${week===ccgW()?'Conference Championships':week>=Number(cfg.schedule.postseason_start_week)?esc(wkName(week)):`${wkName(week)} Games`}</em>`;};
   async function get(url,signal){
     const abort=new AbortController(),cancel=()=>abort.abort();
     signal?.addEventListener('abort',cancel,{once:true});
@@ -397,7 +397,7 @@
     week=Number(params.get('week')||index.week);if(!index.weeks.includes(week))throw Error('No supported baseline for this week');title();
     [metadata,colors]=await Promise.all([get(`${cfg.data.scoreboard}/${season}/players.json`),get(`${cfg.data.scoreboard}/leagues.json`)]);metadataAt=Date.now();
     try{gotw=await get(`${cfg.data.scoreboard}/${season}/game-of-the-week.json`);}catch(e){gotw={};}
-    options($('week'),index.weeks.map(w=>[w,wkName(w)]),week);
+    options($('week'),index.weeks.map(w=>[w,ScoreboardCore.weekLabel(cfg,w,true)]),week);  // short label: dropdowns
     options($('league'),[['','All conferences'],...Object.entries(index.leagues).sort((a,b)=>lname(a[0]).localeCompare(lname(b[0]))).map(([id,l])=>[id,colors[id]?.label||l.label||l.name])],index.leagues[params.get('league')]?params.get('league'):'');
     $('chooser').addEventListener('submit',e=>e.preventDefault());for(const id of ['league','week'])$(id).addEventListener('change',select);
     $('refresh').addEventListener('click',select);

@@ -413,7 +413,7 @@ def main():
                f'<option value="">All {esc(units)}</option>' +
                ''.join(f'<option value="{esc(k)}">{esc(short.get(k, k))}</option>' for k in lg) +
                f'</select></label><label>Week<select id="tx-week"><option value="">All weeks</option>' +
-               ''.join(f'<option value="{w}">{esc(lcfg.week_label(w))}</option>' for w in weeks) +
+               ''.join(f'<option value="{w}">{esc(lcfg.week_label(w, short=True))}</option>' for w in weeks) +
                f'</select></label><label>{labels["team"]}<select id="tx-team"><option value="">All teams</option>' +
                ''.join(f'<option value="{esc(n)}">{esc(n)}</option>' for n in sorted(set(names.values()))) +
                '</select></label></div>')
@@ -440,7 +440,7 @@ def main():
 </section>
 <section><h2>{labels["movement"]}</h2>
 <div class="tx-controls"><label>Week<select id="tx-move-week">{
-''.join(f'<option value="{w}"{" selected" if w == last else ""}>{esc(lcfg.week_label(w))}</option>' for w in weeks)}</select></label></div>
+''.join(f'<option value="{w}"{" selected" if w == last else ""}>{esc(lcfg.week_label(w, short=True))}</option>' for w in weeks)}</select></label></div>
 <p class="tx-note">Distinct {esc(units)} with an eligible completed player move;
 trades excluded. Ownership and availability are from the current roster snapshot.</p>
 <div class="tx-movement"><div><h3>{labels["most_added"]}</h3><div id="tx-adds"></div></div>
