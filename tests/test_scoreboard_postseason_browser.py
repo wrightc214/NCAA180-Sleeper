@@ -87,6 +87,7 @@ class PostseasonBrowserTests(unittest.TestCase):
                         self.assertEqual(page.locator('.mini-match.grp .ldtag.dog').count(), 15)
                         self.assertIn('WEEK 13 · POSTSEASON WEEK 1', page.locator('h1').inner_text().upper())  # postseason title: label only, no "Games" suffix
                         self.assertFalse(page.evaluate('document.documentElement.scrollWidth > innerWidth'))
+                        self.assertGreaterEqual(page.evaluate("document.querySelector('#week').getBoundingClientRect().width"), 100)  # week dropdown never collapses (PR #118 review)
                         if os.environ.get('SCOREBOARD_SCREENSHOTS'):
                             d = Path(os.environ['SCOREBOARD_SCREENSHOTS']); d.mkdir(parents=True, exist_ok=True)
                             page.screenshot(path=str(d / f'post-{width}.png'), full_page=True)
