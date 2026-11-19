@@ -13,7 +13,7 @@ import selection_watch as sw  # noqa: E402
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 EXPECT = {  # thieves that won (steals) / at-large teams pushed out, from the real seasons
-    2024: ({"Jackson State", "UAB", "Eastern Kentucky"}, {"Memphis", "Arizona State", "UTEP"}),
+    2024: ({"Jackson State", "UAB"}, {"Memphis", "Arizona State", "UTEP"}),
     2025: ({"Kansas State", "Nevada"}, {"UNLV", "Youngstown State"}),
 }
 
@@ -37,24 +37,27 @@ def test_board_matches_real_season(season):
     year, _, d = season
     name = {t["k"]: t["team"] for t in d["order"]}
     leaders = {g["id"]: g["winner"] for g in d["ccg"]}
-    thieves, at_risk, k = sw.board(d, leaders)
-    stole = {name[t["team"]] for t in thieves if t["leading"]}
-    pushed = {name[x] for x in at_risk[:k]}
+    labels = sw.final_labels(d, leaders)
+    stole = {name[leaders[gid]] for gid, label in labels.items() if label == "Stolen"}
+    inside = {t["k"] for t in d["order"] if t["rank"] <= d["field_size"]}
+    pushed = {name[k] for k in inside - sw.field(d, leaders.values()).keys()}
     assert (stole, pushed) == EXPECT[year]
 
 
-def test_board_count_rule_equals_field_rule(season):
-    """Any CCG results: the bottom-k-out board agrees with the full field rule."""
+def test_steals_and_outside_play_in_winners_account_for_the_cut(season):
+    """Across possible slates, each outside berth displaces one natural-field team."""
     _, _, d = season
+    inside = {t["k"] for t in d["order"] if t["rank"] <= d["field_size"]}
     rng = random.Random(7)
     for _ in range(300):
-        win = [g[rng.choice("ab")] for g in d["ccg"]]
-        f = {k for k, s in sw.field(d, win).items() if s == 1}
-        thieves, at_risk, k = sw.board(d, {g["id"]: w for g, w in zip(d["ccg"], win)})
-        out = set(at_risk[:k])
-        inside = {t["k"] for t in d["order"][:d["field_size"]]}
-        assert out == inside - f  # exactly the natural-field teams that miss
-        assert all((t["team"] in f) == t["leading"] for t in thieves)  # a thief is in iff it leads
+        win = {g["id"]: g[rng.choice("ab")] for g in d["ccg"]}
+        f = sw.field(d, win.values())
+        labels = sw.final_labels(d, win)
+        assert {gid for gid, label in labels.items() if label == "Play-in winner"} == set(d["play_ins"])
+        steals = {gid for gid, label in labels.items() if label == "Stolen"}
+        outside_play_ins = {gid for gid in d["play_ins"] if win[gid] not in inside}
+        assert steals == {gid for gid, winner in win.items() if winner not in inside} - outside_play_ins
+        assert len(inside - f.keys()) == len(steals) + len(outside_play_ins)
 
 
 def test_odds_final_results_are_certain(season):
