@@ -24,6 +24,7 @@ league_df = pd.read_csv("data/LeagueIDs_AllYears.csv")
 league_df = league_df[league_df["Year"] == league_df["Year"].max()]
 
 all_transactions = []
+fetch_failed = False
 
 OBSERVER_IDS = [int(x) for x in lcfg.observer_ids()]
 
@@ -46,6 +47,7 @@ for idx, row in league_df.iterrows():
             weekly_tx = league_api.get_transactions(week)
         except Exception as e:
             print(f"  ERROR fetching transactions for {league_id} week {week}: {e}")
+            fetch_failed = True
             continue
 
         if not weekly_tx:
@@ -75,11 +77,17 @@ for idx, row in league_df.iterrows():
                 "Drops": tx.get('drops', {}),
                 "Status": tx.get('status'),
                 "Created": tx.get('created'),
+                "StatusUpdated": tx.get("status_updated") or tx.get("created"),
                 "CreatorID": tx.get('creator'),
             })
 
         # Polite pause
         time.sleep(0.5)
+
+# Do not replace the complete transaction history with a partial pull.
+# The weekly runner will retain the previous file and skip Team Fit capture.
+if fetch_failed:
+    raise SystemExit("Transaction pull incomplete; retaining the previous season file")
 
 out_file = "data/Transactions_Season.csv"
 tx_df = pd.DataFrame(all_transactions)

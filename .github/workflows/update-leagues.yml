@@ -47,8 +47,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Confirm historical Team Fit snapshots and their publication order.
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -99,6 +97,7 @@ jobs:
               fi
           }
 
+          FIT_CAPTURE_STARTED_MS="$(date +%s%3N)"
           run league_ids            league_ids.py            all
           run rosters               rosters.py               all
           run matchups              league_matchups.py       all
@@ -123,11 +122,18 @@ jobs:
           run orphans               orphans.py               all
           run lineup_streaks        lineup_streaks.py        all
           run player_values         player_values.py         all
-          # Trade history uses the transaction + FantasyCalc snapshots already generated above.
-          # Static-only; never sends Discord messages.
-          run transactions_page    transactions_page.py    all
           run draft_picks           draft_picks.py           all
           run roster_map            roster_map.py            all
+          # Capture a coherent observation only when its inputs succeeded this run.
+          if [ "$SCRIPT_TO_RUN" = "all" ] && [ -z "$BLOCKED" ]; then
+              if [[ "$FAILED" =~ (^|[[:space:]])(league_ids|rosters|transactions|scores|player_values|draft_picks|roster_map)([[:space:]]|$) ]]; then
+                  echo "::warning::Team Fit capture skipped because an input failed"
+              else
+                  run trade_fit "trade_fit_update.py --capture-start-ms $FIT_CAPTURE_STARTED_MS" all
+              fi
+          fi
+          # Static-only. A standalone page build reads stored grades and never writes them.
+          run transactions_page    transactions_page.py    all
           run poll                poll_aggregate.py        all
           run poll_page           poll_page.py             all
           # Bowl projection (page + data only; images in a later step). Weeks from_week..last regular week.
@@ -327,6 +333,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/*.csv
+          git add data/trade-fit 2>/dev/null || true
           git add data/OrphanCard_Current.json 2>/dev/null || true
           git add data/scoreboard 2>/dev/null || true
           git add data/postseason_drafts 2>/dev/null || true

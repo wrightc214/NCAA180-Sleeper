@@ -119,7 +119,7 @@ The existing shared brand, conference terminology, and semantic colour tokens ar
 
 ## Team Fit v1
 
-Team Fit is not the market trade grade. Each team is evaluated independently against keeping its pre-trade roster. It uses the latest eligible pre-trade weekly context, pre-trade FantasyCalc values, and an archived roster/pick rewind checked by forward replay. A later archive is used only to verify ownership, never to supply forecasts or prices. Git publication time bounds what can be known. The most recent trades may remain ungraded until a second archive corroborates them. Insufficient evidence displays a hyphen. Unknown IDs otherwise count as zero.
+Team Fit is not the market trade grade. Each team is evaluated independently against keeping its pre-trade roster. It uses the latest eligible pre-trade weekly context, pre-trade FantasyCalc values, and an archived roster/pick rewind checked by forward replay. A later archive is used only to verify ownership, never to supply forecasts or prices. Snapshot observation time bounds what can be known. A one-time Git backfill populated the ledger; page builds and new grading do not consult history. The most recent trades may remain pending until a later observation corroborates ownership. Insufficient evidence displays a hyphen. Unknown IDs otherwise count as zero.
 
 - Win now measures change in the best legal starting lineup. The specialist input recognises scarce starter coverage from prior scoring. It does not change the 4.12 market proxy.
 - Future value compares the return with holding through both rebuild windows. Projected retention applies incremental, position-specific age decline (gradual and steep stages). For rebuilders, picks are flexible capital at a configurable utility premium, not guaranteed starters. Future lineup capacity rewards usable players at multiple slots. When pick capital increases, do not also charge the seller as if that capital were guaranteed to go unused.
@@ -129,8 +129,8 @@ Team Fit is not the market trade grade. Each team is evaluated independently aga
 
 | Review case | Team | Win-now weight | Lineup before → after | Raw dynasty before → after | Fit |
 | --- | --- | ---: | ---: | ---: | ---: |
-| Gibbs | Brown | 65% | 33,464 → 40,387 | 87,700 → 88,451 | A · 65.6 |
-| Gibbs | Bucknell | 9% | 25,335 → 19,610 | 57,369 → 56,618 | B · 52.9 |
+| Gibbs | Brown | 65% | 33,464 → 40,387 | 87,702 → 88,461 | A · 65.6 |
+| Gibbs | Bucknell | 9% | 25,335 → 19,610 | 57,377 → 56,618 | B · 52.8 |
 | JSN / A.J. Brown | Brown | 70% | 41,036 → 47,724 | 88,988 → 92,472 | A · 68.2 |
 | JSN / A.J. Brown | Penn | 22% | 19,804 → 7,316 | 57,119 → 53,635 | Even · 50.7 |
 | Walker–Achane | Citadel | 39% | 27,151 → 18,325 | 65,901 → 68,009 | Even · 51.1 |
@@ -141,6 +141,13 @@ Team Fit is not the market trade grade. Each team is evaluated independently aga
 | Bass / White / Singletary | Oregon | 10% | 10,837 → 9,826 | 50,688 → 50,429 | B+ · 55.1 |
 
 **Tests written:** age curves and the RB cliff, valid below-market sales versus holding, relative bowl weight, hyphen for missing coverage, and the five archived reference grades. **Tests run locally:** full Python suite (152 passed, 10 skipped), full Node suite, deterministic menu rebuild, and report generation. The model produced 68 team-side grades and 158 ungraded sides. The modal letter remains Even (27 of 68 scored sides). Those are the preceding Fit-only test results. The market recheck below did not change the Fit output.
+
+### Team Fit persistence review fix
+
+- The weekly checkout and PR check are shallow again. The weekly job freezes a roster/pick/context/market/odds observation only after its data producers succeed. A standalone Transactions build reads the ledger and never recalculates a published fit.
+- The backfill retained all 68 existing letter grades. Eight draft scores across four October trades changed by less than 0.05 because the backfill uses the pick prices from the exact archived FantasyCalc capture, not a later pick snapshot sharing the same calendar date. Historical rows lacking an acceptance timestamp use the earlier creation cutoff. New pulls retain Sleeper's status-update timestamp. A later snapshot verifies holdings only, so later injuries and valuations never change the original judgment.
+- `data/trade-fit/grades.jsonl` is append-only for published results and records sources, score inputs and model provenance. Append a numbered correction with an explanation if trade-time evidence was misread. Review the operational details in [the permanent doc](docs/transactions.md#team-fit). No new owner-configurable setting.
+- Test evidence includes the original historical examples from persisted data, fake before/during/after captures with a later valuation spike, immutable ledger revisions, and a depth-one render comparison. Full and depth-one reports matched after excluding the generated timestamp. The shallow weekly capture rehearsal appended no duplicate grades. Local suite results: 172 Python passed (10 skipped), 29 Node passed, and the menu rebuild was clean.
 
 ### Team Fit owner defaults
 
@@ -178,8 +185,8 @@ Dynasty shows raw → adjusted points with the market grade. Contender shows raw
 | | Virginia Tech | 6,721 → 5,175 (F) | 777 (F) | 37.26 (F) |
 | Maye `1425929791147610112` | Maine | 6,334 → 4,791 (B) | 0 (F) | 69.68 (A) |
 | | Youngstown State | 4,210 → 4,210 (C) | 3,047 (A) | 50.73 (Even) |
-| Gibbs `1412325964028899328` | Brown | 11,017 → 11,017 (A) | 10,825 (A) | 65.63 (A) |
-| | Bucknell | 10,266 → 7,325 (F) | 5,371 (F) | 52.85 (B) |
+| Gibbs `1412325964028899328` | Brown | 11,017 → 11,017 (A) | 10,825 (A) | 65.64 (A) |
+| | Bucknell | 10,266 → 7,325 (F) | 5,371 (F) | 52.81 (B) |
 | JSN / A.J. Brown `1414580639092518912` | Brown | 14,328 → 11,848 (A) | 12,912 (A) | 68.20 (A) |
 | | Penn | 10,844 → 7,104 (F) | 424 (F) | 50.74 (Even) |
 | Walker `1425239682513420288` | ETSU | 6,869 → 6,869 (B+) | 9,421 (A) | 64.60 (A) |

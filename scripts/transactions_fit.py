@@ -42,6 +42,8 @@ TX = "data/Transactions_Season.csv"
 CONTEXT = "data/RosterValues_Season.csv"
 SCORES = "data/Scores_Season.csv"
 PLAYER_VALUES = "data/PlayerValues_Season.csv"
+PICK_VALUES = "data/PickValues_Season.csv"
+MODEL_VERSION = "team-fit-v1"
 ODDS_DIR = "reports/postseason/"
 POSITION = {"FB": "RB", "PK": "K", "DEF": "DST", "D/ST": "DST"}
 
@@ -124,7 +126,13 @@ def history(path):
 
 
 def event_key(row):
-    return int(row["Created"]), int(row["TransactionID"])
+    # Historical CSV rows lack the completion timestamp. Creation is a
+    # conservative cutoff for those rows rather than using later knowledge.
+    updated = row.get("StatusUpdated") or ""
+    created = int(row["Created"])
+    timestamp = max(created, int(updated)) if updated.isdigit() else created
+    return timestamp, int(row["TransactionID"])
+
 
 
 def pick_key(row):
@@ -154,16 +162,16 @@ def target_consistent(roster, picks, row, after):
     )
 
 
-def holdings(ref, league):
-    roster = {r["PlayerID"]: r["RosterID"] for r in archived(ref, ROSTERS)
+def holdings(archive, ref, league):
+    roster = {r["PlayerID"]: r["RosterID"] for r in archive.rows(ref, ROSTERS)
               if r["LeagueID"] == league and r.get("PlayerID")}
     picks = {(r["Season"], r["Round"], r["OriginalRosterID"]): r["OwnerRosterID"]
-             for r in archived(ref, PICKS) if r["LeagueID"] == league}
+             for r in archive.rows(ref, PICKS) if r["LeagueID"] == league}
     return roster, picks
 
 
-def completed_in(ref):
-    rows = archived(ref, TX)
+def completed_in(archive, ref):
+    rows = archive.rows(ref, TX)
     return {r["TransactionID"] for r in rows if r["Status"] == "complete"} if rows else None
 
 
@@ -171,26 +179,26 @@ def owned(mapping, team):
     return {x for x, owner in mapping.items() if team == owner}
 
 
-def check_reconstruction(row, sides, before, after, events):
+def check_reconstruction(archive, row, sides, before, after, events):
     """Rewind a later snapshot and check it against forward replay from an earlier one."""
     league = row["LeagueID"]
-    first, last = holdings(before[1], league), holdings(after[1], league)
+    first, last = holdings(archive, before[1], league), holdings(archive, after[1], league)
     if not all(first) or not all(last):
         return None
-    orig, later = completed_in(before[1]), completed_in(after[1])
+    orig, later = completed_in(archive, before[1]), completed_in(archive, after[1])
     target = row["TransactionID"]
     if (orig is not None and target in orig) or (later is not None and target not in later):
         return None
     key = event_key(row)
     for t in events:
         ident = t["TransactionID"]
-        if (event_key(t) < key and (orig is None and int(t["Created"]) > before[0]
+        if (event_key(t) < key and (orig is None and event_key(t)[0] > before[0]
                                    or orig is not None and ident not in orig)
                 and (later is None or ident in later)):
             mutate(*first, t)
     for t in reversed(events):
         ident = t["TransactionID"]
-        if (event_key(t) > key and (later is None and int(t["Created"]) <= after[0]
+        if (event_key(t) > key and (later is None and event_key(t)[0] <= after[0]
                                    or later is not None and ident in later)):
             mutate(*last, t, reverse=True)
     if not target_consistent(*first, row, after=False) or not target_consistent(*last, row, after=True):
@@ -202,21 +210,47 @@ def check_reconstruction(row, sides, before, after, events):
     return first, last
 
 
-def group_rows(rows):
-    out = defaultdict(list)
-    for row in rows:
-        out[row["Date"]].append(row)
-    return out
+class GitArchive:
+    """Opt-in legacy evidence source for a deliberate backfill, never for routine builds."""
+    rows = staticmethod(archived)
+
+    def before(self, timestamp):
+        return [a for a in history(ROSTERS) if a[0] < timestamp]
+
+    def after(self, timestamp):
+        return [a for a in reversed(history(ROSTERS)) if a[0] > timestamp]
+
+    def market(self, timestamp):
+        for published, ref, day in history(PLAYER_VALUES):
+            if published >= timestamp:
+                continue
+            players = [r for r in self.rows(ref, PLAYER_VALUES) if r["Date"] == day]
+            picks = self.rows(ref, "data/PickValues_Current.csv")
+            if players and picks:
+                return day, players, picks, {"market": ref, "market_published_ms": published}
+        return None
+
+    def odds(self, timestamp, year, week, start, league):
+        for n in range(week, start - 1, -1):
+            path = f"{ODDS_DIR}odds-wk{n:02d}.json"
+            source = next((a for a in history(path) if a[0] < timestamp), None)
+            if source:
+                raw = git("show", f"{source[1]}:{path}")
+                if raw:
+                    data = json.loads(raw)
+                    if int(data.get("year", 0)) == year:
+                        return ({str(r["RosterID"]): r for r in data["teams"] if str(r["LeagueID"]) == league},
+                                {"odds": source[1], "odds_published_ms": source[0], "odds_week": n})
+        return {}, {}
 
 
 class TeamFit:
-    def __init__(self, transactions, players, player_values, pick_values, market_config):
+    def __init__(self, transactions, players, market_config, archive):
         self.cfg = lcfg.transaction_settings("team_fit", DEFAULTS)
         self.market = market_config
         self.players = players
+        self.archive = archive
         self.birth = {r["SleeperID"]: r for r in read_rows("data/PlayerBirthDates.csv")}
-        self.player_days = group_rows(player_values)
-        self.pick_days = group_rows(pick_values)
         self.events = defaultdict(list)
         for row in transactions:
             if row.get("Status") == "complete" and row.get("LeagueID") and str(row["TransactionID"]).isdigit():
@@ -224,35 +258,19 @@ class TeamFit:
         for events in self.events.values():
             events.sort(key=event_key)
         self.slots = [pos(r["Position"]) for r in read_rows("data/Lineup.csv")]
-        self.roster_history = history(ROSTERS)
-        self.market_history = history(PLAYER_VALUES)
 
     def situation(self, anchor, yr, league, ids):
         context = {}
-        for r in archived(anchor[1], CONTEXT):
+        for r in self.archive.rows(anchor[1], CONTEXT):
             k = r["RosterID"]
             if (r["Year"] == str(yr) and r["LeagueID"] == league and k in ids
                     and (k not in context or int(r["Week"]) > int(context[k]["Week"]))):
                 context[k] = r
         return context
 
-    def postseason(self, t, year, week, league):
-        start = self.cfg["odds_first_week"]
-        for n in range(week, start - 1, -1):
-            path = f"{ODDS_DIR}odds-wk{n:02d}.json"
-            eligible = next((a for a in history(path) if a[0] < t), None)
-            if not eligible:
-                continue
-            raw = git("show", f"{eligible[1]}:{path}")
-            if raw:
-                snapshot = json.loads(raw)
-                if int(snapshot.get("year", 0)) == year:
-                    return {str(r["RosterID"]): r for r in snapshot["teams"] if str(r["LeagueID"]) == league}
-        return {}
-
     def specialist_rates(self, anchor, yr, league, week):
         points = defaultdict(dict)
-        for r in archived(anchor[1], SCORES):
+        for r in self.archive.rows(anchor[1], SCORES):
             w = int(r["weekNum"])
             if (r["LeagueYear"] == str(yr) and r["league_id"] == league
                     and week - self.cfg["specialist_lookback_weeks"] < w <= week):
@@ -306,27 +324,27 @@ class TeamFit:
     def evaluate(self, row, sides):
         if not self.slots or not row.get("LeagueID") or not str(row["TransactionID"]).isdigit():
             return {}
-        t, year, league = int(row["Created"]), int(row["Year"]), row["LeagueID"]
-        if not self.roster_history:
-            return {}
-        before = next((a for a in self.roster_history if a[0] < t and holdings(a[1], league)[1]), None)
-        if not before:
+        t, year, league = event_key(row)[0], int(row["Year"]), row["LeagueID"]
+        archive = self.archive
+        before = next((a for a in archive.before(t) if holdings(archive, a[1], league)[1]), None)
+        market = archive.market(t)
+        if not before or not market:
             return {}
         state = None
-        for after in reversed(self.roster_history):
-            if after[0] > t:
-                state = check_reconstruction(row, sides, before, after, self.events[league])
-                if state:
-                    break
-        context = self.situation(before, year, league, sides)
-        days = [a[2] for a in self.market_history if a[0] < t]
-        day = next((d for d in days if d in self.player_days and d in self.pick_days), None)
-        if not state or not day:
+        for after in archive.after(t):
+            state = check_reconstruction(archive, row, sides, before, after, self.events[league])
+            if state:
+                break
+        if not state:
             return {}
-        odds = self.postseason(t, year, int(row["Week"]), league)
-        values = {r["SleeperID"]: r for r in self.player_days[day]}
-        picks = {(r["Season"], r["Round"]): number(r["Value"]) for r in self.pick_days[day]}
-        proxy = next((v for v, label, est in pick_slot_values(self.pick_days[day], year + 1, self.market)
+        context = self.situation(before, year, league, sides)
+        day, player_rows, pick_rows, sources = market
+        odds, odds_sources = archive.odds(t, year, int(row["Week"]), self.cfg["odds_first_week"], league)
+        sources = {**sources, **odds_sources, "before": before[1], "before_ms": before[0],
+                   "after": after[1], "after_ms": after[0]}
+        values = {r["SleeperID"]: r for r in player_rows}
+        picks = {(r["Season"], r["Round"]): number(r["Value"]) for r in pick_rows}
+        proxy = next((v for v, label, est in pick_slot_values(pick_rows, year + 1, self.market)
                       if label == self.market["proxy_pick_slot"] and est), None)
         result = {}
         for k in sides:
@@ -368,5 +386,6 @@ class TeamFit:
                          "dynasty_before": d0, "dynasty_after": d1, "future": futures,
                          "score": score, "letter": letter, "date": day, "rebuild": rebuild,
                          "starter_future": starters, "future_utility": future, "fit_weight": weight,
+                         "sources": sources, "lineup_utility_delta": wins_now, "lineup_loss_factor": loss_factor,
                          "horizon_gaps": list(zip(self.cfg["growth_horizon_years"], horizon_utility, letters_by_horizon))}
         return result
