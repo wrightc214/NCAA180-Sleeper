@@ -78,7 +78,7 @@
     "minimum_ratio": 4.5,
     "distinguishability_ratio": 1.5,
     "light_background": "#ffffff",
-    "dark_background": "#171b22"
+    "dark_background": "#16213a"
   },
   "defaults": {
     "_note": "Browser-local preference defaults; user may override on their device.",
