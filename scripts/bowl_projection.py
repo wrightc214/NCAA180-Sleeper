@@ -190,11 +190,11 @@ CSS = """
 .lh{font:700 10px var(--sans,sans-serif);text-transform:uppercase;letter-spacing:.05em;color:var(--mute);padding:0 0 4px}
 .lh span:nth-child(2),.lt{text-align:center}.lh span:first-child,.lo{text-align:right}
 .lr{padding:6px 0;border-top:1px solid var(--line)}
-.lo,.hi{font:800 18px var(--num);font-variant-numeric:tabular-nums}.lo{color:#c62828}.hi{color:#2e7d32}
+.lo,.hi{font:800 18px var(--num);font-variant-numeric:tabular-nums}.lo{color:var(--bad)}.hi{color:var(--good)}
 .lt b{display:block;font-size:14px}
 .lc{display:inline-flex;align-items:center;gap:6px;max-width:100%}
 .lt .lp{display:inline-block;padding:2px 8px;border-radius:4px;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-.lt .sw{display:inline-block;font:800 13px var(--num);color:#2e7d32;white-space:nowrap}
+.lt .sw{display:inline-block;font:800 13px var(--num);color:var(--good);white-space:nowrap}
 .lx{margin:10px 0 2px;font:700 10px var(--sans,sans-serif);text-transform:uppercase;letter-spacing:.05em;color:var(--mute);text-align:center}.lt small{display:block;color:var(--mute);font-size:11px}
 .ochips{display:flex;flex-wrap:wrap;gap:4px}.oc{border-radius:4px;padding:3px 7px;font-weight:700;font-size:12px}.oc b{font:800 11px var(--num);margin-left:4px;opacity:.9}
 .card h3 small{font-weight:600;color:var(--mute);margin-left:4px}
@@ -207,7 +207,7 @@ CSS = """
 .ot thead th:first-child,.ot tbody th{text-align:left;position:sticky;left:0;background:var(--panel,#fff);z-index:1}
 .ot thead th button{all:unset;cursor:pointer}.ot thead th[aria-sort=descending] button::after{content:" \\25BE"}.ot thead th[aria-sort=ascending] button::after{content:" \\25B4"}
 .ot tbody th{font-weight:700;max-width:150px;overflow:hidden;text-overflow:ellipsis}.ot tbody th small{display:block;font-weight:500;color:var(--mute);font-size:10px}
-.ot td{text-align:right;background:color-mix(in srgb,#2e7d32 calc(var(--h)*45%),transparent)}
+.ot td{text-align:right;background:color-mix(in srgb,var(--good) calc(var(--h)*45%),transparent)}
 .ot td.na{background:none;color:var(--mute)}.ot td.clinched{font-weight:800}.ot td.out{color:var(--mute)}
 .fold-all{font:700 12px var(--sans,sans-serif);padding:5px 10px;border:1px solid var(--line);border-radius:6px;background:var(--panel,#fff);color:inherit;cursor:pointer}
 .card h2{font-size:20px;margin:0 0 2px}
@@ -231,7 +231,7 @@ CSS = """
 .sd .n{font:700 12px var(--num);text-align:right}
 .sd .tm{padding:3px 6px;font-size:12px}
 .mv{font:700 9px var(--num);display:block;text-align:right}
-.mv.up{color:#16743b}.mv.dn{color:#b42318}.mv.nw{color:var(--mute)}
+.mv.up{color:var(--good)}.mv.dn{color:var(--bad)}.mv.nw{color:var(--mute)}
 .bub{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .bub .tm{margin:0 0 4px;padding:3px 6px;font-size:12px}
 .chips{display:grid;grid-template-columns:1fr 1fr;gap:5px}

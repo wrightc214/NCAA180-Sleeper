@@ -10,7 +10,7 @@
 // shows hidden-dev tabs/items with a DEV tag and a "DEV — not public" bar on non-public pages.
 (function () {
   "use strict";
-  var D = {"tabs":[{"id":"awards","label":"Awards","href":"week-10.html"},{"id":"map","label":"Roster Map","href":"roster-map.html"},{"id":"standings","label":"Standings","href":"standings.html"},{"id":"scoreboard","label":"Games","href":"scoreboard.html"},{"id":"poll","label":"Poll","href":"poll.html","aliases":["poll-how","poll-bots"]},{"id":"postseason","label":"Postseason","href":"postseason.html"},{"id":"selection-watch","label":"Selection Watch","href":"selection-watch.html","state":"hidden-dev"},{"id":"special","label":"Special Events","href":"special.html"},{"id":"managers","label":"Managers","href":"managers.html"},{"id":"transactions","label":"Transactions","href":"transactions.html","state":"hidden-dev"},{"id":"records","label":"Records","href":"records.html"},{"id":"about","label":"About","href":"about.html"},{"id":"app","label":"Notification settings","href":"app.html","icon":"bell"}],"rows":{"awards-seasons":{"label":"Season","aria":"Seasons","items":[{"label":"2021","href":"week-2021-11.html","match":"^week-2021-\\d+\\.html$"},{"label":"2022","href":"week-2022-11.html","match":"^week-2022-\\d+\\.html$"},{"label":"2023","href":"week-2023-11.html","match":"^week-2023-\\d+\\.html$"},{"label":"2024","href":"week-2024-11.html","match":"^week-2024-\\d+\\.html$"},{"label":"2025","href":"week-2025-11.html","match":"^week-2025-\\d+\\.html$"},{"label":"2026","href":"week-10.html","match":"^week-\\d{2}\\.html$"}]},"awards-weeks-2021":{"label":"Week","aria":"Weeks","min":2,"items":[{"label":"Wk 1","href":"week-2021-01.html"},{"label":"Wk 2","href":"week-2021-02.html"},{"label":"Wk 3","href":"week-2021-03.html"},{"label":"Wk 4","href":"week-2021-04.html"},{"label":"Wk 5","href":"week-2021-05.html"},{"label":"Wk 6","href":"week-2021-06.html"},{"label":"Wk 7","href":"week-2021-07.html"},{"label":"Wk 8","href":"week-2021-08.html"},{"label":"Wk 9","href":"week-2021-09.html"},{"label":"Wk 10","href":"week-2021-10.html"},{"label":"Wk 11","href":"week-2021-11.html"}]},"awards-weeks-2022":{"label":"Week","aria":"Weeks","min":2,"items":[{"label":"Wk 1","href":"week-2022-01.html"},{"label":"Wk 2","href":"week-2022-02.html"},{"label":"Wk 3","href":"week-2022-03.html"},{"label":"Wk 4","href":"week-2022-04.html"},{"label":"Wk 5","href":"week-2022-05.html"},{"label":"Wk 6","href":"week-2022-06.html"},{"label":"Wk 7","href":"week-2022-07.html"},{"label":"Wk 8","href":"week-2022-08.html"},{"label":"Wk 9","href":"week-2022-09.html"},{"label":"Wk 10","href":"week-2022-10.html"},{"label":"Wk 11","href":"week-2022-11.html"}]},"awards-weeks-2023":{"label":"Week","aria":"Weeks","min":2,"items":[{"label":"Wk 1","href":"week-2023-01.html"},{"label":"Wk 2","href":"week-2023-02.html"},{"label":"Wk 3","href":"week-2023-03.html"},{"label":"Wk 4","href":"week-2023-04.html"},{"label":"Wk 5","href":"week-2023-05.html"},{"label":"Wk 6","href":"week-2023-06.html"},{"label":"Wk 7","href":"week-2023-07.html"},{"label":"Wk 8","href":"week-2023-08.html"},{"label":"Wk 9","href":"week-2023-09.html"},{"label":"Wk 10","href":"week-2023-10.html"},{"label":"Wk 11","href":"week-2023-11.html"}]},"awards-weeks-2024":{"label":"Week","aria":"Weeks","min":2,"items":[{"label":"Wk 1","href":"week-2024-01.html"},{"label":"Wk 2","href":"week-2024-02.html"},{"label":"Wk 3","href":"week-2024-03.html"},{"label":"Wk 4","href":"week-2024-04.html"},{"label":"Wk 5","href":"week-2024-05.html"},{"label":"Wk 6","href":"week-2024-06.html"},{"label":"Wk 7","href":"week-2024-07.html"},{"label":"Wk 8","href":"week-2024-08.html"},{"label":"Wk 9","href":"week-2024-09.html"},{"label":"Wk 10","href":"week-2024-10.html"},{"label":"Wk 11","href":"week-2024-11.html"}]},"awards-weeks-2025":{"label":"Week","aria":"Weeks","min":2,"items":[{"label":"Wk 1","href":"week-2025-01.html"},{"label":"Wk 2","href":"week-2025-02.html"},{"label":"Wk 3","href":"week-2025-03.html"},{"label":"Wk 4","href":"week-2025-04.html"},{"label":"Wk 5","href":"week-2025-05.html"},{"label":"Wk 6","href":"week-2025-06.html"},{"label":"Wk 7","href":"week-2025-07.html"},{"label":"Wk 8","href":"week-2025-08.html"},{"label":"Wk 9","href":"week-2025-09.html"},{"label":"Wk 10","href":"week-2025-10.html"},{"label":"Wk 11","href":"week-2025-11.html"}]},"awards-weeks-2026":{"label":"Week","aria":"Weeks","min":2,"items":[{"label":"Wk 1","href":"week-01.html"},{"label":"Wk 2","href":"week-02.html"},{"label":"Wk 3","href":"week-03.html"},{"label":"Wk 4","href":"week-04.html"},{"label":"Wk 5","href":"week-05.html"},{"label":"Wk 6","href":"week-06.html"},{"label":"Wk 7","href":"week-07.html"},{"label":"Wk 8","href":"week-08.html"},{"label":"Wk 9","href":"week-09.html"},{"label":"Wk 10","href":"week-10.html"}]},"standings-seasons":{"label":"Season","aria":"Seasons","items":[{"label":"2021","href":"standings-2021.html"},{"label":"2022","href":"standings-2022.html"},{"label":"2023","href":"standings-2023.html"},{"label":"2024","href":"standings-2024.html"},{"label":"2025","href":"standings-2025.html"},{"label":"2026","href":"standings.html","match":"^standings(-2026)?\\.html$"}]},"postseason-seasons":{"label":"Season","aria":"Seasons","items":[{"label":"2019","href":"postseason-2019.html"},{"label":"2020","href":"postseason-2020.html"},{"label":"2021","href":"postseason-2021.html"},{"label":"2022","href":"postseason-2022.html"},{"label":"2023","href":"postseason-2023.html"},{"label":"2024","href":"postseason-2024.html"},{"label":"2025","href":"postseason-2025.html"},{"label":"2026","href":"postseason.html","match":"^postseason(-2026|-proj-wk\\d+)?\\.html$"}]},"projection-archive":{"label":"Projection","aria":"Projection archive","min":2,"items":[{"label":"After wk 8","href":"postseason-proj-wk08.html"},{"label":"After wk 9","href":"postseason-proj-wk09.html"},{"label":"After wk 10","href":"postseason-proj-wk10.html","match":"^postseason(-proj-wk10)?\\.html$"}]},"poll":{"label":"","aria":"Poll pages","items":[{"label":"Latest poll","href":"poll.html","match":"^poll(-top25-wk\\d+)?\\.html$"},{"label":"How the poll works","href":"poll-how.html"},{"label":"Bot ballots","href":"poll-bots.html"}]},"special":{"label":"Event","aria":"Special events","items":[{"label":"The Guillotine","href":"special.html","icon":"../assets/logos/Guillotine/Guillotine%20G.png"}]}},"awards":"week-10.html"};
+  var D = {"tabs":[{"id":"awards","label":"Awards","href":"week-10.html"},{"id":"map","label":"Roster Map","href":"roster-map.html"},{"id":"standings","label":"Standings","href":"standings.html"},{"id":"scoreboard","label":"Games","href":"scoreboard.html"},{"id":"poll","label":"Poll","href":"poll.html","aliases":["poll-how","poll-bots"]},{"id":"postseason","label":"Postseason","href":"postseason.html"},{"id":"selection-watch","label":"Selection Watch","href":"selection-watch.html","state":"hidden-dev"},{"id":"special","label":"Special Events","href":"special.html"},{"id":"managers","label":"Managers","href":"managers.html"},{"id":"transactions","label":"Transactions","href":"transactions.html","state":"hidden-dev"},{"id":"records","label":"Records","href":"records.html"},{"id":"about","label":"About","href":"about.html"},{"id":"access","label":"Accessibility","href":"access.html","state":"hidden-dev"},{"id":"app","label":"Notification settings","href":"app.html","icon":"bell"}],"rows":{"awards-seasons":{"label":"Season","aria":"Seasons","items":[{"label":"2021","href":"week-2021-11.html","match":"^week-2021-\\d+\\.html$"},{"label":"2022","href":"week-2022-11.html","match":"^week-2022-\\d+\\.html$"},{"label":"2023","href":"week-2023-11.html","match":"^week-2023-\\d+\\.html$"},{"label":"2024","href":"week-2024-11.html","match":"^week-2024-\\d+\\.html$"},{"label":"2025","href":"week-2025-11.html","match":"^week-2025-\\d+\\.html$"},{"label":"2026","href":"week-10.html","match":"^week-\\d{2}\\.html$"}]},"awards-weeks-2021":{"label":"Week","aria":"Weeks","min":2,"items":[{"label":"Wk 1","href":"week-2021-01.html"},{"label":"Wk 2","href":"week-2021-02.html"},{"label":"Wk 3","href":"week-2021-03.html"},{"label":"Wk 4","href":"week-2021-04.html"},{"label":"Wk 5","href":"week-2021-05.html"},{"label":"Wk 6","href":"week-2021-06.html"},{"label":"Wk 7","href":"week-2021-07.html"},{"label":"Wk 8","href":"week-2021-08.html"},{"label":"Wk 9","href":"week-2021-09.html"},{"label":"Wk 10","href":"week-2021-10.html"},{"label":"Wk 11","href":"week-2021-11.html"}]},"awards-weeks-2022":{"label":"Week","aria":"Weeks","min":2,"items":[{"label":"Wk 1","href":"week-2022-01.html"},{"label":"Wk 2","href":"week-2022-02.html"},{"label":"Wk 3","href":"week-2022-03.html"},{"label":"Wk 4","href":"week-2022-04.html"},{"label":"Wk 5","href":"week-2022-05.html"},{"label":"Wk 6","href":"week-2022-06.html"},{"label":"Wk 7","href":"week-2022-07.html"},{"label":"Wk 8","href":"week-2022-08.html"},{"label":"Wk 9","href":"week-2022-09.html"},{"label":"Wk 10","href":"week-2022-10.html"},{"label":"Wk 11","href":"week-2022-11.html"}]},"awards-weeks-2023":{"label":"Week","aria":"Weeks","min":2,"items":[{"label":"Wk 1","href":"week-2023-01.html"},{"label":"Wk 2","href":"week-2023-02.html"},{"label":"Wk 3","href":"week-2023-03.html"},{"label":"Wk 4","href":"week-2023-04.html"},{"label":"Wk 5","href":"week-2023-05.html"},{"label":"Wk 6","href":"week-2023-06.html"},{"label":"Wk 7","href":"week-2023-07.html"},{"label":"Wk 8","href":"week-2023-08.html"},{"label":"Wk 9","href":"week-2023-09.html"},{"label":"Wk 10","href":"week-2023-10.html"},{"label":"Wk 11","href":"week-2023-11.html"}]},"awards-weeks-2024":{"label":"Week","aria":"Weeks","min":2,"items":[{"label":"Wk 1","href":"week-2024-01.html"},{"label":"Wk 2","href":"week-2024-02.html"},{"label":"Wk 3","href":"week-2024-03.html"},{"label":"Wk 4","href":"week-2024-04.html"},{"label":"Wk 5","href":"week-2024-05.html"},{"label":"Wk 6","href":"week-2024-06.html"},{"label":"Wk 7","href":"week-2024-07.html"},{"label":"Wk 8","href":"week-2024-08.html"},{"label":"Wk 9","href":"week-2024-09.html"},{"label":"Wk 10","href":"week-2024-10.html"},{"label":"Wk 11","href":"week-2024-11.html"}]},"awards-weeks-2025":{"label":"Week","aria":"Weeks","min":2,"items":[{"label":"Wk 1","href":"week-2025-01.html"},{"label":"Wk 2","href":"week-2025-02.html"},{"label":"Wk 3","href":"week-2025-03.html"},{"label":"Wk 4","href":"week-2025-04.html"},{"label":"Wk 5","href":"week-2025-05.html"},{"label":"Wk 6","href":"week-2025-06.html"},{"label":"Wk 7","href":"week-2025-07.html"},{"label":"Wk 8","href":"week-2025-08.html"},{"label":"Wk 9","href":"week-2025-09.html"},{"label":"Wk 10","href":"week-2025-10.html"},{"label":"Wk 11","href":"week-2025-11.html"}]},"awards-weeks-2026":{"label":"Week","aria":"Weeks","min":2,"items":[{"label":"Wk 1","href":"week-01.html"},{"label":"Wk 2","href":"week-02.html"},{"label":"Wk 3","href":"week-03.html"},{"label":"Wk 4","href":"week-04.html"},{"label":"Wk 5","href":"week-05.html"},{"label":"Wk 6","href":"week-06.html"},{"label":"Wk 7","href":"week-07.html"},{"label":"Wk 8","href":"week-08.html"},{"label":"Wk 9","href":"week-09.html"},{"label":"Wk 10","href":"week-10.html"}]},"standings-seasons":{"label":"Season","aria":"Seasons","items":[{"label":"2021","href":"standings-2021.html"},{"label":"2022","href":"standings-2022.html"},{"label":"2023","href":"standings-2023.html"},{"label":"2024","href":"standings-2024.html"},{"label":"2025","href":"standings-2025.html"},{"label":"2026","href":"standings.html","match":"^standings(-2026)?\\.html$"}]},"postseason-seasons":{"label":"Season","aria":"Seasons","items":[{"label":"2019","href":"postseason-2019.html"},{"label":"2020","href":"postseason-2020.html"},{"label":"2021","href":"postseason-2021.html"},{"label":"2022","href":"postseason-2022.html"},{"label":"2023","href":"postseason-2023.html"},{"label":"2024","href":"postseason-2024.html"},{"label":"2025","href":"postseason-2025.html"},{"label":"2026","href":"postseason.html","match":"^postseason(-2026|-proj-wk\\d+)?\\.html$"}]},"projection-archive":{"label":"Projection","aria":"Projection archive","min":2,"items":[{"label":"After wk 8","href":"postseason-proj-wk08.html"},{"label":"After wk 9","href":"postseason-proj-wk09.html"},{"label":"After wk 10","href":"postseason-proj-wk10.html","match":"^postseason(-proj-wk10)?\\.html$"}]},"poll":{"label":"","aria":"Poll pages","items":[{"label":"Latest poll","href":"poll.html","match":"^poll(-top25-wk\\d+)?\\.html$"},{"label":"How the poll works","href":"poll-how.html"},{"label":"Bot ballots","href":"poll-bots.html"}]},"special":{"label":"Event","aria":"Special events","items":[{"label":"The Guillotine","href":"special.html","icon":"../assets/logos/Guillotine/Guillotine%20G.png"}]}},"awards":"week-10.html"};
   var DEV_KEY = "ncaa180.dev";
   var here = (typeof document !== "undefined" && document.currentScript && document.currentScript.src) || "";
   var base = here ? here.replace(/assets\/menu\.js.*$/, "") : "";
@@ -24,9 +24,16 @@
     ".n180-devbar{background:var(--dev);color:var(--panel,#fff);font:700 12px/1.2 var(--num,sans-serif);letter-spacing:.04em;text-align:center;padding:5px 8px;margin:0 0 8px;border-radius:3px}" +
     "@media print{.n180-devbar{display:none}}";
 
+  // Accessibility is independently maintained in templates/accessibility.js.
+  // scripts/site_common.py bundles it here so existing static pages stay synchronous.
+  // NCAA 180 Accessibility 5.8: independent palette and device-preference module.
+// Bundled into generated reports/assets/menu.js at build time to keep old static pages
+// compatible and apply tokens synchronously before the menu draws (no extra network fetch).
+// This module owns only semantic colours, accessibility storage and motion/emphasis.
+function createNCAA180Accessibility() {
   // ---- Colour tokens (Project Manager 5.8; todo-ranked-odds-colorblind.md) ----------------
-  // Shared good/bad colours for every page. Hard-coded Standard (red/green) for now; the
-  // accessibility page will replace this style element's text per device (colour-blind presets,
+  // Shared semantic colours for every page. Standard colours are injected from
+  // config/league.json during menu generation; user presets and custom pickers
   // custom pickers). Use the tokens, never hex, for anything that means good/bad:
   //   --good / --bad      text and lines (>= 4.5:1 on --panel, light and dark)
   //   --neutral           the 50% midpoint of the win % scale (grey, text-safe)
@@ -35,12 +42,33 @@
   // Diverging scale (win %): NCAA180.colors.scale(p) -> colour for p in 0..1 (bad -> neutral -> good,
   // blended in OKLab so the middle stays grey). Kept in a <style> element, not inline on <html>,
   // so saved images (snapshot.js copies style elements) carry the viewer's colours.
+  var SETTINGS = {"palettes":{"standard":{"light":{"positive":"#1a7f37","negative":"#b42318","neutral":"#6b7484"},"dark":{"positive":"#4fc785","negative":"#ff7b72","neutral":"#8a96ab"}},"rg":{"light":{"positive":"#0758a8","negative":"#a65300"},"dark":{"positive":"#79b9ff","negative":"#ffb45d"}},"by":{"light":{"positive":"#007b73","negative":"#b42318"},"dark":{"positive":"#65d4c6","negative":"#ff7b72"}},"none":{"light":{"positive":"#252525","negative":"#595959"},"dark":{"positive":"#f2f2f2","negative":"#c5c5c5"}}},"appearance":{"soft":{"light":{"positive":"#e3f3e8","negative":"#fbe4e1"},"dark":{"positive":"#173a2a","negative":"#4a2024"}},"alternate_soft":{"light":{"positive":"#e9eef2","negative":"#f1edf0"},"dark":{"positive":"#26313a","negative":"#342c32"}},"fill_text":"#ffffff","monochrome_fills":{"positive":"#3c3c3c","negative":"#656565"}},"contrast":{"minimum_ratio":4.5,"distinguishability_ratio":1.5,"light_background":"#ffffff","dark_background":"#16213a"},"defaults":{"mode":"standard","motion":"system","emphasis":false,"auto_contrast":true},"labels":{"auto_contrast":"Automatically improve contrast","low_light":"Selected colours may be difficult to read on light backgrounds.","low_dark":"Selected colours may be difficult to read on dark backgrounds.","low_fill":"White text on solid fills may be difficult to read.","similar":"Positive and negative colours may be difficult to distinguish; automatic contrast correction cannot guarantee distinguishability."}};
+  // Safe runtime defaults also protect manually loaded templates and older bundles.
+  var P = SETTINGS && SETTINGS.palettes || {};
+  var A = SETTINGS && SETTINGS.appearance || {};
+  var C = SETTINGS && SETTINGS.contrast || {};
+  var D = SETTINGS && SETTINGS.defaults || {};
+  var L = SETTINGS && SETTINGS.labels || {};
+  function settingHex(value, fallback) { return typeof value==="string" && /^#[0-9a-fA-F]{6}$/.test(value)?value:fallback; }
+  function palette(mode,theme,role,fallback) {
+    return settingHex(P[mode]&&P[mode][theme]&&P[mode][theme][role],fallback);
+  }
+  function appearance(section,theme,role,fallback) {
+    return settingHex(A[section]&&A[section][theme]&&A[section][theme][role],fallback);
+  }
+  var LIGHT_BG = settingHex(C.light_background,"#ffffff");
+  var DARK_BG = settingHex(C.dark_background,"#16213a");
+  var FILL_TEXT = settingHex(A.fill_text,"#ffffff");
+  var MIN_CONTRAST = typeof C.minimum_ratio==="number" && C.minimum_ratio>=1 && C.minimum_ratio<=21?C.minimum_ratio:4.5;
+  var DISTINGUISH_RATIO = typeof C.distinguishability_ratio==="number" && C.distinguishability_ratio>=1 && C.distinguishability_ratio<=21?C.distinguishability_ratio:1.5;
   var TOKENS_ID = "n180-tokens";
-  var TOKENS_LIGHT = {"--good": "#1a7f37", "--bad": "#b42318", "--neutral": "#6b7484",
-    "--good-soft": "#e3f3e8", "--bad-soft": "#fbe4e1"};
-  var TOKENS_DARK = {"--good": "#4fc785", "--bad": "#ff7b72", "--neutral": "#8a96ab",
-    "--good-soft": "#173a2a", "--bad-soft": "#4a2024"};
-  var TOKENS_BOTH = {"--good-fill": "#1a7f37", "--bad-fill": "#b42318", "--on-fill": "#ffffff"};
+  var TOKENS_LIGHT = {"--good":palette("standard","light","positive","#1a7f37"),"--bad":palette("standard","light","negative","#b42318"),
+    "--neutral":palette("standard","light","neutral","#6b7484"),
+    "--good-soft":appearance("soft","light","positive","#e3f3e8"),"--bad-soft":appearance("soft","light","negative","#fbe4e1")};
+  var TOKENS_DARK = {"--good":palette("standard","dark","positive","#4fc785"),"--bad":palette("standard","dark","negative","#ff7b72"),
+    "--neutral":palette("standard","dark","neutral","#8a96ab"),
+    "--good-soft":appearance("soft","dark","positive","#173a2a"),"--bad-soft":appearance("soft","dark","negative","#4a2024")};
+  var TOKENS_BOTH = {"--good-fill":TOKENS_LIGHT["--good"],"--bad-fill":TOKENS_LIGHT["--bad"],"--on-fill":FILL_TEXT};
   function decl(o) { var s = ""; for (var k in o) s += k + ":" + o[k] + ";"; return s; }
   function tokensCss(light, dark, both) {
     var d = decl(dark);
@@ -107,8 +135,127 @@
   }
   var colors = {tokens: tokens, scale: scale, mix: mix, css: tokensCss(TOKENS_LIGHT, TOKENS_DARK, TOKENS_BOTH),
                 defaults: {light: TOKENS_LIGHT, dark: TOKENS_DARK, both: TOKENS_BOTH}, buildCss: tokensCss, apply: applyTokens};
-  applyTokens(colors.css);  // before the menu draws: no flash
+  // Legacy report CSS defines --up/--dn directly. Override it in the later-loaded shared
+  // token style so historical reports respond without rebuilding ~100 static pages.
+  colors.css += ":root{--up:var(--good);--dn:var(--bad)}" +
+    "@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--up:var(--good);--dn:var(--bad)}}" +
+    ":root[data-theme=dark]{--up:var(--good);--dn:var(--bad)}";
+  // Accessibility preferences are device-local. Invalid or inaccessible storage is harmless.
+  var ACCESS_KEY = "ncaa180.access";
+  var ACCESS_DEFAULTS = {
+    mode:["standard","rg","by","none","custom"].includes(D.mode)?D.mode:"standard",
+    custom:{bad:TOKENS_LIGHT["--bad"],good:TOKENS_LIGHT["--good"]},
+    motion:["system","on","off"].includes(D.motion)?D.motion:"system",
+    emphasis:D.emphasis===true,autoContrast:D.auto_contrast!==false
+  };
+  var ACCESS_MODES = {
+    standard:{light:[TOKENS_LIGHT["--good"],TOKENS_LIGHT["--bad"]],dark:[TOKENS_DARK["--good"],TOKENS_DARK["--bad"]]},
+    rg:{light:[palette("rg","light","positive","#0758a8"),palette("rg","light","negative","#a65300")],dark:[palette("rg","dark","positive","#79b9ff"),palette("rg","dark","negative","#ffb45d")]},
+    by:{light:[palette("by","light","positive","#007b73"),palette("by","light","negative","#b42318")],dark:[palette("by","dark","positive","#65d4c6"),palette("by","dark","negative","#ff7b72")]},
+    none:{light:[palette("none","light","positive","#252525"),palette("none","light","negative","#595959")],dark:[palette("none","dark","positive","#f2f2f2"),palette("none","dark","negative","#c5c5c5")]}
+  };
+  function validHex(x) { return typeof x==="string" && /^#[0-9a-fA-F]{6}$/.test(x); }
+  function accessRead() {
+    var o;
+    try { o=JSON.parse(localStorage.getItem(ACCESS_KEY)||"null"); } catch(e) { o=null; }
+    if(!o || typeof o!=="object" || Array.isArray(o)) o={};
+    return {
+      mode: ["standard","rg","by","none","custom"].indexOf(o.mode)>=0?o.mode:ACCESS_DEFAULTS.mode,
+      custom:{bad:validHex(o.custom&&o.custom.bad)?o.custom.bad:ACCESS_DEFAULTS.custom.bad,
+              good:validHex(o.custom&&o.custom.good)?o.custom.good:ACCESS_DEFAULTS.custom.good},
+      motion:["system","on","off"].indexOf(o.motion)>=0?o.motion:ACCESS_DEFAULTS.motion,
+      emphasis:typeof o.emphasis==="boolean"?o.emphasis:ACCESS_DEFAULTS.emphasis,
+      autoContrast:typeof o.autoContrast==="boolean"?o.autoContrast:ACCESS_DEFAULTS.autoContrast
+    };
+  }
+  function contrast(a,b) {
+    function lum(h) { var c=hexRgb(h).map(lin); return .2126*c[0]+.7152*c[1]+.0722*c[2]; }
+    var x=lum(a),y=lum(b); return (Math.max(x,y)+.05)/(Math.min(x,y)+.05);
+  }
+  function accessibleHex(h,bg) {
+    var bgLum=contrast("#000000",bg)>contrast("#ffffff",bg)?"#000000":"#ffffff";
+    if(contrast(h,bg)>=MIN_CONTRAST) return h;
+    var lo=0,hi=1,answer=bgLum;
+    for(var i=0;i<22;i++) {
+      var mid=(lo+hi)/2, candidate=mix(h,bgLum,mid), nums=candidate.match(/\d+/g).map(Number);
+      var hex="#"+nums.map(function(n){return n.toString(16).padStart(2,"0");}).join("");
+      if(contrast(hex,bg)>=MIN_CONTRAST){answer=hex;hi=mid;}else lo=mid;
+    }
+    return answer;
+  }
+  function accessCss(o) {
+    var m=ACCESS_MODES[o.mode],light={},dark={},both={};
+    if(o.mode==="custom") {
+      m={light:[o.custom.good,o.custom.bad],dark:[o.custom.good,o.custom.bad]};
+    }
+    if(m) {
+      [["light",light,LIGHT_BG],["dark",dark,DARK_BG]].forEach(function(row) {
+        var pair=m[row[0]];
+        row[1]["--good"]=o.mode==="custom"&&!o.autoContrast?pair[0]:accessibleHex(pair[0],row[2]);
+        row[1]["--bad"]=o.mode==="custom"&&!o.autoContrast?pair[1]:accessibleHex(pair[1],row[2]);
+        if(o.mode!=="standard") {
+          row[1]["--good-soft"]=appearance("alternate_soft",row[0],"positive",row[0]==="light"?"#e9eef2":"#26313a");
+          row[1]["--bad-soft"]=appearance("alternate_soft",row[0],"negative",row[0]==="light"?"#f1edf0":"#342c32");
+        }
+      });
+    }
+    // Solid fills must follow the selected palette too; white labels need 4.5:1 contrast.
+    // Even owner-configured Standard fills must be legible with white labels.
+    // Contrast-safe existing defaults retain their historical values.
+    if(o.mode==="none") both={"--good-fill":settingHex(A.monochrome_fills&&A.monochrome_fills.positive,"#3c3c3c"),"--bad-fill":settingHex(A.monochrome_fills&&A.monochrome_fills.negative,"#656565")};
+    else if(o.mode==="custom"&&!o.autoContrast) both={"--good-fill":m.light[0],"--bad-fill":m.light[1]};
+    else both={"--good-fill":accessibleHex(m.light[0],FILL_TEXT),
+      "--bad-fill":accessibleHex(m.light[1],FILL_TEXT)};
+    var css=tokensCss(Object.assign({},TOKENS_LIGHT,light),Object.assign({},TOKENS_DARK,dark),
+      Object.assign({},TOKENS_BOTH,both));
+    css+=":root{--up:var(--good);--dn:var(--bad)}"+
+      "@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--up:var(--good);--dn:var(--bad)}}"+
+      ":root[data-theme=dark]{--up:var(--good);--dn:var(--bad)}";
+    if(o.motion==="on") css+="html *,html *::before,html *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}";
+    if(o.motion==="system") css+="@media (prefers-reduced-motion:reduce){html *,html *::before,html *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}";
+    if(o.motion==="off") css+="html{scroll-behavior:smooth}";
+    if(o.emphasis||o.mode==="none") css+=":root{--n180-emphasis:1} .up,.dn,[class*=win],[class*=loss]{outline-offset:2px} a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid currentColor!important;outline-offset:3px}";
+    return css;
+  }
+  function accessApply() { var o=accessRead(); colors.css=accessCss(o); applyTokens(colors.css); return o; }
+  function accessSave(partial) {
+    var o=accessRead();
+    if(partial && typeof partial==="object") {
+      if(partial.mode!==undefined)o.mode=partial.mode;
+      if(partial.motion!==undefined)o.motion=partial.motion;
+      if(partial.emphasis!==undefined)o.emphasis=partial.emphasis;
+      if(partial.autoContrast!==undefined)o.autoContrast=partial.autoContrast;
+      if(partial.custom)o.custom=Object.assign({},o.custom,partial.custom);
+    }
+    o={mode:["standard","rg","by","none","custom"].includes(o.mode)?o.mode:"standard",
+      custom:{good:validHex(o.custom&&o.custom.good)?o.custom.good:ACCESS_DEFAULTS.custom.good,
+              bad:validHex(o.custom&&o.custom.bad)?o.custom.bad:ACCESS_DEFAULTS.custom.bad},
+      motion:["system","on","off"].includes(o.motion)?o.motion:"system",emphasis:o.emphasis===true,
+      autoContrast:o.autoContrast!==false};
+    try { localStorage.setItem(ACCESS_KEY,JSON.stringify(o)); }catch(e){}
+    accessApply();
+    if (typeof window !== "undefined" && typeof window.CustomEvent === "function")
+      window.dispatchEvent(new window.CustomEvent("ncaa180:accesschange", {detail:accessRead()}));
+    return accessRead();
+  }
+  function accessReset() {
+    try {localStorage.removeItem(ACCESS_KEY);}catch(e){}
+    var o=accessApply();
+    if (typeof window !== "undefined" && typeof window.CustomEvent === "function")
+      window.dispatchEvent(new window.CustomEvent("ncaa180:accesschange", {detail:o}));
+    return o;
+  }
+  var access={read:accessRead,save:accessSave,reset:accessReset,apply:accessApply,
+    contrast:contrast,adjust:accessibleHex,defaults:ACCESS_DEFAULTS,modes:ACCESS_MODES,settings:{contrast:{minimum_ratio:MIN_CONTRAST,distinguishability_ratio:DISTINGUISH_RATIO,light_background:LIGHT_BG,dark_background:DARK_BG,fill_text:FILL_TEXT},labels:L}};
 
+  accessApply();  // before the menu draws: no flash
+
+  return {colors:colors, access:access, key:ACCESS_KEY};
+}
+
+  var a11y = createNCAA180Accessibility();
+  var colors = a11y.colors, access = a11y.access;
+  var ACCESS_KEY = a11y.key;
   function devOn() { try { return localStorage.getItem(DEV_KEY) === "1"; } catch (e) { return false; } }
   function setDev(on) {
     try { if (on) localStorage.setItem(DEV_KEY, "1"); else localStorage.removeItem(DEV_KEY); } catch (e) {}
@@ -235,12 +382,21 @@
     }
   }
 
-  var api = {render: render, dev: devOn, setDev: setDev, data: D, colors: colors,
+  var api = {access:access, render: render, dev: devOn, setDev: setDev, data: D, colors: colors,
              mainModel: mainModel, rowModel: rowModel, needsBar: needsBar};
   if (typeof module !== "undefined" && module.exports) { module.exports = api; return; }  // node tests
   window.NCAA180 = window.NCAA180 || {};
   window.NCAA180.menu = api;
   window.NCAA180.colors = colors;
+  window.NCAA180.access = access;
+  // Keep open tabs on the same device in sync without touching unrelated storage keys.
+  window.addEventListener("storage", function (e) {
+    if (e.key === ACCESS_KEY || e.key === null) {
+      access.apply();
+      if (typeof window.CustomEvent === "function")
+        window.dispatchEvent(new window.CustomEvent("ncaa180:accesschange", {detail:access.read()}));
+    }
+  });
   render(false);
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", function () { render(false); });
 })();

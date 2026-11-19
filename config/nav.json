@@ -20,6 +20,7 @@
     {"_note": "Task 5.11 Transactions tab. Keep hidden-dev for preview; use visible only after approval, or hidden to omit it from compiled nav.", "id": "transactions", "label": "Transactions", "href": "transactions.html", "state": "hidden-dev"},
     {"id": "records", "label": "Records", "href": "records.html"},
     {"id": "about", "label": "About", "href": "about.html"},
+    {"id": "access", "label": "Accessibility", "href": "access.html", "state": "hidden-dev"},
     {"id": "app", "label": "Notification settings", "href": "app.html", "icon": "bell"}
   ],
   "rows": {

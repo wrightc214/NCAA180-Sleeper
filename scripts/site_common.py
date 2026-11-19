@@ -14,6 +14,9 @@ import os
 import re
 import urllib.parse
 import json
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
 
 TEMPLATE = "templates/weekly_report.html"
 OUT_DIR = "reports"
@@ -159,7 +162,22 @@ def menu_data(out_dir=None):
 def write_menu(out_dir=None):
     data = menu_data(out_dir)
     tpl = open(MENU_TEMPLATE, encoding="utf-8").read()
-    js = tpl.replace("/*__DATA__*/null", json.dumps(data, ensure_ascii=False, separators=(",", ":")))
+    # Bundle the standalone accessibility source into the synchronous menu entrypoint.
+    # Existing static reports only reference assets/menu.js; do not introduce a flash
+    # or require rebuilding historical HTML just to load an additional script.
+    with open(ROOT / "templates" / "accessibility.js", encoding="utf-8") as a11y_file:
+        accessibility_source = a11y_file.read()
+    from league_config import accessibility
+    owner_settings = accessibility()
+    if "/*__OWNER_ACCESSIBILITY_COLORS__*/null" not in accessibility_source:
+        raise ValueError("accessibility template missing owner-settings placeholder")
+    accessibility_source = accessibility_source.replace(
+        "/*__OWNER_ACCESSIBILITY_COLORS__*/null",
+        json.dumps(owner_settings, separators=(",", ":")))
+    if "/*__ACCESSIBILITY__*/" not in tpl:
+        raise ValueError("menu template missing accessibility bundle placeholder")
+    js = tpl.replace("/*__ACCESSIBILITY__*/", accessibility_source).replace(
+        "/*__DATA__*/null", json.dumps(data, ensure_ascii=False, separators=(",", ":")))
     out = os.path.join(out_dir or OUT_DIR, "assets", "menu.js")
     os.makedirs(os.path.dirname(out), exist_ok=True)
     with open(out, "w", encoding="utf-8") as f:

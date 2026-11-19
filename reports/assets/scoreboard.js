@@ -94,7 +94,7 @@
     const tag=isLive?`<span class="lv"><i class="dot"></i>${p.game.period>4?'OT':`Q${p.game.period}`}<span class="clk"> ${escape(p.game.clock)}</span></span>`:escape(({post:'Final',pre:'',bye:'Bye',out:p.status||'Out',unknown:'No game data'})[p.phase]);
     const name=p.position==='DEF'?`${p.team||p.id} DEF`:p.name.replace(/^(\S)\S+\s/,'$1. ');
     const diff=p.actual-p.baseline,k=Math.min(1,Math.abs(diff)/(cfg.position_sd[p.position]||7));
-    const style=color&&p.phase==='post'&&Math.abs(diff)>2?` style="color:color-mix(in srgb,${diff>0?'#1d7a43':'#b3261e'} ${35+65*k}%,var(--ink))"`:'';
+    const style=color&&p.phase==='post'&&Math.abs(diff)>2?` style="color:color-mix(in srgb,${diff>0?'var(--good)':'var(--bad)'} ${35+65*k}%,var(--ink))"`:'';
     const a=`<div class="pc${right?' r':''}" title="${escape(p.name)}"><b>${escape(name)}</b><small>${escape(p.position)} · ${escape(p.team)} ${tag}</small><small>${p.missingProjection?'proj unavailable':`proj ${p.baseline.toFixed(1)}`}${isLive?` · live ${p.projected.toFixed(1)}`:''}</small></div>`;
     const b=`<div class="ps${isLive?' on':''}"${style}>${p.phase==='unknown'?'—':pre?p.baseline.toFixed(1):money(p.actual)}</div>`;
     return right?b+a:a+b;

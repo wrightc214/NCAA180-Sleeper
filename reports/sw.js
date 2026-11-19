@@ -1,10 +1,10 @@
 // NCAA 180 service worker (todo-pwa.md): offline shell + push notifications.
 // Scope: reports/ (this file's folder). Bump VERSION when the caching rules change; pages and
 // data are never cached forever (network first), so ordinary deploys need no bump.
-const VERSION = "v3";
+const VERSION = "v4";
 const SHELL = "ncaa180-shell-" + VERSION;
 const DATA = "ncaa180-data-" + VERSION;
-const PRECACHE = ["index.html", "app.html", "assets/app.js", "assets/menu.js", "../assets/app/icon-192.png", "manifest.webmanifest"];
+const PRECACHE = ["index.html", "app.html", "access.html", "assets/access.js", "assets/app.js", "assets/menu.js", "../assets/app/icon-192.png", "manifest.webmanifest"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(SHELL).then((c) => c.addAll(PRECACHE)).then(() => self.skipWaiting()));

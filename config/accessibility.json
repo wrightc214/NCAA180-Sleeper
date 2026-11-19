@@ -1,0 +1,98 @@
+{
+  "_note": "Owner-controlled accessibility presentation. Browser preferences remain in localStorage. Built into menu.js from this file; missing/invalid values use safe defaults.",
+  "palettes": {
+    "_note": "Positive, negative and neutral semantic colours; all hex values are six-digit.",
+    "standard": {
+      "light": {
+        "positive": "#1a7f37",
+        "negative": "#b42318",
+        "neutral": "#6b7484"
+      },
+      "dark": {
+        "positive": "#4fc785",
+        "negative": "#ff7b72",
+        "neutral": "#8a96ab"
+      }
+    },
+    "rg": {
+      "light": {
+        "positive": "#0758a8",
+        "negative": "#a65300"
+      },
+      "dark": {
+        "positive": "#79b9ff",
+        "negative": "#ffb45d"
+      }
+    },
+    "by": {
+      "light": {
+        "positive": "#007b73",
+        "negative": "#b42318"
+      },
+      "dark": {
+        "positive": "#65d4c6",
+        "negative": "#ff7b72"
+      }
+    },
+    "none": {
+      "light": {
+        "positive": "#252525",
+        "negative": "#595959"
+      },
+      "dark": {
+        "positive": "#f2f2f2",
+        "negative": "#c5c5c5"
+      }
+    }
+  },
+  "appearance": {
+    "_note": "Soft semantic backgrounds, solid fill text, and monochrome fills.",
+    "soft": {
+      "light": {
+        "positive": "#e3f3e8",
+        "negative": "#fbe4e1"
+      },
+      "dark": {
+        "positive": "#173a2a",
+        "negative": "#4a2024"
+      }
+    },
+    "alternate_soft": {
+      "light": {
+        "positive": "#e9eef2",
+        "negative": "#f1edf0"
+      },
+      "dark": {
+        "positive": "#26313a",
+        "negative": "#342c32"
+      }
+    },
+    "fill_text": "#ffffff",
+    "monochrome_fills": {
+      "positive": "#3c3c3c",
+      "negative": "#656565"
+    }
+  },
+  "contrast": {
+    "_note": "WCAG-inspired minimum ratio for text/fills; comparison backgrounds and advisory distinguishability threshold.",
+    "minimum_ratio": 4.5,
+    "distinguishability_ratio": 1.5,
+    "light_background": "#ffffff",
+    "dark_background": "#16213a"
+  },
+  "defaults": {
+    "_note": "Browser-local preference defaults; user may override on their device.",
+    "mode": "standard",
+    "motion": "system",
+    "emphasis": false,
+    "auto_contrast": true
+  },
+  "labels": {
+    "_note": "Settings UI labels and advisory warning text.",
+    "auto_contrast": "Automatically improve contrast",
+    "low_light": "Selected colours may be difficult to read on light backgrounds.",
+    "low_dark": "Selected colours may be difficult to read on dark backgrounds.",
+    "low_fill": "White text on solid fills may be difficult to read.",
+    "similar": "Positive and negative colours may be difficult to distinguish; automatic contrast correction cannot guarantee distinguishability."
+  }
+}

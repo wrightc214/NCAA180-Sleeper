@@ -15,6 +15,11 @@ jobs:
         run: |
           python3 scripts/menu_build.py
           git diff --exit-code -- reports/assets/menu.js
+      - name: Generate accessibility page
+        run: |
+          python3 scripts/access_page.py
+          test -s reports/access.html
+          git diff --exit-code -- reports/access.html
       - name: Python tests
         run: python3 -m pytest -q tests
       - uses: actions/setup-node@v4
