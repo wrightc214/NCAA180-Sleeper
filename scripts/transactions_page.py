@@ -340,7 +340,8 @@ def trade_card(r, sides, names, colors, result, shorts, config=None, team_fit=No
     card_class = "tx-card tx-blockbuster" if blockbuster else "tx-card"
     meta = (f'<div class="tx-head">{esc(short)} · {esc(lcfg.week_label(r["Week"]))} · {esc(day(r["Created"]))}{flag}</div>'
             f'<span class="tx-muted">Trade {esc(r["TransactionID"])}</span>')
-    return (f'<article class="{card_class}" data-conference="{esc(league)}" data-week="{esc(r["Week"])}" '
+    image_title = f'{team[ids[0]]} – {team[ids[1]]} · {day(r["Created"])}'
+    return (f'<article class="{card_class}" data-snap-card="{esc(image_title)}" data-conference="{esc(league)}" data-week="{esc(r["Week"])}" '
             f'data-teams="{esc("|".join(team.values()))}" data-identity="{esc(short)}:{esc(ids[0])}|{esc(short)}:{esc(ids[1])}"><header>{meta}</header>'
             f'<div class="tx-grid">{panel(pairs[0])}{center}{panel(pairs[1])}</div>'
             f'{concentration}</article>')

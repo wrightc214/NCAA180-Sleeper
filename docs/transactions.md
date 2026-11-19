@@ -22,6 +22,8 @@ The Transactions page is configured as hidden-dev. It shows completed trades, we
 
 Trade cards use `config/league.json` → `position_colors` for the small player-position badges. The palette matches the Scoreboard (QB pink, RB mint, WR blue, TE apricot, K lavender, DEF peach), with dark badge text. Player names and picks stay neutral. Unconfigured positions get a neutral badge.
 
+The Trades header saves the current filtered view as an image. Use the image button in a trade's header to save just that card. Both exports preserve open and closed details without changing the page.
+
 ## Team Fit
 
 Trade cards emphasize Team Fit and show market grades as smaller supporting figures. Their colors use the shared theme scale, pulled toward neutral by each team's relevance weight (win-now for Contender, one minus win-now for Rebuild), and by the `transactions.market_grade_color_strength` setting (default `0.5`). Without available Fit, market letters are neutral. Letters, scores and points are unaffected.

@@ -9,6 +9,7 @@
  *   data-snap-tag    file-name suffix
  *   data-snap-state  live | pregame | final | projection -> labeled image (with data-snap-time ISO)
  * Sections with data-nosnap get no image button; data-nofold stays open.
+ * Articles with data-snap-card supply an image label and get a button in their header.
  */
 (() => {
   const css = `section.fold>h2{cursor:pointer;position:relative;padding-right:56px}
@@ -20,6 +21,8 @@ section.fold{position:relative}
 .fold-all{font:700 12px var(--sans,sans-serif);padding:5px 10px;border:1px solid var(--line,#ccd);border-radius:6px;background:var(--panel,#fff);color:inherit;cursor:pointer}
 section.fold>.snap-btn{position:absolute;top:2px;right:22px;display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;padding:0;border:1px solid var(--line,#ccd);border-radius:6px;background:var(--panel,#fff);color:var(--mute,#667);cursor:pointer}
 section.card.fold>.snap-btn{top:12px;right:30px}
+article[data-snap-card]>header:has(>.snap-card-btn){position:relative;padding-right:48px}
+.snap-card-btn{position:absolute;top:7px;right:8px;display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;padding:0;border:1px solid var(--line,#ccd);border-radius:6px;background:var(--panel,#fff);color:var(--mute,#667);cursor:pointer}
 .snap-btn:hover{color:inherit}.snap-btn.busy{opacity:.5;cursor:progress}.snap-btn:focus-visible{outline:2px solid #38638b;outline-offset:2px}`;
   const st = document.createElement('style'); st.textContent = css; document.head.append(st);
 
@@ -57,29 +60,60 @@ section.card.fold>.snap-btn{top:12px;right:30px}
   const d = document.body.dataset;
   const stamp = d.snapState ? {state: d.snapState, time: d.snapTime ? new Date(d.snapTime) : new Date()} : null;
   const page = (document.title || 'ncaa180').replace(/\s*[·|]\s*/g, ' ').trim();
-  secs.filter(s => !s.hasAttribute('data-nosnap')).forEach(s => {
-    const title = (s.querySelector(':scope>h2').childNodes[0]?.textContent || s.id).trim();
-    const btn = S.button(title); s.append(btn);
+  function cloneContent(source) {
+    const copy = source.cloneNode(true);
+    // DOM cloning preserves hidden and open attributes, but not live select choices.
+    const controls = copy.querySelectorAll('select');
+    source.querySelectorAll('select').forEach((select, i) => {
+      [...select.options].forEach((option, j) => {
+        controls[i].options[j].toggleAttribute('selected', option.selected);
+      });
+    });
+    copy.querySelectorAll('.snap-btn,[data-nosnap-part],.tools').forEach(node => node.remove());
+    return copy;
+  }
+  function saveButton(host, label, makeImage, className) {
+    const btn = S.button(label);
+    if (className) btn.classList.add(className);
+    host.append(btn);
     btn.addEventListener('keydown', e => e.stopPropagation());
     btn.addEventListener('click', async e => {
       e.stopPropagation(); btn.disabled = true; btn.classList.add('busy');
       try {
-        const cl = s.cloneNode(true); cl.classList.remove('closed', 'fold');
-        cl.querySelectorAll('.snap-btn,[data-nosnap-part]').forEach(x => x.remove());
-        // keep what the reader filtered out of view hidden in the image too
-        const live = [...s.querySelectorAll('*')], copy = [...cl.querySelectorAll('*')];
-        live.forEach((x, i) => { if (x.hidden && copy[i]) copy[i].hidden = true; });
-        cl.querySelectorAll('.tools').forEach(x => x.remove());
-        // long tables: the first 25 rows of what is on screen (filters and sort kept)
-        cl.querySelectorAll('tbody').forEach(tb => { const rows = [...tb.rows].filter(r => !r.hidden);
-          if (rows.length > 30) { rows.slice(25).forEach(r => r.remove()); const n = document.createElement('p'); n.className = 'note';
-            n.textContent = `Showing 25 of ${rows.length} rows in the current view.`; tb.closest('table').after(n); } });
-        // wide tables: widen the image frame to fit every column (phone width otherwise)
-        const wide = Math.max(0, ...[...s.querySelectorAll('table')].map(t => t.scrollWidth));
-        const width = Math.min(1100, Math.max(400, wide + 56));
-        await S.save({width, html: cl.outerHTML, name: [page, title, d.snapTag].filter(Boolean).join(' '), footer: d.snapFoot || undefined, title, stamp});
+        await S.save(makeImage());
       } catch (err) { btn.title = 'Image could not be made (' + (err && err.message || err) + ')'; console.error(err); }
       finally { btn.disabled = false; btn.classList.remove('busy'); }
     });
+  }
+
+  secs.filter(s => !s.hasAttribute('data-nosnap')).forEach(s => {
+    const title = (s.querySelector(':scope>h2').childNodes[0]?.textContent || s.id).trim();
+    saveButton(s, title, () => {
+      const cl = cloneContent(s);
+      cl.classList.remove('closed', 'fold');
+      // Long tables: the first 25 rows of what is on screen (filters and sort kept).
+      cl.querySelectorAll('tbody').forEach(tb => {
+        const rows = [...tb.rows].filter(r => !r.hidden);
+        if (rows.length > 30) {
+          rows.slice(25).forEach(r => r.remove());
+          const n = document.createElement('p'); n.className = 'note';
+          n.textContent = `Showing 25 of ${rows.length} rows in the current view.`; tb.closest('table').after(n);
+        }
+      });
+      const wide = Math.max(0, ...[...s.querySelectorAll('table')].map(t => t.scrollWidth));
+      const width = Math.min(1100, Math.max(400, wide + 56));
+      return {width, html: cl.outerHTML, name: [page, title, d.snapTag].filter(Boolean).join(' '),
+        footer: d.snapFoot || undefined, title, stamp};
+    });
+  });
+
+  document.querySelectorAll('article[data-snap-card]').forEach(card => {
+    const host = card.querySelector(':scope > header');
+    if (!host) return;
+    const title = card.dataset.snapCard;
+    saveButton(host, title, () => ({
+      html: cloneContent(card).outerHTML, name: [title, d.snapTag].filter(Boolean).join(' '),
+      footer: d.snapFoot || undefined, title, stamp,
+    }), 'snap-card-btn');
   });
 })();

@@ -7,11 +7,84 @@ from csv import DictReader
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+import struct
 from threading import Thread
 
 from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def check_trade_exports(page):
+    # Record the DOM that actually reaches the real renderer, not a stubbed export.
+    vendor = (ROOT / "reports" / "assets" / "vendor" / "html2canvas-1.4.1.min.js").read_text()
+    probe = r"""
+    ;(() => {
+      const draw = window.html2canvas;
+      window.html2canvas = (root, options) => {
+        const visible = [...root.querySelectorAll('.tx-card:not([hidden])')];
+        const geometry = visible.map(c => {
+          const rows = [...c.querySelectorAll('.tx-grade')];
+          return rows.every((row, i) => i === 0 ||
+            row.getBoundingClientRect().top >= rows[i - 1].getBoundingClientRect().bottom);
+        });
+        window.parent.__tradeExport = {
+          titles: visible.map(c => c.dataset.snapCard),
+          details: visible.map(c => [...c.querySelectorAll('.tx-fit details')].map(d => ({
+            open: d.open, hasText: d.textContent.includes('Projected hold comparison:')
+          }))),
+          explainer: root.querySelector('.tx-explainer')?.textContent.includes('FantasyCalc') ?? null,
+          buttons: root.querySelectorAll('.snap-btn').length,
+          team: root.querySelector('#tx-team')?.value ?? null,
+          geometry,
+        };
+        return draw(root, options);
+      };
+    })();
+    """
+    page.route("**/vendor/html2canvas-1.4.1.min.js", lambda route: route.fulfill(
+        body=vendor + probe, content_type="application/javascript"))
+    page.evaluate("Object.defineProperty(navigator, 'canShare', {value: () => false, configurable: true})")
+    team = page.locator("#tx-team")
+    team.select_option("Oregon")
+    visible = page.locator(".tx-card:visible")
+    assert visible.count() > 1
+    card = visible.filter(has_text="1423799198175739904")
+    details = card.locator(".tx-fit details")
+    toggle = details.first.locator("summary")
+    toggle.click()
+    assert details.first.get_attribute("open") is not None
+    assert details.last.get_attribute("open") is None
+
+    def export(button):
+        with page.expect_download(timeout=60000) as result:
+            button.click()
+        download = result.value
+        assert download.suggested_filename.endswith(".png")
+        assert download.failure() is None
+        png = download.path().read_bytes()
+        assert png.startswith(b"\x89PNG\r\n\x1a\n")
+        assert min(struct.unpack(">II", png[16:24])) > 0
+        data = page.evaluate("window.__tradeExport")
+        assert data["buttons"] == 0
+        assert all(data["geometry"]), "Exported grade rows overlap"
+        return data
+
+    single = export(card.get_by_role("button", name="Save image: Arizona State – Oregon · 2026-11-04"))
+    assert single["titles"] == ["Arizona State – Oregon · 2026-11-04"]
+    assert single["details"] == [[{"open": True, "hasText": True}, {"open": False, "hasText": False}]]
+    assert single["team"] is None
+
+    section = export(page.locator("section.fold").first.locator(":scope > .snap-btn"))
+    assert section["titles"] == visible.evaluate_all("(cards) => cards.map(c => c.dataset.snapCard)")
+    assert section["team"] == "Oregon"
+    assert section["explainer"] is False
+    assert section["details"][section["titles"].index(single["titles"][0])] == single["details"][0]
+    assert details.first.get_attribute("open") is not None
+    assert details.last.get_attribute("open") is None
+    assert not page.locator(".tx-explainer .tx-note").is_visible()
+    toggle.click()
+    team.select_option("")
 
 
 def main():
@@ -45,7 +118,8 @@ def main():
                 count = page.locator(".tx-card").count()
                 assert count > 50, f"Too few cards: {count}"
                 assert page.locator("section.fold").count() == 3
-                assert page.locator("section.fold .snap-btn").count() == 3
+                assert page.locator("section.fold > .snap-btn").count() == 3
+                assert page.locator(".tx-card .snap-card-btn").count() == count
                 page.evaluate("(theme) => document.documentElement.setAttribute('data-theme', theme)", theme)
                 explainer = page.locator("details.tx-explainer")
                 toggle = explainer.get_by_text("How trade grades work", exact=True)
@@ -156,6 +230,8 @@ def main():
                     selector.select_option(values[0])
                     assert page.locator("#tx-adds").count() == 1
                     selector.select_option(values[-1])
+                if width == 390:
+                    check_trade_exports(page)
                 overflow = page.evaluate("document.documentElement.scrollWidth - window.innerWidth")
                 assert overflow <= 8, f"Horizontal overflow at {width}px: {overflow}px"
                 assert not errors, errors
