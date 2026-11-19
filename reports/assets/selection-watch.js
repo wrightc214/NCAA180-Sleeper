@@ -119,17 +119,20 @@
     const a=align(left),b=align(right);
     const firstBelow=left.findIndex(t=>t.rank>cut);
     const onCut=firstBelow<0?null:left[firstBelow].k;
-    const atTile=t=>formatTeam?formatTeam(t.k,t.status==='Below cut'||t.status==='COIN TOSS',
-      '<small>'+percent(odds[t.k]||0)+'</small>'):'<strong>#'+E(t.rank)+' '+E(name(t.k))+'</strong>';
-    const rTile=t=>formatTeam?formatTeam(t.k,t.win<.5,'<small>'+percent(t.win)+'</small>'):
+    const atTile=(t,highlight)=>formatTeam?formatTeam(t.k,!highlight,
+      archive?'<small>#'+E(t.rank)+'</small>':'<small>'+percent(odds[t.k]||0)+'</small>'):
+      '<strong>#'+E(t.rank)+' '+E(name(t.k))+'</strong>';
+    const rTile=(t,highlight)=>formatTeam?formatTeam(t.k,!highlight,'<small>'+percent(t.win)+'</small>'):
       '<strong>'+E(name(t.k))+'</strong> · '+percent(t.win);
     let html='<p class="sw-cut-note">'+(archive?'Final':'Projected')+' at-large cut after rank #'+E(cut)+'</p>'+
       '<div class="sw-head"><span>AT-LARGE TEAMS AT RISK</span><span>BID THIEVES · LOW TO HIGH</span></div>';
     for(let i=0;i<n;i++){
       const l=a.get(i),r=b.get(i);
+      const leftIn=l?.status==='Above cut';
+      const rightIn=!leftIn&&(!l||l.status==='Below cut')&&r?.inField;
       html+='<div class="sw-cut-row"><div'+(l&&l.k===onCut?' class="sw-cut-line"':'')+'>'+
-        (l?atTile(l)+'<div class="sw-inline">'+E(l.status)+'</div>':'')+
-        '</div><div>'+(r?rTile(r)+'<div class="sw-inline">'+E(r.status)+
+        (l?atTile(l,leftIn)+'<div class="sw-inline">'+E(l.status)+'</div>':'')+
+        '</div><div>'+(r?rTile(r,rightIn)+'<div class="sw-inline">'+E(r.status)+
           (r.both?' · Can also qualify at-large':'')+detail(r)+'</div>':'')+'</div></div>';
     }
     if(left.length&&!onCut)html+='<div class="sw-cut-row"><div class="sw-cut-line"></div><div></div></div>';
@@ -283,7 +286,12 @@
     if(season.cut_board){
       const d=season.cut_board, finals=Object.fromEntries(d.ccg.map(g=>[g.id,g.winner]));
       const p=Object.fromEntries(d.ccg.map(g=>[g.id,g.a===g.winner?1:0]));
-      content('sw-final-cut',cutHTML(W.cutBoard(d,finals,p,finals),k=>k,true));
+      const archivedTile=(k,dim,extra)=>{
+        const fill=dim?'':teamFill(d.colors?.[k]||'');
+        return '<div class="sw-team'+(dim?' dim':fill?' admitted':'')+'" style="--team:'+
+          E(d.colors?.[k]||'var(--neutral)')+fill+'"><strong>'+E(k)+'</strong>'+extra+'</div>';
+      };
+      content('sw-final-cut',cutHTML(W.cutBoard(d,finals,p,finals),k=>k,true,{},archivedTile));
     }else content('sw-final-cut','<p>A verified cut reconstruction is not available for this season. Recorded finals and the actual field are below.</p>');
     content('sw-final-status','<b class="sw-flag">FINAL RESULTS</b><strong>'+E(year)+' season</strong>'+
       '<span>'+season.ccg.length+' conference championships</span><span>'+season.field.length+' playoff teams</span>'+

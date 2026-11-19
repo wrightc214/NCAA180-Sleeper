@@ -104,4 +104,6 @@ test('the exact cut moves and an inside team can be both at-large and a thief', 
   assert.equal(after.cut,3);
   assert.ok(after.atLarge.some(t=>t.k==='D'&&t.status==='Below cut'));
   assert.equal(after.thieves.find(t=>t.k==='D').needsWin,true);
+  assert.equal(after.thieves.find(t=>t.k==='F').inField,true);
+  assert.equal(after.thieves.find(t=>t.k==='D').inField,false);
 });

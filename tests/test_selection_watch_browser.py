@@ -53,6 +53,8 @@ class SelectionWatchBrowser(unittest.TestCase):
                                 self.assertIn("steals confirmed", page.locator("#sw-status").inner_text())
                                 self.assertEqual(page.locator(".sw-cut-line").count(), 1)
                                 self.assertGreater(page.locator(".sw-cut-row .sw-team.admitted").count(), 0)
+                                self.assertTrue(page.evaluate("""() => [...document.querySelectorAll('#sw-board .sw-cut-row')]
+                                    .every(row => row.querySelectorAll('.sw-team.admitted').length <= 1)"""))
                                 self.assertNotIn("Updated", page.locator("#sw-status").inner_text())
                             layout = page.evaluate("""() => ({
                                 viewport: innerWidth,

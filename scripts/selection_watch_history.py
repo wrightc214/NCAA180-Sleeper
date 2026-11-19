@@ -42,6 +42,7 @@ def verified_steals(year, games, entrants):
         "ccg": [{"id": i, **{k: names[g[k]] for k in ("a", "b", "winner")}}
                 for i, g in enumerate(board["ccg"])],
         "tie": [[names[k] for k in group] for group in board["tie"]],
+        "colors": {name: style["background"] for name, style in board["style"].items() if style["background"]},
     }
 
 

@@ -167,6 +167,7 @@
       const needsWin=(loss[k]||0)<1;
       const final=settled[g.id];
       return {k,game:g.id,win:k===g.a?q:1-q,needsWin,
+        inField:projected[k]===1&&winnersSet.has(k)&&needsWin,
         both:roles.possible.has(k),
         status:final===k?(needsWin?'Stolen':'Won · at-large safe'):
           final?'Lost':needsWin?'Needs a win at this cut':'Conditional thief'};
