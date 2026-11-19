@@ -16,7 +16,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import league_config as lcfg
 import team_names as tn
 from site_common import SECTIONS_JS, logo_html, menu_html, nav_config, page_head, team_colors
-from transactions_grades import cap_rebuild_grade, evaluate_trade, load_config, read_rows
+from transactions_grades import cap_market_grade, evaluate_trade, load_config, read_rows
 from trade_fit_store import FileArchive, FitLedger
 from transactions_fit import event_key
 
@@ -188,7 +188,7 @@ def render_assets(assets, proxies=None, proxy_slot=None):
                    + "</div>" for a in assets)
 
 
-def render_grade(g, name, rebuild_caps=None):
+def render_grade(g, name, caps=None):
     if not g:
         return '<strong title="Historical valuation unavailable">—</strong>'
     score = g["score"][name]
@@ -200,7 +200,7 @@ def render_grade(g, name, rebuild_caps=None):
         points += f" − {discount:,.0f} spread penalty"
     letter = g["grade"][name]
     trade_percent = g.get("trade_size_percent")
-    shown = cap_rebuild_grade(letter, trade_percent, rebuild_caps)
+    shown = cap_market_grade(letter, trade_percent, caps)
     if shown != letter:
         points += f" · Grade capped from {letter} ({trade_percent:.1f}% of snapshot leader)"
     return (f'<span class="tx-side-value" title="{esc(points)}">'
@@ -260,7 +260,7 @@ def trade_card(r, sides, names, colors, result, shorts, config=None, team_fit=No
     status = result.get("status")
     grade_rows = ""
     for key, label, caps in ((dyn, labels["rebuild"], settings["rebuild_grade_caps"]),
-                             (con, labels["contender"], None)):
+                             (con, labels["contender"], settings["contender_grade_caps"])):
         note = " · No measurable value" if key and key["score"][ids[0]] is None else ""
         grade_rows += (f'<div class="tx-grade">{render_grade(key, ids[0], caps)}<span>{label} value{note}</span>'
                        f'{render_grade(key, ids[1], caps)}</div>')
@@ -375,7 +375,7 @@ def main():
 <section><h2>{labels["trades"]} <small>({len(cards)})</small></h2>
 {filters}
 <p class="tx-note">Grades use FantasyCalc values available at trade time — not a verdict.
-{labels["rebuild"]} includes rookie picks and can discount value spread across assets. For smaller trades, the displayed Rebuild grade range narrows based on combined raw value relative to the snapshot’s top player. Point totals don’t change. {labels["contender"]} uses raw rest-of-season values and values traded picks at zero. Unlisted kickers and D/ST use a {esc(grading_config["proxy_pick_slot"])} proxy in both grades. Surplus pick comparisons use the upcoming draft at trade time. {labels["blockbuster"]} marks a large raw dynasty deal with a high-value player, both measured against the snapshot’s top player. It does not indicate a winner. {labels["team_fit"]} compares lineup gains and future value versus holding for each team. A hyphen means evidence is missing or an after-trade snapshot is still pending. Projected wins and before/after odds are unavailable.</p>
+{labels["rebuild"]} includes rookie picks and can discount value spread across assets. For smaller trades, displayed grade ranges narrow based on combined raw value relative to the snapshot leader for that grade. Point totals don’t change. {labels["contender"]} uses raw rest-of-season values and values traded picks at zero. Unlisted kickers and D/ST use a {esc(grading_config["proxy_pick_slot"])} proxy in both grades. Surplus pick comparisons use the upcoming draft at trade time. {labels["blockbuster"]} marks a large raw dynasty deal with a high-value player, both measured against the snapshot’s top player. It does not indicate a winner. {labels["team_fit"]} compares lineup gains and future value versus holding for each team. A hyphen means evidence is missing or an after-trade snapshot is still pending. Projected wins and before/after odds are unavailable.</p>
 <div class="tx-cards" id="tx-trades">{''.join(cards)}</div>
 <p class="tx-empty" id="tx-no-trades" hidden>No trades match these filters.</p>
 <p class="tx-note">{covered} of {len(cards)} trades have a {labels["rebuild"]} grade under the historical valuation rules.</p>
