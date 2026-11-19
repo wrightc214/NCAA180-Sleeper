@@ -20,6 +20,8 @@ The Transactions page is configured as hidden-dev. It shows completed trades, we
 - Transaction cards, both week selectors, and the summary share the site’s schedule and week-label settings via `league_config.week_label()`. Week filter values stay numeric.
 - `config/nav.json` owns the menu label, link and visibility. The Transactions entry explicitly sets `hidden-dev`. Like any tab, a complete entry without a state defaults to `visible`. Removing the entry omits its link and does not block the direct URL. Dev visibility is not access control. Shared site colour tokens and CSV team colours remain the sources for styling.
 
+Trade cards use `config/league.json` → `position_colors` for the small player-position badges. The palette matches the Scoreboard (QB pink, RB mint, WR blue, TE apricot, K lavender, DEF peach), with dark badge text. Player names and picks stay neutral. Unconfigured positions get a neutral badge.
+
 ## Team Fit
 
 Trade cards emphasize Team Fit and show market grades as smaller supporting figures. Their colors use the shared theme scale, pulled toward neutral by each team's relevance weight (win-now for Contender, one minus win-now for Rebuild), and by the `transactions.market_grade_color_strength` setting (default `0.5`). Without available Fit, market letters are neutral. Letters, scores and points are unaffected.

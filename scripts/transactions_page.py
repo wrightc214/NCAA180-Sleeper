@@ -9,6 +9,7 @@ import datetime as dt
 import html
 import json
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -47,6 +48,7 @@ CSS = """
 .tx-assets .tx-receives{text-transform:uppercase;letter-spacing:.08em;font-size:11px;font-weight:800;color:var(--mute);margin:0 0 7px}
 .tx-asset{padding:6px 8px;margin:4px 0;border:1px solid var(--line);border-radius:6px;font-weight:600}
 .tx-pick{font-size:.95em}
+.tx-pos{display:inline-block;vertical-align:baseline;padding:1px 4px;margin-inline-end:4px;border-radius:3px;font-size:10px;font-weight:800;line-height:1.2;color:var(--mute);background:var(--bg)}
 .tx-grade{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--line);font-weight:700;font-size:12px}
 .tx-grade strong{font:bold 15px var(--num,sans-serif);color:var(--neutral)}
 .tx-grade .tx-side-value{min-width:0;text-align:center}
@@ -182,12 +184,39 @@ def render_team(team, colors):
     return f'<div class="tx-team" style="--team-bg:{esc(bg)};--team-ink:{esc(fg)}">{logo}<span>{esc(team)}</span></div>'
 
 
+def position_badge_css(palette):
+    """Validate palette values before embedding them into the page stylesheet."""
+    def is_hex(value):
+        return isinstance(value, str) and re.fullmatch(r"#[0-9a-fA-F]{6}", value)
+
+    if not isinstance(palette, dict):
+        return ""
+    ink = palette.get("ink")
+    ink = ink if is_hex(ink) else "#14213a"
+    backgrounds = palette.get("backgrounds")
+    if not isinstance(backgrounds, dict):
+        return ""
+    return "".join(f'.tx-pos-{position.lower()}{{background:{color};color:{ink}}}'
+                   for position, color in backgrounds.items()
+                   if re.fullmatch(r"[A-Z][A-Z0-9]*", position) and is_hex(color))
+
+
+def render_position(position):
+    label = str(position).strip()
+    if not label:
+        return ""
+    key = label.upper()
+    key = {"FB": "RB", "PK": "K", "DST": "DEF", "D/ST": "DEF"}.get(key, key)
+    css = f" tx-pos-{key.lower()}" if re.fullmatch(r"[A-Z][A-Z0-9]*", key) else ""
+    return f'<span class="tx-pos{css}">{esc(label)}</span> '
+
+
 def render_assets(assets, proxies=None, proxy_slot=None):
     if not assets:
         return '<p class="tx-muted">No assets recorded</p>'
     proxies = proxies or {}
     return "".join(f'<div class="tx-asset{" tx-pick" if a["kind"] == "pick" else ""}">'
-                   + (f'<span class="tx-muted">{esc(a["position"])} · </span>' if a.get("position") else "")
+                   + (render_position(a["position"]) if a["kind"] == "player" and a.get("position") else "")
                    + esc(a["label"])
                    + (f'<small class="tx-muted"> · +{proxies[a["id"]]:,.0f} pts ({esc(proxy_slot)} proxy)</small>'
                       if a.get("id") in proxies else "")
@@ -483,7 +512,8 @@ trades excluded. Ownership and availability are from the current roster snapshot
     js = js.replace("__MOVEMENT__", json.dumps(mv, ensure_ascii=False).replace("</", "<\\/"))
     js = js.replace("__LABELS__", json.dumps(short, ensure_ascii=False).replace("</", "<\\/"))
     js = js.replace("__UNIT_WORDS__", json.dumps([unit, units]).replace("</", "<\\/"))
-    html_out = page_head(f"{page_label} — {lcfg.brand()}", CSS) + body + js + SECTIONS_JS + "</body></html>"
+    css = CSS + position_badge_css(lcfg.cfg().get("position_colors"))
+    html_out = page_head(f"{page_label} — {lcfg.brand()}", css) + body + js + SECTIONS_JS + "</body></html>"
     Path(OUT).parent.mkdir(parents=True, exist_ok=True)
     Path(OUT).write_text(html_out, encoding="utf-8")
     print(f"Wrote {OUT}: {len(cards)} trades, {covered} graded, {len(weeks)} weeks, {len(lg)} conferences")

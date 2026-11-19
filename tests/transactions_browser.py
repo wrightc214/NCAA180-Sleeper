@@ -98,6 +98,9 @@ def main():
                 contender = boston_miami.locator(".tx-grade").filter(has_text="Contender value")
                 assert contender.locator("strong").all_text_contents() == ["C-", "C+"]
                 assert contender.locator("small").all_text_contents() == ["0 pts", "128 pts"]
+                assert oregon.locator(".tx-pos").all_text_contents() == ["RB", "K", "RB", "WR"]
+                assert oregon.locator(".tx-pos-k").evaluate("el => getComputedStyle(el).backgroundColor") == "rgb(201, 184, 242)"
+                assert oregon.locator(".tx-pick .tx-pos").count() == 0
                 asu_oregon_fit = oregon.locator(".tx-fit strong")
                 market = oregon.locator(".tx-grade").filter(has_text="Contender value").locator("strong")
                 assert asu_oregon_fit.all_text_contents() == ["B", "B+"]

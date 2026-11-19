@@ -67,6 +67,18 @@
       "DEF"
     ]
   },
+  "position_colors": {
+    "_note": "Shared player-position badge palette from the Scoreboard. Backgrounds and ink use #RRGGBB. A missing position stays neutral. For FLEX slots, combine the RB, WR, and TE colors.",
+    "ink": "#14213a",
+    "backgrounds": {
+      "QB": "#f4a6b6",
+      "RB": "#9ee6c9",
+      "WR": "#9cc9f2",
+      "TE": "#f6c58f",
+      "K": "#c9b8f2",
+      "DEF": "#e8a88c"
+    }
+  },
   "position_sd": {
     "QB": 8,
     "RB": 7.4,

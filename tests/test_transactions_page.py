@@ -266,6 +266,25 @@ def test_market_grade_cap_exclusive_boundaries(setting, pct, expected):
     assert cap_market_grade("A", pct, []) == "A"
 
 
+def test_player_position_badges_are_small_shared_palette_tags():
+    from transactions_page import position_badge_css, render_assets
+    from league_config import cfg
+
+    assert ".tx-pos-rb{background:#9ee6c9;color:#14213a}" in position_badge_css(cfg()["position_colors"])
+    assert position_badge_css(None) == ""
+    assert position_badge_css({"backgrounds": {"WR": "red;display:none", "Q}": "#123456"}}) == ""
+
+    assets = [{"kind": "player", "id": "1", "label": "Runner", "position": "RB"},
+              {"kind": "player", "id": "2", "label": "Defense", "position": "D/ST"},
+              {"kind": "player", "id": "3", "label": "Unknown", "position": "?"},
+              {"kind": "pick", "label": "2027 R4", "position": "RB"}]
+    result = render_assets(assets)
+    assert '<span class="tx-pos tx-pos-rb">RB</span> Runner' in result
+    assert '<span class="tx-pos tx-pos-def">D/ST</span> Defense' in result
+    assert '<span class="tx-pos">?</span> Unknown' in result
+    assert '<div class="tx-asset tx-pick">2027 R4</div>' in result
+
+
 def test_market_color_score_uses_each_team_fit_weight_without_changing_grade_score():
     strength = load_config()["market_grade_color_strength"]
     assert market_color_score(0, {"fit_weight": .1}, True, strength) == 47.5
