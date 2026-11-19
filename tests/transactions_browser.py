@@ -64,6 +64,7 @@ def main():
                 fit_card = page.locator(".tx-card").filter(has_text="1425957598431035392")
                 fits = fit_card.locator(".tx-fit")
                 assert fits.locator("strong").all_text_contents() == ["Even", "A"]
+                assert fits.locator(".tx-side-value > small").count() == 0
                 disclosure = fits.get_by_text("Fit details", exact=True).first
                 disclosure.click()
                 assert fits.get_by_text("Projected hold comparison:", exact=False).first.is_visible()

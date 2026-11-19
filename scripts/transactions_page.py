@@ -237,7 +237,6 @@ def render_fit(values, pending=False):
     sensitivity = ("<br>Horizon-sensitive: " + esc(" · ".join(f"{years}y {letter}" for years, _, letter in horizons))
                    if len({letter for _, _, letter in horizons}) > 1 else "")
     return (f'<div class="tx-side-value"><strong data-score="{values["score"]:.4f}">{esc(values["letter"])}</strong>'
-            f'<small>{values["score"]:.1f}/100</small>'
             f'<details><summary>Fit details</summary>Lineup {l0:,.0f} → {l1:,.0f}<br>'
             f'Dynasty {d0:,.0f} → {d1:,.0f}<br>Projected hold comparison: {esc(future)}{sensitivity}<br>'
             f'Win-now weight {values["fit_weight"]:.0%} · {esc(values["date"])}</details></div>')
