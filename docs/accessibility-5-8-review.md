@@ -1,3 +1,11 @@
+## Reviewer findings and corrections — 2026-11-19
+
+Reviewer reported four rebase conflicts (config/nav.json, reports/assets/menu.js, tests/menu.test.js, README.md), a blocking 3-digit hex expansion error in the committed menu, a Games test pointing at moved colour declarations, five browser assertions fixed on main, duplicate PR workflows, and incorrect dark contrast reference. Reviewer independently confirmed all presets exceed 4.5:1 on actual panels.
+
+Corrections committed on the feature branch: main's compact nav layout plus the Dev-only Accessibility tab; corrected `h.replace(/./g, "$&$&")` and rebuilt bundle text without JavaScript replacement-string interpolation; Games test now reads `templates/accessibility.js`; menu fixture reads `config/accessibility.json`; main's `pr-check.yml` incorporated with Accessibility generation check; duplicate `pr-safety-tests.yml` removed; dark reference updated to `#16213a`; README restored to main.
+
+**Outstanding blockers:** File-level reconciliation is not a Git rebase. This connector cannot rebase the branch. Run actual `git rebase main` and resolve conflicts, then `python3 scripts/menu_build.py` and `git diff --exit-code -- reports/assets/menu.js` on the final checkout. Native Node, pytest, browser suites and Save image output are not verified. The generated bundle was reconstructed through the connector and must be replaced with the actual Python build output. `README-PR-109.md` is temporary: remove at merge time, not during development.
+
 # Accessibility 5.8 — PR #109 independent review handoff
 
 **Status (2026-11-18): DRAFT / NOT MERGE-READY.** Branch: `feature/accessibility-5-8` → `main`. Owner has explicitly required independent review before any merge or deployment. This document is the canonical current-state handoff; older progress notes are superseded by the status below.
