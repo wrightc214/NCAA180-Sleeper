@@ -41,9 +41,14 @@ def read_rows(path):
         return list(csv.DictReader(f))
 
 
+# Display-only cap labels can fall between two of the base score bands.
+REBUILD_GRADE_ORDER = ("F", "D-", "D", "D+", "C-", "C", "Even", "C+", "B-", "B", "B+", "A")
+
+
 DEFAULTS = {
     "consolidation": {"method": "asset-concentration", "dynasty_concentration_rate": .60},
     "grade_bands": [[60, "A"], [55, "B+"], [52, "B"], [48, "Even"], [45, "C"], [40, "D"], [0, "F"]],
+    "rebuild_grade_caps": [[10, "C-", "C+"], [20, "D+", "B-"], [30, "D", "B"], [40, "D-", "B+"]],
     "blockbuster_min_multiple": 1.4,
     "blockbuster_min_headliner_share": .6,
     "proxy_pick_slot": "4.12",
@@ -82,6 +87,24 @@ def grade(share, bands=None):
         return None
     bands = load_config()["grade_bands"] if bands is None else bands
     return next((label for bound, label in bands if share * 100 >= bound), "F")
+
+
+def cap_rebuild_grade(letter, trade_percent, bands):
+    """Clamp only the displayed letter. Each trade-size ceiling is exclusive."""
+    ranks = REBUILD_GRADE_ORDER
+    if letter not in ranks or letter == "Even" or trade_percent is None or not isinstance(bands, list):
+        return letter
+    neutral = ranks.index("Even")
+    for band in bands:
+        if not isinstance(band, (list, tuple)) or len(band) != 3:
+            continue
+        ceiling, low, high = band
+        if not trade_percent < number(ceiling) or low not in ranks or high not in ranks:
+            continue
+        lo, hi = ranks.index(low), ranks.index(high)
+        if lo < neutral < hi:
+            return ranks[min(hi, max(lo, ranks.index(letter)))]
+    return letter
 
 
 def grade_score(share):
@@ -266,6 +289,8 @@ def evaluate_trade(assets, trade_day, player_history, pick_history, trade_year, 
                     "headliner_points": headliner_points, "headliner_share": headliner_share,
                 }
         val = result["dynasty"]
+        val["trade_size_percent"] = (100 * math.fsum(val["raw"].values()) / market_leader
+                                     if market_leader > 0 else None)
         winner = max(val["adjusted"], key=val["adjusted"].get)
         surplus = val["adjusted"][winner] - min(val["adjusted"].values())
         if surplus >= 0.5:  # Do not render "+0" at whole-point precision.

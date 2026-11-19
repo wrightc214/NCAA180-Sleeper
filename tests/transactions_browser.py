@@ -73,6 +73,11 @@ def main():
                 assert oregon.get_by_text("4.12 → 2.10", exact=False).count() == 1
                 assert "2027" not in oregon.locator(".tx-surplus").inner_text()
                 assert oregon.get_by_text("+725 pts (4.12 proxy)", exact=False).count() == 1
+                wisconsin = page.locator(".tx-card").filter(has_text="1427749292088516608")
+                rebuild = wisconsin.locator(".tx-grade").filter(has_text="Rebuild value")
+                assert set(rebuild.locator("strong").all_text_contents()) == {"B", "D"}
+                assert set(rebuild.locator("small").all_text_contents()) == {"1,557 pts", "777 pts"}
+                assert rebuild.locator('[title*="Grade capped from A"]').count() == 1
                 # Filter to a team on the first trade. Revert filter.
                 first = page.locator(".tx-card").first
                 team = first.get_attribute("data-teams").split("|")[0]

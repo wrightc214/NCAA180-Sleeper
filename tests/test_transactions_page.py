@@ -5,6 +5,7 @@ No API calls; fixtures are deliberately synthetic to isolate valuation logic.
 import datetime as dt
 import json
 import math
+import re
 import sys
 from pathlib import Path
 
@@ -12,7 +13,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from transactions_page import build_teams, day, movement, parse, summary, trade_assets, trade_card
-from transactions_grades import (compare, evaluate_trade, grade, load_config,
+from transactions_grades import (cap_rebuild_grade, compare, evaluate_trade, grade, load_config,
                                  historical, nearest_pick, pick_swap, read_rows)
 
 
@@ -249,6 +250,48 @@ def test_small_surplus_uses_closest_meaningful_swap_and_not_future_round():
     assert pick_swap(372, 2027, p, {"surplus_swap_max_relative_error": .01}) is None
     assert pick_swap(7, 2027, p) is None
     assert pick_swap(725, 2027, p) is None
+
+
+@pytest.mark.parametrize("pct,expected", [
+    (9.999, ("C+", "C-")), (10, ("B-", "D+")), (19.999, ("B-", "D+")),
+    (20, ("B", "D")), (29.999, ("B", "D")), (30, ("B+", "D-")),
+    (39.999, ("B+", "D-")), (40, ("A", "F")), (None, ("A", "F")),
+])
+def test_rebuild_grade_cap_exclusive_boundaries(pct, expected):
+    caps = load_config()["rebuild_grade_caps"]
+    assert tuple(cap_rebuild_grade(letter, pct, caps) for letter in ("A", "F")) == expected
+    assert cap_rebuild_grade("Even", pct, caps) == "Even"
+    assert cap_rebuild_grade(None, pct, caps) is None
+    assert cap_rebuild_grade("A", pct, []) == "A"
+
+
+def test_wisconsin_rebuild_cap_only_affects_rebuild_letters():
+    from transactions_page import TRANSACTIONS, TEAMS as TEAM_FILE, PLAYERS as PLAYER_FILE
+
+    row = next(r for r in read_rows(TRANSACTIONS) if r["TransactionID"] == "1427749292088516608")
+    teams = build_teams(read_rows(TEAM_FILE))
+    players = {p["player_id"]: p for p in read_rows(PLAYER_FILE)}
+    sides = trade_assets(row, teams, players)
+    out = evaluate_trade(sides, day(row["Created"]), read_rows("data/PlayerValues_Season.csv"),
+                         read_rows("data/PickValues_Season.csv"), int(row["Year"]))
+    wis = next(rid for rid in sides if teams[row["LeagueName"], rid] == "Wisconsin")
+    osu = next(rid for rid in sides if rid != wis)
+    assert out["dynasty"]["trade_size_percent"] == pytest.approx(100 * 2334 / 11017)
+    assert out["dynasty"]["raw"] == {wis: 1557, osu: 777}
+    assert out["dynasty"]["grade"] == {wis: "A", osu: "F"}
+    assert "blockbuster" not in out
+
+    capped = trade_card(row, sides, teams, {}, out, {})
+    uncapped = trade_card(row, sides, teams, {}, out, {}, {"rebuild_grade_caps": []})
+    assert 'Grade capped from A (21.2% of snapshot leader)' in capped
+    assert 'Grade capped from F (21.2% of snapshot leader)' in capped
+    assert re.search(r'>B</strong><small>1,557 pts</small>', capped)
+    assert re.search(r'>D</strong><small>777 pts</small>', capped)
+    # Beyond the two Rebuild letters and tooltips, the entire card is unchanged.
+    normalized = re.sub(r' · Grade capped from [AF] \(21\.2% of snapshot leader\)', '', capped)
+    normalized = normalized.replace('>B</strong><small>1,557 pts', '>A</strong><small>1,557 pts', 1)
+    normalized = normalized.replace('>D</strong><small>777 pts', '>F</strong><small>777 pts', 1)
+    assert normalized == uncapped
 
 
 @pytest.mark.parametrize("trade_id,marked", [

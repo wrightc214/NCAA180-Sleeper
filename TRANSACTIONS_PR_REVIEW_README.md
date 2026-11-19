@@ -81,6 +81,7 @@ The existing shared brand, conference terminology, and semantic colour tokens ar
 | --- | --- | --- |
 | `config/transactions.json` | `transactions.consolidation.method` | `"asset-concentration"` |
 | `config/transactions.json` | `transactions.consolidation.dynasty_concentration_rate` | `0.60` |
+| `config/transactions.json` | `transactions.rebuild_grade_caps` | `[[10, "C-", "C+"], [20, "D+", "B-"], [30, "D", "B"], [40, "D-", "B+"]]` |
 | `config/transactions.json` | `transactions.grade_bands` | `[[60, "A"], [55, "B+"], [52, "B"], [48, "Even"], [45, "C"], [40, "D"], [0, "F"]]` |
 | `config/transactions.json` | `transactions.blockbuster_min_multiple` | `1.4` |
 | `config/transactions.json` | `transactions.blockbuster_min_headliner_share` | `0.6` |
@@ -209,6 +210,12 @@ Dynasty shows raw → adjusted points with the market grade. Contender shows raw
 **Added coverage:** equal packages, one-for-many concentration, raw Contender and method-off defaults, penalty bounds, nonnegative throw-ins, proxy exclusion, real review fixtures, and browser regression checks for prominent market and Fit grades.
 
 **Ran locally:** `python3 -m pytest -q tests` (160 passed, 10 skipped), all five `tests/*.test.js` files (29 passed), `python3 scripts/transactions_page.py` (113 trades, 34 graded), and `python3 scripts/menu_build.py` followed immediately by `git diff --exit-code -- reports/assets/menu.js` (clean). Regenerated cards retained identical Team Fit markup and the same four Blockbusters. Local Chromium could not start in the execution environment. Check the read-only Actions run for browser evidence on the review SHA.
+
+### Small-trade Rebuild grade caps
+
+The displayed Rebuild letter is clamped using combined **raw** dynasty points (including K/DST proxies) divided by the highest dynasty player value in the full eligible historical snapshot. The cap bands use exclusive ceilings. No cap applies at 40% or more. The raw and adjusted points, original score and surplus stay intact. Contender, Team Fit, Even, unavailable results and Blockbuster are unchanged. The tooltip discloses when a letter was capped.
+
+Historical audit: 9 of 34 graded trades changed (16 letters), cutting A/F pairs from 10 to 5. Wisconsin–Ohio State (`1427749292088516608`) is 2,334 raw points, or 21.2% of the 11,017-point snapshot leader. Rebuild changes from A/F to B/D at the same 1,557–777 points. No historical graded trade fell below 10%. Synthetic tests cover that band and the exact 10%, 20%, 30% and 40% transitions, and the browser test checks Wisconsin’s rendered letters and values. Local checks: 170 Python passed (10 skipped), 29 Node passed, fresh menu rebuild, and regenerated report verified to change only 16 letters and their tooltips across nine cards.
 
 ### Menu and CI review recheck
 
