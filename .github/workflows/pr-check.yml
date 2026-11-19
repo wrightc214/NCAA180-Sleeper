@@ -1,0 +1,43 @@
+name: PR validation (read-only)
+on: pull_request
+permissions:
+  contents: read
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements.txt pytest
+      - name: Check the committed menu is current
+        run: |
+          python3 scripts/menu_build.py
+          git diff --exit-code -- reports/assets/menu.js
+      - name: Python tests
+        run: python3 -m pytest -q tests
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: JavaScript tests
+        run: |
+          for file in tests/*.test.js; do node "$file" || exit; done
+      - name: Generate transactions page
+        run: |
+          python3 scripts/transactions_page.py
+          test -s reports/transactions.html
+      - name: Install Chromium for browser smoke checks
+        run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Browser smoke checks (desktop light, mobile dark)
+        run: python tests/transactions_browser.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: transactions-preview
+          path: |
+            reports/transactions.html
+            work/transactions-preview/*.png
+          if-no-files-found: ignore

@@ -1,0 +1,143 @@
+{
+  "transactions": {
+    "_note": "Trade valuation and display. grade_bands are descending [adjusted share percent, label] pairs. blockbuster_min_multiple and blockbuster_min_headliner_share are inclusive ratios to the snapshot leader. proxy_pick_slot sets the K/DST proxy and swap anchor. surplus_swap_max_relative_error is the maximum fractional swap error. draft_slots_per_round is the field size. draft_tier_anchors is the early/mid/late pivot triplet on a 12-slot reference scale, rescaled for other field sizes. movement_types lists Sleeper transaction types counted in weekly adds/drops, excluding trades.",
+    "consolidation": {
+      "_note": "asset-concentration discounts spread-out dynasty value only. Use none for raw dynasty grades. The rate is the fraction of the spread penalty applied (0–1). Contender always uses raw values until a separate rate is approved.",
+      "method": "asset-concentration",
+      "dynasty_concentration_rate": 0.60
+    },
+    "rebuild_grade_caps_note": "Display-only Rebuild caps, first matching row wins. Each row is [exclusive upper percent of snapshot leader, lowest label, highest label], using the combined raw dynasty total including K/DST proxies. Omit a higher band to leave it uncapped. Use [] to disable. Even and unavailable are unchanged.",
+    "rebuild_grade_caps": [[10, "C-", "C+"], [20, "D+", "B-"], [30, "D", "B"], [40, "D-", "B+"]],
+    "grade_bands": [
+      [
+        60,
+        "A"
+      ],
+      [
+        55,
+        "B+"
+      ],
+      [
+        52,
+        "B"
+      ],
+      [
+        48,
+        "Even"
+      ],
+      [
+        45,
+        "C"
+      ],
+      [
+        40,
+        "D"
+      ],
+      [
+        0,
+        "F"
+      ]
+    ],
+    "blockbuster_min_multiple": 1.4,
+    "blockbuster_min_headliner_share": 0.6,
+    "proxy_pick_slot": "4.12",
+    "surplus_swap_max_relative_error": 0.25,
+    "draft_slots_per_round": 12,
+    "draft_tier_anchors": [
+      2,
+      6,
+      10
+    ],
+    "movement_types": [
+      "free_agent",
+      "waiver",
+      "commissioner"
+    ],
+    "labels": {
+      "_note": "Public headings and valuation labels. Plain text only.",
+      "rebuild": "Rebuild",
+      "contender": "Contender",
+      "blockbuster": "Blockbuster",
+      "surplus": "Dynasty surplus",
+      "team_fit": "Team Fit",
+      "evaluation": "Trade evaluation",
+      "trades": "Trades",
+      "movement": "Player movement",
+      "summary": "Season summary",
+      "receives": "Receives",
+      "most_added": "Most added",
+      "most_dropped": "Most dropped",
+      "team": "Team",
+      "pick": "Pick",
+      "pick_swap": "Pick swap",
+      "trades_by_week": "Trades by week"
+    }
+  },
+  "fantasycalc": {
+    "_note": "Public FantasyCalc request settings. dynasty, num_qbs, num_teams and ppr must match the scoring format. timeout_seconds sets the request timeout. minimum_player_rows prevents incomplete responses from overwriting snapshots.",
+    "url": "https://api.fantasycalc.com/values/current",
+    "dynasty": true,
+    "num_qbs": 1,
+    "num_teams": 12,
+    "ppr": 1,
+    "timeout_seconds": 30,
+    "minimum_player_rows": 100
+  },
+  "team_fit": {
+    "_note": "Historical Team Fit is separate from market price. Only verified archived pre-trade data is used. Scores describe a modeled goal, not observed manager intent.",
+    "_scale_note": "meaningful_*_points set the size of one fit unit. score_points_per_unit converts one unit to score points around neutral 50.",
+    "_situation_note": "record_weight blends win fraction with the existing contender index. Available odds from odds_first_week blend in at playoff_context_weight. An eligible bowl chance matters less than playoff odds via bowl_weight. win_now_ceiling preserves some future weight for contenders.",
+    "_rebuild_note": "Below rebuild_max_weight treat picks as flexible capital with pick_flexibility as a proportional utility allowance, not a market price. Rebuild starter coverage adds rebuild_starter_weight of capped above-floor future starter capacity. With net new pick capital, don't assume lost starter capacity goes unfilled. Pre-deadline negative lineup impact fades from fully waived at rebuild_lineup_no_weight_at to fully counted at rebuild_lineup_full_weight_at, through the configured deadline week only.",
+    "_age_note": "For each horizon, age_curves entries are [gradual onset age, annual gradual decline, steep onset age, annual steep decline]. Discount only newly elapsed time above each onset. Missing birth date leaves the market value flat, not guessed.",
+    "_specialist_note": "Known K/DST without market prices use the historical proxy. Starting coverage uses specialist_lookback_weeks of prior scores, scaled to specialist_target_ppg. specialist_needs_points determines how much that scarce slot matters to fit. No future injury or starter data is used.",
+    "meaningful_lineup_points": 6500,
+    "meaningful_future_points": 4500,
+    "score_points_per_unit": 20,
+    "record_weight": 0.7,
+    "playoff_context_weight": 0.25,
+    "bowl_weight": 0.15,
+    "odds_first_week": 8,
+    "win_now_ceiling": 0.7,
+    "rebuild_lineup_grace_through_week": 10,
+    "rebuild_lineup_full_weight_at": 0.48,
+    "rebuild_lineup_no_weight_at": 0.28,
+    "rebuild_starter_weight": 0.9,
+    "future_starter_floor": 1300,
+    "future_starter_cap": 4500,
+    "rebuild_max_weight": 0.38,
+    "growth_horizon_years": [
+      1,
+      2
+    ],
+    "pick_flexibility": 0.42,
+    "specialist_lookback_weeks": 4,
+    "specialist_target_ppg": 8,
+    "specialist_needs_points": 2600,
+    "age_curves": {
+      "QB": [
+        31,
+        0.07,
+        35,
+        0.2
+      ],
+      "RB": [
+        27.5,
+        0.15,
+        30.5,
+        0.4
+      ],
+      "WR": [
+        28,
+        0.1,
+        31,
+        0.28
+      ],
+      "TE": [
+        29,
+        0.09,
+        32,
+        0.25
+      ]
+    }
+  }
+}

@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       script_to_run:
-        description: 'Script to run (league_ids, rosters, users, rosterhistory, matchups, scores, standard_scores, max_points, weekly_awards, players, transactions, drafts, standings, orphans, lineup_streaks, push_teams, app_page, push_announce, game_settle, player_values, draft_picks, weekly_report, roster_map, poll, poll_page, matchups_page, gametime_projections, manager_lineups, managers_page, records_page, standings_page, postseason_export, guillotine, special_page, postseason_page, league_staff, about_page, bowl_projection, bowl_projection_publish, game_of_the_week, scoreboard, conference_championships, selection_watch, playoff_field, playoff_bracket, playoff_publish, bowls, bowls_publish, bowls_redraw, nit, nit_publish, nit_redraw, patch_orphans, all). Postseason scripts are manual only (except conference_championships, which runs in all).'
+        description: 'Script to run (league_ids, rosters, users, rosterhistory, matchups, scores, standard_scores, max_points, weekly_awards, players, transactions, drafts, standings, orphans, lineup_streaks, push_teams, app_page, push_announce, game_settle, player_values, transactions_page, draft_picks, weekly_report, roster_map, poll, poll_page, matchups_page, gametime_projections, manager_lineups, managers_page, records_page, standings_page, postseason_export, guillotine, special_page, postseason_page, league_staff, about_page, bowl_projection, bowl_projection_publish, game_of_the_week, scoreboard, conference_championships, selection_watch, playoff_field, playoff_bracket, playoff_publish, bowls, bowls_publish, bowls_redraw, nit, nit_publish, nit_redraw, patch_orphans, all). Postseason scripts are manual only (except conference_championships, which runs in all).'
         required: true
         default: 'all'
       post:
@@ -97,6 +97,7 @@ jobs:
               fi
           }
 
+          FIT_CAPTURE_STARTED_MS="$(date +%s%3N)"
           run league_ids            league_ids.py            all
           run rosters               rosters.py               all
           run matchups              league_matchups.py       all
@@ -123,6 +124,16 @@ jobs:
           run player_values         player_values.py         all
           run draft_picks           draft_picks.py           all
           run roster_map            roster_map.py            all
+          # Capture a coherent observation only when its inputs succeeded this run.
+          if [ "$SCRIPT_TO_RUN" = "all" ] && [ -z "$BLOCKED" ]; then
+              if [[ "$FAILED" =~ (^|[[:space:]])(league_ids|rosters|transactions|scores|player_values|draft_picks|roster_map)([[:space:]]|$) ]]; then
+                  echo "::warning::Team Fit capture skipped because an input failed"
+              else
+                  run trade_fit "trade_fit_update.py --capture-start-ms $FIT_CAPTURE_STARTED_MS" all
+              fi
+          fi
+          # Static-only. A standalone page build reads stored grades and never writes them.
+          run transactions_page    transactions_page.py    all
           run poll                poll_aggregate.py        all
           run poll_page           poll_page.py             all
           # Bowl projection (page + data only; images in a later step). Weeks from_week..last regular week.
@@ -322,6 +333,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/*.csv
+          git add data/trade-fit 2>/dev/null || true
           git add data/OrphanCard_Current.json 2>/dev/null || true
           git add data/scoreboard 2>/dev/null || true
           git add data/postseason_drafts 2>/dev/null || true

@@ -11,11 +11,29 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+TRANSACTIONS_CONFIG = ROOT / "config" / "transactions.json"
 
 
 @functools.lru_cache(maxsize=None)
 def cfg():
     return json.loads((ROOT / "config" / "league.json").read_text(encoding="utf-8"))
+
+
+@functools.lru_cache(maxsize=None)
+def _transactions_cfg(path):
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return {}
+
+
+def transaction_settings(name, defaults, overrides=None):
+    """Resolve a section of config/transactions.json with nested per-key defaults."""
+    def merge(base, values):
+        values = values if isinstance(values, dict) else {}
+        return {key: merge(default, values.get(key)) if isinstance(default, dict)
+                else values.get(key, default) for key, default in base.items()}
+    return merge(merge(defaults, _transactions_cfg(TRANSACTIONS_CONFIG).get(name)), overrides)
 
 
 def brand():
