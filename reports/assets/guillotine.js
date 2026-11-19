@@ -52,10 +52,10 @@
   function rules(){
     const n=gd.entrants||gd.teams.length;
     return `<details class="gl-rules"><summary>How it works</summary><ul>
-      <li>All ${n} teams play ${esc(wkName(gd.first_week))} through ${esc(wkName(gd.last_week))}, on top of any playoff, bowl or NIT game. No extra lineup work.</li>
+      <li>All ${n} teams play ${esc(wkName(gd.first_week,true))} through ${esc(wkName(gd.last_week,true))}, on top of any playoff, bowl or NIT game. No extra lineup work.</li>
       <li>Each week only that week's score counts (standard scoring). Half of the teams still alive survive, rounded down: ${n} → ${Math.floor(n/2)} → ${Math.floor(n/4)} → ${Math.floor(n/8)} → ${Math.floor(n/16)} → 1.</li>
       <li>Ties at the cut line all survive, like a golf cut. The next week's cut is half of whoever is left.</li>
-      <li>${esc(wkName(gd.last_week))}: the top score wins. An exact tie goes to ${esc(wkName(gd.tiebreak_week))}'s score, then co-champions.</li>
+      <li>${esc(wkName(gd.last_week,true))}: the top score wins. An exact tie goes to ${esc(wkName(gd.tiebreak_week,true))}'s score, then co-champions.</li>
       <li>Stat corrections can only add survivors; nobody already through is removed.</li>
       <li><b>% to survive</b> = chance of finishing above the cut, from live projections (points so far + projection × time left) and the same uncertainty as the Games page. Estimates, unofficial while games are live.</li></ul></details>`;
   }
@@ -126,7 +126,7 @@
     const lg=$('gl-logo'),src=logoFor(gd.status==='upcoming'&&!frozen(week)&&!baseline?null:week);
     if(lg&&src&&lg.getAttribute('src')!==src){lg.setAttribute('src',src);lg.alt=`${gd.name} · ${wkName(week)}`;}
     let body=champBanner()+weekNav();
-    if(gd.status==='upcoming'&&!baseline)body+=`<p class="gl-state">Starts ${esc(wkName(gd.first_week))}: all ${gd.entrants} teams. Projections appear here once that week's postseason games are set.</p>`;
+    if(gd.status==='upcoming'&&!baseline)body+=`<p class="gl-state">Starts ${esc(wkName(gd.first_week,true))}: all ${gd.entrants} teams. Projections appear here once that week's postseason games are set.</p>`;
     if(frozen(week))body+=frozenView(week);else if(week===liveWeek())body+=liveView();
     body+=outList()+rules();
     $('board').innerHTML=body;

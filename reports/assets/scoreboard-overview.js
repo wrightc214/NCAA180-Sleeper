@@ -30,7 +30,7 @@
       out.push({post:g,id:match[0].leagueId,match,s});}
     return out;}
   let lastGames={},lastStats={};
-  const title=()=>{document.querySelector('h1').innerHTML=`${esc(cfg.brand||'')} <em>${week===ccgW()?'Conference Championships':`${wkName(week)} Games`}</em>`;};
+  const title=()=>{document.querySelector('h1').innerHTML=`${esc(cfg.brand||'')} <em>${week===ccgW()?'Conference Championships':week>=Number(cfg.schedule.postseason_start_week)?esc(wkName(week)):`${wkName(week)} Games`}</em>`;};
   async function get(url,signal){
     const abort=new AbortController(),cancel=()=>abort.abort();
     signal?.addEventListener('abort',cancel,{once:true});

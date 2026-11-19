@@ -40,7 +40,7 @@ class MenuBrowser(unittest.TestCase):
 
     def tabs(self, pg):
         return pg.eval_on_selector_all('nav.weeks[aria-label="Pages"] a',
-                                       "as => as.map(a => [a.textContent.trim() || 'bell', a.hasAttribute('aria-current')])")
+                                       "as => as.map(a => [a.getAttribute('aria-label') || a.textContent.trim(), a.hasAttribute('aria-current')])")
 
     def test_main_tabs_on_key_pages(self):
         for name, lit in (("scoreboard.html", "Games"), ("standings.html", "Standings"),
@@ -49,9 +49,11 @@ class MenuBrowser(unittest.TestCase):
                 pg = self.page(name)
                 t = self.tabs(pg)
                 self.assertEqual([x[0] for x in t][:3], ["Awards", "Roster Map", "Standings"])
-                self.assertEqual(t[-1][0], "bell")
+                self.assertEqual(t[-1][0], "Notification settings")
                 self.assertEqual([x[0] for x in t if x[1]], [lit])
-                self.assertEqual([x[0] for x in t][-3:], ["Records", "About", "bell"])  # About public since #106
+                self.assertEqual([x[0] for x in t][-3:], ["Records", "About", "Notification settings"])  # About public since #106
+                icons = pg.eval_on_selector_all('nav.weeks[aria-label="Pages"] a.n180-icon', "as => as.map(a => [a.getAttribute('aria-label'), a.textContent.trim(), !!a.querySelector('svg')])")
+                self.assertEqual(icons, [["About", "", True], ["Notification settings", "", True]])  # icon-only tabs (Accessibility is hidden-dev)
                 self.assertEqual(self.errors, [])
                 pg.close()
 

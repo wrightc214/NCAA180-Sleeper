@@ -914,10 +914,10 @@
           "CCG"
         ],
         "post": [
-          "Week {n}",
+          "Week {n} · Postseason Week {p}",
           "Wk {n}"
         ],
-        "_note": "[long, short] per phase. {n} = NFL week (what Sleeper shows), {p} = postseason week (1 = postseason_start_week). Chris 2026-11-17: postseason shows the NFL week, e.g. Week 13.",
+        "_note": "[long, short] per phase. {n} = NFL week (what Sleeper shows), {p} = postseason week (1 = postseason_start_week). Chris 2026-11-19: postseason long label leads with the NFL week (what Sleeper shows), then the postseason week, e.g. \"Week 13 · Postseason Week 1\"; short label stays the NFL week. CCG Week is its own week (postseason week zero) and keeps its own label.",
         "hide_weeks": [
           18
         ]

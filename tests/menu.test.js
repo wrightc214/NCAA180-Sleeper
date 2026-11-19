@@ -25,6 +25,7 @@ const DATA = {
     {id: 'standings', label: 'Standings', href: 'standings.html'},
     {id: 'poll', label: 'Poll', href: 'poll.html', aliases: ['poll-how', 'poll-bots']},
     {id: 'watch', label: 'Selection Watch', href: 'selection-watch.html', state: 'hidden-dev'},
+    {id: 'access', label: 'Accessibility', href: 'access.html', state: 'hidden-dev', icon: 'accessibility'},
     {id: 'app', label: 'Notification settings', href: 'app.html', icon: 'bell'},
   ],
   rows: {
@@ -96,3 +97,10 @@ test('generated reports/assets/menu.js parses and excludes fully hidden tabs', (
   assert.ok(tabs.some(t => t.id === 'access' && t.state === 'hidden-dev'), 'Accessibility remains developer-only');
 });
 
+test('built-in icons: named glyphs are icon-only tabs; image paths are not', () => {
+  const dev = M.mainModel('awards', true);
+  assert.strictEqual(dev.find((t) => t.label === 'Accessibility').glyph, 'accessibility');
+  assert.strictEqual(dev.find((t) => t.label === 'Notification settings').glyph, 'bell');
+  assert.strictEqual(dev.find((t) => t.label === 'Awards').glyph, null);
+  assert.ok(!M.mainModel('awards', false).some((t) => t.label === 'Accessibility'));
+});
