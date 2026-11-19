@@ -523,5 +523,5 @@ def test_ccg_week_uses_shared_labels_in_card_selectors_and_summary(monkeypatch, 
     assert re.search(r'<div class="tx-head">[^<]* · CCG Week · ', rendered)
     for selector in ("tx-week", "tx-move-week"):
         options = re.search(fr'<select id="{selector}">(.*?)</select>', rendered, re.S).group(1)
-        assert re.search(fr'<option value="{ccg_week}"(?: selected)?>CCG Week</option>', options)
+        assert re.search(fr'<option value="{ccg_week}"(?: selected)?>CCG</option>', options)
     assert '<h3>Trades by week</h3><div class="tx-bar"><span>CCG Week</span>' in rendered

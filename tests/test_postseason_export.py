@@ -11,8 +11,8 @@ class Display(unittest.TestCase):
     def test_week_labels(self):
         self.assertEqual(pe.week_label(5), ("Week 5", "Wk 5"))
         self.assertEqual(pe.week_label(12), ("CCG Week", "CCG"))
-        self.assertEqual(pe.week_label(13), ("Week 13 · Postseason Week 1", "Wk 13"))
-        self.assertEqual(pe.week_label(17), ("Week 17 · Postseason Week 5", "Wk 17"))
+        self.assertEqual(pe.week_label(13), ("Week 13 · Postseason Week 1", "Wk 13 · PS1"))
+        self.assertEqual(pe.week_label(17), ("Week 17 · Postseason Week 5", "Wk 17 · PS5"))
 
     def test_bowl_tiers_count_back(self):
         self.assertEqual(pe.bowl_tiers({13, 14}), {14: "Prestige Bowls", 13: "Marquee Bowls"})

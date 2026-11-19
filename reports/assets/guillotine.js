@@ -52,7 +52,7 @@
   function rules(){
     const n=gd.entrants||gd.teams.length;
     return `<details class="gl-rules"><summary>How it works</summary><ul>
-      <li>All ${n} teams play ${esc(wkName(gd.first_week,true))} through ${esc(wkName(gd.last_week,true))}, on top of any playoff, bowl or NIT game. No extra lineup work.</li>
+      <li>All ${n} teams play Rounds 1–${gd.last_week-gd.first_week+1} (${esc(wkName(gd.first_week,true))} – ${esc(wkName(gd.last_week,true))}), on top of any playoff, bowl or NIT game. No extra lineup work.</li>
       <li>Each week only that week's score counts (standard scoring). Half of the teams still alive survive, rounded down: ${n} → ${Math.floor(n/2)} → ${Math.floor(n/4)} → ${Math.floor(n/8)} → ${Math.floor(n/16)} → 1.</li>
       <li>Ties at the cut line all survive, like a golf cut. The next week's cut is half of whoever is left.</li>
       <li>${esc(wkName(gd.last_week,true))}: the top score wins. An exact tie goes to ${esc(wkName(gd.tiebreak_week,true))}'s score, then co-champions.</li>
