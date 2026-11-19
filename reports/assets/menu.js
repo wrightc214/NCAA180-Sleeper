@@ -90,7 +90,7 @@ function createNCAA180Accessibility() {
   // OKLab blend (sRGB hex in, rgb() out).
   function hexRgb(h) {
     h = String(h).trim().replace(/^#/, "");
-    if (h.length === 3) h = h.replace(/./g, "/*__ACCESSIBILITY__*//*__ACCESSIBILITY__*/");
+    if (h.length === 3) h = h.replace(/./g, "h.replace(/./g, "/*__ACCESSIBILITY__*//*__ACCESSIBILITY__*/")h.replace(/./g, "/*__ACCESSIBILITY__*//*__ACCESSIBILITY__*/")");
     var n = parseInt(h, 16);
     return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
   }
