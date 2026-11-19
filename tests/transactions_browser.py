@@ -3,6 +3,7 @@
 Called explicitly by PR CI after generating reports/transactions.html.
 No network calls or production deployment.
 """
+from csv import DictReader
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -14,6 +15,8 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def main():
+    with (ROOT / "data" / "Teams.csv").open(encoding="utf-8-sig", newline="") as file:
+        pac_teams = sorted({r["Team"].strip() for r in DictReader(file) if r["League"].strip() == "NCAA PAC 12"})
     handler = partial(SimpleHTTPRequestHandler, directory=str(ROOT))
     server = ThreadingHTTPServer(("127.0.0.1", 0), handler)
     thread = Thread(target=server.serve_forever, daemon=True)
@@ -44,11 +47,27 @@ def main():
                 assert page.locator("section.fold").count() == 3
                 assert page.locator("section.fold .snap-btn").count() == 3
                 page.evaluate("(theme) => document.documentElement.setAttribute('data-theme', theme)", theme)
+                explainer = page.locator("details.tx-explainer")
+                toggle = explainer.get_by_text("How trade grades work", exact=True)
+                explanation = explainer.locator(".tx-note")
+                assert toggle.is_visible()
+                assert explainer.get_attribute("open") is None
+                assert not explanation.is_visible()
+                if width == 390:
+                    toggle.click()
+                else:
+                    toggle.focus()
+                    page.keyboard.press("Enter")
+                assert explanation.is_visible()
+                assert "FantasyCalc" in explanation.inner_text()
+                toggle.click()
+                assert not explanation.is_visible()
                 assert page.locator("[data-score]").count() > 0
                 assert page.locator('.tx-fit strong[aria-label="Team Fit unavailable"]').first.text_content() == "-"
                 fit_card = page.locator(".tx-card").filter(has_text="1425957598431035392")
                 fits = fit_card.locator(".tx-fit")
                 assert fits.locator("strong").all_text_contents() == ["Even", "A"]
+                assert fits.locator(".tx-side-value > small").count() == 0
                 disclosure = fits.get_by_text("Fit details", exact=True).first
                 disclosure.click()
                 assert fits.get_by_text("Projected hold comparison:", exact=False).first.is_visible()
@@ -82,6 +101,21 @@ def main():
                 contender = boston_miami.locator(".tx-grade").filter(has_text="Contender value")
                 assert contender.locator("strong").all_text_contents() == ["C-", "C+"]
                 assert contender.locator("small").all_text_contents() == ["0 pts", "128 pts"]
+                assert oregon.locator(".tx-pos").all_text_contents() == ["RB", "K", "RB", "WR"]
+                assert oregon.locator(".tx-pos-k").evaluate("el => getComputedStyle(el).backgroundColor") == "rgb(201, 184, 242)"
+                assert oregon.locator(".tx-pick .tx-pos").count() == 0
+                asu_oregon_fit = oregon.locator(".tx-fit strong")
+                market = oregon.locator(".tx-grade").filter(has_text="Contender value").locator("strong")
+                assert asu_oregon_fit.all_text_contents() == ["B", "B+"]
+                assert float(market.last.get_attribute("data-score")) == 0
+                assert float(market.last.get_attribute("data-color-score")) > 45
+                assert market.last.evaluate(
+                    "el => getComputedStyle(el).color === "
+                    "NCAA180.colors.scale(Number(el.dataset.colorScore) / 100).replaceAll(',', ', ')"
+                )
+                assert asu_oregon_fit.last.evaluate("el => parseFloat(getComputedStyle(el).fontSize)") > (
+                    1.8 * market.last.evaluate("el => parseFloat(getComputedStyle(el).fontSize)")
+                )
                 # Filter to a team on the first trade. Revert filter.
                 first = page.locator(".tx-card").first
                 team = first.get_attribute("data-teams").split("|")[0]
@@ -89,6 +123,25 @@ def main():
                 assert 0 < page.locator(".tx-card:visible").count() <= count
                 page.locator("#tx-team").select_option("")
                 assert page.locator(".tx-card:visible").count() == count
+                conference_filter = page.locator("#tx-conference")
+                team_filter = page.locator("#tx-team")
+                all_teams = team_filter.locator("option").evaluate_all("(os) => os.map(o => o.value)")
+                team_filter.select_option("Oregon")
+                conference_filter.select_option("NCAA PAC 12")
+                assert team_filter.locator("option").evaluate_all("(os) => os.map(o => o.value)") == ["", *pac_teams]
+                assert team_filter.input_value() == "Oregon"  # Still a valid selection.
+                filtered = page.locator(".tx-card:visible")
+                assert filtered.count() > 0
+                assert all("Oregon" in names.split("|") for names in
+                           filtered.evaluate_all("(cards) => cards.map(c => c.dataset.teams)"))
+                conference_filter.select_option("NCAA BIG 10")
+                assert team_filter.input_value() == ""  # Oregon is no longer valid.
+                assert team_filter.locator("option[value=Oregon]").count() == 0
+                assert filtered.count() > 0
+                assert set(filtered.evaluate_all("(cards) => cards.map(c => c.dataset.conference)")) == {"NCAA BIG 10"}
+                conference_filter.select_option("")
+                assert team_filter.locator("option").evaluate_all("(os) => os.map(o => o.value)") == all_teams
+                assert filtered.count() == count
                 # Fold and restore without losing page state.
                 sec = page.locator("section.fold").first
                 sec.locator("h2").click()

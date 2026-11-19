@@ -9,6 +9,7 @@ import datetime as dt
 import html
 import json
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -16,7 +17,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import league_config as lcfg
 import team_names as tn
 from site_common import SECTIONS_JS, logo_html, menu_html, nav_config, page_head, team_colors
-from transactions_grades import cap_market_grade, evaluate_trade, load_config, read_rows
+from transactions_grades import cap_market_grade, evaluate_trade, load_config, number, read_rows
 from trade_fit_store import FileArchive, FitLedger
 from transactions_fit import event_key
 
@@ -47,13 +48,17 @@ CSS = """
 .tx-assets .tx-receives{text-transform:uppercase;letter-spacing:.08em;font-size:11px;font-weight:800;color:var(--mute);margin:0 0 7px}
 .tx-asset{padding:6px 8px;margin:4px 0;border:1px solid var(--line);border-radius:6px;font-weight:600}
 .tx-pick{font-size:.95em}
+.tx-pos{display:inline-block;vertical-align:baseline;padding:1px 4px;margin-inline-end:4px;border-radius:3px;font-size:10px;font-weight:800;line-height:1.2;color:var(--mute);background:var(--bg)}
 .tx-grade{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--line);font-weight:700;font-size:12px}
-.tx-grade strong{font:bold 20px var(--num,sans-serif);color:var(--neutral)}
+.tx-grade strong{font:bold 15px var(--num,sans-serif);color:var(--neutral)}
 .tx-grade .tx-side-value{min-width:0;text-align:center}
 .tx-grade .tx-side-value small{display:block;font-size:11px;color:var(--mute);font-variant-numeric:tabular-nums}
 .tx-grade strong[data-score]{color:var(--neutral)}
 .tx-center{text-align:center;display:flex;flex-direction:column;justify-content:center;gap:6px}
-.tx-grade.tx-fit strong{font-size:25px}
+.tx-grade:not(.tx-fit)>span:nth-child(2){font-weight:600;color:var(--mute)}
+.tx-grade.tx-fit{padding:10px 8px;background:var(--bg);border:1px solid var(--line);border-radius:8px}
+.tx-grade.tx-fit strong{font-size:32px;font-weight:900;line-height:1.1}
+.tx-grade.tx-fit>span:nth-child(2){font-size:14px;font-weight:800;color:var(--ink)}
 .tx-fit details{font-size:10px;font-weight:500;color:var(--mute)}
 .tx-fit summary{cursor:pointer}
 .tx-center h3{font-size:12px;letter-spacing:.07em;text-transform:uppercase;margin:0}
@@ -64,6 +69,9 @@ CSS = """
 .tx-surplus{margin:8px;padding:9px 11px;border:1px solid var(--good);border-radius:9px;font-weight:800;color:var(--good);text-align:center;font-size:12px}
 .tx-surplus small{font-size:11px;font-weight:600}
 .tx-note{font-size:12px;color:var(--mute);margin:6px 0}
+.tx-explainer{margin:0 0 10px}
+.tx-explainer>summary{display:list-item;width:fit-content;max-width:100%;padding:6px 0;cursor:pointer;color:var(--ink);font-size:12px;font-weight:700;text-decoration:underline;text-underline-offset:2px}
+.tx-explainer>summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .tx-movement{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 .tx-move{padding:9px 0;border-bottom:1px solid var(--line);font-size:13px}
 .tx-move strong{font-size:14px}
@@ -176,19 +184,56 @@ def render_team(team, colors):
     return f'<div class="tx-team" style="--team-bg:{esc(bg)};--team-ink:{esc(fg)}">{logo}<span>{esc(team)}</span></div>'
 
 
+def position_badge_css(palette):
+    """Validate palette values before embedding them into the page stylesheet."""
+    def is_hex(value):
+        return isinstance(value, str) and re.fullmatch(r"#[0-9a-fA-F]{6}", value)
+
+    if not isinstance(palette, dict):
+        return ""
+    ink = palette.get("ink")
+    ink = ink if is_hex(ink) else "#14213a"
+    backgrounds = palette.get("backgrounds")
+    if not isinstance(backgrounds, dict):
+        return ""
+    return "".join(f'.tx-pos-{position.lower()}{{background:{color};color:{ink}}}'
+                   for position, color in backgrounds.items()
+                   if re.fullmatch(r"[A-Z][A-Z0-9]*", position) and is_hex(color))
+
+
+def render_position(position):
+    label = str(position).strip()
+    if not label:
+        return ""
+    key = label.upper()
+    key = {"FB": "RB", "PK": "K", "DST": "DEF", "D/ST": "DEF"}.get(key, key)
+    css = f" tx-pos-{key.lower()}" if re.fullmatch(r"[A-Z][A-Z0-9]*", key) else ""
+    return f'<span class="tx-pos{css}">{esc(label)}</span> '
+
+
 def render_assets(assets, proxies=None, proxy_slot=None):
     if not assets:
         return '<p class="tx-muted">No assets recorded</p>'
     proxies = proxies or {}
     return "".join(f'<div class="tx-asset{" tx-pick" if a["kind"] == "pick" else ""}">'
-                   + (f'<span class="tx-muted">{esc(a["position"])} · </span>' if a.get("position") else "")
+                   + (render_position(a["position"]) if a["kind"] == "player" and a.get("position") else "")
                    + esc(a["label"])
                    + (f'<small class="tx-muted"> · +{proxies[a["id"]]:,.0f} pts ({esc(proxy_slot)} proxy)</small>'
                       if a.get("id") in proxies else "")
                    + "</div>" for a in assets)
 
 
-def render_grade(g, name, caps=None):
+def market_color_score(score, fit, contender, strength):
+    """Visual emphasis only. Unavailable Team Fit leaves market letters neutral."""
+    weight = (fit or {}).get("fit_weight")
+    if weight is None:
+        return 50.
+    win_now = min(1., max(0., number(weight)))
+    relevance = win_now if contender else 1 - win_now
+    return 50 + (score - 50) * relevance * min(1., max(0., number(strength)))
+
+
+def render_grade(g, name, caps=None, *, color_score=None):
     if not g:
         return '<strong title="Historical valuation unavailable">—</strong>'
     score = g["score"][name]
@@ -203,8 +248,9 @@ def render_grade(g, name, caps=None):
     shown = cap_market_grade(letter, trade_percent, caps)
     if shown != letter:
         points += f" · Grade capped from {letter} ({trade_percent:.1f}% of snapshot leader)"
+    color = f' data-color-score="{color_score:.4f}"' if color_score is not None else ""
     return (f'<span class="tx-side-value" title="{esc(points)}">'
-            f'<strong data-score="{score:.4f}">{esc(shown)}</strong>'
+            f'<strong data-score="{score:.4f}"{color}>{esc(shown)}</strong>'
             f'<small>{g["adjusted"][name]:,.0f} pts</small></span>')
 
 
@@ -220,7 +266,6 @@ def render_fit(values, pending=False):
     sensitivity = ("<br>Horizon-sensitive: " + esc(" · ".join(f"{years}y {letter}" for years, _, letter in horizons))
                    if len({letter for _, _, letter in horizons}) > 1 else "")
     return (f'<div class="tx-side-value"><strong data-score="{values["score"]:.4f}">{esc(values["letter"])}</strong>'
-            f'<small>{values["score"]:.1f}/100</small>'
             f'<details><summary>Fit details</summary>Lineup {l0:,.0f} → {l1:,.0f}<br>'
             f'Dynasty {d0:,.0f} → {d1:,.0f}<br>Projected hold comparison: {esc(future)}{sensitivity}<br>'
             f'Win-now weight {values["fit_weight"]:.0%} · {esc(values["date"])}</details></div>')
@@ -259,12 +304,19 @@ def trade_card(r, sides, names, colors, result, shorts, config=None, team_fit=No
                 f'<div class="tx-receives">{labels["receives"]}</div>{render_assets(assets, proxies.get(rid), proxy_slot)}</div>{badge}</div>')
     status = result.get("status")
     grade_rows = ""
-    for key, label, caps in ((dyn, labels["rebuild"], settings["rebuild_grade_caps"]),
-                             (con, labels["contender"], settings["contender_grade_caps"])):
-        note = " · No measurable value" if key and key["score"][ids[0]] is None else ""
-        grade_rows += (f'<div class="tx-grade">{render_grade(key, ids[0], caps)}<span>{label} value{note}</span>'
-                       f'{render_grade(key, ids[1], caps)}</div>')
     team_fit = team_fit or {}
+    for contender, key, label, caps in (
+        (False, dyn, labels["rebuild"], settings["rebuild_grade_caps"]),
+        (True, con, labels["contender"], settings["contender_grade_caps"]),
+    ):
+        note = " · No measurable value" if key and key["score"][ids[0]] is None else ""
+        rendered = []
+        for rid in ids:
+            score = key["score"][rid] if key else None
+            color = (market_color_score(score, team_fit.get(rid), contender, settings["market_grade_color_strength"])
+                     if score is not None else None)
+            rendered.append(render_grade(key, rid, caps, color_score=color))
+        grade_rows += f'<div class="tx-grade">{rendered[0]}<span>{label} value{note}</span>{rendered[1]}</div>'
     fit = (f'<div class="tx-grade tx-fit">{render_fit(team_fit.get(ids[0]), fit_pending)}'
            f'<span>{labels["team_fit"]}</span>{render_fit(team_fit.get(ids[1]), fit_pending)}</div>')
     missing_label = ("No values from that week" if not result.get("player_date")
@@ -353,6 +405,9 @@ def main():
             for r in m[kind]:
                 r["_type"] = kind
     summ_lg, summ_wk = summary(trades)
+    teams_by_conference = collections.defaultdict(set)
+    for (conference, _), name in names.items():
+        teams_by_conference[conference].add(name)
     filters = (f'<div class="tx-controls"><label>{esc(lcfg.term(cap=True))}<select id="tx-conference">'
                f'<option value="">All {esc(units)}</option>' +
                ''.join(f'<option value="{esc(k)}">{esc(short.get(k, k))}</option>' for k in lg) +
@@ -374,8 +429,10 @@ def main():
 <h1>{esc(lcfg.brand())} <em>{esc(page_label)}</em></h1></div></header>
 <section><h2>{labels["trades"]} <small>({len(cards)})</small></h2>
 {filters}
+<details class="tx-explainer"><summary>{labels["grade_explainer"]}</summary>
 <p class="tx-note">Grades use FantasyCalc values available at trade time — not a verdict.
-{labels["rebuild"]} includes rookie picks and can discount value spread across assets. For smaller trades, displayed grade ranges narrow based on combined raw value relative to the snapshot leader for that grade. Point totals don’t change. {labels["contender"]} uses raw rest-of-season values and values traded picks at zero. Unlisted kickers and D/ST use a {esc(grading_config["proxy_pick_slot"])} proxy in both grades. Surplus pick comparisons use the upcoming draft at trade time. {labels["blockbuster"]} marks a large raw dynasty deal with a high-value player, both measured against the snapshot’s top player. It does not indicate a winner. {labels["team_fit"]} compares lineup gains and future value versus holding for each team. A hyphen means evidence is missing or an after-trade snapshot is still pending. Projected wins and before/after odds are unavailable.</p>
+{labels["rebuild"]} includes rookie picks and can discount value spread across assets. For smaller trades, displayed grade ranges narrow based on combined raw value relative to the snapshot leader for that grade. Point totals don’t change. {labels["contender"]} uses raw rest-of-season values and values traded picks at zero. Unlisted kickers and D/ST use a {esc(grading_config["proxy_pick_slot"])} proxy in both grades. Surplus pick comparisons use the upcoming draft at trade time. {labels["blockbuster"]} marks a large raw dynasty deal with a high-value player, both measured against the snapshot’s top player. It does not indicate a winner. {labels["team_fit"]} compares lineup gains and future value versus holding for each team. It is the primary grade. The two market grades use quieter colors based on each team’s win-now weight, without changing their letters or points. A hyphen means evidence is missing or an after-trade snapshot is still pending. Projected wins and before/after odds are unavailable.</p>
+</details>
 <div class="tx-cards" id="tx-trades">{''.join(cards)}</div>
 <p class="tx-empty" id="tx-no-trades" hidden>No trades match these filters.</p>
 <p class="tx-note">{covered} of {len(cards)} trades have a {labels["rebuild"]} grade under the historical valuation rules.</p>
@@ -396,11 +453,22 @@ trades excluded. Ownership and availability are from the current roster snapshot
   'use strict';
   const m = __MOVEMENT__;
   const labels = __LABELS__;
+  const teamsByConference = __TEAMS_BY_CONFERENCE__;
   const [unit, units] = __UNIT_WORDS__;
   const cards = [...document.querySelectorAll('#tx-trades .tx-card')];
   const conference = document.getElementById('tx-conference');
   const week = document.getElementById('tx-week');
   const team = document.getElementById('tx-team');
+  const allTeamOptions = [...team.options];
+  function updateTeams(){
+    const previous = team.value;
+    const members = new Set(teamsByConference[conference.value] || []);
+    const options = conference.value
+      ? allTeamOptions.filter(option => !option.value || members.has(option.value))
+      : allTeamOptions;
+    team.replaceChildren(...options);
+    team.value = options.some(option => option.value === previous) ? previous : '';
+  }
   function filter(){
     let count = 0;
     for(const c of cards){
@@ -411,7 +479,10 @@ trades excluded. Ownership and availability are from the current roster snapshot
     }
     document.getElementById('tx-no-trades').hidden = !!count;
   }
-  [conference,week,team].forEach(el => el.addEventListener('change',filter));
+  conference.addEventListener('change', () => { updateTeams(); filter(); });
+  [week,team].forEach(el => el.addEventListener('change',filter));
+  updateTeams();
+  filter();
   const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function renderMove(){
     const d = m[document.getElementById('tx-move-week').value] || {adds:[],drops:[]};
@@ -427,12 +498,12 @@ trades excluded. Ownership and availability are from the current roster snapshot
   }
   document.getElementById('tx-move-week').addEventListener('change',renderMove);
   renderMove();
-  // Shared semantic grade scale; colors follow user-selected tokens without depending on
-  // an unimplemented accessibility settings API. Grades and colors use the SAME score.
+  // Paint with the shared theme tokens. Market color scores are display-only;
+  // Team Fit uses the full scale and all actual scores and letters stay intact.
   function paint(){
     for(const el of document.querySelectorAll('[data-score]')){
       const scale = window.NCAA180 && NCAA180.colors && NCAA180.colors.scale;
-      if(scale) el.style.color = scale(Number(el.dataset.score)/100);
+      if(scale) el.style.color = scale(Number(el.dataset.colorScore ?? el.dataset.score)/100);
       else el.style.color = 'var(--neutral)';
     }
   }
@@ -440,6 +511,8 @@ trades excluded. Ownership and availability are from the current roster snapshot
   const observer = new MutationObserver(paint);
   const token = document.getElementById('n180-tokens');
   if(token) observer.observe(token,{childList:true,characterData:true,subtree:true});
+  observer.observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',paint);
   function myTeam(){
     const fn = window.NCAA180 && NCAA180.myTeam;
     if(typeof fn !== 'function') return;
@@ -455,8 +528,11 @@ trades excluded. Ownership and availability are from the current roster snapshot
 </script>"""
     js = js.replace("__MOVEMENT__", json.dumps(mv, ensure_ascii=False).replace("</", "<\\/"))
     js = js.replace("__LABELS__", json.dumps(short, ensure_ascii=False).replace("</", "<\\/"))
+    members = {conference: sorted(teams) for conference, teams in sorted(teams_by_conference.items())}
+    js = js.replace("__TEAMS_BY_CONFERENCE__", json.dumps(members, ensure_ascii=False).replace("</", "<\\/"))
     js = js.replace("__UNIT_WORDS__", json.dumps([unit, units]).replace("</", "<\\/"))
-    html_out = page_head(f"{page_label} — {lcfg.brand()}", CSS) + body + js + SECTIONS_JS + "</body></html>"
+    css = CSS + position_badge_css(lcfg.cfg().get("position_colors"))
+    html_out = page_head(f"{page_label} — {lcfg.brand()}", css) + body + js + SECTIONS_JS + "</body></html>"
     Path(OUT).parent.mkdir(parents=True, exist_ok=True)
     Path(OUT).write_text(html_out, encoding="utf-8")
     print(f"Wrote {OUT}: {len(cards)} trades, {covered} graded, {len(weeks)} weeks, {len(lg)} conferences")
