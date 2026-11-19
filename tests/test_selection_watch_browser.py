@@ -107,7 +107,7 @@ class SelectionWatchBrowser(unittest.TestCase):
                 self.assertEqual(page.locator("#sw-final-ccg tbody tr").count(), 15)
                 self.assertFalse(page.locator("#sw-refresh").is_visible())
                 archive = page.locator("#sw-final")
-                open_sections = archive.locator("details[open]")
+                open_sections = archive.locator("details[open]:not([hidden])")
                 self.assertEqual(open_sections.count(), 3)
                 archive.get_by_role("button", name="Collapse all").click()
                 self.assertEqual(open_sections.count(), 0)
