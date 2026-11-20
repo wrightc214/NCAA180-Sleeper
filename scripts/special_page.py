@@ -81,7 +81,8 @@ def main():
     # Dwight Fight is a separate Special Events sub-page; preserve Guillotine's layout.
     dw_css = """
 .dw-wrap{max-width:1200px;min-width:0}
-.dw-brand{max-width:min(650px,100%);height:auto;display:block;margin:12px auto}
+.dw-hdr{display:block;padding-bottom:10px;border-bottom:3px solid var(--accent);margin-bottom:6px}
+.dw-title{margin:8px 0 0;line-height:0}.dw-title img{display:block;width:100%;max-width:640px;height:auto}
 .dw-bracket{display:grid;grid-template-columns:repeat(var(--dw-rounds),minmax(0,1fr));gap:12px;margin:16px 0}
 .dw-round{min-width:0;display:flex;flex-direction:column;justify-content:space-around;gap:12px}
 .dw-round h2{font-size:15px;margin:0;color:var(--mute)}
@@ -98,6 +99,7 @@ def main():
 .dw-plaque{position:absolute;left:24.6%;top:82.5%;width:50.6%;height:11.1%;display:flex;flex-direction:column;justify-content:center;align-items:center;overflow:hidden;color:#4a260d;text-align:center;font-size:clamp(5px,1vw,10px);line-height:1.1}
 .dw-plaque strong,.dw-plaque span{max-width:100%;white-space:nowrap;display:block;font-size:min(100%,10px);letter-spacing:-.02em}
 .dw-champs{display:flex;flex-wrap:wrap;gap:6px}.dw-champs>div{padding:7px 10px;border:1px solid var(--line);border-radius:5px;background:var(--panel);font-size:13px}
+.dw-champs+h2{margin-top:24px}
 .dw-history{border:1px solid var(--line);margin:10px 0;border-radius:6px;padding:10px}
 .dw-history summary{cursor:pointer;font-weight:700}.dw-past{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
 .dw-past section{min-width:0}.dw-past h3{font-size:13px}.dw-hgame{border:1px solid var(--line);background:var(--panel);padding:7px;border-radius:5px;font-size:12px;margin:5px 0}
@@ -107,15 +109,16 @@ def main():
 """
     dw = c["postseason"].get("dwight_fight", {})
     dw_name = html.escape(dw.get("name", "Dwight Fight"))
+    dw_banner = html.escape("../" + dw["logos"]["banner"].replace(" ", "%20"))
     dw_body = f'''<div class="wrap dw-wrap">
 {menu_html("special", ["special"])}
-<header class="sbh"><div class="eyebrow">{brand} · special events</div><h1>{dw_name}</h1>
-<img id="dw-wordmark" class="dw-brand" alt="{dw_name}"></header>
+<header class="sbh dw-hdr"><div class="eyebrow">{brand} · special events</div>
+<h1 class="dw-title"><img id="dw-banner" src="{dw_banner}" alt="{dw_name}"></h1></header>
 <p id="dw-status" role="status">Loading bracket…</p>
 <div id="dw-trophy" data-src=""></div>
 <div id="dw-main" aria-live="polite"></div>
 <section id="dw-history" aria-label="Dwight Fight history"></section>
-</div><script src="assets/dwight-fight.js" defer></script></body></html>'''
+</div><script src="assets/scoreboard-core.js"></script><script src="assets/dwight-fight.js" defer></script></body></html>'''
     with open("reports/dwight-fight.html", "w", encoding="utf-8") as output:
         output.write(page_head(f"{brand} Dwight Fight", dw_css) + dw_body)
     print("wrote reports/dwight-fight.html")

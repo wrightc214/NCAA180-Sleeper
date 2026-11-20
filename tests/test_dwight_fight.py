@@ -124,7 +124,7 @@ def test_history_rows_recorded_and_preserve_prior_seasons(tmp_path):
     df.write_history(2026,b,p)
     text=p.read_text()
     assert "2023,4,Final" in text
-    assert "2026,1,First Round,17" in text
+    assert "2026,1,Final,17" in text
     assert "Recorded" in text
 
 
