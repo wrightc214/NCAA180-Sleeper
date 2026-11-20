@@ -68,3 +68,13 @@ class Contenders(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class SelectionWatchSubRow(unittest.TestCase):
+    def test_playoffs_page_generator_emits_the_sub_row(self):
+        """The Playoffs page is generated; the CCG / Playoffs row must come from the generator, not a hand edit."""
+        from pathlib import Path
+        import site_common
+        src = (Path(__file__).resolve().parents[1] / "scripts" / "selection_watch_page.py").read_text(encoding="utf-8")
+        self.assertIn('menu_html("selection-watch", rows=("selection-watch",))', src)
+        self.assertIn('data-row="selection-watch"', site_common.menu_html("selection-watch", rows=("selection-watch",)))
