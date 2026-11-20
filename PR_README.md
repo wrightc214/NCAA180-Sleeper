@@ -14,7 +14,8 @@ A new top-level `logos.force` in `config/league.json` maps each team to a file u
 | `data/scoreboard/index.json` | Regenerated. Only `logo_forced` was added; 6 teams have a value. |
 | `reports/assets/scoreboard-overview.js` (team icon on `t.primary`) | `logo_forced` → dark rule → regular. |
 | `reports/assets/guillotine.js` (team icon on `x.primary`) | Same. |
-| `reports/postseason-2019…2025.html`, `reports/transactions.html` | Regenerated pages. Only the forced teams' logos changed, on team-colour blocks (see Acceptance 3). |
+| `reports/transactions.html` | Regenerated. Only North Carolina's logo changed (2 swaps), on team-colour blocks. |
+| `reports/postseason-*.html` | **Deliberately not committed.** 5.13 rebuilds these pages and will pull in this change (Chris, 2026-11-20). |
 | `tests/test_logo_force.py` | New unit tests. |
 | `tests/test_scoreboard_overview_browser.py` | Asserts that the team-colour icons use `logo_forced` and never the regular file for those teams. |
 
@@ -44,9 +45,9 @@ A new top-level `logos.force` in `config/league.json` maps each team to a file u
 
    Browser suites with `RUN_SCOREBOARD_BROWSER_TESTS=1` (overview, scoreboard, postseason scoreboard, guillotine, selection watch): 8 passed, 32 subtests. The overview suite now also checks the forced icons.
 2. **Before/after renders.** `pr-assets/logo-force-light.png` and `pr-assets/logo-force-dark.png` show each team on its own `team_colors` row, light and dark theme.
-3. **Regenerated pages.** Ran `scoreboard_data.py --offline`, `transactions_page.py`, `postseason_page.py`, `poll_page.py`, `records_page.py`, `managers_page.py`, `standings_page.py`, `roster_map.py`, `special_page.py`, `selection_watch_page.py`, `matchups_page.py` and `orphan_card.py`. Only the postseason history pages and transactions changed. A/B check: I generated each changed page with `force` switched off and switched on. The only differences are `<img src>` swaps from `<Team>.png` to `glow-dark/<Team>.png` for the six teams. There were 74 swaps: Clemson 22, North Carolina 12, Purdue 12, Tennessee 11, Oklahoma State 9, Illinois 8. The rest of each page was byte-identical.
-   - **Unrelated drift, not in this PR:** the committed `postseason-20xx.html` files on `main` are stale against their generator. A fresh build also changes `.lo/.hi` colours to `var(--bad)/var(--good)`, and reorders a few 2020 bracket images. To keep this diff to the logo swap, I applied exactly the A/B swaps to the committed files rather than committing full regenerations. The counts match the A/B per page. The next workflow run will bring the drift in on its own.
-   - The offline scoreboard build also rewrote `players.json` and `index.json`'s `metadata_source`/`built_at` (offline mode). I reverted those, and `index.json` differs from `main` only by `logo_forced`.
+3. **Regenerated pages.** Ran `scoreboard_data.py --offline`, `transactions_page.py`, `postseason_page.py`, `poll_page.py`, `records_page.py`, `managers_page.py`, `standings_page.py`, `roster_map.py`, `special_page.py`, `selection_watch_page.py`, `matchups_page.py` and `orphan_card.py`. A/B check (`force` off vs on): the only differences are `<img src>` swaps from `<Team>.png` to `glow-dark/<Team>.png` for the six teams; everything else was byte-identical.
+   - **Committed:** `transactions.html` (2 swaps, North Carolina) and `data/scoreboard/index.json` (`logo_forced` only; the offline build's `players.json` / `built_at` / `metadata_source` changes were reverted).
+   - **Not committed: `postseason-2019…2025.html`.** These would get 72 swaps (Clemson 22, North Carolina 10, Purdue 12, Tennessee 11, Oklahoma State 9, Illinois 8). 5.13 rebuilds these pages and picks the fix up through `logo_html(team, bg=…)`. The committed copies on `main` are also stale against their generator (`.lo/.hi` colours, 2020 image order); that is for 5.13's regeneration, not this PR.
 4. **No broken images.** I crawled all 113 HTML pages under `reports/`. 5,311 local `<img src>` checked (HTML-unescaped, URL-decoded): 0 unresolved. I also checked the 366 logo paths in `data/scoreboard/index.json` (`logo`/`logo_dark`/`logo_forced`): 0 unresolved.
 
 ## Unresolved / for Chris
