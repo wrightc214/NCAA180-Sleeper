@@ -143,7 +143,7 @@ class SelectionWatchBrowser(unittest.TestCase):
                 self.assertIn("UNLV", page.locator(".sw-timeline").inner_text())
                 board_text = page.locator("#sw-final-cut").inner_text()
                 self.assertIn("BID THIEVES", board_text)
-                self.assertIn("Final at-large cut after rank #29", board_text)
+                self.assertIn("Last at-large bid: #29", board_text)
                 self.assertIn("Cut starts at #31 · 1 play-in below", board_text)
                 self.assertNotIn("Georgia Southern", board_text)
                 self.assertNotIn("UTEP", board_text)
@@ -160,7 +160,7 @@ class SelectionWatchBrowser(unittest.TestCase):
                 self.assertIsNone(playin.get_attribute("open"))
                 page.goto(f"http://127.0.0.1:{server.server_port}/reports/selection-watch.html?season=2024")
                 page.locator("#sw-final").wait_for(state="visible")
-                self.assertIn("Final at-large cut after rank #27", page.locator("#sw-final-cut").inner_text())
+                self.assertIn("Last at-large bid: #27", page.locator("#sw-final-cut").inner_text())
                 self.assertIn("Eastern Kentucky", page.locator("#sw-final-playins").inner_text())
                 self.assertIn("Chattanooga", page.locator("#sw-final-playins").inner_text())
                 self.assertNotIn("‡", page.locator("#sw-final").inner_text())
@@ -170,6 +170,15 @@ class SelectionWatchBrowser(unittest.TestCase):
                 self.assertIn("left out by entry error", page.locator('#sw-final-cut [data-at-large="Texas Tech"]').inner_text())
                 self.assertIn("in field by entry error", page.locator('#sw-final-cut [data-at-large="Central Michigan"]').inner_text())
                 self.assertIn("‡ Bracket entry error", cut_text)
+                self.assertIn("Last at-large bid: #25", cut_text)
+                for ranking in (False, True):
+                    if ranking:
+                        page.locator("#sw-final-sort").click()
+                    boundary = page.locator("#sw-final-cut .sw-cut-line").evaluate("""line =>
+                        [line.previousElementSibling, line.nextElementSibling].map(
+                            row => row.querySelector('[data-at-large]').dataset.atLarge)""")
+                    self.assertEqual(boundary, ["Brown", "Central Michigan"] if ranking else ["Central Michigan", "Brown"])
+                self.assertIn("Automatic bid", page.locator('#sw-final-cut [data-at-large="Brown"]').inner_text())
                 self.assertIn("Central Michigan ‡", page.locator("#sw-final-field").inner_text())
                 self.assertEqual(page.evaluate("document.documentElement.scrollWidth - innerWidth"), 0)
                 self.assertTrue(page.evaluate("""() => document.querySelector('.sw-page nav').compareDocumentPosition(
