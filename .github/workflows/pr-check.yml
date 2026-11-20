@@ -47,6 +47,8 @@ jobs:
         run: |
           pip install playwright
           python -m playwright install --with-deps chromium
+      - name: CCG race preview browser acceptance
+        run: RUN_SCOREBOARD_BROWSER_TESTS=1 python3 -m pytest -q tests/test_ccg_race_browser.py
       - name: Browser smoke checks (desktop light, mobile dark)
         run: python tests/transactions_browser.py
       - name: Dwight Fight browser tests
@@ -60,4 +62,5 @@ jobs:
           path: |
             reports/transactions.html
             work/transactions-preview/*.png
+            work/ccg-race-preview/*.png
           if-no-files-found: ignore
