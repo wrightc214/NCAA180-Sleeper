@@ -1,6 +1,8 @@
 """Archive results come from recorded games, not the live selection formula."""
 import json
 import sys
+
+import pytest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -36,5 +38,42 @@ def test_modern_final_steal_labels_are_verified_against_actual_field():
     assert {g["winner"] for g in data["2024"]["ccg"] if g.get("label") == "Stolen"} == {"Jackson State", "UAB"}
     assert {g["winner"] for g in data["2025"]["ccg"] if g.get("label") == "Play-in winner"} == {"Georgia Southern"}
     assert {g["winner"] for g in data["2024"]["ccg"] if g.get("label") == "Play-in winner"} == {"Eastern Kentucky"}
-    for year in ("2019", "2020", "2022"):
+    for year in ("2019", "2020"):
         assert not any(g.get("label") for g in data[year]["ccg"])
+        assert "cut_board" not in data[year]
+
+
+def test_owner_field_exception_restores_2022_board():
+    data = history.build()
+    board = data["2022"]["cut_board"]
+    assert [(x["in"], x["out"]) for x in board["exceptions"]] == [("Central Michigan", "Texas Tech")]
+    assert any(g.get("label") == "Stolen" for g in data["2022"]["ccg"])
+    assert "Central Michigan" in {row["team"] for row in data["2022"]["field"]}
+    assert "Texas Tech" not in {row["team"] for row in data["2022"]["field"]}
+    for year in ("2021", "2023", "2024", "2025"):
+        assert "exceptions" not in data[year]["cut_board"]
+
+
+def _config(tmp_path, exceptions):
+    path = tmp_path / "selection_watch.json"
+    path.write_text(json.dumps({"field_exceptions": exceptions}), encoding="utf-8")
+    return path
+
+
+def test_without_the_exception_2022_has_no_board(tmp_path, monkeypatch):
+    monkeypatch.setattr(history, "CONFIG", _config(tmp_path, {}))
+    data = history.build()
+    assert "cut_board" not in data["2022"]
+    assert not any(g.get("label") for g in data["2022"]["ccg"])
+    assert "cut_board" in data["2025"]
+
+
+@pytest.mark.parametrize("entry", [
+    {"in": "Texas Tech", "out": "Central Michigan", "note": "reversed"},
+    {"in": "Central Michigan", "out": "Brown", "note": "wrong team out"},
+    {"in": "Central Michigan", "out": "Texas Tech", "note": ""},
+])
+def test_stale_or_incomplete_exceptions_fail_loudly(tmp_path, monkeypatch, entry):
+    monkeypatch.setattr(history, "CONFIG", _config(tmp_path, {"2022": [entry]}))
+    with pytest.raises(ValueError):
+        history.build()

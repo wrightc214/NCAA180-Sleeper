@@ -119,7 +119,10 @@
       (delta>0?'+':'')+E(delta.toFixed(1))+'</small>';
   }
   const winMetric=(t,extra='')=>'<small class="sw-win">'+percent(t.win)+'</small>'+extra;
-  function cutHTML(board, {archive=false,odds={},formatTeam,name,detail=()=>'',metric=winMetric}){
+  function cutHTML(board, {archive=false,odds={},formatTeam,name,detail=()=>'',metric=winMetric,exceptions=[]}){
+    // Owner-listed admin errors (config field_exceptions): the board stays by rule; ‡ marks the swapped teams.
+    const entryNote=k=>exceptions.some(x=>x.out===k)?' ‡ · left out by entry error':
+      exceptions.some(x=>x.in===k)?' ‡ · in field by entry error':'';
     const rows=[...board.rows];
     const afterCut=row=>row.left?.rank>board.cut;
     const cutIndex=rows.findIndex(afterCut);
@@ -128,7 +131,7 @@
       const leftIn=l&&(l.status==='Above cut'||l.status==='Saved'||hold);
       const rightIn=!leftIn&&l?.status!=='Coin toss'&&r?.active;
       const leftExtra=archive?'<small>#'+E(l?.rank)+'</small>':'<small>'+percent(odds[l?.k]||0)+'</small>';
-      const leftHTML=l?formatTeam(l.k,!leftIn,leftExtra)+'<div class="sw-inline">'+E(l.status)+'</div>':'';
+      const leftHTML=l?formatTeam(l.k,!leftIn,leftExtra)+'<div class="sw-inline">'+E(l.status+entryNote(l.k))+'</div>':'';
       const note=hold&&(hold.final?hold.conf+' Champion':
         hold.conf+' CCG · '+name(l.k)+' leads'+(hold.pair?'':' — a win keeps this spot'));
       const rightHTML=hold?(hold.pair?formatTeam(hold.pair.k,true,metric(hold.pair))+
@@ -146,6 +149,7 @@
     html+='<div class="sw-head"><span>AT-LARGE TEAMS AT RISK</span><span>BID THIEVES · '+
       (rankingOrder?'LOW TO HIGH':'HIGH TO LOW')+'</span></div>'+markup.join('');
     if(!rows.length)html+='<p>No CCG outcomes change the cut.</p>';
+    exceptions.forEach(x=>{html+='<p class="sw-muted sw-exception">‡ '+E(x.note)+'</p>';});
     if(archive)html+='<p class="sw-muted">100% and 0% reflect final CCG results, not historical pregame odds.</p>';
     return html;
   }
@@ -328,7 +332,8 @@
           E(d.colors?.[k]||'var(--neutral)')+fill+'"><strong>'+E(k)+'</strong>'+extra+'</div>';
       };
       const board=W.cutBoard(d,finals,p,finals);
-      const render=()=>content('sw-final-cut',cutHTML(board,{archive:true,formatTeam:archivedTile,name:k=>k}));
+      const render=()=>content('sw-final-cut',cutHTML(board,{archive:true,formatTeam:archivedTile,name:k=>k,
+        exceptions:d.exceptions||[]}));
       render();
       bindOrder('sw-final-sort',render);
       $('sw-final-playins').hidden=!board.playIns.length;
@@ -359,6 +364,7 @@
     const seeded=season.field.every(t=>Number.isInteger(t.seed));
     content('sw-final-field','<'+(seeded?'ol':'ul')+' class="sw-field">'+
       season.field.map(t=>'<li'+(seeded?' value="'+t.seed+'"':'')+'>'+E(t.team)+
+        (season.cut_board?.exceptions?.some(x=>x.in===t.team)?' ‡':'')+
         (!seeded&&Number.isInteger(t.seed)?' (#'+t.seed+')':'')+'</li>').join('')+(seeded?'</ol>':'</ul>'));
     if(checkpoints.length){
       const names=[...new Set(Object.values(timeline).flatMap(point=>Object.entries(point.odds||{})

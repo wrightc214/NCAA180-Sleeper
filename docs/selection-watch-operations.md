@@ -37,3 +37,12 @@ python3 scripts/selection_watch_page.py
 python3 scripts/menu_build.py
 git diff --exit-code -- reports/assets/menu.js
 ```
+
+## Archive field exceptions
+
+A past season's board is only drawn when the rules reproduce the real playoff field exactly. If the real field differed because of an admin error, list the swap in `config/selection_watch.json` under `field_exceptions`, keyed by season: `in` played in the field, `out` qualified by rule but was left out, `note` is shown under the board. Then rerun `python3 scripts/selection_watch_history.py`.
+
+- The board stays by rule. Both teams are marked ‡ (the † mark is already used for standard-scoring differences), and the `in` team is marked ‡ in the final field list.
+- A stale entry (wrong team, reversed, or no longer needed) stops the history build with an error instead of hiding or faking a board.
+- To drop an exception, or in a fresh template, delete the entry or the whole block. That season then shows no board.
+- Current entry: 2022, Central Michigan in for Texas Tech (bracket entry error).
