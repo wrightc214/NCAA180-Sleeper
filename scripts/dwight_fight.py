@@ -268,6 +268,33 @@ def write_history(year, bracket, path=HISTORY):
         w.writerows(old + mine)
 
 
+def dry_run_sample(year, count, out_dir):
+    """Offline sample against current 2026 teams, never locks or writes production."""
+    if not out_dir:
+        raise ValueError("--sample-count requires --out-dir")
+    if not 2 <= count <= 32:
+        raise ValueError("sample count must be between 2 and 32")
+    year = int(year)
+    owners = pd.read_csv("data/Standings_Season.csv", dtype=str).fillna("")
+    owners = owners[(owners["Year"] == str(year)) & (owners["OwnerID"] != "Orphan")]
+    owners = owners.drop_duplicates("OwnerID").head(count)
+    if len(owners) != count:
+        raise ValueError(f"Expected {count} eligible owner IDs; found {len(owners)}")
+    from team_names import season_name
+    people = [{"user_id": r["OwnerID"], "username": r["OwnerName"],
+               "display_name": r["OwnerName"], "league_id": r["LeagueID"],
+               "roster_id": r["RosterID"], "league": r["LeagueName"],
+               "team": season_name(year, r["LeagueName"], r["RosterID"]) or r["LeagueName"]}
+              for r in owners.to_dict("records")]
+    conf = ps.config()[1]["dwight_fight"]
+    b = draw(people, rank_entrants(people, year), int(conf.get("last_week", 17)), year)
+    Path(out_dir).mkdir(parents=True, exist_ok=True)
+    (Path(out_dir) / "dwight.json").write_text(json.dumps(b, indent=2) + "\n", encoding="utf-8")
+    assert not b["locked"] and b["status"] == "initial"
+    print(f"Dwight Fight {year} DRY RUN: {count} real rosters seeded; initial bracket saved, not locked")
+    return b
+
+
 def replay_2023(out_dir):
     """Rebuild the archived 11-entrant bracket and assert every recorded matchup.
 
@@ -330,6 +357,7 @@ def main():
     ap.add_argument("--year", type=int)
     ap.add_argument("--out-dir", help="isolate replay/dry-run outputs")
     ap.add_argument("--replay-2023", action="store_true", help="historical weeks 15-18, not a production draw")
+    ap.add_argument("--sample-count", type=int, help="dry-run a sample of real 2026 owners (requires --out-dir)")
     args = ap.parse_args()
     os.chdir(Path(__file__).resolve().parent.parent)
     cfg, postseason = ps.config()
@@ -337,6 +365,9 @@ def main():
     year = 2023 if args.replay_2023 else args.year or ps.current_season()
     if args.replay_2023:
         replay_2023(args.out_dir)
+        return
+    if args.sample_count:
+        dry_run_sample(year, args.sample_count, args.out_dir)
         return
     if year < int(conf.get("from_season", 2026)) and not args.replay_2023:
         print(f"Dwight Fight: {year} precedes from_season; no-op")
