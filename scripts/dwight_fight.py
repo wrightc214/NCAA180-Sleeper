@@ -54,7 +54,10 @@ def resolve(requested, owners, api, session=None, saved=None):
     session = session or requests
     resolved, errors = [], []
     saved = saved or []
-    saved_handles = {str(x.get("username", "")).casefold(): x for x in saved}
+    saved_handles = {}
+    for x in saved:
+        saved_handles[str(x.get("username", "")).casefold()] = x
+        saved_handles[str(x.get("requested_handle", x.get("username", ""))).casefold()] = x
     for handle in requested:
         try:
             response = session.get(f"{api}/user/{handle}", timeout=20)
@@ -87,7 +90,8 @@ def resolve(requested, owners, api, session=None, saved=None):
             continue
         resolved.append({**team, "user_id": uid,
                          "username": str(obj.get("username") or handle),
-                         "display_name": str(obj.get("display_name") or handle)})
+                         "display_name": str(obj.get("display_name") or handle),
+                         "requested_handle": handle})
     ids = [x["user_id"] for x in resolved]
     if len(set(ids)) != len(ids):
         errors.append("Two supplied usernames resolve to the same Sleeper user ID")
