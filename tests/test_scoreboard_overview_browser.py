@@ -73,6 +73,10 @@ class OverviewBrowserTests(unittest.TestCase):
                             self.assertTrue(all(any(k in s for k in want) for s in statuses),(phase,statuses[:4]))
                             self.assertEqual(page.locator('.gotw .gotw-why').inner_text(),'test reason')  # auto pick (object form)
                             self.assertEqual(page.locator('.conference .gotw-mini').count(),1)
+                            # logos.force (task 5.14): team-colour icons use the forced file, never the regular one
+                            icons=page.evaluate("[...document.querySelectorAll('.conference .team-icon img')].map(i=>i.getAttribute('src'))")
+                            for t in (t for l in index['leagues'].values() for t in l['teams'].values() if t.get('logo_forced')):
+                                self.assertIn(t['logo_forced'],icons,t['name']);self.assertNotIn(t['logo'],icons,t['name'])
                             # collapse / expand all (2026-11-06)
                             self.assertEqual(page.locator('#fold-all').inner_text(),'Collapse all')
                             page.click('#fold-all')

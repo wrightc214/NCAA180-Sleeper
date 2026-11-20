@@ -1042,6 +1042,17 @@
     "quality_scale": 25,
     "rank_gap_scale": 12
   },
+  "logos": {
+    "_note": "Logo overrides (task 5.14, 2026-11-20). force: team -> file under assets/logos/teams/ to use on fixed team-colour backgrounds (team rows, chips, icons; site_common.logo_html with a bg, scoreboard JSON logo_forced). It wins over the dark-background rule (alt-dark, then glow-dark, only when the colour is dark). For taste calls and clash fixes, e.g. a logo that vanishes on its own mid-tone primary. Not used on white tiles or theme-following logos. A forced file that doesn't exist fails the build; a team with no logo is a warning. Separate from the nested postseason 'logos' keys.",
+    "force": {
+      "Tennessee": "glow-dark/Tennessee.png",
+      "Clemson": "glow-dark/Clemson.png",
+      "Illinois": "glow-dark/Illinois.png",
+      "North Carolina": "glow-dark/North Carolina.png",
+      "Purdue": "glow-dark/Purdue.png",
+      "Oklahoma State": "glow-dark/Oklahoma State.png"
+    }
+  },
   "about": {
     "_note": "About page (scripts/about_page.py). Not linked in the site nav until Chris approves it. Directory: league_manager / data_contact = Sleeper display names only (Chris, 2026-11-07: no real names anywhere); conference assistants = everyone else with LM powers (data/LeagueStaff.csv, scripts/league_staff.py); accounts without a team = users with no roster in any league they're in (computed).",
     "discord_invite": "https://discord.gg/UdtSXkjpq",
