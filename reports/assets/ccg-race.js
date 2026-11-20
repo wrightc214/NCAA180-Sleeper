@@ -188,9 +188,10 @@
    if(q===null && Number(index.week)!==week)throw Error(settings.availability_message||"CCG race is active only during the final regular-season week.");
    let dataURL='postseason/ccg-race-'+season+'.json';
    if(q!==null){
-     const profile=settings.previews?.[q];
-     if(!profile?.enabled||!profile.url)throw Error('Unknown or disabled preview');
-     dataURL=profile.url;
+     const matches=Object.values(settings.previews||{}).filter(profile=>
+       profile.enabled===true&&profile.query===q&&typeof profile.url==='string'&&profile.url);
+     if(matches.length!==1)throw Error('Unknown or disabled preview');
+     dataURL=matches[0].url;
    }
    try{data=await get(dataURL);}catch(e){
      if(e.message.includes('404'))throw Error(settings.availability_message||'CCG races are not yet available.');
