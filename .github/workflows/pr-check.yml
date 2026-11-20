@@ -26,8 +26,19 @@ jobs:
         with:
           node-version: '22'
       - name: JavaScript tests
+        run: node --test tests/*.test.js
+      - name: Validate Dwight Fight replay, dry run and generated page
         run: |
-          for file in tests/*.test.js; do node "$file" || exit; done
+          python3 scripts/dwight_fight.py --replay-2023 --out-dir /tmp/dwight-2023-replay
+          python3 scripts/dwight_fight.py --year 2026 --sample-count 11 --out-dir /tmp/dwight-2026-sample
+          python3 - <<'PY'
+          import json
+          b=json.load(open("/tmp/dwight-2026-sample/dwight.json"))
+          assert b["status"] == "initial" and not b["locked"]
+          assert b["start_week"] == 14 and len(b["entrants"]) == 11
+          PY
+          python3 scripts/special_page.py
+          git diff --exit-code -- reports/special.html reports/dwight-fight.html
       - name: Generate transactions page
         run: |
           python3 scripts/transactions_page.py
@@ -38,6 +49,8 @@ jobs:
           python -m playwright install --with-deps chromium
       - name: Browser smoke checks (desktop light, mobile dark)
         run: python tests/transactions_browser.py
+      - name: Dwight Fight browser tests
+        run: RUN_SCOREBOARD_BROWSER_TESTS=1 python3 -m pytest -q tests/test_dwight_browser.py
       - name: Selection Watch browser tests
         run: RUN_SCOREBOARD_BROWSER_TESTS=1 python3 -m pytest tests/test_selection_watch_browser.py
       - uses: actions/upload-artifact@v4

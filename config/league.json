@@ -972,6 +972,20 @@
       "top_games": "leagues",
       "min_swing": 0.05
     },
+    "dwight_fight": {
+      "_note": "League assistants' one-team single-elimination event for 2–64 entrants. The final is always week 17, never week 18. A 33–64 entrant field starts in week 12; smaller fields start later. Each round takes one week in a next-power-of-two bracket. Edit dwights as a comma-separated list of Sleeper usernames (not team names); roster changes are ignored once locked. Empty list is a safe no-op.",
+      "dwights": "",
+      "last_week": 17,
+      "from_season": 2026,
+      "name": "Dwight Fight",
+      "logos": {
+        "banner": "assets/logos/Dwight Fight/Dwight Fight Banner.png",
+        "wordmark": "assets/logos/Dwight Fight/Dwight Fight.png",
+        "mark": "assets/logos/Dwight Fight/Dwight Fight Glasses.png",
+        "trophy": "assets/logos/Dwight Fight/Dwight Fight Trophy Blank.png"
+      },
+      "_art_note": "Images are copied from the dwight-fight art branch. Trophy winner/plaque text is HTML overlay, not generated art."
+    },
     "guillotine": {
       "_note": "The Guillotine (Chris, 2026-11-04 / 11-14; claude/todo-guillotine.md): every team plays weeks first_week..last_week on its own standard score. Each week half of the field entering the week (rounded down) advances; everyone tied with the last spot advances too (PGA style). The top score in last_week wins; an exact tie there is broken by tiebreak_week's score, then co-champions. A rerun after stat corrections only ADDS teams to a frozen week (nobody already advanced is removed). Orphan teams play like everyone else.",
       "name": "The Guillotine",
