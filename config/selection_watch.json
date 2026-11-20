@@ -93,7 +93,8 @@
     "previews": {
       "midweek": {
         "enabled": true,
-        "url": "postseason/ccg-race-preview-2026.json"
+        "url": "postseason/ccg-race-preview-2026.json",
+        "query": "midweek"
       }
     }
   }
