@@ -163,16 +163,16 @@ def update_names(old, fresh):
     for x in old["entrants"]:
         new = by_id.get(x["user_id"])
         if new:
-            x["username"] = new["username"]
-            x["display_name"] = new["display_name"]
+            for field in ("username", "display_name", "league_id", "roster_id", "league", "team"):
+                x[field] = new[field]
     # Match names in every bracket reference, including frozen rounds.
     for rnd in old["rounds"]:
         for game in rnd:
             for side in ("a", "b"):
                 x = game[side]
                 if x and x["user_id"] in by_id:
-                    x["username"] = by_id[x["user_id"]]["username"]
-                    x["display_name"] = by_id[x["user_id"]]["display_name"]
+                    for field in ("username", "display_name", "league_id", "roster_id", "league", "team"):
+                        x[field] = by_id[x["user_id"]][field]
 
 
 def choose(a, b, pa, pb, ma, mb):
