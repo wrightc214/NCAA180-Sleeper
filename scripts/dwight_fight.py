@@ -342,14 +342,15 @@ def main():
         print(f"Dwight Fight: {year} precedes from_season; no-op")
         return
     requested = names(conf.get("dwights", ""))
-    if not requested and not args.replay_2023:
-        print("Dwight Fight: empty dwights configuration; no-op")
-        return
-    if len(requested) > 32:
-        raise SystemExit("Dwight Fight: at most 32 usernames allowed")
     directory = Path(args.out_dir) if args.out_dir else Path(f"data/scoreboard/{year}")
     output = directory / "dwight.json"
     old = json.loads(output.read_text(encoding="utf-8")) if output.exists() else None
+    if not (old and old.get("locked")):
+        if not requested:
+            print("Dwight Fight: empty dwights configuration; no-op")
+            return
+        if len(requested) > 32:
+            raise SystemExit("Dwight Fight: at most 32 usernames allowed")
     done = set(ps.completed_weeks(year))
     lr = ps.last_regular_week()
     if not set(range(1, lr + 1)).issubset(done):
@@ -363,10 +364,12 @@ def main():
         if errors:
             for err in errors:
                 print("WARNING: Dwight Fight:", err)
-            if old:
-                old["warnings"] = errors
-                output.parent.mkdir(parents=True, exist_ok=True)
-                output.write_text(json.dumps(old, indent=2) + "\n", encoding="utf-8")
+            pending = old or {"season": year, "status": "pending", "locked": False,
+                              "entrants": [], "rounds": [], "start_week": None,
+                              "last_week": int(conf.get("last_week", 17))}
+            pending["warnings"] = errors
+            output.parent.mkdir(parents=True, exist_ok=True)
+            output.write_text(json.dumps(pending, indent=2) + "\n", encoding="utf-8")
             return  # Never lock an invalid field.
         if len(fresh) < 2:
             print("Dwight Fight: fewer than two valid entrants; no-op")
@@ -380,6 +383,7 @@ def main():
         else:
             bracket = draw(fresh, rank_entrants(fresh, year), last, year)
             print(f"Dwight Fight: initial bracket drawn ({len(fresh)} teams, {size} slots, week {start})")
+        bracket["warnings"] = []
         if current >= start:
             bracket["locked"] = True
             bracket["status"] = "locked"
