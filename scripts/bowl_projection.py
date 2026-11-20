@@ -427,7 +427,7 @@ def snap_js(after, foot=None, tag=None, projection=True):
     tag = tag or f"wk{int(after)}"
     return ('<script src="assets/snapshot.js"></script><script>(()=>{const S=window.NCAASnap;if(!S)return;'
             f'const FOOT={json.dumps(foot)},TAG={json.dumps(tag)},ST={json.dumps(stamp)};if(ST)ST.time=new Date(ST.time);'
-            """for(const c of document.querySelectorAll('.wrap section.card[id]')){const h=c.querySelector(':scope>h2');if(!h)continue;
+            """for(const c of document.querySelectorAll('.wrap section.card[id]')){const h=c.querySelector(':scope>h2');if(!h||c.querySelector(':scope .bk'))continue;
 const t=(h.childNodes[0]?.textContent||c.id).trim(),b=S.button(t);c.append(b);
 const stop=e=>e.stopPropagation();b.addEventListener('keydown',stop);
 b.addEventListener('click',async e=>{e.stopPropagation();b.disabled=true;b.classList.add('busy');

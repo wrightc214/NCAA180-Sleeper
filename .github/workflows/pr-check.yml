@@ -53,6 +53,10 @@ jobs:
         run: RUN_SCOREBOARD_BROWSER_TESTS=1 python3 -m pytest -q tests/test_dwight_browser.py
       - name: Selection Watch browser tests
         run: RUN_SCOREBOARD_BROWSER_TESTS=1 python3 -m pytest tests/test_selection_watch_browser.py
+      - name: Install WebKit (iOS Safari's engine) for the bracket export check
+        run: python -m playwright install --with-deps webkit
+      - name: Bracket browser tests (phone navigation, links, widths/themes, exports incl. WebKit 1.5x)
+        run: RUN_SCOREBOARD_BROWSER_TESTS=1 python3 -m pytest -q tests/test_bracket_browser.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:

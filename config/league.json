@@ -962,7 +962,13 @@
         "CCG": "",
         "Bowl": ""
       },
-      "_prefix_note": "Playoff rounds show without a prefix unless the same week has an NIT round of the same name; NIT rounds always prefixed."
+      "_prefix_note": "Playoff rounds show without a prefix unless the same week has an NIT round of the same name; NIT rounds always prefixed.",
+      "bracket": {
+        "_note": "Playoff bracket look (Chris, 2026-11-20, task 5.13). loser_opacity / loser_grayscale dim a team once its game is final (winners stay full colour; live and upcoming games are never dimmed). quad_label names each 8-team quad after its Elite 8 bowl: {bowl} = the bowl name without 'Bowl' (Orange Bowl -> 'Orange Quad'); bowls come from playoff.bowl_rotation (current/future seasons) or as played (past seasons).",
+        "loser_opacity": 0.35,
+        "loser_grayscale": 0.6,
+        "quad_label": "{bowl} Quad"
+      }
     },
     "odds": {
       "_note": "scripts/postseason_odds.py (Chris, 2026-11-07). Most impactful games: top_games biggest swings per subsection (playoff / bowl; \"leagues\" = as many as there are leagues, 15), then one row for every other league whose biggest swing is at least min_swing.",

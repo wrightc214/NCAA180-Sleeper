@@ -20,17 +20,19 @@ import html
 import os
 import re
 import sys
+import urllib.parse
 
 import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import _postseason_common as ps  # noqa: E402
+import bracket as BK  # noqa: E402
 import bowl_projection as bp  # noqa: E402
 import bowls as B  # noqa: E402
 import league_config as lcfg  # noqa: E402
 import team_names as tn  # noqa: E402
 from poll_page import colors, logo  # noqa: E402
-from site_common import menu_html, page_head  # noqa: E402
+from site_common import logo_html, menu_html, page_head  # noqa: E402
 
 HIST = "data/Postseason_Historic.csv"
 PAGE = "reports/postseason.html"
@@ -106,7 +108,7 @@ def season_games(year):
         out.append({"year": int(year), "event": ev, "round": rnd, "name": display_round(year, ev, name, set()), "week": int(num(r0["Week"]) or 0),
                     "bowl": r0["BowlName"] if ev in ("Bowl", "Playoff") else "",
                     "group": gid.split("-")[-1] if ev == "NIT" and len(teams) > 2 else "",
-                    "teams": teams, "final": (g["Status"] == "Final").all(), "note": ""})
+                    "teams": teams, "final": (g["Status"] == "Final").all(), "note": "", "id": gid})
     return out
 
 
@@ -144,23 +146,7 @@ CSS = bp.CSS + """
 .sd2{font:700 11px var(--num);color:var(--mute);margin-right:4px}
 .pending{font-size:11px;color:var(--mute)}
 @media(max-width:560px){.two,.grid2,.champs{grid-template-columns:1fr}}
-.brk-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -4px;padding:0 4px 6px}
-.brk{display:flex;gap:12px;min-width:max-content}
-.bcol{display:flex;flex-direction:column;width:158px}
-.bcol h4{margin:0 0 6px;font:800 10px var(--sans,sans-serif);text-transform:uppercase;letter-spacing:.06em;color:var(--mute);text-align:center}
-.bgames{flex:1;display:flex;flex-direction:column;justify-content:space-around;gap:6px}
-.bg{border:1px solid var(--line);border-radius:5px;overflow:hidden;background:var(--panel,#fff)}
-.br{display:grid;grid-template-columns:18px 1fr auto;gap:4px;align-items:center;height:22px;padding:0 6px 0 4px;border-left:4px solid var(--tc,#99a);font:600 11.5px var(--sans,sans-serif)}
-.br+.br{border-top:1px solid var(--line)}
-.br .bs{font:700 10px var(--num);color:var(--mute);text-align:right}
-.br .bn{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.br .bp{font:700 11px var(--num)}
-.br.win .bn{font-weight:800}.br.lose{opacity:.5}
-.br.tbd{color:var(--mute);border-left-color:var(--line)}
-.champ-col{width:130px}
-.bchamp{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 8px;border-radius:8px;text-align:center;font-size:13px}
-.bchamp img{width:56px;height:56px;object-fit:contain}
-"""
+""" + BK.CSS
 
 
 def chip(t, col, short, seed=""):
@@ -195,85 +181,59 @@ def game_html(g, col, short, label=None, logo_name=""):
 
 
 ROUND_BY_GAMES = {16: "First Round", 8: "Sweet 16", 4: "Elite 8", 2: "Final Four", 1: "National Championship"}
+TROPHY = "assets/trophies/special/National Championship.png"
 
 
-def bracket_order(n):
-    order = [1, 2]
-    while len(order) < n:
-        size = len(order) * 2
-        order = [x for s in order for x in (s, size + 1 - s)]
-    return order
+def bowl_src(name):
+    """Approved bowl / National Championship logo path ('' when none; legacy names only)."""
+    m = re.search(r'src="([^"]+)"', bp.bowl_logo(name) or "")
+    return html.unescape(m.group(1)) if m else ""
 
 
-def bracket_html(po, col):
-    """Traditional bracket (Chris, 2026-11-08): rounds left to right, each game beside the two games
-    that fed it. Order comes from the results themselves (a game's feeders are the earlier games its
-    teams played); rounds not played yet are empty slots. '' when the playoff isn't a clean knockout."""
-    ko = [g for g in po if len(g["teams"]) == 2 and g["name"] not in ("Third Place", "Third Place Game", "Group Stage")]
-    rounds = sorted({(g["week"], g["round"]) for g in ko})
-    R = [[g for g in ko if (g["week"], g["round"]) == r] for r in rounds]
-    if not R or any(len(R[i + 1]) * 2 != len(R[i]) for i in range(len(R) - 1)):
-        return ""
+def bracket_html(po, col, year, short, current=None):
+    """The Playoff bracket (Chris, 2026-11-20, task 5.13; scripts/bracket.py draws it): desktop board,
+    phone round-by-round view and Save image exports. '' when the playoff isn't a clean knockout."""
+    cfg = ps.config()[1]
+    pc, dcfg = cfg["playoff"], cfg["display"].get("bracket", {})
+    ko = [dict(g, round_key=(g["week"], g["round"])) for g in po
+          if len(g["teams"]) == 2 and g["name"] not in ("Third Place", "Third Place Game", "Group Stage", "Playoff Group Stage")]
     seed = lambda t: int(num(t.get("Seed")) or 99)  # noqa: E731
-    names = lambda g: {t["Team"] for t in g["teams"]}  # noqa: E731
-    # order the latest round: first round by bracket seed position, later rounds by best seed
-    if len(R) == 1 and all(seed(t) < 99 for g in R[0] for t in g["teams"]):
-        pos = {s_: i for i, s_ in enumerate(bracket_order(2 * len(R[0])))}
-        R[-1].sort(key=lambda g: min(pos.get(seed(t), 99) for t in g["teams"]))
-    else:
-        R[-1].sort(key=lambda g: min(seed(t) for t in g["teams"]))
-    # feeders: the earlier games each game's teams played; the half holding the best seed goes on top
-    feed = {}
-    for j in range(len(R) - 1, 0, -1):
-        for g in R[j]:
-            feed[id(g)] = [x for x in R[j - 1] if names(x) & names(g)]
-    best = {}
-
-    def low(g):
-        if id(g) not in best:
-            best[id(g)] = min([seed(t) for t in g["teams"]] + [low(f) for f in feed.get(id(g), [])])
-        return best[id(g)]
-    if len(R) > 1:
-        R[-1].sort(key=low)
-    for j in range(len(R) - 1, 0, -1):
-        out, used = [], set()
-        for g in R[j]:
-            for f in sorted(feed[id(g)], key=low):
-                if id(f) not in used:
-                    used.add(id(f))
-                    out.append(f)
-        R[j - 1] = out + [x for x in R[j - 1] if id(x) not in used]
-    n = len(R[-1])
-    while n > 1:  # rounds still to play
-        n //= 2
-        R.append([None] * n)
-
-    def team_row(t, g):
-        if t is None:
-            return '<div class="br tbd"><span class="bs"></span><span class="bn">TBD</span><span class="bp"></span></div>'
-        bg = col.get(t["Team"], ("#14213a", "#ffffff"))[0]
-        lose = g["final"] and not t["Win"]
-        pts = f'{t["Points"]:.1f}' if t["Points"] is not None and g["final"] else ""
-        sd = t.get("Seed", "")
-        return (f'<div class="br{" lose" if lose else ""}{" win" if g["final"] and t["Win"] else ""}" style="--tc:{bg}">'
-                f'<span class="bs">{e(str(sd))}</span><span class="bn">{e(t["Team"])}</span><span class="bp">{pts}</span></div>')
-
-    cols = []
-    for games in R:
+    R = BK.order_rounds(ko, seed)
+    if not R:
+        return ""
+    names, weeks = [], []
+    for j, games in enumerate(R):
         real = next((g for g in games if g), None)
-        title = real["name"] if real else ROUND_BY_GAMES.get(len(games), "")
-        cells = "".join(
-            f'<div class="bg">{"".join(team_row(t, g) for t in sorted(g["teams"], key=seed))}</div>' if g else
-            f'<div class="bg">{team_row(None, None)}{team_row(None, None)}</div>' for g in games)
-        cols.append(f'<div class="bcol"><h4>{e(title)}</h4><div class="bgames">{cells}</div></div>')
-    last = R[-1][0]
-    if last and last["final"]:
-        w = next((t for t in last["teams"] if t["Win"]), None)
-        if w:
-            bg, fg = col.get(w["Team"], ("#14213a", "#ffffff"))
-            cols.append(f'<div class="bcol champ-col"><h4>Champion</h4><div class="bgames"><div class="bchamp" style="background:{bg};color:{fg}">'
-                        f'{logo(w["Team"], bg)}<b>{e(w["Team"])}</b></div></div></div>')
-    return f'<div class="brk-wrap"><div class="brk">{"".join(cols)}</div></div>'
+        names.append(real["name"] if real else ROUND_BY_GAMES.get(len(games), f"Round {j + 1}"))
+        weeks.append(real["week"] if real else (weeks[-1] + 1 if weeks else int(pc.get("first_week", 13))))
+    # bowls for rounds not drawn yet: this season's rotation (past seasons show bowls as played)
+    current = int(year) >= ps.current_season() if current is None else current
+    full = len(R) == len(pc.get("rounds", []))
+    planned = {int(k) - 1: v for k, v in ps.playoff_round_bowls(year).items()} if (current and full) else {}
+    e8 = next((j for j, g in enumerate(R) if len(g) == 4), None)
+    quad_bowls = None
+    if e8 is not None and e8 >= 1:
+        quad_bowls = [(g["bowl"] if g and g.get("bowl") else (planned.get(e8) or [""] * 4)[i]) for i, g in enumerate(R[e8])]
+        if not all(quad_bowls):  # seasons without Elite 8 bowls (2021) get no quads
+            quad_bowls = None
+    full_short = {v: k for k, v in ps.league_short().items()} if short is None else short
+
+    def side(t):
+        bg, fg = col.get(t["Team"], ("#14213a", "#ffffff"))
+        return {"name": t["Team"], "seed": t.get("Seed", ""), "conf": full_short.get(t["LeagueName"], t["LeagueName"]),
+                "bg": bg, "fg": fg, "logo": logo_html(t["Team"], bg=bg)}
+
+    def href(g):  # the Scoreboard's postseason game view (current-season games carry a GameID)
+        return f"scoreboard.html?season={g['year']}&week={g['week']}&post={g['id']}" if g.get("id") else None
+
+    site = pc.get("championship_sites", {}).get(str(year))
+    B = BK.model(R, year=int(year), title="National Playoff", eyebrow=f"{lcfg.brand()} · {year} Postseason",
+                 round_names=names, weeks=weeks, side=side, href=href, bowls=planned, quad_bowls=quad_bowls,
+                 quad_round=e8 if quad_bowls else None, e8_round=e8, quad_label=dcfg.get("quad_label", "{bowl} Quad"),
+                 bowl_src=bowl_src, site=bp.where({"location": site}) if site else "",
+                 champion_trophy="../" + urllib.parse.quote(TROPHY), foot=bp.LINK.replace("https://", ""))
+    dim = (float(dcfg.get("loser_opacity", 0.35)), float(dcfg.get("loser_grayscale", 0.6)))
+    return BK.html_(B, dim)
 
 
 def section(title, sub, body, sid):
@@ -308,13 +268,16 @@ def build_season(year, years):
             for t, lg, w in champ) + "</div>")
 
     # bracket: the traditional view (Chris, 2026-11-08), then the round-by-round cards
-    brk = bracket_html(po, col) if po else ""
+    brk = bracket_html(po, col, year, short) if po else ""
     if brk:
         secs.append(section("Bracket", "", brk, "bracket"))
 
     # playoff: latest round first
     if po:
-        rounds = sorted({(g["round"], g["week"], g["name"]) for g in po}, key=lambda x: (-x[1], -x[0]))
+        # Ties (2020: Championship and Third Place Game share a week and round) break by name, title game
+        # first, so the page doesn't flip between runs (set order follows string hashing).
+        rounds = sorted({(g["round"], g["week"], g["name"]) for g in po},
+                        key=lambda x: (-x[1], -x[0], x[2] == "Third Place Game", x[2]))
         body = ""
         for rnd, wk, name in rounds:
             gs = [g for g in po if (g["round"], g["week"], g["name"]) == (rnd, wk, name)]
