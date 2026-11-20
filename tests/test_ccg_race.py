@@ -1,10 +1,11 @@
 """Run: python -m unittest tests/test_ccg_race.py"""
 import os
 import sys
+import json
 import unittest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scripts"))
-from ccg_race import alive_members
+from ccg_race import alive_members, build
 
 
 class Contenders(unittest.TestCase):
@@ -30,6 +31,31 @@ class Contenders(unittest.TestCase):
         got = self.run_case({"A": 8, "B": 8, "C": 8},
                             [("A", "B"), ("B", "C"), ("C", "A")])
         self.assertEqual(got, [["A", "B", "C"]])
+
+    def test_current_week_2026_matches_published_snapshot(self):
+        """Integration check on the real scoring inputs, skipped after Week 11 closes."""
+        current = build(2026, write=False)
+        if current is None:
+            self.skipTest("2026 Week 11 no longer active")
+        with open("reports/postseason/ccg-race-2026.json", encoding="utf-8") as source:
+            published = json.load(source)
+        def flat(data):
+            return {
+                (c["league_id"], d["name"]): {
+                    x["roster_id"]: (x["team"], x["wins"], x["losses"],
+                                     round(x["points_for"], 2), round(x["points_against"], 2))
+                    for x in d["contenders"]
+                }
+                for c in data["conferences"] for d in c["divisions"]
+            }
+        self.assertEqual(flat(current), flat(published))
+        divisions = [d for c in current["conferences"] for d in c["divisions"]]
+        self.assertEqual(sum(d["clinched_before_week"] for d in divisions), 12)
+        self.assertEqual(sum(not d["clinched_before_week"] for d in divisions), 18)
+        pac = next(c for c in current["conferences"] if c["name"] == "Pac-12")
+        south = next(d for d in pac["divisions"] if d["name"] == "SOUTH")
+        self.assertEqual({t["team"]: (t["wins"], t["losses"]) for t in south["contenders"]},
+                         {"Colorado": (9, 1), "UCLA": (8, 2), "Arizona State": (8, 2)})
 
     def test_more_than_twenty_game_fallback(self):
         members = list("ABCDEFGHIJKL")
