@@ -63,7 +63,7 @@
    const bg=info.background||info.primary||'#14213a',ink=contrast(bg,info.text);
    const isLeader=leader===id,cls=isLeader?' leader':' dim';
    const dark=/^#[0-9a-f]{6}$/i.test(bg)&&[1,3,5].map(i=>parseInt(bg.slice(i,i+2),16)/255).reduce((acc,v,i)=>acc+[.2126,.7152,.0722][i]*(v<=.04045?v/12.92:((v+.055)/1.055)**2.4),0)<.18;
-   const img=(dark&&info.logo_dark?info.logo_dark:info.logo)||'';
+   const img=(info.logo_forced||(dark&&info.logo_dark?info.logo_dark:info.logo))||''; // logos.force (#124) wins on team-colour blocks
    const status=proven?(proven===id?(settings.labels?.clinched||'Clinched'):(settings.labels?.out||'Out')):(out?.includes(id)?(settings.labels?.out||'Out'):fmt(odds[id]||0));
    const projected=(metrics?.mean??0).toFixed(2);
    const range=Math.sqrt(Math.max(0,metrics?.variance||0)).toFixed(1);
@@ -74,6 +74,11 @@
      '<small>'+E(t.wins)+'-'+E(t.losses)+(t.ties?'-'+E(t.ties):'')+
      ' · PF '+livePF.toFixed(2)+' · This week '+projected+' ±'+range+
      (metrics?.final?' (final)':' (live proj.)')+'</small></div><span class="prob">'+E(status)+'</span></div>';
+ }
+ function CCGRaceOrder(status,odds){
+   const out=new Set(status.out||[]),pos=new Map(status.projected.map((x,i)=>[x,i]));
+   const tier=x=>status.proven===x?0:out.has(x)?2:1;
+   return status.projected.slice().sort((a,b)=>tier(a)-tier(b)||(odds[b]||0)-(odds[a]||0)||pos.get(a)-pos.get(b));
  }
  function paint(models,results,stamp,stale=false){
    $('updated').textContent=(stale?'Stale — last verified ':'Last updated ')+date(stamp);
@@ -86,9 +91,12 @@
      if(!result){node.textContent='Live projections unavailable for this conference.';continue;}
      const divs=conf.divisions.map((d,i)=>{
        const status=result.divisions[i];
-       const ids=status.projected,byId=new Map(d.contenders.map(t=>[String(t.roster_id),t]));
-       const leader=status.proven||ids[0];
-       const shown=d.clinched_before_week?[byId.get(ids[0])]:ids.map(x=>byId.get(x));
+       const byId=new Map(d.contenders.map(t=>[String(t.roster_id),t]));
+       // Highlight and order by the page's own odds (Chris, 2026-11-20): clinched team first, then
+       // highest chance, Out last; projected record only breaks exact ties.
+       const ids=CCGRaceOrder(status,result.odds);
+       const leader=ids[0];
+       const shown=d.clinched_before_week?[byId.get(status.proven||ids[0])]:ids.map(x=>byId.get(x));
        return '<div class="division"><h3>'+E(d.name)+'</h3>'+
          shown.filter(Boolean).map(t=>teamTile(conf,t,models[M.key(id,t.roster_id)],
            result.odds,leader,status.proven,status.out,stamp)).join('')+'</div>';

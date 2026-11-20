@@ -47,6 +47,17 @@ class CCGRaceBrowser(unittest.TestCase):
                     self.assertGreaterEqual(page.locator("#ccg-1331775106527006720 .prob").filter(has_text="Out").count(), 2)
                     self.assertEqual(page.locator("nav[data-row='selection-watch'] a").count(), 2)
                     self.assertLessEqual(page.evaluate("document.documentElement.scrollWidth"), width + 2)
+                    # Each division highlights its clinched team or highest chance, and lists teams by chance.
+                    bad = page.evaluate("""() => [...document.querySelectorAll('#conferences .division')].flatMap(d => {
+                        const v = t => { const s = t.querySelector('.prob').textContent.trim();
+                            return s === 'Clinched' ? 101 : s === 'Out' ? -1 : s.startsWith('>') ? 99.5 : s.startsWith('<') ? 0.5 : parseFloat(s); };
+                        const rows = [...d.querySelectorAll('.race-team')], vals = rows.map(v);
+                        const errs = [];
+                        if (!rows[0].classList.contains('leader')) errs.push(d.querySelector('h3').textContent + ': first row not highlighted');
+                        if (rows.slice(1).some(r => r.classList.contains('leader'))) errs.push(d.querySelector('h3').textContent + ': extra highlight');
+                        if (vals.some((x, i) => i && x > vals[i - 1])) errs.push(d.querySelector('h3').textContent + ': ' + vals.join(','));
+                        return errs; })""")
+                    self.assertEqual(bad, [])
                     page.screenshot(path=str(shots / filename), full_page=True)
                     page.locator(".fold-all").click()
                     self.assertEqual(page.locator("#conferences section.fold.closed").count(), 15)

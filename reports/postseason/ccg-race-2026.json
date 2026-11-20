@@ -9,95 +9,47 @@
     "coin_toss"
   ],
   "coin_toss_results": [],
-  "generated_at": "2026-11-20T15:49:22.222Z",
+  "generated_at": "2026-11-20T22:19:43.221651+00:00",
   "conferences": [
     {
-      "league_id": "1331775206619885568",
-      "name": "Big East",
+      "league_id": "1316899756005412864",
+      "name": "Big Sky",
       "divisions": [
         {
-          "name": "MIDEAST",
-          "clinched_before_week": false,
+          "name": "FRONTIER",
+          "clinched_before_week": true,
           "contenders": [
             {
-              "roster_id": "4",
-              "owner": "vinceA762",
-              "team": "Pittsburgh",
-              "wins": 7,
-              "losses": 3,
+              "roster_id": "12",
+              "team": "Youngstown State",
+              "owner": "mssullivan2022",
+              "wins": 9,
+              "losses": 1,
               "ties": 0,
-              "points_for": 1374.72,
-              "points_against": 1305.32,
+              "points_for": 1540.98,
+              "points_against": 1307.7,
               "remaining_games": [
                 {
                   "week": 11,
-                  "opponent_roster_id": "11"
-                }
-              ]
-            },
-            {
-              "roster_id": "6",
-              "owner": "joonbug",
-              "team": "Coastal Carolina",
-              "wins": 7,
-              "losses": 3,
-              "ties": 0,
-              "points_for": 1572.06,
-              "points_against": 1338.7,
-              "remaining_games": [
-                {
-                  "week": 11,
-                  "opponent_roster_id": "7"
+                  "opponent_roster_id": "2"
                 }
               ]
             }
           ]
         },
         {
-          "name": "NORTHEAST",
-          "clinched_before_week": false,
+          "name": "COLONIES",
+          "clinched_before_week": true,
           "contenders": [
             {
-              "roster_id": "5",
-              "owner": "NastyS8ntChance",
-              "team": "UCONN",
-              "wins": 7,
-              "losses": 3,
-              "ties": 0,
-              "points_for": 1455.48,
-              "points_against": 1235.84,
-              "remaining_games": [
-                {
-                  "week": 11,
-                  "opponent_roster_id": "12"
-                }
-              ]
-            },
-            {
-              "roster_id": "8",
-              "owner": "Claser",
-              "team": "Army",
+              "roster_id": "3",
+              "team": "William & Mary",
+              "owner": "Beastchewy15",
               "wins": 8,
               "losses": 2,
               "ties": 0,
-              "points_for": 1324.64,
-              "points_against": 1215.58,
-              "remaining_games": [
-                {
-                  "week": 11,
-                  "opponent_roster_id": "10"
-                }
-              ]
-            },
-            {
-              "roster_id": "7",
-              "owner": "CodeKhaos",
-              "team": "Syracuse",
-              "wins": 8,
-              "losses": 2,
-              "ties": 0,
-              "points_for": 1613.36,
-              "points_against": 1075.88,
+              "points_for": 1607.52,
+              "points_against": 1190.84,
               "remaining_games": [
                 {
                   "week": 11,
@@ -110,44 +62,22 @@
       ]
     },
     {
-      "league_id": "1331775170712444928",
-      "name": "SEC",
+      "league_id": "1316899936696016896",
+      "name": "Big Ten",
       "divisions": [
         {
           "name": "EAST",
-          "clinched_before_week": true,
-          "contenders": [
-            {
-              "roster_id": "8",
-              "owner": "Stumpy44",
-              "team": "Kentucky",
-              "wins": 9,
-              "losses": 1,
-              "ties": 0,
-              "points_for": 1532.16,
-              "points_against": 1230.66,
-              "remaining_games": [
-                {
-                  "week": 11,
-                  "opponent_roster_id": "5"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "WEST",
           "clinched_before_week": false,
           "contenders": [
             {
-              "roster_id": "2",
-              "owner": "errand",
-              "team": "LSU",
-              "wins": 8,
-              "losses": 2,
+              "roster_id": "1",
+              "team": "Purdue",
+              "owner": "Mo00",
+              "wins": 6,
+              "losses": 4,
               "ties": 0,
-              "points_for": 1382.58,
-              "points_against": 1230.42,
+              "points_for": 1274.98,
+              "points_against": 1177.42,
               "remaining_games": [
                 {
                   "week": 11,
@@ -156,42 +86,52 @@
               ]
             },
             {
-              "roster_id": "4",
-              "owner": "egbdf",
-              "team": "Auburn",
-              "wins": 7,
-              "losses": 3,
+              "roster_id": "12",
+              "team": "Michigan",
+              "owner": "chrispychicken",
+              "wins": 6,
+              "losses": 4,
               "ties": 0,
-              "points_for": 1466.02,
-              "points_against": 1238.4,
+              "points_for": 1434.92,
+              "points_against": 1142.68,
               "remaining_games": [
                 {
                   "week": 11,
-                  "opponent_roster_id": "9"
+                  "opponent_roster_id": "11"
+                }
+              ]
+            },
+            {
+              "roster_id": "9",
+              "team": "Ohio State",
+              "owner": "Klashified",
+              "wins": 6,
+              "losses": 4,
+              "ties": 0,
+              "points_for": 1279.48,
+              "points_against": 1214.8,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "6"
                 }
               ]
             }
           ]
-        }
-      ]
-    },
-    {
-      "league_id": "1331775106527006720",
-      "name": "Pac-12",
-      "divisions": [
+        },
         {
-          "name": "NORTH",
+          "name": "WEST",
           "clinched_before_week": true,
           "contenders": [
             {
-              "roster_id": "4",
-              "owner": "chzhead412",
-              "team": "Washington State",
-              "wins": 10,
-              "losses": 0,
+              "roster_id": "11",
+              "team": "Iowa",
+              "owner": "Schuflakka",
+              "wins": 9,
+              "losses": 1,
               "ties": 0,
-              "points_for": 1615.62,
-              "points_against": 1129.16,
+              "points_for": 1615.28,
+              "points_against": 1196.0,
               "remaining_games": [
                 {
                   "week": 11,
@@ -200,200 +140,162 @@
               ]
             }
           ]
-        },
+        }
+      ]
+    },
+    {
+      "league_id": "1331774454493122560",
+      "name": "Wild",
+      "divisions": [
         {
-          "name": "SOUTH",
+          "name": "PLAINS",
           "clinched_before_week": false,
           "contenders": [
             {
+              "roster_id": "1",
+              "team": "Montana",
+              "owner": "LanceBoneau",
+              "wins": 6,
+              "losses": 4,
+              "ties": 0,
+              "points_for": 1560.66,
+              "points_against": 1255.24,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "2"
+                }
+              ]
+            },
+            {
+              "roster_id": "11",
+              "team": "South Dakota",
+              "owner": "TheScorer",
+              "wins": 5,
+              "losses": 5,
+              "ties": 0,
+              "points_for": 1236.46,
+              "points_against": 1294.8,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "12"
+                }
+              ]
+            },
+            {
+              "roster_id": "5",
+              "team": "Wichita State",
+              "owner": "FareedB",
+              "wins": 5,
+              "losses": 5,
+              "ties": 0,
+              "points_for": 1190.0,
+              "points_against": 1262.68,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "6"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "VALLEY",
+          "clinched_before_week": false,
+          "contenders": [
+            {
+              "roster_id": "10",
+              "team": "Old Dominion",
+              "owner": "olddominion2020",
+              "wins": 9,
+              "losses": 1,
+              "ties": 0,
+              "points_for": 1514.74,
+              "points_against": 1160.06,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "7"
+                }
+              ]
+            },
+            {
               "roster_id": "12",
-              "owner": "lmerkouSaints",
-              "team": "UCLA",
+              "team": "UNC Charlotte",
+              "owner": "DBGiants",
               "wins": 8,
               "losses": 2,
               "ties": 0,
-              "points_for": 1360.96,
-              "points_against": 1259.04,
+              "points_for": 1354.64,
+              "points_against": 1209.38,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "11"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "league_id": "1331774544905510912",
+      "name": "Ohio Valley",
+      "divisions": [
+        {
+          "name": "YANKEE",
+          "clinched_before_week": true,
+          "contenders": [
+            {
+              "roster_id": "10",
+              "team": "Monmouth",
+              "owner": "edgeofdefeat",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1253.06,
+              "points_against": 1074.68,
               "remaining_games": [
                 {
                   "week": 11,
                   "opponent_roster_id": "4"
                 }
               ]
-            },
-            {
-              "roster_id": "7",
-              "owner": "wrightc214",
-              "team": "Arizona State",
-              "wins": 8,
-              "losses": 2,
-              "ties": 0,
-              "points_for": 1599.46,
-              "points_against": 1274.18,
-              "remaining_games": [
-                {
-                  "week": 11,
-                  "opponent_roster_id": "10"
-                }
-              ]
-            },
-            {
-              "roster_id": "8",
-              "owner": "keppin",
-              "team": "Colorado",
-              "wins": 9,
-              "losses": 1,
-              "ties": 0,
-              "points_for": 1549.68,
-              "points_against": 1134.36,
-              "remaining_games": [
-                {
-                  "week": 11,
-                  "opponent_roster_id": "9"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "league_id": "1331774915392577536",
-      "name": "ACC",
-      "divisions": [
-        {
-          "name": "ATLANTIC",
-          "clinched_before_week": false,
-          "contenders": [
-            {
-              "roster_id": "10",
-              "owner": "EerieHush",
-              "team": "NC State",
-              "wins": 8,
-              "losses": 2,
-              "ties": 0,
-              "points_for": 1466.36,
-              "points_against": 1292.92,
-              "remaining_games": [
-                {
-                  "week": 11,
-                  "opponent_roster_id": "3"
-                }
-              ]
-            },
-            {
-              "roster_id": "12",
-              "owner": "dilbennett",
-              "team": "Clemson",
-              "wins": 9,
-              "losses": 1,
-              "ties": 0,
-              "points_for": 1596.94,
-              "points_against": 1170.86,
-              "remaining_games": [
-                {
-                  "week": 11,
-                  "opponent_roster_id": "7"
-                }
-              ]
             }
           ]
         },
         {
-          "name": "COASTAL",
-          "clinched_before_week": true,
-          "contenders": [
-            {
-              "roster_id": "3",
-              "owner": "spendawg",
-              "team": "Georgia Tech",
-              "wins": 7,
-              "losses": 3,
-              "ties": 0,
-              "points_for": 1360.12,
-              "points_against": 1177.96,
-              "remaining_games": [
-                {
-                  "week": 11,
-                  "opponent_roster_id": "10"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "league_id": "1331774880181399552",
-      "name": "Big 12",
-      "divisions": [
-        {
-          "name": "HEAT",
+          "name": "SOUTHERN",
           "clinched_before_week": false,
           "contenders": [
             {
-              "roster_id": "5",
-              "owner": "robertlouis7",
-              "team": "Baylor",
+              "roster_id": "1",
+              "team": "Belmont",
+              "owner": "Mistafyer",
               "wins": 8,
               "losses": 2,
               "ties": 0,
-              "points_for": 1624.44,
-              "points_against": 1192.06,
+              "points_for": 1331.46,
+              "points_against": 1263.64,
               "remaining_games": [
                 {
                   "week": 11,
-                  "opponent_roster_id": "9"
+                  "opponent_roster_id": "11"
                 }
               ]
             },
             {
-              "roster_id": "4",
-              "owner": "deadheadshane",
-              "team": "Texas A&M",
+              "roster_id": "2",
+              "team": "ETSU",
+              "owner": "LMarkiewicz04",
               "wins": 7,
               "losses": 3,
               "ties": 0,
-              "points_for": 1388.54,
-              "points_against": 1326.7,
-              "remaining_games": [
-                {
-                  "week": 11,
-                  "opponent_roster_id": "7"
-                }
-              ]
-            },
-            {
-              "roster_id": "8",
-              "owner": "alicho",
-              "team": "West Virginia",
-              "wins": 7,
-              "losses": 3,
-              "ties": 0,
-              "points_for": 1366.56,
-              "points_against": 1235.72,
-              "remaining_games": [
-                {
-                  "week": 11,
-                  "opponent_roster_id": "3"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "WIND",
-          "clinched_before_week": false,
-          "contenders": [
-            {
-              "roster_id": "3",
-              "owner": "DavidJimm",
-              "team": "Missouri",
-              "wins": 8,
-              "losses": 2,
-              "ties": 0,
-              "points_for": 1330.26,
-              "points_against": 1154.08,
+              "points_for": 1537.0,
+              "points_against": 1344.74,
               "remaining_games": [
                 {
                   "week": 11,
@@ -402,18 +304,18 @@
               ]
             },
             {
-              "roster_id": "7",
-              "owner": "Frankeen",
-              "team": "Kansas State",
-              "wins": 8,
-              "losses": 2,
+              "roster_id": "4",
+              "team": "Chattanooga",
+              "owner": "ethansherwood22",
+              "wins": 7,
+              "losses": 3,
               "ties": 0,
-              "points_for": 1517.88,
-              "points_against": 1172.66,
+              "points_for": 1506.88,
+              "points_against": 1221.96,
               "remaining_games": [
                 {
                   "week": 11,
-                  "opponent_roster_id": "4"
+                  "opponent_roster_id": "10"
                 }
               ]
             }
@@ -422,60 +324,186 @@
       ]
     },
     {
-      "league_id": "1331774846710849536",
-      "name": "Sun Belt",
+      "league_id": "1331774599196585984",
+      "name": "Mountain West",
       "divisions": [
         {
-          "name": "BIBLE",
-          "clinched_before_week": true,
+          "name": "SAINT",
+          "clinched_before_week": false,
           "contenders": [
             {
-              "roster_id": "9",
-              "owner": "denvermanning",
-              "team": "Southern Miss",
+              "roster_id": "1",
+              "team": "Hawaii",
+              "owner": "RicochetRay",
               "wins": 8,
               "losses": 2,
               "ties": 0,
-              "points_for": 1491.22,
-              "points_against": 1159.38,
+              "points_for": 1633.84,
+              "points_against": 1232.88,
               "remaining_games": [
                 {
                   "week": 11,
-                  "opponent_roster_id": "12"
+                  "opponent_roster_id": "8"
+                }
+              ]
+            },
+            {
+              "roster_id": "11",
+              "team": "UNLV",
+              "owner": "bdub3",
+              "wins": 9,
+              "losses": 1,
+              "ties": 0,
+              "points_for": 1487.6,
+              "points_against": 1210.12,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "4"
                 }
               ]
             }
           ]
         },
         {
-          "name": "REBEL",
-          "clinched_before_week": false,
+          "name": "SIN",
+          "clinched_before_week": true,
           "contenders": [
             {
-              "roster_id": "1",
-              "owner": "bruceble",
-              "team": "Temple",
+              "roster_id": "6",
+              "team": "BYU",
+              "owner": "KlondikeBar",
               "wins": 8,
               "losses": 2,
               "ties": 0,
-              "points_for": 1409.42,
-              "points_against": 1151.54,
+              "points_for": 1533.5,
+              "points_against": 1274.94,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "5"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "league_id": "1331774630620332032",
+      "name": "HBCU",
+      "divisions": [
+        {
+          "name": "MISSISSIPPI RIVER",
+          "clinched_before_week": false,
+          "contenders": [
+            {
+              "roster_id": "11",
+              "team": "Tuskegee",
+              "owner": "Jerryb83",
+              "wins": 7,
+              "losses": 3,
+              "ties": 0,
+              "points_for": 1286.88,
+              "points_against": 1137.3,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "10"
+                }
+              ]
+            },
+            {
+              "roster_id": "4",
+              "team": "Southern",
+              "owner": "memphismaniac",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1437.9,
+              "points_against": 1185.86,
               "remaining_games": [
                 {
                   "week": 11,
                   "opponent_roster_id": "3"
                 }
               ]
+            }
+          ]
+        },
+        {
+          "name": "HURRICANE",
+          "clinched_before_week": false,
+          "contenders": [
+            {
+              "roster_id": "1",
+              "team": "North Carolina A&T",
+              "owner": "PhantomXX",
+              "wins": 7,
+              "losses": 3,
+              "ties": 0,
+              "points_for": 1477.34,
+              "points_against": 1175.36,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "12"
+                }
+              ]
+            },
+            {
+              "roster_id": "3",
+              "team": "Delaware State",
+              "owner": "lcummings",
+              "wins": 6,
+              "losses": 4,
+              "ties": 0,
+              "points_for": 1211.32,
+              "points_against": 1131.54,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "4"
+                }
+              ]
             },
             {
               "roster_id": "6",
-              "owner": "Raidersforte",
-              "team": "Tulsa",
-              "wins": 8,
-              "losses": 2,
+              "team": "Howard",
+              "owner": "DeanFalcon",
+              "wins": 6,
+              "losses": 4,
               "ties": 0,
-              "points_for": 1437.48,
-              "points_against": 1052.4,
+              "points_for": 1166.42,
+              "points_against": 1073.42,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "8"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "league_id": "1331774695346823168",
+      "name": "CUSA",
+      "divisions": [
+        {
+          "name": "GULF",
+          "clinched_before_week": false,
+          "contenders": [
+            {
+              "roster_id": "4",
+              "team": "South Alabama",
+              "owner": "GRIDIRONGANG81",
+              "wins": 5,
+              "losses": 5,
+              "ties": 0,
+              "points_for": 1328.64,
+              "points_against": 1210.0,
               "remaining_games": [
                 {
                   "week": 11,
@@ -484,14 +512,118 @@
               ]
             },
             {
-              "roster_id": "8",
-              "owner": "yoboihawks",
-              "team": "Memphis",
+              "roster_id": "9",
+              "team": "Texas State",
+              "owner": "masshole4eva",
+              "wins": 6,
+              "losses": 4,
+              "ties": 0,
+              "points_for": 1234.5,
+              "points_against": 1209.16,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "7"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "TWISTER",
+          "clinched_before_week": true,
+          "contenders": [
+            {
+              "roster_id": "7",
+              "team": "Middle Tennessee State",
+              "owner": "arandrea",
+              "wins": 10,
+              "losses": 0,
+              "ties": 0,
+              "points_for": 1565.1,
+              "points_against": 1282.18,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "9"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "league_id": "1331774741488369664",
+      "name": "Ivy",
+      "divisions": [
+        {
+          "name": "RICH",
+          "clinched_before_week": false,
+          "contenders": [
+            {
+              "roster_id": "1",
+              "team": "Brown",
+              "owner": "FlynnD",
               "wins": 8,
               "losses": 2,
               "ties": 0,
-              "points_for": 1423.26,
-              "points_against": 1184.98,
+              "points_for": 1609.6,
+              "points_against": 1291.46,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "4"
+                }
+              ]
+            },
+            {
+              "roster_id": "11",
+              "team": "Dartmouth",
+              "owner": "jtheadrick98",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1483.2,
+              "points_against": 1126.02,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "12"
+                }
+              ]
+            },
+            {
+              "roster_id": "5",
+              "team": "Georgetown",
+              "owner": "ccassidy",
+              "wins": 7,
+              "losses": 3,
+              "ties": 0,
+              "points_for": 1624.46,
+              "points_against": 1240.54,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "10"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "SMART",
+          "clinched_before_week": true,
+          "contenders": [
+            {
+              "roster_id": "12",
+              "team": "Cornell",
+              "owner": "cobrapanther99",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1381.4,
+              "points_against": 1300.24,
               "remaining_games": [
                 {
                   "week": 11,
@@ -513,8 +645,8 @@
           "contenders": [
             {
               "roster_id": "11",
-              "owner": "FatPat1251",
               "team": "UT Martin",
+              "owner": "FatPat1251",
               "wins": 7,
               "losses": 3,
               "ties": 0,
@@ -535,8 +667,8 @@
           "contenders": [
             {
               "roster_id": "12",
-              "owner": "YikesOnBikes",
               "team": "Davidson",
+              "owner": "YikesOnBikes",
               "wins": 8,
               "losses": 2,
               "ties": 0,
@@ -551,8 +683,8 @@
             },
             {
               "roster_id": "8",
-              "owner": "CrownMeKing",
               "team": "Campbell",
+              "owner": "CrownMeKing",
               "wins": 9,
               "losses": 1,
               "ties": 0,
@@ -570,54 +702,22 @@
       ]
     },
     {
-      "league_id": "1331774741488369664",
-      "name": "Ivy",
+      "league_id": "1331774846710849536",
+      "name": "Sun Belt",
       "divisions": [
         {
-          "name": "RICH",
-          "clinched_before_week": false,
+          "name": "BIBLE",
+          "clinched_before_week": true,
           "contenders": [
             {
-              "roster_id": "1",
-              "owner": "FlynnD",
-              "team": "Brown",
+              "roster_id": "9",
+              "team": "Southern Miss",
+              "owner": "denvermanning",
               "wins": 8,
               "losses": 2,
               "ties": 0,
-              "points_for": 1609.6,
-              "points_against": 1291.46,
-              "remaining_games": [
-                {
-                  "week": 11,
-                  "opponent_roster_id": "4"
-                }
-              ]
-            },
-            {
-              "roster_id": "5",
-              "owner": "ccassidy",
-              "team": "Georgetown",
-              "wins": 7,
-              "losses": 3,
-              "ties": 0,
-              "points_for": 1624.46,
-              "points_against": 1240.54,
-              "remaining_games": [
-                {
-                  "week": 11,
-                  "opponent_roster_id": "10"
-                }
-              ]
-            },
-            {
-              "roster_id": "11",
-              "owner": "jtheadrick98",
-              "team": "Dartmouth",
-              "wins": 8,
-              "losses": 2,
-              "ties": 0,
-              "points_for": 1483.2,
-              "points_against": 1126.02,
+              "points_for": 1491.22,
+              "points_against": 1159.38,
               "remaining_games": [
                 {
                   "week": 11,
@@ -628,18 +728,50 @@
           ]
         },
         {
-          "name": "SMART",
-          "clinched_before_week": true,
+          "name": "REBEL",
+          "clinched_before_week": false,
           "contenders": [
             {
-              "roster_id": "12",
-              "owner": "cobrapanther99",
-              "team": "Cornell",
+              "roster_id": "1",
+              "team": "Temple",
+              "owner": "bruceble",
               "wins": 8,
               "losses": 2,
               "ties": 0,
-              "points_for": 1381.4,
-              "points_against": 1300.24,
+              "points_for": 1409.42,
+              "points_against": 1151.54,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "3"
+                }
+              ]
+            },
+            {
+              "roster_id": "6",
+              "team": "Tulsa",
+              "owner": "Raidersforte",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1437.48,
+              "points_against": 1052.4,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "5"
+                }
+              ]
+            },
+            {
+              "roster_id": "8",
+              "team": "Memphis",
+              "owner": "yoboihawks",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1423.26,
+              "points_against": 1184.98,
               "remaining_games": [
                 {
                   "week": 11,
@@ -652,38 +784,136 @@
       ]
     },
     {
-      "league_id": "1331774695346823168",
-      "name": "CUSA",
+      "league_id": "1331774880181399552",
+      "name": "Big 12",
       "divisions": [
         {
-          "name": "GULF",
+          "name": "HEAT",
           "clinched_before_week": false,
           "contenders": [
             {
               "roster_id": "4",
-              "owner": "GRIDIRONGANG81",
-              "team": "South Alabama",
-              "wins": 5,
-              "losses": 5,
+              "team": "Texas A&M",
+              "owner": "deadheadshane",
+              "wins": 7,
+              "losses": 3,
               "ties": 0,
-              "points_for": 1328.64,
-              "points_against": 1210,
+              "points_for": 1388.54,
+              "points_against": 1326.7,
               "remaining_games": [
                 {
                   "week": 11,
-                  "opponent_roster_id": "5"
+                  "opponent_roster_id": "7"
                 }
               ]
             },
             {
-              "roster_id": "9",
-              "owner": "masshole4eva",
-              "team": "Texas State",
-              "wins": 6,
-              "losses": 4,
+              "roster_id": "5",
+              "team": "Baylor",
+              "owner": "robertlouis7",
+              "wins": 8,
+              "losses": 2,
               "ties": 0,
-              "points_for": 1234.5,
-              "points_against": 1209.16,
+              "points_for": 1624.44,
+              "points_against": 1192.06,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "9"
+                }
+              ]
+            },
+            {
+              "roster_id": "8",
+              "team": "West Virginia",
+              "owner": "alicho",
+              "wins": 7,
+              "losses": 3,
+              "ties": 0,
+              "points_for": 1366.56,
+              "points_against": 1235.72,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "3"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "WIND",
+          "clinched_before_week": false,
+          "contenders": [
+            {
+              "roster_id": "3",
+              "team": "Missouri",
+              "owner": "DavidJimm",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1330.26,
+              "points_against": 1154.08,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "8"
+                }
+              ]
+            },
+            {
+              "roster_id": "7",
+              "team": "Kansas State",
+              "owner": "Frankeen",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1517.88,
+              "points_against": 1172.66,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "4"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "league_id": "1331774915392577536",
+      "name": "ACC",
+      "divisions": [
+        {
+          "name": "ATLANTIC",
+          "clinched_before_week": false,
+          "contenders": [
+            {
+              "roster_id": "10",
+              "team": "NC State",
+              "owner": "EerieHush",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1466.36,
+              "points_against": 1292.92,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "3"
+                }
+              ]
+            },
+            {
+              "roster_id": "12",
+              "team": "Clemson",
+              "owner": "dilbennett",
+              "wins": 9,
+              "losses": 1,
+              "ties": 0,
+              "points_for": 1596.94,
+              "points_against": 1170.86,
               "remaining_games": [
                 {
                   "week": 11,
@@ -694,18 +924,100 @@
           ]
         },
         {
-          "name": "TWISTER",
+          "name": "COASTAL",
           "clinched_before_week": true,
           "contenders": [
             {
-              "roster_id": "7",
-              "owner": "arandrea",
-              "team": "Middle Tennessee State",
+              "roster_id": "3",
+              "team": "Georgia Tech",
+              "owner": "spendawg",
+              "wins": 7,
+              "losses": 3,
+              "ties": 0,
+              "points_for": 1360.12,
+              "points_against": 1177.96,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "10"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "league_id": "1331775106527006720",
+      "name": "Pac-12",
+      "divisions": [
+        {
+          "name": "NORTH",
+          "clinched_before_week": true,
+          "contenders": [
+            {
+              "roster_id": "4",
+              "team": "Washington State",
+              "owner": "chzhead412",
               "wins": 10,
               "losses": 0,
               "ties": 0,
-              "points_for": 1565.1,
-              "points_against": 1282.18,
+              "points_for": 1615.62,
+              "points_against": 1129.16,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "12"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "SOUTH",
+          "clinched_before_week": false,
+          "contenders": [
+            {
+              "roster_id": "12",
+              "team": "UCLA",
+              "owner": "lmerkouSaints",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1360.96,
+              "points_against": 1259.04,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "4"
+                }
+              ]
+            },
+            {
+              "roster_id": "7",
+              "team": "Arizona State",
+              "owner": "wrightc214",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1599.46,
+              "points_against": 1274.18,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "10"
+                }
+              ]
+            },
+            {
+              "roster_id": "8",
+              "team": "Colorado",
+              "owner": "keppin",
+              "wins": 9,
+              "losses": 1,
+              "ties": 0,
+              "points_for": 1549.68,
+              "points_against": 1134.36,
               "remaining_games": [
                 {
                   "week": 11,
@@ -718,158 +1030,22 @@
       ]
     },
     {
-      "league_id": "1331774630620332032",
-      "name": "HBCU",
+      "league_id": "1331775170712444928",
+      "name": "SEC",
       "divisions": [
         {
-          "name": "MISSISSIPPI RIVER",
-          "clinched_before_week": false,
-          "contenders": [
-            {
-              "roster_id": "11",
-              "owner": "Jerryb83",
-              "team": "Tuskegee",
-              "wins": 7,
-              "losses": 3,
-              "ties": 0,
-              "points_for": 1286.88,
-              "points_against": 1137.3,
-              "remaining_games": [
-                {
-                  "week": 11,
-                  "opponent_roster_id": "10"
-                }
-              ]
-            },
-            {
-              "roster_id": "4",
-              "owner": "memphismaniac",
-              "team": "Southern",
-              "wins": 8,
-              "losses": 2,
-              "ties": 0,
-              "points_for": 1437.9,
-              "points_against": 1185.86,
-              "remaining_games": [
-                {
-                  "week": 11,
-                  "opponent_roster_id": "3"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "HURRICANE",
-          "clinched_before_week": false,
-          "contenders": [
-            {
-              "roster_id": "1",
-              "owner": "PhantomXX",
-              "team": "North Carolina A&T",
-              "wins": 7,
-              "losses": 3,
-              "ties": 0,
-              "points_for": 1477.34,
-              "points_against": 1175.36,
-              "remaining_games": [
-                {
-                  "week": 11,
-                  "opponent_roster_id": "12"
-                }
-              ]
-            },
-            {
-              "roster_id": "6",
-              "owner": "DeanFalcon",
-              "team": "Howard",
-              "wins": 6,
-              "losses": 4,
-              "ties": 0,
-              "points_for": 1166.42,
-              "points_against": 1073.42,
-              "remaining_games": [
-                {
-                  "week": 11,
-                  "opponent_roster_id": "8"
-                }
-              ]
-            },
-            {
-              "roster_id": "3",
-              "owner": "lcummings",
-              "team": "Delaware State",
-              "wins": 6,
-              "losses": 4,
-              "ties": 0,
-              "points_for": 1211.32,
-              "points_against": 1131.54,
-              "remaining_games": [
-                {
-                  "week": 11,
-                  "opponent_roster_id": "4"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "league_id": "1331774599196585984",
-      "name": "Mountain West",
-      "divisions": [
-        {
-          "name": "SAINT",
-          "clinched_before_week": false,
-          "contenders": [
-            {
-              "roster_id": "1",
-              "owner": "RicochetRay",
-              "team": "Hawaii",
-              "wins": 8,
-              "losses": 2,
-              "ties": 0,
-              "points_for": 1633.84,
-              "points_against": 1232.88,
-              "remaining_games": [
-                {
-                  "week": 11,
-                  "opponent_roster_id": "8"
-                }
-              ]
-            },
-            {
-              "roster_id": "11",
-              "owner": "bdub3",
-              "team": "UNLV",
-              "wins": 9,
-              "losses": 1,
-              "ties": 0,
-              "points_for": 1487.6,
-              "points_against": 1210.12,
-              "remaining_games": [
-                {
-                  "week": 11,
-                  "opponent_roster_id": "4"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "SIN",
+          "name": "EAST",
           "clinched_before_week": true,
           "contenders": [
             {
-              "roster_id": "6",
-              "owner": "KlondikeBar",
-              "team": "BYU",
-              "wins": 8,
-              "losses": 2,
+              "roster_id": "8",
+              "team": "Kentucky",
+              "owner": "Stumpy44",
+              "wins": 9,
+              "losses": 1,
               "ties": 0,
-              "points_for": 1533.5,
-              "points_against": 1274.94,
+              "points_for": 1532.16,
+              "points_against": 1230.66,
               "remaining_games": [
                 {
                   "week": 11,
@@ -878,64 +1054,20 @@
               ]
             }
           ]
-        }
-      ]
-    },
-    {
-      "league_id": "1331774544905510912",
-      "name": "Ohio Valley",
-      "divisions": [
-        {
-          "name": "YANKEE",
-          "clinched_before_week": true,
-          "contenders": [
-            {
-              "roster_id": "10",
-              "owner": "edgeofdefeat",
-              "team": "Monmouth",
-              "wins": 8,
-              "losses": 2,
-              "ties": 0,
-              "points_for": 1253.06,
-              "points_against": 1074.68,
-              "remaining_games": [
-                {
-                  "week": 11,
-                  "opponent_roster_id": "4"
-                }
-              ]
-            }
-          ]
         },
         {
-          "name": "SOUTHERN",
+          "name": "WEST",
           "clinched_before_week": false,
           "contenders": [
             {
-              "roster_id": "1",
-              "owner": "Mistafyer",
-              "team": "Belmont",
+              "roster_id": "2",
+              "team": "LSU",
+              "owner": "errand",
               "wins": 8,
               "losses": 2,
               "ties": 0,
-              "points_for": 1331.46,
-              "points_against": 1263.64,
-              "remaining_games": [
-                {
-                  "week": 11,
-                  "opponent_roster_id": "11"
-                }
-              ]
-            },
-            {
-              "roster_id": "4",
-              "owner": "ethansherwood22",
-              "team": "Chattanooga",
-              "wins": 7,
-              "losses": 3,
-              "ties": 0,
-              "points_for": 1506.88,
-              "points_against": 1221.96,
+              "points_for": 1382.58,
+              "points_against": 1230.42,
               "remaining_games": [
                 {
                   "week": 11,
@@ -944,18 +1076,18 @@
               ]
             },
             {
-              "roster_id": "2",
-              "owner": "LMarkiewicz04",
-              "team": "ETSU",
+              "roster_id": "4",
+              "team": "Auburn",
+              "owner": "egbdf",
               "wins": 7,
               "losses": 3,
               "ties": 0,
-              "points_for": 1537,
-              "points_against": 1344.74,
+              "points_for": 1466.02,
+              "points_against": 1238.4,
               "remaining_games": [
                 {
                   "week": 11,
-                  "opponent_roster_id": "8"
+                  "opponent_roster_id": "9"
                 }
               ]
             }
@@ -964,76 +1096,22 @@
       ]
     },
     {
-      "league_id": "1331774454493122560",
-      "name": "Wild",
+      "league_id": "1331775206619885568",
+      "name": "Big East",
       "divisions": [
         {
-          "name": "PLAINS",
+          "name": "MIDEAST",
           "clinched_before_week": false,
           "contenders": [
             {
-              "roster_id": "1",
-              "owner": "LanceBoneau",
-              "team": "Montana",
-              "wins": 6,
-              "losses": 4,
+              "roster_id": "4",
+              "team": "Pittsburgh",
+              "owner": "vinceA762",
+              "wins": 7,
+              "losses": 3,
               "ties": 0,
-              "points_for": 1560.66,
-              "points_against": 1255.24,
-              "remaining_games": [
-                {
-                  "week": 11,
-                  "opponent_roster_id": "2"
-                }
-              ]
-            },
-            {
-              "roster_id": "11",
-              "owner": "TheScorer",
-              "team": "South Dakota",
-              "wins": 5,
-              "losses": 5,
-              "ties": 0,
-              "points_for": 1236.46,
-              "points_against": 1294.8,
-              "remaining_games": [
-                {
-                  "week": 11,
-                  "opponent_roster_id": "12"
-                }
-              ]
-            },
-            {
-              "roster_id": "5",
-              "owner": "FareedB",
-              "team": "Wichita State",
-              "wins": 5,
-              "losses": 5,
-              "ties": 0,
-              "points_for": 1190,
-              "points_against": 1262.68,
-              "remaining_games": [
-                {
-                  "week": 11,
-                  "opponent_roster_id": "6"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "VALLEY",
-          "clinched_before_week": false,
-          "contenders": [
-            {
-              "roster_id": "12",
-              "owner": "DBGiants",
-              "team": "UNC Charlotte",
-              "wins": 8,
-              "losses": 2,
-              "ties": 0,
-              "points_for": 1354.64,
-              "points_against": 1209.38,
+              "points_for": 1374.72,
+              "points_against": 1305.32,
               "remaining_games": [
                 {
                   "week": 11,
@@ -1042,14 +1120,14 @@
               ]
             },
             {
-              "roster_id": "10",
-              "owner": "olddominion2020",
-              "team": "Old Dominion",
-              "wins": 9,
-              "losses": 1,
+              "roster_id": "6",
+              "team": "Coastal Carolina",
+              "owner": "joonbug",
+              "wins": 7,
+              "losses": 3,
               "ties": 0,
-              "points_for": 1514.74,
-              "points_against": 1160.06,
+              "points_for": 1572.06,
+              "points_against": 1338.7,
               "remaining_games": [
                 {
                   "week": 11,
@@ -1058,134 +1136,56 @@
               ]
             }
           ]
-        }
-      ]
-    },
-    {
-      "league_id": "1316899936696016896",
-      "name": "Big Ten",
-      "divisions": [
+        },
         {
-          "name": "EAST",
+          "name": "NORTHEAST",
           "clinched_before_week": false,
           "contenders": [
             {
-              "roster_id": "1",
-              "owner": "Mo00",
-              "team": "Purdue",
-              "wins": 6,
-              "losses": 4,
+              "roster_id": "5",
+              "team": "UCONN",
+              "owner": "NastyS8ntChance",
+              "wins": 7,
+              "losses": 3,
               "ties": 0,
-              "points_for": 1274.98,
-              "points_against": 1177.42,
-              "remaining_games": [
-                {
-                  "week": 11,
-                  "opponent_roster_id": "10"
-                }
-              ]
-            },
-            {
-              "roster_id": "9",
-              "owner": "Klashified",
-              "team": "Ohio State",
-              "wins": 6,
-              "losses": 4,
-              "ties": 0,
-              "points_for": 1279.48,
-              "points_against": 1214.8,
-              "remaining_games": [
-                {
-                  "week": 11,
-                  "opponent_roster_id": "6"
-                }
-              ]
-            },
-            {
-              "roster_id": "12",
-              "owner": "chrispychicken",
-              "team": "Michigan",
-              "wins": 6,
-              "losses": 4,
-              "ties": 0,
-              "points_for": 1434.92,
-              "points_against": 1142.68,
-              "remaining_games": [
-                {
-                  "week": 11,
-                  "opponent_roster_id": "11"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "WEST",
-          "clinched_before_week": true,
-          "contenders": [
-            {
-              "roster_id": "11",
-              "owner": "Schuflakka",
-              "team": "Iowa",
-              "wins": 9,
-              "losses": 1,
-              "ties": 0,
-              "points_for": 1615.28,
-              "points_against": 1196,
+              "points_for": 1455.48,
+              "points_against": 1235.84,
               "remaining_games": [
                 {
                   "week": 11,
                   "opponent_roster_id": "12"
                 }
               ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "league_id": "1316899756005412864",
-      "name": "Big Sky",
-      "divisions": [
-        {
-          "name": "FRONTIER",
-          "clinched_before_week": true,
-          "contenders": [
+            },
             {
-              "roster_id": "12",
-              "owner": "mssullivan2022",
-              "team": "Youngstown State",
-              "wins": 9,
-              "losses": 1,
-              "ties": 0,
-              "points_for": 1540.98,
-              "points_against": 1307.7,
-              "remaining_games": [
-                {
-                  "week": 11,
-                  "opponent_roster_id": "2"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "COLONIES",
-          "clinched_before_week": true,
-          "contenders": [
-            {
-              "roster_id": "3",
-              "owner": "Beastchewy15",
-              "team": "William & Mary",
+              "roster_id": "7",
+              "team": "Syracuse",
+              "owner": "CodeKhaos",
               "wins": 8,
               "losses": 2,
               "ties": 0,
-              "points_for": 1607.52,
-              "points_against": 1190.84,
+              "points_for": 1613.36,
+              "points_against": 1075.88,
               "remaining_games": [
                 {
                   "week": 11,
                   "opponent_roster_id": "6"
+                }
+              ]
+            },
+            {
+              "roster_id": "8",
+              "team": "Army",
+              "owner": "Claser",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1324.64,
+              "points_against": 1215.58,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "10"
                 }
               ]
             }
