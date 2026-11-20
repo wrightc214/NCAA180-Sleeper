@@ -178,7 +178,7 @@ class SelectionWatchBrowser(unittest.TestCase):
                         [line.previousElementSibling, line.nextElementSibling].map(
                             row => row.querySelector('[data-at-large]').dataset.atLarge)""")
                     self.assertEqual(boundary, ["Brown", "Central Michigan"] if ranking else ["Central Michigan", "Brown"])
-                self.assertIn("Above cut", page.locator('#sw-final-cut [data-at-large="Brown"]').inner_text())
+                self.assertIn("Automatic bid", page.locator('#sw-final-cut [data-at-large="Brown"]').inner_text())
                 self.assertIn("Central Michigan ‡", page.locator("#sw-final-field").inner_text())
                 self.assertEqual(page.evaluate("document.documentElement.scrollWidth - innerWidth"), 0)
                 self.assertTrue(page.evaluate("""() => document.querySelector('.sw-page nav').compareDocumentPosition(

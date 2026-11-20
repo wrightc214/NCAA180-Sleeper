@@ -98,13 +98,24 @@ test('a placard skips the leader’s held row against a lock or an at-risk oppon
     assert.equal(held.hold.pair,null);
     assert.equal(held.right,undefined);
     assert.equal(live.rows.filter(r=>r.right?.active).length,2);
-    assert.equal(live.rows.find(r=>r.left?.k==='D').left.status,'Bubble impact');
+    assert.equal(live.rows.find(r=>r.left?.k==='D').left.status,'Leading CCG');
     const final=core.cutBoard(d,leaders,odds,{...leaders});
     assert.equal(final.labels.save,'Saved');
     const trailing=core.cutBoard(d,{...leaders,save:opponent},odds,{x:'H',y:'I'});
     assert.equal(trailing.rows.find(r=>r.left?.k==='D').hold,undefined);
     assert.equal(trailing.rows.find(r=>r.left?.k==='D').left.status,'Below cut');
   }
+});
+test('a decided CCG winner shows Automatic bid; a live leader keeps its projected status',()=>{
+  const d=savedFixture('E'), odds={x:.9,y:.9,save:.3};
+  const live=core.cutBoard(d,{x:'A',y:'B',save:'E'},odds,{x:'A',y:'B'});
+  const status=b=>b.rows.find(r=>r.left?.k==='E')?.left.status;
+  assert.notEqual(status(live),'Automatic bid');
+  const decided=core.cutBoard(d,{},odds,{x:'A',y:'B',save:'E'});
+  assert.equal(status(decided),'Automatic bid');
+  assert.equal(decided.projected.E,1);
+  const saved=core.cutBoard(savedFixture('F'),{},{},{x:'H',y:'I',save:'D'});
+  assert.equal(saved.rows.find(r=>r.left?.k==='D').left.status,'Saved');
 });
 test('a non-play-in stays untagged when other What-if games make it win-or-out',()=>{
   const d=savedFixture('F');

@@ -122,7 +122,7 @@
       if(saved&&byBubble.has(k)&&(final||holding[g.id]===k)){
         const conf=team.get(k)?.conf||team.get(other)?.conf||'Conference';
         const row=byBubble.get(k);
-        row.status=final?'Saved':'Bubble impact';
+        row.status=final?'Saved':'Leading CCG';
         held.set(k,{conf,game:g.id,final,pair:otherOutside?thief(other):null});
       }else if(outside||otherOutside){
         thieves.push(thief(outside?k:other));
@@ -145,6 +145,13 @@
       }
       labels[g.id]=impact?'Bubble impact':'No bubble impact';
     }
+    // A decided CCG winner is in on its own bid; say so even when it would also be in at-large.
+    // Saved keeps its own label, and live leaders keep their projected status.
+    games.forEach(g=>{
+      const k=settled[g.id]||g.winner, row=k&&!playIns.has(g.id)&&byBubble.get(k);
+      if(row&&row.status!=='Saved')row.status='Automatic bid';
+    });
+    // Thieves sort by live win chance once games start (pregame odds before kickoff).
     thieves.sort((a,b)=>a.win-b.win||a.rank-b.rank||a.k.localeCompare(b.k));
     for(const t of thieves)t.label=labels[t.game]==='Stolen'&&!t.active?'':labels[t.game];
     const rows=atLarge.map(left=>({left,hold:held.get(left.k)}));
