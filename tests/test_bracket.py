@@ -74,6 +74,20 @@ class Final2025(unittest.TestCase):
             self.assertRegex(self.d, rf'class="bk-bowl"[^>]*><img src="[^"]*{b}\.png"[^>]*><span>{b}</span>')
         self.assertRegex(self.d, r'class="bk-bowl nc"[^>]*><img src="[^"]*National Championship\.png"[^>]*><span>National Championship</span>')
 
+    def test_forced_logos_on_team_rows(self):
+        """5.14 logos.force: a forced team's rows use its forced file in every view and export."""
+        import json
+        force = json.load(open(os.path.join(F.ROOT, "config", "league.json")))["logos"]["force"]
+        self.assertIn("Clemson", force)
+        rows = re.findall(r'<div class="bk-row[^"]*"[^>]*><span class="bk-sd">\d*</span><img src="([^"]*)"[^>]*><span class="bk-nm"><b>([^<]*)</b>', self.h)
+        seen = {}
+        for src, name in rows:
+            if name in force:
+                seen.setdefault(name, set()).add(src)
+        self.assertEqual(seen.get("Clemson"), {"../assets/logos/teams/glow-dark/Clemson.png"})
+        for name, srcs in seen.items():
+            self.assertEqual(srcs, {"../assets/logos/teams/" + force[name].split("assets/logos/teams/")[-1]}, name)
+
     def test_past_season_games_have_no_scoreboard_link(self):
         self.assertNotIn('href="scoreboard.html', self.h)
 
