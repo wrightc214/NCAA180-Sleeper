@@ -13,7 +13,7 @@ class Contenders(unittest.TestCase):
         return alive_members(members, divisions or [members], games, wins)
 
     def test_one_game_lead_with_tie_possible(self):
-        got = self.run_case({"A": 8, "B": 7}, [("A", "C"), ("B", "D")],
+        got = self.run_case({"A": 8, "B": 7, "C": 0, "D": 0}, [("A", "C"), ("B", "D")],
                             [["A", "B"], ["C", "D"]])
         self.assertEqual(got[0], ["A", "B"])
 
