@@ -9,7 +9,7 @@
   function participant(t){return t?'<span class="dw-team"><b>#'+esc(t.seed)+'</b> '+esc(t.team)+'<small>'+esc(t.display_name||t.username)+'</small></span>':'<span class="dw-team dw-empty">Bye / TBD</span>'}
   function game(g){
     const a=g.a,b=g.b,win=g.winner?.user_id;
-    const shown=(t,s,orig)=>'<div class="dw-side '+(t&&win===t.user_id?'dw-win':'')+'">'+participant(t)+'<span class="dw-score">'+(s==null?'—':Number(s).toFixed(2))+'</span>'+(g.frozen&&orig!=null&&s!==orig?'<span class="dw-diff" title="Sleeper differs from frozen score">Sleeper differs</span>':'')+'</div>';
+    const shown=(t,s,orig)=>'<div class="dw-side '+(t&&win===t.user_id?'dw-win':'')+'">'+participant(t)+'<span class="dw-score">'+(s==null?'—':Number(s).toFixed(2))+'</span>'+(g.frozen&&orig!=null&&s!==orig?'<span class="dw-diff" title="Sleeper differs from the score frozen when this round became final">†</span>':'')+'</div>';
     return '<div class="dw-game">'+shown(a,g.score_a,g.snapshot_a)+shown(b,g.score_b,g.snapshot_b)+'</div>';
   }
   function draw(data){
@@ -25,6 +25,7 @@
       html+='<section class="dw-champion"><div class="dw-trophy"><img src="'+esc(path(trophy))+'" alt="Dwight Fight trophy"><div class="dw-plaque"><strong>'+esc(c.team)+'</strong><span>'+esc(data.season)+' DWIGHT FIGHT CHAMPION</span></div></div><h2>'+esc(c.team)+' wins Dwight Fight</h2></section>';
     }
     html+='<section class="dw-bracket" aria-label="Dwight Fight bracket">'+rounds.map((r,i)=>'<div class="dw-round"><h2>'+(rounds.length===1?'Final':i===rounds.length-1?'Final':i===rounds.length-2?'Semifinal':i===rounds.length-3?'Quarterfinal':'Round '+(i+1))+' · Week '+(data.start_week+i)+'</h2>'+r.map(game).join('')+'</div>').join('')+'</section>';
+    html += '<p class="dw-note">† Sleeper differs from the score used when advancement was frozen.</p>';
     $('dw-main').innerHTML=html;
     // Responsive plaque engraving: shrink long school names within the art's bounds.
     const plaque=document.querySelector('.dw-plaque');
