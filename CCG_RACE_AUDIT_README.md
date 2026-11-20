@@ -59,7 +59,8 @@ Playoffs remains hidden-dev. Leave actual config hidden-dev on PR.
 ### Review/validation status
 - Current conference/contender data was cross-checked against source CSVs and verified to be **18/12**; the twelve named clinches and Pac-12 South records matched.
 - New JS source was syntax-parsed and the deterministic simulation was smoke-tested in an isolated JS runtime, including all 15 fixture conferences.
-- **Python unit tests, complete browser screenshot/export tests, generated-menu diff, and end-to-end GitHub Actions job have not been executed in this authoring environment.** Reviewer must run the commands above and validate these before merge.
+- **PR CI validation succeeded** in GitHub Actions run #44769915555: committed-menu regeneration/diff, accessibility generation, all Python and JS tests, CCG preview browser acceptance (desktop light/mobile dark), existing transaction, Dwight Fight and Selection Watch browser tests. The preview acceptance generated two full-page screenshots in the CI artifact `transactions-preview` (`work/ccg-race-preview/desktop.png` and `mobile.png`).
+- **Still requires human reviewer verification:** inspect CI screenshots and PNG export behavior, confirm actual live Sleeper/ESPN updates and data freshness during Week 11, and review UI/colors on representative devices. These are not proven by the offline fixture.
 - Current source uses the existing weekly workflow's update; production activation/publication must be managed separately from the PR. No automatic public-state change is included.
 
 ## Risks and reviewer focus
