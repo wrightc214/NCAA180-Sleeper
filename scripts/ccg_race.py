@@ -95,7 +95,7 @@ def build(year=None, write=True):
                 "remaining_games": []
             }
         for div in spec.itertuples(index=False):
-            div_name = str(getattr(div, "_1", div[1])).strip().upper() if False else str(div[1]).strip().upper()
+            div_name = str(div[1]).strip().upper()
             subset = [str(r["RosterID"]).removesuffix(".0") for r in frame.to_dict("records")
                       if str(r["Division"]).upper() == div_name]
             if not subset:
@@ -117,8 +117,10 @@ def build(year=None, write=True):
             raise ValueError("No remaining games for " + full)
         alive = alive_members(members, [v for _, v in divkeys], games,
                               {k: entries[k]["wins"] for k in members})
+        if full not in short:
+            raise ValueError("Missing friendly short conference name: " + full)
         confs.append({
-            "league_id": league, "name": short.get(full, full),
+            "league_id": league, "name": short[full],
             "divisions": [
                 {"name": label, "clinched_before_week": len(ids) == 1,
                  "contenders": [entries[k] for k in ids]}
