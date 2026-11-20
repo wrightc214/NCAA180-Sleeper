@@ -148,8 +148,9 @@ def build(offline=False):
     standard = standard_settings(scoring)
     colors = {r["Team"]: r for r in rows("data/Colors - Teams.csv")}
     def logo_fields(team):  # dark-background logo: alt, else glow file (Chris, 2026-11-12; site_common.logo_info)
-        i = logo_info(team)
-        return {"logo": i["src"] if i else "", "logo_dark": i["dark"] if i else ""}
+        i = logo_info(team)  # logo_forced: logos.force file for team-colour blocks, wins over logo_dark (task 5.14)
+        return {"logo": i["src"] if i else "", "logo_dark": i["dark"] if i else "",
+                "logo_forced": i["forced"] if i else ""}
 
     teams = {}
     for r in rows("data/Teams.csv"):

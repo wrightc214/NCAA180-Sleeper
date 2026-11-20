@@ -24,7 +24,7 @@
   const lname=id=>index.leagues[id]?.label||index.leagues[id]?.name||'';
   const ident=t=>index.leagues[t.l]?.teams?.[String(t.r)]||{name:t.team};
   const darkBg=h=>{const m=/^#?([0-9a-f]{6})$/i.exec(String(h||''));if(!m)return false;const c=[0,2,4].map(i=>parseInt(m[1].slice(i,i+2),16)/255).map(v=>v<=.03928?v/12.92:((v+.055)/1.055)**2.4);return .2126*c[0]+.7152*c[1]+.0722*c[2]<.18;};
-  const icon=t=>{const x=ident(t);return `<span class="team-icon" style="background:${esc(x.primary||'#14213a')}">${x.logo?`<img src="${esc(darkBg(x.primary)&&x.logo_dark||x.logo)}" alt="" onerror="this.hidden=true">`:''}</span>`;};
+  const icon=t=>{const x=ident(t);return `<span class="team-icon" style="background:${esc(x.primary||'#14213a')}">${x.logo?`<img src="${esc(x.logo_forced||darkBg(x.primary)&&x.logo_dark||x.logo)}" alt="" onerror="this.hidden=true">`:''}</span>`;};
   let mine='';try{const m=window.NCAA180?.myTeam?.();if(m)mine=`${m.conf}:${m.roster}`;}catch(e){}
   const isMine=t=>mine&&`${index.leagues[t.l]?.label||''}:${t.r}`===mine;
   function nflGames(data){

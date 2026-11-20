@@ -12,6 +12,7 @@ import glob
 import html
 import os
 import re
+import sys
 import urllib.parse
 import json
 from pathlib import Path
@@ -327,17 +328,61 @@ SECTIONS_JS = '<script src="assets/snapshot.js"></script><script src="assets/sec
 # else the glow version (glow-dark/<Team>.png, logo_glow.py), else the normal logo. Light
 # backgrounds use the normal logo. Theme-following pages emit both images and CSS picks
 # (.tl-hd / .tl-d in the shared stylesheet); blocks with a fixed color (team-color chips) decide here.
+# Overrides (task 5.14, 2026-11-20): config/league.json logos.force wins on fixed team-colour
+# backgrounds (mid-tone colours where the regular logo vanishes); white tiles and theme-following
+# logos are unchanged. Front-end JSON carries it as logo_forced (scoreboard_data.py).
 LOGO_DIR = "assets/logos/teams"
 
 
+class LogoConfigError(ValueError):
+    """config/league.json logos.force names a file that doesn't exist (fails the build)."""
+
+
+def forced_logos(config=None):
+    """{team: path under assets/logos/teams/} from config/league.json -> logos.force (task 5.14).
+    Raises LogoConfigError for a missing/invalid file; warns for a team that has no logo."""
+    if config is None:
+        config = json.loads((ROOT / "config" / "league.json").read_text(encoding="utf-8"))
+    force = ((config.get("logos") or {}).get("force") or {})
+    if not isinstance(force, dict):
+        raise LogoConfigError("config/league.json logos.force must be an object of team -> file")
+    out = {}
+    for team, rel in force.items():
+        if team.startswith("_"):
+            continue
+        rel = str(rel or "").replace("\\", "/").strip()
+        full = os.path.join(LOGO_DIR, rel)
+        if not rel or rel.startswith("/") or ".." in rel.split("/") or not os.path.isfile(full):
+            raise LogoConfigError(f"config/league.json logos.force: {team!r} -> {rel!r} "
+                                  f"is not a file under {LOGO_DIR}/ (looked for {full})")
+        if not os.path.exists(os.path.join(LOGO_DIR, f"{team}.png")):
+            print(f"WARNING: config/league.json logos.force: unknown team {team!r} "
+                  f"(no {LOGO_DIR}/{team}.png); override ignored", file=sys.stderr)
+        out[team] = rel
+    return out
+
+
+_FORCED = None
+
+
+def _forced():
+    global _FORCED
+    if _FORCED is None:
+        _FORCED = forced_logos()
+    return _FORCED
+
+
 def logo_info(team, prefix="../"):
-    """{'src', 'dark'} for a team ('dark' = alt or glow file, '' if neither), or None without a logo."""
+    """{'src', 'dark', 'forced'} for a team, or None without a logo. 'dark' = alt or glow file
+    ('' if neither); 'forced' = logos.force file for fixed team-colour backgrounds ('' if none)."""
     if not team or not os.path.exists(os.path.join(LOGO_DIR, f"{team}.png")):
         return None
     q = urllib.parse.quote(team)
     dark = next((f"{prefix}{LOGO_DIR}/{d}/{q}.png" for d in ("alt-dark", "glow-dark")
                  if os.path.exists(os.path.join(LOGO_DIR, d, f"{team}.png"))), "")
-    return {"src": f"{prefix}{LOGO_DIR}/{q}.png", "dark": dark}
+    rel = _forced().get(team)
+    forced = f"{prefix}{LOGO_DIR}/{urllib.parse.quote(rel)}" if rel else ""
+    return {"src": f"{prefix}{LOGO_DIR}/{q}.png", "dark": dark, "forced": forced}
 
 
 def is_dark(hexcolor):
@@ -350,6 +395,24 @@ def is_dark(hexcolor):
     return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b) < 0.18
 
 
+def is_white_tile(hexcolor):
+    """Near-white neutral (a white logo tile, not a team colour): logos.force doesn't apply."""
+    try:
+        h = hexcolor.lstrip("#")
+        rgb = [int(h[i:i + 2], 16) for i in (0, 2, 4)]
+    except (AttributeError, ValueError):
+        return False
+    return min(rgb) >= 235 and max(rgb) - min(rgb) <= 12
+
+
+def fixed_bg_src(info, bg):
+    """Logo file for a fixed background: logos.force first (team-colour blocks, not white tiles),
+    then the dark rule (alt-dark / glow-dark only when bg is dark), else the regular logo."""
+    if info.get("forced") and not is_white_tile(bg):
+        return info["forced"]
+    return info["dark"] if is_dark(bg) and info["dark"] else info["src"]
+
+
 def logo_html(team, prefix="../", cls="", alt="", bg=None, attrs=""):
     """<img> markup for a team logo ('' without one). bg=None follows the page theme;
     bg='#hex' is a fixed background (decided now)."""
@@ -359,7 +422,7 @@ def logo_html(team, prefix="../", cls="", alt="", bg=None, attrs=""):
     a = f' alt="{html.escape(alt)}"{attrs}'
     c = lambda extra: f' class="{(cls + " " + extra).strip()}"' if (cls or extra) else ""  # noqa: E731
     if bg is not None:
-        return f'<img{c("")} src="{i["dark"] if is_dark(bg) and i["dark"] else i["src"]}"{a}>'
+        return f'<img{c("")} src="{fixed_bg_src(i, bg)}"{a}>'
     if i["dark"]:
         return f'<img{c("tl-hd")} src="{i["src"]}"{a}><img{c("tl-d")} src="{i["dark"]}" alt="">'
     return f'<img{c("")} src="{i["src"]}"{a}>'
