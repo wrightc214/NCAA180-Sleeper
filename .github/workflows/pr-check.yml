@@ -26,8 +26,7 @@ jobs:
         with:
           node-version: '22'
       - name: JavaScript tests
-        run: |
-          for file in tests/*.test.js; do node "$file" || exit; done
+        run: node --test tests/*.test.js
       - name: Validate Dwight Fight replay, dry run and generated page
         run: |
           python3 scripts/dwight_fight.py --replay-2023 --out-dir /tmp/dwight-2023-replay
