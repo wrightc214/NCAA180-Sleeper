@@ -3,6 +3,7 @@ import sys
 from pathlib import Path
 
 import pytest
+import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import dwight_fight as df
@@ -131,3 +132,16 @@ def test_2023_replay(tmp_path):
     b = df.replay_2023(tmp_path)
     assert b["champion"]["team"] == "Arizona State"
     assert (tmp_path / "dwight-2023-replay.json").exists()
+
+
+def test_standings_tiebreaks_win_pct_pf_then_pa(monkeypatch):
+    e = entrants(3)
+    rows=[]
+    for team,pf,pa in ((e[0],1000,1800),(e[1],1100,1900),(e[2],1100,2000)):
+        rows.append({"LeagueID":team["league_id"],"RosterID":team["roster_id"],
+                     "LeagueName":"Test","Team":team["team"],"Wins":5,
+                     "Losses":5,"Ties":0,"PointsFor":pf,"PointsAgainst":pa})
+    monkeypatch.setattr(df.ps,"standings",lambda year:pd.DataFrame(rows))
+    monkeypatch.setattr(df.ps,"regular_games",lambda year:pd.DataFrame())
+    ordered=df.rank_entrants(e,2026)
+    assert [v["user_id"] for v in ordered] == ["3","2","1"]
