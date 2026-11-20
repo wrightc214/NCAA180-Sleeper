@@ -8,6 +8,12 @@
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0d1526;--panel:#16213a;--ink:#e8edf6;--mute:#9aa7bd;--line:#2a3756;--accent:#ff5468;color-scheme:dark}}
 :root[data-theme=dark]{--bg:#0d1526;--panel:#16213a;--ink:#e8edf6;--mute:#9aa7bd;--line:#2a3756;--accent:#ff5468;color-scheme:dark}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 var(--sans)}
+.weeks{display:flex;flex-wrap:wrap;gap:6px;font:600 13px var(--sans);margin-bottom:7px}
+.weeks a{color:var(--mute);text-decoration:none;padding:2px 8px;border:1px solid var(--line);border-radius:3px}
+.weeks a[aria-current]{color:var(--panel);background:var(--ink);border-color:var(--ink)}
+.weeks.sub{font-size:12px;margin:4px 0 14px;align-items:center}
+.weeks.sub span{color:var(--mute);margin-right:2px}
+.weeks.sub a{padding:1px 7px}
 .wrap{max-width:1200px;margin:auto;padding:22px 16px 44px}
 h1{font:900 clamp(36px,6vw,64px)/.98 "Big Shoulders Display",Impact,sans-serif;margin:0;text-transform:uppercase}
 h2{font:700 27px "Big Shoulders Display",Impact,sans-serif;text-transform:uppercase;margin:0 0 12px}
