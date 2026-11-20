@@ -16,7 +16,8 @@ def entrants(n):
 
 
 @pytest.mark.parametrize("n,first,size", [(5,15,8),(8,15,8),(11,14,16),
-                                         (16,14,16),(17,13,32),(32,13,32)])
+                                         (16,14,16),(17,13,32),(32,13,32),
+                                         (33,12,64),(64,12,64)])
 def test_bracket_dimensions(n, first, size):
     assert df.dimensions(n) == (size, first)
     b = df.draw(entrants(n), entrants(n))
@@ -26,11 +27,11 @@ def test_bracket_dimensions(n, first, size):
 
 
 def test_oversize_fails():
-    with pytest.raises(ValueError, match="at most 32"):
-        df.dimensions(33)
+    with pytest.raises(ValueError, match="at most 64"):
+        df.dimensions(65)
 
 
-@pytest.mark.parametrize("n", [5,11,16,17])
+@pytest.mark.parametrize("n", [5,11,16,17,33])
 def test_fixed_pairings_and_byes(n):
     b = df.draw(entrants(n), entrants(n))
     assert [g["a"]["seed"] for g in b["rounds"][0]] == df.slots(b["bracket_size"])[::2]
@@ -38,6 +39,9 @@ def test_fixed_pairings_and_byes(n):
         x if x <= n else None for x in df.slots(b["bracket_size"])[1::2]]
     df.advance(b, {}, {}, set())
     assert sum(bool(g["winner"]) for g in b["rounds"][0]) == b["bracket_size"] - n
+    if n == 33:
+        assert b["start_week"] == 12 and b["last_week"] == 17
+        assert sum(g["b"] is None for g in b["rounds"][0]) == 31
 
 
 def test_exact_sixteen_order():
@@ -132,6 +136,14 @@ def test_2023_replay(tmp_path):
     b = df.replay_2023(tmp_path)
     assert b["champion"]["team"] == "Arizona State"
     assert (tmp_path / "dwight-2023-replay.json").exists()
+
+
+@pytest.mark.parametrize("year,champion", [(2024, "New Mexico"), (2025, "Arizona State")])
+def test_reconstructed_replay(year, champion, tmp_path):
+    bracket = df.replay_reconstructed(year, tmp_path)
+    assert bracket["champion"]["team"] == champion
+    assert bracket["start_week"] == 14 and bracket["last_week"] == 17
+    assert (tmp_path / f"dwight-{year}-replay.json").exists()
 
 
 def test_standings_tiebreaks_win_pct_pf_then_pa(monkeypatch):

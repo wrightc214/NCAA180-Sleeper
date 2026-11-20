@@ -7,7 +7,6 @@ import argparse
 import csv
 import datetime as dt
 import json
-import math
 import os
 import sys
 from pathlib import Path
@@ -20,6 +19,14 @@ import _postseason_common as ps
 import week_status
 
 HISTORY = Path("data/Dwight_Historic.csv")
+FINAL_WEEK = 17
+MAX_ENTRANTS = 64
+RECONSTRUCTED_CHAMPIONS = {2024: "New Mexico", 2025: "Arizona State"}
+RECONSTRUCTED_FIELD = (
+    "Arizona State", "Minnesota", "Wisconsin", "Montana", "Louisiana Monroe",
+    "New Mexico", "North Alabama", "Eastern Washington", "Nebraska", "Wake Forest",
+    "Stony Brook",
+)
 COLUMNS = ["Season", "Round", "RoundName", "Week", "TeamA", "SeedA",
            "TeamB", "SeedB", "ScoreA", "ScoreB", "Winner", "Notes", "Status"]
 
@@ -29,9 +36,9 @@ def names(value):
     return list(dict.fromkeys(x.strip().casefold() for x in str(value or "").split(",") if x.strip()))
 
 
-def dimensions(count, last=17):
-    if count > 32:
-        raise ValueError("Dwight Fight supports at most 32 entrants")
+def dimensions(count, last=FINAL_WEEK):
+    if count > MAX_ENTRANTS:
+        raise ValueError(f"Dwight Fight supports at most {MAX_ENTRANTS} entrants")
     if count < 2:
         raise ValueError("Dwight Fight requires at least two entrants")
     size = 1 << (count - 1).bit_length()
@@ -97,7 +104,7 @@ def resolve(requested, owners, api, session=None, saved=None):
     return resolved, errors
 
 
-def draw(entrants, ranked, last=17, season=2026):
+def draw(entrants, ranked, last=FINAL_WEEK, season=2026):
     size, start = dimensions(len(entrants), last)
     ordered = [dict(x, seed=i + 1) for i, x in enumerate(ranked)]
     byseed = {x["seed"]: x for x in ordered}
@@ -248,41 +255,45 @@ def round_name(index, total):
     return late.get(total - index, "First Round" if index == 0 else f"Round {index + 1}")
 
 
-def write_history(year, bracket, path=HISTORY):
-    old = []
-    if Path(path).exists():
-        with open(path, newline="", encoding="utf-8-sig") as f:
-            old = [r for r in csv.DictReader(f) if str(r.get("Season")) != str(year)]
-    mine = []
+def history_rows(year, bracket):
     for ri, rnd in enumerate(bracket["rounds"]):
         for g in rnd:
             a, b = g["a"], g["b"]
             if not a or not b:
                 continue  # bye is not a played game
             diff = g["frozen"] and (g["score_a"] != g["snapshot_a"] or g["score_b"] != g["snapshot_b"])
-            mine.append({"Season": year, "Round": ri + 1,
-                         "RoundName": round_name(ri, len(bracket["rounds"])),
-                         "Week": bracket["start_week"] + ri,
-                         "TeamA": a["team"], "SeedA": a["seed"],
-                         "TeamB": b["team"], "SeedB": b["seed"],
-                         "ScoreA": g["score_a"] if g["score_a"] is not None else "",
-                         "ScoreB": g["score_b"] if g["score_b"] is not None else "",
-                         "Winner": (g["winner"] or {}).get("team", ""),
-                         "Notes": "Sleeper differs (frozen advancement)" if diff else "",
-                         "Status": "Recorded"})
+            yield {
+                "Season": year, "Round": ri + 1,
+                "RoundName": round_name(ri, len(bracket["rounds"])),
+                "Week": bracket["start_week"] + ri,
+                "TeamA": a["team"], "SeedA": a["seed"],
+                "TeamB": b["team"], "SeedB": b["seed"],
+                "ScoreA": g["score_a"] if g["score_a"] is not None else "",
+                "ScoreB": g["score_b"] if g["score_b"] is not None else "",
+                "Winner": (g["winner"] or {}).get("team", ""),
+                "Notes": "Sleeper differs (frozen advancement)" if diff else "",
+                "Status": "Recorded",
+            }
+
+
+def write_history(year, bracket, path=HISTORY):
+    old = []
+    if Path(path).exists():
+        with open(path, newline="", encoding="utf-8-sig") as f:
+            old = [r for r in csv.DictReader(f) if str(r.get("Season")) != str(year)]
     Path(path).parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=COLUMNS)
         w.writeheader()
-        w.writerows(old + mine)
+        w.writerows(old)
+        w.writerows(history_rows(year, bracket))
 
 
 def dry_run_sample(year, count, out_dir):
     """Offline sample against current 2026 teams, never locks or writes production."""
     if not out_dir:
         raise ValueError("--sample-count requires --out-dir")
-    if not 2 <= count <= 32:
-        raise ValueError("sample count must be between 2 and 32")
+    dimensions(count)
     year = int(year)
     owners = pd.read_csv("data/Standings_Season.csv", dtype=str).fillna("")
     owners = owners[(owners["Year"] == str(year)) & (owners["OwnerID"] != "Orphan")]
@@ -295,8 +306,7 @@ def dry_run_sample(year, count, out_dir):
                "roster_id": r["RosterID"], "league": r["LeagueName"],
                "team": season_name(year, r["LeagueName"], r["RosterID"]) or r["LeagueName"]}
               for r in owners.to_dict("records")]
-    conf = ps.config()[1]["dwight_fight"]
-    b = draw(people, rank_entrants(people, year), int(conf.get("last_week", 17)), year)
+    b = draw(people, rank_entrants(people, year), season=year)
     Path(out_dir).mkdir(parents=True, exist_ok=True)
     (Path(out_dir) / "dwight.json").write_text(json.dumps(b, indent=2) + "\n", encoding="utf-8")
     assert not b["locked"] and b["status"] == "initial"
@@ -361,24 +371,81 @@ def replay_2023(out_dir):
     return bracket
 
 
+def replay_reconstructed(year, out_dir):
+    """Rebuild from the supplied poll-voter field, archived standings and standard scores.
+
+    The Dwight archive is the expected output only. No matchup, seed or score is
+    taken from it as input to the reconstruction.
+    """
+    if not out_dir:
+        raise ValueError("--replay-reconstructed requires --out-dir to protect production data")
+    frame = ps.standings(year)
+    field = frame[frame["Team"].isin(RECONSTRUCTED_FIELD)]
+    if sorted(field["Team"]) != sorted(RECONSTRUCTED_FIELD):
+        raise AssertionError(f"{year} reconstruction must resolve each poll-voter team exactly once")
+    ordered, _, _ = ps.rank_ties(field, ps.regular_games(year))
+    people = [{"user_id": f"{r.LeagueID}:{r.RosterID}", "username": r.OwnerName,
+               "display_name": r.OwnerName, "team": r.Team, "league": r.LeagueName,
+               "league_id": r.LeagueID, "roster_id": r.RosterID}
+              for r in ordered.itertuples()]
+    bracket = draw(people, people, season=year)
+    standard = pd.read_csv("data/ScoresStandard_Historic.csv", dtype=str)
+    weeks = set(range(bracket["start_week"], FINAL_WEEK + 1))
+    scores = {week: {} for week in weeks}
+    keys = {(p["league_id"], p["roster_id"]) for p in people}
+    for r in standard[standard["Year"] == str(year)].itertuples():
+        week, roster = int(r.Week), (r.LeagueID, r.RosterID)
+        if week in weeks and roster in keys:
+            scores[week][roster] = round(float(r.PointsStandard), 2)
+    if any(set(week_scores) != keys for week_scores in scores.values()):
+        raise AssertionError(f"{year} reconstruction is missing poll-voter standard scores")
+    advance(bracket, scores, max_for(year), weeks)
+
+    def game_record(row):
+        return tuple(float(row[k]) if k.startswith("Score") else str(row[k]) for k in COLUMNS[:-2])
+
+    with open(HISTORY, newline="", encoding="utf-8-sig") as stream:
+        expected = [r for r in csv.DictReader(stream) if r["Season"] == str(year)]
+    actual = list(history_rows(year, bracket))
+    if len(expected) != len(people) - 1 or len(actual) != len(expected):
+        raise AssertionError(f"{year} replay game count: got {len(actual)}, archive has {len(expected)}")
+    for archived, replayed in zip(expected, actual):
+        if not archived["Status"].startswith("Reconstructed") or game_record(archived) != game_record(replayed):
+            raise AssertionError(f"{year} replay mismatch: archive {game_record(archived)} != replay {game_record(replayed)}")
+    champion = (bracket["champion"] or {}).get("team")
+    if champion != RECONSTRUCTED_CHAMPIONS[year]:
+        raise AssertionError(f"{year} replay unexpected champion: {champion}")
+    Path(out_dir).mkdir(parents=True, exist_ok=True)
+    (Path(out_dir) / f"dwight-{year}-replay.json").write_text(
+        json.dumps(bracket, indent=2) + "\n", encoding="utf-8")
+    print(f"Dwight Fight {year} replay: verified {len(actual)} reconstructed games; champion {champion}")
+    return bracket
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--year", type=int)
     ap.add_argument("--out-dir", help="isolate replay/dry-run outputs")
-    ap.add_argument("--replay-2023", action="store_true", help="historical weeks 15-18, not a production draw")
+    replay = ap.add_mutually_exclusive_group()
+    replay.add_argument("--replay-2023", action="store_true", help="historical weeks 15-18, not a production draw")
+    replay.add_argument("--replay-reconstructed", type=int, choices=RECONSTRUCTED_CHAMPIONS,
+                        help="verify a reconstruction from archived standings and standard scores")
     ap.add_argument("--sample-count", type=int, help="dry-run a sample of real 2026 owners (requires --out-dir)")
     args = ap.parse_args()
     os.chdir(Path(__file__).resolve().parent.parent)
     cfg, postseason = ps.config()
     conf = postseason.get("dwight_fight", {})
-    year = 2023 if args.replay_2023 else args.year or ps.current_season()
     if args.replay_2023:
         replay_2023(args.out_dir)
         return
+    if args.replay_reconstructed:
+        replay_reconstructed(args.replay_reconstructed, args.out_dir)
+        return
+    year = args.year or ps.current_season()
     if args.sample_count:
         dry_run_sample(year, args.sample_count, args.out_dir)
         return
-    if year < int(conf.get("from_season", 2026)) and not args.replay_2023:
+    if year < int(conf.get("from_season", 2026)):
         print(f"Dwight Fight: {year} precedes from_season; no-op")
         return
     requested = names(conf.get("dwights", ""))
@@ -389,8 +456,8 @@ def main():
         if not requested:
             print("Dwight Fight: empty dwights configuration; no-op")
             return
-        if len(requested) > 32:
-            raise SystemExit("Dwight Fight: at most 32 usernames allowed")
+        if len(requested) > MAX_ENTRANTS:
+            raise SystemExit(f"Dwight Fight: at most {MAX_ENTRANTS} usernames allowed")
     done = set(ps.completed_weeks(year))
     lr = ps.last_regular_week()
     if not set(range(1, lr + 1)).issubset(done):
@@ -406,7 +473,7 @@ def main():
                 print("WARNING: Dwight Fight:", err)
             pending = old or {"season": year, "status": "pending", "locked": False,
                               "entrants": [], "rounds": [], "start_week": None,
-                              "last_week": int(conf.get("last_week", 17))}
+                              "last_week": FINAL_WEEK}
             pending["warnings"] = errors
             output.parent.mkdir(parents=True, exist_ok=True)
             output.write_text(json.dumps(pending, indent=2) + "\n", encoding="utf-8")
@@ -414,14 +481,13 @@ def main():
         if len(fresh) < 2:
             print("Dwight Fight: fewer than two valid entrants; no-op")
             return
-        last = int(conf.get("last_week", 17))
-        size, start = dimensions(len(fresh), last)
+        size, start = dimensions(len(fresh))
         current = week_status.current_week(year)
         if old and same_members(old, fresh):
             bracket = old
             update_names(bracket, fresh)
         else:
-            bracket = draw(fresh, rank_entrants(fresh, year), last, year)
+            bracket = draw(fresh, rank_entrants(fresh, year), season=year)
             print(f"Dwight Fight: initial bracket drawn ({len(fresh)} teams, {size} slots, week {start})")
         bracket["warnings"] = []
         if current >= start:

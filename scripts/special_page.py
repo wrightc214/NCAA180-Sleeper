@@ -98,8 +98,11 @@ def main():
 .dw-trophy{position:relative;width:min(300px,100%);margin:auto}.dw-trophy img{width:100%;display:block}
 .dw-plaque{position:absolute;left:24.6%;top:82.5%;width:50.6%;height:11.1%;display:flex;flex-direction:column;justify-content:center;align-items:center;overflow:hidden;color:#4a260d;text-align:center;font-size:clamp(5px,1vw,10px);line-height:1.1}
 .dw-plaque strong,.dw-plaque span{max-width:100%;white-space:nowrap;display:block;font-size:min(100%,10px);letter-spacing:-.02em}
-.dw-champs{display:flex;flex-wrap:wrap;gap:6px}.dw-champs>div{padding:7px 10px;border:1px solid var(--line);border-radius:5px;background:var(--panel);font-size:13px}
-.dw-champs+h2{margin-top:24px}
+.dw-champs,.dw-totals{display:flex;flex-wrap:wrap;gap:6px}
+.dw-champs>div,.dw-totals>div{padding:7px 10px;border:1px solid var(--line);border-radius:5px;background:var(--panel);font-size:13px}
+.dw-recorded-title{margin-top:28px}
+.dw-reconstruction,#dw-reconstruction-note{font-size:13px;color:var(--mute)}
+.dw-reconstructed{color:var(--accent);font-weight:800;margin-left:1px}
 .dw-history{border:1px solid var(--line);margin:10px 0;border-radius:6px;padding:10px}
 .dw-history summary{cursor:pointer;font-weight:700}.dw-past{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
 .dw-past section{min-width:0}.dw-past h3{font-size:13px}.dw-hgame{border:1px solid var(--line);background:var(--panel);padding:7px;border-radius:5px;font-size:12px;margin:5px 0}

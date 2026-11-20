@@ -57,15 +57,41 @@
     const keys=out.shift()||[];return out.map(a=>Object.fromEntries(keys.map((k,i)=>[k,a[i]||''])));
   }
   function history(rows,inProgressYear){
-    const winners={'2019':'Penn','2020':'Finalist: Penn · champion unknown','2021':'Villanova','2022':'Arizona State','2023':'Arizona State','2024':'No record','2025':'No record'};
-    let html='<h2>Past champions</h2><div class="dw-champs">'+Object.entries(winners).map(([y,w])=>'<div><b>'+y+'</b> '+esc(w)+'</div>').join('')+'</div>';
-    const years=[...new Set(rows.map(r=>Number(r.Season)))]
-      .filter(year=>Number.isInteger(year)&&year>0&&year!==inProgressYear)
-      .sort((a,b)=>b-a);
-    html+='<h2>Recorded brackets</h2>'+years.map(year=>{
-      const season=rows.filter(r=>+r.Season===year),grp={};
+    const archive=new Map();
+    for(const row of rows){
+      const year=Number(row.Season);
+      if(!Number.isInteger(year)||year<1||year===inProgressYear)continue;
+      if(!archive.has(year))archive.set(year,[]);
+      archive.get(year).push(row);
+    }
+    const seasons=[...archive].sort(([a],[b])=>b-a).map(([year,games])=>({
+      year,games,
+      reconstructed:games.some(r=>r.Status?.startsWith('Reconstructed')),
+      winner:games.find(r=>r.RoundName==='Final'&&r.Winner)?.Winner
+    }));
+    const winners=[{year:2019,winner:'Penn'},{year:2020,display:'Finalist: Penn · champion unknown'},
+      ...seasons.filter(s=>s.winner).reverse()];
+    const mark=s=>s.reconstructed?'<sup class="dw-reconstructed" aria-label="reconstructed" aria-describedby="dw-reconstruction-note">*</sup>':'';
+    const totals=new Map();
+    for(const champ of winners){
+      if(!champ.winner)continue;
+      if(!totals.has(champ.winner))totals.set(champ.winner,[]);
+      totals.get(champ.winner).push(champ);
+    }
+    let html='<h2>Past champions</h2><div class="dw-champs">'+winners.map(c=>
+      '<div><b>'+c.year+'</b> '+esc(c.winner||c.display)+mark(c)+'</div>').join('')+'</div>';
+    html+='<h3>Title totals</h3><div class="dw-totals">'+[...totals]
+      .sort(([a,x],[b,y])=>y.length-x.length||a.localeCompare(b))
+      .map(([team,titles])=>'<div><b>'+esc(team)+' '+titles.length+'</b> ('+
+        titles.map(c=>c.year+mark(c)).join(', ')+')</div>').join('')+'</div>';
+    if(winners.some(c=>c.reconstructed))html+='<p id="dw-reconstruction-note">* Reconstructed bracket; managers may not have set lineups for this event.</p>';
+    html+='<h2 class="dw-recorded-title">Recorded brackets</h2>'+seasons.map(({year,games:season,reconstructed})=>{
+      const grp={};
       for(const r of season)(grp[r.Round]??=[]).push(r);
-      return '<details class="dw-history"><summary>'+year+' · '+season.length+(season.length===1?' game':' games')+'</summary><div class="dw-past">'+Object.keys(grp).sort((a,b)=>a-b).map(k=>'<section><h3>'+esc(grp[k][0].RoundName)+' · Week '+esc(grp[k][0].Week)+'</h3>'+grp[k].map(g=>'<div class="dw-hgame"><span class="'+(g.Winner===g.TeamA?'dw-win':'')+'">#'+esc(g.SeedA)+' '+esc(g.TeamA)+' <b>'+score(g.ScoreA)+'</b></span><span class="'+(g.Winner===g.TeamB?'dw-win':'')+'">#'+esc(g.SeedB)+' '+esc(g.TeamB)+' <b>'+score(g.ScoreB)+'</b></span></div>').join('')+'</section>').join('')+'</div></details>';
+      return '<details class="dw-history"><summary>'+year+' · '+season.length+(season.length===1?' game':' games')+
+        (reconstructed?' · Reconstructed':'')+'</summary>'+
+        (reconstructed?'<p class="dw-reconstruction">Reconstructed: field = that season\'s poll voters; the event was likely not held.</p>':'')+
+        '<div class="dw-past">'+Object.keys(grp).sort((a,b)=>a-b).map(k=>'<section><h3>'+esc(grp[k][0].RoundName)+' · Week '+esc(grp[k][0].Week)+'</h3>'+grp[k].map(g=>'<div class="dw-hgame"><span class="'+(g.Winner===g.TeamA?'dw-win':'')+'">#'+esc(g.SeedA)+' '+esc(g.TeamA)+' <b>'+score(g.ScoreA)+'</b></span><span class="'+(g.Winner===g.TeamB?'dw-win':'')+'">#'+esc(g.SeedB)+' '+esc(g.TeamB)+' <b>'+score(g.ScoreB)+'</b></span></div>').join('')+'</section>').join('')+'</div></details>';
     }).join('');
     $('dw-history').innerHTML=html;
   }

@@ -27,14 +27,14 @@ class DwightFightBrowser(unittest.TestCase):
         people = [{"user_id": str(i), "username": f"dwight{i}",
                    "display_name": f"Dwight {i}", "team": f"University of Test School {i}",
                    "league": "Sample", "league_id": "L", "roster_id": str(i)}
-                  for i in range(1, 33)]
+                  for i in range(1, 34)]
         sample = dw.draw(people, people, 17, 2026)
         sample["locked"] = True
         sample["status"] = "locked"
-        scores = {w: {("L", str(i)): 110 + i + w / 100 for i in range(1, 33)} for w in range(13, 18)}
-        dw.advance(sample, scores, {}, set(range(13, 17)))
+        scores = {w: {("L", str(i)): 110 + i + w / 100 for i in range(1, 34)} for w in range(12, 18)}
+        dw.advance(sample, scores, {}, set(range(12, 17)))
         in_progress_body = json.dumps(sample)
-        dw.advance(sample, scores, {}, set(range(13, 18)))
+        dw.advance(sample, scores, {}, set(range(12, 18)))
         self.assertTrue(sample["champion"])
         body = json.dumps(sample)
         with TemporaryDirectory() as work:
@@ -42,7 +42,7 @@ class DwightFightBrowser(unittest.TestCase):
             historic = (ROOT / "data/Dwight_Historic.csv").read_text(encoding="utf-8")
             # Out of order, absent from the original archive, with zero and missing scores.
             history_path.write_text(
-                historic.rstrip("\n") + "\n2024,1,Final,17,Extra A,1,Extra B,2,0,,Extra A,,Recorded\n",
+                historic.rstrip("\n") + "\n2018,1,Final,17,Extra A,1,Extra B,2,0,,,,Recorded\n",
                 encoding="utf-8",
             )
             dw.write_history(2026, sample, history_path)
@@ -77,25 +77,36 @@ class DwightFightBrowser(unittest.TestCase):
                         self.assertGreater(banner.evaluate("(img) => img.naturalWidth"), 0)
                         expect(page.locator("#dw-status")).to_contain_text("Locked bracket")
                         rounds = page.locator(".dw-round h2")
-                        names = ["First Round", "Round 2", "Quarterfinal", "Semifinal", "Final"]
+                        names = ["First Round", "Round 2", "Round 3", "Quarterfinal", "Semifinal", "Final"]
                         expect(rounds).to_have_text([
-                            f"{name} · Wk {i + 12} · PS{i}" for i, name in enumerate(names, 1)
+                            f"{names[0]} · Wk 12 · CCG",
+                            *(f"{name} · Wk {i + 12} · PS{i}" for i, name in enumerate(names[1:], 1)),
                         ])
                         expect(page.locator(".dw-champion")).to_be_visible()
                         archive = page.locator(".dw-history")
                         summaries = archive.locator("summary")
                         expect(summaries).to_have_text([
-                            "2026 · 31 games", "2024 · 1 game", "2023 · 10 games",
-                            "2022 · 15 games", "2021 · 15 games",
+                            "2026 · 32 games", "2025 · 10 games · Reconstructed",
+                            "2024 · 10 games · Reconstructed", "2023 · 10 games",
+                            "2022 · 15 games", "2021 · 15 games", "2018 · 1 game",
                         ])
                         summaries.first.click()
                         expect(archive.first.locator("h3")).to_have_text([
-                            f"{name} · Week {i + 12}" for i, name in enumerate(names, 1)
+                            f"{name} · Week {i + 12}" for i, name in enumerate(names)
                         ])
-                        summaries.nth(1).click()
-                        expect(archive.nth(1).locator(".dw-hgame b")).to_have_text(["0.00", "—"])
+                        for i in (1, 2):
+                            summaries.nth(i).click()
+                            expect(archive.nth(i).locator(".dw-reconstruction")).to_have_text(
+                                "Reconstructed: field = that season's poll voters; the event was likely not held.")
+                            expect(archive.nth(i).locator(".dw-hgame")).to_have_count(10)
+                        expect(page.locator(".dw-champs > div").filter(has_text="2024")).to_have_text("2024 New Mexico*")
+                        expect(page.locator(".dw-champs > div").filter(has_text="2025")).to_have_text("2025 Arizona State*")
+                        expect(page.locator("#dw-reconstruction-note")).to_have_text(
+                            "* Reconstructed bracket; managers may not have set lineups for this event.")
                         summaries.last.click()
-                        historic_scores = archive.last.locator(".dw-hgame b").all_text_contents()
+                        expect(archive.last.locator(".dw-hgame b")).to_have_text(["0.00", "—"])
+                        summaries.nth(5).click()
+                        historic_scores = archive.nth(5).locator(".dw-hgame b").all_text_contents()
                         self.assertIn("80.50", historic_scores)
                         self.assertIn("138.00", historic_scores)
                         self.assertFalse(page.evaluate(
@@ -109,7 +120,12 @@ class DwightFightBrowser(unittest.TestCase):
                             expect(rounds.last).to_have_text("Final · Wk 17 · PS5")
                             expect(page.locator(".dw-champion")).to_have_count(0)
                             expect(summaries).to_have_text([
-                                "2024 · 1 game", "2023 · 10 games", "2022 · 15 games", "2021 · 15 games",
+                                "2025 · 10 games · Reconstructed", "2024 · 10 games · Reconstructed",
+                                "2023 · 10 games", "2022 · 15 games", "2021 · 15 games", "2018 · 1 game",
+                            ])
+                            expect(page.locator(".dw-totals > div")).to_have_text([
+                                "Arizona State 3 (2022, 2023, 2025*)", "New Mexico 1 (2024*)",
+                                "Penn 1 (2019)", "Villanova 1 (2021)",
                             ])
                         self.assertFalse(errors, errors)
                         page.close()

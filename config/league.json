@@ -973,7 +973,7 @@
       "min_swing": 0.05
     },
     "dwight_fight": {
-      "_note": "League assistants' one-team single-elimination event. Edit dwights as a comma-separated list of Sleeper usernames (not team names); roster changes ignored once locked. Empty list is a safe no-op.",
+      "_note": "League assistants' one-team single-elimination event for 2–64 entrants. The final is always week 17, never week 18. A 33–64 entrant field starts in week 12; smaller fields start later. Each round takes one week in a next-power-of-two bracket. Edit dwights as a comma-separated list of Sleeper usernames (not team names); roster changes are ignored once locked. Empty list is a safe no-op.",
       "dwights": "",
       "last_week": 17,
       "from_season": 2026,
