@@ -302,7 +302,7 @@ function createNCAA180Accessibility() {
 
   // ---- models (pure: tested in tests/menu.test.js) ----
   // Main tabs for page key `cur`: [{label, href, current, dev, bell, glyph, icon}] (glyph = built-in icon name or null)
-  // Parent destination resolves to the first item visible to the current viewer.
+  // Parent points to the first sub-page actually visible in this viewer's mode.
   function firstVisibleHref(tab, dev) {
     var row = D.rows[tab.id];
     if (!row) return tab.href;
