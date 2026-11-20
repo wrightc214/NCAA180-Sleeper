@@ -11,7 +11,7 @@
  let cfg,settings,index,metadata,baseline,data,leagueColors,week,season;
  let timer=null,busy=false,failures=0,lastGood=null,started=false;
  const records=new Map(),leagueCfg=new Map();
- let refreshMs=300000,gen=0;
+ let refreshMs=300000,gen=0,unit='conference';
  async function get(path){const abort=new AbortController(),timeout=setTimeout(()=>abort.abort(),20000);
    try{const r=await fetch(path,{cache:'no-cache',signal:abort.signal});if(!r.ok)throw Error('HTTP '+r.status+' — '+path);return await r.json();}
    finally{clearTimeout(timeout);}
@@ -75,6 +75,7 @@
      ' · PF '+livePF.toFixed(2)+' · This week '+projected+' ±'+range+
      (metrics?.final?' (final)':' (live proj.)')+'</small></div><span class="prob">'+E(status)+'</span></div>';
  }
+ const cap=w=>String(w).replace(/(^|\s)\S/g,c=>c.toUpperCase());
  function CCGRaceOrder(status,odds){
    const out=new Set(status.out||[]),pos=new Map(status.projected.map((x,i)=>[x,i]));
    const tier=x=>status.proven===x?0:out.has(x)?2:1;
@@ -88,7 +89,7 @@
      const node=document.querySelector('#ccg-'+CSS.escape(id)+' .content');
      if(!node)continue;
      const result=results[id];
-     if(!result){node.textContent='Live projections unavailable for this conference.';continue;}
+     if(!result){node.textContent='Live projections unavailable for this '+unit+'.';continue;}
      const divs=conf.divisions.map((d,i)=>{
        const status=result.divisions[i];
        const byId=new Map(d.contenders.map(t=>[String(t.roster_id),t]));
@@ -161,7 +162,7 @@
        order:data.tiebreak_order
      });}catch(e){errors.push(id+': '+e.message);}
    }
-   if(!Object.keys(results).length)throw Error('No complete live conference models — '+errors.slice(0,2).join('; '));
+   if(!Object.keys(results).length)throw Error('No complete live '+unit+' models — '+errors.slice(0,2).join('; '));
    return {models,results,errors,stamp:new Date().toISOString()};
  }
  function schedule(delay){clearTimeout(timer);if(!document.hidden)timer=setTimeout(refresh,delay);}
@@ -170,7 +171,7 @@
    try{
      const next=await fetchLive();lastGood=next;failures=0;
      paint(next.models,next.results,next.stamp);
-     warn(next.errors.length?next.errors.length+' conference issue(s): '+next.errors.join(' · '):'');
+     warn(next.errors.length?next.errors.length+' '+unit+' issue(s): '+next.errors.join(' · '):'');
      const allFinal=Object.values(next.models).length&&Object.values(next.models).every(m=>m.final);
      // Incomplete conferences must continue retrying even if the other games are all final.
      if(next.errors.length||!allFinal)schedule(next.errors.length?Math.min(num(cfg.refresh?.max_backoff_ms)||1800000,120000):refreshMs);
@@ -190,9 +191,9 @@
    const current=await get(cfg.data.scoreboard+'/index.json');
    season=Number(current.season);
    index=current;
-   const singular=cfg.unit_term?.singular||"conference";
-   const plural=cfg.unit_term?.plural||"conferences";
-   document.querySelector(".eyebrow").textContent="Selection Watch / "+plural+" championships";
+   // Configurable unit term (config unit_term; league_config.term()): "Conference Championships".
+   unit=cfg.unit_term?.singular||'conference';
+   document.querySelector(".eyebrow").textContent="Selection Watch / "+cap(unit)+" Championships";
    const q=route.get('preview');
    if(q===null && Number(index.week)!==week)throw Error(settings.availability_message||"CCG race is active only during the final regular-season week.");
    let dataURL='postseason/ccg-race-'+season+'.json';
