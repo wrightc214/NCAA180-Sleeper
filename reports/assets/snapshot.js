@@ -1,7 +1,8 @@
 /* snapshot.js -- "Save image" for any part of any page (Chris, 2026-11-07: every collapsible section
  * gets an image button; part of the site design from here on).
  *
- *   NCAASnap.save({html, name, footer, title, stamp, whatif})   -> PNG via share sheet (phones) or download
+ *   NCAASnap.save({html, name, footer, title, stamp, whatif, width, scale})   -> PNG via share sheet (phones) or download
+ *     scale:  pixel ratio of the image (default 2; the bracket's full-size image offers 1.5 for iPhone canvas limits)
  *     stamp:  {state: 'live'|'pregame'|'final'|'projection', time: Date, note}  -> label on top of the image
  *     whatif: ['Wyoming beats Boise State', ...]                                 -> WHAT-IF banner
  *   Labeling rule (Chris, 2026-11-07, site-wide): anything reacting to a live situation carries a
@@ -68,7 +69,7 @@
     }
   }
 
-  async function render(html, footer, top = '', width = 400) {
+  async function render(html, footer, top = '', width = 400, scale = 2) {
     const css = [...document.querySelectorAll('style,link[rel="stylesheet"]')].map(n => n.outerHTML).join('');
     const de = document.documentElement;
     const doc = `<!doctype html><html class="${esc(de.className)}"${de.dataset.theme ? ` data-theme="${esc(de.dataset.theme)}"` : ''}><head>` +
@@ -95,14 +96,14 @@
       const el = w.document.getElementById('snap');
       prepareDetails(w, el);
       plainColors(w, el);
-      const canvas = await w.html2canvas(el, {scale: 2, windowWidth: width, useCORS: true, logging: false,
+      const canvas = await w.html2canvas(el, {scale, windowWidth: width, useCORS: true, logging: false,
         backgroundColor: w.getComputedStyle(w.document.body).backgroundColor});
       return await new Promise(r => canvas.toBlob(r, 'image/png'));
     } finally { f.remove(); }
   }
 
-  async function save({html, name, footer, title, stamp, whatif, width}) {
-    const blob = await render(html, footer ?? `${location.host}${location.pathname.replace(/[^/]*$/, '')}`, labels(stamp, whatif), width || 400);
+  async function save({html, name, footer, title, stamp, whatif, width, scale}) {
+    const blob = await render(html, footer ?? `${location.host}${location.pathname.replace(/[^/]*$/, '')}`, labels(stamp, whatif), width || 400, scale || 2);
     if (!blob || !blob.size) throw new Error('Image is too large; narrow the view or save a smaller section');
     const file = new File([blob], `${name || 'ncaa180'}.png`.replace(/[^\w .-]+/g, '').replace(/\s+/g, '-'), {type: 'image/png'});
     if (navigator.canShare && navigator.canShare({files: [file]})) {
