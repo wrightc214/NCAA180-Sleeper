@@ -109,7 +109,7 @@ def main():
     html += f"""
 <main class="wrap sw-page">
 """
-    html += menu_html("selection-watch")
+    html += menu_html("selection-watch", rows=("selection-watch",))  # CCG / Playoffs sub-row (#126)
     html += f"""
 <header><h1><span id="sw-brand">{escape(brand)}</span> <em data-sw-label="title">{escape(title)}</em></h1>
 <p id="sw-intro" class="sw-muted">Exact playoff probabilities during conference championship week · Unofficial</p></header>

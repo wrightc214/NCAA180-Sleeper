@@ -77,5 +77,25 @@
         "through": "2026-12-01T03:00:00-05:00"
       }
     ]
+  },
+  "ccg": {
+    "simulations": 20000,
+    "seed": 2026,
+    "refresh_interval_ms": null,
+    "labels": {
+      "title": "CCG Division Races",
+      "unofficial": "Unofficial — live projections",
+      "clinched": "Clinched",
+      "out": "Out"
+    },
+    "export_filename_prefix": "ncaa180-ccg-race",
+    "availability_message": "CCG race projections are not available for this week.",
+    "previews": {
+      "midweek": {
+        "enabled": true,
+        "url": "postseason/ccg-race-preview-2026.json",
+        "query": "midweek"
+      }
+    }
   }
 }

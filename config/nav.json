@@ -29,6 +29,10 @@
       {"label": "How the poll works", "href": "poll-how.html"},
       {"label": "Bot ballots", "href": "poll-bots.html"}
     ]},
+    "selection-watch": {"label": "", "items": [
+      {"label": "CCG", "href": "ccg-race.html", "state": "hidden-dev"},
+      {"label": "Playoffs", "href": "selection-watch.html", "state": "hidden-dev"}
+    ]},
     "special": {"label": "Event", "items": [
       {"label": "The Guillotine", "href": "special.html", "icon": "../assets/logos/Guillotine/Guillotine%20G.png"},
       {"label": "Dwight Fight", "href": "dwight-fight.html", "icon": "../assets/logos/Dwight%20Fight/Dwight%20Fight%20Glasses.png", "state": "hidden-dev"}

@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       script_to_run:
-        description: 'Script to run (league_ids, rosters, users, rosterhistory, matchups, scores, standard_scores, max_points, weekly_awards, players, transactions, drafts, standings, orphans, lineup_streaks, push_teams, app_page, push_announce, game_settle, player_values, transactions_page, draft_picks, weekly_report, roster_map, poll, poll_page, matchups_page, gametime_projections, manager_lineups, managers_page, records_page, standings_page, postseason_export, guillotine, dwight_fight, special_page, postseason_page, league_staff, about_page, bowl_projection, bowl_projection_publish, game_of_the_week, scoreboard, conference_championships, selection_watch, playoff_field, playoff_bracket, playoff_publish, bowls, bowls_publish, bowls_redraw, nit, nit_publish, nit_redraw, patch_orphans, all). Postseason scripts are manual only (except conference_championships, which runs in all).'
+        description: 'Script to run (league_ids, rosters, users, rosterhistory, matchups, scores, standard_scores, max_points, weekly_awards, players, transactions, drafts, standings, orphans, lineup_streaks, push_teams, app_page, push_announce, game_settle, player_values, transactions_page, draft_picks, weekly_report, roster_map, poll, poll_page, matchups_page, gametime_projections, manager_lineups, managers_page, records_page, standings_page, postseason_export, guillotine, dwight_fight, special_page, postseason_page, league_staff, about_page, bowl_projection, bowl_projection_publish, game_of_the_week, scoreboard, conference_championships, selection_watch, ccg_race, playoff_field, playoff_bracket, playoff_publish, bowls, bowls_publish, bowls_redraw, nit, nit_publish, nit_redraw, patch_orphans, all). Postseason scripts are manual only (except conference_championships, which runs in all).'
         required: true
         default: 'all'
       post:
@@ -119,6 +119,8 @@ jobs:
           run gametime_projections  gametime_projections.py  all
           run weekly_awards         weekly_awards.py         all
           run standings             standings.py             all
+          # CCG race snapshot: generator no-ops unless the active week is ccg_week - 1.
+          run ccg_race             ccg_race.py              all
           run orphans               orphans.py               all
           run lineup_streaks        lineup_streaks.py        all
           run player_values         player_values.py         all

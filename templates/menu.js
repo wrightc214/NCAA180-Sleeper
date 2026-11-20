@@ -76,9 +76,16 @@
 
   // ---- models (pure: tested in tests/menu.test.js) ----
   // Main tabs for page key `cur`: [{label, href, current, dev, bell, glyph, icon}] (glyph = built-in icon name or null)
+  // Parent points to the first sub-page actually visible in this viewer's mode.
+  function firstVisibleHref(tab, dev) {
+    var row = D.rows[tab.id];
+    if (!row) return tab.href;
+    var first = row.items.find(function(item) { return visible(item, dev); });
+    return first ? first.href : tab.href;
+  }
   function mainModel(cur, dev) {
     return D.tabs.filter(function (t) { return visible(t, dev); }).map(function (t) {
-      return {label: t.label, href: t.href, icon: t.icon, bell: t.icon === "bell", glyph: ICONS[t.icon] ? t.icon : null, state: t.state,
+      return {label: t.label, href: firstVisibleHref(t, dev), icon: t.icon, bell: t.icon === "bell", glyph: ICONS[t.icon] ? t.icon : null, state: t.state,
               current: t.id === cur || (t.aliases || []).indexOf(cur) >= 0};
     });
   }
