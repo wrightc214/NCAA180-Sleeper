@@ -164,7 +164,8 @@
      paint(next.models,next.results,next.stamp);
      warn(next.errors.length?next.errors.length+' conference issue(s): '+next.errors.join(' · '):'');
      const allFinal=Object.values(next.models).length&&Object.values(next.models).every(m=>m.final);
-     if(!allFinal)schedule(refreshMs);
+     // Incomplete conferences must continue retrying even if the other games are all final.
+     if(next.errors.length||!allFinal)schedule(next.errors.length?Math.min(num(cfg.refresh?.max_backoff_ms)||1800000,120000):refreshMs);
    }catch(e){
      failures++;if(lastGood)paint(lastGood.models,lastGood.results,lastGood.stamp,true);
      warn('Live update failed; '+(lastGood?'showing last verified projections. ':'no verified projections. ')+e.message);
