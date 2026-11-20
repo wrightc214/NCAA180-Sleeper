@@ -30,7 +30,8 @@
       {"label": "Bot ballots", "href": "poll-bots.html"}
     ]},
     "special": {"label": "Event", "items": [
-      {"label": "The Guillotine", "href": "special.html", "icon": "../assets/logos/Guillotine/Guillotine%20G.png"}
+      {"label": "The Guillotine", "href": "special.html", "icon": "../assets/logos/Guillotine/Guillotine%20G.png"},
+      {"label": "Dwight Fight", "href": "dwight-fight.html", "icon": "../assets/logos/Dwight%20Fight/Dwight%20Fight%20Glasses.png", "state": "hidden-dev"}
     ]}
   }
 }
