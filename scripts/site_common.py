@@ -39,7 +39,8 @@ MENU_TEMPLATE = "templates/menu.js"
 MENU_OUT = os.path.join(OUT_DIR, "assets", "menu.js")
 # aria-labels of the sub-rows (kept from the per-page rows they replace)
 ROW_ARIA = {"awards-seasons": "Seasons", "standings-seasons": "Seasons", "postseason-seasons": "Seasons",
-            "projection-archive": "Projection archive", "poll": "Poll pages", "special": "Special events"}
+            "projection-archive": "Projection archive", "poll": "Poll pages", "special": "Special events",
+            "selection-watch": "Selection Watch pages"}
 
 
 def nav_config():
