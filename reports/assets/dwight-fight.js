@@ -26,6 +26,22 @@
     }
     html+='<section class="dw-bracket" aria-label="Dwight Fight bracket">'+rounds.map((r,i)=>'<div class="dw-round"><h2>'+(rounds.length===1?'Final':i===rounds.length-1?'Final':i===rounds.length-2?'Semifinal':i===rounds.length-3?'Quarterfinal':'Round '+(i+1))+' · Week '+(data.start_week+i)+'</h2>'+r.map(game).join('')+'</div>').join('')+'</section>';
     $('dw-main').innerHTML=html;
+    // Responsive plaque engraving: shrink long school names within the art's bounds.
+    const plaque=document.querySelector('.dw-plaque');
+    if(plaque){
+      const fit=()=>{
+        const items=[...plaque.children];
+        for(const el of items){
+          let size=10;
+          el.style.fontSize=size+'px';
+          while(size>4&&el.scrollWidth>plaque.clientWidth-2){
+            el.style.fontSize=(--size)+'px';
+          }
+        }
+      };
+      requestAnimationFrame(fit);
+      window.addEventListener('resize',fit,{passive:true});
+    }
   }
   function csv(text){
     // Quoted CSV fields, embedded commas and CRLF supported.
