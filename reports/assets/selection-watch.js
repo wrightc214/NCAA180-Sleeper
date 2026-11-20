@@ -124,8 +124,9 @@
     const entryNote=k=>exceptions.some(x=>x.out===k)?' ‡ · left out by entry error':
       exceptions.some(x=>x.in===k)?' ‡ · in field by entry error':'';
     const rows=[...board.rows];
-    const afterCut=row=>row.left?.rank>board.cut;
-    const cutIndex=rows.findIndex(afterCut);
+    // Automatic bids can be safe even when their rank follows the last at-large bid.
+    // Split the displayed row statuses, keeping Saved/held teams on the at-risk side.
+    const cutIndex=rows.findIndex(({left,hold})=>left&&(hold||left.status!=='Above cut'));
     const line='<div class="sw-cut-line" aria-hidden="true"></div>';
     const markup=rows.map(({left:l,right:r,hold})=>{
       const leftIn=l&&(l.status==='Above cut'||l.status==='Saved'||hold);
@@ -143,7 +144,7 @@
     });
     if(rows.length)markup.splice(cutIndex<0?markup.length:cutIndex,0,line);
     if(!rankingOrder)markup.reverse();
-    let html='<p class="sw-cut-note">'+(archive?'Final':'Projected')+' at-large cut after rank #'+E(board.cut)+'</p>';
+    let html='<p class="sw-cut-note">'+(archive?'Last':'Projected last')+' at-large bid: #'+E(board.cut)+'</p>';
     if(board.playIns.length)html+='<p class="sw-muted">Cut starts at #'+E(board.initialCut)+' · '+board.playIns.length+
       ' play-in'+(board.playIns.length===1?'':'s')+' below</p>';
     html+='<div class="sw-head"><span>AT-LARGE TEAMS AT RISK</span><span>BID THIEVES · '+
