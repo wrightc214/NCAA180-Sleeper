@@ -199,6 +199,20 @@
    ]);
    if(!baseline.projections||!baseline.scoring)throw Error('Tuesday baseline unavailable');
    renderShell();
+   if(q!==null){
+     // Preview is entirely local: no Sleeper/ESPN calls or fabricated live percentages.
+     const models=data.preview_models;
+     if(!models)throw Error('Preview model fixture missing');
+     const results={};
+     for(const conf of data.conferences)results[String(conf.league_id)]=M.simulate(conf,models,{
+       sims:settings.simulations||20000,seed:settings.seed??2026,order:data.tiebreak_order
+     });
+     paint(models,results,new Date().toISOString());
+     $('updated').textContent='PREVIEW fixture — not live · '+date(new Date());
+     $('flag').textContent='PREVIEW — unofficial, simulated';
+     $('refresh').hidden=true;
+     return;
+   }
    $('refresh').addEventListener('click',refresh);
    document.addEventListener('visibilitychange',()=>{clearTimeout(timer);if(!document.hidden)refresh();});
    await refresh();
