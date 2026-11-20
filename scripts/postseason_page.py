@@ -274,7 +274,10 @@ def build_season(year, years):
 
     # playoff: latest round first
     if po:
-        rounds = sorted({(g["round"], g["week"], g["name"]) for g in po}, key=lambda x: (-x[1], -x[0]))
+        # Ties (2020: Championship and Third Place Game share a week and round) break by name, title game
+        # first, so the page doesn't flip between runs (set order follows string hashing).
+        rounds = sorted({(g["round"], g["week"], g["name"]) for g in po},
+                        key=lambda x: (-x[1], -x[0], x[2] == "Third Place Game", x[2]))
         body = ""
         for rnd, wk, name in rounds:
             gs = [g for g in po if (g["round"], g["week"], g["name"]) == (rnd, wk, name)]

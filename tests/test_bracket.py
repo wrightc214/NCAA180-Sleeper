@@ -194,3 +194,12 @@ class AllSeasons(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_playoff_round_order_is_stable_for_shared_week():
+    """2020's title game and third-place game share a week and round; the page must not flip between runs."""
+    import re
+    from pathlib import Path
+    page = (Path(__file__).resolve().parents[1] / "reports/postseason-2020.html").read_text(encoding="utf-8")
+    heads = re.findall(r"<h3>([^<]*)</h3>", page)
+    assert heads.index("National Championship") < heads.index("Third Place Game")
