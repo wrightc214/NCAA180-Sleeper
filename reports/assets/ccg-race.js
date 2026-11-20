@@ -115,7 +115,7 @@
        const pre=!summary.started&&!summary.final;
        all[M.key(id,rid)]={
          mean:summary.final?C.round(m.actual):pre?m.pregame:m.projected,
-         variance:summary.final?0:m.variance,actual:m.actual,final:summary.final
+         variance:summary.final?0:pre?Math.pow(Number(cfg.spread)||24,2):m.variance,actual:m.actual,final:summary.final
        };
      }
    }
