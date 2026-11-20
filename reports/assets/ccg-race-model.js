@@ -142,7 +142,31 @@
       }else{
         for(const a of candidates)if(candidates.every(b=>a===b||a.lo>b.hi))proven=a.id;
       }
-      return {name:d.name,projected,proven};
+      // Out is also provable individually: once a team has finished its own
+      // games, an opponent already above its maximum attainable win total
+      // cannot fall behind it. Equal wins leave PF/PA tiebreak possibilities.
+      const played=new Map(d.contenders.map(t=>[String(t.roster_id),start(t)]));
+      for(const g of games){
+        const a=gamemodel.get(key(rosterLeague,g.a)),b=gamemodel.get(key(rosterLeague,g.b));
+        if(!a.final||!b.final)continue;
+        const sa=cents(a.mean),sb=cents(b.mean);
+        for(const [id,pf,pa] of [[g.a,sa,sb],[g.b,sb,sa]]){
+          const t=played.get(id);if(!t)continue;
+          t.points_for=cents(t.points_for+pf);t.points_against=cents(t.points_against+pa);
+          if(sa===sb)t.ties++;else if(pf>pa)t.wins++;else t.losses++;
+        }
+      }
+      const out=d.contenders.filter(t=>{
+        const id=String(t.roster_id);
+        if(proven)return proven!==id;
+        if(!t.remaining_games.every(g=>{
+          return gamemodel.get(key(rosterLeague,id))?.final &&
+            gamemodel.get(key(rosterLeague,String(g.opponent_roster_id)))?.final;
+        }))return false;
+        const mine=played.get(id),score=mine.wins+mine.ties/2;
+        return [...played].some(([other,row])=>other!==id && row.wins+row.ties/2>score);
+      }).map(t=>String(t.roster_id));
+      return {name:d.name,projected,proven,out};
     });
     return {odds,expected,divisions,draws};
   }
