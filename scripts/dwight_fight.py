@@ -268,6 +268,63 @@ def write_history(year, bracket, path=HISTORY):
         w.writerows(old + mine)
 
 
+def replay_2023(out_dir):
+    """Rebuild the archived 11-entrant bracket and assert every recorded matchup.
+
+    Historical fixtures establish team-week points; the independent bracket engine
+    must recreate every pairing, bye, advancement and seed from those fixtures.
+    """
+    if not out_dir:
+        raise ValueError("--replay-2023 requires --out-dir to protect production data")
+    with open(HISTORY, newline="", encoding="utf-8-sig") as stream:
+        old = [x for x in csv.DictReader(stream) if x["Season"] == "2023"]
+    seeds = {}
+    for r in old:
+        for side in "AB":
+            seeds[int(r["Seed" + side])] = r["Team" + side]
+    if len(seeds) != 11 or set(seeds) != set(range(1, 12)):
+        raise AssertionError("2023 archive is missing expected seeds 1–11")
+    entrants = [{"seed": k, "user_id": f"historic-{k}",
+                 "username": name, "display_name": name, "team": name,
+                 "league_id": "historic", "roster_id": str(k), "league": "Historic"}
+                for k, name in sorted(seeds.items())]
+    bracket = draw(entrants, entrants, 18, 2023)
+    scores = {}
+    for r in old:
+        w = int(r["Week"])
+        for side in "AB":
+            k = (r["Team" + side], float(r["Score" + side]))
+            seed = int(r["Seed" + side])
+            scores.setdefault(w, {})[("historic", str(seed))] = k[1]
+    advance(bracket, scores, {}, set(range(15, 19)))
+    seen = {}
+    for ri, rnd in enumerate(bracket["rounds"], 1):
+        for g in rnd:
+            a, b = g["a"], g["b"]
+            if not a or not b:
+                continue
+            key = (ri, int(a["seed"]), int(b["seed"]))
+            seen[key] = g
+    for r in old:
+        key = (int(r["Round"]), int(r["SeedA"]), int(r["SeedB"]))
+        g = seen.pop(key, None)
+        if not g:
+            raise AssertionError(f"2023 replay missing recorded matchup {key}")
+        if (g["winner"] or {}).get("team") != r["Winner"]:
+            raise AssertionError(f"2023 replay winner mismatch {key}: {g['winner']} vs {r['Winner']}")
+        if round(float(g["score_a"]), 2) != round(float(r["ScoreA"]), 2) or round(float(g["score_b"]), 2) != round(float(r["ScoreB"]), 2):
+            raise AssertionError(f"2023 replay score mismatch {key}")
+    if seen:
+        raise AssertionError(f"2023 replay has unexpected matchups: {sorted(seen)}")
+    if bracket["champion"]["team"] != "Arizona State":
+        raise AssertionError("2023 champion differs from Arizona State")
+    Path(out_dir).mkdir(parents=True, exist_ok=True)
+    (Path(out_dir) / "dwight-2023-replay.json").write_text(
+        json.dumps(bracket, indent=2) + "\n", encoding="utf-8")
+    print(f"Dwight Fight 2023 replay: verified {len(old)} games and Arizona State over Minnesota in the final")
+    return bracket
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--year", type=int)
@@ -278,6 +335,9 @@ def main():
     cfg, postseason = ps.config()
     conf = postseason.get("dwight_fight", {})
     year = 2023 if args.replay_2023 else args.year or ps.current_season()
+    if args.replay_2023:
+        replay_2023(args.out_dir)
+        return
     if year < int(conf.get("from_season", 2026)) and not args.replay_2023:
         print(f"Dwight Fight: {year} precedes from_season; no-op")
         return
@@ -299,8 +359,6 @@ def main():
         bracket = old
         print("Dwight Fight: locked bracket retained; configuration edits ignored")
     else:
-        if args.replay_2023:
-            raise SystemExit("Historical 2023 replay requires a separate archival name-to-owner mapping")
         fresh, errors = resolve(requested, team_map(), cfg["api"]["sleeper"], saved=old["entrants"] if old else [])
         if errors:
             for err in errors:
