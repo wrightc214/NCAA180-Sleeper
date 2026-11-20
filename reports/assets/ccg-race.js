@@ -181,6 +181,9 @@
    const current=await get(cfg.data.scoreboard+'/index.json');
    season=Number(current.season);
    index=current;
+   const singular=cfg.unit_term?.singular||"conference";
+   const plural=cfg.unit_term?.plural||"conferences";
+   document.querySelector(".eyebrow").textContent="Selection Watch / "+plural+" championships";
    const q=route.get('preview');
    if(q===null && Number(index.week)!==week)throw Error(settings.availability_message||"CCG race is active only during the final regular-season week.");
    let dataURL='postseason/ccg-race-'+season+'.json';
