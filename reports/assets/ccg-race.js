@@ -62,16 +62,17 @@
    const id=String(t.roster_id),info=index.leagues[String(conf.league_id)]?.teams?.[id]||{};
    const bg=info.background||info.primary||'#14213a',ink=contrast(bg,info.text);
    const isLeader=leader===id,cls=isLeader?' leader':' dim';
-   const img=(ink==='#ffffff'&&info.logo_dark?info.logo_dark:info.logo)||'';
-   const status=proven?(proven===id?'Clinched':'Out'):fmt(odds[id]||0);
-   const played=(metrics?.actual??0).toFixed(2);
+   const dark=/^#[0-9a-f]{6}$/i.test(bg)&&[1,3,5].map(i=>parseInt(bg.slice(i,i+2),16)/255).reduce((acc,v,i)=>acc+[.2126,.7152,.0722][i]*(v<=.04045?v/12.92:((v+.055)/1.055)**2.4),0)<.18;
+   const img=(dark&&info.logo_dark?info.logo_dark:info.logo)||'';
+   const status=proven?(proven===id?(settings.labels?.clinched||'Clinched'):(settings.labels?.out||'Out')):fmt(odds[id]||0);
    const projected=(metrics?.mean??0).toFixed(2);
+   const range=Math.sqrt(Math.max(0,metrics?.variance||0)).toFixed(1);
    const livePF=Number(t.points_for)+(metrics?.actual||0);
    return '<div class="race-team'+cls+'" style="--team:'+E(bg)+';--team-ink:'+E(ink)+'">'+
      (img?'<img src="'+E(img)+'" alt="">':'<span aria-hidden="true"></span>')+
      '<div><strong>'+E(t.team)+'</strong><small class="owner">@'+E(t.owner)+'</small>'+
      '<small>'+E(t.wins)+'-'+E(t.losses)+(t.ties?'-'+E(t.ties):'')+
-     ' · PF '+livePF.toFixed(2)+' · This week '+projected+
+     ' · PF '+livePF.toFixed(2)+' · This week '+projected+' ±'+range+
      (metrics?.final?' (final)':' (live proj.)')+'</small></div><span class="prob">'+E(status)+'</span></div>';
  }
  function paint(models,results,stamp,stale=false){
@@ -173,6 +174,9 @@
  try{
    [cfg,settings]=await Promise.all([get('../config/league.json'),get('../config/selection_watch.json')]);
    settings=settings.ccg||{};
+   if(settings.labels?.title){document.querySelector('h1').textContent=settings.labels.title;document.title=settings.labels.title+' | '+(cfg.brand||'NCAA 180');}
+   if(settings.labels?.unofficial)$('flag').textContent=settings.labels.unofficial;
+   document.body.dataset.snapTag=settings.export_filename_prefix||'ncaa180-ccg-race';
    week=Number(cfg.schedule.ccg_week)-1;
    const current=await get(cfg.data.scoreboard+'/index.json');
    season=Number(current.season);
