@@ -1,0 +1,2279 @@
+{
+  "season": 2026,
+  "week": 11,
+  "last_regular_week": 11,
+  "tiebreak_order": [
+    "win_pct",
+    "points_for",
+    "points_against",
+    "coin_toss"
+  ],
+  "coin_toss_results": [],
+  "generated_at": "2026-11-20T15:50:32.509Z",
+  "conferences": [
+    {
+      "league_id": "1331775206619885568",
+      "name": "Big East",
+      "divisions": [
+        {
+          "name": "MIDEAST",
+          "clinched_before_week": false,
+          "contenders": [
+            {
+              "roster_id": "4",
+              "owner": "vinceA762",
+              "team": "Pittsburgh",
+              "wins": 7,
+              "losses": 3,
+              "ties": 0,
+              "points_for": 1374.72,
+              "points_against": 1305.32,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "11"
+                }
+              ]
+            },
+            {
+              "roster_id": "6",
+              "owner": "joonbug",
+              "team": "Coastal Carolina",
+              "wins": 7,
+              "losses": 3,
+              "ties": 0,
+              "points_for": 1572.06,
+              "points_against": 1338.7,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "7"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "NORTHEAST",
+          "clinched_before_week": false,
+          "contenders": [
+            {
+              "roster_id": "5",
+              "owner": "NastyS8ntChance",
+              "team": "UCONN",
+              "wins": 7,
+              "losses": 3,
+              "ties": 0,
+              "points_for": 1455.48,
+              "points_against": 1235.84,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "12"
+                }
+              ]
+            },
+            {
+              "roster_id": "8",
+              "owner": "Claser",
+              "team": "Army",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1324.64,
+              "points_against": 1215.58,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "10"
+                }
+              ]
+            },
+            {
+              "roster_id": "7",
+              "owner": "CodeKhaos",
+              "team": "Syracuse",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1613.36,
+              "points_against": 1075.88,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "6"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "league_id": "1331775170712444928",
+      "name": "SEC",
+      "divisions": [
+        {
+          "name": "EAST",
+          "clinched_before_week": true,
+          "contenders": [
+            {
+              "roster_id": "8",
+              "owner": "Stumpy44",
+              "team": "Kentucky",
+              "wins": 9,
+              "losses": 1,
+              "ties": 0,
+              "points_for": 1532.16,
+              "points_against": 1230.66,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "5"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "WEST",
+          "clinched_before_week": false,
+          "contenders": [
+            {
+              "roster_id": "2",
+              "owner": "errand",
+              "team": "LSU",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1382.58,
+              "points_against": 1230.42,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "10"
+                }
+              ]
+            },
+            {
+              "roster_id": "4",
+              "owner": "egbdf",
+              "team": "Auburn",
+              "wins": 7,
+              "losses": 3,
+              "ties": 0,
+              "points_for": 1466.02,
+              "points_against": 1238.4,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "9"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "league_id": "1331775106527006720",
+      "name": "Pac-12",
+      "divisions": [
+        {
+          "name": "NORTH",
+          "clinched_before_week": true,
+          "contenders": [
+            {
+              "roster_id": "4",
+              "owner": "chzhead412",
+              "team": "Washington State",
+              "wins": 10,
+              "losses": 0,
+              "ties": 0,
+              "points_for": 1615.62,
+              "points_against": 1129.16,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "12"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "SOUTH",
+          "clinched_before_week": false,
+          "contenders": [
+            {
+              "roster_id": "12",
+              "owner": "lmerkouSaints",
+              "team": "UCLA",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1360.96,
+              "points_against": 1259.04,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "4"
+                }
+              ]
+            },
+            {
+              "roster_id": "7",
+              "owner": "wrightc214",
+              "team": "Arizona State",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1599.46,
+              "points_against": 1274.18,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "10"
+                }
+              ]
+            },
+            {
+              "roster_id": "8",
+              "owner": "keppin",
+              "team": "Colorado",
+              "wins": 9,
+              "losses": 1,
+              "ties": 0,
+              "points_for": 1549.68,
+              "points_against": 1134.36,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "9"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "league_id": "1331774915392577536",
+      "name": "ACC",
+      "divisions": [
+        {
+          "name": "ATLANTIC",
+          "clinched_before_week": false,
+          "contenders": [
+            {
+              "roster_id": "10",
+              "owner": "EerieHush",
+              "team": "NC State",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1466.36,
+              "points_against": 1292.92,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "3"
+                }
+              ]
+            },
+            {
+              "roster_id": "12",
+              "owner": "dilbennett",
+              "team": "Clemson",
+              "wins": 9,
+              "losses": 1,
+              "ties": 0,
+              "points_for": 1596.94,
+              "points_against": 1170.86,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "7"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "COASTAL",
+          "clinched_before_week": true,
+          "contenders": [
+            {
+              "roster_id": "3",
+              "owner": "spendawg",
+              "team": "Georgia Tech",
+              "wins": 7,
+              "losses": 3,
+              "ties": 0,
+              "points_for": 1360.12,
+              "points_against": 1177.96,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "10"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "league_id": "1331774880181399552",
+      "name": "Big 12",
+      "divisions": [
+        {
+          "name": "HEAT",
+          "clinched_before_week": false,
+          "contenders": [
+            {
+              "roster_id": "5",
+              "owner": "robertlouis7",
+              "team": "Baylor",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1624.44,
+              "points_against": 1192.06,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "9"
+                }
+              ]
+            },
+            {
+              "roster_id": "4",
+              "owner": "deadheadshane",
+              "team": "Texas A&M",
+              "wins": 7,
+              "losses": 3,
+              "ties": 0,
+              "points_for": 1388.54,
+              "points_against": 1326.7,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "7"
+                }
+              ]
+            },
+            {
+              "roster_id": "8",
+              "owner": "alicho",
+              "team": "West Virginia",
+              "wins": 7,
+              "losses": 3,
+              "ties": 0,
+              "points_for": 1366.56,
+              "points_against": 1235.72,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "3"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "WIND",
+          "clinched_before_week": false,
+          "contenders": [
+            {
+              "roster_id": "3",
+              "owner": "DavidJimm",
+              "team": "Missouri",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1330.26,
+              "points_against": 1154.08,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "8"
+                }
+              ]
+            },
+            {
+              "roster_id": "7",
+              "owner": "Frankeen",
+              "team": "Kansas State",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1517.88,
+              "points_against": 1172.66,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "4"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "league_id": "1331774846710849536",
+      "name": "Sun Belt",
+      "divisions": [
+        {
+          "name": "BIBLE",
+          "clinched_before_week": true,
+          "contenders": [
+            {
+              "roster_id": "9",
+              "owner": "denvermanning",
+              "team": "Southern Miss",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1491.22,
+              "points_against": 1159.38,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "12"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "REBEL",
+          "clinched_before_week": false,
+          "contenders": [
+            {
+              "roster_id": "1",
+              "owner": "bruceble",
+              "team": "Temple",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1409.42,
+              "points_against": 1151.54,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "3"
+                }
+              ]
+            },
+            {
+              "roster_id": "6",
+              "owner": "Raidersforte",
+              "team": "Tulsa",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1437.48,
+              "points_against": 1052.4,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "5"
+                }
+              ]
+            },
+            {
+              "roster_id": "8",
+              "owner": "yoboihawks",
+              "team": "Memphis",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1423.26,
+              "points_against": 1184.98,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "11"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "league_id": "1331774804222545920",
+      "name": "Pioneer",
+      "divisions": [
+        {
+          "name": "PATRIOT",
+          "clinched_before_week": true,
+          "contenders": [
+            {
+              "roster_id": "11",
+              "owner": "FatPat1251",
+              "team": "UT Martin",
+              "wins": 7,
+              "losses": 3,
+              "ties": 0,
+              "points_for": 1390.64,
+              "points_against": 1201.1,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "8"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "FREEDOM",
+          "clinched_before_week": false,
+          "contenders": [
+            {
+              "roster_id": "12",
+              "owner": "YikesOnBikes",
+              "team": "Davidson",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1327.82,
+              "points_against": 1204.46,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "3"
+                }
+              ]
+            },
+            {
+              "roster_id": "8",
+              "owner": "CrownMeKing",
+              "team": "Campbell",
+              "wins": 9,
+              "losses": 1,
+              "ties": 0,
+              "points_for": 1537.14,
+              "points_against": 1100.34,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "11"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "league_id": "1331774741488369664",
+      "name": "Ivy",
+      "divisions": [
+        {
+          "name": "RICH",
+          "clinched_before_week": false,
+          "contenders": [
+            {
+              "roster_id": "1",
+              "owner": "FlynnD",
+              "team": "Brown",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1609.6,
+              "points_against": 1291.46,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "4"
+                }
+              ]
+            },
+            {
+              "roster_id": "5",
+              "owner": "ccassidy",
+              "team": "Georgetown",
+              "wins": 7,
+              "losses": 3,
+              "ties": 0,
+              "points_for": 1624.46,
+              "points_against": 1240.54,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "10"
+                }
+              ]
+            },
+            {
+              "roster_id": "11",
+              "owner": "jtheadrick98",
+              "team": "Dartmouth",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1483.2,
+              "points_against": 1126.02,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "12"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "SMART",
+          "clinched_before_week": true,
+          "contenders": [
+            {
+              "roster_id": "12",
+              "owner": "cobrapanther99",
+              "team": "Cornell",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1381.4,
+              "points_against": 1300.24,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "11"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "league_id": "1331774695346823168",
+      "name": "CUSA",
+      "divisions": [
+        {
+          "name": "GULF",
+          "clinched_before_week": false,
+          "contenders": [
+            {
+              "roster_id": "4",
+              "owner": "GRIDIRONGANG81",
+              "team": "South Alabama",
+              "wins": 5,
+              "losses": 5,
+              "ties": 0,
+              "points_for": 1328.64,
+              "points_against": 1210,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "5"
+                }
+              ]
+            },
+            {
+              "roster_id": "9",
+              "owner": "masshole4eva",
+              "team": "Texas State",
+              "wins": 6,
+              "losses": 4,
+              "ties": 0,
+              "points_for": 1234.5,
+              "points_against": 1209.16,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "7"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "TWISTER",
+          "clinched_before_week": true,
+          "contenders": [
+            {
+              "roster_id": "7",
+              "owner": "arandrea",
+              "team": "Middle Tennessee State",
+              "wins": 10,
+              "losses": 0,
+              "ties": 0,
+              "points_for": 1565.1,
+              "points_against": 1282.18,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "9"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "league_id": "1331774630620332032",
+      "name": "HBCU",
+      "divisions": [
+        {
+          "name": "MISSISSIPPI RIVER",
+          "clinched_before_week": false,
+          "contenders": [
+            {
+              "roster_id": "11",
+              "owner": "Jerryb83",
+              "team": "Tuskegee",
+              "wins": 7,
+              "losses": 3,
+              "ties": 0,
+              "points_for": 1286.88,
+              "points_against": 1137.3,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "10"
+                }
+              ]
+            },
+            {
+              "roster_id": "4",
+              "owner": "memphismaniac",
+              "team": "Southern",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1437.9,
+              "points_against": 1185.86,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "3"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "HURRICANE",
+          "clinched_before_week": false,
+          "contenders": [
+            {
+              "roster_id": "1",
+              "owner": "PhantomXX",
+              "team": "North Carolina A&T",
+              "wins": 7,
+              "losses": 3,
+              "ties": 0,
+              "points_for": 1477.34,
+              "points_against": 1175.36,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "12"
+                }
+              ]
+            },
+            {
+              "roster_id": "6",
+              "owner": "DeanFalcon",
+              "team": "Howard",
+              "wins": 6,
+              "losses": 4,
+              "ties": 0,
+              "points_for": 1166.42,
+              "points_against": 1073.42,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "8"
+                }
+              ]
+            },
+            {
+              "roster_id": "3",
+              "owner": "lcummings",
+              "team": "Delaware State",
+              "wins": 6,
+              "losses": 4,
+              "ties": 0,
+              "points_for": 1211.32,
+              "points_against": 1131.54,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "4"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "league_id": "1331774599196585984",
+      "name": "Mountain West",
+      "divisions": [
+        {
+          "name": "SAINT",
+          "clinched_before_week": false,
+          "contenders": [
+            {
+              "roster_id": "1",
+              "owner": "RicochetRay",
+              "team": "Hawaii",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1633.84,
+              "points_against": 1232.88,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "8"
+                }
+              ]
+            },
+            {
+              "roster_id": "11",
+              "owner": "bdub3",
+              "team": "UNLV",
+              "wins": 9,
+              "losses": 1,
+              "ties": 0,
+              "points_for": 1487.6,
+              "points_against": 1210.12,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "4"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "SIN",
+          "clinched_before_week": true,
+          "contenders": [
+            {
+              "roster_id": "6",
+              "owner": "KlondikeBar",
+              "team": "BYU",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1533.5,
+              "points_against": 1274.94,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "5"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "league_id": "1331774544905510912",
+      "name": "Ohio Valley",
+      "divisions": [
+        {
+          "name": "YANKEE",
+          "clinched_before_week": true,
+          "contenders": [
+            {
+              "roster_id": "10",
+              "owner": "edgeofdefeat",
+              "team": "Monmouth",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1253.06,
+              "points_against": 1074.68,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "4"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "SOUTHERN",
+          "clinched_before_week": false,
+          "contenders": [
+            {
+              "roster_id": "1",
+              "owner": "Mistafyer",
+              "team": "Belmont",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1331.46,
+              "points_against": 1263.64,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "11"
+                }
+              ]
+            },
+            {
+              "roster_id": "4",
+              "owner": "ethansherwood22",
+              "team": "Chattanooga",
+              "wins": 7,
+              "losses": 3,
+              "ties": 0,
+              "points_for": 1506.88,
+              "points_against": 1221.96,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "10"
+                }
+              ]
+            },
+            {
+              "roster_id": "2",
+              "owner": "LMarkiewicz04",
+              "team": "ETSU",
+              "wins": 7,
+              "losses": 3,
+              "ties": 0,
+              "points_for": 1537,
+              "points_against": 1344.74,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "8"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "league_id": "1331774454493122560",
+      "name": "Wild",
+      "divisions": [
+        {
+          "name": "PLAINS",
+          "clinched_before_week": false,
+          "contenders": [
+            {
+              "roster_id": "1",
+              "owner": "LanceBoneau",
+              "team": "Montana",
+              "wins": 6,
+              "losses": 4,
+              "ties": 0,
+              "points_for": 1560.66,
+              "points_against": 1255.24,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "2"
+                }
+              ]
+            },
+            {
+              "roster_id": "11",
+              "owner": "TheScorer",
+              "team": "South Dakota",
+              "wins": 5,
+              "losses": 5,
+              "ties": 0,
+              "points_for": 1236.46,
+              "points_against": 1294.8,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "12"
+                }
+              ]
+            },
+            {
+              "roster_id": "5",
+              "owner": "FareedB",
+              "team": "Wichita State",
+              "wins": 5,
+              "losses": 5,
+              "ties": 0,
+              "points_for": 1190,
+              "points_against": 1262.68,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "6"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "VALLEY",
+          "clinched_before_week": false,
+          "contenders": [
+            {
+              "roster_id": "12",
+              "owner": "DBGiants",
+              "team": "UNC Charlotte",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1354.64,
+              "points_against": 1209.38,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "11"
+                }
+              ]
+            },
+            {
+              "roster_id": "10",
+              "owner": "olddominion2020",
+              "team": "Old Dominion",
+              "wins": 9,
+              "losses": 1,
+              "ties": 0,
+              "points_for": 1514.74,
+              "points_against": 1160.06,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "7"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "league_id": "1316899936696016896",
+      "name": "Big Ten",
+      "divisions": [
+        {
+          "name": "EAST",
+          "clinched_before_week": false,
+          "contenders": [
+            {
+              "roster_id": "1",
+              "owner": "Mo00",
+              "team": "Purdue",
+              "wins": 6,
+              "losses": 4,
+              "ties": 0,
+              "points_for": 1274.98,
+              "points_against": 1177.42,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "10"
+                }
+              ]
+            },
+            {
+              "roster_id": "9",
+              "owner": "Klashified",
+              "team": "Ohio State",
+              "wins": 6,
+              "losses": 4,
+              "ties": 0,
+              "points_for": 1279.48,
+              "points_against": 1214.8,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "6"
+                }
+              ]
+            },
+            {
+              "roster_id": "12",
+              "owner": "chrispychicken",
+              "team": "Michigan",
+              "wins": 6,
+              "losses": 4,
+              "ties": 0,
+              "points_for": 1434.92,
+              "points_against": 1142.68,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "11"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "WEST",
+          "clinched_before_week": true,
+          "contenders": [
+            {
+              "roster_id": "11",
+              "owner": "Schuflakka",
+              "team": "Iowa",
+              "wins": 9,
+              "losses": 1,
+              "ties": 0,
+              "points_for": 1615.28,
+              "points_against": 1196,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "12"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "league_id": "1316899756005412864",
+      "name": "Big Sky",
+      "divisions": [
+        {
+          "name": "FRONTIER",
+          "clinched_before_week": true,
+          "contenders": [
+            {
+              "roster_id": "12",
+              "owner": "mssullivan2022",
+              "team": "Youngstown State",
+              "wins": 9,
+              "losses": 1,
+              "ties": 0,
+              "points_for": 1540.98,
+              "points_against": 1307.7,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "2"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "COLONIES",
+          "clinched_before_week": true,
+          "contenders": [
+            {
+              "roster_id": "3",
+              "owner": "Beastchewy15",
+              "team": "William & Mary",
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "points_for": 1607.52,
+              "points_against": 1190.84,
+              "remaining_games": [
+                {
+                  "week": 11,
+                  "opponent_roster_id": "6"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "preview_models": {
+    "1331775206619885568|1": {
+      "mean": 111.7,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331775206619885568|2": {
+      "mean": 113.4,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331775206619885568|3": {
+      "mean": 115.1,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331775206619885568|4": {
+      "mean": 116.8,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331775206619885568|5": {
+      "mean": 118.5,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331775206619885568|6": {
+      "mean": 120.2,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331775206619885568|7": {
+      "mean": 121.9,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331775206619885568|8": {
+      "mean": 123.6,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331775206619885568|9": {
+      "mean": 125.3,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331775206619885568|10": {
+      "mean": 127,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331775206619885568|11": {
+      "mean": 128.7,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331775206619885568|12": {
+      "mean": 130.4,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331775170712444928|1": {
+      "mean": 111.7,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331775170712444928|2": {
+      "mean": 113.4,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331775170712444928|3": {
+      "mean": 115.1,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331775170712444928|4": {
+      "mean": 116.8,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331775170712444928|5": {
+      "mean": 118.5,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331775170712444928|6": {
+      "mean": 120.2,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331775170712444928|7": {
+      "mean": 121.9,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331775170712444928|8": {
+      "mean": 123.6,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331775170712444928|9": {
+      "mean": 125.3,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331775170712444928|10": {
+      "mean": 127,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331775170712444928|11": {
+      "mean": 128.7,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331775170712444928|12": {
+      "mean": 130.4,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331775106527006720|1": {
+      "mean": 111.7,
+      "variance": 0,
+      "actual": 111.7,
+      "final": true
+    },
+    "1331775106527006720|2": {
+      "mean": 113.4,
+      "variance": 0,
+      "actual": 113.4,
+      "final": true
+    },
+    "1331775106527006720|3": {
+      "mean": 115.1,
+      "variance": 0,
+      "actual": 115.1,
+      "final": true
+    },
+    "1331775106527006720|4": {
+      "mean": 116.8,
+      "variance": 0,
+      "actual": 116.8,
+      "final": true
+    },
+    "1331775106527006720|5": {
+      "mean": 118.5,
+      "variance": 0,
+      "actual": 118.5,
+      "final": true
+    },
+    "1331775106527006720|6": {
+      "mean": 120.2,
+      "variance": 0,
+      "actual": 120.2,
+      "final": true
+    },
+    "1331775106527006720|7": {
+      "mean": 121.9,
+      "variance": 0,
+      "actual": 121.9,
+      "final": true
+    },
+    "1331775106527006720|8": {
+      "mean": 200,
+      "variance": 0,
+      "actual": 200,
+      "final": true
+    },
+    "1331775106527006720|9": {
+      "mean": 125.3,
+      "variance": 0,
+      "actual": 125.3,
+      "final": true
+    },
+    "1331775106527006720|10": {
+      "mean": 127,
+      "variance": 0,
+      "actual": 127,
+      "final": true
+    },
+    "1331775106527006720|11": {
+      "mean": 128.7,
+      "variance": 0,
+      "actual": 128.7,
+      "final": true
+    },
+    "1331775106527006720|12": {
+      "mean": 130.4,
+      "variance": 0,
+      "actual": 130.4,
+      "final": true
+    },
+    "1331774915392577536|1": {
+      "mean": 111.7,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774915392577536|2": {
+      "mean": 113.4,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774915392577536|3": {
+      "mean": 115.1,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774915392577536|4": {
+      "mean": 116.8,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774915392577536|5": {
+      "mean": 118.5,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774915392577536|6": {
+      "mean": 120.2,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774915392577536|7": {
+      "mean": 121.9,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774915392577536|8": {
+      "mean": 123.6,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774915392577536|9": {
+      "mean": 125.3,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774915392577536|10": {
+      "mean": 127,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774915392577536|11": {
+      "mean": 128.7,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774915392577536|12": {
+      "mean": 130.4,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774880181399552|1": {
+      "mean": 111.7,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774880181399552|2": {
+      "mean": 113.4,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774880181399552|3": {
+      "mean": 115.1,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774880181399552|4": {
+      "mean": 116.8,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774880181399552|5": {
+      "mean": 118.5,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774880181399552|6": {
+      "mean": 120.2,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774880181399552|7": {
+      "mean": 121.9,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774880181399552|8": {
+      "mean": 123.6,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774880181399552|9": {
+      "mean": 125.3,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774880181399552|10": {
+      "mean": 127,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774880181399552|11": {
+      "mean": 128.7,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774880181399552|12": {
+      "mean": 130.4,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774846710849536|1": {
+      "mean": 111.7,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774846710849536|2": {
+      "mean": 113.4,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774846710849536|3": {
+      "mean": 115.1,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774846710849536|4": {
+      "mean": 116.8,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774846710849536|5": {
+      "mean": 118.5,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774846710849536|6": {
+      "mean": 120.2,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774846710849536|7": {
+      "mean": 121.9,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774846710849536|8": {
+      "mean": 123.6,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774846710849536|9": {
+      "mean": 125.3,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774846710849536|10": {
+      "mean": 127,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774846710849536|11": {
+      "mean": 128.7,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774846710849536|12": {
+      "mean": 130.4,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774804222545920|1": {
+      "mean": 111.7,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774804222545920|2": {
+      "mean": 113.4,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774804222545920|3": {
+      "mean": 115.1,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774804222545920|4": {
+      "mean": 116.8,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774804222545920|5": {
+      "mean": 118.5,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774804222545920|6": {
+      "mean": 120.2,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774804222545920|7": {
+      "mean": 121.9,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774804222545920|8": {
+      "mean": 123.6,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774804222545920|9": {
+      "mean": 125.3,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774804222545920|10": {
+      "mean": 127,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774804222545920|11": {
+      "mean": 128.7,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774804222545920|12": {
+      "mean": 130.4,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774741488369664|1": {
+      "mean": 111.7,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774741488369664|2": {
+      "mean": 113.4,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774741488369664|3": {
+      "mean": 115.1,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774741488369664|4": {
+      "mean": 116.8,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774741488369664|5": {
+      "mean": 118.5,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774741488369664|6": {
+      "mean": 120.2,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774741488369664|7": {
+      "mean": 121.9,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774741488369664|8": {
+      "mean": 123.6,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774741488369664|9": {
+      "mean": 125.3,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774741488369664|10": {
+      "mean": 127,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774741488369664|11": {
+      "mean": 128.7,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774741488369664|12": {
+      "mean": 130.4,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774695346823168|1": {
+      "mean": 111.7,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774695346823168|2": {
+      "mean": 113.4,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774695346823168|3": {
+      "mean": 115.1,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774695346823168|4": {
+      "mean": 116.8,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774695346823168|5": {
+      "mean": 118.5,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774695346823168|6": {
+      "mean": 120.2,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774695346823168|7": {
+      "mean": 121.9,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774695346823168|8": {
+      "mean": 123.6,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774695346823168|9": {
+      "mean": 125.3,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774695346823168|10": {
+      "mean": 127,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774695346823168|11": {
+      "mean": 128.7,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774695346823168|12": {
+      "mean": 130.4,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774630620332032|1": {
+      "mean": 111.7,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774630620332032|2": {
+      "mean": 113.4,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774630620332032|3": {
+      "mean": 115.1,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774630620332032|4": {
+      "mean": 116.8,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774630620332032|5": {
+      "mean": 118.5,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774630620332032|6": {
+      "mean": 120.2,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774630620332032|7": {
+      "mean": 121.9,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774630620332032|8": {
+      "mean": 123.6,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774630620332032|9": {
+      "mean": 125.3,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774630620332032|10": {
+      "mean": 127,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774630620332032|11": {
+      "mean": 128.7,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774630620332032|12": {
+      "mean": 130.4,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774599196585984|1": {
+      "mean": 111.7,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774599196585984|2": {
+      "mean": 113.4,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774599196585984|3": {
+      "mean": 115.1,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774599196585984|4": {
+      "mean": 116.8,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774599196585984|5": {
+      "mean": 118.5,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774599196585984|6": {
+      "mean": 120.2,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774599196585984|7": {
+      "mean": 121.9,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774599196585984|8": {
+      "mean": 123.6,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774599196585984|9": {
+      "mean": 125.3,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774599196585984|10": {
+      "mean": 127,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774599196585984|11": {
+      "mean": 128.7,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774599196585984|12": {
+      "mean": 130.4,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774544905510912|1": {
+      "mean": 111.7,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774544905510912|2": {
+      "mean": 113.4,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774544905510912|3": {
+      "mean": 115.1,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774544905510912|4": {
+      "mean": 116.8,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774544905510912|5": {
+      "mean": 118.5,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774544905510912|6": {
+      "mean": 120.2,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774544905510912|7": {
+      "mean": 121.9,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774544905510912|8": {
+      "mean": 123.6,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774544905510912|9": {
+      "mean": 125.3,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774544905510912|10": {
+      "mean": 127,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774544905510912|11": {
+      "mean": 128.7,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774544905510912|12": {
+      "mean": 130.4,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774454493122560|1": {
+      "mean": 111.7,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774454493122560|2": {
+      "mean": 113.4,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774454493122560|3": {
+      "mean": 115.1,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774454493122560|4": {
+      "mean": 116.8,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774454493122560|5": {
+      "mean": 118.5,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774454493122560|6": {
+      "mean": 120.2,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774454493122560|7": {
+      "mean": 121.9,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774454493122560|8": {
+      "mean": 123.6,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774454493122560|9": {
+      "mean": 125.3,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774454493122560|10": {
+      "mean": 127,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774454493122560|11": {
+      "mean": 128.7,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1331774454493122560|12": {
+      "mean": 130.4,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1316899936696016896|1": {
+      "mean": 111.7,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1316899936696016896|2": {
+      "mean": 113.4,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1316899936696016896|3": {
+      "mean": 115.1,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1316899936696016896|4": {
+      "mean": 116.8,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1316899936696016896|5": {
+      "mean": 118.5,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1316899936696016896|6": {
+      "mean": 120.2,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1316899936696016896|7": {
+      "mean": 121.9,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1316899936696016896|8": {
+      "mean": 123.6,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1316899936696016896|9": {
+      "mean": 125.3,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1316899936696016896|10": {
+      "mean": 127,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1316899936696016896|11": {
+      "mean": 128.7,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1316899936696016896|12": {
+      "mean": 130.4,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1316899756005412864|1": {
+      "mean": 111.7,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1316899756005412864|2": {
+      "mean": 113.4,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1316899756005412864|3": {
+      "mean": 115.1,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1316899756005412864|4": {
+      "mean": 116.8,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1316899756005412864|5": {
+      "mean": 118.5,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1316899756005412864|6": {
+      "mean": 120.2,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1316899756005412864|7": {
+      "mean": 121.9,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1316899756005412864|8": {
+      "mean": 123.6,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1316899756005412864|9": {
+      "mean": 125.3,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1316899756005412864|10": {
+      "mean": 127,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1316899756005412864|11": {
+      "mean": 128.7,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    },
+    "1316899756005412864|12": {
+      "mean": 130.4,
+      "variance": 320,
+      "actual": 10,
+      "final": false
+    }
+  }
+}
