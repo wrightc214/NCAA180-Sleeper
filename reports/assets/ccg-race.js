@@ -58,13 +58,13 @@
      const script=document.createElement('script');script.src='assets/sections.js';document.body.append(script);
    }
  }
- function teamTile(conf,t,metrics,odds,leader,proven,stamp){
+ function teamTile(conf,t,metrics,odds,leader,proven,out,stamp){
    const id=String(t.roster_id),info=index.leagues[String(conf.league_id)]?.teams?.[id]||{};
    const bg=info.background||info.primary||'#14213a',ink=contrast(bg,info.text);
    const isLeader=leader===id,cls=isLeader?' leader':' dim';
    const dark=/^#[0-9a-f]{6}$/i.test(bg)&&[1,3,5].map(i=>parseInt(bg.slice(i,i+2),16)/255).reduce((acc,v,i)=>acc+[.2126,.7152,.0722][i]*(v<=.04045?v/12.92:((v+.055)/1.055)**2.4),0)<.18;
    const img=(dark&&info.logo_dark?info.logo_dark:info.logo)||'';
-   const status=proven?(proven===id?(settings.labels?.clinched||'Clinched'):(settings.labels?.out||'Out')):fmt(odds[id]||0);
+   const status=proven?(proven===id?(settings.labels?.clinched||'Clinched'):(settings.labels?.out||'Out')):(out?.includes(id)?(settings.labels?.out||'Out'):fmt(odds[id]||0));
    const projected=(metrics?.mean??0).toFixed(2);
    const range=Math.sqrt(Math.max(0,metrics?.variance||0)).toFixed(1);
    const livePF=Number(t.points_for)+(metrics?.actual||0);
@@ -91,7 +91,7 @@
        const shown=d.clinched_before_week?[byId.get(ids[0])]:ids.map(x=>byId.get(x));
        return '<div class="division"><h3>'+E(d.name)+'</h3>'+
          shown.filter(Boolean).map(t=>teamTile(conf,t,models[M.key(id,t.roster_id)],
-           result.odds,leader,status.proven,stamp)).join('')+'</div>';
+           result.odds,leader,status.proven,status.out,stamp)).join('')+'</div>';
      });
      node.innerHTML='<div class="divisions">'+divs.join('')+'</div>'+
        '<div class="capture-note">Unofficial — live projections · '+E(date(stamp))+
