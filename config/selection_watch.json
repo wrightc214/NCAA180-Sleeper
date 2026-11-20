@@ -26,6 +26,16 @@
       "url": "postseason/selection-watch-provisional-2026.json"
     }
   },
+  "_field_exceptions_note": "Archive only. Real playoff fields that differ from the rules because of an admin error, keyed by season. Each entry swaps one team: 'in' played in the field, 'out' qualified by rule but was left out. The archive board is drawn by the rules and marks both teams with a dagger. Delete an entry (or the whole block in a fresh template) to drop the exception; that season then shows no board.",
+  "field_exceptions": {
+    "2022": [
+      {
+        "in": "Central Michigan",
+        "out": "Texas Tech",
+        "note": "Bracket entry error: Central Michigan was placed in the field instead of Texas Tech. Results stand as played."
+      }
+    ]
+  },
   "_availability_message_note": "Message shown when the live data file has not been published. Update or remove the date for future seasons.",
   "availability_message": "Available after the regular season is final (Tue Nov 24).",
   "timeline": {

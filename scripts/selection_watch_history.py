@@ -7,7 +7,19 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "data/Postseason_Historic.csv"
+CONFIG = ROOT / "config/selection_watch.json"
 OUTPUT = ROOT / "reports/postseason/selection-watch-history.json"
+
+
+def field_exceptions(year, config=None):
+    """Owner-listed admin errors for one season: [{"in", "out", "note"}]. Empty when none."""
+    entries = json.loads((config or CONFIG).read_text(encoding="utf-8")).get("field_exceptions", {}).get(str(year), [])
+    for entry in entries:
+        if not all(isinstance(entry.get(key), str) and entry[key].strip() for key in ("in", "out", "note")):
+            raise ValueError(f"{year} field exception needs in, out and note")
+        if entry["in"] == entry["out"]:
+            raise ValueError(f"{year} field exception swaps {entry['in']} with itself")
+    return entries
 
 
 def verified_steals(year, games, entrants):
@@ -27,6 +39,14 @@ def verified_steals(year, games, entrants):
     if not all(winners):
         return
     actual = {by_key[key]["team"] for key, share in field(board, winners).items() if share == 1}
+    exceptions = field_exceptions(year)
+    for entry in exceptions:
+        # A stale or mistyped exception must fail loudly, not silently hide or fake a board.
+        if entry["out"] not in actual or entry["in"] in actual:
+            raise ValueError(f"{year} field exception {entry['in']} for {entry['out']} does not match the rule field")
+        if entry["in"] not in entrants or entry["out"] in entrants:
+            raise ValueError(f"{year} field exception {entry['in']} for {entry['out']} does not match the recorded field")
+        actual = (actual - {entry["out"]}) | {entry["in"]}
     if actual != set(entrants):
         return
     labels = final_labels(board, {g["id"]: g["winner"] for g in board["ccg"]})
@@ -43,6 +63,7 @@ def verified_steals(year, games, entrants):
         "play_ins": board["play_ins"],
         "tie": [[names[k] for k in group] for group in board["tie"]],
         "colors": {name: style["background"] for name, style in board["style"].items() if style["background"]},
+        **({"exceptions": exceptions} if exceptions else {}),
     }
 
 
