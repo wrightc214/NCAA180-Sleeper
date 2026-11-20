@@ -81,7 +81,7 @@
   "ccg": {
     "simulations": 20000,
     "seed": 2026,
-    "refresh_interval_ms": 300000,
+    "refresh_interval_ms": null,
     "labels": {
       "title": "CCG Division Races",
       "unofficial": "Unofficial — live projections",
