@@ -256,7 +256,10 @@ def write_history(year, bracket, path=HISTORY):
                 continue  # bye is not a played game
             diff = g["frozen"] and (g["score_a"] != g["snapshot_a"] or g["score_b"] != g["snapshot_b"])
             mine.append({"Season": year, "Round": ri + 1,
-                         "RoundName": NAMES.get(ri + 1, f"Round {ri + 1}"),
+                         "RoundName": ("Final" if ri == len(bracket["rounds"]) - 1 else
+                                       "Semifinal" if ri == len(bracket["rounds"]) - 2 else
+                                       "Quarterfinal" if ri == len(bracket["rounds"]) - 3 else
+                                       "First Round" if ri == 0 else f"Round {ri + 1}"),
                          "Week": bracket["start_week"] + ri,
                          "TeamA": a["team"], "SeedA": a["seed"],
                          "TeamB": b["team"], "SeedB": b["seed"],
