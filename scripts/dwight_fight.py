@@ -49,18 +49,34 @@ def slots(size):
     return result
 
 
-def resolve(requested, owners, api, session=None):
+def resolve(requested, owners, api, session=None, saved=None):
     """Resolve user handles with the Sleeper public API, then map IDs to current teams."""
     session = session or requests
     resolved, errors = [], []
+    saved = saved or []
+    saved_handles = {str(x.get("username", "")).casefold(): x for x in saved}
     for handle in requested:
         try:
             response = session.get(f"{api}/user/{handle}", timeout=20)
             response.raise_for_status()
             obj = response.json()
         except Exception as exc:
-            errors.append(f"{handle}: Sleeper lookup failed ({exc})")
-            continue
+            # Sleeper may stop resolving a renamed handle. An initial bracket
+            # supplies the immutable ID to recover the same person.
+            old = saved_handles.get(handle)
+            if not old:
+                errors.append(f"{handle}: Sleeper lookup failed ({exc})")
+                continue
+            try:
+                response = session.get(f"{api}/user/{old['user_id']}", timeout=20)
+                response.raise_for_status()
+                obj = response.json()
+                if not obj or str(obj.get("user_id")) != str(old["user_id"]):
+                    raise ValueError("saved Sleeper ID could not be verified")
+                print(f"NOTE: renamed Sleeper account {handle} -> {obj.get('username')} (ID {old['user_id']})")
+            except Exception as follow:
+                errors.append(f"{handle}: saved ID lookup failed ({follow})")
+                continue
         uid = str((obj or {}).get("user_id") or "")
         if not uid:
             errors.append(f"{handle}: Sleeper returned no user")
@@ -285,7 +301,7 @@ def main():
     else:
         if args.replay_2023:
             raise SystemExit("Historical 2023 replay requires a separate archival name-to-owner mapping")
-        fresh, errors = resolve(requested, team_map(), cfg["api"]["sleeper"])
+        fresh, errors = resolve(requested, team_map(), cfg["api"]["sleeper"], saved=old["entrants"] if old else [])
         if errors:
             for err in errors:
                 print("WARNING: Dwight Fight:", err)
