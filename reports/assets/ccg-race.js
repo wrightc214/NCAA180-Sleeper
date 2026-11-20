@@ -178,6 +178,7 @@
    season=Number(current.season);
    index=current;
    const q=route.get('preview');
+   if(q===null && Number(index.week)!==week)throw Error(settings.availability_message||"CCG race is active only during the final regular-season week.");
    let dataURL='postseason/ccg-race-'+season+'.json';
    if(q!==null){
      const profile=settings.previews?.[q];
