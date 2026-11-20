@@ -55,7 +55,11 @@ def build(year=None, write=True):
     if week != last:
         # Future seasons may support a longer window; do not expand it in 2026.
         raise ValueError("CCG race currently supports only the last regular-season week")
-    if year != ps.current_season() or week in ps.completed_weeks(year):
+    if year != ps.current_season():
+        return None
+    completed = ps.completed_weeks(year)
+    current = next((w for w in range(1, last + 1) if w not in completed), None)
+    if current != week:
         return None
 
     st = ps.standings(year)
