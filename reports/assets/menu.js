@@ -5,6 +5,7 @@
 // Every page carries empty placeholders written once by site_common.menu_html():
 //   <nav class="weeks" aria-label="Pages" data-current="standings"></nav>   main tabs
 //   <nav class="weeks sub" data-row="standings-seasons"></nav>              optional sub-rows
+//     (drawn below the page header: see placeRows)
 //   <script src="assets/menu.js"></script>                                   this file (synchronous: no flash)
 // Dev view (per device, localStorage "ncaa180.dev" = "1", switched on the About page's dev panel)
 // shows hidden-dev tabs/items with a DEV tag and a "DEV — not public" bar on non-public pages.
@@ -26,7 +27,8 @@
     ".weeks a.n180-dev[aria-current]{background:var(--dev);border-color:var(--dev);color:var(--panel,#fff)}" +
     ".n180-devtag{font:700 9px/1 var(--num,sans-serif);letter-spacing:.06em;margin-left:5px;padding:1px 3px;border:1px solid currentColor;border-radius:2px;vertical-align:1px}" +
     ".n180-devbar{background:var(--dev);color:var(--panel,#fff);font:700 12px/1.2 var(--num,sans-serif);letter-spacing:.04em;text-align:center;padding:5px 8px;margin:0 0 8px;border-radius:3px}" +
-    "@media print{.n180-devbar{display:none}}";
+    "@media print{.n180-devbar{display:none}}" +
+    "nav.weeks.sub.n180-wait{display:none}nav.weeks.sub.n180-below{margin:12px 0 0}nav.weeks.sub.n180-below+nav.weeks.sub.n180-below{margin-top:8px}";
 
   // Accessibility is independently maintained in templates/accessibility.js.
   // scripts/site_common.py bundles it here so existing static pages stay synchronous.
@@ -370,6 +372,46 @@ function createNCAA180Accessibility() {
     nav.parentNode.insertBefore(el("div", {"class": "n180-devbar", role: "note"}, "DEV &mdash; not public"), nav);
   }
 
+  // Sub-rows display directly below the page header, not between the main menu and the header
+  // (Chris, 2026-11-20). Pages keep writing the placeholders next to the main menu (site_common.menu_html);
+  // this moves them after the <header> that follows them as a sibling, skipping only script/noscript/nav
+  // and the dev bar. No such header: the row stays where it is. Order of several rows is kept.
+  var SKIP = {SCRIPT: 1, NOSCRIPT: 1, NAV: 1, STYLE: 1, LINK: 1};
+  function headerAfter(node) {
+    for (var n = node.nextElementSibling; n; n = n.nextElementSibling) {
+      var t = (n.tagName || "").toUpperCase();
+      if (t === "HEADER") return n;
+      if (!SKIP[t] && !(n.className && /(^|\s)n180-devbar(\s|$)/.test(n.className))) return null;
+    }
+    return null;
+  }
+  function placeRows(final) {
+    var rows = document.querySelectorAll("nav.weeks.sub[data-row]:not(.n180-below)");
+    var anchors = [];
+    for (var i = 0; i < rows.length; i++) {
+      var nav = rows[i], h = headerAfter(nav);
+      if (!h) {
+        if (final) nav.classList.remove("n180-wait");  // no header on this page: leave it in place
+        else nav.classList.add("n180-wait");             // header not parsed yet: hide until it is
+        continue;
+      }
+      var after = h;
+      for (var k = 0; k < anchors.length; k++) if (anchors[k][0] === h) after = anchors[k][1];
+      after.parentNode.insertBefore(nav, after.nextSibling);
+      nav.classList.remove("n180-wait");
+      nav.classList.add("n180-below");
+      anchors.push([h, nav]);
+    }
+    return document.querySelectorAll("nav.weeks.sub.n180-wait").length === 0;
+  }
+  function watchRows() {
+    if (placeRows(document.readyState !== "loading")) return;
+    if (typeof MutationObserver === "undefined") return;
+    var mo = new MutationObserver(function () { if (placeRows(false)) mo.disconnect(); });
+    mo.observe(document.documentElement, {childList: true, subtree: true});
+    document.addEventListener("DOMContentLoaded", function () { mo.disconnect(); placeRows(true); });
+  }
+
   function render(force) {
     if (!D) return;
     if (!document.getElementById("n180-menu-css")) {
@@ -394,7 +436,7 @@ function createNCAA180Accessibility() {
   }
 
   var api = {access:access, render: render, dev: devOn, setDev: setDev, data: D, colors: colors,
-             mainModel: mainModel, rowModel: rowModel, needsBar: needsBar};
+             mainModel: mainModel, rowModel: rowModel, needsBar: needsBar, headerAfter: headerAfter};
   if (typeof module !== "undefined" && module.exports) { module.exports = api; return; }  // node tests
   window.NCAA180 = window.NCAA180 || {};
   window.NCAA180.menu = api;
@@ -409,5 +451,6 @@ function createNCAA180Accessibility() {
     }
   });
   render(false);
+  watchRows();
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", function () { render(false); });
 })();

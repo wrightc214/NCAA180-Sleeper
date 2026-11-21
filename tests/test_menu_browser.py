@@ -69,6 +69,24 @@ class MenuBrowser(unittest.TestCase):
         self.assertEqual(pg.locator('nav.weeks.sub img').count(), 1)
         pg.close()
 
+    def test_sub_rows_below_header(self):
+        # Chris, 2026-11-20: sub-rows display directly below the page header, in their original order.
+        for name, labels in (("week-05.html", ["Seasons", "Weeks"]), ("standings.html", ["Seasons"]),
+                             ("poll-how.html", ["Poll pages"]), ("special.html", ["Special events"]),
+                             ("ccg-race.html", ["Selection Watch pages"]), ("selection-watch.html", ["Selection Watch pages"])):
+            with self.subTest(page=name):
+                pg = self.page(name)
+                got = pg.evaluate("""() => {
+                  const h = document.querySelector('header'), out = [];
+                  let n = h.nextElementSibling;
+                  while (n && n.matches('nav.weeks.sub')) { out.push(n.getAttribute('aria-label')); n = n.nextElementSibling; }
+                  return {after: out, before: document.querySelectorAll('nav.weeks.sub:not(.n180-below)').length,
+                          waiting: document.querySelectorAll('nav.weeks.sub.n180-wait').length};
+                }""")
+                self.assertEqual(got, {"after": labels, "before": 0, "waiting": 0})
+                self.assertEqual(self.errors, [])
+                pg.close()
+
     def test_dev_view_and_about_panel(self):
         pg = self.page("about.html")
         self.assertTrue(pg.locator("#devpanel").is_hidden())
