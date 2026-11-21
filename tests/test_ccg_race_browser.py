@@ -143,11 +143,70 @@ class CCGRaceBrowser(unittest.TestCase):
         for x, y in zip(la["rgb"], mix("#0C2340", "#ffffff", la["strength"] / 100)):
             self.assertLessEqual(abs(x - y), 1)
         # A team that already reads on the dark panel is not swapped; its card uses its main colour.
-        s = dark["syracuse"]
-        self.assertFalse(s["swapped"])
-        if s["strength"] > 0:
-            for x, y in zip(s["rgb"], mix("#F76900", "#16213a", s["strength"] / 100)):
-                self.assertLessEqual(abs(x - y), 1)
+        for theme, base in (("dark", "#16213a"), ("light", "#ffffff")):
+            s = got[theme]["syracuse"]
+            self.assertFalse(s["swapped"], theme)
+            self.assertGreater(s["strength"], 0)
+            for x, y in zip(s["rgb"], mix("#F76900", base, s["strength"] / 100)):
+                self.assertLessEqual(abs(x - y), 1, theme)
+
+    def test_game_indicator_line(self):
+        """Game indicator (Chris, 2026-11-20). The midweek fixture has Big 12 pregame, Pac-12 final and the
+        rest live, so each state appears; PF = season PF + projection before final, actual total after."""
+        import json, re
+        from playwright.sync_api import sync_playwright
+
+        class Quiet(SimpleHTTPRequestHandler):
+            def log_message(self, *args):
+                pass
+
+        fx = json.loads((ROOT / "reports/postseason/ccg-race-preview-2026.json").read_text(encoding="utf-8"))
+        idx = json.loads((ROOT / "data/scoreboard/index.json").read_text(encoding="utf-8"))
+        server = ThreadingHTTPServer(("127.0.0.1", 0), partial(Quiet, directory=str(ROOT)))
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        try:
+            with sync_playwright() as pw:
+                browser = pw.chromium.launch(headless=True, args=["--no-sandbox", "--disable-dev-shm-usage"])
+                page = browser.new_page(viewport={"width": 1280, "height": 960}, service_workers="block")
+                for url in ("https://api.sleeper.app/**", "https://site.api.espn.com/**",
+                            "https://fonts.googleapis.com/**", "https://fonts.gstatic.com/**"):
+                    page.route(url, lambda route: route.abort())
+                page.goto(f"http://127.0.0.1:{server.server_port}/reports/ccg-race.html?preview=midweek")
+                page.wait_for_function("document.querySelectorAll('#conferences .race-team .game').length > 20", timeout=30000)
+                cards = page.evaluate("""() => [...document.querySelectorAll('#conferences section')].flatMap(sec =>
+                    [...sec.querySelectorAll('.race-team')].map(t => ({sec: sec.id.replace('ccg-', ''),
+                        team: t.querySelector('strong').textContent, game: t.querySelector('.game').textContent,
+                        state: t.querySelector('.game').dataset.state, text: t.textContent})))""")
+                browser.close()
+        finally:
+            server.shutdown()
+        models = fx["preview_models"]
+        teams = {(c["league_id"], t["team"]): t for c in fx["conferences"] for d in c["divisions"] for t in d["contenders"]}
+        index_names = {t["name"] for l in idx["leagues"].values() for t in l["teams"].values()}
+        seen = set()
+        for c in cards:
+            t = teams[(c["sec"], c["team"])]
+            me = models[f"{c['sec']}|{t['roster_id']}"]
+            opp_id = t["remaining_games"][0]["opponent_roster_id"]
+            opp = models[f"{c['sec']}|{opp_id}"]
+            opp_name = idx["leagues"][c["sec"]]["teams"][opp_id]["name"]
+            self.assertIn(opp_name, index_names)
+            self.assertNotIn("±", c["text"])
+            self.assertIn(" vs " + opp_name, c["game"], c)
+            want = t["points_for"] + (me["actual"] if me["state"] == "final" else me["mean"])
+            pf = float(re.search(r"PF (\d+\.\d\d)$", c["game"]).group(1))
+            self.assertAlmostEqual(pf, round(want, 2), delta=0.006, msg=c)
+            self.assertEqual(c["state"], me["state"])
+            seen.add(c["state"])
+            if me["state"] == "pregame":
+                self.assertRegex(c["game"], r"^(Proj [WL] by \d+\.\d\d|Proj even) vs ")
+            elif me["state"] == "live":
+                self.assertRegex(c["game"], r"^(Leading by \d+\.\d\d|Trailing by \d+\.\d\d|Tied) vs .+ · (Proj [WL] by \d+\.\d\d|Proj even) · PF ")
+            else:
+                self.assertRegex(c["game"], r"^[WLT] \d+\.\d\d–\d+\.\d\d vs ")
+                a, b = map(float, re.match(r"^[WLT] (\S+)–(\S+)", c["game"]).groups())
+                self.assertEqual((a, b), (round(me["actual"], 2), round(opp["actual"], 2)))
+        self.assertEqual(seen, {"pregame", "live", "final"})
 
 
 if __name__ == "__main__":

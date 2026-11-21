@@ -98,7 +98,38 @@
      return {team:text,text:bg,swapped:true};
    return {team:bg,text:text,swapped:false};
  }
- function teamTile(conf,t,metrics,odds,leader,proven,out,stamp){
+ // Game indicator (Chris, 2026-11-20): one line about the team's own game this week, then projected
+ // final PF. Margin = this team's mean minus the opponent's mean, from the same models the odds use.
+ //   Pregame  Proj W by 22.16 vs Oregon · PF 1752.16
+ //   Live     Leading by 8.40 vs Oregon · Proj W by 22.16 · PF 1752.16
+ //   Final    W 141.20–118.94 vs Oregon · PF 1752.16
+ // PF before final = season PF + this week's projection; after final = the actual total. No ± on the card.
+ // Missing game model (team or opponent): PF only, no margin.
+ const f2=x=>Number(x).toFixed(2);
+ function gameState(m){return m.state||(m.final?'final':(Number(m.actual)||0)>0?'live':'pregame');}
+ function gameLine(conf,t,models){
+   const lid=String(conf.league_id),me=models?.[M.key(lid,t.roster_id)];
+   const game=(t.remaining_games||[]).find(g=>Number(g.week)===Number(data.week));
+   const oppId=game?String(game.opponent_roster_id):null;
+   const opp=oppId?models?.[M.key(lid,oppId)]:null;
+   const season=Number(t.points_for)||0;
+   if(!me||!opp||!oppId)return {text:'PF '+f2(season),state:'missing'};
+   const st=gameState(me),final=st==='final';
+   const oppName=index.leagues[lid]?.teams?.[oppId]?.name||'opponent';
+   const vs=' vs '+oppName;
+   const pf='PF '+f2(final?season+Number(me.actual):season+Number(me.mean));
+   if(final){
+     const a=Number(me.actual),b=Number(opp.actual),r=a>b?'W':a<b?'L':'T';
+     return {text:r+' '+f2(a)+'–'+f2(b)+vs+' · '+pf,state:st};
+   }
+   const d=Math.round((Number(me.mean)-Number(opp.mean))*100)/100;
+   const proj=d>0?'Proj W by '+f2(d):d<0?'Proj L by '+f2(-d):'Proj even';
+   if(st==='pregame')return {text:proj+vs+' · '+pf,state:st};
+   const g=Math.round((Number(me.actual)-Number(opp.actual))*100)/100;
+   const now=g>0?'Leading by '+f2(g):g<0?'Trailing by '+f2(-g):'Tied';
+   return {text:now+vs+' · '+proj+' · '+pf,state:st};
+ }
+ function teamTile(conf,t,models,odds,leader,proven,out,stamp){
    const id=String(t.roster_id),info=index.leagues[String(conf.league_id)]?.teams?.[id]||{};
    const panel=panelHex(),colours=cardColours(info,panel),team=colours.team;
    const isOut=proven?proven!==id:!!out?.includes(id);
@@ -107,17 +138,14 @@
    const style=p>0?'background:'+bg+';border-color:'+bg+';color:'+contrast(bg,colours.text):'';
    const img=(p>=50&&info.logo_forced)||(isDark(bg)&&info.logo_dark?info.logo_dark:info.logo)||info.logo_forced||''; // logos.force (#124) on strong team colour
    const status=proven?(proven===id?(settings.labels?.clinched||'Clinched'):(settings.labels?.out||'Out')):(out?.includes(id)?(settings.labels?.out||'Out'):fmt(odds[id]||0));
-   const projected=(metrics?.mean??0).toFixed(2);
-   const range=Math.sqrt(Math.max(0,metrics?.variance||0)).toFixed(1);
-   const livePF=Number(t.points_for)+(metrics?.actual||0);
+   const line=gameLine(conf,t,models);
    return '<div class="race-team'+(leader===id?' leader':'')+(isOut?' out':'')+'" data-strength="'+p.toFixed(1)+'"'+
      (colours.swapped?' data-swapped="1"':'')+
      (style?' style="'+E(style)+'"':'')+'>'+
      (img?'<img src="'+E(img)+'" alt="">':'<span aria-hidden="true"></span>')+
      '<div><strong>'+E(t.team)+'</strong><small class="owner">@'+E(t.owner)+'</small>'+
-     '<small>'+E(t.wins)+'-'+E(t.losses)+(t.ties?'-'+E(t.ties):'')+
-     ' · PF '+livePF.toFixed(2)+' · This week '+projected+' ±'+range+
-     (metrics?.final?' (final)':' (live proj.)')+'</small></div><span class="prob">'+E(status)+'</span></div>';
+     '<small class="record">'+E(t.wins)+'-'+E(t.losses)+(t.ties?'-'+E(t.ties):'')+'</small>'+
+     '<small class="game" data-state="'+E(line.state)+'">'+E(line.text)+'</small></div><span class="prob">'+E(status)+'</span></div>';
  }
  const cap=w=>String(w).replace(/(^|\s)\S/g,c=>c.toUpperCase());
  function CCGRaceOrder(status,odds){
@@ -146,7 +174,7 @@
        const leader=ids[0];
        const shown=d.clinched_before_week?[byId.get(status.proven||ids[0])]:ids.map(x=>byId.get(x));
        return '<div class="division"><h3>'+E(d.name)+'</h3>'+
-         shown.filter(Boolean).map(t=>teamTile(conf,t,models[M.key(id,t.roster_id)],
+         shown.filter(Boolean).map(t=>teamTile(conf,t,models,
            result.odds,leader,status.proven,status.out,stamp)).join('')+'</div>';
      });
      node.innerHTML='<div class="divisions">'+divs.join('')+'</div>'+
@@ -171,7 +199,8 @@
        const pre=!summary.started&&!summary.final;
        all[M.key(id,rid)]={
          mean:summary.final?C.round(m.actual):pre?m.pregame:m.projected,
-         variance:summary.final?0:pre?Math.pow(Number(cfg.spread)||24,2):m.variance,actual:m.actual,final:summary.final
+         variance:summary.final?0:pre?Math.pow(Number(cfg.spread)||24,2):m.variance,actual:m.actual,final:summary.final,
+         state:summary.final?'final':pre?'pregame':'live'
        };
      }
    }
