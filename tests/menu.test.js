@@ -84,6 +84,11 @@ test('DEV bar: only with Dev view, only on non-public pages', () => {
   assert.strictEqual(M.needsBar('standings', null, true), false);      // public
   assert.strictEqual(M.needsBar('about', 'hidden', true), true);       // hidden page: state baked in the page
   assert.strictEqual(M.needsBar('standings', 'hidden', true), false);  // promoted to visible: menu wins over a stale page
+  // public tab, non-public sub-page (Selection Watch: CCG public, Playoffs Dev-only)
+  const devItem = M.data.rows.special.items.find((i) => i.state === 'hidden-dev');
+  assert.strictEqual(M.needsBar('special', null, true, devItem.href), true);
+  assert.strictEqual(M.needsBar('special', null, true, 'special.html'), false);
+  assert.strictEqual(M.needsBar('special', null, false, devItem.href), false);
 });
 
 test('generated reports/assets/menu.js parses and excludes fully hidden tabs', () => {

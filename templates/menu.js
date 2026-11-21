@@ -107,11 +107,20 @@
   }
   // "DEV — not public" bar: Dev view on and this page's tab isn't public. A page left out of this file
   // (state hidden) carries its own state in data-state, baked at build.
-  function needsBar(cur, pageState, dev) {
+  // A public tab can still have a non-public sub-page (Selection Watch: CCG public, Playoffs Dev-only):
+  // the sub-row item for this file decides then.
+  function needsBar(cur, pageState, dev, file) {
     if (!dev) return false;
     var t = tabFor(cur);
     var state = t ? (t.state || "visible") : (pageState || "visible");
-    return state !== "visible";
+    if (state !== "visible") return true;
+    if (!file) return false;
+    for (var k in D.rows) {
+      var items = D.rows[k].items || [];
+      for (var i = 0; i < items.length; i++)
+        if (itemMatches(items[i], file) && (items[i].state || "visible") !== "visible") return true;
+    }
+    return false;
   }
 
   // ---- DOM ----
@@ -139,10 +148,10 @@
     m.items.forEach(function (i) { nav.appendChild(link(i, i.current)); });
   }
 
-  function devBar(nav, dev) {
+  function devBar(nav, dev, file) {
     var old = document.querySelector(".n180-devbar");
     if (old) old.remove();
-    if (!needsBar(nav.getAttribute("data-current") || "", nav.getAttribute("data-state"), dev)) return;
+    if (!needsBar(nav.getAttribute("data-current") || "", nav.getAttribute("data-state"), dev, file)) return;
     nav.parentNode.insertBefore(el("div", {"class": "n180-devbar", role: "note"}, "DEV &mdash; not public"), nav);
   }
 
@@ -198,7 +207,7 @@
       var n = mains[i];
       if (n.getAttribute("data-r") && !force) continue;
       fillMain(n, dev);
-      devBar(n, dev);
+      devBar(n, dev, file);
       n.setAttribute("data-r", "1");
     }
     var rows = document.querySelectorAll("nav.weeks[data-row]");
