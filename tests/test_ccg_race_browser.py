@@ -176,6 +176,7 @@ class CCGRaceBrowser(unittest.TestCase):
                 cards = page.evaluate("""() => [...document.querySelectorAll('#conferences section')].flatMap(sec =>
                     [...sec.querySelectorAll('.race-team')].map(t => ({sec: sec.id.replace('ccg-', ''),
                         team: t.querySelector('strong').textContent, game: t.querySelector('.game').textContent,
+                        record: t.querySelector('.record').textContent,
                         state: t.querySelector('.game').dataset.state, text: t.textContent})))""")
                 browser.close()
         finally:
@@ -194,14 +195,16 @@ class CCGRaceBrowser(unittest.TestCase):
             self.assertNotIn("±", c["text"])
             self.assertIn(" vs " + opp_name, c["game"], c)
             want = t["points_for"] + (me["actual"] if me["state"] == "final" else me["mean"])
-            pf = float(re.search(r"PF (\d+\.\d\d)$", c["game"]).group(1))
+            self.assertRegex(c["record"], r"^\d+-\d+(-\d+)? · PF \d+\.\d\d$")
+            self.assertNotIn("PF", c["game"])
+            pf = float(re.search(r"PF (\d+\.\d\d)$", c["record"]).group(1))
             self.assertAlmostEqual(pf, round(want, 2), delta=0.006, msg=c)
             self.assertEqual(c["state"], me["state"])
             seen.add(c["state"])
             if me["state"] == "pregame":
                 self.assertRegex(c["game"], r"^(Proj [WL] by \d+\.\d\d|Proj even) vs ")
             elif me["state"] == "live":
-                self.assertRegex(c["game"], r"^(Leading by \d+\.\d\d|Trailing by \d+\.\d\d|Tied) vs .+ · (Proj [WL] by \d+\.\d\d|Proj even) · PF ")
+                self.assertRegex(c["game"], r"^(Leading by \d+\.\d\d|Trailing by \d+\.\d\d|Tied) vs .+ · (Proj [WL] by \d+\.\d\d|Proj even)$")
             else:
                 self.assertRegex(c["game"], r"^[WLT] \d+\.\d\d–\d+\.\d\d vs ")
                 a, b = map(float, re.match(r"^[WLT] (\S+)–(\S+)", c["game"]).groups())

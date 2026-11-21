@@ -98,11 +98,12 @@
      return {team:text,text:bg,swapped:true};
    return {team:bg,text:text,swapped:false};
  }
- // Game indicator (Chris, 2026-11-20): one line about the team's own game this week, then projected
- // final PF. Margin = this team's mean minus the opponent's mean, from the same models the odds use.
- //   Pregame  Proj W by 22.16 vs Oregon · PF 1752.16
- //   Live     Leading by 8.40 vs Oregon · Proj W by 22.16 · PF 1752.16
- //   Final    W 141.20–118.94 vs Oregon · PF 1752.16
+ // Game indicator (Chris, 2026-11-20): record and PF share one line; the next line is the team's own game.
+ // Margin = this team's mean minus the opponent's mean, from the same models the odds use.
+ //   Record   8-2 · PF 1752.16
+ //   Pregame  Proj W by 22.16 vs Oregon
+ //   Live     Leading by 8.40 vs Oregon · Proj W by 22.16
+ //   Final    W 141.20–118.94 vs Oregon
  // PF before final = season PF + this week's projection; after final = the actual total. No ± on the card.
  // Missing game model (team or opponent): PF only, no margin.
  const f2=x=>Number(x).toFixed(2);
@@ -113,21 +114,21 @@
    const oppId=game?String(game.opponent_roster_id):null;
    const opp=oppId?models?.[M.key(lid,oppId)]:null;
    const season=Number(t.points_for)||0;
-   if(!me||!opp||!oppId)return {text:'PF '+f2(season),state:'missing'};
+   if(!me||!opp||!oppId)return {text:'',pf:'PF '+f2(season),state:'missing'};
    const st=gameState(me),final=st==='final';
    const oppName=index.leagues[lid]?.teams?.[oppId]?.name||'opponent';
    const vs=' vs '+oppName;
    const pf='PF '+f2(final?season+Number(me.actual):season+Number(me.mean));
    if(final){
      const a=Number(me.actual),b=Number(opp.actual),r=a>b?'W':a<b?'L':'T';
-     return {text:r+' '+f2(a)+'–'+f2(b)+vs+' · '+pf,state:st};
+     return {text:r+' '+f2(a)+'–'+f2(b)+vs,pf,state:st};
    }
    const d=Math.round((Number(me.mean)-Number(opp.mean))*100)/100;
    const proj=d>0?'Proj W by '+f2(d):d<0?'Proj L by '+f2(-d):'Proj even';
-   if(st==='pregame')return {text:proj+vs+' · '+pf,state:st};
+   if(st==='pregame')return {text:proj+vs,pf,state:st};
    const g=Math.round((Number(me.actual)-Number(opp.actual))*100)/100;
    const now=g>0?'Leading by '+f2(g):g<0?'Trailing by '+f2(-g):'Tied';
-   return {text:now+vs+' · '+proj+' · '+pf,state:st};
+   return {text:now+vs+' · '+proj,pf,state:st};
  }
  function teamTile(conf,t,models,odds,leader,proven,out,stamp){
    const id=String(t.roster_id),info=index.leagues[String(conf.league_id)]?.teams?.[id]||{};
@@ -144,8 +145,8 @@
      (style?' style="'+E(style)+'"':'')+'>'+
      (img?'<img src="'+E(img)+'" alt="">':'<span aria-hidden="true"></span>')+
      '<div><strong>'+E(t.team)+'</strong><small class="owner">@'+E(t.owner)+'</small>'+
-     '<small class="record">'+E(t.wins)+'-'+E(t.losses)+(t.ties?'-'+E(t.ties):'')+'</small>'+
-     '<small class="game" data-state="'+E(line.state)+'">'+E(line.text)+'</small></div><span class="prob">'+E(status)+'</span></div>';
+     '<small class="record">'+E(t.wins)+'-'+E(t.losses)+(t.ties?'-'+E(t.ties):'')+' · '+E(line.pf)+'</small>'+
+     (line.text?'<small class="game" data-state="'+E(line.state)+'">'+E(line.text)+'</small>':'')+'</div><span class="prob">'+E(status)+'</span></div>';
  }
  const cap=w=>String(w).replace(/(^|\s)\S/g,c=>c.toUpperCase());
  function CCGRaceOrder(status,odds){
