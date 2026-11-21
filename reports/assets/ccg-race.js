@@ -82,26 +82,69 @@
  function isDark(hex){
    return [1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255).reduce((acc,v,i)=>acc+[.2126,.7152,.0722][i]*(v<=.04045?v/12.92:((v+.055)/1.055)**2.4),0)<.18;
  }
- function teamTile(conf,t,metrics,odds,leader,proven,out,stamp){
+ function lumHex(h){
+   return [1,3,5].map(i=>parseInt(h.slice(i,i+2),16)/255).reduce((acc,v,i)=>acc+[.2126,.7152,.0722][i]*(v<=.04045?v/12.92:((v+.055)/1.055)**2.4),0);
+ }
+ const ratioHex=(a,b)=>{const x=lumHex(a),y=lumHex(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05);};
+ const HEX=/^#[\da-f]{6}$/i;
+ // Dark-mode colour swap (Chris, 2026-11-20): on the dark panel a team whose main colour nearly matches
+ // the card (Auburn #0C2340 on #16213a is 1.01:1) would show no tint at any odds. When its text colour
+ // stands out from the panel, use that as the card colour and the main colour as the preferred text.
+ // Thresholds live in config (ccg.dark_swap); light mode never swaps.
+ function cardColours(info,panel){
+   const bg=info.background||info.primary||'#14213a',text=info.text;
+   const sw=settings.dark_swap||{},maxBg=Number(sw.max_background_contrast)||1.5,minText=Number(sw.min_text_contrast)||3;
+   if(isDark(panel)&&HEX.test(bg)&&HEX.test(text||'')&&ratioHex(bg,panel)<maxBg&&ratioHex(text,panel)>=minText)
+     return {team:text,text:bg,swapped:true};
+   return {team:bg,text:text,swapped:false};
+ }
+ // Game lines (Chris, 2026-11-20):
+ //   Record line   7-3 · PF 1467.32        actual: season PF + points scored so far (all of them once final)
+ //   Game line     pregame: vs Vanderbilt   live: Trailing by 3.82 vs Vanderbilt   final: W 141.20–118.94 vs Oregon
+ //   Proj line     not final only: Proj L by 8.50; PF 1675.12   (projected margin; season PF + this week's projection)
+ // Margin = this team's mean minus the opponent's mean, from the same models the odds use. No ± on the card.
+ // Missing game model (team or opponent): record line only, with season PF.
+ const f2=x=>Number(x).toFixed(2);
+ function gameState(m){return m.state||(m.final?'final':(Number(m.actual)||0)>0?'live':'pregame');}
+ function gameLine(conf,t,models){
+   const lid=String(conf.league_id),me=models?.[M.key(lid,t.roster_id)];
+   const game=(t.remaining_games||[]).find(g=>Number(g.week)===Number(data.week));
+   const oppId=game?String(game.opponent_roster_id):null;
+   const opp=oppId?models?.[M.key(lid,oppId)]:null;
+   const season=Number(t.points_for)||0;
+   if(!me||!opp||!oppId)return {pf:'PF '+f2(season),game:'',proj:'',state:'missing'};
+   const st=gameState(me),vs='vs '+(index.leagues[lid]?.teams?.[oppId]?.name||'opponent');
+   const scored=st==='pregame'?0:Number(me.actual)||0;
+   const pf='PF '+f2(season+scored);
+   if(st==='final'){
+     const a=Number(me.actual),b=Number(opp.actual),r=a>b?'W':a<b?'L':'T';
+     return {pf,game:r+' '+f2(a)+'–'+f2(b)+' '+vs,proj:'',state:st};
+   }
+   const d=Math.round((Number(me.mean)-Number(opp.mean))*100)/100;
+   const proj=(d>0?'Proj W by '+f2(d):d<0?'Proj L by '+f2(-d):'Proj even')+'; PF '+f2(season+Number(me.mean));
+   if(st==='pregame')return {pf,game:vs,proj,state:st};
+   const g=Math.round((Number(me.actual)-Number(opp.actual))*100)/100;
+   const now=g>0?'Leading by '+f2(g):g<0?'Trailing by '+f2(-g):'Tied';
+   return {pf,game:now+' '+vs,proj,state:st};
+ }
+ function teamTile(conf,t,models,odds,leader,proven,out,stamp){
    const id=String(t.roster_id),info=index.leagues[String(conf.league_id)]?.teams?.[id]||{};
-   const team=info.background||info.primary||'#14213a';
+   const panel=panelHex(),colours=cardColours(info,panel),team=colours.team;
    const isOut=proven?proven!==id:!!out?.includes(id);
    const p=strength(id,odds,proven,out);
-   const style=p>0?(()=>{const bg=mix(team,panelHex(),p);
-     return 'background:'+bg+';border-color:'+bg+';color:'+contrast(bg,info.text);})():'';
-   const bg=p>0?mix(team,panelHex(),p):panelHex();
+   const bg=p>0?mix(team,panel,p):panel;
+   const style=p>0?'background:'+bg+';border-color:'+bg+';color:'+contrast(bg,colours.text):'';
    const img=(p>=50&&info.logo_forced)||(isDark(bg)&&info.logo_dark?info.logo_dark:info.logo)||info.logo_forced||''; // logos.force (#124) on strong team colour
    const status=proven?(proven===id?(settings.labels?.clinched||'Clinched'):(settings.labels?.out||'Out')):(out?.includes(id)?(settings.labels?.out||'Out'):fmt(odds[id]||0));
-   const projected=(metrics?.mean??0).toFixed(2);
-   const range=Math.sqrt(Math.max(0,metrics?.variance||0)).toFixed(1);
-   const livePF=Number(t.points_for)+(metrics?.actual||0);
+   const line=gameLine(conf,t,models);
    return '<div class="race-team'+(leader===id?' leader':'')+(isOut?' out':'')+'" data-strength="'+p.toFixed(1)+'"'+
+     (colours.swapped?' data-swapped="1"':'')+
      (style?' style="'+E(style)+'"':'')+'>'+
      (img?'<img src="'+E(img)+'" alt="">':'<span aria-hidden="true"></span>')+
      '<div><strong>'+E(t.team)+'</strong><small class="owner">@'+E(t.owner)+'</small>'+
-     '<small>'+E(t.wins)+'-'+E(t.losses)+(t.ties?'-'+E(t.ties):'')+
-     ' · PF '+livePF.toFixed(2)+' · This week '+projected+' ±'+range+
-     (metrics?.final?' (final)':' (live proj.)')+'</small></div><span class="prob">'+E(status)+'</span></div>';
+     '<small class="record">'+E(t.wins)+'-'+E(t.losses)+(t.ties?'-'+E(t.ties):'')+' · '+E(line.pf)+'</small>'+
+     (line.game?'<small class="game" data-state="'+E(line.state)+'">'+E(line.game)+'</small>':'')+
+     (line.proj?'<small class="proj">'+E(line.proj)+'</small>':'')+'</div><span class="prob">'+E(status)+'</span></div>';
  }
  const cap=w=>String(w).replace(/(^|\s)\S/g,c=>c.toUpperCase());
  function CCGRaceOrder(status,odds){
@@ -130,7 +173,7 @@
        const leader=ids[0];
        const shown=d.clinched_before_week?[byId.get(status.proven||ids[0])]:ids.map(x=>byId.get(x));
        return '<div class="division"><h3>'+E(d.name)+'</h3>'+
-         shown.filter(Boolean).map(t=>teamTile(conf,t,models[M.key(id,t.roster_id)],
+         shown.filter(Boolean).map(t=>teamTile(conf,t,models,
            result.odds,leader,status.proven,status.out,stamp)).join('')+'</div>';
      });
      node.innerHTML='<div class="divisions">'+divs.join('')+'</div>'+
@@ -155,7 +198,8 @@
        const pre=!summary.started&&!summary.final;
        all[M.key(id,rid)]={
          mean:summary.final?C.round(m.actual):pre?m.pregame:m.projected,
-         variance:summary.final?0:pre?Math.pow(Number(cfg.spread)||24,2):m.variance,actual:m.actual,final:summary.final
+         variance:summary.final?0:pre?Math.pow(Number(cfg.spread)||24,2):m.variance,actual:m.actual,final:summary.final,
+         state:summary.final?'final':pre?'pregame':'live'
        };
      }
    }

@@ -27,7 +27,8 @@ class CCGRaceBrowser(unittest.TestCase):
         try:
             with sync_playwright() as pw:
                 browser = pw.chromium.launch(headless=True, args=["--no-sandbox", "--disable-dev-shm-usage"])
-                for width, theme, filename in [(1280, "light", "desktop.png"), (390, "dark", "mobile.png")]:
+                for width, theme, filename in [(1280, "light", "desktop.png"), (390, "dark", "mobile.png"),
+                                               (1280, "dark", "desktop-dark.png"), (390, "light", "mobile-light.png")]:
                     page = browser.new_page(viewport={"width": width, "height": 960},
                                             service_workers="block", color_scheme=theme)
                     errors = []
@@ -84,6 +85,139 @@ class CCGRaceBrowser(unittest.TestCase):
                 browser.close()
         finally:
             server.shutdown()
+
+    def test_dark_mode_colour_swap(self):
+        """Dark-mode swap (Chris, 2026-11-20): a team whose main colour vanishes on the dark panel uses its
+        text colour as the card colour. Auburn (#0C2340 / #E87722) at 26% in the midweek preview."""
+        from playwright.sync_api import sync_playwright
+
+        class Quiet(SimpleHTTPRequestHandler):
+            def log_message(self, *args):
+                pass
+
+        server = ThreadingHTTPServer(("127.0.0.1", 0), partial(Quiet, directory=str(ROOT)))
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        probe = """() => {
+            const lum = c => { const m = c.match(/\\d+(\\.\\d+)?/g).slice(0, 3).map(x => +x / 255)
+                .map(x => x <= .04045 ? x / 12.92 : ((x + .055) / 1.055) ** 2.4); return .2126*m[0] + .7152*m[1] + .0722*m[2]; };
+            const ratio = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); };
+            const panel = getComputedStyle(document.querySelector('#conferences section')).backgroundColor;
+            const card = n => [...document.querySelectorAll('#conferences .race-team')]
+                .find(t => t.querySelector('strong').textContent === n);
+            const info = n => { const t = card(n), bg = getComputedStyle(t).backgroundColor;
+                return {swapped: t.dataset.swapped === '1', strength: +t.dataset.strength, bg,
+                        rgb: bg.match(/\\d+/g).slice(0, 3).map(Number),
+                        text: ratio(bg, getComputedStyle(t.querySelector('strong')).color),
+                        prob: ratio(bg, getComputedStyle(t.querySelector('.prob')).color),
+                        panel: ratio(bg, panel)}; };
+            return {auburn: info('Auburn'), syracuse: info('Syracuse')}; }"""
+        mix = lambda team, base, p: [round(int(team[i:i + 2], 16) * p + int(base[i:i + 2], 16) * (1 - p)) for i in (1, 3, 5)]
+        try:
+            with sync_playwright() as pw:
+                browser = pw.chromium.launch(headless=True, args=["--no-sandbox", "--disable-dev-shm-usage"])
+                got = {}
+                for theme in ("dark", "light"):
+                    page = browser.new_page(viewport={"width": 1280, "height": 960}, service_workers="block", color_scheme=theme)
+                    for url in ("https://api.sleeper.app/**", "https://site.api.espn.com/**",
+                                "https://fonts.googleapis.com/**", "https://fonts.gstatic.com/**"):
+                        page.route(url, lambda route: route.abort())
+                    page.goto(f"http://127.0.0.1:{server.server_port}/reports/ccg-race.html?preview=midweek")
+                    page.wait_for_function("document.querySelectorAll('#conferences .race-team[data-strength]').length > 20", timeout=30000)
+                    got[theme] = page.evaluate(probe)
+                    page.close()
+                browser.close()
+        finally:
+            server.shutdown()
+        dark, light = got["dark"], got["light"]
+        a = dark["auburn"]
+        self.assertTrue(a["swapped"])
+        self.assertAlmostEqual(a["strength"], 26, delta=1)
+        r, g, b = a["rgb"]
+        self.assertTrue(r > g > b, f"Auburn dark card should be orange-tinted, got {a['bg']}")
+        self.assertGreaterEqual(a["text"], 4.5)
+        self.assertGreaterEqual(a["prob"], 4.5)
+        self.assertGreaterEqual(a["panel"], 1.2)
+        # Light mode: Auburn unchanged (navy blended into white by its odds).
+        la = light["auburn"]
+        self.assertFalse(la["swapped"])
+        for x, y in zip(la["rgb"], mix("#0C2340", "#ffffff", la["strength"] / 100)):
+            self.assertLessEqual(abs(x - y), 1)
+        # A team that already reads on the dark panel is not swapped; its card uses its main colour.
+        for theme, base in (("dark", "#16213a"), ("light", "#ffffff")):
+            s = got[theme]["syracuse"]
+            self.assertFalse(s["swapped"], theme)
+            self.assertGreater(s["strength"], 0)
+            for x, y in zip(s["rgb"], mix("#F76900", base, s["strength"] / 100)):
+                self.assertLessEqual(abs(x - y), 1, theme)
+
+    def test_game_indicator_line(self):
+        """Game indicator (Chris, 2026-11-20). The midweek fixture has Big 12 pregame, Pac-12 final and the
+        rest live, so each state appears; PF = season PF + projection before final, actual total after."""
+        import json, re
+        from playwright.sync_api import sync_playwright
+
+        class Quiet(SimpleHTTPRequestHandler):
+            def log_message(self, *args):
+                pass
+
+        fx = json.loads((ROOT / "reports/postseason/ccg-race-preview-2026.json").read_text(encoding="utf-8"))
+        idx = json.loads((ROOT / "data/scoreboard/index.json").read_text(encoding="utf-8"))
+        server = ThreadingHTTPServer(("127.0.0.1", 0), partial(Quiet, directory=str(ROOT)))
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        try:
+            with sync_playwright() as pw:
+                browser = pw.chromium.launch(headless=True, args=["--no-sandbox", "--disable-dev-shm-usage"])
+                page = browser.new_page(viewport={"width": 1280, "height": 960}, service_workers="block")
+                for url in ("https://api.sleeper.app/**", "https://site.api.espn.com/**",
+                            "https://fonts.googleapis.com/**", "https://fonts.gstatic.com/**"):
+                    page.route(url, lambda route: route.abort())
+                page.goto(f"http://127.0.0.1:{server.server_port}/reports/ccg-race.html?preview=midweek")
+                page.wait_for_function("document.querySelectorAll('#conferences .race-team .game').length > 20", timeout=30000)
+                cards = page.evaluate("""() => [...document.querySelectorAll('#conferences section')].flatMap(sec =>
+                    [...sec.querySelectorAll('.race-team')].map(t => ({sec: sec.id.replace('ccg-', ''),
+                        team: t.querySelector('strong').textContent, game: t.querySelector('.game').textContent,
+                        record: t.querySelector('.record').textContent,
+                        proj: t.querySelector('.proj') ? t.querySelector('.proj').textContent : null,
+                        state: t.querySelector('.game').dataset.state, text: t.textContent})))""")
+                browser.close()
+        finally:
+            server.shutdown()
+        models = fx["preview_models"]
+        teams = {(c["league_id"], t["team"]): t for c in fx["conferences"] for d in c["divisions"] for t in d["contenders"]}
+        index_names = {t["name"] for l in idx["leagues"].values() for t in l["teams"].values()}
+        seen = set()
+        for c in cards:
+            t = teams[(c["sec"], c["team"])]
+            me = models[f"{c['sec']}|{t['roster_id']}"]
+            opp_id = t["remaining_games"][0]["opponent_roster_id"]
+            opp = models[f"{c['sec']}|{opp_id}"]
+            opp_name = idx["leagues"][c["sec"]]["teams"][opp_id]["name"]
+            self.assertIn(opp_name, index_names)
+            self.assertNotIn("±", c["text"])
+            self.assertIn("vs " + opp_name, c["game"], c)
+            # Record line: actual PF = season PF + points scored so far (none pregame, all once final).
+            scored = 0 if me["state"] == "pregame" else me["actual"]
+            self.assertRegex(c["record"], r"^\d+-\d+(-\d+)? · PF \d+\.\d\d$")
+            pf = float(re.search(r"PF (\d+\.\d\d)$", c["record"]).group(1))
+            self.assertAlmostEqual(pf, round(t["points_for"] + scored, 2), delta=0.006, msg=c)
+            self.assertNotIn("PF", c["game"])
+            self.assertEqual(c["state"], me["state"])
+            seen.add(c["state"])
+            if me["state"] == "final":
+                self.assertRegex(c["game"], r"^[WLT] \d+\.\d\d–\d+\.\d\d vs ")
+                a, b = map(float, re.match(r"^[WLT] (\S+)–(\S+)", c["game"]).groups())
+                self.assertEqual((a, b), (round(me["actual"], 2), round(opp["actual"], 2)))
+                self.assertIsNone(c["proj"])
+                continue
+            if me["state"] == "pregame":
+                self.assertEqual(c["game"], "vs " + opp_name)
+            else:
+                self.assertRegex(c["game"], r"^(Leading by \d+\.\d\d|Trailing by \d+\.\d\d|Tied) vs ")
+            # Projection line: "Proj L by 8.50; PF 1675.12" with PF = season PF + this week's projection.
+            self.assertRegex(c["proj"], r"^(Proj [WL] by \d+\.\d\d|Proj even); PF \d+\.\d\d$")
+            ppf = float(re.search(r"PF (\d+\.\d\d)$", c["proj"]).group(1))
+            self.assertAlmostEqual(ppf, round(t["points_for"] + me["mean"], 2), delta=0.006, msg=c)
+        self.assertEqual(seen, {"pregame", "live", "final"})
 
 
 if __name__ == "__main__":

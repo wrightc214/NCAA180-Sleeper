@@ -1198,1082 +1198,1262 @@
     "1331775206619885568|1": {
       "mean": 111.7,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 50.27,
+      "final": false,
+      "state": "live"
     },
     "1331775206619885568|2": {
       "mean": 113.4,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 51.03,
+      "final": false,
+      "state": "live"
     },
     "1331775206619885568|3": {
       "mean": 115.1,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 51.8,
+      "final": false,
+      "state": "live"
     },
     "1331775206619885568|4": {
       "mean": 116.8,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 52.56,
+      "final": false,
+      "state": "live"
     },
     "1331775206619885568|5": {
       "mean": 118.5,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 53.33,
+      "final": false,
+      "state": "live"
     },
     "1331775206619885568|6": {
       "mean": 120.2,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 54.09,
+      "final": false,
+      "state": "live"
     },
     "1331775206619885568|7": {
       "mean": 121.9,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 54.86,
+      "final": false,
+      "state": "live"
     },
     "1331775206619885568|8": {
       "mean": 123.6,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 55.62,
+      "final": false,
+      "state": "live"
     },
     "1331775206619885568|9": {
       "mean": 125.3,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 56.38,
+      "final": false,
+      "state": "live"
     },
     "1331775206619885568|10": {
       "mean": 127,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 57.15,
+      "final": false,
+      "state": "live"
     },
     "1331775206619885568|11": {
       "mean": 128.7,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 57.91,
+      "final": false,
+      "state": "live"
     },
     "1331775206619885568|12": {
       "mean": 130.4,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 58.68,
+      "final": false,
+      "state": "live"
     },
     "1331775170712444928|1": {
       "mean": 111.7,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 50.27,
+      "final": false,
+      "state": "live"
     },
     "1331775170712444928|2": {
       "mean": 113.4,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 51.03,
+      "final": false,
+      "state": "live"
     },
     "1331775170712444928|3": {
       "mean": 115.1,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 51.8,
+      "final": false,
+      "state": "live"
     },
     "1331775170712444928|4": {
       "mean": 116.8,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 52.56,
+      "final": false,
+      "state": "live"
     },
     "1331775170712444928|5": {
       "mean": 118.5,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 53.33,
+      "final": false,
+      "state": "live"
     },
     "1331775170712444928|6": {
       "mean": 120.2,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 54.09,
+      "final": false,
+      "state": "live"
     },
     "1331775170712444928|7": {
       "mean": 121.9,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 54.86,
+      "final": false,
+      "state": "live"
     },
     "1331775170712444928|8": {
       "mean": 123.6,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 55.62,
+      "final": false,
+      "state": "live"
     },
     "1331775170712444928|9": {
       "mean": 125.3,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 56.38,
+      "final": false,
+      "state": "live"
     },
     "1331775170712444928|10": {
       "mean": 127,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 57.15,
+      "final": false,
+      "state": "live"
     },
     "1331775170712444928|11": {
       "mean": 128.7,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 57.91,
+      "final": false,
+      "state": "live"
     },
     "1331775170712444928|12": {
       "mean": 130.4,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 58.68,
+      "final": false,
+      "state": "live"
     },
     "1331775106527006720|1": {
       "mean": 111.7,
       "variance": 0,
       "actual": 111.7,
-      "final": true
+      "final": true,
+      "state": "final"
     },
     "1331775106527006720|2": {
       "mean": 113.4,
       "variance": 0,
       "actual": 113.4,
-      "final": true
+      "final": true,
+      "state": "final"
     },
     "1331775106527006720|3": {
       "mean": 115.1,
       "variance": 0,
       "actual": 115.1,
-      "final": true
+      "final": true,
+      "state": "final"
     },
     "1331775106527006720|4": {
       "mean": 116.8,
       "variance": 0,
       "actual": 116.8,
-      "final": true
+      "final": true,
+      "state": "final"
     },
     "1331775106527006720|5": {
       "mean": 118.5,
       "variance": 0,
       "actual": 118.5,
-      "final": true
+      "final": true,
+      "state": "final"
     },
     "1331775106527006720|6": {
       "mean": 120.2,
       "variance": 0,
       "actual": 120.2,
-      "final": true
+      "final": true,
+      "state": "final"
     },
     "1331775106527006720|7": {
       "mean": 121.9,
       "variance": 0,
       "actual": 121.9,
-      "final": true
+      "final": true,
+      "state": "final"
     },
     "1331775106527006720|8": {
       "mean": 200,
       "variance": 0,
       "actual": 200,
-      "final": true
+      "final": true,
+      "state": "final"
     },
     "1331775106527006720|9": {
       "mean": 125.3,
       "variance": 0,
       "actual": 125.3,
-      "final": true
+      "final": true,
+      "state": "final"
     },
     "1331775106527006720|10": {
       "mean": 127,
       "variance": 0,
       "actual": 127,
-      "final": true
+      "final": true,
+      "state": "final"
     },
     "1331775106527006720|11": {
       "mean": 128.7,
       "variance": 0,
       "actual": 128.7,
-      "final": true
+      "final": true,
+      "state": "final"
     },
     "1331775106527006720|12": {
       "mean": 130.4,
       "variance": 0,
       "actual": 130.4,
-      "final": true
+      "final": true,
+      "state": "final"
     },
     "1331774915392577536|1": {
       "mean": 111.7,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 50.27,
+      "final": false,
+      "state": "live"
     },
     "1331774915392577536|2": {
       "mean": 113.4,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 51.03,
+      "final": false,
+      "state": "live"
     },
     "1331774915392577536|3": {
       "mean": 115.1,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 51.8,
+      "final": false,
+      "state": "live"
     },
     "1331774915392577536|4": {
       "mean": 116.8,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 52.56,
+      "final": false,
+      "state": "live"
     },
     "1331774915392577536|5": {
       "mean": 118.5,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 53.33,
+      "final": false,
+      "state": "live"
     },
     "1331774915392577536|6": {
       "mean": 120.2,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 54.09,
+      "final": false,
+      "state": "live"
     },
     "1331774915392577536|7": {
       "mean": 121.9,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 54.86,
+      "final": false,
+      "state": "live"
     },
     "1331774915392577536|8": {
       "mean": 123.6,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 55.62,
+      "final": false,
+      "state": "live"
     },
     "1331774915392577536|9": {
       "mean": 125.3,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 56.38,
+      "final": false,
+      "state": "live"
     },
     "1331774915392577536|10": {
       "mean": 127,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 57.15,
+      "final": false,
+      "state": "live"
     },
     "1331774915392577536|11": {
       "mean": 128.7,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 57.91,
+      "final": false,
+      "state": "live"
     },
     "1331774915392577536|12": {
       "mean": 130.4,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 58.68,
+      "final": false,
+      "state": "live"
     },
     "1331774880181399552|1": {
       "mean": 111.7,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 0,
+      "final": false,
+      "state": "pregame"
     },
     "1331774880181399552|2": {
       "mean": 113.4,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 0,
+      "final": false,
+      "state": "pregame"
     },
     "1331774880181399552|3": {
       "mean": 115.1,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 0,
+      "final": false,
+      "state": "pregame"
     },
     "1331774880181399552|4": {
       "mean": 116.8,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 0,
+      "final": false,
+      "state": "pregame"
     },
     "1331774880181399552|5": {
       "mean": 118.5,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 0,
+      "final": false,
+      "state": "pregame"
     },
     "1331774880181399552|6": {
       "mean": 120.2,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 0,
+      "final": false,
+      "state": "pregame"
     },
     "1331774880181399552|7": {
       "mean": 121.9,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 0,
+      "final": false,
+      "state": "pregame"
     },
     "1331774880181399552|8": {
       "mean": 123.6,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 0,
+      "final": false,
+      "state": "pregame"
     },
     "1331774880181399552|9": {
       "mean": 125.3,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 0,
+      "final": false,
+      "state": "pregame"
     },
     "1331774880181399552|10": {
       "mean": 127,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 0,
+      "final": false,
+      "state": "pregame"
     },
     "1331774880181399552|11": {
       "mean": 128.7,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 0,
+      "final": false,
+      "state": "pregame"
     },
     "1331774880181399552|12": {
       "mean": 130.4,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 0,
+      "final": false,
+      "state": "pregame"
     },
     "1331774846710849536|1": {
       "mean": 111.7,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 50.27,
+      "final": false,
+      "state": "live"
     },
     "1331774846710849536|2": {
       "mean": 113.4,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 51.03,
+      "final": false,
+      "state": "live"
     },
     "1331774846710849536|3": {
       "mean": 115.1,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 51.8,
+      "final": false,
+      "state": "live"
     },
     "1331774846710849536|4": {
       "mean": 116.8,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 52.56,
+      "final": false,
+      "state": "live"
     },
     "1331774846710849536|5": {
       "mean": 118.5,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 53.33,
+      "final": false,
+      "state": "live"
     },
     "1331774846710849536|6": {
       "mean": 120.2,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 54.09,
+      "final": false,
+      "state": "live"
     },
     "1331774846710849536|7": {
       "mean": 121.9,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 54.86,
+      "final": false,
+      "state": "live"
     },
     "1331774846710849536|8": {
       "mean": 123.6,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 55.62,
+      "final": false,
+      "state": "live"
     },
     "1331774846710849536|9": {
       "mean": 125.3,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 56.38,
+      "final": false,
+      "state": "live"
     },
     "1331774846710849536|10": {
       "mean": 127,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 57.15,
+      "final": false,
+      "state": "live"
     },
     "1331774846710849536|11": {
       "mean": 128.7,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 57.91,
+      "final": false,
+      "state": "live"
     },
     "1331774846710849536|12": {
       "mean": 130.4,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 58.68,
+      "final": false,
+      "state": "live"
     },
     "1331774804222545920|1": {
       "mean": 111.7,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 50.27,
+      "final": false,
+      "state": "live"
     },
     "1331774804222545920|2": {
       "mean": 113.4,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 51.03,
+      "final": false,
+      "state": "live"
     },
     "1331774804222545920|3": {
       "mean": 115.1,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 51.8,
+      "final": false,
+      "state": "live"
     },
     "1331774804222545920|4": {
       "mean": 116.8,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 52.56,
+      "final": false,
+      "state": "live"
     },
     "1331774804222545920|5": {
       "mean": 118.5,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 53.33,
+      "final": false,
+      "state": "live"
     },
     "1331774804222545920|6": {
       "mean": 120.2,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 54.09,
+      "final": false,
+      "state": "live"
     },
     "1331774804222545920|7": {
       "mean": 121.9,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 54.86,
+      "final": false,
+      "state": "live"
     },
     "1331774804222545920|8": {
       "mean": 123.6,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 55.62,
+      "final": false,
+      "state": "live"
     },
     "1331774804222545920|9": {
       "mean": 125.3,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 56.38,
+      "final": false,
+      "state": "live"
     },
     "1331774804222545920|10": {
       "mean": 127,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 57.15,
+      "final": false,
+      "state": "live"
     },
     "1331774804222545920|11": {
       "mean": 128.7,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 57.91,
+      "final": false,
+      "state": "live"
     },
     "1331774804222545920|12": {
       "mean": 130.4,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 58.68,
+      "final": false,
+      "state": "live"
     },
     "1331774741488369664|1": {
       "mean": 111.7,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 50.27,
+      "final": false,
+      "state": "live"
     },
     "1331774741488369664|2": {
       "mean": 113.4,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 51.03,
+      "final": false,
+      "state": "live"
     },
     "1331774741488369664|3": {
       "mean": 115.1,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 51.8,
+      "final": false,
+      "state": "live"
     },
     "1331774741488369664|4": {
       "mean": 116.8,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 52.56,
+      "final": false,
+      "state": "live"
     },
     "1331774741488369664|5": {
       "mean": 118.5,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 53.33,
+      "final": false,
+      "state": "live"
     },
     "1331774741488369664|6": {
       "mean": 120.2,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 54.09,
+      "final": false,
+      "state": "live"
     },
     "1331774741488369664|7": {
       "mean": 121.9,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 54.86,
+      "final": false,
+      "state": "live"
     },
     "1331774741488369664|8": {
       "mean": 123.6,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 55.62,
+      "final": false,
+      "state": "live"
     },
     "1331774741488369664|9": {
       "mean": 125.3,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 56.38,
+      "final": false,
+      "state": "live"
     },
     "1331774741488369664|10": {
       "mean": 127,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 57.15,
+      "final": false,
+      "state": "live"
     },
     "1331774741488369664|11": {
       "mean": 128.7,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 57.91,
+      "final": false,
+      "state": "live"
     },
     "1331774741488369664|12": {
       "mean": 130.4,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 58.68,
+      "final": false,
+      "state": "live"
     },
     "1331774695346823168|1": {
       "mean": 111.7,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 50.27,
+      "final": false,
+      "state": "live"
     },
     "1331774695346823168|2": {
       "mean": 113.4,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 51.03,
+      "final": false,
+      "state": "live"
     },
     "1331774695346823168|3": {
       "mean": 115.1,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 51.8,
+      "final": false,
+      "state": "live"
     },
     "1331774695346823168|4": {
       "mean": 116.8,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 52.56,
+      "final": false,
+      "state": "live"
     },
     "1331774695346823168|5": {
       "mean": 118.5,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 53.33,
+      "final": false,
+      "state": "live"
     },
     "1331774695346823168|6": {
       "mean": 120.2,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 54.09,
+      "final": false,
+      "state": "live"
     },
     "1331774695346823168|7": {
       "mean": 121.9,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 54.86,
+      "final": false,
+      "state": "live"
     },
     "1331774695346823168|8": {
       "mean": 123.6,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 55.62,
+      "final": false,
+      "state": "live"
     },
     "1331774695346823168|9": {
       "mean": 125.3,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 56.38,
+      "final": false,
+      "state": "live"
     },
     "1331774695346823168|10": {
       "mean": 127,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 57.15,
+      "final": false,
+      "state": "live"
     },
     "1331774695346823168|11": {
       "mean": 128.7,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 57.91,
+      "final": false,
+      "state": "live"
     },
     "1331774695346823168|12": {
       "mean": 130.4,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 58.68,
+      "final": false,
+      "state": "live"
     },
     "1331774630620332032|1": {
       "mean": 111.7,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 50.27,
+      "final": false,
+      "state": "live"
     },
     "1331774630620332032|2": {
       "mean": 113.4,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 51.03,
+      "final": false,
+      "state": "live"
     },
     "1331774630620332032|3": {
       "mean": 115.1,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 51.8,
+      "final": false,
+      "state": "live"
     },
     "1331774630620332032|4": {
       "mean": 116.8,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 52.56,
+      "final": false,
+      "state": "live"
     },
     "1331774630620332032|5": {
       "mean": 118.5,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 53.33,
+      "final": false,
+      "state": "live"
     },
     "1331774630620332032|6": {
       "mean": 120.2,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 54.09,
+      "final": false,
+      "state": "live"
     },
     "1331774630620332032|7": {
       "mean": 121.9,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 54.86,
+      "final": false,
+      "state": "live"
     },
     "1331774630620332032|8": {
       "mean": 123.6,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 55.62,
+      "final": false,
+      "state": "live"
     },
     "1331774630620332032|9": {
       "mean": 125.3,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 56.38,
+      "final": false,
+      "state": "live"
     },
     "1331774630620332032|10": {
       "mean": 127,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 57.15,
+      "final": false,
+      "state": "live"
     },
     "1331774630620332032|11": {
       "mean": 128.7,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 57.91,
+      "final": false,
+      "state": "live"
     },
     "1331774630620332032|12": {
       "mean": 130.4,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 58.68,
+      "final": false,
+      "state": "live"
     },
     "1331774599196585984|1": {
       "mean": 111.7,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 50.27,
+      "final": false,
+      "state": "live"
     },
     "1331774599196585984|2": {
       "mean": 113.4,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 51.03,
+      "final": false,
+      "state": "live"
     },
     "1331774599196585984|3": {
       "mean": 115.1,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 51.8,
+      "final": false,
+      "state": "live"
     },
     "1331774599196585984|4": {
       "mean": 116.8,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 52.56,
+      "final": false,
+      "state": "live"
     },
     "1331774599196585984|5": {
       "mean": 118.5,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 53.33,
+      "final": false,
+      "state": "live"
     },
     "1331774599196585984|6": {
       "mean": 120.2,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 54.09,
+      "final": false,
+      "state": "live"
     },
     "1331774599196585984|7": {
       "mean": 121.9,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 54.86,
+      "final": false,
+      "state": "live"
     },
     "1331774599196585984|8": {
       "mean": 123.6,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 55.62,
+      "final": false,
+      "state": "live"
     },
     "1331774599196585984|9": {
       "mean": 125.3,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 56.38,
+      "final": false,
+      "state": "live"
     },
     "1331774599196585984|10": {
       "mean": 127,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 57.15,
+      "final": false,
+      "state": "live"
     },
     "1331774599196585984|11": {
       "mean": 128.7,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 57.91,
+      "final": false,
+      "state": "live"
     },
     "1331774599196585984|12": {
       "mean": 130.4,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 58.68,
+      "final": false,
+      "state": "live"
     },
     "1331774544905510912|1": {
       "mean": 111.7,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 50.27,
+      "final": false,
+      "state": "live"
     },
     "1331774544905510912|2": {
       "mean": 113.4,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 51.03,
+      "final": false,
+      "state": "live"
     },
     "1331774544905510912|3": {
       "mean": 115.1,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 51.8,
+      "final": false,
+      "state": "live"
     },
     "1331774544905510912|4": {
       "mean": 116.8,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 52.56,
+      "final": false,
+      "state": "live"
     },
     "1331774544905510912|5": {
       "mean": 118.5,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 53.33,
+      "final": false,
+      "state": "live"
     },
     "1331774544905510912|6": {
       "mean": 120.2,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 54.09,
+      "final": false,
+      "state": "live"
     },
     "1331774544905510912|7": {
       "mean": 121.9,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 54.86,
+      "final": false,
+      "state": "live"
     },
     "1331774544905510912|8": {
       "mean": 123.6,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 55.62,
+      "final": false,
+      "state": "live"
     },
     "1331774544905510912|9": {
       "mean": 125.3,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 56.38,
+      "final": false,
+      "state": "live"
     },
     "1331774544905510912|10": {
       "mean": 127,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 57.15,
+      "final": false,
+      "state": "live"
     },
     "1331774544905510912|11": {
       "mean": 128.7,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 57.91,
+      "final": false,
+      "state": "live"
     },
     "1331774544905510912|12": {
       "mean": 130.4,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 58.68,
+      "final": false,
+      "state": "live"
     },
     "1331774454493122560|1": {
       "mean": 111.7,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 50.27,
+      "final": false,
+      "state": "live"
     },
     "1331774454493122560|2": {
       "mean": 113.4,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 51.03,
+      "final": false,
+      "state": "live"
     },
     "1331774454493122560|3": {
       "mean": 115.1,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 51.8,
+      "final": false,
+      "state": "live"
     },
     "1331774454493122560|4": {
       "mean": 116.8,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 52.56,
+      "final": false,
+      "state": "live"
     },
     "1331774454493122560|5": {
       "mean": 118.5,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 53.33,
+      "final": false,
+      "state": "live"
     },
     "1331774454493122560|6": {
       "mean": 120.2,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 54.09,
+      "final": false,
+      "state": "live"
     },
     "1331774454493122560|7": {
       "mean": 121.9,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 54.86,
+      "final": false,
+      "state": "live"
     },
     "1331774454493122560|8": {
       "mean": 123.6,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 55.62,
+      "final": false,
+      "state": "live"
     },
     "1331774454493122560|9": {
       "mean": 125.3,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 56.38,
+      "final": false,
+      "state": "live"
     },
     "1331774454493122560|10": {
       "mean": 127,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 57.15,
+      "final": false,
+      "state": "live"
     },
     "1331774454493122560|11": {
       "mean": 128.7,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 57.91,
+      "final": false,
+      "state": "live"
     },
     "1331774454493122560|12": {
       "mean": 130.4,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 58.68,
+      "final": false,
+      "state": "live"
     },
     "1316899936696016896|1": {
       "mean": 111.7,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 50.27,
+      "final": false,
+      "state": "live"
     },
     "1316899936696016896|2": {
       "mean": 113.4,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 51.03,
+      "final": false,
+      "state": "live"
     },
     "1316899936696016896|3": {
       "mean": 115.1,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 51.8,
+      "final": false,
+      "state": "live"
     },
     "1316899936696016896|4": {
       "mean": 116.8,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 52.56,
+      "final": false,
+      "state": "live"
     },
     "1316899936696016896|5": {
       "mean": 118.5,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 53.33,
+      "final": false,
+      "state": "live"
     },
     "1316899936696016896|6": {
       "mean": 120.2,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 54.09,
+      "final": false,
+      "state": "live"
     },
     "1316899936696016896|7": {
       "mean": 121.9,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 54.86,
+      "final": false,
+      "state": "live"
     },
     "1316899936696016896|8": {
       "mean": 123.6,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 55.62,
+      "final": false,
+      "state": "live"
     },
     "1316899936696016896|9": {
       "mean": 125.3,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 56.38,
+      "final": false,
+      "state": "live"
     },
     "1316899936696016896|10": {
       "mean": 127,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 57.15,
+      "final": false,
+      "state": "live"
     },
     "1316899936696016896|11": {
       "mean": 128.7,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 57.91,
+      "final": false,
+      "state": "live"
     },
     "1316899936696016896|12": {
       "mean": 130.4,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 58.68,
+      "final": false,
+      "state": "live"
     },
     "1316899756005412864|1": {
       "mean": 111.7,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 50.27,
+      "final": false,
+      "state": "live"
     },
     "1316899756005412864|2": {
       "mean": 113.4,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 51.03,
+      "final": false,
+      "state": "live"
     },
     "1316899756005412864|3": {
       "mean": 115.1,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 51.8,
+      "final": false,
+      "state": "live"
     },
     "1316899756005412864|4": {
       "mean": 116.8,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 52.56,
+      "final": false,
+      "state": "live"
     },
     "1316899756005412864|5": {
       "mean": 118.5,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 53.33,
+      "final": false,
+      "state": "live"
     },
     "1316899756005412864|6": {
       "mean": 120.2,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 54.09,
+      "final": false,
+      "state": "live"
     },
     "1316899756005412864|7": {
       "mean": 121.9,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 54.86,
+      "final": false,
+      "state": "live"
     },
     "1316899756005412864|8": {
       "mean": 123.6,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 55.62,
+      "final": false,
+      "state": "live"
     },
     "1316899756005412864|9": {
       "mean": 125.3,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 56.38,
+      "final": false,
+      "state": "live"
     },
     "1316899756005412864|10": {
       "mean": 127,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 57.15,
+      "final": false,
+      "state": "live"
     },
     "1316899756005412864|11": {
       "mean": 128.7,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 57.91,
+      "final": false,
+      "state": "live"
     },
     "1316899756005412864|12": {
       "mean": 130.4,
       "variance": 320,
-      "actual": 10,
-      "final": false
+      "actual": 58.68,
+      "final": false,
+      "state": "live"
     }
   }
 }

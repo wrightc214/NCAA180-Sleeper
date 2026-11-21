@@ -89,6 +89,11 @@
       "out": "Out"
     },
     "export_filename_prefix": "ncaa180-ccg-race",
+    "dark_swap": {
+      "_note": "Dark mode only (Chris, 2026-11-20). A team whose main colour (background) is under max_background_contrast against the dark card panel, and whose text colour is at least min_text_contrast against it, has its two colours swapped on its card: text becomes the card colour (blended by odds as usual) and background becomes the preferred text colour. The 4.5:1 text check still applies with black/white fallback. Light mode is unchanged.",
+      "max_background_contrast": 1.5,
+      "min_text_contrast": 3.0
+    },
     "availability_message": "CCG race projections are not available for this week.",
     "previews": {
       "midweek": {
