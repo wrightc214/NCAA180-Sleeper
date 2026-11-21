@@ -104,3 +104,22 @@ test('built-in icons: named glyphs are icon-only tabs; image paths are not', () 
   assert.strictEqual(dev.find((t) => t.label === 'Awards').glyph, null);
   assert.ok(!M.mainModel('awards', false).some((t) => t.label === 'Accessibility'));
 });
+
+// Sub-rows sit below the page header (Chris, 2026-11-20): headerAfter finds the <header> that follows a
+// sub-row as a sibling, skipping only script/noscript/nav/style/link and the dev bar.
+test('headerAfter: finds the page header past the menu siblings, nothing else', () => {
+  const M = load(DATA);
+  const chain = (...tags) => {
+    const nodes = tags.map((t) => (typeof t === 'string' ? {tagName: t} : t));
+    nodes.forEach((n, i) => { n.nextElementSibling = nodes[i + 1] || null; });
+    return nodes;
+  };
+  let n = chain('NAV', 'NAV', 'SCRIPT', 'NOSCRIPT', 'HEADER');
+  assert.strictEqual(M.headerAfter(n[0]), n[4]);
+  n = chain('NAV', {tagName: 'DIV', className: 'n180-devbar'}, 'HEADER');
+  assert.strictEqual(M.headerAfter(n[0]), n[2]);
+  n = chain('NAV', 'SCRIPT', 'MAIN', 'HEADER');  // a header further down (e.g. inside content) is not the page header
+  assert.strictEqual(M.headerAfter(n[0]), null);
+  n = chain('NAV', 'SCRIPT');  // not parsed yet / no header
+  assert.strictEqual(M.headerAfter(n[0]), null);
+});
