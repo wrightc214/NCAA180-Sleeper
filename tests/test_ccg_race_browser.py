@@ -27,7 +27,8 @@ class CCGRaceBrowser(unittest.TestCase):
         try:
             with sync_playwright() as pw:
                 browser = pw.chromium.launch(headless=True, args=["--no-sandbox", "--disable-dev-shm-usage"])
-                for width, theme, filename in [(1280, "light", "desktop.png"), (390, "dark", "mobile.png")]:
+                for width, theme, filename in [(1280, "light", "desktop.png"), (390, "dark", "mobile.png"),
+                                               (1280, "dark", "desktop-dark.png"), (390, "light", "mobile-light.png")]:
                     page = browser.new_page(viewport={"width": width, "height": 960},
                                             service_workers="block", color_scheme=theme)
                     errors = []
@@ -84,6 +85,69 @@ class CCGRaceBrowser(unittest.TestCase):
                 browser.close()
         finally:
             server.shutdown()
+
+    def test_dark_mode_colour_swap(self):
+        """Dark-mode swap (Chris, 2026-11-20): a team whose main colour vanishes on the dark panel uses its
+        text colour as the card colour. Auburn (#0C2340 / #E87722) at 26% in the midweek preview."""
+        from playwright.sync_api import sync_playwright
+
+        class Quiet(SimpleHTTPRequestHandler):
+            def log_message(self, *args):
+                pass
+
+        server = ThreadingHTTPServer(("127.0.0.1", 0), partial(Quiet, directory=str(ROOT)))
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        probe = """() => {
+            const lum = c => { const m = c.match(/\\d+(\\.\\d+)?/g).slice(0, 3).map(x => +x / 255)
+                .map(x => x <= .04045 ? x / 12.92 : ((x + .055) / 1.055) ** 2.4); return .2126*m[0] + .7152*m[1] + .0722*m[2]; };
+            const ratio = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); };
+            const panel = getComputedStyle(document.querySelector('#conferences section')).backgroundColor;
+            const card = n => [...document.querySelectorAll('#conferences .race-team')]
+                .find(t => t.querySelector('strong').textContent === n);
+            const info = n => { const t = card(n), bg = getComputedStyle(t).backgroundColor;
+                return {swapped: t.dataset.swapped === '1', strength: +t.dataset.strength, bg,
+                        rgb: bg.match(/\\d+/g).slice(0, 3).map(Number),
+                        text: ratio(bg, getComputedStyle(t.querySelector('strong')).color),
+                        prob: ratio(bg, getComputedStyle(t.querySelector('.prob')).color),
+                        panel: ratio(bg, panel)}; };
+            return {auburn: info('Auburn'), syracuse: info('Syracuse')}; }"""
+        mix = lambda team, base, p: [round(int(team[i:i + 2], 16) * p + int(base[i:i + 2], 16) * (1 - p)) for i in (1, 3, 5)]
+        try:
+            with sync_playwright() as pw:
+                browser = pw.chromium.launch(headless=True, args=["--no-sandbox", "--disable-dev-shm-usage"])
+                got = {}
+                for theme in ("dark", "light"):
+                    page = browser.new_page(viewport={"width": 1280, "height": 960}, service_workers="block", color_scheme=theme)
+                    for url in ("https://api.sleeper.app/**", "https://site.api.espn.com/**",
+                                "https://fonts.googleapis.com/**", "https://fonts.gstatic.com/**"):
+                        page.route(url, lambda route: route.abort())
+                    page.goto(f"http://127.0.0.1:{server.server_port}/reports/ccg-race.html?preview=midweek")
+                    page.wait_for_function("document.querySelectorAll('#conferences .race-team[data-strength]').length > 20", timeout=30000)
+                    got[theme] = page.evaluate(probe)
+                    page.close()
+                browser.close()
+        finally:
+            server.shutdown()
+        dark, light = got["dark"], got["light"]
+        a = dark["auburn"]
+        self.assertTrue(a["swapped"])
+        self.assertAlmostEqual(a["strength"], 26, delta=1)
+        r, g, b = a["rgb"]
+        self.assertTrue(r > g > b, f"Auburn dark card should be orange-tinted, got {a['bg']}")
+        self.assertGreaterEqual(a["text"], 4.5)
+        self.assertGreaterEqual(a["prob"], 4.5)
+        self.assertGreaterEqual(a["panel"], 1.2)
+        # Light mode: Auburn unchanged (navy blended into white by its odds).
+        la = light["auburn"]
+        self.assertFalse(la["swapped"])
+        for x, y in zip(la["rgb"], mix("#0C2340", "#ffffff", la["strength"] / 100)):
+            self.assertLessEqual(abs(x - y), 1)
+        # A team that already reads on the dark panel is not swapped; its card uses its main colour.
+        s = dark["syracuse"]
+        self.assertFalse(s["swapped"])
+        if s["strength"] > 0:
+            for x, y in zip(s["rgb"], mix("#F76900", "#16213a", s["strength"] / 100)):
+                self.assertLessEqual(abs(x - y), 1)
 
 
 if __name__ == "__main__":

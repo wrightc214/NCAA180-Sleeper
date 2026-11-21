@@ -82,20 +82,36 @@
  function isDark(hex){
    return [1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255).reduce((acc,v,i)=>acc+[.2126,.7152,.0722][i]*(v<=.04045?v/12.92:((v+.055)/1.055)**2.4),0)<.18;
  }
+ function lumHex(h){
+   return [1,3,5].map(i=>parseInt(h.slice(i,i+2),16)/255).reduce((acc,v,i)=>acc+[.2126,.7152,.0722][i]*(v<=.04045?v/12.92:((v+.055)/1.055)**2.4),0);
+ }
+ const ratioHex=(a,b)=>{const x=lumHex(a),y=lumHex(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05);};
+ const HEX=/^#[\da-f]{6}$/i;
+ // Dark-mode colour swap (Chris, 2026-11-20): on the dark panel a team whose main colour nearly matches
+ // the card (Auburn #0C2340 on #16213a is 1.01:1) would show no tint at any odds. When its text colour
+ // stands out from the panel, use that as the card colour and the main colour as the preferred text.
+ // Thresholds live in config (ccg.dark_swap); light mode never swaps.
+ function cardColours(info,panel){
+   const bg=info.background||info.primary||'#14213a',text=info.text;
+   const sw=settings.dark_swap||{},maxBg=Number(sw.max_background_contrast)||1.5,minText=Number(sw.min_text_contrast)||3;
+   if(isDark(panel)&&HEX.test(bg)&&HEX.test(text||'')&&ratioHex(bg,panel)<maxBg&&ratioHex(text,panel)>=minText)
+     return {team:text,text:bg,swapped:true};
+   return {team:bg,text:text,swapped:false};
+ }
  function teamTile(conf,t,metrics,odds,leader,proven,out,stamp){
    const id=String(t.roster_id),info=index.leagues[String(conf.league_id)]?.teams?.[id]||{};
-   const team=info.background||info.primary||'#14213a';
+   const panel=panelHex(),colours=cardColours(info,panel),team=colours.team;
    const isOut=proven?proven!==id:!!out?.includes(id);
    const p=strength(id,odds,proven,out);
-   const style=p>0?(()=>{const bg=mix(team,panelHex(),p);
-     return 'background:'+bg+';border-color:'+bg+';color:'+contrast(bg,info.text);})():'';
-   const bg=p>0?mix(team,panelHex(),p):panelHex();
+   const bg=p>0?mix(team,panel,p):panel;
+   const style=p>0?'background:'+bg+';border-color:'+bg+';color:'+contrast(bg,colours.text):'';
    const img=(p>=50&&info.logo_forced)||(isDark(bg)&&info.logo_dark?info.logo_dark:info.logo)||info.logo_forced||''; // logos.force (#124) on strong team colour
    const status=proven?(proven===id?(settings.labels?.clinched||'Clinched'):(settings.labels?.out||'Out')):(out?.includes(id)?(settings.labels?.out||'Out'):fmt(odds[id]||0));
    const projected=(metrics?.mean??0).toFixed(2);
    const range=Math.sqrt(Math.max(0,metrics?.variance||0)).toFixed(1);
    const livePF=Number(t.points_for)+(metrics?.actual||0);
    return '<div class="race-team'+(leader===id?' leader':'')+(isOut?' out':'')+'" data-strength="'+p.toFixed(1)+'"'+
+     (colours.swapped?' data-swapped="1"':'')+
      (style?' style="'+E(style)+'"':'')+'>'+
      (img?'<img src="'+E(img)+'" alt="">':'<span aria-hidden="true"></span>')+
      '<div><strong>'+E(t.team)+'</strong><small class="owner">@'+E(t.owner)+'</small>'+
