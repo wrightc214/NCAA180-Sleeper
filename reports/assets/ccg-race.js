@@ -98,14 +98,12 @@
      return {team:text,text:bg,swapped:true};
    return {team:bg,text:text,swapped:false};
  }
- // Game indicator (Chris, 2026-11-20): record and PF share one line; the next line is the team's own game.
- // Margin = this team's mean minus the opponent's mean, from the same models the odds use.
- //   Record   8-2 · PF 1752.16
- //   Pregame  Proj W by 22.16 vs Oregon
- //   Live     Leading by 8.40 vs Oregon · Proj W by 22.16
- //   Final    W 141.20–118.94 vs Oregon
- // PF before final = season PF + this week's projection; after final = the actual total. No ± on the card.
- // Missing game model (team or opponent): PF only, no margin.
+ // Game lines (Chris, 2026-11-20):
+ //   Record line   7-3 · PF 1467.32        actual: season PF + points scored so far (all of them once final)
+ //   Game line     pregame: vs Vanderbilt   live: Trailing by 3.82 vs Vanderbilt   final: W 141.20–118.94 vs Oregon
+ //   Proj line     not final only: Proj L by 8.50; PF 1675.12   (projected margin; season PF + this week's projection)
+ // Margin = this team's mean minus the opponent's mean, from the same models the odds use. No ± on the card.
+ // Missing game model (team or opponent): record line only, with season PF.
  const f2=x=>Number(x).toFixed(2);
  function gameState(m){return m.state||(m.final?'final':(Number(m.actual)||0)>0?'live':'pregame');}
  function gameLine(conf,t,models){
@@ -114,21 +112,20 @@
    const oppId=game?String(game.opponent_roster_id):null;
    const opp=oppId?models?.[M.key(lid,oppId)]:null;
    const season=Number(t.points_for)||0;
-   if(!me||!opp||!oppId)return {text:'',pf:'PF '+f2(season),state:'missing'};
-   const st=gameState(me),final=st==='final';
-   const oppName=index.leagues[lid]?.teams?.[oppId]?.name||'opponent';
-   const vs=' vs '+oppName;
-   const pf='PF '+f2(final?season+Number(me.actual):season+Number(me.mean));
-   if(final){
+   if(!me||!opp||!oppId)return {pf:'PF '+f2(season),game:'',proj:'',state:'missing'};
+   const st=gameState(me),vs='vs '+(index.leagues[lid]?.teams?.[oppId]?.name||'opponent');
+   const scored=st==='pregame'?0:Number(me.actual)||0;
+   const pf='PF '+f2(season+scored);
+   if(st==='final'){
      const a=Number(me.actual),b=Number(opp.actual),r=a>b?'W':a<b?'L':'T';
-     return {text:r+' '+f2(a)+'–'+f2(b)+vs,pf,state:st};
+     return {pf,game:r+' '+f2(a)+'–'+f2(b)+' '+vs,proj:'',state:st};
    }
    const d=Math.round((Number(me.mean)-Number(opp.mean))*100)/100;
-   const proj=d>0?'Proj W by '+f2(d):d<0?'Proj L by '+f2(-d):'Proj even';
-   if(st==='pregame')return {text:proj+vs,pf,state:st};
+   const proj=(d>0?'Proj W by '+f2(d):d<0?'Proj L by '+f2(-d):'Proj even')+'; PF '+f2(season+Number(me.mean));
+   if(st==='pregame')return {pf,game:vs,proj,state:st};
    const g=Math.round((Number(me.actual)-Number(opp.actual))*100)/100;
    const now=g>0?'Leading by '+f2(g):g<0?'Trailing by '+f2(-g):'Tied';
-   return {text:now+vs+' · '+proj,pf,state:st};
+   return {pf,game:now+' '+vs,proj,state:st};
  }
  function teamTile(conf,t,models,odds,leader,proven,out,stamp){
    const id=String(t.roster_id),info=index.leagues[String(conf.league_id)]?.teams?.[id]||{};
@@ -146,7 +143,8 @@
      (img?'<img src="'+E(img)+'" alt="">':'<span aria-hidden="true"></span>')+
      '<div><strong>'+E(t.team)+'</strong><small class="owner">@'+E(t.owner)+'</small>'+
      '<small class="record">'+E(t.wins)+'-'+E(t.losses)+(t.ties?'-'+E(t.ties):'')+' · '+E(line.pf)+'</small>'+
-     (line.text?'<small class="game" data-state="'+E(line.state)+'">'+E(line.text)+'</small>':'')+'</div><span class="prob">'+E(status)+'</span></div>';
+     (line.game?'<small class="game" data-state="'+E(line.state)+'">'+E(line.game)+'</small>':'')+
+     (line.proj?'<small class="proj">'+E(line.proj)+'</small>':'')+'</div><span class="prob">'+E(status)+'</span></div>';
  }
  const cap=w=>String(w).replace(/(^|\s)\S/g,c=>c.toUpperCase());
  function CCGRaceOrder(status,odds){

@@ -177,6 +177,7 @@ class CCGRaceBrowser(unittest.TestCase):
                     [...sec.querySelectorAll('.race-team')].map(t => ({sec: sec.id.replace('ccg-', ''),
                         team: t.querySelector('strong').textContent, game: t.querySelector('.game').textContent,
                         record: t.querySelector('.record').textContent,
+                        proj: t.querySelector('.proj') ? t.querySelector('.proj').textContent : null,
                         state: t.querySelector('.game').dataset.state, text: t.textContent})))""")
                 browser.close()
         finally:
@@ -193,22 +194,29 @@ class CCGRaceBrowser(unittest.TestCase):
             opp_name = idx["leagues"][c["sec"]]["teams"][opp_id]["name"]
             self.assertIn(opp_name, index_names)
             self.assertNotIn("±", c["text"])
-            self.assertIn(" vs " + opp_name, c["game"], c)
-            want = t["points_for"] + (me["actual"] if me["state"] == "final" else me["mean"])
+            self.assertIn("vs " + opp_name, c["game"], c)
+            # Record line: actual PF = season PF + points scored so far (none pregame, all once final).
+            scored = 0 if me["state"] == "pregame" else me["actual"]
             self.assertRegex(c["record"], r"^\d+-\d+(-\d+)? · PF \d+\.\d\d$")
-            self.assertNotIn("PF", c["game"])
             pf = float(re.search(r"PF (\d+\.\d\d)$", c["record"]).group(1))
-            self.assertAlmostEqual(pf, round(want, 2), delta=0.006, msg=c)
+            self.assertAlmostEqual(pf, round(t["points_for"] + scored, 2), delta=0.006, msg=c)
+            self.assertNotIn("PF", c["game"])
             self.assertEqual(c["state"], me["state"])
             seen.add(c["state"])
-            if me["state"] == "pregame":
-                self.assertRegex(c["game"], r"^(Proj [WL] by \d+\.\d\d|Proj even) vs ")
-            elif me["state"] == "live":
-                self.assertRegex(c["game"], r"^(Leading by \d+\.\d\d|Trailing by \d+\.\d\d|Tied) vs .+ · (Proj [WL] by \d+\.\d\d|Proj even)$")
-            else:
+            if me["state"] == "final":
                 self.assertRegex(c["game"], r"^[WLT] \d+\.\d\d–\d+\.\d\d vs ")
                 a, b = map(float, re.match(r"^[WLT] (\S+)–(\S+)", c["game"]).groups())
                 self.assertEqual((a, b), (round(me["actual"], 2), round(opp["actual"], 2)))
+                self.assertIsNone(c["proj"])
+                continue
+            if me["state"] == "pregame":
+                self.assertEqual(c["game"], "vs " + opp_name)
+            else:
+                self.assertRegex(c["game"], r"^(Leading by \d+\.\d\d|Trailing by \d+\.\d\d|Tied) vs ")
+            # Projection line: "Proj L by 8.50; PF 1675.12" with PF = season PF + this week's projection.
+            self.assertRegex(c["proj"], r"^(Proj [WL] by \d+\.\d\d|Proj even); PF \d+\.\d\d$")
+            ppf = float(re.search(r"PF (\d+\.\d\d)$", c["proj"]).group(1))
+            self.assertAlmostEqual(ppf, round(t["points_for"] + me["mean"], 2), delta=0.006, msg=c)
         self.assertEqual(seen, {"pregame", "live", "final"})
 
 
