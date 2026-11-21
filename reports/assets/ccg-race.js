@@ -21,7 +21,7 @@
  const fmt=p=>p<1?'<1%':p>99?'>99%':Math.round(p)+'%';
  function contrast(color,requested){
    const lum=h=>{const v=/^#([0-9a-f]{6})$/i.exec(h||'');if(!v)return 0;
-     const a=[1,3,5].map(i=>parseInt(v[1].slice(i,i+2),16)/255).map(x=>x<=.04045?x/12.92:((x+.055)/1.055)**2.4);
+     const a=[0,2,4].map(i=>parseInt(v[1].slice(i,i+2),16)/255).map(x=>x<=.04045?x/12.92:((x+.055)/1.055)**2.4);
      return .2126*a[0]+.7152*a[1]+.0722*a[2];};
    const bg=lum(color),ok=lum(requested);
    const ratio=x=>(Math.max(bg,x)+.05)/(Math.min(bg,x)+.05);
@@ -58,22 +58,39 @@
      const script=document.createElement('script');script.src='assets/sections.js';document.body.append(script);
    }
  }
+ // Card fill = chance to win the division (Chris, 2026-11-20): the team colour fills the card from the
+ // left in proportion to its odds (Colorado 70% -> 70% filled, ASU 30% -> 30%); <1% and Out get none,
+ // Clinched is full. The row is drawn twice: plain on the card, and in team colours on a fill layer that
+ // is cut to the odds width, so every letter is readable whichever side of the edge it falls on.
+ // (Width + overflow, not clip-path: the Save-image renderer, html2canvas, ignores clip-path.)
+ function fillPct(id,odds,proven,out){
+   if(proven)return proven===id?100:0;
+   if(out?.includes(id))return 0;
+   const p=Number(odds[id])||0;
+   return p<1?0:Math.min(100,p);
+ }
  function teamTile(conf,t,metrics,odds,leader,proven,out,stamp){
    const id=String(t.roster_id),info=index.leagues[String(conf.league_id)]?.teams?.[id]||{};
    const bg=info.background||info.primary||'#14213a',ink=contrast(bg,info.text);
-   const isLeader=leader===id,cls=isLeader?' leader':' dim';
+   const isOut=proven?proven!==id:!!out?.includes(id);
+   const fill=fillPct(id,odds,proven,out);
    const dark=/^#[0-9a-f]{6}$/i.test(bg)&&[1,3,5].map(i=>parseInt(bg.slice(i,i+2),16)/255).reduce((acc,v,i)=>acc+[.2126,.7152,.0722][i]*(v<=.04045?v/12.92:((v+.055)/1.055)**2.4),0)<.18;
-   const img=(info.logo_forced||(dark&&info.logo_dark?info.logo_dark:info.logo))||''; // logos.force (#124) wins on team-colour blocks
+   const onColor=(info.logo_forced||(dark&&info.logo_dark?info.logo_dark:info.logo))||''; // logos.force (#124) wins on team-colour blocks
+   const onCard=info.logo||onColor;
    const status=proven?(proven===id?(settings.labels?.clinched||'Clinched'):(settings.labels?.out||'Out')):(out?.includes(id)?(settings.labels?.out||'Out'):fmt(odds[id]||0));
    const projected=(metrics?.mean??0).toFixed(2);
    const range=Math.sqrt(Math.max(0,metrics?.variance||0)).toFixed(1);
    const livePF=Number(t.points_for)+(metrics?.actual||0);
-   return '<div class="race-team'+cls+'" style="--team:'+E(bg)+';--team-ink:'+E(ink)+'">'+
+   const row=img=>'<div class="rt-row">'+
      (img?'<img src="'+E(img)+'" alt="">':'<span aria-hidden="true"></span>')+
      '<div><strong>'+E(t.team)+'</strong><small class="owner">@'+E(t.owner)+'</small>'+
      '<small>'+E(t.wins)+'-'+E(t.losses)+(t.ties?'-'+E(t.ties):'')+
      ' · PF '+livePF.toFixed(2)+' · This week '+projected+' ±'+range+
      (metrics?.final?' (final)':' (live proj.)')+'</small></div><span class="prob">'+E(status)+'</span></div>';
+   return '<div class="race-team'+(leader===id?' leader':'')+(isOut?' out':'')+'" data-fill="'+fill.toFixed(1)+'"'+
+     ' style="--team:'+E(bg)+';--team-ink:'+E(ink)+';--fill:'+fill.toFixed(2)+'%;--fillnum:'+Math.max(fill,1).toFixed(2)+'">'+
+     row(onCard)+
+     (fill>0?'<div class="rt-fill" aria-hidden="true">'+row(onColor)+'</div>':'')+'</div>';
  }
  const cap=w=>String(w).replace(/(^|\s)\S/g,c=>c.toUpperCase());
  function CCGRaceOrder(status,odds){

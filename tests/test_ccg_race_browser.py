@@ -58,6 +58,23 @@ class CCGRaceBrowser(unittest.TestCase):
                         if (vals.some((x, i) => i && x > vals[i - 1])) errs.push(d.querySelector('h3').textContent + ': ' + vals.join(','));
                         return errs; })""")
                     self.assertEqual(bad, [])
+                    # Fill = odds (Chris, 2026-11-20): colour width matches the chance, none for <1% / Out,
+                    # full for Clinched, and text on the fill reads at 4.5:1 or better against the team colour.
+                    fills = page.evaluate("""() => {
+                        const lum = c => { const m = c.match(/\\d+(\\.\\d+)?/g).slice(0, 3).map(x => +x / 255)
+                            .map(x => x <= .04045 ? x / 12.92 : ((x + .055) / 1.055) ** 2.4); return .2126*m[0] + .7152*m[1] + .0722*m[2]; };
+                        const ratio = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); };
+                        return [...document.querySelectorAll('#conferences .race-team')].map(t => {
+                            const s = t.querySelector('.prob').textContent.trim(), f = t.querySelector('.rt-fill');
+                            const want = s === 'Clinched' ? 100 : (s === 'Out' || s.startsWith('<')) ? 0 : s.startsWith('>') ? 99 : parseFloat(s);
+                            const got = f ? f.getBoundingClientRect().width / t.getBoundingClientRect().width * 100 : 0;
+                            const name = t.querySelector('strong').textContent;
+                            const errs = [];
+                            if (Math.abs(got - want) > 1.5) errs.push(name + ' fill ' + got.toFixed(1) + ' vs ' + s);
+                            if (f) { const st = getComputedStyle(f), r = ratio(st.backgroundColor, getComputedStyle(f.querySelector('strong')).color);
+                                if (r < 4.5) errs.push(name + ' contrast ' + r.toFixed(2)); }
+                            return errs; }).flat(); }""")
+                    self.assertEqual(fills, [])
                     page.screenshot(path=str(shots / filename), full_page=True)
                     page.locator(".fold-all").click()
                     self.assertEqual(page.locator("#conferences section.fold.closed").count(), 15)
