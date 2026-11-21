@@ -59,6 +59,9 @@ class CCGRaceBrowser(unittest.TestCase):
                         if (vals.some((x, i) => i && x > vals[i - 1])) errs.push(d.querySelector('h3').textContent + ': ' + vals.join(','));
                         return errs; })""")
                     self.assertEqual(bad, [])
+                    names = page.locator("#conferences > section > h2").all_inner_texts()
+                    self.assertEqual(names, sorted(names, key=str.casefold))
+                    self.assertEqual(len(names), 15)
                     # Colour strength = odds (Chris, 2026-11-20): none for <1% / Out, full for Clinched, and the
                     # name and chance read at 4.5:1 or better on every card's blended background.
                     fills = page.evaluate("""() => {
