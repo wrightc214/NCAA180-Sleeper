@@ -79,7 +79,7 @@ def test_hidden_nav_state_hides_only_selection_watch(monkeypatch):
     for state in ("hidden-dev", "hidden"):
         selection["state"] = state
         tabs = {t["id"]: t.get("state") for t in site_common.menu_data()["tabs"]}
-        assert tabs["transactions"] == "hidden-dev"
+        assert tabs["transactions"] is None
         if state == "hidden":
             assert "selection-watch" not in tabs
             assert site_common.page_state("selection-watch") == "hidden"

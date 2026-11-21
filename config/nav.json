@@ -17,7 +17,7 @@
     {"_note": "Selection Watch tab public since 2026-11-20 (Chris) for the CCG sub-page; Playoffs stays Dev-only via its sub-row item. The tab links to the first sub-page the viewer can see. Set state to hidden to turn off the board and its data publication.", "id": "selection-watch", "label": "Selection Watch", "href": "selection-watch.html", "state": "visible"},
     {"id": "special", "label": "Special Events", "href": "special.html"},
     {"id": "managers", "label": "Managers", "href": "managers.html"},
-    {"_note": "Task 5.11 Transactions tab. Keep hidden-dev for preview; use visible only after approval, or hidden to omit it from compiled nav.", "id": "transactions", "label": "Transactions", "href": "transactions.html", "state": "hidden-dev"},
+    {"id": "transactions", "label": "Transactions", "href": "transactions.html"},
     {"id": "records", "label": "Records", "href": "records.html"},
     {"id": "about", "label": "About", "href": "about.html", "icon": "info"},
     {"id": "access", "label": "Accessibility", "href": "access.html", "state": "hidden-dev", "icon": "accessibility"},

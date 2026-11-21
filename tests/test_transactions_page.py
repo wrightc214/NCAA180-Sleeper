@@ -494,9 +494,10 @@ def test_transactions_uses_declared_nav_settings(monkeypatch):
     import site_common
 
     real = next(t for t in site_common.nav_config()["tabs"] if t["id"] == "transactions")
-    assert any(t["id"] == "transactions" and t["state"] == "hidden-dev"
+    # Public since 2026-11-21: listed with no state, and the page carries no data-state.
+    assert any(t["id"] == "transactions" and "state" not in t
                for t in site_common.menu_data()["tabs"])
-    assert 'data-state="hidden-dev"' in site_common.menu_html("transactions")
+    assert "data-state" not in site_common.menu_html("transactions")
 
     for tabs in ([], [{"id": "transactions"}]):
         monkeypatch.setattr(site_common, "nav_config", lambda: {"tabs": tabs})
