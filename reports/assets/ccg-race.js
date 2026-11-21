@@ -46,7 +46,8 @@
  function renderShell(){
    const host=$('conferences');host.replaceChildren();
    const byId=new Map(data.conferences.map(c=>[String(c.league_id),c]));
-   const ids=Object.keys(index.leagues).filter(id=>byId.has(id));
+   // Conferences in alphabetical order by short name (Chris, 2026-11-20).
+   const ids=[...byId.keys()].sort((a,b)=>String(byId.get(a).name).localeCompare(String(byId.get(b).name),'en',{sensitivity:'base',numeric:true}));
    for(const id of ids){
      const conf=byId.get(id),sec=document.createElement('section');sec.id='ccg-'+id;
      const head=document.createElement('h2');head.textContent=conf.name;
