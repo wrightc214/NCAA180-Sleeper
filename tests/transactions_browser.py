@@ -107,16 +107,11 @@ def main():
                 page.wait_for_selector(".tx-card")
                 nav = page.locator('nav[data-current="transactions"]')
                 nav.locator("a").first.wait_for()
+                # Transactions is public (main 8044302): the tab shows without Dev view, and there's no DEV bar.
                 tx_link = nav.locator('a[href$="/transactions.html"]')
-                assert tx_link.count() == 0, "Transactions leaked into normal navigation"
-                page.evaluate("localStorage.setItem('ncaa180.dev', '1')")
-                page.reload()
                 tx_link.wait_for(state="visible")
-                assert tx_link.count() == 1
-                page.evaluate("localStorage.removeItem('ncaa180.dev')")
-                page.reload()
-                nav.locator("a").first.wait_for()
-                assert tx_link.count() == 0
+                assert tx_link.count() == 1, "Transactions missing from normal navigation"
+                assert page.locator(".n180-devbar").count() == 0
                 count = page.locator(".tx-card").count()
                 assert count > 50, f"Too few cards: {count}"
                 assert page.locator("section.fold").count() == 3

@@ -41,7 +41,7 @@ MENU_OUT = os.path.join(OUT_DIR, "assets", "menu.js")
 # aria-labels of the sub-rows (kept from the per-page rows they replace)
 ROW_ARIA = {"awards-seasons": "Seasons", "standings-seasons": "Seasons", "postseason-seasons": "Seasons",
             "projection-archive": "Projection archive", "poll": "Poll pages", "special": "Special events",
-            "selection-watch": "Selection Watch pages"}
+            "selection-watch": "Selection Watch pages", "champions-league": "Champions League pages"}
 
 
 def nav_config():
@@ -69,7 +69,7 @@ def menu_html(current, rows=()):
     """The page's menu block: main-tab placeholder, sub-row placeholders, the shared menu script.
     current: tab key (int week -> "awards"; see config/nav.json ids/aliases). rows: sub-row keys
     (awards-seasons, awards-weeks-<year>, standings-seasons, postseason-seasons, projection-archive,
-    poll, special). Written once per page; reports/assets/menu.js fills it in the browser."""
+    poll, special, champions-league). Written once per page; reports/assets/menu.js fills it in the browser."""
     key = "awards" if isinstance(current, int) else (current or "")
     state = page_state(key) if key else "visible"
     st = f' data-state="{state}"' if state != "visible" else ""
