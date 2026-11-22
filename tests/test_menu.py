@@ -40,7 +40,7 @@ class Config(unittest.TestCase):
         vis = [t["label"] for t in CFG["tabs"] if t.get("state", "visible") == "visible"]
         self.assertEqual(vis, ["Awards", "Roster Map", "Standings", "Games", "Poll", "Postseason",
                                "Selection Watch", "Special Events", "Managers", "Transactions", "Records", "About",
-                               "Notification settings"])
+                               "Accessibility", "Notification settings"])
 
     def test_selection_watch_ccg_public_playoffs_dev(self):
         """Chris, 2026-11-20: CCG public; Playoffs stays Dev-only until approved."""

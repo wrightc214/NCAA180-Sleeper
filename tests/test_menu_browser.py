@@ -51,9 +51,9 @@ class MenuBrowser(unittest.TestCase):
                 self.assertEqual([x[0] for x in t][:3], ["Awards", "Roster Map", "Standings"])
                 self.assertEqual(t[-1][0], "Notification settings")
                 self.assertEqual([x[0] for x in t if x[1]], [lit])
-                self.assertEqual([x[0] for x in t][-3:], ["Records", "About", "Notification settings"])  # About public since #106
+                self.assertEqual([x[0] for x in t][-4:], ["Records", "About", "Accessibility", "Notification settings"])  # About public since #106; Accessibility since 2026-11-22
                 icons = pg.eval_on_selector_all('nav.weeks[aria-label="Pages"] a.n180-icon', "as => as.map(a => [a.getAttribute('aria-label'), a.textContent.trim(), !!a.querySelector('svg')])")
-                self.assertEqual(icons, [["About", "", True], ["Notification settings", "", True]])  # icon-only tabs (Accessibility is hidden-dev)
+                self.assertEqual(icons, [["About", "", True], ["Accessibility", "", True], ["Notification settings", "", True]])  # icon-only tabs (Accessibility public since 2026-11-22)
                 self.assertEqual(self.errors, [])
                 pg.close()
 

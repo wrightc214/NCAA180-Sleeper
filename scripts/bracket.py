@@ -697,5 +697,5 @@ a.bk-g:focus-visible,a.bk-card:focus-visible{outline:3px solid var(--accent);out
 .bk-menu .bk-do{display:flex;gap:8px;justify-content:flex-end;margin-top:6px}
 .bk-menu button{font:600 14px var(--body);border-radius:6px;padding:7px 14px;cursor:pointer;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
 .bk-menu button.go{background:var(--accent);border-color:var(--accent);color:#fff}
-.bk-menu .bk-err{color:var(--dn);font-size:12px;margin:6px 0 0}
+.bk-menu .bk-err{color:var(--bad);font-size:12px;margin:6px 0 0}
 """

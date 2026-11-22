@@ -9,10 +9,10 @@
 <meta name="theme-color" content="#14213a"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Dynasty Data"><script src="assets/app.js" defer></script>
 <style>
 /* Layout: stadium-scoreboard header, then a two-column stat sheet (poll left, week detail right) that stacks on phones */
-:root{--bg:#eef1f5;--panel:#ffffff;--ink:#14213a;--mute:#5d6a80;--line:#d5dbe5;--accent:#c8102e;--gold:#b8860b;--up:#1d7a43;--dn:#b3261e;
+:root{--bg:#eef1f5;--panel:#ffffff;--ink:#14213a;--mute:#5d6a80;--line:#d5dbe5;--accent:#c8102e;--gold:#b8860b;--up:var(--good,#1a7f37);--dn:var(--bad,#b42318);
 --disp:"Big Shoulders Display",Impact,"Arial Narrow",sans-serif;--body:"Barlow",system-ui,sans-serif;--num:"Barlow Condensed","Arial Narrow",sans-serif}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1526;--panel:#16213a;--ink:#e8edf6;--mute:#9aa7bd;--line:#2a3756;--accent:#ff5468;--gold:#e0b44a;--up:#4fc785;--dn:#ff7b72;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#0d1526;--panel:#16213a;--ink:#e8edf6;--mute:#9aa7bd;--line:#2a3756;--accent:#ff5468;--gold:#e0b44a;--up:#4fc785;--dn:#ff7b72;color-scheme:dark}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1526;--panel:#16213a;--ink:#e8edf6;--mute:#9aa7bd;--line:#2a3756;--accent:#ff5468;--gold:#e0b44a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0d1526;--panel:#16213a;--ink:#e8edf6;--mute:#9aa7bd;--line:#2a3756;--accent:#ff5468;--gold:#e0b44a;color-scheme:dark}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.4}
 .wrap{max-width:1100px;margin:0 auto;padding-inline:16px;padding-block:24px 40px;display:grid;gap:20px}
 header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;border-bottom:4px solid var(--accent);padding-bottom:12px}
@@ -40,7 +40,7 @@ td.tm{display:flex;align-items:center;gap:0}
 @media (max-width:640px){table{font-size:13px}td.tm{flex-wrap:wrap;white-space:normal}td.tm b{flex:1;min-width:0}td.tm small{flex-basis:100%;margin-left:18px!important;font-size:11px!important}td,th{padding:5px 3px}td.mv{width:26px;font-size:12px}th{letter-spacing:.06em}}
 td.tm b{font-weight:700}td.tm small{margin-left:8px;font-size:12px}
 td.mv{text-align:center;width:34px;font:600 13px var(--num)}
-.up{color:var(--up)}.dn{color:var(--dn)}.eq{color:var(--mute)}
+.up{color:var(--good,#1a7f37)}.dn{color:var(--bad,#b42318)}.eq{color:var(--mute)}
 tr:nth-child(-n+4) td:first-child{color:var(--accent);font-weight:600}
 .awards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
 .aw{background:var(--panel);padding:10px 12px;display:flex;flex-direction:column;gap:3px;text-align:center;align-items:center}
@@ -98,10 +98,10 @@ footer{font-size:12px;color:var(--mute)}
 .gl-t{min-width:0;font-size:14px;line-height:1.15;overflow-wrap:anywhere}.gl-t small{display:block;font-size:11px;color:var(--mute)}
 .gl-n,.gl-w{text-align:right;font:600 15px var(--num);font-variant-numeric:tabular-nums}
 .gl-n.pj,.gl-n.mn,.gl-w{color:var(--mute);font-weight:500}.gl-n.od{font-weight:800}
-.gl-r.live .gl-n.sc{font-weight:900}.gl-r.bubble{background:color-mix(in srgb,var(--panel),var(--gold) 10%)}
+.gl-r.live .gl-n.sc{font-weight:900}.gl-r.bubble{background:var(--bad-soft)}
 .gl-r.mine{box-shadow:inset 4px 0 0 var(--accent)}.gl-r.gone{opacity:.5}
-.gl-cut{position:relative;height:22px;border-top:2px dashed var(--accent);margin:0 6px}
-.gl-cut span{position:absolute;right:0;top:-1px;background:var(--accent);color:#fff;font:700 10px var(--body);text-transform:uppercase;letter-spacing:.05em;padding:2px 6px;border-radius:0 0 4px 4px}
+.gl-cut{position:relative;height:22px;border-top:2px dashed var(--bad);margin:0 6px}
+.gl-cut span{position:absolute;right:0;top:-1px;background:var(--bad-fill);color:var(--on-fill);font:700 10px var(--body);text-transform:uppercase;letter-spacing:.05em;padding:2px 6px;border-radius:0 0 4px 4px}
 .gl-cut.final{border-top-style:solid}
 .team-icon{display:flex;width:22px;height:22px;align-items:center;justify-content:center;border-radius:3px;overflow:hidden}
 .team-icon img{width:100%;height:100%;object-fit:contain}

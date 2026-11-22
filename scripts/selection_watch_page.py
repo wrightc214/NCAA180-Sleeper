@@ -34,7 +34,7 @@ CSS = """
 .sw-toss{font-weight:800;border:1px dashed var(--neutral);padding:1px 4px}
 .sw-track{margin:8px 0}.sw-track>div{display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:4px}
 .sw-track span{border:1px solid var(--line);padding:4px}.sw-track small{display:block}
-.sw-cut-note{margin:6px 0;font-weight:700}.sw-cut-line{border-top:2px dashed var(--accent);margin:5px 0}
+.sw-cut-note{margin:6px 0;font-weight:700}.sw-cut-line{border-top:2px dashed var(--bad);margin:5px 0}
 .sw-order{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
 .sw-order button{border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:6px 9px}
 .sw-order button[aria-pressed=true]{border-color:var(--accent)}

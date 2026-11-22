@@ -557,7 +557,7 @@ CSS = """
 .tipbox span{display:block;white-space:nowrap}
 .tip:hover .tipbox,.tip:focus .tipbox,.tip:focus-within .tipbox{display:block}
 .card li.m .v{text-align:left;font-size:13px}
-.card .v.up{color:var(--up)}.card .v.dn{color:var(--dn)}
+.card .v.up{color:var(--good)}.card .v.dn{color:var(--bad)}
 .card li[hidden]{display:none}
 .tools{margin:10px 0 0;font:600 13px var(--sans,sans-serif)}.tools select{font:inherit;padding:4px 6px;margin-left:6px}
 h2 .lgtag{font:700 12px var(--num);letter-spacing:.05em;text-transform:uppercase;color:var(--accent)}

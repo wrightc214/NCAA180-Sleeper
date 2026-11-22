@@ -20,7 +20,7 @@
     {"id": "transactions", "label": "Transactions", "href": "transactions.html"},
     {"id": "records", "label": "Records", "href": "records.html"},
     {"id": "about", "label": "About", "href": "about.html", "icon": "info"},
-    {"id": "access", "label": "Accessibility", "href": "access.html", "state": "hidden-dev", "icon": "accessibility"},
+    {"id": "access", "label": "Accessibility", "href": "access.html", "state": "visible", "icon": "accessibility"},
     {"id": "app", "label": "Notification settings", "href": "app.html", "icon": "bell"}
   ],
   "rows": {

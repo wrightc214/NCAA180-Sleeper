@@ -207,15 +207,19 @@ test('accessibility settings: presets, custom, reset and malformed storage', () 
   }
 });
 
-test('accessibility: no-colour uses monochrome fills and invalid settings are normalized', () => {
+test('accessibility: stored no-colour paints Standard (5.12.2) and invalid settings are normalized', () => {
   const old=global.localStorage, store={};
   global.localStorage={getItem:k=>store[k]||null,setItem:(k,v)=>{store[k]=v;},removeItem:k=>{delete store[k];}};
   try {
     const m=load(DATA);
+    m.access.save({mode:'standard'});
+    const standard=m.colors.css;
     m.access.save({mode:'none'});
-    assert.match(m.colors.css, /--good-fill:#3c3c3c/);
-    assert.match(m.colors.css, /--bad-fill:#656565/);
-    assert.match(m.colors.css, /--n180-emphasis:1/);
+    assert.strictEqual(m.access.read().mode,'none','the saved setting itself is left unchanged');
+    assert.strictEqual(m.colors.css,standard,'a stored none writes exactly the Standard tokens');
+    assert.doesNotMatch(m.colors.css, /--good-fill:#3c3c3c/);
+    assert.doesNotMatch(m.colors.css, /--n180-emphasis:1/);
+    assert.ok(m.access.modes.none,'none palette kept in the engine for later');
     m.access.save({mode:'unrecognized',motion:'bogus',custom:{good:'red'}});
     assert.strictEqual(m.access.read().mode,'standard');
     assert.strictEqual(m.access.read().motion,'system');
@@ -236,7 +240,7 @@ test('generated menu matches source template exactly except embedded navigation 
   // Function replacers: the accessibility source contains "$&", which a string replacement would expand.
   assert.strictEqual(template.replace('/*__ACCESSIBILITY__*/', () => a11y)
     .replace('/*__DATA__*/null', () => embedded[1]), built);
-  assert.ok(JSON.parse(embedded[1]).tabs.some(t => t.id === 'access' && t.state === 'hidden-dev'));
+  assert.ok(JSON.parse(embedded[1]).tabs.some(t => t.id === 'access' && (t.state || 'visible') === 'visible'));  // public since 2026-11-22 (Chris)
   // Regression (#109 review): a JS string replacement once turned this "$&$&" into the placeholder text.
   assert.ok(built.includes('h.replace(/./g, "$&$&")'), '3-digit hex expansion intact in the built bundle');
   assert.ok(!built.includes('__ACCESSIBILITY__'), 'no unexpanded or duplicated placeholder in the built bundle');
@@ -273,7 +277,7 @@ test('Accessibility page includes shared site CSS, dev navigation and accessible
   const weekly=fs.readFileSync(path.join(__dirname,'..','templates','weekly_report.html'),'utf8');
   const shared=weekly.match(/<style>[\s\S]*?<\/style>/)[0];
   assert.ok(html.includes(shared),'shared site stylesheet embedded');
-  assert.match(html,/data-current="access" data-state="hidden-dev"/);
+  assert.match(html,/data-current="access"(?! data-state)/);
   assert.match(html,/src="assets\/menu\.js"/);
   assert.match(html,/src="assets\/access\.js"/);
   assert.match(html,/id="restore-custom"/);
@@ -357,4 +361,11 @@ test('Accessibility controls update and reset preferences without a browser', ()
   assert.strictEqual(state.mode,'standard');
   state.mode='none';handlers['window:ncaa180:accesschange']();
   assert.strictEqual(nodes.mode.value,'none');
+});
+
+test('No colour option is visible but disabled with its label (5.12.2)', () => {
+  for (const f of ['templates/access.html','reports/access.html']) {
+    const html=fs.readFileSync(path.join(__dirname,'..',f),'utf8');
+    assert.match(html,/<option value="none" disabled>No colour: not yet available<\/option>/,f);
+  }
 });

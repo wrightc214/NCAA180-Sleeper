@@ -27,7 +27,7 @@ CSS = """
 .card h2{font-family:var(--disp);font-size:22px;margin:0 0 8px;letter-spacing:.02em}
 .card .hint{color:var(--mute);font-size:14px;margin:0 0 10px}
 .status{font-weight:600}
-.status.ok{color:var(--up)} .status.warn{color:var(--dn)}
+.status.ok{color:var(--good)} .status.warn{color:var(--bad)}
 .tester{display:inline-block;background:var(--gold);color:#000;border-radius:6px;padding:2px 8px;font-size:13px;font-weight:700}
 .search{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit;background:var(--bg);color:var(--ink)}
 details{border-top:1px solid var(--line)} details:first-of-type{border-top:0}
