@@ -222,6 +222,75 @@ class CCGRaceBrowser(unittest.TestCase):
             self.assertAlmostEqual(ppf, round(t["points_for"] + me["mean"], 2), delta=0.006, msg=c)
         self.assertEqual(seen, {"pregame", "live", "final"})
 
+    def test_projection_gap_keeps_conference(self):
+        """Chris, 2026-11-22: one starter with no Tuesday projection (Josh Johnson, ARI QB, id 260) blanked
+        the whole Pac-12 and Pioneer. The conference must still render, with the gap on the affected cards,
+        and any issue banner names conferences, never league IDs."""
+        import csv, json
+        from playwright.sync_api import sync_playwright
+
+        class Quiet(SimpleHTTPRequestHandler):
+            def log_message(self, *args):
+                pass
+
+        pac = "1331775106527006720"
+        base = json.loads((ROOT / "data/scoreboard/2026/week-11.json").read_text(encoding="utf-8"))
+        players = json.loads((ROOT / "data/scoreboard/2026/players.json").read_text(encoding="utf-8"))
+        self.assertNotIn("260", base["projections"])
+        self.assertIn("260", players)
+        projected = [pid for pid in base["projections"] if pid in players and players[pid].get("team")][:24]
+        pairs = sorted({tuple(sorted((r["RosterID"], r["OpponentRosterID"])))
+                        for r in csv.DictReader((ROOT / "data/Matchups_Season.csv").open(encoding="utf-8"))
+                        if r["Week"] == "11" and r["LeagueID"] == pac})
+        rosters, k = [], 0
+        for mid, (a, b) in enumerate(pairs, 1):
+            for rid in (a, b):
+                starters = [projected[k]] + (["260"] if rid == "8" else [])  # Colorado starts Johnson
+                k += 1
+                rosters.append({"roster_id": int(rid), "matchup_id": mid, "starters": starters,
+                                "points": 0, "players_points": {x: 0 for x in starters}})
+        league = json.loads(json.dumps({"scoring_settings": base["scoring"]}))
+        espn = {"season": {"year": 2026}, "week": {"number": 11},
+                "events": [{"date": "2026-11-22T21:05Z", "status": {"type": {"state": "pre"}, "period": 0, "displayClock": "0:00"},
+                            "competitions": [{"competitors": [{"team": {"abbreviation": "ARI"}}, {"team": {"abbreviation": "SEA"}}]}]}]}
+
+        def sleeper(route):
+            url = route.request.url
+            if "/stats/nfl/" in url:
+                body = {}
+            elif f"/league/{pac}/matchups/" in url:
+                body = rosters
+            elif "/matchups/" in url:
+                body = []
+            else:
+                body = league
+            route.fulfill(status=200, content_type="application/json", body=json.dumps(body))
+
+        server = ThreadingHTTPServer(("127.0.0.1", 0), partial(Quiet, directory=str(ROOT)))
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        try:
+            with sync_playwright() as pw:
+                browser = pw.chromium.launch(headless=True, args=["--no-sandbox", "--disable-dev-shm-usage"])
+                page = browser.new_page(viewport={"width": 1280, "height": 960}, service_workers="block")
+                page.route("https://api.sleeper.app/**", sleeper)
+                page.route("https://site.api.espn.com/**", lambda r: r.fulfill(status=200, content_type="application/json", body=json.dumps(espn)))
+                for url in ("https://fonts.googleapis.com/**", "https://fonts.gstatic.com/**"):
+                    page.route(url, lambda route: route.abort())
+                page.goto(f"http://127.0.0.1:{server.server_port}/reports/ccg-race.html")
+                page.wait_for_function(f"document.querySelectorAll('#ccg-{pac} .race-team').length > 0", timeout=30000)
+                got = page.evaluate(f"""() => ({{
+                    cards: [...document.querySelectorAll('#ccg-{pac} .race-team')].map(t => ({{
+                        team: t.querySelector('strong').textContent, gap: t.querySelector('.gap')?.textContent || ''}})),
+                    banner: document.body.innerText.match(/\\d+ conference issue\\(s\\):[^\\n]*/)?.[0] || ''}})""")
+                browser.close()
+        finally:
+            server.shutdown()
+        gaps = {c["team"]: c["gap"] for c in got["cards"]}
+        self.assertIn("Colorado", gaps)
+        self.assertIn("no Tuesday projection, counted as 0", gaps["Colorado"])
+        self.assertIn("Josh Johnson", gaps["Colorado"])
+        self.assertNotRegex(got["banner"], r"\d{15,}")  # issues name conferences, not league IDs
+
 
 if __name__ == "__main__":
     unittest.main()

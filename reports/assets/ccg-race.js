@@ -128,6 +128,12 @@
    const now=g>0?'Leading by '+f2(g):g<0?'Trailing by '+f2(-g):'Tied';
    return {pf,game:now+' '+vs,proj,state:st};
  }
+ function gapNote(conf,t){
+   const lid=String(conf.league_id),game=(t.remaining_games||[]).find(g=>Number(g.week)===Number(data.week));
+   const own=gaps[M.key(lid,t.roster_id)]||[],opp=game?gaps[M.key(lid,game.opponent_roster_id)]||[]:[];
+   const all=[...own,...opp.map(x=>'Opponent: '+x)];
+   return all.length?'<small class="gap">⚠ '+all.map(E).join(' · ')+'</small>':'';
+ }
  function teamTile(conf,t,models,odds,leader,proven,out,stamp){
    const id=String(t.roster_id),info=index.leagues[String(conf.league_id)]?.teams?.[id]||{};
    const panel=panelHex(),colours=cardColours(info,panel),team=colours.team;
@@ -145,7 +151,7 @@
      '<div><strong>'+E(t.team)+'</strong><small class="owner">@'+E(t.owner)+'</small>'+
      '<small class="record">'+E(t.wins)+'-'+E(t.losses)+(t.ties?'-'+E(t.ties):'')+' · '+E(line.pf)+'</small>'+
      (line.game?'<small class="game" data-state="'+E(line.state)+'">'+E(line.game)+'</small>':'')+
-     (line.proj?'<small class="proj">'+E(line.proj)+'</small>':'')+'</div><span class="prob">'+E(status)+'</span></div>';
+     (line.proj?'<small class="proj">'+E(line.proj)+'</small>':'')+gapNote(conf,t)+'</div><span class="prob">'+E(status)+'</span></div>';
  }
  const cap=w=>String(w).replace(/(^|\s)\S/g,c=>c.toUpperCase());
  function CCGRaceOrder(status,odds){
@@ -182,6 +188,7 @@
        ' · '+E(result.draws)+' simulations · Standard scoring</div>';
    }
  }
+ let gaps={};
  function teamScores(id,rs,scoring,events,stats){
    const groups=new Map();
    for(const r of rs){if(r.matchup_id==null)continue;const k=String(r.matchup_id);
@@ -191,10 +198,21 @@
      if(group.length!==2)throw Error('Incomplete matchup in '+id);
      const match=group.map(r=>({...r,leagueId:id}));
      const summary=S.summarize(match,metadata,baseline,events,stats,scoring,cfg,false);
-     if(summary.missing||summary.unknown||summary.incomplete)
-       throw Error('Missing live player score or baseline for '+id);
+     // Data gaps no longer drop the whole conference (Chris, 2026-11-22: one starter without a Tuesday
+     // projection, Josh Johnson ARI QB, blanked Pac-12 and Pioneer). The model is still built: a starter
+     // with no Tuesday projection counts as 0 (that is what the baseline holds), one with no game data
+     // counts only what he has scored, and the gap is listed on the affected cards.
      for(let i=0;i<2;i++){
        const r=match[i],m=summary.models[i],rid=String(r.roster_id);
+       const notes=[];
+       for(const pl of m.starters){
+         if(pl.id==='0')continue;
+         const who=(pl.name||'Player '+pl.id)+(pl.position||pl.team?' ('+[pl.position,pl.team].filter(Boolean).join(', ')+')':'');
+         if(pl.phase==='unknown')notes.push(who+': no game data, counting points scored only');
+         else if(pl.missingProjection&&pl.phase!=='post')notes.push(who+': no Tuesday projection, counted as 0');
+       }
+       if(summary.incomplete&&!summary.final)notes.push('live stats delayed; using Sleeper points');
+       if(notes.length)gaps[M.key(id,rid)]=notes;
        // Preserve the Tuesday baseline for games that have not started.
        const pre=!summary.started&&!summary.final;
        all[M.key(id,rid)]={
@@ -214,6 +232,11 @@
    const events=nflGames(clock),stats=C.statsMap(raw);
    if(!raw||typeof raw!=='object')throw Error('Missing live statistics');
    const ids=data.conferences.map(c=>String(c.league_id)),models={};
+   gaps={};
+   const confName=id=>data.conferences.find(c=>String(c.league_id)===id)?.name||id;
+   // Issue text names teams, never league IDs (front end shows friendly names only).
+   const friendly=m=>String(m).replace(/(\d{12,})\|(\d+)/g,(x,l,r)=>index.leagues[l]?.teams?.[r]?.name||'roster '+r)
+     .replace(/\d{12,}/g,l=>confName(l)).replace('Missing live score model for','No live score for');
    let n=0;const errors=[];
    async function worker(){
      while(n<ids.length){
@@ -226,7 +249,7 @@
          if(!Object.keys(lg.scoring_settings||{}).length)throw Error('Missing scoring settings');
          leagueCfg.set(id,lg);
          Object.assign(models,teamScores(id,rs,lg.scoring_settings,events,stats));
-       }catch(e){errors.push(id+': '+e.message);}
+       }catch(e){errors.push(confName(id)+': '+friendly(e.message));}
      }
    }
    await Promise.all(Array.from({length:Math.min(4,ids.length)},()=>worker()));
@@ -236,10 +259,10 @@
      try{results[id]=M.simulate(conf,models,{
        sims:settings.simulations||20000,seed:(settings.seed??2026)+Number(id.slice(-7)),
        order:data.tiebreak_order
-     });}catch(e){errors.push(id+': '+e.message);}
+     });}catch(e){errors.push(confName(id)+': '+friendly(e.message));}
    }
    if(!Object.keys(results).length)throw Error('No complete live '+unit+' models — '+errors.slice(0,2).join('; '));
-   return {models,results,errors,stamp:new Date().toISOString()};
+   return {models,results,errors,gaps,stamp:new Date().toISOString()};
  }
  function schedule(delay){clearTimeout(timer);if(!document.hidden)timer=setTimeout(refresh,delay);}
  async function refresh(){
