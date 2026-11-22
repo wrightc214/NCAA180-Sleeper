@@ -240,7 +240,7 @@ test('generated menu matches source template exactly except embedded navigation 
   // Function replacers: the accessibility source contains "$&", which a string replacement would expand.
   assert.strictEqual(template.replace('/*__ACCESSIBILITY__*/', () => a11y)
     .replace('/*__DATA__*/null', () => embedded[1]), built);
-  assert.ok(JSON.parse(embedded[1]).tabs.some(t => t.id === 'access' && t.state === 'hidden-dev'));
+  assert.ok(JSON.parse(embedded[1]).tabs.some(t => t.id === 'access' && (t.state || 'visible') === 'visible'));  // public since 2026-11-22 (Chris)
   // Regression (#109 review): a JS string replacement once turned this "$&$&" into the placeholder text.
   assert.ok(built.includes('h.replace(/./g, "$&$&")'), '3-digit hex expansion intact in the built bundle');
   assert.ok(!built.includes('__ACCESSIBILITY__'), 'no unexpanded or duplicated placeholder in the built bundle');
@@ -277,7 +277,7 @@ test('Accessibility page includes shared site CSS, dev navigation and accessible
   const weekly=fs.readFileSync(path.join(__dirname,'..','templates','weekly_report.html'),'utf8');
   const shared=weekly.match(/<style>[\s\S]*?<\/style>/)[0];
   assert.ok(html.includes(shared),'shared site stylesheet embedded');
-  assert.match(html,/data-current="access" data-state="hidden-dev"/);
+  assert.match(html,/data-current="access"(?! data-state)/);
   assert.match(html,/src="assets\/menu\.js"/);
   assert.match(html,/src="assets\/access\.js"/);
   assert.match(html,/id="restore-custom"/);
