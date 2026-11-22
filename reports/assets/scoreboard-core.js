@@ -86,7 +86,7 @@
     const phase=inactive?'out':!game?'unknown':game.state==='bye'?'bye':game.state;
     return {id,...p,positions,position:pos,phase,game,actual,baseline:projected,
       projected:round(actual+projected*fraction),variance:(num(cfg.position_sd[pos])*fraction)**2,
-      minutes:60*fraction,official:num(official),missingMetadata:!metadata,missingProjection:projection===undefined};
+      minutes:60*fraction,official:num(official),missingMetadata:!metadata};
   }
   function teamModel(roster, players) {
     const starters=(roster.starters||[]).map(id=>players[String(id)] || {id:'0',name:'Empty slot',positions:[],position:'',phase:'out',actual:0,baseline:0,projected:0,variance:0,minutes:0,official:0});

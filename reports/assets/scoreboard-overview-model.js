@@ -23,7 +23,7 @@
     const next=starters.filter(p=>p.phase==='pre').map(p=>p.game).sort((a,b)=>Date.parse(a.kickoff)-Date.parse(b.kickoff))[0];
     const final=!active.length&&!next&&!unknown&&(starters.some(p=>p.phase==='post')||Object.values(games).every(g=>g.state==='post'));
     const started=starters.some(p=>p.phase==='post'||p.phase==='in'||p.actual!==0);
-    const missing=unknown||incomplete||starters.some(p=>p.missingProjection);
+    const missing=unknown||incomplete; // no Tuesday projection = projected 0 (Chris, 2026-11-22)
     // Postseason weeks: pregame chance per side from the frozen game (win / finish top of the group).
     const key=r=>`${r.leagueId}|${r.roster_id}`,mine=new Set(rosters.map(key));
     const pg=(baseline.games||[]).find(g=>g.sides.length===rosters.length&&g.sides.every(x=>mine.has(`${x.LeagueID}|${x.RosterID}`)));
