@@ -199,9 +199,9 @@
      const match=group.map(r=>({...r,leagueId:id}));
      const summary=S.summarize(match,metadata,baseline,events,stats,scoring,cfg,false);
      // Data gaps no longer drop the whole conference (Chris, 2026-11-22: one starter without a Tuesday
-     // projection, Josh Johnson ARI QB, blanked Pac-12 and Pioneer). The model is still built: a starter
-     // with no Tuesday projection counts as 0 (that is what the baseline holds), one with no game data
-     // counts only what he has scored, and the gap is listed on the affected cards.
+     // projection, Josh Johnson ARI QB, blanked Pac-12 and Pioneer). A starter with no Tuesday projection is
+     // simply projected 0 — nothing else changes (2026-11-22). One with no game data counts only what he has
+     // scored; that gap and delayed stats are listed on the affected cards.
      for(let i=0;i<2;i++){
        const r=match[i],m=summary.models[i],rid=String(r.roster_id);
        const notes=[];
@@ -209,7 +209,6 @@
          if(pl.id==='0')continue;
          const who=(pl.name||'Player '+pl.id)+(pl.position||pl.team?' ('+[pl.position,pl.team].filter(Boolean).join(', ')+')':'');
          if(pl.phase==='unknown')notes.push(who+': no game data, counting points scored only');
-         else if(pl.missingProjection&&pl.phase!=='post')notes.push(who+': no Tuesday projection, counted as 0');
        }
        if(summary.incomplete&&!summary.final)notes.push('live stats delayed; using Sleeper points');
        if(notes.length)gaps[M.key(id,rid)]=notes;

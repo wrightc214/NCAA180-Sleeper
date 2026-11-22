@@ -95,7 +95,7 @@
     const name=p.position==='DEF'?`${p.team||p.id} DEF`:p.name.replace(/^(\S)\S+\s/,'$1. ');
     const diff=p.actual-p.baseline,k=Math.min(1,Math.abs(diff)/(cfg.position_sd[p.position]||7));
     const style=color&&p.phase==='post'&&Math.abs(diff)>2?` style="color:color-mix(in srgb,${diff>0?'var(--good)':'var(--bad)'} ${35+65*k}%,var(--ink))"`:'';
-    const a=`<div class="pc${right?' r':''}" title="${escape(p.name)}"><b>${escape(name)}</b><small>${escape(p.position)} · ${escape(p.team)} ${tag}</small><small>${p.missingProjection?'proj unavailable':`proj ${p.baseline.toFixed(1)}`}${isLive?` · live ${p.projected.toFixed(1)}`:''}</small></div>`;
+    const a=`<div class="pc${right?' r':''}" title="${escape(p.name)}"><b>${escape(name)}</b><small>${escape(p.position)} · ${escape(p.team)} ${tag}</small><small>proj ${p.baseline.toFixed(1)}${isLive?` · live ${p.projected.toFixed(1)}`:''}</small></div>`;
     const b=`<div class="ps${isLive?' on':''}"${style}>${p.phase==='unknown'?'—':pre?p.baseline.toFixed(1):money(p.actual)}</div>`;
     return right?b+a:a+b;
   }
@@ -136,7 +136,7 @@
     const center=title(games,models),isFinal=center.includes('FINAL');
     const started=models.some(m=>m.starters.some(p=>['in','post'].includes(p.phase)||p.actual!==0));
     snapState=isFinal?'final':started?'live':'pregame';
-    const missing=models.some(m=>m.starters.some(p=>p.missingProjection||p.phase==='unknown'));
+    const missing=models.some(m=>m.starters.some(p=>p.phase==='unknown'));
     const pre=chosen.map(r=>Number(postSide(r)?.WinPct??0));
     const ch=isFinal||!started?pre:missing?null:C.chanceTop(models);
     const top=Math.max(...models.map(m=>m.actual));
@@ -199,7 +199,6 @@
       }
       const model=C.teamModel(roster,players);
       if(model.starters.some(p=>p.phase==='unknown')) warns.push('Some player game statuses are unavailable; estimates may be incomplete.');
-      if(model.starters.some(p=>p.missingProjection)) warns.push('Some starters have no Tuesday projection; live odds are unavailable.');
       // Cross-check complete raw scoring against Sleeper's current rules before showing it.
       const officialRules=roster.scoring;
       const checked=model.starters.filter(p=>!noStats.has(String(p.id)));
@@ -215,7 +214,7 @@
     const slots=index.leagues[leagueId].slots;
     const benches=chosen.map((r,i)=>C.benchPlayers(r,playerSets[i],models[i].starters,slots,cfg,pregame));
     let html=`<div class="eyebrow">${postGame?`${escape(gLabel(postGame))} · ${season} · ${escape(wkName(week))}`:`${escape(index.leagues[leagueId].label||index.leagues[leagueId].name)} · ${season} · ${baseline.pairs?'Conference Championship':`Week ${week}`}`}</div><div class="top">${header(chosen[0],a,false,isFinal,pregame)}<div class="mid">${badges().map(b=>`<img class="gbadge" src="${b.src}" alt="${escape(b.alt)}" title="${escape(b.alt)}">`).join('')}<div class="mid-status">${center}</div></div>${header(chosen[1],b,true,isFinal,pregame)}</div><div class="odds">`;
-    const missing=models.some(m=>m.starters.some(p=>p.missingProjection||p.phase==='unknown'));
+    const missing=models.some(m=>m.starters.some(p=>p.phase==='unknown'));
     if(isFinal) {
       const m=C.round(Math.abs(a.actual-b.actual)),w=a.actual>b.actual?chosen[0]:chosen[1];
       html+=`<div class="fin">${m<0.005?'Final · tie':`Final · ${escape(team(w.roster_id,w.leagueId).name)} by ${money(m)}`}</div>`;

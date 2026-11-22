@@ -224,7 +224,7 @@ class CCGRaceBrowser(unittest.TestCase):
 
     def test_projection_gap_keeps_conference(self):
         """Chris, 2026-11-22: one starter with no Tuesday projection (Josh Johnson, ARI QB, id 260) blanked
-        the whole Pac-12 and Pioneer. The conference must still render, with the gap on the affected cards,
+        the whole Pac-12 and Pioneer. The conference must still render with him projected at 0 and no note,
         and any issue banner names conferences, never league IDs."""
         import csv, json
         from playwright.sync_api import sync_playwright
@@ -287,8 +287,8 @@ class CCGRaceBrowser(unittest.TestCase):
             server.shutdown()
         gaps = {c["team"]: c["gap"] for c in got["cards"]}
         self.assertIn("Colorado", gaps)
-        self.assertIn("no Tuesday projection, counted as 0", gaps["Colorado"])
-        self.assertIn("Josh Johnson", gaps["Colorado"])
+        # 2026-11-22 follow-up: no Tuesday projection is just a projection of 0 — no note, nothing different.
+        self.assertEqual(gaps["Colorado"], "")
         self.assertNotRegex(got["banner"], r"\d{15,}")  # issues name conferences, not league IDs
 
 
