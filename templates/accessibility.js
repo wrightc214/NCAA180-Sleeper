@@ -155,7 +155,12 @@ function createNCAA180Accessibility() {
     }
     return answer;
   }
+  // "No colour" (5.12.2, Chris): shown disabled on the Accessibility page until its non-colour cues
+  // exist. A stored "none" stays stored (read() still returns it) but paints exactly like Standard.
+  // The none palette, monochrome fills and forced emphasis below are kept for when it ships.
+  var NONE_AVAILABLE = false;
   function accessCss(o) {
+    if(o.mode==="none"&&!NONE_AVAILABLE) o=Object.assign({},o,{mode:"standard"});
     var m=ACCESS_MODES[o.mode],light={},dark={},both={};
     if(o.mode==="custom") {
       m={light:[o.custom.good,o.custom.bad],dark:[o.custom.good,o.custom.bad]};

@@ -56,7 +56,7 @@ CSS = """
 .tx-grade strong[data-score]{color:var(--neutral)}
 .tx-center{text-align:center;display:flex;flex-direction:column;justify-content:center;gap:6px}
 .tx-grade:not(.tx-fit)>span:nth-child(2){font-weight:600;color:var(--mute)}
-.tx-grade.tx-fit{padding:10px 8px;background:var(--bg);border:1px solid var(--line);border-radius:8px}
+.tx-grade.tx-fit{padding:10px 8px;background:var(--panel);border:1px solid var(--line);border-radius:8px}
 .tx-grade.tx-fit strong{font-size:32px;font-weight:900;line-height:1.1}
 .tx-grade.tx-fit>span:nth-child(2){font-size:14px;font-weight:800;color:var(--ink)}
 .tx-fit details{font-size:10px;font-weight:500;color:var(--mute)}
@@ -78,7 +78,10 @@ CSS = """
 .tx-bars{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 .tx-bar{display:flex;align-items:center;gap:8px;margin:7px 0;font-size:12px}
 .tx-bar span:first-child{flex:0 0 105px}
-.tx-bar meter{flex:1;min-width:30px;accent-color:var(--accent)}
+.tx-bar meter{flex:1;min-width:30px;accent-color:var(--neutral)}
+.tx-bar meter::-webkit-meter-bar{background:var(--line);border:0;border-radius:3px}
+.tx-bar meter::-webkit-meter-optimum-value{background:var(--neutral);border-radius:3px}
+.tx-bar meter::-moz-meter-bar{background:var(--neutral)}
 .tx-bar b{width:28px;text-align:right}
 .tx-empty{color:var(--mute);padding:20px 0}
 @media(max-width:760px){.tx-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}

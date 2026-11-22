@@ -39,10 +39,10 @@ CSS = """
 .gl-t{min-width:0;font-size:14px;line-height:1.15;overflow-wrap:anywhere}.gl-t small{display:block;font-size:11px;color:var(--mute)}
 .gl-n,.gl-w{text-align:right;font:600 15px var(--num);font-variant-numeric:tabular-nums}
 .gl-n.pj,.gl-n.mn,.gl-w{color:var(--mute);font-weight:500}.gl-n.od{font-weight:800}
-.gl-r.live .gl-n.sc{font-weight:900}.gl-r.bubble{background:color-mix(in srgb,var(--panel),var(--gold) 10%)}
+.gl-r.live .gl-n.sc{font-weight:900}.gl-r.bubble{background:var(--bad-soft)}
 .gl-r.mine{box-shadow:inset 4px 0 0 var(--accent)}.gl-r.gone{opacity:.5}
-.gl-cut{position:relative;height:22px;border-top:2px dashed var(--accent);margin:0 6px}
-.gl-cut span{position:absolute;right:0;top:-1px;background:var(--accent);color:#fff;font:700 10px var(--body);text-transform:uppercase;letter-spacing:.05em;padding:2px 6px;border-radius:0 0 4px 4px}
+.gl-cut{position:relative;height:22px;border-top:2px dashed var(--bad);margin:0 6px}
+.gl-cut span{position:absolute;right:0;top:-1px;background:var(--bad-fill);color:var(--on-fill);font:700 10px var(--body);text-transform:uppercase;letter-spacing:.05em;padding:2px 6px;border-radius:0 0 4px 4px}
 .gl-cut.final{border-top-style:solid}
 .team-icon{display:flex;width:22px;height:22px;align-items:center;justify-content:center;border-radius:3px;overflow:hidden}
 .team-icon img{width:100%;height:100%;object-fit:contain}

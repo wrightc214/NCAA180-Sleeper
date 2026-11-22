@@ -39,7 +39,7 @@ CSS = """
 .cl-t td{padding:6px 8px;border-top:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums}
 .cl-t th.l,.cl-t td.l{text-align:left}
 .cl-t tr.mine td{box-shadow:inset 0 0 0 9999px color-mix(in srgb,transparent,var(--accent) 8%)}
-.cl-t tr.cut td{border-top:2px dashed var(--accent)}
+.cl-t tr.cut td{border-top:2px dashed var(--bad)}
 .cl-team{display:flex;align-items:center;gap:7px;min-width:0}.cl-team b{font-weight:700}
 .cl-team small{display:block;font-size:11px;color:var(--mute);font-weight:400}
 .team-icon{display:inline-flex;flex:0 0 22px;width:22px;height:22px;align-items:center;justify-content:center;border-radius:3px;overflow:hidden}

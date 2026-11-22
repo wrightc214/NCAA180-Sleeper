@@ -207,15 +207,19 @@ test('accessibility settings: presets, custom, reset and malformed storage', () 
   }
 });
 
-test('accessibility: no-colour uses monochrome fills and invalid settings are normalized', () => {
+test('accessibility: stored no-colour paints Standard (5.12.2) and invalid settings are normalized', () => {
   const old=global.localStorage, store={};
   global.localStorage={getItem:k=>store[k]||null,setItem:(k,v)=>{store[k]=v;},removeItem:k=>{delete store[k];}};
   try {
     const m=load(DATA);
+    m.access.save({mode:'standard'});
+    const standard=m.colors.css;
     m.access.save({mode:'none'});
-    assert.match(m.colors.css, /--good-fill:#3c3c3c/);
-    assert.match(m.colors.css, /--bad-fill:#656565/);
-    assert.match(m.colors.css, /--n180-emphasis:1/);
+    assert.strictEqual(m.access.read().mode,'none','the saved setting itself is left unchanged');
+    assert.strictEqual(m.colors.css,standard,'a stored none writes exactly the Standard tokens');
+    assert.doesNotMatch(m.colors.css, /--good-fill:#3c3c3c/);
+    assert.doesNotMatch(m.colors.css, /--n180-emphasis:1/);
+    assert.ok(m.access.modes.none,'none palette kept in the engine for later');
     m.access.save({mode:'unrecognized',motion:'bogus',custom:{good:'red'}});
     assert.strictEqual(m.access.read().mode,'standard');
     assert.strictEqual(m.access.read().motion,'system');
@@ -357,4 +361,11 @@ test('Accessibility controls update and reset preferences without a browser', ()
   assert.strictEqual(state.mode,'standard');
   state.mode='none';handlers['window:ncaa180:accesschange']();
   assert.strictEqual(nodes.mode.value,'none');
+});
+
+test('No colour option is visible but disabled with its label (5.12.2)', () => {
+  for (const f of ['templates/access.html','reports/access.html']) {
+    const html=fs.readFileSync(path.join(__dirname,'..',f),'utf8');
+    assert.match(html,/<option value="none" disabled>No colour: not yet available<\/option>/,f);
+  }
 });

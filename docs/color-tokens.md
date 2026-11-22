@@ -2,8 +2,10 @@
 
 Shared colours for anything that means good/bad (Project Manager 5.8). Defined once in
 `templates/menu.js` (built into `reports/assets/menu.js`, already loaded synchronously on every page),
-written into `<style id="n180-tokens">` before the menu draws. **Hard-coded Standard (red/green) for now**;
-the accessibility page will rewrite that style element per device (presets, custom pickers).
+written into `<style id="n180-tokens">` before the menu draws. The Accessibility page (`reports/access.html`)
+rewrites that style element per device: Standard, red/green-safe `rg`, blue/yellow `by`, Custom. Palettes live in
+`config/accessibility.json`. "No colour" is shown disabled ("No colour: not yet available"); a stored `none`
+paints exactly like Standard until its non-colour cues are built (the `none` palette and engine code are kept).
 
 | Token | Light | Dark | Use |
 |---|---|---|---|
@@ -13,7 +15,18 @@ the accessibility page will rewrite that style element per device (presets, cust
 | `--good-fill` / `--bad-fill` + `--on-fill` | #1a7f37 / #b42318 + #fff | same | solid badges with text on them |
 
 ## Rules
-- Use `var(--good)` etc., never a red/green hex. A fallback is fine: `var(--good,#1a7f37)`.
+- **Meaning → tokens.** Any colour that means something (good/bad, up/down, win/loss, odds, clinched/out, cut
+  lines, grades, above/below projection, more/less likely) uses `var(--good)` / `var(--bad)` / `var(--neutral)`
+  (plus `-soft` / `-fill` + `--on-fill`) in CSS, or `NCAA180.colors.scale()` in JS. Never a red/green hex,
+  `rgb()`, `hsl()` or named colour. A fallback is fine: `var(--good,#1a7f37)`.
+- **Exempt:** team / brand / conference colours (incl. the site `--accent`), category colours (positions),
+  status badges (LIVE / FINAL / upcoming, the Games lead/underdog tag; redesign pending). They don't change
+  with the viewer's mode.
+- **PNG renders stay Standard.** Images Python renders for Discord/posts (poll, bot-ballot, weekly, projection
+  cards) have no viewer. They screenshot the pages in a fresh headless browser, so they get the Standard tokens;
+  where a card needs its old look, the shoot step applies it (e.g. `poll_bot_cards.shade()` in `shoot()`).
+- Legacy `--up` / `--dn` are aliases of `--good` / `--bad` (kept defined so archived pages follow the viewer's
+  mode). Don't use them in new code.
 - Pair colour with a non-colour cue where meaning matters (bold favourite, ✓/✗, label text).
 - Win % (diverging scale, JS): `NCAA180.colors.scale(p)` → `rgb(...)` for `p` in 0..1 — bad → neutral grey → good,
   blended in OKLab. Colouring many cells: `const t = NCAA180.colors.tokens();` once, then `scale(p, t)`.
@@ -21,7 +34,9 @@ the accessibility page will rewrite that style element per device (presets, cust
 - Saved images: `snapshot.js` copies `<style>` elements, so the viewer's colours carry over. Don't move the
   tokens to an inline `style` on `<html>`.
 
-## Not yet on tokens (5.8 audit)
-Page CSS `--up` / `--dn` (rank movement), `bowl_projection.py` (`#2e7d32` / `#c62828` / `#16743b` / `#b42318`),
-live-status greens in `scoreboard-overview.css`, `snapshot.js` LIVE label, Selection Watch / Guillotine / standings
-red/green. Moving them is part of the accessibility page build.
+## Guard
+`scripts/color_literal_check.py` (run by `tests/test_color_literals.py`) fails on red/green colour literals —
+hex, `rgb()`, `hsl()`, computed `hsl(`/`rgb(` strings, named colours in CSS — in `scripts/`, `templates/` and
+`reports/assets/` outside the token definitions. Its allowlist is explicit and commented (token definitions,
+brand accent, position colours, status badges, PNG renderers); a stale entry fails too. The same test fails on
+any `var(--up)` / `var(--dn)` use. Archived pages under `reports/*.html` aren't scanned.
