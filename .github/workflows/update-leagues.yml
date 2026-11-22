@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       script_to_run:
-        description: 'Script to run (league_ids, rosters, users, rosterhistory, matchups, scores, standard_scores, max_points, weekly_awards, players, transactions, drafts, standings, orphans, lineup_streaks, push_teams, app_page, push_announce, game_settle, player_values, transactions_page, draft_picks, weekly_report, roster_map, poll, poll_page, matchups_page, gametime_projections, manager_lineups, managers_page, records_page, standings_page, postseason_export, guillotine, dwight_fight, special_page, postseason_page, league_staff, about_page, bowl_projection, bowl_projection_publish, game_of_the_week, scoreboard, conference_championships, selection_watch, ccg_race, playoff_field, playoff_bracket, playoff_publish, bowls, bowls_publish, bowls_redraw, nit, nit_publish, nit_redraw, patch_orphans, all). Postseason scripts are manual only (except conference_championships, which runs in all).'
+        description: 'Script to run (league_ids, rosters, users, rosterhistory, matchups, scores, standard_scores, max_points, weekly_awards, players, transactions, drafts, standings, orphans, lineup_streaks, push_teams, app_page, push_announce, game_settle, player_values, transactions_page, draft_picks, weekly_report, roster_map, poll, poll_page, matchups_page, gametime_projections, manager_lineups, managers_page, records_page, standings_page, postseason_export, guillotine, dwight_fight, special_page, champions_league, champions_league_page, postseason_page, league_staff, about_page, bowl_projection, bowl_projection_publish, game_of_the_week, scoreboard, conference_championships, selection_watch, ccg_race, playoff_field, playoff_bracket, playoff_publish, bowls, bowls_publish, bowls_redraw, nit, nit_publish, nit_redraw, patch_orphans, all). Postseason scripts are manual only (except conference_championships, which runs in all).'
         required: true
         default: 'all'
       post:
@@ -164,6 +164,10 @@ jobs:
           run guillotine            guillotine.py            all
           run dwight_fight          dwight_fight.py         all
           run special_page          special_page.py          all
+          # Champions League (config/champions_league.json; hidden-dev): pod results + standings + next-season
+          # projection for every enabled season with a locked field file, then the six page shells.
+          run champions_league      champions_league.py      all
+          run champions_league_page champions_league_page.py all
           # Postseason page: every season's real postseason; takes over postseason.html once 2026 has published rows
           run postseason_page       postseason_page.py       all
           run league_staff          league_staff.py          all
@@ -343,6 +347,7 @@ jobs:
           git add data/standard 2>/dev/null || true  # separate lines: a missing file must not stop the others
           git add data/StandardAlerts_Season.json 2>/dev/null || true
           git add data/postseason 2>/dev/null || true
+          git add data/champions_league 2>/dev/null || true  # locked Champions League fields + owner exclusions
           git add data/standings 2>/dev/null || true  # past-season standings (standings.py --history)
           git add data/CoinTossAlert.json 2>/dev/null || true  # coin-toss alert sent (posted once per situation)
           git add data/push 2>/dev/null || true  # push ledger: stops a result being announced twice

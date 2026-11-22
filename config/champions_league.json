@@ -1,0 +1,42 @@
+{
+  "_about": "Champions League (Chris, 2026-11-21; planning repo todo/todo-champions-league.md + todo-champions-league-build.md). A shadow event computed from home-league scores: 33 teams chosen from the previous season, three-team pods every week (weeks 1-16, fixed schedule), then the Triad Cup (top 3, weeks 17-18). Special events keep their own config file; shared league values (season, scoring basis, standard tiebreak order) come from config/league.json. Pages: reports/cl-*.html (hidden-dev).",
+  "name": "Champions League",
+  "cup_name": "Triad Cup",
+  "_seasons_note": "Seasons the event is computed for. dev_seasons: computed and shown only in Dev view (the pages carry a DEV PREVIEW banner); seasons: official. A field file data/champions_league/field_<season>.csv must exist for a season to run.",
+  "seasons": [],
+  "dev_seasons": [2026],
+  "preview_banner": "Dev preview: unofficial. Rules and field may change before the first official season.",
+  "field_size": 33,
+  "_weeks_note": "pod_weeks: the round robin (schedule_file has one row per pod per week). cup_weeks: the Triad Cup, scored on the combined score of these weeks.",
+  "pod_weeks": [1, 16],
+  "cup_weeks": [17, 18],
+  "schedule_file": "data/champions_league/schedule.csv",
+  "_points_note": "Pod points for the best, middle and worst score in a pod (every pod awards their sum). Tied teams split the points of the places they share: two tied for 1st -> 2 each, two tied for 2nd -> 0.5 each, three-way -> 4/3 each.",
+  "pod_points": [3, 1, 0],
+  "_cup_note": "The top cup_size teams in the standings after the last pod week play the Triad Cup. head_start: points added to the combined score by standings place (1st, 2nd, 3rd). A tie on the combined score goes to the higher seed.",
+  "cup_size": 3,
+  "cup_head_start": [10, 5, 0],
+  "_standings_note": "Standings are sorted by pod points only; equal points share a rank. All-play wins (teams in the field outscored each week, ties count half) are shown in their own column and used only to decide the top cup_size: pod points -> all-play wins -> the standard steps below.",
+  "_selection_note": "How the next season's field is chosen from a finished season. Ladder lines are taken in order; a team already in folds (no pass down). Then at-large places go to the lowest sum of three ranks: all-play wins (allplay_weeks), best-ball total = sum of weekly best possible lineup points (bestball_weeks), and the season's final BotConsensus poll rank. League guarantee: before each at-large place, if the number of leagues with no team in the field equals the places left, every remaining place goes to the lowest-sum team of each unrepresented league. No automatic places for league winners, no per-league cap.",
+  "selection": {
+    "ladder": ["final_four", "nit_champion", "snub", "defending_champion"],
+    "_ladder_note": "final_four: the four playoff semifinalists. nit_champion: the NIT winner (the back door). snub: the best non-playoff team on the final BotConsensus poll. defending_champion: last season's Triad Cup winner, from defending_champion_from on.",
+    "defending_champion_from": 2028,
+    "allplay_weeks": [1, 11],
+    "bestball_weeks": [1, 18],
+    "poll_type": "BotConsensus",
+    "league_guarantee": true,
+    "_projection_note": "The Selection page projects next season's field from projection_start_week of the current season (same engine, data through the latest final week; postseason lines show once they exist).",
+    "projection_start_week": 10
+  },
+  "_tiebreak_note": "Ranking the field, the at-large order and the top cup_size use these steps in order. event_steps first, then standard_steps (to move into a league-wide unified tiebreak structure in the offseason; PROJECT_MANAGER backlog). Multi-team ties, at every step: a team that beats every other tied team wins; else a team that loses to every other tied team drops and the rest start over from the first step; else move to the next step. rank_sum / best_worst_rank: lower wins. bestball_total: higher wins. h2h: weekly scores compared between the tied teams over weeks w..h2h_last_week for w = 1, 2, ... (more weeks outscoring wins). coin_toss: reproducible hash of season + teams, printed in the run log; record a real toss in coin_toss_results ({season, teams, order, note}).",
+  "tiebreak": {
+    "selection_steps": ["rank_sum", "best_worst_rank", "bestball_total", "h2h", "coin_toss"],
+    "cup_steps": ["allplay", "bestball_total", "h2h", "coin_toss"],
+    "h2h_last_week": 11,
+    "coin_toss_results": []
+  },
+  "_ownership_note": "A place belongs to the owner who earned it (Chris, 2026-11-21). If a team's owner (Sleeper user ID) at the start of the season is not the owner recorded when the field was locked, the team gives up its place and the selection is rerun without it. Before schedule_publish_date the whole field is re-seeded; after it the replacement takes the vacated seed. The field locks at week 1: no replacements after that (in-season orphans follow the standard orphan rules).",
+  "schedule_publish_date": {"2026": "2026-08-20"},
+  "orphans_note": "Standard orphan rules are not built yet (offseason). Orphan teams keep their place in season and score whatever their lineup scores."
+}

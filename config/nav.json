@@ -35,7 +35,16 @@
     ]},
     "special": {"label": "Event", "items": [
       {"label": "The Guillotine", "href": "special.html", "icon": "../assets/logos/Guillotine/Guillotine%20G.png"},
-      {"label": "Dwight Fight", "href": "dwight-fight.html", "icon": "../assets/logos/Dwight%20Fight/Dwight%20Fight%20Glasses.png", "state": "hidden-dev"}
+      {"label": "Dwight Fight", "href": "dwight-fight.html", "icon": "../assets/logos/Dwight%20Fight/Dwight%20Fight%20Glasses.png", "state": "hidden-dev"},
+      {"label": "Champions League", "href": "cl-standings.html", "match": "^cl-[a-z-]+\\.html$", "state": "hidden-dev"}
+    ]},
+    "champions-league": {"label": "", "items": [
+      {"label": "Standings", "href": "cl-standings.html", "state": "hidden-dev"},
+      {"label": "Schedule", "href": "cl-schedule.html", "state": "hidden-dev"},
+      {"label": "Scoreboard", "href": "cl-scoreboard.html", "state": "hidden-dev"},
+      {"label": "Field", "href": "cl-field.html", "state": "hidden-dev"},
+      {"label": "Selection", "href": "cl-selection.html", "state": "hidden-dev"},
+      {"label": "Rules", "href": "cl-rules.html", "state": "hidden-dev"}
     ]}
   }
 }
