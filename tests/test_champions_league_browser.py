@@ -38,7 +38,7 @@ class ChampionsLeagueBrowserTests(unittest.TestCase):
             with sync_playwright() as pw:
                 kw = {"executable_path": os.environ["PW_CHROME"]} if os.environ.get("PW_CHROME") else {}
                 b = pw.chromium.launch(args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"], **kw)
-                for width in (1300, 400):
+                for width in (1300, 400, 390, 320):
                     for page, needles in PAGES.items():
                         with self.subTest(page=page, width=width):
                             ctx = b.new_context(viewport={"width": width, "height": 1000})
@@ -49,6 +49,8 @@ class ChampionsLeagueBrowserTests(unittest.TestCase):
                             pg.wait_for_timeout(800)
                             text = pg.inner_text("body")
                             self.assertEqual(errors, [])
+                            # Site rule: no sideways page scroll; wide tables scroll inside their section.
+                            self.assertLessEqual(pg.evaluate("document.documentElement.scrollWidth - innerWidth"), 0)
                             self.assertFalse(pg.is_visible("#cl-error"), text[:300])
                             for n in needles:
                                 self.assertIn(n.lower(), text.lower())
