@@ -1,0 +1,109 @@
+{
+  "_note": "Trophy display + plaque engraving (task 5.1). One shared art base per trophy; the plaque is engraved at view time from a ledger row (data/Trophies_Historic.csv + data/Trophies_Season.csv). No image file is ever stored per trophy won. New art = drop the PNG in assets/trophies/ and add/point one 'events' entry here.",
+  "plaque": {
+    "_note": "Default engraving box in SOURCE pixels of the art (size x size). The shared base is 1200x1200 with a blank #CFD4D8 plaque at x 280-919, y 914-1073. text_color = engraving ink. max_lines is fixed at 2 (team, then '<year> <event>'). padding = share of the box width kept clear on each side. line1_max/line2_max = largest font size as a share of the box height (auto-fit only shrinks from there). uppercase_line2 matches the Dwight Fight's engraved look.",
+    "size": 1200,
+    "x": 280,
+    "y": 914,
+    "w": 640,
+    "h": 160,
+    "text_color": "#1b2340",
+    "max_lines": 2,
+    "padding": 0.05,
+    "line1_max": 0.4,
+    "line2_max": 0.28,
+    "uppercase_line2": true
+  },
+  "overrides": {
+    "_note": "Per-art geometry/colour, keyed by the art path. Any 'plaque' key can be overridden. Dwight Fight: its own art (1254 px, its own plaque) and brown ink, kept exactly as the page drew it before (left 24.6%, top 82.5%, width 50.6%, height 11.1%, #4a260d, 10px of a ~33px plaque per line).",
+    "assets/logos/Dwight Fight/Dwight Fight Trophy Blank.png": {
+      "size": 1254,
+      "x": 308.5,
+      "y": 1034.55,
+      "w": 634.52,
+      "h": 139.19,
+      "text_color": "#4a260d",
+      "padding": 0.02,
+      "line1_max": 0.3,
+      "line2_max": 0.3
+    }
+  },
+  "events": {
+    "_note": "EventType -> art, engraving and fallback logo. Placeholders: {year} {conference} {event} (the bowl, aliased by bowl_art for art and bowl_labels for text) {round} {team}. art/logo are repo paths. line2 = plaque line 2; alt = the trophy's alt text. A missing art file shows the fallback block (logo + the same two lines), never a broken image.",
+    "CCG": {
+      "_note": "Conference championship game winner. {conference} = league short name (data/LeagueShortNames.csv).",
+      "art": "assets/trophies/conferences/{conference}.png",
+      "logo": "assets/logos/CCG/{conference} CCG.png",
+      "name": "{conference} Championship",
+      "line2": "{year} {conference} Champion",
+      "alt": "{year} {conference} Championship trophy, won by {team}"
+    },
+    "Bowl": {
+      "_note": "Non-playoff bowl winner.",
+      "art": "assets/trophies/bowls/{art}.png",
+      "logo": "assets/logos/Bowls/{event}.png",
+      "name": "{event}",
+      "line2": "{year} {event}",
+      "alt": "{year} {event} trophy, won by {team}"
+    },
+    "PlayoffRound": {
+      "_note": "Elite 8 / Final Four winners, on that year's host playoff bowl (the round is on line 2 because each playoff bowl hosts different rounds by year). Seasons whose playoff had no host bowls (2021) get no round trophy.",
+      "rounds": ["Elite 8", "Final Four"],
+      "art": "assets/trophies/bowls/{art}.png",
+      "logo": "assets/logos/Playoffs/{event}.png",
+      "name": "{event}",
+      "line2": "{year} {event} · {round}",
+      "alt": "{year} {event} {round} trophy, won by {team}"
+    },
+    "NationalTitle": {
+      "_note": "Playoff champion.",
+      "art": "assets/trophies/special/National Championship.png",
+      "logo": "assets/logos/Playoffs/National Championship.png",
+      "name": "National Championship",
+      "line2": "{year} National Champion",
+      "alt": "{year} National Championship trophy, won by {team}"
+    },
+    "NIT": {
+      "_note": "NIT champion (the final is the Stagg Bowl).",
+      "art": "assets/trophies/special/Stagg Bowl.png",
+      "logo": "assets/logos/Bowls/Stagg Bowl.png",
+      "name": "NIT Championship",
+      "line2": "{year} NIT Champion",
+      "alt": "{year} NIT Championship trophy, won by {team}"
+    },
+    "Guillotine": {
+      "_note": "The Guillotine champion (co-champions each get a row).",
+      "art": "assets/trophies/special/Guillotine.png",
+      "logo": "assets/logos/Guillotine/Guillotine G.png",
+      "name": "The Guillotine",
+      "line2": "{year} Guillotine Champion",
+      "alt": "{year} Guillotine trophy, won by {team}"
+    },
+    "DwightFight": {
+      "_note": "Dwight Fight champion; geometry from overrides.",
+      "art": "assets/logos/Dwight Fight/Dwight Fight Trophy Blank.png",
+      "logo": "assets/logos/Dwight Fight/Dwight Fight Glasses.png",
+      "name": "Dwight Fight",
+      "line2": "{year} Dwight Fight Champion",
+      "alt": "{year} Dwight Fight trophy, won by {team}"
+    }
+  },
+  "bowl_art": {
+    "_note": "Bowl played under an older or sponsored name -> the art file of the same bowl today. config/league.json postseason.bowls.history_names is merged in automatically (Brooklyn -> Gotham etc.); add a line here only for names it doesn't cover. Unlisted names without art use the fallback.",
+    "Capital One Bowl": "Citrus Bowl",
+    "TaxSlayer Bowl": "Gator Bowl",
+    "Chick-fil-A Bowl": "Peach Bowl"
+  },
+  "bowl_labels": {
+    "_note": "Bowl name to ENGRAVE when the season's name was a sponsor's (no-sponsor rule). Everything else is engraved as played. Open question for Chris: Belk, Duke's Mayonnaise, Outback, EA Sports, FedEx, Geico, Ice, PlayStation, Xbox (see PR_README).",
+    "Capital One Bowl": "Citrus Bowl",
+    "TaxSlayer Bowl": "Gator Bowl",
+    "Chick-fil-A Bowl": "Peach Bowl"
+  },
+  "display": {
+    "_note": "Card widths in CSS px (they shrink on narrow screens). list = bowl/CCG/NIT/playoff-round cards; champion = bracket champion card and Special Events champions; export = the champion card's Save image.",
+    "list": 180,
+    "champion": 240,
+    "export": 300
+  }
+}

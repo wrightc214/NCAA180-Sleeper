@@ -13,6 +13,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import league_config as lcfg  # noqa: E402
+import trophies as TR  # noqa: E402
 from site_common import menu_html, page_head  # noqa: E402
 
 CSS = """
@@ -55,7 +56,8 @@ CSS = """
 .live-t .gl-h,.live-t .gl-r{grid-template-columns:20px minmax(0,1fr) 56px 46px 34px 46px;gap:4px;padding:6px 6px}
 .gl-n,.gl-w{font-size:14px}.gl-t{font-size:13px}}
 [hidden]{display:none!important}
-"""
+.gl-champ .trophy{flex:none}
+""" + TR.CSS
 
 
 def main():
@@ -74,7 +76,7 @@ def main():
 <p id="error" role="alert" hidden></p>
 <div id="board" aria-live="polite"></div>
 </div>
-<script src="assets/scoreboard-core.js"></script><script src="assets/guillotine-model.js"></script><script src="assets/guillotine.js" defer></script></body></html>'''
+<script src="assets/scoreboard-core.js"></script><script src="assets/trophy.js"></script><script src="assets/guillotine-model.js"></script><script src="assets/guillotine.js" defer></script></body></html>'''
     with open("reports/special.html", "w", encoding="utf-8") as f:
         f.write(page_head(f"{brand} {g.get('name', 'The Guillotine')}", CSS) + body)
 
@@ -95,9 +97,7 @@ def main():
 .dw-diff{font-size:10px;color:var(--bad);width:100%;text-align:right}
 .dw-warn{border:1px solid var(--bad);border-radius:6px;padding:10px;color:var(--bad)}
 .dw-champion{text-align:center;padding:12px;border:1px solid var(--good);border-radius:8px}
-.dw-trophy{position:relative;width:min(300px,100%);margin:auto}.dw-trophy img{width:100%;display:block}
-.dw-plaque{position:absolute;left:24.6%;top:82.5%;width:50.6%;height:11.1%;display:flex;flex-direction:column;justify-content:center;align-items:center;overflow:hidden;color:#4a260d;text-align:center;font-size:clamp(5px,1vw,10px);line-height:1.1}
-.dw-plaque strong,.dw-plaque span{max-width:100%;white-space:nowrap;display:block;font-size:min(100%,10px);letter-spacing:-.02em}
+.dw-champion .trophy{margin:auto}
 .dw-champs,.dw-totals{display:flex;flex-wrap:wrap;gap:6px}
 .dw-champs>div,.dw-totals>div{padding:7px 10px;border:1px solid var(--line);border-radius:5px;background:var(--panel);font-size:13px}
 .dw-recorded-title{margin-top:28px}
@@ -108,8 +108,8 @@ def main():
 .dw-past section{min-width:0}.dw-past h3{font-size:13px}.dw-hgame{border:1px solid var(--line);background:var(--panel);padding:7px;border-radius:5px;font-size:12px;margin:5px 0}
 .dw-hgame span{display:flex;justify-content:space-between;gap:5px;overflow-wrap:anywhere}
 @media(max-width:900px){.dw-bracket{grid-template-columns:repeat(2,minmax(0,1fr))}.dw-past{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:450px){.dw-bracket,.dw-past{grid-template-columns:minmax(0,1fr)}.dw-wrap{padding-inline:8px}.dw-plaque{font-size:7px}}
-"""
+@media(max-width:450px){.dw-bracket,.dw-past{grid-template-columns:minmax(0,1fr)}.dw-wrap{padding-inline:8px}}
+""" + TR.CSS
     dw = c["postseason"].get("dwight_fight", {})
     dw_name = html.escape(dw.get("name", "Dwight Fight"))
     dw_banner = html.escape("../" + dw["logos"]["banner"].replace(" ", "%20"))
@@ -118,10 +118,9 @@ def main():
 <header class="sbh dw-hdr"><div class="eyebrow">{brand} · special events</div>
 <h1 class="dw-title"><img id="dw-banner" src="{dw_banner}" alt="{dw_name}"></h1></header>
 <p id="dw-status" role="status">Loading bracket…</p>
-<div id="dw-trophy" data-src=""></div>
 <div id="dw-main" aria-live="polite"></div>
 <section id="dw-history" aria-label="Dwight Fight history"></section>
-</div><script src="assets/scoreboard-core.js"></script><script src="assets/dwight-fight.js" defer></script></body></html>'''
+</div><script src="assets/scoreboard-core.js"></script><script src="assets/trophy.js"></script><script src="assets/dwight-fight.js" defer></script></body></html>'''
     with open("reports/dwight-fight.html", "w", encoding="utf-8") as output:
         output.write(page_head(f"{brand} Dwight Fight", dw_css) + dw_body)
     print("wrote reports/dwight-fight.html")

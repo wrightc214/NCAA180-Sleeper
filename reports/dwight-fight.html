@@ -90,9 +90,7 @@ footer{font-size:12px;color:var(--mute)}
 .dw-diff{font-size:10px;color:var(--bad);width:100%;text-align:right}
 .dw-warn{border:1px solid var(--bad);border-radius:6px;padding:10px;color:var(--bad)}
 .dw-champion{text-align:center;padding:12px;border:1px solid var(--good);border-radius:8px}
-.dw-trophy{position:relative;width:min(300px,100%);margin:auto}.dw-trophy img{width:100%;display:block}
-.dw-plaque{position:absolute;left:24.6%;top:82.5%;width:50.6%;height:11.1%;display:flex;flex-direction:column;justify-content:center;align-items:center;overflow:hidden;color:#4a260d;text-align:center;font-size:clamp(5px,1vw,10px);line-height:1.1}
-.dw-plaque strong,.dw-plaque span{max-width:100%;white-space:nowrap;display:block;font-size:min(100%,10px);letter-spacing:-.02em}
+.dw-champion .trophy{margin:auto}
 .dw-champs,.dw-totals{display:flex;flex-wrap:wrap;gap:6px}
 .dw-champs>div,.dw-totals>div{padding:7px 10px;border:1px solid var(--line);border-radius:5px;background:var(--panel);font-size:13px}
 .dw-recorded-title{margin-top:28px}
@@ -103,14 +101,26 @@ footer{font-size:12px;color:var(--mute)}
 .dw-past section{min-width:0}.dw-past h3{font-size:13px}.dw-hgame{border:1px solid var(--line);background:var(--panel);padding:7px;border-radius:5px;font-size:12px;margin:5px 0}
 .dw-hgame span{display:flex;justify-content:space-between;gap:5px;overflow-wrap:anywhere}
 @media(max-width:900px){.dw-bracket{grid-template-columns:repeat(2,minmax(0,1fr))}.dw-past{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:450px){.dw-bracket,.dw-past{grid-template-columns:minmax(0,1fr)}.dw-wrap{padding-inline:8px}.dw-plaque{font-size:7px}}
+@media(max-width:450px){.dw-bracket,.dw-past{grid-template-columns:minmax(0,1fr)}.dw-wrap{padding-inline:8px}}
+
+@font-face{font-family:"Barlow Trophy";font-weight:700;font-display:block;src:url("../assets/fonts/barlow-latin-700-normal.woff2") format("woff2"),url("../assets/fonts/barlow-latin-700-normal.woff") format("woff")}
+@font-face{font-family:"Barlow Trophy";font-weight:400;font-display:block;src:url("../assets/fonts/barlow-latin-400-normal.woff2") format("woff2"),url("../assets/fonts/barlow-latin-400-normal.woff") format("woff")}
+.trophy{margin:0;width:min(var(--tw,180px),100%);flex:none}
+.trophy-art{position:relative;container-type:inline-size;line-height:0}
+.trophy-art>img{display:block;width:100%;height:auto;aspect-ratio:1}
+.trophy-plaque{position:absolute;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;overflow:hidden;font-family:"Barlow Trophy","Barlow",sans-serif;letter-spacing:-.02em;line-height:1.15;white-space:nowrap}
+.trophy-plaque span{display:block;max-width:100%}
+.trophy-plaque .tp-1{font-weight:700;color:inherit}.trophy-plaque .tp-2{font-weight:400;color:inherit}
+.trophy-plaque .tp-up{text-transform:uppercase}
+.trophy.fallback .trophy-art{aspect-ratio:auto;display:flex;flex-direction:column;align-items:center;gap:6%;padding:6% 4%;box-sizing:border-box;border:1px solid var(--line,#d5dbe5);border-radius:10px;background:var(--panel,#fff)}
+.trophy.fallback .trophy-art>img{width:46%;aspect-ratio:1;object-fit:contain}
+.trophy.fallback .trophy-plaque{position:relative;inset:auto;width:100%;aspect-ratio:4/1;background:#CFD4D8;border:2px solid #222934;border-radius:4px;box-sizing:border-box}
 </style>
 </head><body><a href="#" class="totop" aria-label="Back to top" hidden>&#8593;</a><script>(function(){var b=document.currentScript.previousElementSibling;function f(){b.hidden=window.scrollY<window.innerHeight*0.9;}window.addEventListener("scroll",f,{passive:true});window.addEventListener("load",f);b.addEventListener("click",function(ev){ev.preventDefault();var r=window.matchMedia("(prefers-reduced-motion: reduce)").matches;window.scrollTo({top:0,behavior:r?"auto":"smooth"});});})();</script><div class="wrap dw-wrap">
 <nav class="weeks" aria-label="Pages" data-current="special"></nav><nav class="weeks sub" aria-label="Special events" data-row="special"></nav><script src="assets/menu.js"></script><noscript><a href="index.html">Home</a></noscript>
 <header class="sbh dw-hdr"><div class="eyebrow">NCAA 180 · special events</div>
 <h1 class="dw-title"><img id="dw-banner" src="../assets/logos/Dwight%20Fight/Dwight%20Fight%20Banner.png" alt="Dwight Fight"></h1></header>
 <p id="dw-status" role="status">Loading bracket…</p>
-<div id="dw-trophy" data-src=""></div>
 <div id="dw-main" aria-live="polite"></div>
 <section id="dw-history" aria-label="Dwight Fight history"></section>
-</div><script src="assets/scoreboard-core.js"></script><script src="assets/dwight-fight.js" defer></script></body></html>
+</div><script src="assets/scoreboard-core.js"></script><script src="assets/trophy.js"></script><script src="assets/dwight-fight.js" defer></script></body></html>

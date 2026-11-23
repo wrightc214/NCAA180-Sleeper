@@ -288,7 +288,9 @@ def champ_html(B, cls=""):
         return f'<div class="bk-champ empty {cls}"><span>Champion</span></div>'
     seed = f'{c["seed"]} seed · ' if c.get("seed") else ""
     path = f'{seed}beat {", ".join(c["path"])}' if c["path"] else ""
-    trophy = f'<img class="bk-ct" src="{e(c["trophy"])}" alt="National Championship trophy">' if c["trophy"] else ""
+    # engraved trophy (task 5.1, scripts/trophies.py) when the ledger has it; else the plain art
+    th = c.get("trophy_html_big" if "bk-big" in cls else "trophy_html")
+    trophy = th or (f'<img class="bk-ct" src="{e(c["trophy"])}" alt="National Championship trophy">' if c["trophy"] else "")
     big = re.sub(r'class="[^"]*"', "", c["logo"], count=1).replace("<img", '<img class="bk-cl"', 1)
     return (f'<div class="bk-champ {cls}" style="background:{c["bg"]};color:{c["fg"]};--ring:{c["fg"]}">'
             f'{big}<div class="bk-ce">{e(c["title"])}</div><div class="bk-cn">{e(c["name"])}</div>'

@@ -44,10 +44,21 @@
   const liveWeek=()=>gd.next_week;
   const frozen=w=>(gd.weeks||[]).find(x=>x.week===w);
   // ---------- paint ----------
+  let trophyRows=[];
+  // Engraved trophy per champion once the event is final (shared component, task 5.1; season name as played).
+  function trophies(){
+    if(gd.status!=='final'||!window.NCAATrophy?.config)return '';
+    const W=(NCAATrophy.config.display||{}).champion||240;
+    return gd.champions.map(c=>{
+      const row=trophyRows.find(r=>r.EventType==='Guillotine'&&String(r.Season)===String(gd.season)&&r.LeagueID===c.l&&r.RosterID===c.r)
+        ||{EventType:'Guillotine',Event:gd.name,Team:c.team,Season:gd.season};
+      return NCAATrophy.html(row,null,null,null,{width:W,lazy:false});
+    }).join('');
+  }
   function champBanner(){
     if(!gd.champions?.length)return '';
     const co=gd.champions.length>1;
-    return `<section class="gl-champ"><img src="${esc(logoFor(gd.last_week))}" alt="${esc(gd.name)} final" onerror="this.hidden=true"><div><div class="eyebrow">${esc(gd.name)} ${co?'co-champions':'champion'}</div>${gd.champions.map(c=>`<div class="gl-cname">${icon(c)} ${esc(ident(c).name)}</div>`).join('')}</div></section>`;
+    return `<section class="gl-champ"><img src="${esc(logoFor(gd.last_week))}" alt="${esc(gd.name)} final" onerror="this.hidden=true"><div><div class="eyebrow">${esc(gd.name)} ${co?'co-champions':'champion'}</div>${gd.champions.map(c=>`<div class="gl-cname">${icon(c)} ${esc(ident(c).name)}</div>`).join('')}</div>${trophies()}</section>`;
   }
   function rules(){
     const n=gd.entrants||gd.teams.length;
@@ -173,6 +184,7 @@
   try{
     cfg=await get('../config/league.json');index=await get(`${cfg.data.scoreboard}/index.json`);season=Number(index.season);
     gd=await get(`${cfg.data.scoreboard}/${season}/guillotine.json`);
+    try{await window.NCAATrophy?.load('../');trophyRows=await window.NCAATrophy?.ledger('../')}catch(e){console.warn('trophy config unavailable',e)}
     [metadata,colors]=await Promise.all([get(`${cfg.data.scoreboard}/${season}/players.json`),get(`${cfg.data.scoreboard}/leagues.json`)]);
     const want=Number(params.get('week'));
     const choices=[...(gd.weeks||[]).map(x=>x.week),liveWeek()].filter(Boolean);

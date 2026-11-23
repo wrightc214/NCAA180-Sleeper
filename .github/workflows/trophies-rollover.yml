@@ -1,0 +1,42 @@
+name: Trophy ledger rollover
+
+# Task 5.1: once a season's last trophy event is final, move its rows from data/Trophies_Season.csv
+# into the frozen data/Trophies_Historic.csv. Historic changes always go through a PR (Chris merges):
+# this pushes a branch and opens a PR; it never commits to main.
+on:
+  workflow_dispatch:
+    inputs:
+      season:
+        description: 'Season to roll over (e.g. 2026)'
+        required: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  rollover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements.txt
+      - name: Roll the season into the historic ledger
+        run: python scripts/trophies.py --rollover "${{ github.event.inputs.season }}"
+      - name: Open a PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SEASON: ${{ github.event.inputs.season }}
+        run: |
+          BR="trophies-rollover-$SEASON"
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BR"
+          git add data/Trophies_Historic.csv data/Trophies_Season.csv
+          git commit -m "Trophy ledger: roll $SEASON into Trophies_Historic.csv"
+          git push -u origin "$BR"
+          gh pr create --base main --head "$BR" --title "Trophy ledger rollover: $SEASON" \
+            --body "Moves the $SEASON rows from data/Trophies_Season.csv into the frozen data/Trophies_Historic.csv (scripts/trophies.py --rollover). Review the added rows, then merge." \
+          || echo "::warning::Branch $BR pushed; open the PR by hand (Actions may not be allowed to create PRs in this repo's settings)."
