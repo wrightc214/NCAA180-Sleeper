@@ -92,6 +92,7 @@
       for (let i = 0; i < 50 && !w.html2canvas; i++) await new Promise(r => setTimeout(r, 100));
       if (!w.html2canvas) throw new Error('image library did not load');
       await w.document.fonts.ready;
+      for (const im of w.document.images) if (im.loading === 'lazy') im.loading = 'eager';  // offscreen frame: lazy never loads
       await Promise.all([...w.document.images].map(im => im.complete ? 0 : new Promise(r => { im.onload = im.onerror = r; })));
       const el = w.document.getElementById('snap');
       prepareDetails(w, el);

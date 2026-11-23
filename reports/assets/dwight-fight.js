@@ -5,7 +5,7 @@
   const $=id=>document.getElementById(id);
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const get=async url=>{const r=await fetch(url,{cache:'no-cache'});if(!r.ok)throw Error(url+' HTTP '+r.status);return r.json()};
-  const path=v=>'../'+String(v||'').split(' ').join('%20');
+  let trophyRows=[];
   const score=v=>v==null||v===''?'—':Number(v).toFixed(2);
   // Same round naming rule as scripts/dwight_fight.py's CSV writer.
   const roundName=(i,total)=>['Final','Semifinal','Quarterfinal'][total-i-1]??(i===0?'First Round':'Round '+(i+1));
@@ -23,28 +23,17 @@
     let html='';
     if(data.warnings?.length)html+='<aside class="dw-warn"><strong>Resolution warning — bracket not locked.</strong><p>'+data.warnings.map(esc).join('<br>')+'</p></aside>';
     if(data.champion){
-      const c=data.champion, trophy=$('dw-trophy')?.dataset.src||'';
-      html+='<section class="dw-champion"><div class="dw-trophy"><img src="'+esc(path(trophy))+'" alt="Dwight Fight trophy"><div class="dw-plaque"><strong>'+esc(c.team)+'</strong><span>'+esc(data.season)+' DWIGHT FIGHT CHAMPION</span></div></div><h2>'+esc(c.team)+' wins Dwight Fight</h2></section>';
+      // Shared trophy component (task 5.1): config/trophies.json holds the Dwight Fight's own plaque geometry.
+      const c=data.champion;
+      // The ledger row once the weekly job has recorded it; until then the frozen final from this file.
+      const row=(trophyRows||[]).find(r=>r.EventType==='DwightFight'&&String(r.Season)===String(data.season))
+        ||{EventType:'DwightFight',Event:'Dwight Fight',Team:c.team,Season:data.season};
+      const trophy=window.NCAATrophy?.config?NCAATrophy.html(row,null,null,null,{width:300,lazy:false,cls:'dw-trophy'}):'';
+      html+='<section class="dw-champion">'+trophy+'<h2>'+esc(c.team)+' wins Dwight Fight</h2></section>';
     }
     html+='<section class="dw-bracket" aria-label="Dwight Fight bracket" style="--dw-rounds:'+rounds.length+'">'+rounds.map((r,i)=>'<div class="dw-round"><h2>'+roundName(i,rounds.length)+' · '+esc(ScoreboardCore.weekLabel(cfg,data.start_week+i,true))+'</h2>'+r.map(game).join('')+'</div>').join('')+'</section>';
     html += '<p class="dw-note">† Sleeper differs from the score used when advancement was frozen.</p>';
     $('dw-main').innerHTML=html;
-    // Responsive plaque engraving: shrink long school names within the art's bounds.
-    const plaque=document.querySelector('.dw-plaque');
-    if(plaque){
-      const fit=()=>{
-        const items=[...plaque.children];
-        for(const el of items){
-          let size=10;
-          el.style.fontSize=size+'px';
-          while(size>4&&el.scrollWidth>plaque.clientWidth-2){
-            el.style.fontSize=(--size)+'px';
-          }
-        }
-      };
-      requestAnimationFrame(fit);
-      window.addEventListener('resize',fit,{passive:true});
-    }
   }
   function csv(text){
     // Quoted CSV fields, embedded commas and CRLF supported.
@@ -97,9 +86,9 @@
   }
   try{
     const cfg=await get('../config/league.json');
+    try{await window.NCAATrophy?.load('../');trophyRows=await window.NCAATrophy?.ledger('../')}catch(e){console.warn('trophy config unavailable',e)}
     const idx=await get(cfg.data.scoreboard+'/index.json');
-    const year=Number(idx.season),art=cfg.postseason.dwight_fight?.logos||{};
-    $('dw-trophy').dataset.src=art.trophy||'';
+    const year=Number(idx.season);
     let live;
     try{
       live=await get(cfg.data.scoreboard+'/'+year+'/dwight.json');

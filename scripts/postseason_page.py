@@ -31,6 +31,7 @@ import bowl_projection as bp  # noqa: E402
 import bowls as B  # noqa: E402
 import league_config as lcfg  # noqa: E402
 import team_names as tn  # noqa: E402
+import trophies as TR  # noqa: E402
 from poll_page import colors, logo  # noqa: E402
 from site_common import logo_html, menu_html, page_head  # noqa: E402
 
@@ -146,7 +147,12 @@ CSS = bp.CSS + """
 .sd2{font:700 11px var(--num);color:var(--mute);margin-right:4px}
 .pending{font-size:11px;color:var(--mute)}
 @media(max-width:560px){.two,.grid2,.champs{grid-template-columns:1fr}}
-""" + BK.CSS
+.gm.tr{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;align-items:center}
+.gm.tr>.hd{grid-column:1/-1}.gm.tr>.rows{min-width:0}
+.gm.tr>.trophy{width:min(var(--tw),26vw)}
+@media(max-width:400px){.gm.tr{grid-template-columns:minmax(0,1fr)}.gm.tr>.trophy{width:min(var(--tw),50vw);justify-self:center}}
+.bk-champ .trophy{width:min(var(--tw),100%)}
+""" + TR.CSS + BK.CSS
 
 
 def chip(t, col, short, seed=""):
@@ -157,7 +163,8 @@ def chip(t, col, short, seed=""):
             f'<small>{e(lg)}</small></div></div>')
 
 
-def game_html(g, col, short, label=None, logo_name=""):
+def game_html(g, col, short, label=None, logo_name="", trophy=""):
+    """trophy: the winner's engraved trophy (shown only once the game is final)."""
     rows = []
     teams = g["teams"]
     if g["event"] == "NIT" and len(teams) > 2:
@@ -177,7 +184,27 @@ def game_html(g, col, short, label=None, logo_name=""):
         b = next((x for x in B.bowl_list(ps.config()[1]["bowls"]) if x["name"] == g["bowl"]), None)
         loc = bp.where(b) if b else ""
     hd = f'<p class="hd">{lg}{e(head)}{f"<span>{e(loc)}</span>" if loc else ""}</p>' if (head or lg) else ""
+    if trophy and g["final"]:
+        return f'<div class="gm tr">{hd}<div class="rows">{"".join(rows)}</div>{trophy}</div>'
     return f'<div class="gm">{hd}{"".join(rows)}{"" if g["final"] else "<p class=pending>Upcoming</p>"}</div>'
+
+
+def trophy_index(year):
+    """{(EventType, Event, Round): [ledger rows]} for a season, from both trophy files."""
+    L = TR.ledger()
+    out = {}
+    for r in L[L["Season"].astype(str) == str(year)].to_dict("records"):
+        out.setdefault((r["EventType"], r["Event"], r["Round"]), []).append(r)
+    return out
+
+
+def trophy_for(T, key, g, width=None, lazy=True):
+    """The engraved trophy for a finished game's winner ('' when the ledger has none or it isn't final)."""
+    if not g.get("final"):
+        return ""
+    w = next((t["Team"] for t in g["teams"] if t["Win"]), None)
+    rows = [r for r in T.get(key, []) if r["Team"] == w] or T.get(key, [])[:1]
+    return "".join(TR.trophy_html(r, width=width, lazy=lazy) for r in rows)
 
 
 ROUND_BY_GAMES = {16: "First Round", 8: "Sweet 16", 4: "Elite 8", 2: "Final Four", 1: "National Championship"}
@@ -190,7 +217,7 @@ def bowl_src(name):
     return html.unescape(m.group(1)) if m else ""
 
 
-def bracket_html(po, col, year, short, current=None):
+def bracket_html(po, col, year, short, current=None, T=None):
     """The Playoff bracket (Chris, 2026-11-20, task 5.13; scripts/bracket.py draws it): desktop board,
     phone round-by-round view and Save image exports. '' when the playoff isn't a clean knockout."""
     cfg = ps.config()[1]
@@ -232,6 +259,11 @@ def bracket_html(po, col, year, short, current=None):
                  quad_round=e8 if quad_bowls else None, e8_round=e8, quad_label=dcfg.get("quad_label", "{bowl} Quad"),
                  bowl_src=bowl_src, site=bp.where({"location": site}) if site else "",
                  champion_trophy="../" + urllib.parse.quote(TROPHY), foot=bp.LINK.replace("https://", ""))
+    nt = (T or {}).get(("NationalTitle", "National Championship", ""))
+    if B["champion"] and nt:  # engraved (task 5.1): page card + the larger Save-image card
+        d = TR.cfg()["display"]
+        B["champion"]["trophy_html"] = TR.trophy_html(nt[0], width=d["champion"], lazy=False)
+        B["champion"]["trophy_html_big"] = TR.trophy_html(nt[0], width=d["export"], lazy=False)
     dim = (float(dcfg.get("loser_opacity", 0.35)), float(dcfg.get("loser_grayscale", 0.6)))
     return BK.html_(B, dim)
 
@@ -242,6 +274,7 @@ def section(title, sub, body, sid):
 
 def build_season(year, years):
     G = games_for(year)
+    T = trophy_index(year)
     col = colors()
     short = {v: k for k, v in ps.league_short().items()}
     secs = []
@@ -268,7 +301,7 @@ def build_season(year, years):
             for t, lg, w in champ) + "</div>")
 
     # bracket: the traditional view (Chris, 2026-11-08), then the round-by-round cards
-    brk = bracket_html(po, col, year, short) if po else ""
+    brk = bracket_html(po, col, year, short, T=T) if po else ""
     if brk:
         secs.append(section("Bracket", "", brk, "bracket"))
 
@@ -286,8 +319,13 @@ def build_season(year, years):
             gs.sort(key=lambda g: (hosts.index(g["bowl"]) if g["bowl"] in hosts else 99,
                                    min(int(num(t["Seed"]) or 99) for t in g["teams"])))  # bracket order
             natty = name == "National Championship"
-            inner = "".join(game_html(g, col, short, "" if natty else g["bowl"], logo_name="National Championship" if natty else "")
-                            for g in gs)
+
+            def tro(g):  # round trophies on the host bowl; the title trophy lives on the bracket card
+                if natty:
+                    return "" if brk else trophy_for(T, ("NationalTitle", "National Championship", ""), g)
+                return trophy_for(T, ("PlayoffRound", g["bowl"], name), g) if g["bowl"] else ""
+            inner = "".join(game_html(g, col, short, "" if natty else g["bowl"], logo_name="National Championship" if natty else "",
+                                      trophy=tro(g)) for g in gs)
             body += f'<h3>{e(name)}</h3><div class="{"two" if len(gs) > 1 else ""}">{inner}</div>'
         secs.append(section("Playoff", f"{len([g for g in po])} games", body, "playoff"))
 
@@ -299,7 +337,8 @@ def build_season(year, years):
         body = ""
         for w in weeks:
             gs = sorted([g for g in bw if g["week"] == w], key=lambda g: g["bowl"])
-            body += f'<h3>{e(tier[w])}</h3><div class="two">{"".join(game_html(g, col, short) for g in gs)}</div>'
+            body += (f'<h3>{e(tier[w])}</h3><div class="two">'
+                     f'{"".join(game_html(g, col, short, trophy=trophy_for(T, ("Bowl", g["bowl"], ""), g)) for g in gs)}</div>')
         secs.append(section("Bowls", f"{len(bw)} games", body, "bowls"))
 
     # NIT: latest round first
@@ -308,7 +347,9 @@ def build_season(year, years):
         body = ""
         for wk, name in rounds:
             gs = sorted([g for g in nit if (g["week"], g["name"]) == (wk, name)], key=lambda g: g["group"] or "")
-            inner = "".join(game_html(g, col, short, ("Group " + g["group"]) if g["group"] else "") for g in gs)
+            last_nit = (wk, name) == rounds[0] and len(gs) == 1 and len(gs[0]["teams"]) == 2
+            inner = "".join(game_html(g, col, short, ("Group " + g["group"]) if g["group"] else "",
+                                      trophy=trophy_for(T, ("NIT", "NIT", ""), g) if last_nit else "") for g in gs)
             body += f'<h3>{e(name)}</h3><div class="two">{inner}</div>'
         secs.append(section("NIT", "", body, "nit"))
 
@@ -317,7 +358,8 @@ def build_season(year, years):
     if cc:
         def lgname(g):
             return short.get(g["teams"][0]["LeagueName"], g["teams"][0]["LeagueName"])
-        body = '<div class="two">' + "".join(game_html(g, col, short, lgname(g)) for g in sorted(cc, key=lgname)) + "</div>"
+        body = '<div class="two">' + "".join(game_html(g, col, short, lgname(g), trophy=trophy_for(T, ("CCG", f"{lgname(g)} Championship", ""), g))
+                                             for g in sorted(cc, key=lgname)) + "</div>"
         secs.append(section("Conference Championships", "", body, "ccg"))
 
     if not secs:

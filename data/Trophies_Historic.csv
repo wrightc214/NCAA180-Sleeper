@@ -1,0 +1,360 @@
+Season,EventType,Event,Round,Team,Conference,LeagueID,RosterID,ManagerUserID,ManagerName,ArtKey,Status,Source
+2019,CCG,ACC Championship,,Clemson,ACC,455862950553448448,12,447244659752693760,MoeMoghrabi,assets/trophies/conferences/ACC.png,Final,Postseason_Historic.csv
+2019,CCG,American Championship,,Ohio,American,460505297153159168,5,462804070080442368,dabeastman,assets/trophies/conferences/American.png,Final,Postseason_Historic.csv
+2019,CCG,Big 12 Championship,,Texas Tech,Big 12,471499316175826944,1,446530486903238656,BigSexy3422,assets/trophies/conferences/Big 12.png,Final,Postseason_Historic.csv
+2019,CCG,Big East Championship,,Army,Big East,455834597620445184,8,456167283761344512,Claser,assets/trophies/conferences/Big East.png,Final,Postseason_Historic.csv
+2019,CCG,Big Ten Championship,,Northwestern,Big Ten,460505110800232448,3,456550391375458304,NorthWestern,assets/trophies/conferences/Big Ten.png,Final,Postseason_Historic.csv
+2019,CCG,Ivy Championship,,Bucknell,Ivy,462453135504306176,3,489629400208240640,jordanfiedel,assets/trophies/conferences/Ivy.png,Final,Postseason_Historic.csv
+2019,CCG,Mountain West Championship,,New Mexico,Mountain West,462407211507773440,9,463212708402032640,Matthew12,assets/trophies/conferences/Mountain West.png,Final,Postseason_Historic.csv
+2019,CCG,Pac-12 Championship,,Washington,Pac-12,460504411332931584,6,445343296378630144,Je4ez,assets/trophies/conferences/Pac-12.png,Final,Postseason_Historic.csv
+2019,CCG,SEC Championship,,Kentucky,SEC,460505032731652096,10,446782746484797440,Jasonkuz,assets/trophies/conferences/SEC.png,Final,Postseason_Historic.csv
+2019,CCG,Sun Belt Championship,,Memphis,Sun Belt,462407340038025216,8,441362521463451648,yoboihawks,assets/trophies/conferences/Sun Belt.png,Final,Postseason_Historic.csv
+2019,CCG,Wild Championship,,Citadel,Wild,462453279037583360,8,462714981117325312,Buckeyefan5184,assets/trophies/conferences/Wild.png,Final,Postseason_Historic.csv
+2019,Bowl,Alamo Bowl,,South Dakota State,Big East,455834597620445184,3,333005257409847296,ikemendel,assets/trophies/bowls/Alamo Bowl.png,Final,Postseason_Historic.csv
+2019,Bowl,Armed Forces Bowl,,UNLV,Mountain West,462407211507773440,11,489121730279763968,Fdbell5,assets/trophies/bowls/Armed Forces Bowl.png,Final,Postseason_Historic.csv
+2019,Bowl,Bahamas Bowl,,UNC Charlotte,Wild,462453279037583360,12,448446449538035712,DBGiants,assets/trophies/bowls/Bahamas Bowl.png,Final,Postseason_Historic.csv
+2019,Bowl,Belk Bowl,,San Diego State,Mountain West,462407211507773440,12,322205296309051392,TBLowery58,assets/trophies/bowls/Belk Bowl.png,Final,Postseason_Historic.csv
+2019,Bowl,Birmingham Bowl,,Oklahoma,Big 12,471499316175826944,9,453711063846744064,rchau56,assets/trophies/bowls/Vulcan Bowl.png,Final,Postseason_Historic.csv
+2019,Bowl,Boca Raton Bowl,,Cincinnati,American,460505297153159168,8,483060475177725952,DunkmasterCj,assets/trophies/bowls/Palm Bowl.png,Final,Postseason_Historic.csv
+2019,Bowl,Brooklyn Bowl,,Miami,ACC,455862950553448448,9,412321968218451968,B1GNate35,assets/trophies/bowls/Gotham Bowl.png,Final,Postseason_Historic.csv
+2019,Bowl,Capital One Bowl,,Michigan State,Big Ten,460505110800232448,4,,,assets/trophies/bowls/Citrus Bowl.png,Final,Postseason_Historic.csv
+2019,Bowl,Chick-fil-A Bowl,,California,Pac-12,460504411332931584,10,461082030721986560,Cleaner7,assets/trophies/bowls/Peach Bowl.png,Final,Postseason_Historic.csv
+2019,Bowl,Citrus Bowl,,Rice,Sun Belt,462407340038025216,4,447283305738399744,thefalconsfix,assets/trophies/bowls/Citrus Bowl.png,Final,Postseason_Historic.csv
+2019,Bowl,EA Sports Bowl,,North Carolina,ACC,455862950553448448,2,329474836155879424,BlockBoyz,assets/trophies/bowls/EA Sports Bowl.png,Final,Postseason_Historic.csv
+2019,Bowl,Gator Bowl,,UTEP,Sun Belt,462407340038025216,2,464247141036978176,L2noClout,assets/trophies/bowls/Gator Bowl.png,Final,Postseason_Historic.csv
+2019,Bowl,Holiday Bowl,,Wichita State,Wild,462453279037583360,5,465260042191368192,DelbertLongino,assets/trophies/bowls/Holiday Bowl.png,Final,Postseason_Historic.csv
+2019,Bowl,Ice Bowl,,Louisiana Tech,Sun Belt,462407340038025216,11,461681329860243456,ryanfried2,assets/trophies/bowls/Ice Bowl.png,Final,Postseason_Historic.csv
+2019,Bowl,Idaho Potato Bowl,,Eastern Michigan,Wild,462453279037583360,6,464886421866409984,prubinstein6,assets/trophies/bowls/Idaho Potato Bowl.png,Final,Postseason_Historic.csv
+2019,Bowl,Independence Bowl,,Ole Miss,SEC,460505032731652096,5,442366201536966656,jakelac2,assets/trophies/bowls/Independence Bowl.png,Final,Postseason_Historic.csv
+2019,Bowl,Las Vegas Bowl,,Brown,Ivy,462453135504306176,1,468150356518367232,TonyP1765,assets/trophies/bowls/Las Vegas Bowl.png,Final,Postseason_Historic.csv
+2019,Bowl,Liberty Bowl,,Texas A&M,Big 12,471499316175826944,4,425362114291437568,deadheadshane,assets/trophies/bowls/Liberty Bowl.png,Final,Postseason_Historic.csv
+2019,Bowl,Music City Bowl,,Miami (OH),American,460505297153159168,4,338808944136822784,M4CHINE,assets/trophies/bowls/Music City Bowl.png,Final,Postseason_Historic.csv
+2019,Bowl,New Mexico Bowl,,Idaho,Mountain West,462407211507773440,7,463004241129107456,Idaho77,assets/trophies/bowls/Zia Bowl.png,Final,Postseason_Historic.csv
+2019,Bowl,New Orleans Bowl,,Stanford,Pac-12,460504411332931584,5,449591245241577472,ChuucH1,assets/trophies/bowls/New Orleans Bowl.png,Final,Postseason_Historic.csv
+2019,Bowl,Outback Bowl,,Baylor,Big 12,471499316175826944,5,464117743042424832,robertlouis7,assets/trophies/bowls/Outback Bowl.png,Final,Postseason_Historic.csv
+2019,Bowl,PlayStation Bowl,,NC State,ACC,455862950553448448,10,343081722184728576,TheFFUK,assets/trophies/bowls/PlayStation Bowl.png,Final,Postseason_Historic.csv
+2019,Bowl,Sun Bowl,,Duke,ACC,455862950553448448,7,453658285061435392,fatalbeast,assets/trophies/bowls/Sun Bowl.png,Final,Postseason_Historic.csv
+2019,Bowl,TaxSlayer Bowl,,Wisconsin,Big Ten,460505110800232448,6,460511267564548096,laxbro000,assets/trophies/bowls/Gator Bowl.png,Final,Postseason_Historic.csv
+2019,Bowl,Texas Bowl,,Purdue,Big Ten,460505110800232448,1,340600026956906496,LastChapter,assets/trophies/bowls/Bluebonnet Bowl.png,Final,Postseason_Historic.csv
+2019,Bowl,Xbox Bowl,,USC,Pac-12,460504411332931584,2,460730537724604416,tonytheLGND23,assets/trophies/bowls/Xbox Bowl.png,Final,Postseason_Historic.csv
+2019,PlayoffRound,Cotton Bowl,Elite 8,Army,Big East,455834597620445184,8,456167283761344512,Claser,assets/trophies/bowls/Cotton Bowl.png,Final,Postseason_Historic.csv
+2019,PlayoffRound,Fiesta Bowl,Final Four,Maryland,Big East,455834597620445184,2,389656085486649344,UrTrash,assets/trophies/bowls/Fiesta Bowl.png,Final,Postseason_Historic.csv
+2019,PlayoffRound,Orange Bowl,Elite 8,Kentucky,SEC,460505032731652096,10,446782746484797440,Jasonkuz,assets/trophies/bowls/Orange Bowl.png,Final,Postseason_Historic.csv
+2019,PlayoffRound,Peach Bowl,Elite 8,Virginia Tech,ACC,455862950553448448,4,455836851501002752,landonh12,assets/trophies/bowls/Peach Bowl.png,Final,Postseason_Historic.csv
+2019,PlayoffRound,Rose Bowl,Final Four,Army,Big East,455834597620445184,8,456167283761344512,Claser,assets/trophies/bowls/Rose Bowl.png,Final,Postseason_Historic.csv
+2019,PlayoffRound,Sugar Bowl,Elite 8,Maryland,Big East,455834597620445184,2,389656085486649344,UrTrash,assets/trophies/bowls/Sugar Bowl.png,Final,Postseason_Historic.csv
+2019,NationalTitle,National Championship,,Army,Big East,455834597620445184,8,456167283761344512,Claser,assets/trophies/special/National Championship.png,Final,Postseason_Historic.csv
+2019,NIT,NIT,,Vanderbilt,SEC,460505032731652096,9,503639845369802752,gregorybly,assets/trophies/special/Stagg Bowl.png,Final,Postseason_Historic.csv
+2019,DwightFight,Dwight Fight,,Penn,Ivy,462453135504306176,7,463944449920069632,Spence24,assets/logos/Dwight Fight/Dwight Fight Trophy Blank.png,Recorded,Dwight Fight page past champions (no bracket recorded)
+2020,CCG,ACC Championship,,Clemson,ACC,520082008453632000,12,302575527556825088,dilbennett,assets/trophies/conferences/ACC.png,Final,Postseason_Historic.csv
+2020,CCG,Big 12 Championship,,West Virginia,Big 12,520086664899657728,8,543929284962770944,alicho,assets/trophies/conferences/Big 12.png,Final,Postseason_Historic.csv
+2020,CCG,Big East Championship,,UCF,Big East,519112273652240384,9,482459707504586752,Jason31,assets/trophies/conferences/Big East.png,Final,Postseason_Historic.csv
+2020,CCG,Big Sky Championship,,Villanova,Big Sky,519431936523956224,2,439255136309604352,PapaCrowther,assets/trophies/conferences/Big Sky.png,Final,Postseason_Historic.csv
+2020,CCG,Big Ten Championship,,Michigan,Big Ten,519114104323002368,12,443870183853912064,christianpaton,assets/trophies/conferences/Big Ten.png,Final,Postseason_Historic.csv
+2020,CCG,CUSA Championship,,South Alabama,CUSA,519398167841558528,11,561620293351694336,therealfitzmagic,assets/trophies/conferences/CUSA.png,Final,Postseason_Historic.csv
+2020,CCG,HBCU Championship,,Mississippi Valley State,HBCU,519412020617998336,7,519728067978186752,StrikerS091,assets/trophies/conferences/HBCU.png,Final,Postseason_Historic.csv
+2020,CCG,Ivy Championship,,Penn,Ivy,519109907858935808,7,463944449920069632,Spence24,assets/trophies/conferences/Ivy.png,Final,Postseason_Historic.csv
+2020,CCG,Mountain West Championship,,Utah State,Mountain West,519113931987255296,5,609605414685859840,KingWapo,assets/trophies/conferences/Mountain West.png,Final,Postseason_Historic.csv
+2020,CCG,Pac-12 Championship,,Utah,Pac-12,519108145819570176,11,76460245878456320,seniormeow,assets/trophies/conferences/Pac-12.png,Final,Postseason_Historic.csv
+2020,CCG,Pioneer Championship,,SE Missouri State,Pioneer,519446956439826432,6,519664508596187136,NewGOAT15,assets/trophies/conferences/Pioneer.png,Final,Postseason_Historic.csv
+2020,CCG,SEC Championship,,Ole Miss,SEC,520081942477230080,5,601248305229406208,ryankenn,assets/trophies/conferences/SEC.png,Final,Postseason_Historic.csv
+2020,CCG,Southland Championship,,Dixie State,Southland,552229388243996672,8,,,assets/trophies/conferences/Southland.png,Final,Postseason_Historic.csv
+2020,CCG,Sun Belt Championship,,Rice,Sun Belt,519113796658036736,4,447283305738399744,Lucchityler,assets/trophies/conferences/Sun Belt.png,Final,Postseason_Historic.csv
+2020,CCG,Wild Championship,,Citadel,Wild,519112491566792704,8,462714981117325312,Buckeyefan5184,assets/trophies/conferences/Wild.png,Final,Postseason_Historic.csv
+2020,Bowl,Alamo Bowl,,Arizona,Pac-12,519108145819570176,1,,,assets/trophies/bowls/Alamo Bowl.png,Final,Postseason_Historic.csv
+2020,Bowl,Armed Forces Bowl,,Army,Big East,519112273652240384,8,456167283761344512,Claser,assets/trophies/bowls/Armed Forces Bowl.png,Final,Postseason_Historic.csv
+2020,Bowl,Bahamas Bowl,,Lamar,Southland,552229388243996672,6,77300101038882816,majerused,assets/trophies/bowls/Bahamas Bowl.png,Final,Postseason_Historic.csv
+2020,Bowl,Belk Bowl,,Furman,Pioneer,519446956439826432,10,,,assets/trophies/bowls/Belk Bowl.png,Final,Postseason_Historic.csv
+2020,Bowl,Birmingham Bowl,,Nicholls State,Southland,552229388243996672,11,376262422366896128,flsIII,assets/trophies/bowls/Vulcan Bowl.png,Final,Postseason_Historic.csv
+2020,Bowl,Boca Raton Bowl,,Arkansas State,CUSA,519398167841558528,8,420055169137377280,lepiscoposhow,assets/trophies/bowls/Palm Bowl.png,Final,Postseason_Historic.csv
+2020,Bowl,Brooklyn Bowl,,Stony Brook,Big Sky,519431936523956224,5,461273516759576576,Julian1993,assets/trophies/bowls/Gotham Bowl.png,Final,Postseason_Historic.csv
+2020,Bowl,Capital One Bowl,,Northwestern,Big Ten,519114104323002368,3,456550391375458304,Clamonte,assets/trophies/bowls/Citrus Bowl.png,Final,Postseason_Historic.csv
+2020,Bowl,Chick-fil-A Bowl,,Wyoming,Mountain West,519113931987255296,3,463057520089362432,ryanl17,assets/trophies/bowls/Peach Bowl.png,Final,Postseason_Historic.csv
+2020,Bowl,Citrus Bowl,,Nevada,Mountain West,519113931987255296,10,461772326111801344,Chang,assets/trophies/bowls/Citrus Bowl.png,Final,Postseason_Historic.csv
+2020,Bowl,EA Sports Bowl,,Pittsburgh,Big East,519112273652240384,4,456129190995947520,vma2016,assets/trophies/bowls/EA Sports Bowl.png,Final,Postseason_Historic.csv
+2020,Bowl,FedEx Bowl,,Colorado State,Mountain West,519113931987255296,8,325726913966395392,bkoldham,assets/trophies/bowls/FedEx Bowl.png,Final,Postseason_Historic.csv
+2020,Bowl,Gator Bowl,,Presbyterian,Southland,552229388243996672,2,76457435317288960,Fantasy412,assets/trophies/bowls/Gator Bowl.png,Final,Postseason_Historic.csv
+2020,Bowl,Geico Bowl,,Rutgers,Big East,519112273652240384,1,,,assets/trophies/bowls/Geico Bowl.png,Final,Postseason_Historic.csv
+2020,Bowl,Holiday Bowl,,North Dakota State,Wild,519112491566792704,3,441392312380026880,4thdownTD,assets/trophies/bowls/Holiday Bowl.png,Final,Postseason_Historic.csv
+2020,Bowl,Ice Bowl,,Central Arkansas,Wild,519112491566792704,9,603083535368134656,MrBarryMcCockiner,assets/trophies/bowls/Ice Bowl.png,Final,Postseason_Historic.csv
+2020,Bowl,Idaho Potato Bowl,,Northern Iowa,Big Sky,519431936523956224,10,450023004458446848,DaLegend,assets/trophies/bowls/Idaho Potato Bowl.png,Final,Postseason_Historic.csv
+2020,Bowl,Independence Bowl,,UNC Charlotte,Wild,519112491566792704,12,,,assets/trophies/bowls/Independence Bowl.png,Final,Postseason_Historic.csv
+2020,Bowl,Las Vegas Bowl,,Fresno State,Mountain West,519113931987255296,4,571767410708901888,Kyvend01,assets/trophies/bowls/Las Vegas Bowl.png,Final,Postseason_Historic.csv
+2020,Bowl,Liberty Bowl,,Georgia Tech,ACC,520082008453632000,3,,,assets/trophies/bowls/Liberty Bowl.png,Final,Postseason_Historic.csv
+2020,Bowl,Military Bowl,,Delaware State,HBCU,519412020617998336,3,475102016549416960,JackSibley28,assets/trophies/bowls/Military Bowl.png,Final,Postseason_Historic.csv
+2020,Bowl,Music City Bowl,,Yale,Ivy,519109907858935808,9,,,assets/trophies/bowls/Music City Bowl.png,Final,Postseason_Historic.csv
+2020,Bowl,New Mexico Bowl,,Indiana,Big Ten,519114104323002368,8,519694666546008064,eseromo760,assets/trophies/bowls/Zia Bowl.png,Final,Postseason_Historic.csv
+2020,Bowl,New Orleans Bowl,,Bucknell,Ivy,519109907858935808,3,480124073456693248,Jrodr71,assets/trophies/bowls/New Orleans Bowl.png,Final,Postseason_Historic.csv
+2020,Bowl,Outback Bowl,,Kansas State,Big 12,520086664899657728,7,425386065373691904,Frankeen,assets/trophies/bowls/Outback Bowl.png,Final,Postseason_Historic.csv
+2020,Bowl,PlayStation Bowl,,Mississippi State,SEC,520081942477230080,6,545494104980213760,cheesebot,assets/trophies/bowls/PlayStation Bowl.png,Final,Postseason_Historic.csv
+2020,Bowl,Sun Bowl,,North Carolina,ACC,520082008453632000,2,329474836155879424,BlockBoyz,assets/trophies/bowls/Sun Bowl.png,Final,Postseason_Historic.csv
+2020,Bowl,TaxSlayer Bowl,,UTEP,Sun Belt,519113796658036736,2,458650904741015552,CRicks3,assets/trophies/bowls/Gator Bowl.png,Final,Postseason_Historic.csv
+2020,Bowl,Texas Bowl,,Wichita State,Wild,519112491566792704,5,597544499589201920,KerriganNation,assets/trophies/bowls/Bluebonnet Bowl.png,Final,Postseason_Historic.csv
+2020,Bowl,Xbox Bowl,,Texas State,CUSA,519398167841558528,9,561616808766005248,ATypicalDerp,assets/trophies/bowls/Xbox Bowl.png,Final,Postseason_Historic.csv
+2020,PlayoffRound,Cotton Bowl,Elite 8,Virginia Tech,ACC,520082008453632000,4,455836851501002752,landonh12,assets/trophies/bowls/Cotton Bowl.png,Final,Postseason_Historic.csv
+2020,PlayoffRound,Fiesta Bowl,Final Four,Campbell,Pioneer,519446956439826432,8,339931221767249920,CrownMeKing,assets/trophies/bowls/Fiesta Bowl.png,Final,Postseason_Historic.csv
+2020,PlayoffRound,Orange Bowl,Elite 8,Harvard,Ivy,519109907858935808,2,463212708402032640,Matthew12,assets/trophies/bowls/Orange Bowl.png,Final,Postseason_Historic.csv
+2020,PlayoffRound,Peach Bowl,Elite 8,Lehigh,Ivy,519109907858935808,6,508415252621357056,ryanmchugh,assets/trophies/bowls/Peach Bowl.png,Final,Postseason_Historic.csv
+2020,PlayoffRound,Rose Bowl,Final Four,Virginia Tech,ACC,520082008453632000,4,455836851501002752,landonh12,assets/trophies/bowls/Rose Bowl.png,Final,Postseason_Historic.csv
+2020,PlayoffRound,Sugar Bowl,Elite 8,Campbell,Pioneer,519446956439826432,8,339931221767249920,CrownMeKing,assets/trophies/bowls/Sugar Bowl.png,Final,Postseason_Historic.csv
+2020,NationalTitle,National Championship,,Campbell,Pioneer,519446956439826432,8,339931221767249920,CrownMeKing,assets/trophies/special/National Championship.png,Final,Postseason_Historic.csv
+2020,NIT,NIT,,South Dakota,Wild,519112491566792704,11,434740393972592640,Squinto,assets/trophies/special/Stagg Bowl.png,Final,Postseason_Historic.csv
+2021,CCG,ACC Championship,,Virginia Tech,ACC,652823058658209792,4,455836851501002752,landonh12,assets/trophies/conferences/ACC.png,Final,Postseason_Historic.csv
+2021,CCG,Big 12 Championship,,Baylor,Big 12,652822871495749632,5,464117743042424832,robertlouis7,assets/trophies/conferences/Big 12.png,Final,Postseason_Historic.csv
+2021,CCG,Big East Championship,,South Dakota State,Big East,652822724795764736,3,333005257409847296,ikemendel,assets/trophies/conferences/Big East.png,Final,Postseason_Historic.csv
+2021,CCG,Big Sky Championship,,Youngstown State,Big Sky,652822938654937088,12,519767126595325952,mssullivan2022,assets/trophies/conferences/Big Sky.png,Final,Postseason_Historic.csv
+2021,CCG,Big Ten Championship,,Wisconsin,Big Ten,652821876346810368,6,460511267564548096,laxbro000,assets/trophies/conferences/Big Ten.png,Final,Postseason_Historic.csv
+2021,CCG,CUSA Championship,,Arkansas State,CUSA,652822788075229184,8,605439246030925824,krichknowsbest,assets/trophies/conferences/CUSA.png,Final,Postseason_Historic.csv
+2021,CCG,HBCU Championship,,Jackson State,HBCU,652822152327815168,10,694233255825719296,bb7661KING,assets/trophies/conferences/HBCU.png,Final,Postseason_Historic.csv
+2021,CCG,Ivy Championship,,Yale,Ivy,652822666251710464,9,,,assets/trophies/conferences/Ivy.png,Final,Postseason_Historic.csv
+2021,CCG,Mountain West Championship,,Colorado State,Mountain West,652822293206081536,8,325726913966395392,bkoldham,assets/trophies/conferences/Mountain West.png,Final,Postseason_Historic.csv
+2021,CCG,Ohio Valley Championship,,North Alabama,Ohio Valley,644097339790827520,11,638193564806897664,Romantryert,assets/trophies/conferences/Ohio Valley.png,Final,Postseason_Historic.csv
+2021,CCG,Pac-12 Championship,,Washington,Pac-12,652823294856224768,6,338823136923381760,samggannon,assets/trophies/conferences/Pac-12.png,Final,Postseason_Historic.csv
+2021,CCG,Pioneer Championship,,SE Missouri State,Pioneer,652822592985579520,6,455753261765357568,BDAVIS309,assets/trophies/conferences/Pioneer.png,Final,Postseason_Historic.csv
+2021,CCG,SEC Championship,,Vanderbilt,SEC,652822356867264512,9,503639845369802752,gregorybly,assets/trophies/conferences/SEC.png,Final,Postseason_Historic.csv
+2021,CCG,Sun Belt Championship,,UTEP,Sun Belt,652822437578215424,2,458650904741015552,CRicks3,assets/trophies/conferences/Sun Belt.png,Final,Postseason_Historic.csv
+2021,CCG,Wild Championship,,Montana,Wild,652822508415823872,1,457579310098673664,LanceBoneau,assets/trophies/conferences/Wild.png,Final,Postseason_Historic.csv
+2021,Bowl,Alamo Bowl,,Louisiana,CUSA,652822788075229184,11,732763988848410624,ajisgoated,assets/trophies/bowls/Alamo Bowl.png,Final,Postseason_Historic.csv
+2021,Bowl,Armed Forces Bowl,,Iowa State,Big 12,652822871495749632,2,667752373111824384,trev7293,assets/trophies/bowls/Armed Forces Bowl.png,Final,Postseason_Historic.csv
+2021,Bowl,Bahamas Bowl,,Jacksonville State,Ohio Valley,644097339790827520,9,347683464398749696,ducttapeit,assets/trophies/bowls/Bahamas Bowl.png,Final,Postseason_Historic.csv
+2021,Bowl,Belk Bowl,,Utah State,Mountain West,652822293206081536,5,609605414685859840,KingWapo,assets/trophies/bowls/Belk Bowl.png,Final,Postseason_Historic.csv
+2021,Bowl,Birmingham Bowl,,Rhode Island,Big Sky,652822938654937088,1,516266187571630080,PedroCal,assets/trophies/bowls/Vulcan Bowl.png,Final,Postseason_Historic.csv
+2021,Bowl,Boca Raton Bowl,,North Carolina Central,Ohio Valley,644097339790827520,12,327689364916146176,McNaga,assets/trophies/bowls/Palm Bowl.png,Final,Postseason_Historic.csv
+2021,Bowl,Brooklyn Bowl,,Dayton,Pioneer,652822592985579520,7,475391637342646272,rgroban,assets/trophies/bowls/Gotham Bowl.png,Final,Postseason_Historic.csv
+2021,Bowl,Capital One Bowl,,Ole Miss,SEC,652822356867264512,5,562032371824951296,ryank45,assets/trophies/bowls/Citrus Bowl.png,Final,Postseason_Historic.csv
+2021,Bowl,Chick-fil-A Bowl,,Richmond,Big Sky,652822938654937088,7,78892531970359296,fballfreek80,assets/trophies/bowls/Peach Bowl.png,Final,Postseason_Historic.csv
+2021,Bowl,Citrus Bowl,,Memphis,Sun Belt,652822437578215424,8,441362521463451648,yoboihawks,assets/trophies/bowls/Citrus Bowl.png,Final,Postseason_Historic.csv
+2021,Bowl,EA Sports Bowl,,Nebraska,Big Ten,652821876346810368,2,438178170542223360,EthanH,assets/trophies/bowls/EA Sports Bowl.png,Final,Postseason_Historic.csv
+2021,Bowl,FedEx Bowl,,Kentucky,SEC,652822356867264512,10,641695634772025344,TimothyMartinFF,assets/trophies/bowls/FedEx Bowl.png,Final,Postseason_Historic.csv
+2021,Bowl,Gator Bowl,,Citadel,Wild,652822508415823872,8,462714981117325312,Buckeyefan5184,assets/trophies/bowls/Gator Bowl.png,Final,Postseason_Historic.csv
+2021,Bowl,Geico Bowl,,Dartmouth,Ivy,652822666251710464,11,460895027179024384,jtheadrick98,assets/trophies/bowls/Geico Bowl.png,Final,Postseason_Historic.csv
+2021,Bowl,Holiday Bowl,,Arizona State,Pac-12,652823294856224768,7,597246797479469056,wrightc214,assets/trophies/bowls/Holiday Bowl.png,Final,Postseason_Historic.csv
+2021,Bowl,Ice Bowl,,Temple,Sun Belt,652822437578215424,1,429733810611949568,Piglet10,assets/trophies/bowls/Ice Bowl.png,Final,Postseason_Historic.csv
+2021,Bowl,Idaho Potato Bowl,,Furman,Pioneer,652822592985579520,10,,,assets/trophies/bowls/Idaho Potato Bowl.png,Final,Postseason_Historic.csv
+2021,Bowl,Independence Bowl,,Grambling State,HBCU,652822152327815168,12,,,assets/trophies/bowls/Independence Bowl.png,Final,Postseason_Historic.csv
+2021,Bowl,Las Vegas Bowl,,UCLA,Pac-12,652823294856224768,12,450806182555152384,lmerkouSaints,assets/trophies/bowls/Las Vegas Bowl.png,Final,Postseason_Historic.csv
+2021,Bowl,Liberty Bowl,,Bucknell,Ivy,652822666251710464,3,480124073456693248,Jrodr71,assets/trophies/bowls/Liberty Bowl.png,Final,Postseason_Historic.csv
+2021,Bowl,Military Bowl,,Texas A&M,Big 12,652822871495749632,4,425362114291437568,deadheadshane,assets/trophies/bowls/Military Bowl.png,Final,Postseason_Historic.csv
+2021,Bowl,Music City Bowl,,Southern,HBCU,652822152327815168,4,640086413861294080,csmith1222,assets/trophies/bowls/Music City Bowl.png,Final,Postseason_Historic.csv
+2021,Bowl,New Mexico Bowl,,Bethune - Cookman,HBCU,652822152327815168,9,631893934183882752,aaronlaw,assets/trophies/bowls/Zia Bowl.png,Final,Postseason_Historic.csv
+2021,Bowl,New Orleans Bowl,,NC State,ACC,652823058658209792,10,625717955707117568,superman14,assets/trophies/bowls/New Orleans Bowl.png,Final,Postseason_Historic.csv
+2021,Bowl,Outback Bowl,,Missouri,Big 12,652822871495749632,3,468501524721430528,agupta03,assets/trophies/bowls/Outback Bowl.png,Final,Postseason_Historic.csv
+2021,Bowl,Sun Bowl,,North Carolina,ACC,652823058658209792,2,568115266901286912,MattyBent,assets/trophies/bowls/Sun Bowl.png,Final,Postseason_Historic.csv
+2021,Bowl,TaxSlayer Bowl,,Syracuse,Big East,652822724795764736,7,456159345906806784,CodeKhaos,assets/trophies/bowls/Gator Bowl.png,Final,Postseason_Historic.csv
+2021,Bowl,Texas Bowl,,West Virginia,Big 12,652822871495749632,8,543929284962770944,alicho,assets/trophies/bowls/Bluebonnet Bowl.png,Final,Postseason_Historic.csv
+2021,NationalTitle,National Championship,,Youngstown State,Big Sky,652822938654937088,12,519767126595325952,mssullivan2022,assets/trophies/special/National Championship.png,Final,Postseason_Historic.csv
+2021,NIT,NIT,,Eastern Kentucky,Ohio Valley,644097339790827520,5,474662041341128704,Dreev,assets/trophies/special/Stagg Bowl.png,Final,Postseason_Historic.csv
+2021,DwightFight,Dwight Fight,,Villanova,Big Sky,652822938654937088,2,439255136309604352,PapaCrowther,assets/logos/Dwight Fight/Dwight Fight Trophy Blank.png,Final,Dwight_Historic.csv: Confirmed (Chris 2026-11-19)
+2022,CCG,ACC Championship,,Clemson,ACC,787122703772614656,12,302575527556825088,dilbennett,assets/trophies/conferences/ACC.png,Final,Postseason_Historic.csv
+2022,CCG,Big 12 Championship,,Texas,Big 12,787428826962571264,6,335910160469880832,elianbruger,assets/trophies/conferences/Big 12.png,Final,Postseason_Historic.csv
+2022,CCG,Big East Championship,,Army,Big East,787469620847190016,8,456167283761344512,Claser,assets/trophies/conferences/Big East.png,Final,Postseason_Historic.csv
+2022,CCG,Big Sky Championship,,Richmond,Big Sky,787428947523657728,7,78892531970359296,fballfreek80,assets/trophies/conferences/Big Sky.png,Final,Postseason_Historic.csv
+2022,CCG,Big Ten Championship,,Purdue,Big Ten,787122556279885824,1,340600026956906496,Mation05,assets/trophies/conferences/Big Ten.png,Final,Postseason_Historic.csv
+2022,CCG,CUSA Championship,,Western Kentucky,CUSA,787469368543035392,6,560611777479667712,PatrickT21,assets/trophies/conferences/CUSA.png,Final,Postseason_Historic.csv
+2022,CCG,HBCU Championship,,Alcorn State,HBCU,787469538403921920,8,467835045181124608,wblack2012,assets/trophies/conferences/HBCU.png,Final,Postseason_Historic.csv
+2022,CCG,Ivy Championship,,Brown,Ivy,787469399828365312,1,470912510262767616,FlynnD,assets/trophies/conferences/Ivy.png,Final,Postseason_Historic.csv
+2022,CCG,Mountain West Championship,,Hawaii,Mountain West,787469647648763904,1,596835723861082112,RicochetRay,assets/trophies/conferences/Mountain West.png,Final,Postseason_Historic.csv
+2022,CCG,Ohio Valley Championship,,ETSU,Ohio Valley,787469585417945088,2,601198801197260800,LMarkiewicz04,assets/trophies/conferences/Ohio Valley.png,Final,Postseason_Historic.csv
+2022,CCG,Pac-12 Championship,,California,Pac-12,787122632301649920,10,534619662650601472,ImagineWiigons,assets/trophies/conferences/Pac-12.png,Final,Postseason_Historic.csv
+2022,CCG,Pioneer Championship,,Wofford,Pioneer,787469482338717696,1,533363986486435840,MattJB87,assets/trophies/conferences/Pioneer.png,Final,Postseason_Historic.csv
+2022,CCG,SEC Championship,,Ole Miss,SEC,787428859766263808,5,562032371824951296,ryank45,assets/trophies/conferences/SEC.png,Final,Postseason_Historic.csv
+2022,CCG,Sun Belt Championship,,Memphis,Sun Belt,787428905404465152,8,441362521463451648,yoboihawks,assets/trophies/conferences/Sun Belt.png,Final,Postseason_Historic.csv
+2022,CCG,Wild Championship,,Citadel,Wild,787469508792152064,8,462714981117325312,Buckeyefan5184,assets/trophies/conferences/Wild.png,Final,Postseason_Historic.csv
+2022,Bowl,Alamo Bowl,,North Texas,CUSA,787469368543035392,2,464625836192952320,brooksy33,assets/trophies/bowls/Alamo Bowl.png,Final,Postseason_Historic.csv
+2022,Bowl,Armed Forces Bowl,,Louisiana,CUSA,787469368543035392,11,725895632845357056,T0rey,assets/trophies/bowls/Armed Forces Bowl.png,Final,Postseason_Historic.csv
+2022,Bowl,Bahamas Bowl,,Youngstown State,Big Sky,787428947523657728,12,519767126595325952,mssullivan2022,assets/trophies/bowls/Bahamas Bowl.png,Final,Postseason_Historic.csv
+2022,Bowl,Belk Bowl,,Delaware State,HBCU,787469538403921920,3,640052303377952768,lcummings,assets/trophies/bowls/Belk Bowl.png,Final,Postseason_Historic.csv
+2022,Bowl,Birmingham Bowl,,Coastal Carolina,Big East,787469620847190016,6,443323427143544832,joonbug,assets/trophies/bowls/Vulcan Bowl.png,Final,Postseason_Historic.csv
+2022,Bowl,Boca Raton Bowl,,New Mexico,Mountain West,787469647648763904,9,589001974318403584,Mrhawke19,assets/trophies/bowls/Palm Bowl.png,Final,Postseason_Historic.csv
+2022,Bowl,Brooklyn Bowl,,Jackson State,HBCU,787469538403921920,10,694233255825719296,bb7661KING,assets/trophies/bowls/Gotham Bowl.png,Final,Postseason_Historic.csv
+2022,Bowl,Capital One Bowl,,Minnesota,Big Ten,787122556279885824,7,460518714907815936,linkoftime1,assets/trophies/bowls/Citrus Bowl.png,Final,Postseason_Historic.csv
+2022,Bowl,Citrus Bowl,,Air Force,Mountain West,787469647648763904,4,571767410708901888,Kyvend01,assets/trophies/bowls/Citrus Bowl.png,Final,Postseason_Historic.csv
+2022,Bowl,Duke's Mayonnaise Bowl,,Louisiana Tech,Sun Belt,787428905404465152,11,461681329860243456,ryanfried2,assets/trophies/bowls/Duke's Mayonnaise Bowl.png,Final,Postseason_Historic.csv
+2022,Bowl,EA Sports Bowl,,Montana,Wild,787469508792152064,1,457579310098673664,LanceBoneau,assets/trophies/bowls/EA Sports Bowl.png,Final,Postseason_Historic.csv
+2022,Bowl,Gator Bowl,,Utah,Pac-12,787122632301649920,11,76460245878456320,seniormeow,assets/trophies/bowls/Gator Bowl.png,Final,Postseason_Historic.csv
+2022,Bowl,Holiday Bowl,,Texas Tech,Big 12,787428826962571264,1,446530486903238656,BigSexy3422,assets/trophies/bowls/Holiday Bowl.png,Final,Postseason_Historic.csv
+2022,Bowl,Ice Bowl,,Eastern Washington,Big Sky,787428947523657728,4,519439276311531520,Elestial,assets/trophies/bowls/Ice Bowl.png,Final,Postseason_Historic.csv
+2022,Bowl,Idaho Potato Bowl,,Oklahoma,Big 12,787428826962571264,9,453711063846744064,rchau56,assets/trophies/bowls/Idaho Potato Bowl.png,Final,Postseason_Historic.csv
+2022,Bowl,Independence Bowl,,Tennessee State,Pioneer,787469482338717696,5,432164755709370368,EBurkhart,assets/trophies/bowls/Independence Bowl.png,Final,Postseason_Historic.csv
+2022,Bowl,Las Vegas Bowl,,Old Dominion,Wild,787469508792152064,10,505166677990699008,olddominion2020,assets/trophies/bowls/Las Vegas Bowl.png,Final,Postseason_Historic.csv
+2022,Bowl,Liberty Bowl,,Wyoming,Mountain West,787469647648763904,3,560626155833876480,HonoredMexican,assets/trophies/bowls/Liberty Bowl.png,Final,Postseason_Historic.csv
+2022,Bowl,Military Bowl,,Colorado State,Mountain West,787469647648763904,8,325726913966395392,bkoldham,assets/trophies/bowls/Military Bowl.png,Final,Postseason_Historic.csv
+2022,Bowl,Music City Bowl,,Lehigh,Ivy,787469399828365312,6,508415252621357056,ryanmchugh,assets/trophies/bowls/Music City Bowl.png,Final,Postseason_Historic.csv
+2022,Bowl,New Mexico Bowl,,Montana State,Big Sky,787428947523657728,6,424793511431262208,Elwayluva7,assets/trophies/bowls/Zia Bowl.png,Final,Postseason_Historic.csv
+2022,Bowl,New Orleans Bowl,,Tuskegee,HBCU,787469538403921920,11,327614483000217600,Jerryb83,assets/trophies/bowls/New Orleans Bowl.png,Final,Postseason_Historic.csv
+2022,Bowl,Outback Bowl,,West Virginia,Big 12,787428826962571264,8,543929284962770944,alicho,assets/trophies/bowls/Outback Bowl.png,Final,Postseason_Historic.csv
+2022,Bowl,Sun Bowl,,Navy,Big East,787469620847190016,11,456182244336201728,Ianiners,assets/trophies/bowls/Sun Bowl.png,Final,Postseason_Historic.csv
+2022,Bowl,TaxSlayer Bowl,,Troy,CUSA,787469368543035392,1,389658700735868928,dh671,assets/trophies/bowls/Gator Bowl.png,Final,Postseason_Historic.csv
+2022,Bowl,Texas Bowl,,TCU,Big 12,787428826962571264,11,619190004979138560,CousinMose15,assets/trophies/bowls/Bluebonnet Bowl.png,Final,Postseason_Historic.csv
+2022,PlayoffRound,Cotton Bowl,Elite 8,Memphis,Sun Belt,787428905404465152,8,441362521463451648,yoboihawks,assets/trophies/bowls/Cotton Bowl.png,Final,Postseason_Historic.csv
+2022,PlayoffRound,Fiesta Bowl,Final Four,Charleston Southern,Ohio Valley,787469585417945088,6,331558449374593024,leathershoe4,assets/trophies/bowls/Fiesta Bowl.png,Final,Postseason_Historic.csv
+2022,PlayoffRound,Orange Bowl,Elite 8,Iowa State,Big 12,787428826962571264,2,667752373111824384,trev7293,assets/trophies/bowls/Orange Bowl.png,Final,Postseason_Historic.csv
+2022,PlayoffRound,Peach Bowl,Elite 8,Charleston Southern,Ohio Valley,787469585417945088,6,331558449374593024,leathershoe4,assets/trophies/bowls/Peach Bowl.png,Final,Postseason_Historic.csv
+2022,PlayoffRound,Rose Bowl,Final Four,Clemson,ACC,787122703772614656,12,302575527556825088,dilbennett,assets/trophies/bowls/Rose Bowl.png,Final,Postseason_Historic.csv
+2022,PlayoffRound,Sugar Bowl,Elite 8,Clemson,ACC,787122703772614656,12,302575527556825088,dilbennett,assets/trophies/bowls/Sugar Bowl.png,Final,Postseason_Historic.csv
+2022,NationalTitle,National Championship,,Charleston Southern,Ohio Valley,787469585417945088,6,331558449374593024,leathershoe4,assets/trophies/special/National Championship.png,Final,Postseason_Historic.csv
+2022,NIT,NIT,,Washington State,Pac-12,787122632301649920,4,477666723663704064,chzhead412,assets/trophies/special/Stagg Bowl.png,Final,Postseason_Historic.csv
+2022,DwightFight,Dwight Fight,,Arizona State,Pac-12,787122632301649920,7,597246797479469056,wrightc214,assets/logos/Dwight Fight/Dwight Fight Trophy Blank.png,Final,Dwight_Historic.csv: Confirmed (Chris 2026-11-19)
+2023,CCG,ACC Championship,,Clemson,ACC,921152041332871168,12,302575527556825088,dilbennett,assets/trophies/conferences/ACC.png,Final,Postseason_Historic.csv
+2023,CCG,Big 12 Championship,,Baylor,Big 12,921152073054457856,5,464117743042424832,robertlouis7,assets/trophies/conferences/Big 12.png,Final,Postseason_Historic.csv
+2023,CCG,Big East Championship,,Syracuse,Big East,921152169275957248,7,456159345906806784,CodeKhaos,assets/trophies/conferences/Big East.png,Final,Postseason_Historic.csv
+2023,CCG,Big Sky Championship,,Portland State,Big Sky,921152273420525568,8,437413803001376768,Vitus,assets/trophies/conferences/Big Sky.png,Final,Postseason_Historic.csv
+2023,CCG,Big Ten Championship,,Minnesota,Big Ten,919305562058285056,7,460518714907815936,linkoftime1,assets/trophies/conferences/Big Ten.png,Final,Postseason_Historic.csv
+2023,CCG,CUSA Championship,,Louisiana Monroe,CUSA,921152384695357440,12,650627977721245696,BroncoZzz,assets/trophies/conferences/CUSA.png,Final,Postseason_Historic.csv
+2023,CCG,HBCU Championship,,Alcorn State,HBCU,921152417742311424,8,467835045181124608,wblack2012,assets/trophies/conferences/HBCU.png,Final,Postseason_Historic.csv
+2023,CCG,Ivy Championship,,Dartmouth,Ivy,921152355658248192,11,460895027179024384,jtheadrick98,assets/trophies/conferences/Ivy.png,Final,Postseason_Historic.csv
+2023,CCG,Mountain West Championship,,Hawaii,Mountain West,921152489498468352,1,596835723861082112,RicochetRay,assets/trophies/conferences/Mountain West.png,Final,Postseason_Historic.csv
+2023,CCG,Ohio Valley Championship,,Charleston Southern,Ohio Valley,921152450353090560,6,331558449374593024,leathershoe4,assets/trophies/conferences/Ohio Valley.png,Final,Postseason_Historic.csv
+2023,CCG,Pac-12 Championship,,California,Pac-12,921151976868155392,10,534619662650601472,ImagineWiigons,assets/trophies/conferences/Pac-12.png,Final,Postseason_Historic.csv
+2023,CCG,Pioneer Championship,,Davidson,Pioneer,921152239639564288,12,519675297838780416,willsingle05,assets/trophies/conferences/Pioneer.png,Final,Postseason_Historic.csv
+2023,CCG,SEC Championship,,Mississippi State,SEC,921152118084460544,6,510556455562792960,thatmansanti,assets/trophies/conferences/SEC.png,Final,Postseason_Historic.csv
+2023,CCG,Sun Belt Championship,,Memphis,Sun Belt,921152207104335872,8,441362521463451648,yoboihawks,assets/trophies/conferences/Sun Belt.png,Final,Postseason_Historic.csv
+2023,CCG,Wild Championship,,North Dakota State,Wild,921152324230262784,3,441392312380026880,4thdownTD,assets/trophies/conferences/Wild.png,Final,Postseason_Historic.csv
+2023,Bowl,Alamo Bowl,,Tennessee State,Pioneer,921152239639564288,5,432164755709370368,EBurkhart,assets/trophies/bowls/Alamo Bowl.png,Final,Postseason_Historic.csv
+2023,Bowl,Aloha Bowl,,Texas A&M,Big 12,921152073054457856,4,425362114291437568,deadheadshane,assets/trophies/bowls/Aloha Bowl.png,Final,Postseason_Historic.csv
+2023,Bowl,Arizona Bowl,,Kansas State,Big 12,921152073054457856,7,425386065373691904,Frankeen,assets/trophies/bowls/Copper Bowl.png,Final,Postseason_Historic.csv
+2023,Bowl,Armed Forces Bowl,,Florida International,CUSA,921152384695357440,10,590358219562455040,Woolley69,assets/trophies/bowls/Armed Forces Bowl.png,Final,Postseason_Historic.csv
+2023,Bowl,Bahamas Bowl,,Youngstown State,Big Sky,921152273420525568,12,519767126595325952,mssullivan2022,assets/trophies/bowls/Bahamas Bowl.png,Final,Postseason_Historic.csv
+2023,Bowl,Birmingham Bowl,,Cornell,Ivy,921152355658248192,12,464595147808567296,cobrapanther99,assets/trophies/bowls/Vulcan Bowl.png,Final,Postseason_Historic.csv
+2023,Bowl,Boca Raton Bowl,,Dayton,Pioneer,921152239639564288,7,398884413687001088,Ortizz,assets/trophies/bowls/Palm Bowl.png,Final,Postseason_Historic.csv
+2023,Bowl,Brooklyn Bowl,,Grambling State,HBCU,921152417742311424,12,520088376557371392,scoobydaeaglemahomes,assets/trophies/bowls/Gotham Bowl.png,Final,Postseason_Historic.csv
+2023,Bowl,Camellia Bowl,,Villanova,Big Sky,921152273420525568,2,439255136309604352,PapaCrowther,assets/trophies/bowls/Camellia Bowl.png,Final,Postseason_Historic.csv
+2023,Bowl,Citrus Bowl,,New Mexico,Mountain West,921152489498468352,9,589001974318403584,Mrhawke19,assets/trophies/bowls/Citrus Bowl.png,Final,Postseason_Historic.csv
+2023,Bowl,Cure Bowl,,William & Mary,Big Sky,921152273420525568,3,449327253101211648,Beastchewy15,assets/trophies/bowls/Cure Bowl.png,Final,Postseason_Historic.csv
+2023,Bowl,Fenway Bowl,,UTSA,Sun Belt,921152207104335872,12,465297932204109824,utsa,assets/trophies/bowls/Fenway Bowl.png,Final,Postseason_Historic.csv
+2023,Bowl,Gasparilla Bowl,,Penn State,Big Ten,919305562058285056,5,870064363892060160,AdamNicoll17,assets/trophies/bowls/Gasparilla Bowl.png,Final,Postseason_Historic.csv
+2023,Bowl,Gator Bowl,,Wichita State,Wild,921152324230262784,5,642578171354484736,FareedB,assets/trophies/bowls/Gator Bowl.png,Final,Postseason_Historic.csv
+2023,Bowl,Holiday Bowl,,UAB,Sun Belt,921152207104335872,10,441330448283463680,Fr3shBC11,assets/trophies/bowls/Holiday Bowl.png,Final,Postseason_Historic.csv
+2023,Bowl,Idaho Potato Bowl,,Tuskegee,HBCU,921152417742311424,11,327614483000217600,Jerryb83,assets/trophies/bowls/Idaho Potato Bowl.png,Final,Postseason_Historic.csv
+2023,Bowl,Independence Bowl,,Montana State,Big Sky,921152273420525568,6,424793511431262208,Elwayluva7,assets/trophies/bowls/Independence Bowl.png,Final,Postseason_Historic.csv
+2023,Bowl,International Bowl,,UCONN,Big East,921152169275957248,5,836025225756934144,ngregg38,assets/trophies/bowls/International Bowl.png,Final,Postseason_Historic.csv
+2023,Bowl,LA Bowl,,Delaware State,HBCU,921152417742311424,3,640052303377952768,lcummings,assets/trophies/bowls/Freedom Bowl.png,Final,Postseason_Historic.csv
+2023,Bowl,Las Vegas Bowl,,Richmond,Big Sky,921152273420525568,7,78892531970359296,fballfreek80,assets/trophies/bowls/Las Vegas Bowl.png,Final,Postseason_Historic.csv
+2023,Bowl,Liberty Bowl,,Kentucky,SEC,921152118084460544,8,634614368377589760,MENDl,assets/trophies/bowls/Liberty Bowl.png,Final,Postseason_Historic.csv
+2023,Bowl,Miami Beach Bowl,,SE Missouri State,Pioneer,921152239639564288,6,455753261765357568,BDAVIS309,assets/trophies/bowls/Palm Bowl.png,Final,Postseason_Historic.csv
+2023,Bowl,Military Bowl,,Purdue,Big Ten,919305562058285056,1,340600026956906496,CanadaGoose05,assets/trophies/bowls/Military Bowl.png,Final,Postseason_Historic.csv
+2023,Bowl,Music City Bowl,,Bethune - Cookman,HBCU,921152417742311424,9,445360519348482048,PHINIX,assets/trophies/bowls/Music City Bowl.png,Final,Postseason_Historic.csv
+2023,Bowl,New Mexico Bowl,,Virginia Tech,ACC,921152041332871168,4,455836851501002752,landonh12,assets/trophies/bowls/Zia Bowl.png,Final,Postseason_Historic.csv
+2023,Bowl,New Orleans Bowl,,Western Kentucky,CUSA,921152384695357440,6,560611777479667712,PatrickT21,assets/trophies/bowls/New Orleans Bowl.png,Final,Postseason_Historic.csv
+2023,Bowl,Pinstripe Bowl,,Oklahoma State,Big 12,921152073054457856,12,820771678849171456,Gangly22,assets/trophies/bowls/Pinstripe Bowl.png,Final,Postseason_Historic.csv
+2023,Bowl,Poinsettia Bowl,,TCU,Big 12,921152073054457856,11,619190004979138560,CousinMose15,assets/trophies/bowls/Poinsettia Bowl.png,Final,Postseason_Historic.csv
+2023,Bowl,Sun Bowl,,Pittsburgh,Big East,921152169275957248,4,456129190995947520,vinceA762,assets/trophies/bowls/Sun Bowl.png,Final,Postseason_Historic.csv
+2023,Bowl,Tangerine Bowl,,Penn,Ivy,921152355658248192,7,826571292240109568,KamaraMinute,assets/trophies/bowls/Tangerine Bowl.png,Final,Postseason_Historic.csv
+2023,Bowl,Texas Bowl,,Arkansas State,CUSA,921152384695357440,8,605439246030925824,krichknowsbest,assets/trophies/bowls/Bluebonnet Bowl.png,Final,Postseason_Historic.csv
+2023,PlayoffRound,Cotton Bowl,Elite 8,Utah,Pac-12,921151976868155392,11,76460245878456320,seniormeow,assets/trophies/bowls/Cotton Bowl.png,Final,Postseason_Historic.csv
+2023,PlayoffRound,Fiesta Bowl,Elite 8,Georgia Southern,Sun Belt,921152207104335872,7,547214728132608000,alphabeasttt,assets/trophies/bowls/Fiesta Bowl.png,Final,Postseason_Historic.csv
+2023,PlayoffRound,Orange Bowl,Elite 8,Charleston Southern,Ohio Valley,921152450353090560,6,331558449374593024,leathershoe4,assets/trophies/bowls/Orange Bowl.png,Final,Postseason_Historic.csv
+2023,PlayoffRound,Peach Bowl,Elite 8,LSU,SEC,921152118084460544,2,508516852143693824,TheLegoBatman,assets/trophies/bowls/Peach Bowl.png,Final,Postseason_Historic.csv
+2023,PlayoffRound,Rose Bowl,Final Four,Utah,Pac-12,921151976868155392,11,76460245878456320,seniormeow,assets/trophies/bowls/Rose Bowl.png,Final,Postseason_Historic.csv
+2023,PlayoffRound,Sugar Bowl,Final Four,LSU,SEC,921152118084460544,2,508516852143693824,TheLegoBatman,assets/trophies/bowls/Sugar Bowl.png,Final,Postseason_Historic.csv
+2023,NationalTitle,National Championship,,LSU,SEC,921152118084460544,2,508516852143693824,TheLegoBatman,assets/trophies/special/National Championship.png,Final,Postseason_Historic.csv
+2023,NIT,NIT,,Southern,HBCU,921152417742311424,4,471080793406435328,memphismaniac,assets/trophies/special/Stagg Bowl.png,Final,Postseason_Historic.csv
+2023,DwightFight,Dwight Fight,,Arizona State,Pac-12,921151976868155392,7,597246797479469056,wrightc214,assets/logos/Dwight Fight/Dwight Fight Trophy Blank.png,Final,Dwight_Historic.csv: Confirmed (semi + final matchups per 2024-01-04 league conversation)
+2024,CCG,ACC Championship,,Clemson,ACC,1051381725097500672,12,302575527556825088,dilbennett,assets/trophies/conferences/ACC.png,Final,Postseason_Historic.csv
+2024,CCG,Big 12 Championship,,Oklahoma State,Big 12,1051381689932468224,12,820771678849171456,Gangly22,assets/trophies/conferences/Big 12.png,Final,Postseason_Historic.csv
+2024,CCG,Big East Championship,,Coastal Carolina,Big East,1051381610739847168,6,443323427143544832,joonbug,assets/trophies/conferences/Big East.png,Final,Postseason_Historic.csv
+2024,CCG,Big Sky Championship,,Richmond,Big Sky,1051381505785810944,7,78892531970359296,fballfreek80,assets/trophies/conferences/Big Sky.png,Final,Postseason_Historic.csv
+2024,CCG,Big Ten Championship,,Ohio State,Big Ten,1051228339672961024,9,559208653427675136,Klashified,assets/trophies/conferences/Big Ten.png,Final,Postseason_Historic.csv
+2024,CCG,CUSA Championship,,Troy,CUSA,1051381357190053888,1,389658700735868928,dh671,assets/trophies/conferences/CUSA.png,Final,Postseason_Historic.csv
+2024,CCG,HBCU Championship,,Jackson State,HBCU,1051381320515002368,10,694233255825719296,bb7661KING,assets/trophies/conferences/HBCU.png,Final,Postseason_Historic.csv
+2024,CCG,Ivy Championship,,Yale,Ivy,1051381408469598208,9,82696315553071104,TheBear1973,assets/trophies/conferences/Ivy.png,Final,Postseason_Historic.csv
+2024,CCG,Mountain West Championship,,Wyoming,Mountain West,1051381233009295360,3,560626155833876480,HonoredMexican,assets/trophies/conferences/Mountain West.png,Final,Postseason_Historic.csv
+2024,CCG,Ohio Valley Championship,,Eastern Kentucky,Ohio Valley,1051381274868289536,5,474662041341128704,Dreev,assets/trophies/conferences/Ohio Valley.png,Final,Postseason_Historic.csv
+2024,CCG,Pac-12 Championship,,UCLA,Pac-12,1051381777098473472,12,450806182555152384,lmerkouSaints,assets/trophies/conferences/Pac-12.png,Final,Postseason_Historic.csv
+2024,CCG,Pioneer Championship,,Holy Cross,Pioneer,1051381539596021760,2,468638573403303936,DownLoMoJo,assets/trophies/conferences/Pioneer.png,Final,Postseason_Historic.csv
+2024,CCG,SEC Championship,,Florida,SEC,1051381651198078976,1,441458152391569408,tedman546,assets/trophies/conferences/SEC.png,Final,Postseason_Historic.csv
+2024,CCG,Sun Belt Championship,,UAB,Sun Belt,1051381575037931520,10,441330448283463680,Fr3shBC11,assets/trophies/conferences/Sun Belt.png,Final,Postseason_Historic.csv
+2024,CCG,Wild Championship,,Montana,Wild,1051381464723570688,1,457579310098673664,LanceBoneau,assets/trophies/conferences/Wild.png,Final,Postseason_Historic.csv
+2024,Bowl,Alamo Bowl,,Campbell,Pioneer,1051381539596021760,8,339931221767249920,CrownMeKing,assets/trophies/bowls/Alamo Bowl.png,Final,Postseason_Historic.csv
+2024,Bowl,Aloha Bowl,,Portland State,Big Sky,1051381505785810944,8,437413803001376768,Vitus,assets/trophies/bowls/Aloha Bowl.png,Final,Postseason_Historic.csv
+2024,Bowl,Arizona Bowl,,Georgia Southern,Sun Belt,1051381575037931520,7,547214728132608000,alphabeasttt,assets/trophies/bowls/Copper Bowl.png,Final,Postseason_Historic.csv
+2024,Bowl,Armed Forces Bowl,,Texas A&M,Big 12,1051381689932468224,4,425362114291437568,deadheadshane,assets/trophies/bowls/Armed Forces Bowl.png,Final,Postseason_Historic.csv
+2024,Bowl,Bahamas Bowl,,Auburn,SEC,1051381651198078976,4,446524535810813952,ahhchainsaw,assets/trophies/bowls/Bahamas Bowl.png,Final,Postseason_Historic.csv
+2024,Bowl,Birmingham Bowl,,Central Michigan,Wild,1051381464723570688,4,635935003657723904,matthewitz,assets/trophies/bowls/Vulcan Bowl.png,Final,Postseason_Historic.csv
+2024,Bowl,Boca Raton Bowl,,Ole Miss,SEC,1051381651198078976,5,562032371824951296,ryank45,assets/trophies/bowls/Palm Bowl.png,Final,Postseason_Historic.csv
+2024,Bowl,Brooklyn Bowl,,TCU,Big 12,1051381689932468224,11,619190004979138560,CousinMose15,assets/trophies/bowls/Gotham Bowl.png,Final,Postseason_Historic.csv
+2024,Bowl,Camellia Bowl,,Virginia,ACC,1051381725097500672,1,571754879825395712,ChrisW21,assets/trophies/bowls/Camellia Bowl.png,Final,Postseason_Historic.csv
+2024,Bowl,Citrus Bowl,,California,Pac-12,1051381777098473472,10,534619662650601472,ImagineWiigons,assets/trophies/bowls/Citrus Bowl.png,Final,Postseason_Historic.csv
+2024,Bowl,Cure Bowl,,Washington,Pac-12,1051381777098473472,6,338823136923381760,samggannon,assets/trophies/bowls/Cure Bowl.png,Final,Postseason_Historic.csv
+2024,Bowl,Gasparilla Bowl,,Dartmouth,Ivy,1051381408469598208,11,460895027179024384,jtheadrick98,assets/trophies/bowls/Gasparilla Bowl.png,Final,Postseason_Historic.csv
+2024,Bowl,Gator Bowl,,Hawaii,Mountain West,1051381233009295360,1,596835723861082112,RicochetRay,assets/trophies/bowls/Gator Bowl.png,Final,Postseason_Historic.csv
+2024,Bowl,Holiday Bowl,,UTEP,Sun Belt,1051381575037931520,2,873461886535036928,Tommybuckets000,assets/trophies/bowls/Holiday Bowl.png,Final,Postseason_Historic.csv
+2024,Bowl,Idaho Potato Bowl,,UCONN,Big East,1051381610739847168,5,836025225756934144,ngregg38,assets/trophies/bowls/Idaho Potato Bowl.png,Final,Postseason_Historic.csv
+2024,Bowl,Independence Bowl,,Alcorn State,HBCU,1051381320515002368,8,467835045181124608,wblack2012,assets/trophies/bowls/Independence Bowl.png,Final,Postseason_Historic.csv
+2024,Bowl,International Bowl,,NC State,ACC,1051381725097500672,10,713189676609003520,LetsGooooo365,assets/trophies/bowls/International Bowl.png,Final,Postseason_Historic.csv
+2024,Bowl,LA Bowl,,Georgetown,Ivy,1051381408469598208,5,395321276102627328,ccassidy,assets/trophies/bowls/Freedom Bowl.png,Final,Postseason_Historic.csv
+2024,Bowl,Las Vegas Bowl,,New Mexico,Mountain West,1051381233009295360,9,589001974318403584,Mrhawke19,assets/trophies/bowls/Las Vegas Bowl.png,Final,Postseason_Historic.csv
+2024,Bowl,Liberty Bowl,,Chattanooga,Ohio Valley,1051381274868289536,4,472879969664495616,ethansherwood22,assets/trophies/bowls/Liberty Bowl.png,Final,Postseason_Historic.csv
+2024,Bowl,Miami Beach Bowl,,Tuskegee,HBCU,1051381320515002368,11,327614483000217600,Jerryb83,assets/trophies/bowls/Palm Bowl.png,Final,Postseason_Historic.csv
+2024,Bowl,Military Bowl,,Kansas State,Big 12,1051381689932468224,7,425386065373691904,Frankeen,assets/trophies/bowls/Military Bowl.png,Final,Postseason_Historic.csv
+2024,Bowl,Music City Bowl,,Southern,HBCU,1051381320515002368,4,471080793406435328,memphismaniac,assets/trophies/bowls/Music City Bowl.png,Final,Postseason_Historic.csv
+2024,Bowl,New Mexico Bowl,,Grambling State,HBCU,1051381320515002368,12,520088376557371392,scoobydaeaglemahomes,assets/trophies/bowls/Zia Bowl.png,Final,Postseason_Historic.csv
+2024,Bowl,New Orleans Bowl,,Texas Tech,Big 12,1051381689932468224,1,446530486903238656,BigSexy3422,assets/trophies/bowls/New Orleans Bowl.png,Final,Postseason_Historic.csv
+2024,Bowl,Pinstripe Bowl,,UCF,Big East,1051381610739847168,9,802480422482206720,JEANTY,assets/trophies/bowls/Pinstripe Bowl.png,Final,Postseason_Historic.csv
+2024,Bowl,Poinsettia Bowl,,Mississippi State,SEC,1051381651198078976,6,510556455562792960,thatmansanti,assets/trophies/bowls/Poinsettia Bowl.png,Final,Postseason_Historic.csv
+2024,Bowl,Sun Bowl,,LSU,SEC,1051381651198078976,2,508516852143693824,errand,assets/trophies/bowls/Sun Bowl.png,Final,Postseason_Historic.csv
+2024,Bowl,Tangerine Bowl,,Arizona State,Pac-12,1051381777098473472,7,597246797479469056,wrightc214,assets/trophies/bowls/Tangerine Bowl.png,Final,Postseason_Historic.csv
+2024,Bowl,Texas Bowl,,Nebraska,Big Ten,1051228339672961024,2,438178170542223360,EthanH,assets/trophies/bowls/Bluebonnet Bowl.png,Final,Postseason_Historic.csv
+2024,PlayoffRound,Cotton Bowl,Elite 8,Minnesota,Big Ten,1051228339672961024,7,460518714907815936,linkoftime1,assets/trophies/bowls/Cotton Bowl.png,Final,Postseason_Historic.csv
+2024,PlayoffRound,Fiesta Bowl,Elite 8,UCLA,Pac-12,1051381777098473472,12,450806182555152384,lmerkouSaints,assets/trophies/bowls/Fiesta Bowl.png,Final,Postseason_Historic.csv
+2024,PlayoffRound,Orange Bowl,Elite 8,Montana State,Big Sky,1051381505785810944,6,424793511431262208,Elwayluva7,assets/trophies/bowls/Orange Bowl.png,Final,Postseason_Historic.csv
+2024,PlayoffRound,Peach Bowl,Elite 8,Washington State,Pac-12,1051381777098473472,4,477666723663704064,chzhead412,assets/trophies/bowls/Peach Bowl.png,Final,Postseason_Historic.csv
+2024,PlayoffRound,Rose Bowl,Final Four,Minnesota,Big Ten,1051228339672961024,7,460518714907815936,linkoftime1,assets/trophies/bowls/Rose Bowl.png,Final,Postseason_Historic.csv
+2024,PlayoffRound,Sugar Bowl,Final Four,Washington State,Pac-12,1051381777098473472,4,477666723663704064,chzhead412,assets/trophies/bowls/Sugar Bowl.png,Final,Postseason_Historic.csv
+2024,NationalTitle,National Championship,,Washington State,Pac-12,1051381777098473472,4,477666723663704064,chzhead412,assets/trophies/special/National Championship.png,Final,Postseason_Historic.csv
+2024,NIT,NIT,,Middle Tennessee State,CUSA,1051381357190053888,7,651857322645241856,ridinroundinarover,assets/trophies/special/Stagg Bowl.png,Final,Postseason_Historic.csv
+2024,DwightFight,Dwight Fight,,New Mexico,Mountain West,1051381233009295360,9,589001974318403584,Mrhawke19,assets/logos/Dwight Fight/Dwight Fight Trophy Blank.png,Reconstructed,Dwight_Historic.csv: Reconstructed (field = poll voters; event likely not held) (Chris 2026-11-19)
+2025,CCG,ACC Championship,,Clemson,ACC,1192383069776863232,12,302575527556825088,dilbennett,assets/trophies/conferences/ACC.png,Final,Postseason_Historic.csv
+2025,CCG,Big 12 Championship,,Kansas State,Big 12,1192383107391332352,7,425386065373691904,Frankeen,assets/trophies/conferences/Big 12.png,Final,Postseason_Historic.csv
+2025,CCG,Big East Championship,,Pittsburgh,Big East,1183984327853932544,4,456129190995947520,vinceA762,assets/trophies/conferences/Big East.png,Final,Postseason_Historic.csv
+2025,CCG,Big Sky Championship,,William & Mary,Big Sky,1197683509209083904,3,449327253101211648,Beastchewy15,assets/trophies/conferences/Big Sky.png,Final,Postseason_Historic.csv
+2025,CCG,Big Ten Championship,,Minnesota,Big Ten,1187162832969211904,7,460518714907815936,linkoftime1,assets/trophies/conferences/Big Ten.png,Final,Postseason_Historic.csv
+2025,CCG,CUSA Championship,,Florida Atlantic,CUSA,1197683737584746496,3,599286882408394752,Botro,assets/trophies/conferences/CUSA.png,Final,Postseason_Historic.csv
+2025,CCG,HBCU Championship,,Florida A&M,HBCU,1197683812742483968,5,1072700435921838080,DaMagic436,assets/trophies/conferences/HBCU.png,Final,Postseason_Historic.csv
+2025,CCG,Ivy Championship,,Georgetown,Ivy,1197683676763148288,5,395321276102627328,ccassidy,assets/trophies/conferences/Ivy.png,Final,Postseason_Historic.csv
+2025,CCG,Mountain West Championship,,Nevada,Mountain West,1197683891784134656,10,814354227357908992,Twistedmentat,assets/trophies/conferences/Mountain West.png,Final,Postseason_Historic.csv
+2025,CCG,Ohio Valley Championship,,Chattanooga,Ohio Valley,1197684159036805120,4,472879969664495616,ethansherwood22,assets/trophies/conferences/Ohio Valley.png,Final,Postseason_Historic.csv
+2025,CCG,Pac-12 Championship,,Washington State,Pac-12,1192383038721757184,4,477666723663704064,chzhead412,assets/trophies/conferences/Pac-12.png,Final,Postseason_Historic.csv
+2025,CCG,Pioneer Championship,,Furman,Pioneer,1192383184619986944,10,315736569111650304,JMullen175,assets/trophies/conferences/Pioneer.png,Final,Postseason_Historic.csv
+2025,CCG,SEC Championship,,Mississippi State,SEC,1188461140190814208,6,510556455562792960,thatmansanti,assets/trophies/conferences/SEC.png,Final,Postseason_Historic.csv
+2025,CCG,Sun Belt Championship,,Georgia Southern,Sun Belt,1192383143762542592,7,547214728132608000,alphabeasttt,assets/trophies/conferences/Sun Belt.png,Final,Postseason_Historic.csv
+2025,CCG,Wild Championship,,Montana,Wild,1197683625282244608,1,457579310098673664,LanceBoneau,assets/trophies/conferences/Wild.png,Final,Postseason_Historic.csv
+2025,Bowl,Alamo Bowl,,Western Kentucky,CUSA,1197683737584746496,6,560611777479667712,PatrickT21,assets/trophies/bowls/Alamo Bowl.png,Final,Postseason_Historic.csv
+2025,Bowl,Aloha Bowl,,Texas A&M,Big 12,1192383107391332352,4,425362114291437568,deadheadshane,assets/trophies/bowls/Aloha Bowl.png,Final,Postseason_Historic.csv
+2025,Bowl,Arizona Bowl,,West Virginia,Big 12,1192383107391332352,8,543929284962770944,alicho,assets/trophies/bowls/Copper Bowl.png,Final,Postseason_Historic.csv
+2025,Bowl,Armed Forces Bowl,,Nebraska,Big Ten,1187162832969211904,2,438178170542223360,EthanH,assets/trophies/bowls/Armed Forces Bowl.png,Final,Postseason_Historic.csv
+2025,Bowl,Bahamas Bowl,,Richmond,Big Sky,1197683509209083904,7,78892531970359296,fballfreek80,assets/trophies/bowls/Bahamas Bowl.png,Final,Postseason_Historic.csv
+2025,Bowl,Birmingham Bowl,,Austin Peay,Pioneer,1192383184619986944,9,602687087556231168,DictatorBerry,assets/trophies/bowls/Vulcan Bowl.png,Final,Postseason_Historic.csv
+2025,Bowl,Boca Raton Bowl,,Villanova,Big Sky,1197683509209083904,2,439255136309604352,PapaCrowther,assets/trophies/bowls/Palm Bowl.png,Final,Postseason_Historic.csv
+2025,Bowl,Brooklyn Bowl,,Eastern Kentucky,Ohio Valley,1197684159036805120,5,474662041341128704,Dreev,assets/trophies/bowls/Gotham Bowl.png,Final,Postseason_Historic.csv
+2025,Bowl,Citrus Bowl,,Tulsa,Sun Belt,1192383143762542592,6,465019661495300096,Raidersforte,assets/trophies/bowls/Citrus Bowl.png,Final,Postseason_Historic.csv
+2025,Bowl,Cure Bowl,,Missouri,Big 12,1192383107391332352,3,533541056352481280,DavidJimm,assets/trophies/bowls/Cure Bowl.png,Final,Postseason_Historic.csv
+2025,Bowl,Fenway Bowl,,Jackson State,HBCU,1197683812742483968,10,694233255825719296,bb7661KING,assets/trophies/bowls/Fenway Bowl.png,Final,Postseason_Historic.csv
+2025,Bowl,Gasparilla Bowl,,Ohio State,Big Ten,1187162832969211904,9,559208653427675136,Klashified,assets/trophies/bowls/Gasparilla Bowl.png,Final,Postseason_Historic.csv
+2025,Bowl,Gator Bowl,,Eastern Michigan,Wild,1197683625282244608,6,203496917160697856,ThomasHarris,assets/trophies/bowls/Gator Bowl.png,Final,Postseason_Historic.csv
+2025,Bowl,Holiday Bowl,,Youngstown State,Big Sky,1197683509209083904,12,519767126595325952,mssullivan2022,assets/trophies/bowls/Holiday Bowl.png,Final,Postseason_Historic.csv
+2025,Bowl,Idaho Potato Bowl,,Michigan,Big Ten,1187162832969211904,12,443870183853912064,chrispychicken,assets/trophies/bowls/Idaho Potato Bowl.png,Final,Postseason_Historic.csv
+2025,Bowl,Independence Bowl,,North Texas,CUSA,1197683737584746496,2,464625836192952320,brooksy33,assets/trophies/bowls/Independence Bowl.png,Final,Postseason_Historic.csv
+2025,Bowl,International Bowl,,Memphis,Sun Belt,1192383143762542592,8,441362521463451648,yoboihawks,assets/trophies/bowls/International Bowl.png,Final,Postseason_Historic.csv
+2025,Bowl,LA Bowl,,Ole Miss,SEC,1188461140190814208,5,562032371824951296,ryank45,assets/trophies/bowls/Freedom Bowl.png,Final,Postseason_Historic.csv
+2025,Bowl,Las Vegas Bowl,,New Mexico,Mountain West,1197683891784134656,9,589001974318403584,Mrhawke19,assets/trophies/bowls/Las Vegas Bowl.png,Final,Postseason_Historic.csv
+2025,Bowl,Liberty Bowl,,Lehigh,Ivy,1197683676763148288,6,1017588201080369152,TJWATTDPOY25,assets/trophies/bowls/Liberty Bowl.png,Final,Postseason_Historic.csv
+2025,Bowl,Miami Beach Bowl,,Wisconsin,Big Ten,1187162832969211904,6,460511267564548096,laxbro000,assets/trophies/bowls/Palm Bowl.png,Final,Postseason_Historic.csv
+2025,Bowl,Military Bowl,,Iowa,Big Ten,1187162832969211904,11,471056290550902784,Schuflakka,assets/trophies/bowls/Military Bowl.png,Final,Postseason_Historic.csv
+2025,Bowl,Music City Bowl,,Cornell,Ivy,1197683676763148288,12,464595147808567296,cobrapanther99,assets/trophies/bowls/Music City Bowl.png,Final,Postseason_Historic.csv
+2025,Bowl,New Mexico Bowl,,Campbell,Pioneer,1192383184619986944,8,339931221767249920,CrownMeKing,assets/trophies/bowls/Zia Bowl.png,Final,Postseason_Historic.csv
+2025,Bowl,New Orleans Bowl,,Arkansas State,CUSA,1197683737584746496,8,605439246030925824,krichknowsbest,assets/trophies/bowls/New Orleans Bowl.png,Final,Postseason_Historic.csv
+2025,Bowl,Pinstripe Bowl,,UTSA,Sun Belt,1192383143762542592,12,465297932204109824,utsa,assets/trophies/bowls/Pinstripe Bowl.png,Final,Postseason_Historic.csv
+2025,Bowl,Poinsettia Bowl,,Notre Dame,Big East,1183984327853932544,12,64174089933570048,ryno,assets/trophies/bowls/Poinsettia Bowl.png,Final,Postseason_Historic.csv
+2025,Bowl,Sun Bowl,,NC State,ACC,1192383069776863232,10,713189676609003520,LetsGooooo365,assets/trophies/bowls/Sun Bowl.png,Final,Postseason_Historic.csv
+2025,Bowl,Tangerine Bowl,,UNLV,Mountain West,1197683891784134656,11,702897403514159104,bdub3,assets/trophies/bowls/Tangerine Bowl.png,Final,Postseason_Historic.csv
+2025,Bowl,Texas Bowl,,North Alabama,Ohio Valley,1197684159036805120,11,638193564806897664,Romantryert,assets/trophies/bowls/Bluebonnet Bowl.png,Final,Postseason_Historic.csv
+2025,PlayoffRound,Cotton Bowl,Elite 8,Arizona State,Pac-12,1192383038721757184,7,597246797479469056,wrightc214,assets/trophies/bowls/Cotton Bowl.png,Final,Postseason_Historic.csv
+2025,PlayoffRound,Fiesta Bowl,Elite 8,Montana,Wild,1197683625282244608,1,457579310098673664,LanceBoneau,assets/trophies/bowls/Fiesta Bowl.png,Final,Postseason_Historic.csv
+2025,PlayoffRound,Orange Bowl,Elite 8,Washington State,Pac-12,1192383038721757184,4,477666723663704064,chzhead412,assets/trophies/bowls/Orange Bowl.png,Final,Postseason_Historic.csv
+2025,PlayoffRound,Peach Bowl,Elite 8,Clemson,ACC,1192383069776863232,12,302575527556825088,dilbennett,assets/trophies/bowls/Peach Bowl.png,Final,Postseason_Historic.csv
+2025,PlayoffRound,Rose Bowl,Final Four,Arizona State,Pac-12,1192383038721757184,7,597246797479469056,wrightc214,assets/trophies/bowls/Rose Bowl.png,Final,Postseason_Historic.csv
+2025,PlayoffRound,Sugar Bowl,Final Four,Montana,Wild,1197683625282244608,1,457579310098673664,LanceBoneau,assets/trophies/bowls/Sugar Bowl.png,Final,Postseason_Historic.csv
+2025,NationalTitle,National Championship,,Arizona State,Pac-12,1192383038721757184,7,597246797479469056,wrightc214,assets/trophies/special/National Championship.png,Final,Postseason_Historic.csv
+2025,NIT,NIT,,Tuskegee,HBCU,1197683812742483968,11,327614483000217600,Jerryb83,assets/trophies/special/Stagg Bowl.png,Final,Postseason_Historic.csv
+2025,DwightFight,Dwight Fight,,Arizona State,Pac-12,1192383038721757184,7,597246797479469056,wrightc214,assets/logos/Dwight Fight/Dwight Fight Trophy Blank.png,Reconstructed,Dwight_Historic.csv: Reconstructed (field = poll voters; event likely not held) (Chris 2026-11-19)
