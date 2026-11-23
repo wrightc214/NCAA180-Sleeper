@@ -62,7 +62,7 @@ class Contenders(unittest.TestCase):
                          {"Colorado": (9, 1), "UCLA": (8, 2), "Arizona State": (8, 2)})
 
     def test_current_week_2026_with_points_cap(self):
-        """5.15 replay at 0.45 / 18 (one week left = 297): only gaps over 297 change."""
+        """5.15 replay at 0.4 / 18 (one week left = 264; with the 11.01 floor a gap must exceed 275.01): Delaware State 266 stays."""
         current = build(2026, write=False)
         if current is None:
             self.skipTest("2026 Week 11 no longer active")
@@ -70,7 +70,7 @@ class Contenders(unittest.TestCase):
                for c in current["conferences"] for d in c["divisions"]}
         self.assertEqual(div[("Wild", "PLAINS")], {"Montana"})          # Wichita State 371, South Dakota 324 back
         self.assertEqual(div[("HBCU", "HURRICANE")], {"North Carolina A&T", "Delaware State"})  # Howard 311 back
-        self.assertEqual(div[("Pac-12", "SOUTH")], {"Colorado", "UCLA", "Arizona State"})       # UCLA 189 < 297
+        self.assertEqual(div[("Pac-12", "SOUTH")], {"Colorado", "UCLA", "Arizona State"})       # UCLA 189 < 275.01
         divisions = [d for c in current["conferences"] for d in c["divisions"]]
         self.assertEqual(sum(d["clinched_before_week"] for d in divisions), 13)
 

@@ -70,9 +70,10 @@ class CapCurve(unittest.TestCase):
 
     def test_config(self):
         rate, burst = clinch_cap.settings()
-        self.assertEqual((rate, burst), (0.45, 18.0))
+        self.assertEqual((rate, burst), (0.4, 18.0))  # Chris 2026-11-23: 0.4 (was 0.45)
         self.assertEqual(clinch_cap.max_drop(), 11.01)
-        self.assertIn("0.45 points per remaining player-minute", clinch_cap.note())
+        self.assertIn("0.4 points per remaining player-minute", clinch_cap.note())
+        self.assertAlmostEqual(clinch_cap.week_cap(11, rate, burst), 264)
 
     def test_off_when_missing(self):
         with mock.patch.object(clinch_cap.lcfg, "cfg", return_value={"postseason": {}}):
