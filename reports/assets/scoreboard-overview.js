@@ -120,7 +120,7 @@
   function card(g){
     if(g.post&&g.match.length>2)return groupCard(g);
     const {id,game,match,s,o}=g,league=index.leagues[id];
-    const p=s.probability===null?null:Math.round(s.probability),href=`scoreboard.html?${new URLSearchParams(g.post?{season,week,post:g.post.id,overview:$('league').value||'all'}:{season,week,league:id,game,overview:$('league').value||'all'})}`;
+    const p=s.probability===null?null:s.probability,href=`scoreboard.html?${new URLSearchParams(g.post?{season,week,post:g.post.id,overview:$('league').value||'all'}:{season,week,league:id,game,overview:$('league').value||'all'})}`;
     const status=s.active?`● Live · ${s.active} playing`:s.final?'Final':s.started?'In progress':s.next?kickTxt(s.next.kickoff):s.status;
     const order=cardOrder(g);
     const pre=s.live&&s.pregame!=null?`<div class="ew">Pregame: ${esc(league.teams[String(match[order[0]].roster_id)]?.name)} ${esc(pct(order[0]===0?s.pregame:100-s.pregame))}</div>`:'';
