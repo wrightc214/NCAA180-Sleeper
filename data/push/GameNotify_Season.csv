@@ -96,3 +96,7 @@ Year,Week,Key,Kind,At,Data
 2026,10,settled:w10-Big Sky-6,settled,2026-11-17T18:47:20Z,"{""points"": [60.72, 37.44], ""winner"": ""Big Sky:4"", ""flipped"": false}"
 2026,10,settled:w10-Big Sky-5,settled,2026-11-17T18:47:20Z,"{""points"": [140.66, 48.4], ""winner"": ""Big Sky:5"", ""flipped"": false}"
 2026,11,window:thu-2026-11-19,window,2026-11-20T13:36:15Z,
+2026,11,final:w11-HBCU-5,final,2026-11-23T01:55:33Z,"{""teams"": [{""league_id"": ""1331774630620332032"", ""roster_id"": ""1"", ""slot"": ""HBCU:1"", ""name"": ""North Carolina A&T"", ""points"": 140.2}, {""league_id"": ""1331774630620332032"", ""roster_id"": ""12"", ""slot"": ""HBCU:12"", ""name"": ""Grambling State"", ""points"": 67.58}], ""winner"": ""HBCU:1"", ""label"": """"}"
+2026,11,final:w11-Big Sky-4,final,2026-11-23T01:55:33Z,"{""teams"": [{""league_id"": ""1316899756005412864"", ""roster_id"": ""1"", ""slot"": ""Big Sky:1"", ""name"": ""Rhode Island"", ""points"": 125.56}, {""league_id"": ""1316899756005412864"", ""roster_id"": ""11"", ""slot"": ""Big Sky:11"", ""name"": ""Maine"", ""points"": 91.6}], ""winner"": ""Big Sky:1"", ""label"": """"}"
+2026,11,window:sun-early,window,2026-11-23T01:55:33Z,
+2026,11,window:sun-late,window,2026-11-23T01:55:33Z,
