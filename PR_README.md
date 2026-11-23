@@ -111,7 +111,7 @@ The Guillotine starts in 2026, so it has no history. 2025 spot check (tested): n
 
 ## Acceptance results
 
-- `python3 -m pytest -q tests`: **341 passed, 34 skipped** (the 27 new ledger, config, geometry, fit, fallback, parity, PNG and page tests are included).
+- `python3 -m pytest -q tests`: **314 passed, 34 skipped** (the 27 new ledger, config, geometry, fit, fallback, parity, PNG and page tests are included).
 - `node --test tests/*.test.js`: **80 passed** (5 new).
 - Browser tests (`RUN_SCOREBOARD_BROWSER_TESTS=1`): trophies 4/4; Dwight Fight, Guillotine, bracket, scoreboard postseason and CCG race all still pass.
 - Crawl of all 120 generated pages under `reports/`: **360 trophies drawn, 0 broken trophy images**, and no plaque text overflow at 390 or 1280, light or dark.
