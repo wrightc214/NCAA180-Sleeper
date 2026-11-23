@@ -47,5 +47,18 @@
     }
     return Array.from(hits,h=>100*h/sims);
   }
-  return {target,team,cutLine,advanceOdds,EPS};
+  // Proven calls (Chris, 2026-11-23; config live_bounds, ScoreboardCore.bounds). LIVE DISPLAY ONLY.
+  // Safe: at most k-1 other teams can still finish above this team's floor (ties at the line survive).
+  // Cut: at least k other teams are already certain to finish above this team's ceiling.
+  function provenCalls(models,k,lb){
+    const b=models.map(m=>C.bounds(m,lb));
+    if(!lb||b.some(x=>!x))return models.map(()=>null);
+    return b.map((me,i)=>{
+      const above=b.filter((o,j)=>j!==i&&o.ceil>me.floor).length;
+      if(above<=k-1)return 'safe';
+      const sure=b.filter((o,j)=>j!==i&&o.floor>me.ceil).length;
+      return sure>=k?'cut':null;
+    });
+  }
+  return {target,team,cutLine,advanceOdds,provenCalls,EPS};
 });

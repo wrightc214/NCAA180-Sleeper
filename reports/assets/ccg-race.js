@@ -189,24 +189,13 @@
    }
  }
  let gaps={};
- function left(starters){
-   let minutes=0,players=0;
-   for(const p of starters||[]){
-     if(p.phase==='unknown'){minutes+=60;players++;continue;}
-     if(p.phase==='in'||p.phase==='pre'){minutes+=Number(p.minutes)||0;players++;}
-   }
-   return {minutes_left:minutes,players_left:players};
- }
  function clinchNote(){
-   const c=cfg.postseason?.clinch||{},r=Number(c.points_per_minute)||0,b=Number(c.burst_per_player)||0,el=$('clinch-note');
-   if(!el||!(r>0||b>0))return;
-   el.textContent='Clinched and Out are proven, never guessed: points-for ties count as settled when the gap exceeds the most the chasing team could still score ('+
-     r+' points per remaining player-minute, but never less than '+b+' per player still to play)'+
-     ((Number(c.max_drop)||0)>0?', while the leader could still lose up to '+Number(c.max_drop)+' if it has a starter still to play':'')+'.';
+   const el=$('clinch-note');
+   if(!el||!cfg.live_bounds)return;
+   el.textContent='Clinched and Out are proven, never guessed: a points-for tie counts as settled only when the trailing team could not catch up even with its remaining projection plus one huge game, and the leader could not fall back with one big negative.';
  }
- function clinchOptions(lid){
-   const c=cfg.postseason?.clinch||{},slots=(index.leagues[String(lid)]?.slots||[]).length;
-   return {rate:Number(c.points_per_minute)||0,burst:Number(c.burst_per_player)||0,drop:Number(c.max_drop)||0,slots,week:Number(data.week)};
+ function clinchOptions(){
+   return {bounds:!!cfg.live_bounds,week:Number(data.week)};
  }
  function teamScores(id,rs,scoring,events,stats){
    const groups=new Map();
@@ -237,9 +226,8 @@
          mean:summary.final?C.round(m.actual):pre?m.pregame:m.projected,
          variance:summary.final?0:pre?Math.pow(Number(cfg.spread)||24,2):m.variance,actual:m.actual,final:summary.final,
          state:summary.final?'final':pre?'pregame':'live',
-         // 5.15 clinch cap inputs: starters still to play and their player-minutes left. A starter in
-         // a live game counts even at 0 minutes (overtime); one with no game data counts a full game.
-         ...left(m.starters)
+         // Proven-call inputs (ScoreboardCore.bounds, config live_bounds): most it can still add / lose.
+         ...(()=>{const b=C.bounds(m,cfg.live_bounds);return b?{upside:b.ceil-m.actual,drop:m.actual-b.floor}:{};})()
        };
      }
    }
@@ -279,7 +267,7 @@
      const id=String(conf.league_id);
      try{results[id]=M.simulate(conf,models,{
        sims:settings.simulations||20000,seed:(settings.seed??2026)+Number(id.slice(-7)),
-       order:data.tiebreak_order,clinch:clinchOptions(id)
+       order:data.tiebreak_order,...clinchOptions()
      });}catch(e){errors.push(confName(id)+': '+friendly(e.message));}
    }
    if(!Object.keys(results).length)throw Error('No complete live '+unit+' models — '+errors.slice(0,2).join('; '));
@@ -345,7 +333,7 @@
      const results={};
      for(const conf of data.conferences)results[String(conf.league_id)]=M.simulate(conf,models,{
        sims:settings.simulations||20000,seed:settings.seed??2026,order:data.tiebreak_order,
-       clinch:clinchOptions(conf.league_id)
+       ...clinchOptions()
      });
      paint(models,results,new Date().toISOString());
      $('updated').textContent='PREVIEW fixture — not live · '+date(new Date());

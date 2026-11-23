@@ -65,6 +65,31 @@
     if (variance<1e-10) return a.projected===b.projected?50:(a.projected>b.projected?100:0);
     return 50*(1+erf((a.projected-b.projected)/Math.sqrt(2*variance)));
   }
+  // Proven results (Chris, 2026-11-23; config live_bounds). LIVE DISPLAY ONLY: the Python twin
+  // (live_model.py: push notifications + their ledger) and the weekly run never use these.
+  // Ceiling = points so far + remaining projection (Tuesday projection x share of each game left)
+  //   + ONE big-game allowance: max(team_upside x share of lineup minutes left,
+  //     biggest player_upside[pos] x share left among starters still to play, burst if anyone is left).
+  // Floor = points so far - max_drop while any starter is still to play.
+  function bounds(team,lb){
+    if(!lb||!team)return null;
+    const up=lb.player_upside||{},full=60*Math.max(1,(team.starters||[]).length);
+    let rest=0,minutes=0,players=0,best=0;
+    for(const p of team.starters||[]){
+      if(String(p.id)==='0'||!['pre','in','unknown'].includes(p.phase))continue;
+      const f=p.phase==='unknown'?1:Math.max(0,Math.min(1,num(p.minutes)/60));
+      players++;minutes+=60*f;rest+=num(p.baseline)*f;
+      best=Math.max(best,num(up[p.position]??lb.player_upside_default??45)*f);
+    }
+    const allowance=players?Math.max(num(lb.team_upside)*minutes/full,best,num(lb.burst)):0;
+    return {floor:num(team.actual)-(players?num(lb.max_drop):0),ceil:num(team.actual)+rest+allowance,players};
+  }
+  // 'a' / 'b' when that side's floor beats the other's ceiling, else null.
+  function decided(a,b,lb){
+    const A=bounds(a,lb),B=bounds(b,lb);
+    if(!A||!B)return null;
+    return A.floor>B.ceil?'a':B.floor>A.ceil?'b':null;
+  }
   // NIT groups (3–5 teams): chance each team posts the top score (independent normals). 2 teams = probability().
   function chanceTop(models,steps=800) {
     const ms=models.map(m=>({mu:m.projected,sd:Math.sqrt(Math.max(m.variance,1e-6))}));
@@ -126,7 +151,7 @@
     const pair = Array.isArray(L[phase]) ? L[phase] : fallback;
     return String(pair[short ? 1 : 0]).replace(/\{n\}/g, w).replace(/\{p\}/g, w - start + 1);
   }
-  const api={weekLabel,num,round,statsMap,normalizedStats,score,remaining,eligible,bestLineup,probability,chanceTop,playerModel,teamModel,benchPlayers};
+  const api={weekLabel,num,round,statsMap,normalizedStats,score,remaining,eligible,bestLineup,probability,chanceTop,bounds,decided,playerModel,teamModel,benchPlayers};
   if(typeof module!=='undefined' && module.exports) module.exports=api;
   root.ScoreboardCore=api;
 })(typeof window==='undefined'?globalThis:window);

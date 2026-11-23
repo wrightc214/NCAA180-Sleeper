@@ -35,8 +35,12 @@
     // Proj column (Chris, 2026-10-30, Sleeper-style): pregame until the game's starters play, then
     // adjusted by known outcomes, back to the pregame value once the game is final.
     const proj=models.map(m=>final||!started?m.pregame:m.projected);
-    return {models,group,chances,pregames,final,active:active.length,next,unknown,incomplete,missing,started,proj,pregame,
-      probability:group?null:unknown?null:final||!started?pregame:missing?null:C.probability(...models),
+    // Live: a proven result (config live_bounds) shows 100 / 0; an estimate never reaches either.
+    const live=!group&&!unknown&&!final&&started&&!missing;
+    const proven=live?C.decided(models[0],models[1],cfg.live_bounds):null;
+    const estimate=live?Math.min(99.999,Math.max(0.001,C.probability(...models))):null;
+    return {models,group,chances,pregames,final,active:active.length,next,unknown,incomplete,missing,started,proj,pregame,proven,
+      probability:group?null:unknown?null:final||!started?pregame:missing?null:proven==='a'?100:proven==='b'?0:estimate,
       oddsLabel:final||!started?'Pregame %':'Live win %',live:!final&&started,
       status:unknown?'Status unavailable':final?'Final':active.length?'Live':started?'In progress':'Upcoming'};
   }

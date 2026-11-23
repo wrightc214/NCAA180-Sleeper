@@ -5,7 +5,7 @@
   if(params.has('game')||params.has('post')||params.has('roster')||params.get('view')==='game')return;
   const $=id=>document.getElementById(id),C=window.ScoreboardCore,S=window.ScoreboardOverview;
   const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const pct=p=>p===null?'—':p<1?'<1%':p>99?'>99%':`${Math.round(p)}%`;
+  const pct=p=>p===null?'—':p===0?'0%':p===100?'100%':p<1?'<1%':p>99?'>99%':`${Math.round(p)}%`; // exactly 0 / 100 = proven (live_bounds) or a pregame record
   let cfg,index,metadata,baseline,colors,gotw={},season,week,generation=0,controller,timer,busy=false,failures=0,metadataAt=0;
   // Only reload on becoming visible if work was interrupted while hidden or data is over a minute old (avoids a duplicate load).
   let pausedHidden=false,loadedAt=Date.now();

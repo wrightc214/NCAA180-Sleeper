@@ -1,10 +1,11 @@
 /* Pure CCG race probability model. Same inputs in browser and Node tests.
  * A real coin toss is NEVER simulated: an unresolved n-way tie awards 1/n
  * probability to each team. Score comparisons are rounded to 0.01.
- * Clinched / Out (task 5.15, Chris 2026-11-23): with options.clinch {rate, burst}
- * (config postseason.clinch), a tie on wins is settled when one team's points-for
- * floor (points so far) beats the other's ceiling (points so far + pointsCap).
- * Twin of scripts/clinch_cap.py + postseason_odds._Conf; same inputs, same answer.
+ * Clinched / Out (Chris, 2026-11-23): with options.bounds (config live_bounds, via
+ * ScoreboardCore.bounds), a tie on wins is settled when one team's points-for floor
+ * beats the other's ceiling. Each model carries `upside` (most it can still add) and
+ * `drop` (most it can still lose) for this week; a model without them settles nothing.
+ * LIVE DISPLAY ONLY: the weekly run's postseason flags keep the strict rule.
  */
 (function(root,factory){
   const api=factory();
@@ -14,14 +15,7 @@
   'use strict';
   const cents=x=>Math.round((Number(x)||0)*100)/100;
   const key=(league,id)=>String(league)+'|'+String(id);
-  const MINUTES_PER_GAME=60, MAX_PROOF_GAMES=16;
-  // Most a team can still score: max(rate x player-minutes left, burst x starters still to play).
-  function pointsCap(minutes,players,rate,burst){
-    minutes=Number(minutes)||0;players=Number(players)||0;
-    if(minutes<=0&&players<=0)return 0;
-    return Math.max((Number(rate)||0)*minutes,(Number(burst)||0)*players);
-  }
-  const weekCap=(slots,rate,burst)=>pointsCap(MINUTES_PER_GAME*slots,slots,rate,burst);
+  const MAX_PROOF_GAMES=16;
   // Exact proof by enumerating every unfinished game that involves a contender.
   // bound: {id: {wins (current, finals counted), floor, ceil}}; games: [{a,b}] unfinished.
   // Returns {clinched: id|null, out: Set} for one division, or null if too many games.
@@ -199,25 +193,24 @@
         const mine=played.get(id),score=mine.wins+mine.ties/2;
         return [...played].some(([other,row])=>other!==id && row.wins+row.ties/2>score);
       }).map(t=>String(t.roster_id));
-      // 5.15: points-for cap. Off (rate = burst = 0 / missing) -> the result above, unchanged.
-      const clinch=options.clinch||{};
-      if(!d.clinched_before_week&&((Number(clinch.rate)||0)>0||(Number(clinch.burst)||0)>0)){
+      // Proven calls (config live_bounds). Off -> the result above, unchanged.
+      if(!d.clinched_before_week&&options.bounds){
         const ids=d.contenders.map(t=>String(t.roster_id)),bound={},open=[];
-        const slots=Number(clinch.slots)||0,week=Number(clinch.week);
+        const week=Number(options.week);
         for(const t of d.contenders){
           const id=String(t.roster_id),m=models[key(rosterLeague,id)]||{},row=played.get(id);
-          // Floor = points so far (finished games are already in `played`; add this week's live
-          // points while the game is open). Ceiling = floor + cap for what is still to play.
-          // max_drop: while starters are still to play, points so far can still fall (one big negative).
-          let ceil=0,live=0,drop=0;const md=Number(clinch.drop)||0;
+          // Floor = points so far - drop; ceiling = points so far + upside. Finished games are already
+          // in `played`; this week's live points are added while the game is open. A later week, or a
+          // model without upside/drop, can't be bounded: its ties stay unknown.
+          let ceil=0,live=0,drop=0;
           for(const g of t.remaining_games||[]){
             const now=Number.isFinite(week)?Number(g.week)===week:true;
-            if(!now){ceil+=weekCap(slots,clinch.rate,clinch.burst);drop+=md;continue;}
+            if(!now){ceil=Infinity;drop=Infinity;continue;}
             if(m.final&&models[key(rosterLeague,g.opponent_roster_id)]?.final)continue; // counted in played
             live+=Number(m.actual)||0;
-            const players=m.players_left??slots;
-            if(!m.final)ceil+=pointsCap(m.minutes_left??MINUTES_PER_GAME*slots,players,clinch.rate,clinch.burst);
-            if(!m.final&&players>0)drop+=md;
+            if(m.final)continue;
+            ceil+=Number.isFinite(m.upside)?m.upside:Infinity;
+            drop+=Number.isFinite(m.drop)?m.drop:Infinity;
           }
           const now=row.points_for+live;
           bound[id]={wins:row.wins+row.ties/2,floor:now-drop,ceil:now+ceil};
@@ -240,5 +233,5 @@
     });
     return {odds,expected,divisions,draws};
   }
-  return {simulate,leaders,rank,key,cents,pointsCap,weekCap,proveDivision};
+  return {simulate,leaders,rank,key,cents,proveDivision};
 });
