@@ -45,6 +45,7 @@ import pandas as pd
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import _postseason_common as ps  # noqa: E402
 import bowls as B  # noqa: E402
+import clinch_cap  # noqa: E402
 import league_config as lcfg  # noqa: E402
 
 OUT_DIR = "reports/postseason"
@@ -316,7 +317,7 @@ def simulate(year, sims=None, seed=None):
     took = time.time() - t0
     odds = {c_: counts[c_] / sims for c_ in COLS}
     return dict(year=year, after=after, sims=sims, took=took, st=st, keys=keys, idx=idx, odds=odds, games=games,
-                lev=lev, mu=mu, sd=sd, W0=W0, L0=L0, rules=R, upcoming=upcoming)
+                lev=lev, mu=mu, sd=sd, W0=W0, L0=L0, PF0=PF0, rules=R, upcoming=upcoming)
 
 
 def deterministic(year):
@@ -346,16 +347,24 @@ def deterministic(year):
 # team is the sum of each conference's own worst / best case. Equal wins count AGAINST the team for a
 # clinch and FOR it for an out (points-for tiebreaks are unknown in advance). A conference with more
 # than MAX_ENUM games left falls back to the simple wins bound.
+# Task 5.15 (Chris, 2026-11-23): with postseason.clinch set, a tie on wins is SETTLED when one team's
+# points-for floor (points so far) beats the other's ceiling (points so far + clinch_cap cap for its
+# remaining weeks). A settled tie counts like any decided outcome; otherwise it stays unknown.
 MAX_ENUM = 20
 
 
 class _Conf:
-    def __init__(self, members, divs, games, W0):
+    def __init__(self, members, divs, games, W0, PF0=None, cap=None):
         self.m = list(members)                      # global team indices
         loc = {g: i for i, g in enumerate(self.m)}
         self.divs = [[loc[g] for g in d] for d in divs]
         self.games = [(loc[a], loc[b]) for a, b in games]
         self.W0 = W0[self.m].astype(int)
+        # Points-for floor / ceiling per member; without a cap no tie is ever settled.
+        self.capped = PF0 is not None and cap is not None
+        if self.capped:
+            self.floor = np.asarray(PF0, dtype=float)[self.m]
+            self.ceil = self.floor + np.asarray(cap, dtype=float)[self.m]
         self.left = np.zeros(len(self.m), dtype=int)
         for a, b in self.games:
             self.left[a] += 1
@@ -378,15 +387,37 @@ class _Conf:
                 ok &= self.bits[:, gi] == ((a == li) == win)
         return ok
 
-    def most_ahead(self, t, li=None):
+    def beats(self, a, b):
+        """Local a's points-for floor beats local b's ceiling: a tie on wins goes to a for sure."""
+        return bool(self.capped and self.floor[a] > self.ceil[b])
+
+    def below(self, floor):
+        """Members whose points-for ceiling is under an outside team's floor (lose a wins tie to it)."""
+        if not self.capped or floor is None:
+            return np.zeros(len(self.m), dtype=bool)
+        return self.ceil < floor
+
+    def above(self, ceil):
+        """Members whose points-for floor is over an outside team's ceiling (win a wins tie against it)."""
+        if not self.capped or ceil is None:
+            return np.zeros(len(self.m), dtype=bool)
+        return self.floor > ceil
+
+    def most_ahead(self, t, li=None, floor=None):
         """Most teams (other than li, who loses out) that can finish with >= t wins at once, less one
-        when both division champions must be among them (one of them is then the auto bid)."""
+        when both division champions must be among them (one of them is then the auto bid).
+        floor: the measured team's points-for floor; an equal-wins team whose ceiling is below it can't
+        finish ahead (5.15)."""
         keep = [j for j in range(len(self.m)) if j != li]
         two = len(self.divs) == 2
+        lose = self.below(floor)
+        if li is not None and self.capped:
+            lose = self.ceil < self.floor[li]
         if not self.exact:
-            return int(sum(self.W0[j] + self.left[j] >= t for j in keep))
+            hi = self.W0 + self.left
+            return int(sum(hi[j] > t or (hi[j] == t and not lose[j]) for j in keep))
         W = self.W[self._mask(li, False)] if li is not None else self.W
-        ge = W >= t
+        ge = (W > t) | ((W == t) & ~lose[None, :])
         cnt = ge[:, keep].sum(1)
         if two:
             both = np.all([ge[:, [j for j in d if j != li]].any(1) if [j for j in d if j != li] else np.zeros(len(W), bool)
@@ -394,16 +425,21 @@ class _Conf:
             cnt = cnt - both
         return int(cnt.max())
 
-    def fewest_ahead(self, t, li=None):
-        """Fewest teams (other than li, who wins out) certain to finish with > t wins, less the one
-        that can take the auto bid."""
+    def fewest_ahead(self, t, li=None, ceil=None):
+        """Fewest teams (other than li, who wins out) certain to finish ahead at t wins, less the one
+        that can take the auto bid. ceil: the measured team's points-for ceiling; an equal-wins team
+        whose floor is above it is certain to finish ahead (5.15)."""
         keep = [j for j in range(len(self.m)) if j != li]
         two = len(self.divs) == 2
+        win = self.above(ceil)
+        if li is not None and self.capped:
+            win = self.floor > self.ceil[li]
         if not self.exact:
-            c = int(sum(self.W0[j] > t for j in keep))
+            c = int(sum(self.W0[j] > t or (self.W0[j] == t and win[j]) for j in keep))
             return c - (1 if two and c else 0)
         W = self.W[self._mask(li, True)] if li is not None else self.W
-        cnt = (W[:, keep] > t).sum(1)
+        ahead = (W > t) | ((W == t) & win[None, :])
+        cnt = ahead[:, keep].sum(1)
         if two:
             cnt = cnt - (cnt > 0)
         return int(cnt.min())
@@ -415,28 +451,54 @@ class _Conf:
             return "clinched"
         if not self.exact:
             lo, hi = self.W0[li], self.W0[li] + self.left[li]
-            if lo > max(self.W0[j] + self.left[j] for j in riv):
+            if all(lo > self.W0[j] + self.left[j] or (lo == self.W0[j] + self.left[j] and self.beats(li, j))
+                   for j in riv):
                 return "clinched"
-            return "out" if any(hi < self.W0[j] for j in riv) else ""
+            return "out" if any(hi < self.W0[j] or (hi == self.W0[j] and self.beats(j, li)) for j in riv) else ""
         Wl = self.W[self._mask(li, False)]
-        if (Wl[:, riv].max(1) < Wl[:, li]).all():
+        ok = np.ones(len(Wl), dtype=bool)
+        for j in riv:
+            ok &= (Wl[:, j] < Wl[:, li]) | ((Wl[:, j] == Wl[:, li]) & self.beats(li, j))
+        if ok.all():
             return "clinched"
         Ww = self.W[self._mask(li, True)]
-        if (Ww[:, riv].max(1) > Ww[:, li]).all():
+        gone = np.zeros(len(Ww), dtype=bool)
+        for j in riv:
+            gone |= (Ww[:, j] > Ww[:, li]) | ((Ww[:, j] == Ww[:, li]) & self.beats(j, li))
+        if gone.all():
             return "out"
         return ""
 
 
-def proofs(S):
+def remaining_caps(keys, games, year, rate=None, burst=None):
+    """Per-team points-for cap over its remaining regular-season weeks (one full lineup per week), or
+    None when postseason.clinch is off. Keys are (league_id, roster_id)."""
+    if rate is None or burst is None:
+        rate, burst = clinch_cap.settings()
+    if not clinch_cap.enabled(rate, burst):
+        return None
+    slots = clinch_cap.starter_slots(year)
+    weeks = np.zeros(len(keys))
+    for _, a, b in games:
+        weeks[a] += 1
+        weeks[b] += 1
+    fallback = max(slots.values(), default=0)
+    return np.array([weeks[i] * clinch_cap.week_cap(slots.get(keys[i][0], fallback), rate, burst)
+                     for i in range(len(keys))])
+
+
+def proofs(S, rate=None, burst=None):
     keys, games = S["keys"], S["games"]
     n = len(keys)
     R = S["rules"]
     W0 = np.asarray(S["W0"])
+    PF0 = np.asarray(S["PF0"], dtype=float) if S.get("PF0") is not None else None
+    cap = remaining_caps(keys, games, S["year"], rate, burst) if PF0 is not None else None
     conf_of, confs = {}, {}
     for l, divs in R.leagues.items():
         mem = [int(i) for d in divs for i in d]
         gl = [(a, b) for _, a, b in games if a in mem]
-        confs[l] = _Conf(mem, [[int(i) for i in d] for d in divs], gl, W0)
+        confs[l] = _Conf(mem, [[int(i) for i in d] for d in divs], gl, W0, PF0 if cap is not None else None, cap)
         for i in mem:
             conf_of[i] = l
     left = np.zeros(n)
@@ -452,20 +514,32 @@ def proofs(S):
         li = C.m.index(i)
         flag["CCG"][i] = C.ccg(li)
         t = int(W0[i])
+        fl = float(PF0[i]) if cap is not None else None
+        ck = {}
         for l, D in confs.items():
-            if l != conf_of[i] and (l, t) not in cache_most:
-                cache_most[(l, t)] = D.most_ahead(t)
-        worst = C.most_ahead(t, li) + sum(cache_most[(l, t)] for l in confs if l != conf_of[i])
+            if l == conf_of[i]:
+                continue
+            k_ = (l, t, D.below(fl).tobytes())
+            if k_ not in cache_most:
+                cache_most[k_] = D.most_ahead(t, floor=fl)
+            ck[l] = k_
+        worst = C.most_ahead(t, li) + sum(cache_most[ck[l]] for l in ck)
         if flag["CCG"][i] == "clinched" and len(C.divs) < 2:
             flag["Playoff"][i] = "clinched"
         elif worst <= at_large - 1:
             flag["Playoff"][i] = "clinched"
         elif flag["CCG"][i] == "out":
             u = int(wmax[i])
+            ce = float(PF0[i] + cap[i]) if cap is not None else None
+            kf = {}
             for l, D in confs.items():
-                if l != conf_of[i] and (l, u) not in cache_few:
-                    cache_few[(l, u)] = D.fewest_ahead(u)
-            best = C.fewest_ahead(u, li) + sum(cache_few[(l, u)] for l in confs if l != conf_of[i])
+                if l == conf_of[i]:
+                    continue
+                k_ = (l, u, D.above(ce).tobytes())
+                if k_ not in cache_few:
+                    cache_few[k_] = D.fewest_ahead(u, ceil=ce)
+                kf[l] = k_
+            best = C.fewest_ahead(u, li) + sum(cache_few[kf[l]] for l in kf)
             if best >= at_large:
                 flag["Playoff"][i] = "out"
         if flag["Playoff"][i] == "clinched":
