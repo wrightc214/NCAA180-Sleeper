@@ -1,0 +1,288 @@
+{
+ "_note": "Task 5.15 shared fixture: Python (tests/test_clinch_cap.py) and JS (tests/clinch-cap.test.js) must both give `expect` for division D. Teams are as of the start of week 11; `live` holds each team's week-11 model (actual points so far, final flag, player-minutes and starters left). Teams without `live` are pregame with a full lineup (11 starters, 660 minutes). Opponents X/Y/Z sit in the other division.",
+ "slots": 11,
+ "week": 11,
+ "teams": {
+  "A": {
+   "div": "D",
+   "wins": 8,
+   "losses": 2,
+   "pf": 1500
+  },
+  "B": {
+   "div": "D",
+   "wins": 7,
+   "losses": 3,
+   "pf": 1100
+  },
+  "C": {
+   "div": "D",
+   "wins": 7,
+   "losses": 3,
+   "pf": 1050
+  },
+  "X": {
+   "div": "E",
+   "wins": 0,
+   "losses": 10,
+   "pf": 800
+  },
+  "Y": {
+   "div": "E",
+   "wins": 0,
+   "losses": 10,
+   "pf": 800
+  },
+  "Z": {
+   "div": "E",
+   "wins": 0,
+   "losses": 10,
+   "pf": 800
+  }
+ },
+ "games": [
+  [
+   "A",
+   "X"
+  ],
+  [
+   "B",
+   "Y"
+  ],
+  [
+   "C",
+   "Z"
+  ]
+ ],
+ "cases": [
+  {
+   "name": "gap over the cap clinches; chasers out",
+   "rate": 0.45,
+   "burst": 18,
+   "expect": {
+    "clinched": "A",
+    "out": [
+     "B",
+     "C"
+    ]
+   },
+   "drop": 11.01
+  },
+  {
+   "name": "gap under the cap stays open",
+   "rate": 0.45,
+   "burst": 18,
+   "teams": {
+    "B": {
+     "pf": 1300
+    }
+   },
+   "expect": {
+    "clinched": null,
+    "out": [
+     "C"
+    ]
+   },
+   "drop": 11.01
+  },
+  {
+   "name": "cap off reproduces the old rule (points ties unknown)",
+   "rate": 0,
+   "burst": 0,
+   "expect": {
+    "clinched": null,
+    "out": []
+   },
+   "drop": 0
+  },
+  {
+   "name": "kickoff: B could still close a 200-point gap",
+   "rate": 0.45,
+   "burst": 18,
+   "teams": {
+    "A": {
+     "pf": 1300
+    }
+   },
+   "expect": {
+    "clinched": null,
+    "out": []
+   },
+   "drop": 11.01
+  },
+  {
+   "name": "late: A lost and is final, B has one player and 10 minutes left",
+   "rate": 0.45,
+   "burst": 18,
+   "teams": {
+    "A": {
+     "pf": 1300
+    }
+   },
+   "live": {
+    "A": {
+     "actual": 90,
+     "final": true
+    },
+    "X": {
+     "actual": 120,
+     "final": true
+    },
+    "B": {
+     "actual": 150,
+     "minutes": 10,
+     "players": 1
+    },
+    "Y": {
+     "actual": 100,
+     "minutes": 60,
+     "players": 1
+    },
+    "C": {
+     "actual": 100,
+     "minutes": 0,
+     "players": 0,
+     "final": true
+    },
+    "Z": {
+     "actual": 90,
+     "final": true
+    }
+   },
+   "expect": {
+    "clinched": "A",
+    "out": [
+     "B",
+     "C"
+    ]
+   },
+   "drop": 11.01
+  },
+  {
+   "name": "head to head: B can win and tie at 8 inside the cap",
+   "rate": 0.45,
+   "burst": 18,
+   "teams": {
+    "B": {
+     "pf": 1300
+    }
+   },
+   "games": [
+    [
+     "A",
+     "B"
+    ],
+    [
+     "C",
+     "Z"
+    ],
+    [
+     "X",
+     "Y"
+    ]
+   ],
+   "expect": {
+    "clinched": null,
+    "out": [
+     "C"
+    ]
+   },
+   "drop": 11.01
+  },
+  {
+   "rate": 0.45,
+   "burst": 18,
+   "drop": 11.01,
+   "teams": {
+    "A": {
+     "pf": 1310
+    },
+    "B": {
+     "pf": 1300
+    }
+   },
+   "name": "A leads B by 1 on points with its last starter still to play: open (one negative could flip it)",
+   "live": {
+    "A": {
+     "actual": 101,
+     "minutes": 60,
+     "players": 1
+    },
+    "X": {
+     "actual": 80,
+     "minutes": 60,
+     "players": 1
+    },
+    "B": {
+     "actual": 110,
+     "final": true
+    },
+    "Y": {
+     "actual": 90,
+     "final": true
+    },
+    "C": {
+     "actual": 50,
+     "final": true
+    },
+    "Z": {
+     "actual": 60,
+     "final": true
+    }
+   },
+   "expect": {
+    "clinched": null,
+    "out": [
+     "C"
+    ]
+   }
+  },
+  {
+   "rate": 0.45,
+   "burst": 18,
+   "drop": 11.01,
+   "teams": {
+    "A": {
+     "pf": 1310
+    },
+    "B": {
+     "pf": 1300
+    }
+   },
+   "name": "same 1-point lead once A's last starter is final (A lost 101-120): clinched",
+   "live": {
+    "A": {
+     "actual": 101,
+     "final": true
+    },
+    "X": {
+     "actual": 120,
+     "final": true
+    },
+    "B": {
+     "actual": 110,
+     "final": true
+    },
+    "Y": {
+     "actual": 90,
+     "final": true
+    },
+    "C": {
+     "actual": 50,
+     "final": true
+    },
+    "Z": {
+     "actual": 60,
+     "final": true
+    }
+   },
+   "expect": {
+    "clinched": "A",
+    "out": [
+     "B",
+     "C"
+    ]
+   }
+  }
+ ]
+}

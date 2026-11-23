@@ -16,6 +16,7 @@ import pandas as pd
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from site_common import SECTIONS_JS, menu_html, page_head  # noqa: E402
 import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
+import clinch_cap  # noqa: E402
 
 SRC = "data/OverallStandings_Season.csv"
 OUT = "reports/standings.html"
@@ -81,7 +82,7 @@ def main():
     df, disp = extra_columns(df)
     write(df, disp, cur, years, cur, "standings.html", CSV_URL, "All 180 teams · regular season to date",
           "Max PF: points the best possible lineup would have scored. Playoff %: <a href=\"postseason.html\">postseason projection</a> odds "
-          "(Clinched / Out only when proven; not official). The Raw CSV has the standings columns only.")
+          "(Clinched / Out only when proven; not official). " + clinch_cap.note() + " The Raw CSV has the standings columns only.")
     print(f"Wrote {OUT}: {len(df)} teams; past seasons {years}")
 
 
