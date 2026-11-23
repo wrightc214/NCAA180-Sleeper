@@ -2,7 +2,8 @@
 
 ## Rule (Chris, 2026-11-23)
 `cap = max(points_per_minute × player-minutes left, burst_per_player × starters still to play)`, with `0.45` and `18` in `config/league.json` → `postseason.clinch`.
-- On a tie in wins, the points-for tiebreak is **settled** when one team's floor beats the other's ceiling. The floor is points so far; the ceiling is points so far + cap.
+- On a tie in wins, the points-for tiebreak is **settled** when one team's floor beats the other's ceiling. The ceiling is points so far + cap. The floor is points so far − `max_drop` (11.01) while the team still has a starter to play, and points so far once it doesn't.
+- **max_drop (Chris, follow-up):** assume at most one big negative per team. 11.01 = a defense's standard-scoring floor (−4 for 35+ points allowed, −7 for 550+ yards allowed) plus a cent. The worst other starter on record is a QB at −7.66 (Darnold, 2019 week 7: 4 interceptions and a lost fumble). Summing a worst game for every slot (≈64) was rejected as far-fetched. In the Tuesday proofs it applies once per week left.
 - A settled tie counts like any decided outcome, for Clinched and for Out. Points against is never capped.
 - With both values 0 or missing, the old rule applies: every points-for tie stays unknown. This is tested.
 
@@ -16,7 +17,7 @@
 | `reports/assets/ccg-race.js` | Models carry `minutes_left` / `players_left`; `clinchOptions` comes from config. Page note sentence comes from config. |
 | Page notes | Bowl projection (two notes) and Standings via `clinch_cap.note()`; CCG race via JS. |
 
-**Full week still to play:** every starter slot × 60 minutes. Slots come from `data/LeagueIDs_AllYears.csv` `RosterPositions` without BN/IR/TAXI/RES; 2026 is 11 for all 15 leagues, so one week = max(297, 198) = **297**.
+**Full week still to play:** every starter slot × 60 minutes, so the lead must exceed 297 + 11.01 = 308.01. Slots come from `data/LeagueIDs_AllYears.csv` `RosterPositions` without BN/IR/TAXI/RES; 2026 is 11 for all 15 leagues, so one week = max(297, 198) = **297**.
 
 **Live minutes and starters:**
 - A starter in a live game counts as a player left even at 0 minutes. Overtime reads as 0 minutes in `remaining()`, but he can still score.
@@ -39,11 +40,12 @@
 | South Dakota | Wild Plains | 5-5, 1236.46 | 324 | CCG / Playoff / Natty out |
 | Howard | HBCU Hurricane | 6-4, 1166.42 | 311 (vs NC A&T) | CCG / Playoff / Natty out |
 
-Gaps under 297 stay unknown: Delaware State 266, West Virginia 258, Texas A&M 236, Davidson 209, UCLA 189. CCG race contenders: 18 live / 12 clinched → 17 / 13.
+With max_drop, the same four change (Howard 311 > 308.01). Gaps under 297 stay unknown: Delaware State 266, West Virginia 258, Texas A&M 236, Davidson 209, UCLA 189. CCG race contenders: 18 live / 12 clinched → 17 / 13.
 
 **Week 11 live** (Mon Nov 23 ~11 AM ET, Sunday final, MNF pending). This is the branch JS run on live Sleeper data in the browser; the published page showed these as >99% / <1%:
 - **Clinched:** Clemson (ACC), Baylor (Big 12), Campbell (Pioneer), Montana and Old Dominion (Wild).
 - **Out:** NC State, Texas A&M, West Virginia, UConn, UCLA, Davidson, South Dakota, Wichita State, UNC Charlotte.
+- Rerun with max_drop 11.01: same 14 changes; the leaders had no starters left.
 - **Example:** NC State is 8-2, PF 1603.00, with no starters left. Clemson's floor of 1738.90 beats that, so a tie at 9 can't go to NC State.
 
 ## Tests
@@ -54,7 +56,7 @@ Gaps under 297 stay unknown: Delaware State 266, West Virginia 258, Texas A&M 23
   - The week-10 replay diff.
   - Contenders inside/outside the cap.
 - `tests/test_ccg_race.py`: the snapshot test now runs with the cap off (the snapshot predates the cap). A new test pins the capped result: Wild Plains = Montana; HBCU Hurricane drops Howard; Pac-12 South unchanged; 13 clinched.
-- `node tests/clinch-cap.test.js` (new) runs the same 6 fixture cases as Python (`tests/fixtures/clinch-cap-cases.json`), including kickoff open → late clinched as the chaser's players finish. All `node tests/*.test.js` pass.
+- `node tests/clinch-cap.test.js` (new) runs the same 6 fixture cases as Python (`tests/fixtures/clinch-cap-cases.json`), including kickoff open → late clinched as the chaser's players finish, and Chris's case: a 1-point lead with the leader's last starter still to play stays open, then is Clinched once that starter is final. 8 shared cases. All `node tests/*.test.js` pass.
 - `RUN_SCOREBOARD_BROWSER_TESTS=1 pytest tests/test_ccg_race_browser.py tests/test_selection_watch_page.py tests/test_menu_browser.py` → 13 passed.
 
 ## Open for Chris (5.15.2)
