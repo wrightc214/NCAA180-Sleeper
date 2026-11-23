@@ -102,16 +102,20 @@ class TrophyBrowser(unittest.TestCase):
         ink = sum(1 for y in range(y0, y1) for x in range(xs[0], xs[-1]) if sum(px[x, y]) < 300)
         self.assertGreater(ink, 300, "plaque is blank in the saved image")
 
-    def test_dwight_fight_and_js_fallback(self):
+    def test_dwight_fight_and_js_generic_then_fallback(self):
         p = self.open("reports/dwight-fight.html", 390)
         p.wait_for_function("window.NCAATrophy?.config")
-        html = p.evaluate("""()=>{const d=document.createElement('div');document.body.append(d);
+        drawn = p.evaluate("""()=>{const d=document.createElement('div');document.body.append(d);
+          d.innerHTML=NCAATrophy.html({EventType:'Bowl',Event:'No Such Bowl'},'Arizona State',2026,null,{lazy:false});
+          return new Promise(r=>setTimeout(()=>{const i=d.querySelector('img');r([i.src,i.naturalWidth,d.textContent])},1500))}""")
+        self.assertTrue(drawn[0].endswith("Generic%20Bowl.png") and drawn[1] > 0, drawn)
+        self.assertIn("2026 No Such Bowl", drawn[2])
+        html = p.evaluate("""()=>{NCAATrophy.config.events.Bowl.generic='assets/trophies/none.png';
+          const d=document.createElement('div');document.body.append(d);
           d.innerHTML=NCAATrophy.html({EventType:'Bowl',Event:'No Such Bowl'},'Arizona State',2026,null,{lazy:false});
           return new Promise(r=>setTimeout(()=>r(d.innerHTML),1500))}""")
         self.assertIn('class="trophy fallback', html)
         self.assertIn("2026 No Such Bowl", html)
-        self.assertNotIn("No%20Such%20Bowl.png", html.split("data-art")[0])
-
 
 if __name__ == "__main__":
     unittest.main()

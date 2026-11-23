@@ -24,7 +24,7 @@ CLI (CWD = repo root):
   python scripts/trophies.py --allow-changes    same, accepting changed/dropped rows (after a reviewed correction)
   python scripts/trophies.py --backfill         one-time: write data/Trophies_Historic.csv (refuses to overwrite)
   python scripts/trophies.py --rollover YEAR    append YEAR's season rows to the historic file + clear the season
-                                                file (run on a branch -> PR; .github/workflows/trophies-rollover.yml)
+                                                file (for the year-end closing scripts; historic changes go via PR)
   python scripts/trophies.py --metrics          regenerate assets/fonts/barlow-trophy-metrics.json
   python scripts/trophies.py --check            every ledger row's art resolves (or falls back); counts
 """
@@ -147,6 +147,18 @@ def art_key(row):
     return _fmt(event_cfg(row)["art"], fields(row))
 
 
+def generic_key(row):
+    return _fmt(event_cfg(row).get("generic", ""), fields(row))
+
+
+def resolved_art(row):
+    """The file actually drawn: the event's own art, else its generic stand-in, else '' (fallback block)."""
+    for p in (art_key(row), generic_key(row)):
+        if p and os.path.exists(_path(p)):
+            return p
+    return ""
+
+
 def geometry(art):
     """Plaque box for an art file: the default plaque with any per-file override."""
     c = cfg()
@@ -227,7 +239,8 @@ def trophy_html(event, winner=None, year=None, line2=None, *, width=None, prefix
     The plaque is HTML text over the art (percentages of the image), sized in cqw so it stays crisp at
     any width and in Save image. Missing art -> the event's logo + the same two lines on a plain plaque."""
     en = engraving(event, winner, year, line2)
-    if not os.path.exists(_path(en["art"])):
+    drawn = resolved_art(_row(event, winner, year))
+    if not drawn:
         en = engraving(event, winner, year, line2, fallback=True)
     w = width or cfg()["display"]["list"]
     url = lambda p: e(prefix + urllib.parse.quote(p))  # noqa: E731
@@ -235,11 +248,11 @@ def trophy_html(event, winner=None, year=None, line2=None, *, width=None, prefix
     t2 = f'<span class="tp-2{" tp-up" if en["upper2"] else ""}" style="font-size:{en["size2"]}cqw">{e(en["line2"])}</span>'
     load = ' loading="lazy" decoding="async"' if lazy else ""
     a = e(alt or en["alt"])
-    if os.path.exists(_path(en["art"])):
+    if drawn:  # own art or the generic stand-in (same shared base, same plaque)
         b = en["box"]
         pos = f'left:{b["left"]}%;top:{b["top"]}%;width:{b["width"]}%;height:{b["height"]}%;color:{en["color"]}'
         return (f'<figure class="trophy {cls}" style="--tw:{w}px" data-art="{e(en["art"])}">'
-                f'<div class="trophy-art"><img src="{url(en["art"])}" alt="{a}" width="{w}" height="{w}"{load}>'
+                f'<div class="trophy-art"><img src="{url(drawn)}" alt="{a}" width="{w}" height="{w}"{load}>'
                 f'<div class="trophy-plaque" style="{pos}">{t1}{t2}</div></div></figure>')
     lg = logo_for(en)
     img = f'<img src="{url(lg)}" alt=""{load}>' if lg else ""
@@ -253,8 +266,9 @@ def engrave_png(row, width=None):
     Never writes a file. Missing art -> a plain plaque-style image with the two lines."""
     from PIL import Image, ImageDraw, ImageFont
     en = engraving(row)
-    if os.path.exists(_path(en["art"])):
-        im = Image.open(_path(en["art"])).convert("RGBA")
+    drawn = resolved_art(row)
+    if drawn:
+        im = Image.open(_path(drawn)).convert("RGBA")
     else:  # same plain plaque as the page's fallback block
         en = engraving(row, fallback=True)
         im = Image.new("RGBA", (1200, 300), (0, 0, 0, 0))
@@ -548,12 +562,12 @@ def check():
     L = ledger()
     bad = 0
     for r in L.to_dict("records"):
-        art = r["ArtKey"] or art_key(r)
-        if not os.path.exists(_path(art)):
-            print(f"fallback: {r['Season']} {r['EventType']} {r['Event']} ({art})")
+        drawn = resolved_art(r)
+        if drawn != (r["ArtKey"] or art_key(r)):
+            print(f"{'generic' if drawn else 'fallback'}: {r['Season']} {r['EventType']} {r['Event']} ({drawn or 'no art'})")
             bad += 1
     print(L.groupby(["Season", "EventType"]).size().unstack(fill_value=0).to_string())
-    print(f"{len(L)} trophies; {bad} use the fallback (no art file)")
+    print(f"{len(L)} trophies; {bad} without their own art file")
 
 
 def main():

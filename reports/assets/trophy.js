@@ -9,7 +9,8 @@
  *
  * event: a ledger row ({Season, EventType, Event, Round, Team, Conference}) or an EventType string.
  * The plaque is HTML text over the art in percentages of the image, sized in cqw (crisp at any size,
- * readable by screen readers, captured by Save image). A missing art file swaps to the fallback block.
+ * readable by screen readers, captured by Save image). A missing art file swaps to the event's generic
+ * stand-in art, then to the fallback block.
  */
 (function (root, factory) {
   const api = factory();
@@ -56,6 +57,7 @@
     return ev;
   }
   const artKey = r => fmt(eventCfg(r).art, fields(r));
+  const genericKey = r => fmt(eventCfg(r).generic ?? '', fields(r));
   function geometry(art) {
     return {...clean(C.plaque), ...clean((C.overrides || {})[art])};
   }
@@ -99,9 +101,11 @@
     const en = engraving(event, winner, year, line2), b = en.box;
     const fb = fallbackHtml(event, winner, year, line2, o);
     const pos = `left:${b.left}%;top:${b.top}%;width:${b.width}%;height:${b.height}%;color:${esc(en.color)}`;
-    // Missing art never shows a broken image: the figure swaps itself for the fallback block.
-    const swap = `this.closest('figure').outerHTML=this.closest('figure').dataset.fallback`;
-    return `<figure class="trophy ${esc(o.cls)}" style="--tw:${o.width}px" data-art="${esc(en.art)}" data-fallback="${esc(fb)}">` +
+    // Missing art never shows a broken image: own art -> the event's generic stand-in -> the fallback block.
+    const gen = genericKey(row(event, winner, year));
+    const swap = `const f=this.closest('figure');if(f.dataset.generic&&!f.dataset.tried){f.dataset.tried=1;this.src=f.dataset.generic}else f.outerHTML=f.dataset.fallback`;
+    return `<figure class="trophy ${esc(o.cls)}" style="--tw:${o.width}px" data-art="${esc(en.art)}"` +
+      `${gen ? ` data-generic="${url(o.prefix, gen)}"` : ''} data-fallback="${esc(fb)}">` +
       `<div class="trophy-art"><img src="${url(o.prefix, en.art)}" alt="${esc(en.alt)}" width="${o.width}" height="${o.width}"` +
       `${o.lazy ? ' loading="lazy" decoding="async"' : ''} onerror="${esc(swap)}">` +
       `<div class="trophy-plaque" style="${pos}">${lines(en)}</div></div></figure>`;

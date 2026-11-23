@@ -56,15 +56,21 @@ def test_every_row_has_a_roster_slot():
     assert (h["LeagueID"] != "").all() and (h["RosterID"] != "").all()
 
 
-def test_every_row_maps_to_art_or_the_fallback():
+def test_every_row_maps_to_art_or_the_generic_stand_in():
     for r in T.ledger().to_dict("records"):
         assert r["ArtKey"] == T.art_key(r)
+        drawn = T.resolved_art(r)
+        assert drawn in (r["ArtKey"], T.generic_key(r)) and os.path.exists(drawn), r
         out = T.trophy_html(r)
-        if os.path.exists(r["ArtKey"]):
-            assert f'src="../{T.urllib.parse.quote(r["ArtKey"])}"' in out and "fallback" not in out
-        else:
-            assert 'class="trophy fallback' in out and T.urllib.parse.quote(r["ArtKey"]) not in out.split("data-art")[0]
-            assert re.search(r'src="[^"]*assets/trophies/', out) is None  # never a broken trophy image
+        assert f'src="../{T.urllib.parse.quote(drawn)}"' in out and "fallback" not in out
+
+
+def test_unmatched_bowls_and_conferences_use_the_generic_trophy():
+    b = T.trophy_html({"EventType": "Bowl", "Event": "Belk Bowl"}, "Furman", 2020)
+    assert "Generic%20Bowl.png" in b and "2020 Belk Bowl" in b
+    c = T.trophy_html({"EventType": "CCG", "Conference": "Southland"}, "Dixie State", 2020)
+    assert "Generic%20Conference.png" in c and "2020 Southland Champion" in c
+    assert "Generic%20Bowl.png" in T.trophy_html({"EventType": "PlayoffRound", "Event": "New Bowl", "Round": "Elite 8"}, "X", 2030)
 
 
 def test_spot_check_2025_against_postseason_history():
@@ -280,13 +286,15 @@ def test_engrave_png_in_memory(tmp_path, monkeypatch):
     ink = sum(n for n, p in box.getcolors(box.width * box.height) if sum(p) < 300)
     assert ink > 500  # the two lines are drawn
     assert list(tmp_path.iterdir()) == []  # nothing written
-    fb = T.engrave_png({**row, "EventType": "Bowl", "Event": "No Such Bowl"})
-    assert fb.size == (1200, 300)
+    assert T.engrave_png({**row, "EventType": "Bowl", "Event": "No Such Bowl"}).size == (1200, 1200)  # generic art
+    monkeypatch.setattr(T, "resolved_art", lambda r: "")
+    assert T.engrave_png({**row, "EventType": "Bowl", "Event": "No Such Bowl"}).size == (1200, 300)  # plain plaque
 
 
 def test_fallback_when_art_missing(monkeypatch):
     real = T.os.path.exists
     monkeypatch.setattr(T.os.path, "exists", lambda p: False if "National Championship.png" in str(p) and "trophies" in str(p) else real(p))
+    # (NationalTitle has no generic stand-in; a Bowl falls back only if its generic is missing too)
     out = T.trophy_html({"EventType": "NationalTitle"}, "Arizona State", 2025)
     assert 'class="trophy fallback' in out and "Arizona State" in out and "2025 National Champion" in out
     assert "assets/logos/Playoffs/National%20Championship.png" in out  # the event's logo
@@ -341,4 +349,4 @@ def test_no_per_trophy_image_files():
     teams = {t for t in hist()["Team"]}
     # trophy art + generated images: nothing named after a winner or a season's trophy
     per = [p for p in imgs if Path(p).stem in teams or re.search(r"(19|20)\d\d.*(champ|trophy|bowl)", Path(p).stem, re.I)]
-    assert per == [] and len(glob.glob(str(ROOT / "assets/trophies/**/*.png"), recursive=True)) == 61
+    assert per == [] and len(glob.glob(str(ROOT / "assets/trophies/**/*.png"), recursive=True)) == 63  # 61 + 2 generic placeholders

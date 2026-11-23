@@ -14,8 +14,9 @@ Delete this file and `docs/reviews/5-1-trophies/` (the screenshots) when the PR 
 | Engraving font (Barlow, OFL) + width table | `assets/fonts/` (woff/woff2 400 + 700, `Barlow-OFL.txt`, `barlow-trophy-metrics.json`) |
 | Pages | `scripts/postseason_page.py`, `scripts/bracket.py` (champion card), `scripts/special_page.py`, `reports/assets/dwight-fight.js`, `reports/assets/guillotine.js` |
 | Save image fix | `reports/assets/snapshot.js`: lazy images in the hidden export frame are switched to eager, so they still load |
-| Workflows | `update-leagues.yml` (new `trophies` and `trophies_allow_changes` steps), new `trophies-rollover.yml`, and `pr-check.yml` (a step for the trophy browser tests) |
-| Tests | `tests/test_trophies.py` (27), `tests/test_trophies_browser.py` (4, opt-in Playwright), `tests/trophy.test.js` (5) |
+| Workflows | `update-leagues.yml` (new `trophies` and `trophies_allow_changes` steps) and `pr-check.yml` (a step for the trophy browser tests) |
+| Placeholder generic art | `assets/trophies/bowls/Generic Bowl.png`, `assets/trophies/conferences/Generic Conference.png` (shared base and plaque untouched) |
+| Tests | `tests/test_trophies.py` (28), `tests/test_trophies_browser.py` (4, opt-in Playwright), `tests/trophy.test.js` (5) |
 
 No image is stored for any trophy. Every display draws the shared art and puts the plaque text on top as HTML from a ledger row. `engrave_png(row)` builds a `PIL.Image` in memory and never writes a file.
 
@@ -35,9 +36,8 @@ No image is stored for any trophy. Every display draws the shared art and puts t
   - Additions always pass.
   - Once the change has been checked, run the workflow with `script_to_run = trophies_allow_changes`.
   - A team rename after a trophy row exists also trips the check (conservative on purpose).
-- **Rollover:** run the *Trophy ledger rollover* workflow with the season.
-  - It runs `trophies.py --rollover YEAR`, pushes branch `trophies-rollover-YEAR`, and opens a PR. It never commits to main.
-  - If repo settings don't allow Actions to create PRs, the branch is still pushed and the job warns you to open the PR by hand.
+- **Rollover:** `trophies.py --rollover YEAR` appends the season's rows to `Trophies_Historic.csv` and clears the season file.
+  - Chris (2026-11-22): the still-to-be-built year-end closing scripts call it; there is no workflow of its own. Historic changes still go through a PR.
   - After rollover, the weekly job skips any season already in the historic file.
   - If a new season starts before the rollover, the safety check trips and its message says to roll over first.
 - **Component:** `trophy_html(event, winner, year, line2=None, …)` in Python and `NCAATrophy.html(event, winner, year, line2, opts)` in JS. `event` can be a ledger row or an EventType dict.
@@ -47,8 +47,9 @@ No image is stored for any trophy. Every display draws the shared art and puts t
   - Widths are unkerned sums plus 3%, so they are always at least as wide as what the browser draws. The longest real name is checked against the real kerned font.
   - Sizes only shrink from a maximum. Text is never truncated and centred both ways.
   - The font is vendored and declared locally (`"Barlow Trophy"`), so the measurements hold even when Google Fonts doesn't load.
-- **Missing art:** a plain plaque-style block shows the event's logo (approved bowl logos only) and the same two lines.
-  - Python checks the file at build time. In JS, the `<img onerror>` swaps in the fallback that was rendered alongside it.
+- **Missing art:** the event's own art, else its **generic stand-in** (`generic` in config: Generic Bowl for bowls and playoff rounds, Generic Conference for CCGs), else a plain plaque-style block with the event's logo and the same two lines.
+  - Python checks the files at build time. In JS, `<img onerror>` walks the same chain.
+  - The generic art is a **placeholder** drawn on the shared base; replacing it with a real design is an offseason todo. Same file names, so no config change.
 - **Adding art later** (e.g. `special/Triad Cup.png`): drop in the file and add one `events` entry. Rows with the new EventType start appearing once a builder writes them.
 
 ## Decisions to review
@@ -57,12 +58,12 @@ No image is stored for any trophy. Every display draws the shared art and puts t
    - Ink colour is `#1b2340`; the Dwight Fight keeps its brown `#4a260d`.
    - The text in the DOM stays mixed case, e.g. "2026 Big Sky Champion". Only the display is uppercase, via CSS. Set `uppercase_line2: false` to turn that off.
 2. **The Dwight Fight is unchanged in look.** It uses its own art (1254 px) with the old box as a config override (24.6 / 82.5 / 50.6 / 11.1 %), at 10 px per line on a 300 px trophy. The before/after screenshots are pixel-identical (see screenshots).
-3. **The box in the prompt vs the real plaque.** 160/1200 is **13.33 %** tall, not 13.25 %. The code uses the measured plaque (left 23.33 %, top 76.16 %, width 53.33 %, height 13.33 %), rounded down so the text never leaves the plaque. A test samples every one of the 61 art files: inside the box is all `#CFD4D8`, and just outside each edge is not.
+3. **The box in the prompt vs the real plaque.** 160/1200 is **13.33 %** tall, not 13.25 %. The code uses the measured plaque (left 23.33 %, top 76.16 %, width 53.33 %, height 13.33 %), rounded down so the text never leaves the plaque. A test samples every art file (61 plus the 2 generic placeholders): inside the box is all `#CFD4D8`, and just outside each edge is not.
 4. **Placement on the Postseason page.**
    - Each finished CCG, bowl, Elite 8 / Final Four game and the NIT final card has its trophy at the right of the game.
    - The trophy is 180 px wide on desktop and 26vw (~100 px) on phones. Below 400 px wide it drops under the scores, so that 320 px phones don't clip team names (checked: 0 clipped names at 320 and 390 on every season page).
    - The National Championship trophy is engraved on the bracket champion card (240 px on the page, 300 px in Save image). It also appears on the title game only when a season has no clean bracket.
-5. **On phones the list engravings are small** (about 4–5 px text on a 100 px trophy). The information is still in the alt text and the selectable text, and it is crisp on the champion cards and in Save image. A tap-to-enlarge could be a follow-up.
+5. **On phones the list engravings are small** (about 4–5 px text on a 100 px trophy). Kept as is (Chris, 2026-11-22). The information is still in the alt text and the selectable text, and it is crisp on the champion cards and in Save image.
 6. **The Guillotine trophy** appears in the champion banner on Special Events once `guillotine.json` is `final`, one trophy per co-champion.
 7. **Pages that draw in the browser** (Dwight Fight, Guillotine) read both ledger files. Until the weekly job has written the row, they fall back to the event's own final file, so the trophy shows as soon as the result is final.
 8. **No trophy for a live or unplayed game.** Ledger rows exist only for Final results, and pages also check that the game is final.
@@ -84,14 +85,14 @@ The Guillotine starts in 2026, so it has no history. 2025 spot check (tested): n
 
 ## Gaps and data notes
 
-- **2019:** only 11 CCGs (11 leagues that year). The American CCG (Ohio) has no art, so it uses the fallback.
-- **2020:** the Southland CCG has no art (fallback). There is no Dwight Fight champion: the page lists "Finalist: Penn · champion unknown".
+- **2019:** only 11 CCGs (11 leagues that year). The American CCG (Ohio) has no art, so it uses Generic Conference.
+- **2020:** the Southland CCG has no art (Generic Conference). There is no Dwight Fight champion: the page lists "Finalist: Penn · champion unknown".
 - **2021:** the playoff had no host bowls, so there are no Elite 8 / Final Four trophies. The national title still has its trophy.
 - **Dwight Fight:**
   - 2019 Penn has `Status=Recorded`, taken from the Dwight Fight page's past-champions list; no bracket was recorded.
   - 2024 (New Mexico) and 2025 (Arizona State) have `Status=Reconstructed`: field = poll voters, event likely not held.
-  - All three are kept as rows so the trophy rooms can decide what to show, filtering on `Status`.
-- **Bowls without art (27 rows, all use the fallback):** Belk (2019–22), Duke's Mayonnaise (2022), Outback (2019–22), EA Sports (2019–22), Ice (2019–22), FedEx (2020–21), Geico (2020–21), PlayStation (2019–20), Xbox (2019–20).
+  - All three are kept as trophies (Chris, 2026-11-22); `Status` stays for reference.
+- **Bowls without their own art (25 rows, all use Generic Bowl):** Belk (2019–22), Duke's Mayonnaise (2022), Outback (2019–22), EA Sports (2019–22), Ice (2019–22), FedEx (2020–21), Geico (2020–21), PlayStation (2019–20), Xbox (2019–20).
 - **Older or sponsored names mapped to today's art:**
   - Already in `league.json` `history_names`: Brooklyn→Gotham, Texas→Bluebonnet, Arizona→Copper, Birmingham→Vulcan, New Mexico→Zia, LA→Freedom, Miami Beach/Boca Raton→Palm.
   - Added in `trophies.json bowl_art`: Capital One→Citrus, TaxSlayer→Gator, Chick-fil-A→Peach.
@@ -101,20 +102,18 @@ The Guillotine starts in 2026, so it has no history. 2025 spot check (tested): n
   - 2021: Ivy CCG Yale; Idaho Potato Bowl Furman; Independence Bowl Grambling State
   - Caretakers: the data has no record of anyone running an orphan for a season, so none are credited. If a caretaker should be credited, add `ManagerName` in a hand-edit PR.
 
-## Open questions for Chris
+## Offseason todo
 
-1. **Sponsored bowl names on plaques.** The no-sponsor rule says the engraving should not show them, so Capital One, TaxSlayer and Chick-fil-A engrave as Citrus, Gator and Peach. Belk, Duke's Mayonnaise, Outback, EA Sports, FedEx, Geico, Ice, PlayStation and Xbox still engrave as played, because I couldn't pick legacy names for them.
-   - For each one, give the legacy name: one line in `bowl_labels` fixes the engraving, and one line in `bowl_art` fixes the art if a matching file exists.
-2. **Reconstructed and pre-bracket Dwight Fight titles** (2019 Penn, 2024, 2025): keep them as trophies (the current rows) or drop them? Nothing displays historic Dwight trophies yet.
-3. **Phone size for list trophies:** keep ~100 px beside the game, or show a smaller trophy icon with tap-to-enlarge?
-4. **Rollover PR permission:** the rollover workflow needs "Allow GitHub Actions to create and approve pull requests" turned on in the repo settings. Without it, it pushes the branch and you open the PR yourself.
+- **Replace the placeholder generic trophies** (`bowls/Generic Bowl.png`, `conferences/Generic Conference.png`) with a real design. Same file names, so no config change.
+- **Legacy names** for Belk, Duke's Mayonnaise, Outback, EA Sports, FedEx, Geico, Ice, PlayStation and Xbox: one `bowl_labels` line each fixes the engraving. Until then they engrave as played.
+- **Year-end closing scripts:** call `python scripts/trophies.py --rollover YEAR` after the season's last event, and commit through a PR.
 
 ## Acceptance results
 
-- `python3 -m pytest -q tests`: **314 passed, 34 skipped** (the 27 new ledger, config, geometry, fit, fallback, parity, PNG and page tests are included).
+- `python3 -m pytest -q tests`: **315 passed, 34 skipped** (the 28 new ledger, config, geometry, fit, fallback, parity, PNG and page tests are included).
 - `node --test tests/*.test.js`: **80 passed** (5 new).
 - Browser tests (`RUN_SCOREBOARD_BROWSER_TESTS=1`): trophies 4/4; Dwight Fight, Guillotine, bracket, scoreboard postseason and CCG race all still pass.
-- Crawl of all 120 generated pages under `reports/`: **360 trophies drawn, 0 broken trophy images**, and no plaque text overflow at 390 or 1280, light or dark.
+- Crawl of all 120 generated pages under `reports/`: **360 trophies drawn (27 on generic art), 0 broken trophy images**, and no plaque text overflow at 390 or 1280, light or dark.
 - Save image of the champion card shows the engraving: `docs/reviews/5-1-trophies/save-image-champion-card.png`. The browser test also checks for ink inside the plaque.
 - No new image file under `assets/` or `reports/` for any trophy won (tested).
 - Screenshots are in `docs/reviews/5-1-trophies/`:

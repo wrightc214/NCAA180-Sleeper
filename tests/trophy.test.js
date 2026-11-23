@@ -40,7 +40,8 @@ test('html: art + engraved text, alt, lazy, and a fallback for missing art', () 
   assert.match(h, /class="tp-1"[^>]*>Clemson</);
   assert.match(h, /class="tp-2 tp-up"[^>]*>2026 Gator Bowl</);
   assert.match(h, /loading="lazy"/);
-  assert.match(h, /onerror=/);  // swaps to data-fallback if the file is missing
+  assert.match(h, /onerror=/);  // missing file: data-generic, then data-fallback
+  assert.match(h, /data-generic="\.\.\/assets\/trophies\/bowls\/Generic%20Bowl\.png"/);
   const fb = h.match(/data-fallback="([^"]*)"/)[1].replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
   assert.match(fb, /class="trophy fallback/);
   assert.match(fb, /2026 Gator Bowl/);

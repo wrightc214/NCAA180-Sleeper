@@ -29,10 +29,11 @@
     }
   },
   "events": {
-    "_note": "EventType -> art, engraving and fallback logo. Placeholders: {year} {conference} {event} (the bowl, aliased by bowl_art for art and bowl_labels for text) {round} {team}. art/logo are repo paths. line2 = plaque line 2; alt = the trophy's alt text. A missing art file shows the fallback block (logo + the same two lines), never a broken image.",
+    "_note": "EventType -> art, engraving and fallback logo. Placeholders: {year} {conference} {event} (the bowl, aliased by bowl_art for art and bowl_labels for text) {round} {team}. art/logo are repo paths. line2 = plaque line 2; alt = the trophy's alt text. generic = the event's stand-in art when its own file doesn't exist (PLACEHOLDER art drawn 2026-11-22; offseason todo: Chris's real generic design). Order: own art -> generic -> fallback block (logo + the same two lines), never a broken image.",
     "CCG": {
       "_note": "Conference championship game winner. {conference} = league short name (data/LeagueShortNames.csv).",
       "art": "assets/trophies/conferences/{conference}.png",
+      "generic": "assets/trophies/conferences/Generic Conference.png",
       "logo": "assets/logos/CCG/{conference} CCG.png",
       "name": "{conference} Championship",
       "line2": "{year} {conference} Champion",
@@ -41,6 +42,7 @@
     "Bowl": {
       "_note": "Non-playoff bowl winner.",
       "art": "assets/trophies/bowls/{art}.png",
+      "generic": "assets/trophies/bowls/Generic Bowl.png",
       "logo": "assets/logos/Bowls/{event}.png",
       "name": "{event}",
       "line2": "{year} {event}",
@@ -50,6 +52,7 @@
       "_note": "Elite 8 / Final Four winners, on that year's host playoff bowl (the round is on line 2 because each playoff bowl hosts different rounds by year). Seasons whose playoff had no host bowls (2021) get no round trophy.",
       "rounds": ["Elite 8", "Final Four"],
       "art": "assets/trophies/bowls/{art}.png",
+      "generic": "assets/trophies/bowls/Generic Bowl.png",
       "logo": "assets/logos/Playoffs/{event}.png",
       "name": "{event}",
       "line2": "{year} {event} · {round}",
