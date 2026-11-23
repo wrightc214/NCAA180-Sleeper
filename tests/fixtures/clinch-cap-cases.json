@@ -65,7 +65,8 @@
      "B",
      "C"
     ]
-   }
+   },
+   "drop": 11.01
   },
   {
    "name": "gap under the cap stays open",
@@ -81,7 +82,8 @@
     "out": [
      "C"
     ]
-   }
+   },
+   "drop": 11.01
   },
   {
    "name": "cap off reproduces the old rule (points ties unknown)",
@@ -90,7 +92,8 @@
    "expect": {
     "clinched": null,
     "out": []
-   }
+   },
+   "drop": 0
   },
   {
    "name": "kickoff: B could still close a 200-point gap",
@@ -104,7 +107,8 @@
    "expect": {
     "clinched": null,
     "out": []
-   }
+   },
+   "drop": 11.01
   },
   {
    "name": "late: A lost and is final, B has one player and 10 minutes left",
@@ -151,7 +155,8 @@
      "B",
      "C"
     ]
-   }
+   },
+   "drop": 11.01
   },
   {
    "name": "head to head: B can win and tie at 8 inside the cap",
@@ -179,6 +184,102 @@
    "expect": {
     "clinched": null,
     "out": [
+     "C"
+    ]
+   },
+   "drop": 11.01
+  },
+  {
+   "rate": 0.45,
+   "burst": 18,
+   "drop": 11.01,
+   "teams": {
+    "A": {
+     "pf": 1310
+    },
+    "B": {
+     "pf": 1300
+    }
+   },
+   "name": "A leads B by 1 on points with its last starter still to play: open (one negative could flip it)",
+   "live": {
+    "A": {
+     "actual": 101,
+     "minutes": 60,
+     "players": 1
+    },
+    "X": {
+     "actual": 80,
+     "minutes": 60,
+     "players": 1
+    },
+    "B": {
+     "actual": 110,
+     "final": true
+    },
+    "Y": {
+     "actual": 90,
+     "final": true
+    },
+    "C": {
+     "actual": 50,
+     "final": true
+    },
+    "Z": {
+     "actual": 60,
+     "final": true
+    }
+   },
+   "expect": {
+    "clinched": null,
+    "out": [
+     "C"
+    ]
+   }
+  },
+  {
+   "rate": 0.45,
+   "burst": 18,
+   "drop": 11.01,
+   "teams": {
+    "A": {
+     "pf": 1310
+    },
+    "B": {
+     "pf": 1300
+    }
+   },
+   "name": "same 1-point lead once A's last starter is final (A lost 101-120): clinched",
+   "live": {
+    "A": {
+     "actual": 101,
+     "final": true
+    },
+    "X": {
+     "actual": 120,
+     "final": true
+    },
+    "B": {
+     "actual": 110,
+     "final": true
+    },
+    "Y": {
+     "actual": 90,
+     "final": true
+    },
+    "C": {
+     "actual": 50,
+     "final": true
+    },
+    "Z": {
+     "actual": 60,
+     "final": true
+    }
+   },
+   "expect": {
+    "clinched": "A",
+    "out": [
+     "B",
      "C"
     ]
    }

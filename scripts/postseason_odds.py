@@ -470,30 +470,37 @@ class _Conf:
         return ""
 
 
-def remaining_caps(keys, games, year, rate=None, burst=None):
-    """Per-team points-for cap over its remaining regular-season weeks (one full lineup per week), or
-    None when postseason.clinch is off. Keys are (league_id, roster_id)."""
+def remaining_caps(keys, games, year, rate=None, burst=None, drop=None):
+    """(cap, drop) per team over its remaining regular-season weeks (one full lineup per week), or
+    None when postseason.clinch is off. cap = most it can still add; drop = most it can still lose
+    (max_drop per week left). Keys are (league_id, roster_id)."""
     if rate is None or burst is None:
         rate, burst = clinch_cap.settings()
     if not clinch_cap.enabled(rate, burst):
         return None
+    drop = clinch_cap.max_drop() if drop is None else float(drop)
     slots = clinch_cap.starter_slots(year)
     weeks = np.zeros(len(keys))
     for _, a, b in games:
         weeks[a] += 1
         weeks[b] += 1
     fallback = max(slots.values(), default=0)
-    return np.array([weeks[i] * clinch_cap.week_cap(slots.get(keys[i][0], fallback), rate, burst)
-                     for i in range(len(keys))])
+    cap = np.array([weeks[i] * clinch_cap.week_cap(slots.get(keys[i][0], fallback), rate, burst)
+                    for i in range(len(keys))])
+    return cap, weeks * drop
 
 
-def proofs(S, rate=None, burst=None):
+def proofs(S, rate=None, burst=None, drop=None):
     keys, games = S["keys"], S["games"]
     n = len(keys)
     R = S["rules"]
     W0 = np.asarray(S["W0"])
     PF0 = np.asarray(S["PF0"], dtype=float) if S.get("PF0") is not None else None
-    cap = remaining_caps(keys, games, S["year"], rate, burst) if PF0 is not None else None
+    cd = remaining_caps(keys, games, S["year"], rate, burst, drop) if PF0 is not None else None
+    cap = None
+    if cd is not None:
+        # Floor = points so far - drop; ceiling = points so far + cap (_Conf keeps floor and floor + cap).
+        PF0, cap = PF0 - cd[1], cd[0] + cd[1]
     conf_of, confs = {}, {}
     for l, divs in R.leagues.items():
         mem = [int(i) for d in divs for i in d]

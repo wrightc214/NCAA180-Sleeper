@@ -131,8 +131,11 @@ def build(year=None, write=True):
         if clinch_cap.enabled(rate, burst):
             slots = clinch_cap.starter_slots(year)
             wcap = clinch_cap.week_cap(slots.get(league, max(slots.values(), default=0)), rate, burst)
-            pf = {k: entries[k]["points_for"] for k in members}
-            caps = {k: wcap * len(entries[k]["remaining_games"]) for k in members}
+            drop = clinch_cap.max_drop()
+            left = {k: len(entries[k]["remaining_games"]) for k in members}
+            # Floor = points so far - drop per week left; ceiling = points so far + cap.
+            pf = {k: entries[k]["points_for"] - drop * left[k] for k in members}
+            caps = {k: (wcap + drop) * left[k] for k in members}
         alive = alive_members(members, [v for _, v in divkeys], games,
                               {k: entries[k]["wins"] for k in members}, pf, caps)
         if full not in short:

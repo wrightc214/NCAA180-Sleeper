@@ -25,11 +25,12 @@ def run_case(fx, case):
     teams = {k: dict(v, **case.get("teams", {}).get(k, {})) for k, v in fx["teams"].items()}
     games = case.get("games", fx["games"])
     live = case.get("live", {})
-    rate, burst, slots = case["rate"], case["burst"], fx["slots"]
+    rate, burst, slots, drop = case["rate"], case["burst"], fx["slots"], case.get("drop", 0)
     ids = list(teams)
     W0 = {k: teams[k]["wins"] for k in ids}
     PF0 = {k: float(teams[k]["pf"]) for k in ids}
     cap = {k: 0.0 for k in ids}
+    fall = {k: 0.0 for k in ids}
     open_games = []
     for a, b in games:
         la, lb = live.get(a, {}), live.get(b, {})
@@ -44,12 +45,15 @@ def run_case(fx, case):
             PF0[k] += lk.get("actual", 0)
             if not lk.get("final"):
                 cap[k] += clinch_cap.points_cap(lk.get("minutes", 60 * slots), lk.get("players", slots), rate, burst)
+                if lk.get("players", slots) > 0:
+                    fall[k] += drop
     on = clinch_cap.enabled(rate, burst)
     at = {k: i for i, k in enumerate(ids)}
     divs = [[at[k] for k in ids if teams[k]["div"] == d] for d in ("D", "E")]
     c = _Conf(list(range(len(ids))), divs, [(at[a], at[b]) for a, b in open_games],
               np.array([W0[k] for k in ids]),
-              np.array([PF0[k] for k in ids]) if on else None, np.array([cap[k] for k in ids]) if on else None)
+              np.array([PF0[k] - fall[k] for k in ids]) if on else None,
+              np.array([cap[k] + fall[k] for k in ids]) if on else None)
     flags = {k: c.ccg(at[k]) for k in ids if teams[k]["div"] == "D"}
     clinched = next((k for k, f in flags.items() if f == "clinched"), None)
     return {"clinched": clinched, "out": sorted(k for k, f in flags.items() if f == "out")}
@@ -67,6 +71,7 @@ class CapCurve(unittest.TestCase):
     def test_config(self):
         rate, burst = clinch_cap.settings()
         self.assertEqual((rate, burst), (0.45, 18.0))
+        self.assertEqual(clinch_cap.max_drop(), 11.01)
         self.assertIn("0.45 points per remaining player-minute", clinch_cap.note())
 
     def test_off_when_missing(self):

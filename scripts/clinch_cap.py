@@ -5,8 +5,11 @@ never clinch on a points gap. This module bounds what a chasing team can still s
 
     cap = max(points_per_minute x player-minutes left, burst_per_player x starters still to play)
 
-The other team's floor is its points so far (it may score nothing more). On a tie in wins, the
-points-for tiebreak is settled when one team's floor beats the other's ceiling (points so far + cap).
+The other team's floor is its points so far minus max_drop while it still has a starter to play
+(Chris, 2026-11-23: at most one big negative per team; 11.01 = a defense's floor under standard scoring,
+-4 for 35+ points allowed and -7 for 550+ yards, plus a cent; the worst other starter on record is a QB
+at -7.66). On a tie in wins, the points-for tiebreak is settled when one team's floor beats the other's
+ceiling (points so far + cap).
 Points against (the next tiebreak) is never capped.
 
 Settings: config/league.json -> postseason.clinch (points_per_minute, burst_per_player). Both 0 or
@@ -29,6 +32,12 @@ def settings():
     rate = float(c.get("points_per_minute") or 0)
     burst = float(c.get("burst_per_player") or 0)
     return max(rate, 0.0), max(burst, 0.0)
+
+
+def max_drop():
+    """Most one team can still lose (points) while it has starters to play; 0 when missing."""
+    c = (lcfg.cfg().get("postseason") or {}).get("clinch") or {}
+    return max(float(c.get("max_drop") or 0), 0.0)
 
 
 def enabled(rate, burst):
@@ -66,4 +75,6 @@ def note():
         return ""
     fmt = lambda x: f"{x:g}"  # noqa: E731
     return (f"Points-for ties count as settled when the gap exceeds the most the chasing team could still score "
-            f"({fmt(rate)} points per remaining player-minute, but never less than {fmt(burst)} per player still to play).")
+            f"({fmt(rate)} points per remaining player-minute, but never less than {fmt(burst)} per player still to play)"
+            + (f", while the leader could still lose up to {fmt(max_drop())} if it has a starter still to play" if max_drop() else "")
+            + ".")

@@ -208,16 +208,19 @@
           const id=String(t.roster_id),m=models[key(rosterLeague,id)]||{},row=played.get(id);
           // Floor = points so far (finished games are already in `played`; add this week's live
           // points while the game is open). Ceiling = floor + cap for what is still to play.
-          let ceil=0,live=0;
+          // max_drop: while starters are still to play, points so far can still fall (one big negative).
+          let ceil=0,live=0,drop=0;const md=Number(clinch.drop)||0;
           for(const g of t.remaining_games||[]){
             const now=Number.isFinite(week)?Number(g.week)===week:true;
-            if(!now){ceil+=weekCap(slots,clinch.rate,clinch.burst);continue;}
+            if(!now){ceil+=weekCap(slots,clinch.rate,clinch.burst);drop+=md;continue;}
             if(m.final&&models[key(rosterLeague,g.opponent_roster_id)]?.final)continue; // counted in played
             live+=Number(m.actual)||0;
-            if(!m.final)ceil+=pointsCap(m.minutes_left??MINUTES_PER_GAME*slots,m.players_left??slots,clinch.rate,clinch.burst);
+            const players=m.players_left??slots;
+            if(!m.final)ceil+=pointsCap(m.minutes_left??MINUTES_PER_GAME*slots,players,clinch.rate,clinch.burst);
+            if(!m.final&&players>0)drop+=md;
           }
-          const floor=cents(row.points_for+live);
-          bound[id]={wins:row.wins+row.ties/2,floor,ceil:floor+ceil};
+          const now=row.points_for+live;
+          bound[id]={wins:row.wins+row.ties/2,floor:now-drop,ceil:now+ceil};
         }
         for(const g of games){
           const a=gamemodel.get(key(rosterLeague,g.a)),b=gamemodel.get(key(rosterLeague,g.b));

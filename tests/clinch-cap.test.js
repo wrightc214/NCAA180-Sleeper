@@ -29,7 +29,7 @@ function runCase(c){
       minutes_left:l.minutes??60*fx.slots,players_left:l.players??fx.slots};
   }
   const r=M.simulate(conf,models,{sims:2000,seed:1,order:['win_pct','points_for','points_against','coin_toss'],
-    clinch:{rate:c.rate,burst:c.burst,slots:fx.slots,week:fx.week}});
+    clinch:{rate:c.rate,burst:c.burst,drop:c.drop||0,slots:fx.slots,week:fx.week}});
   const d=r.divisions[0];
   return {clinched:d.proven,out:[...d.out].sort()};
 }

@@ -201,11 +201,12 @@
    const c=cfg.postseason?.clinch||{},r=Number(c.points_per_minute)||0,b=Number(c.burst_per_player)||0,el=$('clinch-note');
    if(!el||!(r>0||b>0))return;
    el.textContent='Clinched and Out are proven, never guessed: points-for ties count as settled when the gap exceeds the most the chasing team could still score ('+
-     r+' points per remaining player-minute, but never less than '+b+' per player still to play).';
+     r+' points per remaining player-minute, but never less than '+b+' per player still to play)'+
+     ((Number(c.max_drop)||0)>0?', while the leader could still lose up to '+Number(c.max_drop)+' if it has a starter still to play':'')+'.';
  }
  function clinchOptions(lid){
    const c=cfg.postseason?.clinch||{},slots=(index.leagues[String(lid)]?.slots||[]).length;
-   return {rate:Number(c.points_per_minute)||0,burst:Number(c.burst_per_player)||0,slots,week:Number(data.week)};
+   return {rate:Number(c.points_per_minute)||0,burst:Number(c.burst_per_player)||0,drop:Number(c.max_drop)||0,slots,week:Number(data.week)};
  }
  function teamScores(id,rs,scoring,events,stats){
    const groups=new Map();
