@@ -998,7 +998,21 @@
         "mark": "assets/logos/Dwight Fight/Dwight Fight Glasses.png",
         "trophy": "assets/logos/Dwight Fight/Dwight Fight Trophy Blank.png"
       },
-      "_art_note": "Images are copied from the dwight-fight art branch. Trophy winner/plaque text is HTML overlay, not generated art."
+      "_art_note": "Images are copied from the dwight-fight art branch. Trophy winner/plaque text is HTML overlay, not generated art.",
+      "_roles_note": "Bracket second line = 'username · role' (Chris, 2026-11-24, task 5.18). This season: (1) official role from the About page's staff source (scripts/league_roles.py: about.league_manager, about.data_contact, data/LeagueStaff.csv assistants; highest wins); (2) roles below (Sleeper username -> role text, any case) for roles the staff source can't tell; (3) role_labels.default_current. Past seasons (Chris, 2026-11-24): the role each person held THAT season from data/Dwight_Roles.csv (Season, Username, Role; prefilled with today's roles, edit to the real history), else role_labels.default_past. {conference} = the conference's short name.",
+      "roles": {},
+      "role_labels": {
+        "league_manager": "Commissioner",
+        "data_contact": "Data Manager",
+        "assistant": "{conference} Assistant",
+        "default_current": "Legacy Voter",
+        "default_past": "Poll Voter",
+        "orphan": "Orphan"
+      },
+      "_display_note": "Bracket look: row_width = desktop row width in px (the Playoff uses 292); wider so 'username · role' never clips. projected_label marks the bracket before the draw; live_label marks every live / upcoming view.",
+      "row_width": 340,
+      "projected_label": "Projected: draws after the regular season",
+      "live_label": "Unofficial"
     },
     "guillotine": {
       "_note": "The Guillotine (Chris, 2026-11-04 / 11-14; claude/todo-guillotine.md): every team plays weeks first_week..last_week on its own standard score. Each week half of the field entering the week (rounded down) advances; everyone tied with the last spot advances too (PGA style). The top score in last_week wins; an exact tie there is broken by tiebreak_week's score, then co-champions. A rerun after stat corrections only ADDS teams to a frozen week (nobody already advanced is removed). Orphan teams play like everyone else.",

@@ -39,7 +39,7 @@ NAV_CONFIG = "config/nav.json"
 MENU_TEMPLATE = "templates/menu.js"
 MENU_OUT = os.path.join(OUT_DIR, "assets", "menu.js")
 # aria-labels of the sub-rows (kept from the per-page rows they replace)
-ROW_ARIA = {"awards-seasons": "Seasons", "standings-seasons": "Seasons", "postseason-seasons": "Seasons",
+ROW_ARIA = {"awards-seasons": "Seasons", "standings-seasons": "Seasons", "postseason-seasons": "Seasons", "dwight-seasons": "Seasons",
             "projection-archive": "Projection archive", "poll": "Poll pages", "special": "Special events",
             "selection-watch": "Selection Watch pages", "champions-league": "Champions League pages"}
 
@@ -125,6 +125,12 @@ def menu_rows(out_dir=None):
         rows["postseason-seasons"] = {"label": "Season", "aria": "Seasons",
                                       "items": [{"label": str(y), "href": f"postseason-{y}.html"} for y in sorted(py) if y != cur]
                                       + [{"label": str(cur), "href": "postseason.html", "match": f"^postseason(-{cur}|-proj-wk\\d+)?\\.html$"}]}
+        # Dwight Fight (task 5.18): this season first (dwight-fight.html), then past seasons newest first
+        dy = [int(m.group(1)) for f in _files("dwight-fight-*.html") if (m := re.fullmatch(r"dwight-fight-(\d{4})\.html", f))]
+        if dy:
+            rows["dwight-seasons"] = {"label": "Season", "aria": "Seasons",
+                                      "items": [{"label": str(cur), "href": "dwight-fight.html", "match": f"^dwight-fight(-{cur})?\\.html$"}]
+                                      + [{"label": str(y), "href": f"dwight-fight-{y}.html"} for y in sorted(dy, reverse=True) if y != cur]}
         # Projection archive: one link per saved projection week; the newest is also postseason.html
         pw = sorted(int(m.group(1)) for f in _files("postseason-proj-wk*.html") if (m := re.fullmatch(r"postseason-proj-wk(\d+)\.html", f)))
         rows["projection-archive"] = {"label": "Projection", "aria": "Projection archive", "min": 2,

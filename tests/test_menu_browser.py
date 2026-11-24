@@ -65,8 +65,10 @@ class MenuBrowser(unittest.TestCase):
         self.assertEqual(rows[1], ["Weeks", "Wk 5"])
         pg.close()
         pg = self.page("special.html")
-        self.assertIn("The Guillotine", pg.inner_text('nav.weeks.sub[data-row="special"]'))
-        self.assertEqual(pg.locator('nav.weeks.sub img').count(), 1)
+        special = pg.inner_text('nav.weeks.sub[data-row="special"]')
+        self.assertIn("The Guillotine", special)
+        self.assertIn("Dwight Fight", special)  # public since 889a0a0 (Chris, Nov 24)
+        self.assertEqual(pg.locator('nav.weeks.sub[data-row="special"] img').count(), 2)
         pg.close()
 
     def test_sub_rows_below_header(self):

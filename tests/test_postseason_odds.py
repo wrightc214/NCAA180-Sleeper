@@ -60,3 +60,19 @@ class Simulation(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class NoGamesLeft(unittest.TestCase):
+    def test_simulation_runs_with_no_regular_season_games_left(self):
+        """After the last regular-season week, `games` is empty (regression: IndexError on Nov 24)."""
+        orig = po.inputs
+        def empty(year):
+            r = list(orig(year))
+            r[5] = []
+            return tuple(r)
+        po.inputs = empty
+        try:
+            with contextlib.redirect_stdout(io.StringIO()):
+                po.simulate(ps.current_season(), sims=50, seed=1)
+        finally:
+            po.inputs = orig

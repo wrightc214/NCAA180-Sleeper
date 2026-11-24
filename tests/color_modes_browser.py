@@ -43,7 +43,7 @@ PAGES = [
     ("bracket", "_bracket-fixture-e8-live.html", ".bk-g"),
     ("ccg-race", "ccg-race.html?preview=midweek", ".race li.in,.race li.cutline,.race"),
     ("champions-league", "cl-standings.html", ".cl-t tr.cut,.cl-pr.top,.cl-t"),
-    ("dwight-fight", "dwight-fight.html", ".dw-win,.dw-diff,.dw-champion,main"),
+    ("dwight-fight", "dwight-fight-2023.html", ".bk-row.win,.bk-row.lose,.dw-champs,main"),
     ("guillotine", "special.html", ".gl-cut,.gl-r"),
     ("guillotine-live", "special.html", ".gl-cut"),  # week-13 live fixture: draws the cut line
     ("records", "records.html", ".card .v.up,.card .v.dn,.card"),

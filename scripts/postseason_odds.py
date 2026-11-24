@@ -262,9 +262,11 @@ def simulate(year, sims=None, seed=None):
     PF0 = st["PointsFor"].to_numpy(float)
     PA0 = st["PointsAgainst"].to_numpy(float)
     G = len(games)
-    gw = np.array([g[0] for g in games])
-    ga = np.array([g[1] for g in games])
-    gb = np.array([g[2] for g in games])
+    # dtype=int: once the regular season is over `games` is empty, and an empty float array
+    # can't index (np.add.at raised IndexError on the first post-season weekly run).
+    gw = np.array([g[0] for g in games], dtype=int)
+    ga = np.array([g[1] for g in games], dtype=int)
+    gb = np.array([g[2] for g in games], dtype=int)
     mua = np.array([proj.get((w, a), mu[a]) for w, a, b in games])
     mub = np.array([proj.get((w, b), mu[b]) for w, a, b in games])
     sda = np.array([spread if (w, a) in proj else sd[a] for w, a, b in games])
