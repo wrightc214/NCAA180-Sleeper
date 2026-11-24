@@ -38,7 +38,38 @@ jobs:
           assert b["start_week"] == 14 and len(b["entrants"]) == 11
           PY
           python3 scripts/special_page.py
-          git diff --exit-code -- reports/special.html reports/dwight-fight.html
+          # Guillotine shell + past Dwight Fight seasons are deterministic: the committed copies must be current.
+          # reports/dwight-fight.html (this season) is a live page (build time, today's standings): checked below.
+          git diff --exit-code -- reports/special.html 'reports/dwight-fight-*.html'
+          test -z "$(git status --porcelain -- 'reports/dwight-fight-*.html')" || { git status --porcelain -- 'reports/dwight-fight-*.html'; exit 1; }
+          # Task 5.18: every page draws a bracket with the bracket component, and so does the 11-entrant sample.
+          python3 - <<'PY'
+          import json, re, sys
+          sys.path.insert(0, "scripts")
+          import dwight_page as D
+
+          def r0(html):
+              desk = html.split('<div class="bk-desk">', 1)[1].split('<div class="bk-phone"', 1)[0]
+              return [int(r) for r in re.findall(r'class="bk-g st-\w+" data-r="(\d+)"', desk)]
+          for y in (2021, 2022, 2023, 2024, 2025):
+              g = r0(open(f"reports/dwight-fight-{y}.html", encoding="utf-8").read())
+              assert g.count(0) == (8 if y < 2023 else 3) and g.count(1) == 4, (y, g)
+          assert r0(open("reports/dwight-fight.html", encoding="utf-8").read()), "current page has no bracket"
+          ev = D.history_event(2023, D.history_rows())
+          assert {g["a"]["seed"] for g in ev["rounds"][0] if g["bye"]} == {1, 2, 3, 4, 5}
+          s = D._from_json(json.load(open("/tmp/dwight-2026-sample/dwight.json")), "drawn")
+          g = r0(D.build_page(2026, s, [], [], current=True, n_req=11))
+          assert g.count(0) == 3 and g.count(1) == 4, g
+          print("Dwight Fight brackets: sample + 2021-2025 OK")
+          PY
+      - name: Playoff bracket output unchanged (past seasons are deterministic)
+        run: |
+          python3 scripts/postseason_page.py
+          cur=$(python3 -c "import sys; sys.path.insert(0,'scripts'); import _postseason_common as ps; print(ps.current_season())")
+          for f in reports/postseason-20*.html; do
+            y=${f#reports/postseason-}; y=${y%.html}
+            if [ "$y" -lt "$cur" ]; then git diff --exit-code -- "$f"; fi
+          done
       - name: Generate transactions page
         run: |
           python3 scripts/transactions_page.py

@@ -22,6 +22,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import _postseason_common as ps  # noqa: E402
 import bowl_projection as bp  # noqa: E402
 import league_config as lcfg  # noqa: E402
+import league_roles as LR  # noqa: E402
 from poll_page import colors  # noqa: E402
 from site_common import menu_html, page_head  # noqa: E402
 
@@ -68,22 +69,11 @@ def directory(term, short, col=None):
     special accounts (Chris, 2026-11-07). Names are Sleeper display names; tap one to copy it (Sleeper has
     no public link that opens a DM)."""
     a = lcfg.cfg().get("about", {})
-    # accounts without a team (Chris, 2026-11-07): users with no roster in any league they're in -- just a list
-    if len(st := (pd.read_csv("data/LeagueStaff.csv", dtype=str, keep_default_na=False)
-                  if os.path.exists("data/LeagueStaff.csv") else pd.DataFrame())):
-        has = st.groupby("DisplayName")["HasRoster"].apply(lambda x: (x == "True").any())
-        special = {n: sorted(st[st["DisplayName"] == n]["LeagueName"]) for n in has[~has].index}
-    else:
-        special = {}
-    lm, dc = a.get("league_manager", {}), a.get("data_contact", {})
-    f = "data/LeagueStaff.csv"
-    st = pd.read_csv(f, dtype=str, keep_default_na=False) if os.path.exists(f) else pd.DataFrame()
+    # who holds which role: one lookup shared with the Dwight Fight bracket (league_roles.py, task 5.18)
+    s = LR.staff()
+    special, st, owners, lm_name = s["special"], s["staff"], s["owners"], s["league_manager"]
+    dc = a.get("data_contact", {})
     un = lambda n: f'<button type="button" class="un" data-u="{e(n)}" title="Copy Sleeper name">@{e(n)}</button>' if n else ""  # noqa: E731
-    owners = st[st["IsOwner"] == "True"] if len(st) else st
-    lm_name = lm.get("sleeper", "")
-    if not lm_name and len(owners):  # the commissioner of the most leagues, not the data contact or a special account
-        c = owners[~owners["DisplayName"].isin(list(special) + [dc.get("sleeper", "")])]["DisplayName"].value_counts()
-        lm_name = c.index[0] if len(c) and c.iloc[0] > 1 else ""
     taken = {lm_name, dc.get("sleeper", ""), *special}
     # Sleeper name, then the team they manage, in its colors (Chris, 2026-11-07)
     col = col or {}

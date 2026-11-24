@@ -169,7 +169,6 @@ jobs:
           # correction, rerun with script_to_run = trophies_allow_changes.
           run trophies              trophies.py              all
           run trophies_allow_changes "trophies.py --allow-changes"
-          run special_page          special_page.py          all
           # Champions League (config/champions_league.json; hidden-dev): pod results + standings + next-season
           # projection for every enabled season with a locked field file, then the six page shells.
           run champions_league      champions_league.py      all
@@ -178,6 +177,9 @@ jobs:
           run postseason_page       postseason_page.py       all
           run league_staff          league_staff.py          all
           run about_page            about_page.py            all
+          # Special Events pages after league_staff: the Dwight Fight bracket's "username · role" line uses the
+          # same staff roles as the About page (task 5.18). Still after dwight_fight + trophies.
+          run special_page          special_page.py          all
           # App (todo-pwa.md): follow-picker lists, the setup page, then push for anything newly final.
           run push_teams            push_teams.py            all
           run app_page              app_page.py              all

@@ -16,6 +16,17 @@ seed . logo . name (conference on a second line) . score; losers dimmed (opacity
 config postseason.display.bracket) only once their game is final; connector lines in the colour of
 the team that advanced; Elite 8 / Final Four bowls named and shown with their logo; champion card
 after the final.
+
+Options for other events (task 5.18, Dwight Fight; every default keeps the Playoff output byte-identical):
+  byes          a first-round game {"bye": True, "final": True, "teams": [team with Win=True]} is a seed's
+                bye: never drawn (no empty BYE row); its team first appears in round 2, and the played
+                first-round games stay aligned with the round-2 slot they feed
+  row_width     desktop row width (default RW = 292)
+  side 'sub_cls' a class for the row's second line (CSS_EXT 'bk-case': not uppercased, wraps on phone)
+  logo          event mark in the bracket header
+  status_label  prefix for every non-final status ("Unofficial", "Projected: ...")
+  export_name / champ_file   Save image titles and the champion file name
+  final_label   the title game's caption on phone cards (default "National Championship")
 """
 import datetime as dt
 import html
@@ -154,7 +165,8 @@ def bracket_order(n):
 
 def model(R, *, year, title, eyebrow, round_names, weeks, side, href=None, bowls=None, quad_bowls=None,
           quad_round=None, e8_round=None, quad_label="{bowl} Quad", bowl_src=None, site="", champion_trophy="",
-          champion_title="", foot="", slug_name="playoff", file_prefix="ncaa180"):
+          champion_title="", foot="", slug_name="playoff", file_prefix="ncaa180", row_width=RW, logo="",
+          status_label="", export_name=None, champ_file="national-champion", final_label="National Championship"):
     """Bracket model from ordered rounds R (order_rounds output).
     side(team_dict) -> {'name','seed','conf','bg','fg','logo','logo_alt'?}: display fields for a team.
     href(game) -> Scoreboard link or None. bowls: {round index: [bowl per game]} for rounds not
@@ -193,6 +205,8 @@ def model(R, *, year, title, eyebrow, round_names, weeks, side, href=None, bowls
             live = bool(g and not final and any(t.get("Points") for t in g["teams"]))
             known = all(s is not None for s in slots)
             state = "final" if final else "live" if live else ("upcoming" if known else "tbd")
+            if g and g.get("bye"):
+                state = "bye"
             win = winner_side(g)
             sides = []
             for s in slots:
@@ -200,7 +214,7 @@ def model(R, *, year, title, eyebrow, round_names, weeks, side, href=None, bowls
                     sides.append(None)
                     continue
                 d = dict(side(s))
-                d["score"] = fmt(s.get("Points")) if (g and (final or live)) else ""
+                d["score"] = fmt(s.get("Points")) if (g and (final or live) and state != "bye") else ""
                 d["win"] = bool(final and win is s)
                 d["lose"] = bool(final and win is not None and win is not s)
                 sides.append(d)
@@ -246,9 +260,13 @@ def model(R, *, year, title, eyebrow, round_names, weeks, side, href=None, bowls
         status = f"Live · updated {now_et()}"
     else:
         status = f"Updated {now_et()}"
+    if status_label and not champ:
+        status = f"{status_label} · {status}"
     return {"year": year, "title": title, "eyebrow": eyebrow, "site": site, "status": status, "rounds": rounds,
             "quads": quads, "quad_round": quad_round if quads else None, "e8_round": e8_round, "champion": champ, "foot": foot,
-            "slug": slug_name, "prefix": file_prefix, "nc_logo": last["bowl_logo"]}
+            "slug": slug_name, "prefix": file_prefix, "nc_logo": last["bowl_logo"], "rw": row_width, "logo": logo,
+            "status_label": status_label, "name": export_name or slug_name.title(), "champ_file": champ_file,
+            "final_label": final_label}
 
 
 # ---------------------------------------------------------------- shared pieces
@@ -260,8 +278,12 @@ def row_html(s, dim=None, cls=""):
     x = f' data-xbg="{gray_mix(s["bg"], dim[1])}" data-xfg="{gray_mix(s["fg"], dim[1])}"' if (s["lose"] and dim) else ""
     return (f'<div class="{c}" style="background:{s["bg"]};color:{s["fg"]}"{x}>'
             f'<span class="bk-sd">{e(str(s.get("seed") or ""))}</span>{s["logo"]}'
-            f'<span class="bk-nm"><b>{e(s["name"])}</b><small>{e(s.get("conf") or "")}</small></span>'
+            f'<span class="bk-nm"><b>{e(s["name"])}</b><small{_cls(s.get("sub_cls"))}>{e(s.get("conf") or "")}</small></span>'
             f'<span class="bk-pt">{e(s["score"])}</span></div>')
+
+
+def _cls(c):
+    return f' class="{e(c)}"' if c else ""
 
 
 def game_label(gm, B):
@@ -298,7 +320,8 @@ def champ_html(B, cls=""):
             f'<div class="bk-cp">{e(path)}</div>{trophy}</div>')
 
 
-def head_html(B, title=None, status=None, logo=""):
+def head_html(B, title=None, status=None, logo=None):
+    logo = B.get("logo", "") if logo is None else logo
     site = f'<div>National Championship · {e(B["site"])}</div>' if B["site"] else ""
     lg = f'<img class="bk-hl" src="{e(logo)}" alt="">' if logo else ""
     return (f'<div class="bk-head">{lg}<div class="bk-ht"><div class="bk-eb">{e(B["eyebrow"])}</div>'
@@ -352,16 +375,19 @@ def _row_centre(gm_c, slot):
 def desktop_board(B, dim, quad=None, export=False):
     """The whole bracket (quad=None) or one quad's First Round -> Elite 8 (quad export)."""
     R = B["rounds"]
+    rw = B.get("rw", RW)
+    cp = rw + CGAP
+    wst = f"width:{rw}px;" if rw != RW else ""  # wider rows (task 5.18); the Playoff keeps the CSS width
     C, per = _centres(B, quad)
     last_r = len(R) - 1 if quad is None else B["quad_round"]
     out = []
     # round headers
     for j in range(last_r + 1):
-        out.append(f'<div class="bk-rh" style="left:{X0 + j * CP}px;top:{TOP_ROUNDS}px"><b>{e(R[j]["name"])}</b>{wk_span(R[j])}</div>')
+        out.append(f'<div class="bk-rh" style="left:{X0 + j * cp}px;top:{TOP_ROUNDS}px{";" + wst[:-1] if wst else ""}"><b>{e(R[j]["name"])}</b>{wk_span(R[j])}</div>')
     # quad headers
     if B["quad_round"] is not None and quad is None:  # a quad image carries its name in the header
         qs = range(len(B["quads"]))
-        span = (B["quad_round"] + 1) * CP - CGAP
+        span = (B["quad_round"] + 1) * cp - CGAP
         for k in qs:
             q = B["quads"][k]
             top = C[(0, k * per)] - GH / 2 - QH
@@ -369,19 +395,19 @@ def desktop_board(B, dim, quad=None, export=False):
             out.append(f'<div class="bk-qh" style="left:{X0}px;top:{top:.0f}px;width:{span}px">{lg}<span>{e(q["name"])}</span></div>')
     # games, bowls, connectors
     for j in range(last_r + 1):
-        x = X0 + j * CP
+        x = X0 + j * cp
         for gm in R[j]["games"]:
             c = C.get((j, gm["i"]))
-            if c is None:
+            if c is None or gm["state"] == "bye":  # a bye is never drawn: its team starts in round 2
                 continue
             top = c - GH / 2
             big = j == len(R) - 1
             if gm["bowl_logo"] and (gm["bowl"] or big) and j > 0:
                 h = NC_LOGO if big else BOWL_LOGO
                 label = "National Championship" if big else gm["bowl"]
-                out.append(f'<div class="bk-bowl{" nc" if big else ""}" style="left:{x}px;top:{top - h - 35:.0f}px">'
+                out.append(f'<div class="bk-bowl{" nc" if big else ""}" style="{wst}left:{x}px;top:{top - h - 35:.0f}px">'
                            f'<img src="{e(gm["bowl_logo"])}" alt="" style="height:{h}px"><span>{e(label)}</span></div>')
-            o, cl = game_open(gm, B, "bk-g", f"left:{x}px;top:{top:.0f}px")
+            o, cl = game_open(gm, B, "bk-g", f"{wst}left:{x}px;top:{top:.0f}px")
             out.append(o + "".join(row_html(s, dim) for s in gm["sides"]) + live_tag(gm) + cl)
             # connector to the slot this game's winner fills in the next round
             if j < last_r and (j + 1, gm["i"] // 2) in C:
@@ -389,20 +415,20 @@ def desktop_board(B, dim, quad=None, export=False):
                 ty = _row_centre(nc, gm["i"] % 2)
                 w = gm["sides"][gm["winner"]] if gm["winner"] is not None else None
                 col = w["bg"] if w else None
-                xm = x + RW + STUB - 1.5
+                xm = x + rw + STUB - 1.5
                 y0, y1 = sorted((c, ty))
-                out.append(_line(x + RW, c - 1.5, STUB, 3, col) + _line(xm, y0 - 1.5, 3, y1 - y0 + 3, col)
+                out.append(_line(x + rw, c - 1.5, STUB, 3, col) + _line(xm, y0 - 1.5, 3, y1 - y0 + 3, col)
                            + _line(xm + 1.5, ty - 1.5, CGAP - STUB, 3, col))
     if quad is None:
-        nx = X0 + len(R) * CP - CGAP + 28
+        nx = X0 + len(R) * cp - CGAP + 28
         nc = C[(len(R) - 1, 0)]
         w = R[-1]["games"][0]
         if w["winner"] is not None:  # line from the title game into the champion card
-            out.append(_line(X0 + (len(R) - 1) * CP + RW, nc - 1.5, 28, 3, w["sides"][w["winner"]]["bg"]))
+            out.append(_line(X0 + (len(R) - 1) * cp + rw, nc - 1.5, 28, 3, w["sides"][w["winner"]]["bg"]))
         out.append(f'<div class="bk-cw" style="left:{nx}px;top:{nc:.0f}px;width:{CHAMP_W}px">{champ_html(B)}</div>')
         width = nx + CHAMP_W + X0 - 24
     else:
-        width = X0 * 2 + (last_r + 1) * CP - CGAP
+        width = X0 * 2 + (last_r + 1) * cp - CGAP
     bottom = max(C.values()) + GH / 2
     height = int(bottom + (90 if quad is None and not export else 40))
     foot = ""
@@ -423,12 +449,13 @@ def _status_for(B, games):
     """Header state for an image that shows only these games."""
     if games is None:
         return None
-    st = [g["state"] for g in games]
+    st = [g["state"] for g in games if g["state"] != "bye"]
+    lab = f'{B["status_label"]} · ' if B.get("status_label") else ""
     if "live" in st:
-        return f"Live · updated {now_et()}"
+        return f"{lab}Live · updated {now_et()}"
     if st and all(s == "final" for s in st):
         return "Final"
-    return f"Updated {now_et()}"
+    return f"{lab}Updated {now_et()}"
 
 
 def desktop_html(B, dim):
@@ -438,11 +465,13 @@ def desktop_html(B, dim):
 
 # ---------------------------------------------------------------- phone (positions set by assets/bracket.js)
 def card_html(gm, B, dim, big_bowl=False):
+    if gm["state"] == "bye":  # invisible spacer: keeps assets/bracket.js's feeder positions (no BYE row)
+        return f'<div class="bk-card bk-bye st-bye" data-r="{gm["r"]}" data-i="{gm["i"]}" aria-hidden="true"></div>'
     o, cl = game_open(gm, B, "bk-card")
     rd = B["rounds"][gm["r"]]
     last = gm["r"] == len(B["rounds"]) - 1
     st = {"final": "Final", "live": "", "upcoming": "Upcoming", "tbd": ""}[gm["state"]]
-    label = "National Championship" if last else gm["bowl"]
+    label = B.get("final_label", "National Championship") if last else gm["bowl"]
     logo = gm["bowl_logo"] if (gm["bowl"] or last) else ""
     if big_bowl and logo:
         top = f'<div class="bk-cbowl"><img src="{e(logo)}" alt=""><span>{e(label)}</span></div>'
@@ -467,11 +496,15 @@ def phone_html(B, dim):
     qh = "".join(f'<div class="bk-pq" data-q="{q["k"]}">{img(q["logo"])}<span>{e(q["name"])}</span></div>' for q in B["quads"])
     return (f'<div class="bk-phone" data-quad-round="{B["quad_round"] if B["quad_round"] is not None else -1}" '
             f'data-quads="{len(B["quads"])}" style="{dim_vars(dim)}">'
-            f'<div class="bk-phead"><div class="bk-eb">{e(B["eyebrow"])}</div><div class="bk-h1">{e(B["title"])}</div>'
+            f'<div class="bk-phead">{_hlogo(B)}<div class="bk-eb">{e(B["eyebrow"])}</div><div class="bk-h1">{e(B["title"])}</div>'
             f'<div class="bk-st">{e(B["status"])}</div></div>'
             f'<div class="bk-tabs"><div class="bk-tabtrack">{tabs}</div></div>'
             f'<div class="bk-view" tabindex="0" aria-label="Bracket: swipe or use the left and right arrow keys to change round">'
             f'<div class="bk-track">{qh}{"".join(cols)}</div></div></div>')
+
+
+def _hlogo(B):
+    return f'<img class="bk-hl" src="{e(B["logo"])}" alt="">' if B.get("logo") else ""
 
 
 # ---------------------------------------------------------------- exports (Save image)
@@ -485,19 +518,21 @@ def round_export(B, j, dim):
     R = B["rounds"]
     rd = R[j]
     last = j == len(R) - 1
-    title = f'{B["year"]} {B["slug"].title()} · {rd["name"]}' + (f' · Week {rd["week"]}' if rd["week"] else "")
+    title = f'{B["year"]} {B.get("name") or B["slug"].title()} · {rd["name"]}' + (f' · Week {rd["week"]}' if rd["week"] else "")
     parts = []
     qr = B["quad_round"]
     per = (len(rd["games"]) // len(B["quads"])) if (qr is not None and j <= qr) else 0
     if last:
         parts.append(champ_html(B, "bk-xchamp"))
     for gm in rd["games"]:
+        if gm["state"] == "bye":
+            continue
         if per and gm["i"] % per == 0:
             q = B["quads"][gm["i"] // per]
             parts.append(f'<div class="bk-xq">{img(q["logo"])}<span>{e(q["name"])}</span></div>')
         parts.append(card_html(gm, B, dim, big_bowl=bool(gm["bowl"]) or last))
     st = _status_for(B, rd["games"])
-    body = (f'<div class="bk-x1" style="{dim_vars(dim)}"><div class="bk-xh"><div class="bk-eb">{e(B["eyebrow"])}</div>'
+    body = (f'<div class="bk-x1" style="{dim_vars(dim)}"><div class="bk-xh">{_hlogo(B)}<div class="bk-eb">{e(B["eyebrow"])}</div>'
             f'<div class="bk-h1">{e(title)}</div><div class="bk-st">{e(st)}</div></div>{"".join(parts)}</div>')
     return _tpl(f"round-{j}", "This round", f'{B["prefix"]}-{B["year"]}-{B["slug"]}-{slug(rd["name"])}', 400, body,
                 any(g["state"] == "live" for g in rd["games"]), group="round")
@@ -566,7 +601,7 @@ def champion_export(B):
     c = B["champion"]
     body = (f'<div class="bk-xc"><div class="bk-xch"><div class="bk-eb">{e(B["eyebrow"])}</div>'
             f'<div class="bk-h1">{e(c["title"])}</div></div>{champ_html(B, "bk-big")}</div>')
-    return _tpl("champ", "Champion", f'{B["prefix"]}-{B["year"]}-national-champion', 540, body, False, group="champ")
+    return _tpl("champ", "Champion", f'{B["prefix"]}-{B["year"]}-{B.get("champ_file", "national-champion")}', 540, body, False, group="champ")
 
 
 def export_templates(B, dim):
@@ -700,4 +735,13 @@ a.bk-g:focus-visible,a.bk-card:focus-visible{outline:3px solid var(--accent);out
 .bk-menu button{font:600 14px var(--body);border-radius:6px;padding:7px 14px;cursor:pointer;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
 .bk-menu button.go{background:var(--accent);border-color:var(--accent);color:#fff}
 .bk-menu .bk-err{color:var(--bad);font-size:12px;margin:6px 0 0}
+"""
+
+# Opt-in styles for the task 5.18 options (pages that use them add CSS_EXT; the Playoff page doesn't,
+# so its CSS stays byte-identical).
+CSS_EXT = """
+.bk-nm small.bk-case{text-transform:none;letter-spacing:.01em}
+.bk-phone .bk-nm small.bk-case,.bk-x1 .bk-nm small.bk-case{white-space:normal;overflow-wrap:anywhere}
+.bk-card.bk-bye{visibility:hidden;height:56px;padding:0;border:0}
+.bk-phead .bk-hl,.bk-xh .bk-hl{float:right;height:48px;max-width:96px;margin:0 0 4px 8px}
 """
