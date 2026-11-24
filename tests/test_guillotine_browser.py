@@ -114,7 +114,7 @@ class GuillotineBrowserTests(unittest.TestCase):
             self.assertTrue(all(o.endswith('%') for o in odds))
             # MNF Q4 -> automatic refresh every 30 seconds
             self.assertIn('every 30 seconds', page.locator('#updated').inner_text())
-            self.assertEqual(page.locator('nav[aria-label="Special events"] a').inner_text(), 'The Guillotine')
+            self.assertEqual(page.locator('nav[aria-label="Special events"] a').first.inner_text(), 'The Guillotine')
             self.assertIn('Round%201.png', page.locator('#gl-logo').get_attribute('src'))
             self.assertTrue(page.evaluate("[...document.images].filter(i=>i.src.includes('Guillotine')).every(i=>i.complete&&i.naturalWidth>0)"))
             self.assertIn('Special Events', page.locator('nav.weeks[aria-label="Pages"]').inner_text())
