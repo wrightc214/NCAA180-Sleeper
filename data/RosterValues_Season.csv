@@ -1439,3 +1439,183 @@ Year,Week,LeagueID,LeagueName,RosterID,Team,Owner,W,L,T,PPG,DynastyTotal,PlayerD
 2026,10,1331775206619885568,NCAA BIG EAST & CO.,7,Syracuse,CodeKhaos,8,2,0,161.34,87587,72253,15334,"Acquired: 2027 1st (Army, late) · Traded away: 2027 3rd (to Army), 2028 2nd (to Notre Dame) Own 2027 picks project late.",52533,1.653,1.0
 2026,10,1331775206619885568,NCAA BIG EAST & CO.,8,Army,Claser,8,2,0,132.46,48115,35276,12839,"Acquired: 2027 3rd (Syracuse, late) · Traded away: 2027 1st (to Syracuse), 2027 3rd (to USF) Own 2027 picks project late.",24793,0.356,1.0
 2026,10,1331775206619885568,NCAA BIG EAST & CO.,9,UCF,JEANTY,4,6,0,115.02,61870,46133,15737,"Holds all its own picks, 2027–29.",27713,-0.428,1.0
+2026,11,1316899756005412864,NCAA BIG SKY,1,Rhode Island,WillyP15,4,7,0,121.74,75775,58910,16865,"Acquired: 2027 3rd (Portland State, late)",23556,-0.087,1.0
+2026,11,1316899756005412864,NCAA BIG SKY,10,Northern Iowa,thejockytype,0,11,0,63.45,46814,15302,31512,"Acquired: 2027 1st (Stony Brook), 2027 1st (William & Mary, late), 2027 2nd (Stony Brook), 2028 1st (Stony Brook), 2028 1st (William & Mary), 2028 2nd (Stony Brook), 2028 4th (Stony Brook) Own 2027 picks project early.",1318,-2.749,1.0
+2026,11,1316899756005412864,NCAA BIG SKY,11,Maine,mgrant55,3,8,0,102.87,53242,28755,24487,"Acquired: 2027 1st (Youngstown State, late), 2027 2nd (Youngstown State, late), 2028 1st (Youngstown State) Own 2027 picks project early.",13156,-0.949,1.0
+2026,11,1316899756005412864,NCAA BIG SKY,12,Youngstown State,mssullivan2022,10,1,0,153.87,58161,48700,9461,"Traded away: 2027 1st (to Maine), 2027 2nd (to Maine), 2028 1st (to Maine) Own 2027 picks project late.",41239,1.38,1.0
+2026,11,1316899756005412864,NCAA BIG SKY,2,Villanova,PapaCrowther,6,5,0,111.49,49120,32970,16150,Acquired: 2027 3rd (Eastern Washington) · Traded away: 2027 4th (to Eastern Washington),17518,-0.555,1.0
+2026,11,1316899756005412864,NCAA BIG SKY,3,William & Mary,Beastchewy15,9,2,0,159.63,79764,68911,10853,"Traded away: 2027 1st (to Northern Iowa), 2028 1st (to Northern Iowa) Own 2027 picks project late.",46282,1.643,1.0
+2026,11,1316899756005412864,NCAA BIG SKY,4,Eastern Washington,Elestial,7,4,0,123.93,49961,35249,14712,"Acquired: 2027 4th (Villanova) · Traded away: 2027 3rd (to Villanova), 2028 3rd (to Portland State)",21106,0.013,1.0
+2026,11,1316899756005412864,NCAA BIG SKY,5,Stony Brook,agrakush,6,5,0,136.98,68047,61341,6706,"Traded away: 2027 1st (to Northern Iowa), 2027 2nd (to Northern Iowa), 2027 4th (to Montana State), 2028 1st (to Northern Iowa), 2028 2nd (to Northern Iowa), 2028 4th (to Northern Iowa)",28683,0.609,1.0
+2026,11,1316899756005412864,NCAA BIG SKY,6,Montana State,Elwayluva7,7,4,0,146.47,86833,70140,16693,Acquired: 2027 4th (Stony Brook),41509,1.042,1.0
+2026,11,1316899756005412864,NCAA BIG SKY,7,Richmond,fballfreek80,5,6,0,120.74,55719,39811,15908,"Holds all its own picks, 2027–29.",14467,-0.133,1.0
+2026,11,1316899756005412864,NCAA BIG SKY,8,Portland State,Vitus,8,3,0,156.37,80821,65460,15361,Acquired: 2028 3rd (Eastern Washington) · Traded away: 2027 3rd (to Rhode Island) Own 2027 picks project late.,43554,1.494,1.0
+2026,11,1316899756005412864,NCAA BIG SKY,9,Weber State,Pinky7373,1,10,0,61.29,41092,22508,18584,"Holds all its own picks, 2027–29. Own 2027 picks project early.",7382,-2.848,1.0
+2026,11,1316899936696016896,NCAA BIG 10,1,Purdue,Mo00,7,4,0,127.93,51534,36411,15123,Traded away: 2027 4th (to Michigan),26880,0.196,1.0
+2026,11,1316899936696016896,NCAA BIG 10,10,Illinois,richardson98,7,4,0,137.21,69559,53651,15908,"Holds all its own picks, 2027–29.",31552,0.619,1.0
+2026,11,1316899936696016896,NCAA BIG 10,11,Iowa,Schuflakka,10,1,0,160.72,78991,67733,11258,"Traded away: 2027 1st (to Wisconsin), 2027 3rd (to Penn State), 2028 4th (to Penn State) Own 2027 picks project late.",44528,1.693,1.0
+2026,11,1316899936696016896,NCAA BIG 10,12,Michigan,chrispychicken,6,5,0,142.34,71908,55215,16693,Acquired: 2027 4th (Purdue),37973,0.854,1.0
+2026,11,1316899936696016896,NCAA BIG 10,2,Nebraska,EthanH,7,4,0,149.44,77549,63169,14380,Traded away: 2027 2nd (to Wisconsin),26742,1.178,1.0
+2026,11,1316899936696016896,NCAA BIG 10,3,Northwestern,kfitch3p,3,8,0,72.75,53519,34935,18584,"Holds all its own picks, 2027–29. Own 2027 picks project early.",12581,-2.324,1.0
+2026,11,1316899936696016896,NCAA BIG 10,4,Michigan State,EndZoneAllDay1,0,11,0,79.93,47878,29294,18584,"Holds all its own picks, 2027–29. Own 2027 picks project early.",14746,-1.996,1.0
+2026,11,1316899936696016896,NCAA BIG 10,5,Penn State,Justahippo,5,6,0,121.38,65112,47256,17856,"Acquired: 2027 3rd (Iowa, late), 2027 3rd (Wisconsin), 2028 4th (Iowa) · Traded away: 2027 4th (to Wisconsin)",22335,-0.104,1.0
+2026,11,1316899936696016896,NCAA BIG 10,6,Wisconsin,laxbro000,6,5,0,129.03,67200,44164,23036,"Acquired: 2027 1st (Iowa, late), 2027 1st (Ohio State), 2027 2nd (Nebraska), 2027 4th (Penn State), 2028 4th (Ohio State) · Traded away: 2027 3rd (to Penn State)",24119,0.246,1.0
+2026,11,1316899936696016896,NCAA BIG 10,7,Minnesota,linkoftime1,8,3,0,155.26,73476,58112,15364,"Holds all its own picks, 2027–29. Own 2027 picks project late.",48468,1.444,1.0
+2026,11,1316899936696016896,NCAA BIG 10,8,Indiana,ChAiNSmOkErTk,1,10,0,73.46,41500,22916,18584,"Holds all its own picks, 2027–29. Own 2027 picks project early.",10459,-2.292,1.0
+2026,11,1316899936696016896,NCAA BIG 10,9,Ohio State,Klashified,6,5,0,125.74,46774,34308,12466,"Traded away: 2027 1st (to Wisconsin), 2028 4th (to Wisconsin)",21410,0.096,1.0
+2026,11,1331774454493122560,NCAA WILD,1,Montana,LanceBoneau,7,4,0,155.1,77231,65100,12131,"Acquired: 2027 3rd (South Dakota) · Traded away: 2027 1st (to Old Dominion), 2028 1st (to Old Dominion)",34390,1.436,1.0
+2026,11,1331774454493122560,NCAA WILD,10,Old Dominion,olddominion2020,10,1,0,149.52,85978,65810,20168,"Acquired: 2027 1st (Montana), 2028 1st (Montana) Own 2027 picks project late.",42390,1.181,1.0
+2026,11,1331774454493122560,NCAA WILD,11,South Dakota,TheScorer,6,5,0,125.22,66324,56046,10278,"Traded away: 2027 2nd (to Citadel), 2027 3rd (to Montana), 2027 4th (to Citadel), 2028 2nd (to Citadel), 2028 3rd (to San Jose State)",35362,0.072,1.0
+2026,11,1331774454493122560,NCAA WILD,12,UNC Charlotte,DBGiants,8,3,0,133.35,56297,44436,11861,"Traded away: 2027 2nd (to Citadel), 2028 1st (to Citadel) Own 2027 picks project late.",34533,0.443,1.0
+2026,11,1331774454493122560,NCAA WILD,2,James Madison,Hart123,7,4,0,138.59,73274,57366,15908,"Holds all its own picks, 2027–29.",31042,0.682,1.0
+2026,11,1331774454493122560,NCAA WILD,3,North Dakota State,4thdownTD,3,8,0,118.05,57136,38552,18584,"Holds all its own picks, 2027–29. Own 2027 picks project early.",18922,-0.256,1.0
+2026,11,1331774454493122560,NCAA WILD,4,Central Michigan,itsonlyfairs,6,5,0,120.63,47012,31104,15908,"Holds all its own picks, 2027–29.",21668,-0.138,1.0
+2026,11,1331774454493122560,NCAA WILD,5,Wichita State,FareedB,5,6,0,116.51,52249,36341,15908,"Holds all its own picks, 2027–29.",27065,-0.326,1.0
+2026,11,1331774454493122560,NCAA WILD,6,Eastern Michigan,ThomasHarris,5,6,0,121.51,60364,44456,15908,"Holds all its own picks, 2027–29.",24727,-0.098,1.0
+2026,11,1331774454493122560,NCAA WILD,7,San Jose State,mrflack,2,9,0,99.74,49352,29814,19538,Acquired: 2028 3rd (South Dakota) Own 2027 picks project early.,13246,-1.092,1.0
+2026,11,1331774454493122560,NCAA WILD,8,Citadel,lmkl,5,6,0,126.97,62974,39914,23060,"Acquired: 2027 2nd (South Dakota), 2027 2nd (UNC Charlotte, late), 2027 4th (South Dakota), 2028 1st (UNC Charlotte), 2028 2nd (South Dakota)",17316,0.151,1.0
+2026,11,1331774454493122560,NCAA WILD,9,Central Arkansas,MrBarryMcCockiner,2,9,0,85.68,57615,39031,18584,"Holds all its own picks, 2027–29. Own 2027 picks project early.",21875,-1.734,1.0
+2026,11,1331774544905510912,NCAA OHIO VALLEY,1,Belmont,Mistafyer,8,3,0,132.02,59954,44590,15364,"Holds all its own picks, 2027–29. Own 2027 picks project late.",26550,0.382,1.0
+2026,11,1331774544905510912,NCAA OHIO VALLEY,10,Monmouth,edgeofdefeat,9,2,0,126.55,63627,49960,13667,"Traded away: 2027 3rd (to Morehead State), 2027 4th (to Morehead State) Own 2027 picks project late.",30067,0.132,1.0
+2026,11,1331774544905510912,NCAA OHIO VALLEY,11,North Alabama,Romantryert,7,4,0,155.19,61716,49837,11879,"Traded away: 2027 1st (to Charleston Southern), 2028 2nd (to Charleston Southern)",42610,1.44,1.0
+2026,11,1331774544905510912,NCAA OHIO VALLEY,12,North Carolina Central,Firephool,4,7,0,127.41,66502,50594,15908,"Holds all its own picks, 2027–29.",29394,0.172,1.0
+2026,11,1331774544905510912,NCAA OHIO VALLEY,2,ETSU,LMarkiewicz04,8,3,0,156.67,57944,49437,8507,"Traded away: 2027 1st (to Charleston Southern), 2027 2nd (to Charleston Southern), 2028 1st (to Charleston Southern), 2028 3rd (to Charleston Southern) Own 2027 picks project late.",40113,1.508,1.0
+2026,11,1331774544905510912,NCAA OHIO VALLEY,3,Kennesaw State,srcav,3,8,0,108.53,52898,34314,18584,"Holds all its own picks, 2027–29. Own 2027 picks project early.",14366,-0.69,1.0
+2026,11,1331774544905510912,NCAA OHIO VALLEY,4,Chattanooga,ethansherwood22,7,4,0,145.93,75128,60748,14380,Traded away: 2027 2nd (to Charleston Southern),43898,1.018,1.0
+2026,11,1331774544905510912,NCAA OHIO VALLEY,5,Eastern Kentucky,Dreev,5,6,0,121.9,68891,52983,15908,"Holds all its own picks, 2027–29.",22098,-0.08,1.0
+2026,11,1331774544905510912,NCAA OHIO VALLEY,6,Charleston Southern,leathershoe4,4,7,0,102.63,51499,23177,28322,"Acquired: 2027 1st (ETSU, late), 2027 1st (North Alabama), 2027 2nd (Chattanooga), 2027 2nd (ETSU, late), 2028 1st (ETSU), 2028 2nd (North Alabama), 2028 3rd (ETSU)",5280,-0.96,1.0
+2026,11,1331774544905510912,NCAA OHIO VALLEY,7,Delaware,charlielol,5,6,0,131.13,62767,46859,15908,"Holds all its own picks, 2027–29.",34048,0.342,1.0
+2026,11,1331774544905510912,NCAA OHIO VALLEY,8,Morehead State,mooremc,2,9,0,103.18,64943,44662,20281,"Acquired: 2027 3rd (Monmouth, late), 2027 4th (Monmouth, late) Own 2027 picks project early.",23399,-0.935,1.0
+2026,11,1331774544905510912,NCAA OHIO VALLEY,9,Jacksonville State,pontes021,4,7,0,116.29,59143,43235,15908,"Holds all its own picks, 2027–29.",19403,-0.336,1.0
+2026,11,1331774599196585984,NCAA MOUNTAIN WEST,1,Hawaii,RicochetRay,8,3,0,162.22,72443,58273,14170,"Acquired: 2027 3rd (Boise State, early) · Traded away: 2027 1st (to Boise State) Own 2027 picks project late.",50276,1.761,1.0
+2026,11,1331774599196585984,NCAA MOUNTAIN WEST,10,Nevada,postdeezy,3,8,0,112.13,52531,38630,13901,Traded away: 2027 1st (to Boise State) Own 2027 picks project early.,24277,-0.526,1.0
+2026,11,1331774599196585984,NCAA MOUNTAIN WEST,11,UNLV,bdub3,10,1,0,146.02,68339,54503,13836,"Acquired: 2027 4th (Boise State, early) · Traded away: 2027 1st (to Boise State) Own 2027 picks project late.",25805,1.022,1.0
+2026,11,1331774599196585984,NCAA MOUNTAIN WEST,12,San Diego State,noahdaboa,5,6,0,115.03,57298,45611,11687,"Traded away: 2027 1st (to Boise State), 2027 2nd (to Fresno State)",25058,-0.394,1.0
+2026,11,1331774599196585984,NCAA MOUNTAIN WEST,2,Boise State,jmdorsey00,0,11,0,107.28,64596,32025,32571,"Acquired: 2027 1st (BYU, late), 2027 1st (Hawaii, late), 2027 1st (Nevada, early), 2027 1st (San Diego State), 2027 1st (UNLV, late), 2027 4th (Fresno State, late), 2028 4th (BYU) · Traded away: 2027 3rd (to Hawaii), 2027 4th (to UNLV) Own 2027 picks project early.",16347,-0.748,1.0
+2026,11,1331774599196585984,NCAA MOUNTAIN WEST,3,Wyoming,HonoredMexican,7,4,0,128.09,62399,46491,15908,"Holds all its own picks, 2027–29.",28253,0.203,1.0
+2026,11,1331774599196585984,NCAA MOUNTAIN WEST,4,Air Force,Biggunnz21,1,10,0,81.94,31699,13115,18584,"Holds all its own picks, 2027–29. Own 2027 picks project early.",7351,-1.905,1.0
+2026,11,1331774599196585984,NCAA MOUNTAIN WEST,5,NIU,Pipedawg21,3,8,0,118.71,66540,47956,18584,"Holds all its own picks, 2027–29. Own 2027 picks project early.",19548,-0.225,1.0
+2026,11,1331774599196585984,NCAA MOUNTAIN WEST,6,BYU,KlondikeBar,9,2,0,151.89,70891,59416,11475,"Traded away: 2027 1st (to Boise State), 2027 4th (to Fresno State), 2028 4th (to Boise State) Own 2027 picks project late.",38312,1.29,1.0
+2026,11,1331774599196585984,NCAA MOUNTAIN WEST,7,Fresno State,Vikes1819,8,3,0,145.36,69747,52855,16892,"Acquired: 2027 2nd (San Diego State), 2027 4th (BYU, late) · Traded away: 2027 4th (to Boise State) Own 2027 picks project late.",32999,0.992,1.0
+2026,11,1331774599196585984,NCAA MOUNTAIN WEST,8,Colorado State,bkoldham,7,4,0,145.12,68940,53032,15908,"Holds all its own picks, 2027–29.",33597,0.981,1.0
+2026,11,1331774599196585984,NCAA MOUNTAIN WEST,9,New Mexico,Mrhawke19,5,6,0,113.09,62402,46494,15908,"Holds all its own picks, 2027–29.",21371,-0.482,1.0
+2026,11,1331774630620332032,NCAA HISTORICALLY BLACK,1,North Carolina A&T,PhantomXX,8,3,0,147.05,80673,65309,15364,"Holds all its own picks, 2027–29. Own 2027 picks project late.",36914,1.069,1.0
+2026,11,1331774630620332032,NCAA HISTORICALLY BLACK,10,Jackson State,bb7661KING,3,8,0,116.32,56436,37852,18584,"Holds all its own picks, 2027–29. Own 2027 picks project early.",21251,-0.335,1.0
+2026,11,1331774630620332032,NCAA HISTORICALLY BLACK,11,Tuskegee,Jerryb83,7,4,0,126.5,64308,48400,15908,"Holds all its own picks, 2027–29.",25218,0.13,1.0
+2026,11,1331774630620332032,NCAA HISTORICALLY BLACK,12,Grambling State,scoobydaeaglemahomes,2,9,0,96.06,55779,35492,20287,"Acquired: 2028 3rd (Howard), 2028 4th (Howard) Own 2027 picks project early.",21357,-1.26,1.0
+2026,11,1331774630620332032,NCAA HISTORICALLY BLACK,2,Alabama A&M,B41Pakman,1,10,0,71.03,49475,30891,18584,"Holds all its own picks, 2027–29. Own 2027 picks project early.",10824,-2.403,1.0
+2026,11,1331774630620332032,NCAA HISTORICALLY BLACK,3,Delaware State,lcummings,6,5,0,117.24,59742,43834,15908,"Holds all its own picks, 2027–29.",30904,-0.293,1.0
+2026,11,1331774630620332032,NCAA HISTORICALLY BLACK,4,Southern,memphismaniac,9,2,0,138.19,68472,53108,15364,"Holds all its own picks, 2027–29. Own 2027 picks project late.",41482,0.664,1.0
+2026,11,1331774630620332032,NCAA HISTORICALLY BLACK,5,Florida A&M,DaMagic436,7,4,0,120.34,63194,47286,15908,"Holds all its own picks, 2027–29.",27788,-0.151,1.0
+2026,11,1331774630620332032,NCAA HISTORICALLY BLACK,6,Howard,DeanFalcon,7,4,0,117.07,53905,39700,14205,"Traded away: 2028 3rd (to Grambling State), 2028 4th (to Grambling State)",20661,-0.3,1.0
+2026,11,1331774630620332032,NCAA HISTORICALLY BLACK,7,Mississippi Valley State,StrikerS091,7,4,0,110.39,63509,47601,15908,"Holds all its own picks, 2027–29.",27784,-0.606,1.0
+2026,11,1331774630620332032,NCAA HISTORICALLY BLACK,8,Alcorn State,wblack2012,5,6,0,115.12,66306,50398,15908,"Holds all its own picks, 2027–29.",32485,-0.39,1.0
+2026,11,1331774630620332032,NCAA HISTORICALLY BLACK,9,Bethune - Cookman,Pookieboom,4,7,0,103.15,63184,47276,15908,"Holds all its own picks, 2027–29.",31427,-0.936,1.0
+2026,11,1331774695346823168,NCAA USA,1,Troy,dh671,6,5,0,135.1,63462,47554,15908,"Holds all its own picks, 2027–29.",35262,0.523,1.0
+2026,11,1331774695346823168,NCAA USA,10,Florida International,Woolley69,4,7,0,110.37,62189,46281,15908,"Holds all its own picks, 2027–29.",30576,-0.606,1.0
+2026,11,1331774695346823168,NCAA USA,11,Louisiana,bshouseman,1,10,0,96.18,55104,35563,19541,"Acquired: 2027 3rd (Middle Tennessee State, late) Own 2027 picks project early.",10386,-1.254,1.0
+2026,11,1331774695346823168,NCAA USA,12,Louisiana Monroe,BroncoZzz,5,6,0,109.96,39545,25914,13631,"Traded away: 2027 2nd (to Western Kentucky), 2028 4th (to Western Kentucky)",18866,-0.625,1.0
+2026,11,1331774695346823168,NCAA USA,2,North Texas,jonathansj2,1,10,0,99.81,58694,37559,21135,"Acquired: 2027 1st (Middle Tennessee State, late), 2027 1st (Texas State) · Traded away: 2027 3rd (to Texas State), 2028 2nd (to Texas State) Own 2027 picks project early.",18393,-1.089,1.0
+2026,11,1331774695346823168,NCAA USA,3,Florida Atlantic,Botro,6,5,0,137.27,63596,49216,14380,Traded away: 2027 2nd (to Western Kentucky),28348,0.622,1.0
+2026,11,1331774695346823168,NCAA USA,4,South Alabama,GRIDIRONGANG81,5,6,0,130.99,69593,53685,15908,"Holds all its own picks, 2027–29.",33465,0.335,1.0
+2026,11,1331774695346823168,NCAA USA,5,Georgia State,JustTouchdown1221,8,3,0,147.67,82033,66669,15364,"Holds all its own picks, 2027–29. Own 2027 picks project late.",41864,1.097,1.0
+2026,11,1331774695346823168,NCAA USA,6,Western Kentucky,PatrickT21,5,6,0,120.6,62868,43155,19713,"Acquired: 2027 2nd (Florida Atlantic), 2027 2nd (Louisiana Monroe), 2028 4th (Louisiana Monroe)",19900,-0.139,1.0
+2026,11,1331774695346823168,NCAA USA,7,Middle Tennessee State,arandrea,11,0,0,153.92,73001,59466,13535,"Acquired: 2027 2nd (Texas State) · Traded away: 2027 1st (to North Texas), 2027 3rd (to Louisiana) Own 2027 picks project late.",40108,1.383,1.0
+2026,11,1331774695346823168,NCAA USA,8,Arkansas State,krichknowsbest,8,3,0,135.9,61620,46256,15364,"Holds all its own picks, 2027–29. Own 2027 picks project late.",29225,0.56,1.0
+2026,11,1331774695346823168,NCAA USA,9,Texas State,masshole4eva,6,5,0,122.48,52201,37972,14229,"Acquired: 2027 3rd (North Texas, early), 2028 2nd (North Texas) · Traded away: 2027 1st (to North Texas), 2027 2nd (to Middle Tennessee State)",25119,-0.053,1.0
+2026,11,1331774741488369664,NCAA IVY,1,Brown,FlynnD,9,2,0,161.85,91992,83118,8874,"Acquired: 2028 4th (Penn) · Traded away: 2027 1st (to Penn), 2027 2nd (to Bucknell), 2028 1st (to Penn), 2028 2nd (to Penn) Own 2027 picks project late.",47965,1.745,1.0
+2026,11,1331774741488369664,NCAA IVY,10,Princeton,BLACK93BOIZS,1,10,0,98.15,31693,23521,8172,"Acquired: 2027 4th (Harvard, early) · Traded away: 2027 1st (to Penn), 2027 2nd (to Penn), 2027 3rd (to Harvard), 2028 1st (to Penn), 2028 2nd (to Harvard) Own 2027 picks project early.",14591,-1.164,1.0
+2026,11,1331774741488369664,NCAA IVY,11,Dartmouth,jtheadrick98,9,2,0,147.6,68879,55915,12964,Traded away: 2027 1st (to Lehigh) Own 2027 picks project late.,39956,1.094,1.0
+2026,11,1331774741488369664,NCAA IVY,12,Cornell,cobrapanther99,8,3,0,133.99,65553,50189,15364,"Holds all its own picks, 2027–29. Own 2027 picks project late.",34144,0.472,1.0
+2026,11,1331774741488369664,NCAA IVY,2,Harvard,KennethNZ,3,8,0,103.07,58505,36303,22202,"Acquired: 2027 2nd (Lehigh, early), 2027 3rd (Princeton, early), 2028 2nd (Princeton) · Traded away: 2027 4th (to Princeton) Own 2027 picks project early.",14640,-0.94,1.0
+2026,11,1331774741488369664,NCAA IVY,3,Bucknell,Jrodr71,4,7,0,123.43,53584,36284,17300,"Acquired: 2027 2nd (Brown, late)",22350,-0.01,1.0
+2026,11,1331774741488369664,NCAA IVY,4,Columbia,alecgagnon2001,6,5,0,121.69,64375,48467,15908,"Holds all its own picks, 2027–29.",27190,-0.089,1.0
+2026,11,1331774741488369664,NCAA IVY,5,Georgetown,ccassidy,8,3,0,165.85,68477,53113,15364,"Holds all its own picks, 2027–29. Own 2027 picks project late.",33667,1.927,1.0
+2026,11,1331774741488369664,NCAA IVY,6,Lehigh,Iloveyyounghoes,3,8,0,116.2,55009,35973,19036,"Acquired: 2027 1st (Dartmouth, late) · Traded away: 2027 2nd (to Harvard) Own 2027 picks project early.",18032,-0.34,1.0
+2026,11,1331774741488369664,NCAA IVY,7,Penn,Hambnr,5,6,0,109.45,56239,26491,29748,"Acquired: 2027 1st (Brown, late), 2027 1st (Princeton, early), 2027 2nd (Princeton, early), 2028 1st (Brown), 2028 1st (Princeton), 2028 2nd (Brown) · Traded away: 2028 4th (to Brown)",12279,-0.648,1.0
+2026,11,1331774741488369664,NCAA IVY,8,Colgate,PhilupMynuts,6,5,0,140.64,70406,54498,15908,"Holds all its own picks, 2027–29.",34040,0.776,1.0
+2026,11,1331774741488369664,NCAA IVY,9,Yale,BrynJ9618,4,7,0,113.88,63012,47104,15908,"Holds all its own picks, 2027–29.",25820,-0.446,1.0
+2026,11,1331774804222545920,NCAA PIONEER,1,Wofford,doseofthestars,4,7,0,117.27,57563,41655,15908,"Holds all its own picks, 2027–29.",28778,-0.291,1.0
+2026,11,1331774804222545920,NCAA PIONEER,10,Furman,JMullen175,4,7,0,110.52,60178,44270,15908,"Holds all its own picks, 2027–29.",27858,-0.6,1.0
+2026,11,1331774804222545920,NCAA PIONEER,11,UT Martin,FatPat1251,7,4,0,135.8,64120,48212,15908,"Holds all its own picks, 2027–29.",34669,0.555,1.0
+2026,11,1331774804222545920,NCAA PIONEER,12,Davidson,YikesOnBikes,8,3,0,131.51,64485,51521,12964,Traded away: 2027 1st (to Dayton) Own 2027 picks project late.,36999,0.359,1.0
+2026,11,1331774804222545920,NCAA PIONEER,2,Holy Cross,DownLoMoJo,6,5,0,129.75,67743,51835,15908,"Holds all its own picks, 2027–29.",27683,0.279,1.0
+2026,11,1331774804222545920,NCAA PIONEER,3,Murray State,MyFingerPoints,6,5,0,139.63,66201,50293,15908,"Holds all its own picks, 2027–29.",33458,0.73,1.0
+2026,11,1331774804222545920,NCAA PIONEER,4,Butler,Daphud,5,6,0,118.77,77614,60314,17300,"Acquired: 2027 2nd (Campbell, late)",23586,-0.223,1.0
+2026,11,1331774804222545920,NCAA PIONEER,5,Tennessee State,EBurkhart,2,9,0,95.25,41315,22731,18584,"Holds all its own picks, 2027–29. Own 2027 picks project early.",11509,-1.297,1.0
+2026,11,1331774804222545920,NCAA PIONEER,6,SE Missouri State,BDAVIS309,2,9,0,117.46,60122,41538,18584,"Holds all its own picks, 2027–29. Own 2027 picks project early.",24868,-0.283,1.0
+2026,11,1331774804222545920,NCAA PIONEER,7,Dayton,Ortizz,6,5,0,118.75,60609,42301,18308,"Acquired: 2027 1st (Davidson, late)",18790,-0.224,1.0
+2026,11,1331774804222545920,NCAA PIONEER,8,Campbell,CrownMeKing,10,1,0,153.85,67362,53390,13972,Traded away: 2027 2nd (to Butler) Own 2027 picks project late.,35336,1.379,1.0
+2026,11,1331774804222545920,NCAA PIONEER,9,Austin Peay,DictatorBerry,6,5,0,119.33,57292,41384,15908,"Holds all its own picks, 2027–29.",21482,-0.197,1.0
+2026,11,1331774846710849536,NCAA SUN BELT,1,Temple,bruceble,8,3,0,135.67,66907,51543,15364,"Holds all its own picks, 2027–29. Own 2027 picks project late.",26236,0.549,1.0
+2026,11,1331774846710849536,NCAA SUN BELT,10,UAB,Fr3shBC11,0,11,0,64.7,50881,32297,18584,"Holds all its own picks, 2027–29. Own 2027 picks project early.",14610,-2.692,1.0
+2026,11,1331774846710849536,NCAA SUN BELT,11,Louisiana Tech,Resolhjk,4,7,0,118.36,54055,38147,15908,"Holds all its own picks, 2027–29.",27484,-0.242,1.0
+2026,11,1331774846710849536,NCAA SUN BELT,12,UTSA,utsa,6,5,0,122.1,53578,37670,15908,"Holds all its own picks, 2027–29.",19857,-0.071,1.0
+2026,11,1331774846710849536,NCAA SUN BELT,2,UTEP,Tommybuckets000,4,7,0,109.96,55469,39561,15908,"Holds all its own picks, 2027–29.",31990,-0.625,1.0
+2026,11,1331774846710849536,NCAA SUN BELT,3,Tulane,claym89,5,6,0,121.24,72451,56543,15908,"Holds all its own picks, 2027–29.",23000,-0.11,1.0
+2026,11,1331774846710849536,NCAA SUN BELT,4,Rice,lucchityler,2,9,0,104.77,47893,29309,18584,"Holds all its own picks, 2027–29. Own 2027 picks project early.",18681,-0.862,1.0
+2026,11,1331774846710849536,NCAA SUN BELT,5,Marshall,PackMan1212,5,6,0,115.46,70788,54880,15908,"Holds all its own picks, 2027–29.",28562,-0.374,1.0
+2026,11,1331774846710849536,NCAA SUN BELT,6,Tulsa,Raidersforte,9,2,0,145.7,65247,49883,15364,"Holds all its own picks, 2027–29. Own 2027 picks project late.",34365,1.007,1.0
+2026,11,1331774846710849536,NCAA SUN BELT,7,Georgia Southern,alphabeasttt,5,6,0,132.04,56385,40477,15908,"Holds all its own picks, 2027–29.",31110,0.383,1.0
+2026,11,1331774846710849536,NCAA SUN BELT,8,Memphis,yoboihawks,9,2,0,140.35,70543,55179,15364,"Holds all its own picks, 2027–29. Own 2027 picks project late.",31103,0.763,1.0
+2026,11,1331774846710849536,NCAA SUN BELT,9,Southern Miss,denvermanning,9,2,0,145.79,78235,62871,15364,"Holds all its own picks, 2027–29. Own 2027 picks project late.",41073,1.011,1.0
+2026,11,1331774880181399552,NCAA BIG 12,1,Texas Tech,Orphan,2,9,0,90.71,61616,43032,18584,"Holds all its own picks, 2027–29. Own 2027 picks project early.",21658,-1.504,1.0
+2026,11,1331774880181399552,NCAA BIG 12,10,Kansas,FalconsRULE7,1,10,0,90.11,49154,30570,18584,"Holds all its own picks, 2027–29. Own 2027 picks project early.",13230,-1.532,1.0
+2026,11,1331774880181399552,NCAA BIG 12,11,TCU,CousinMose15,4,7,0,125.0,66540,49675,16865,"Acquired: 2027 3rd (Kansas State, late)",30333,0.062,1.0
+2026,11,1331774880181399552,NCAA BIG 12,12,Oklahoma State,Gangly22,2,9,0,105.09,48973,29649,19324,"Acquired: 2027 4th (Texas A&M, late) Own 2027 picks project early.",18218,-0.847,1.0
+2026,11,1331774880181399552,NCAA BIG 12,2,Iowa State,trev7293,4,7,0,89.04,43802,27894,15908,"Holds all its own picks, 2027–29.",20897,-1.58,1.0
+2026,11,1331774880181399552,NCAA BIG 12,3,Missouri,DavidJimm,9,2,0,132.88,65361,49040,16321,"Acquired: 2027 3rd (Texas A&M, late) Own 2027 picks project late.",29829,0.422,1.0
+2026,11,1331774880181399552,NCAA BIG 12,4,Texas A&M,deadheadshane,8,3,0,138.18,76640,61439,15201,"Acquired: 2027 4th (Oklahoma), 2028 4th (Oklahoma) · Traded away: 2027 3rd (to Missouri), 2027 4th (to Oklahoma State) Own 2027 picks project late.",35100,0.663,1.0
+2026,11,1331774880181399552,NCAA BIG 12,5,Baylor,robertlouis7,9,2,0,161.6,88077,72713,15364,"Holds all its own picks, 2027–29. Own 2027 picks project late.",50824,1.733,1.0
+2026,11,1331774880181399552,NCAA BIG 12,6,Texas,elianbruger,7,4,0,125.72,52895,36987,15908,"Holds all its own picks, 2027–29.",23895,0.095,1.0
+2026,11,1331774880181399552,NCAA BIG 12,7,Kansas State,Frankeen,8,3,0,146.0,68476,54069,14407,Traded away: 2027 3rd (to TCU) Own 2027 picks project late.,32063,1.021,1.0
+2026,11,1331774880181399552,NCAA BIG 12,8,West Virginia,alicho,7,4,0,134.77,62805,46897,15908,"Holds all its own picks, 2027–29.",25174,0.508,1.0
+2026,11,1331774880181399552,NCAA BIG 12,9,Oklahoma,rchau56,5,6,0,126.46,62419,48045,14374,"Traded away: 2027 4th (to Texas A&M), 2028 4th (to Texas A&M)",24845,0.128,1.0
+2026,11,1331774915392577536,NCAA ACC,1,Virginia,ChrisW21,6,5,0,135.81,59128,44247,14881,Traded away: 2027 3rd (to Virginia Tech),35447,0.555,1.0
+2026,11,1331774915392577536,NCAA ACC,10,NC State,EerieHush,9,2,0,145.73,72081,57022,15059,"Acquired: 2027 2nd (Clemson, late) · Traded away: 2027 3rd (to Clemson), 2027 4th (to Virginia Tech) Own 2027 picks project late.",39257,1.008,1.0
+2026,11,1331774915392577536,NCAA ACC,11,Louisville,Campbell8,3,8,0,109.72,51353,32769,18584,"Holds all its own picks, 2027–29. Own 2027 picks project early.",17660,-0.636,1.0
+2026,11,1331774915392577536,NCAA ACC,12,Clemson,dilbennett,10,1,0,159.78,75302,60373,14929,"Acquired: 2027 3rd (NC State, late) · Traded away: 2027 2nd (to NC State) Own 2027 picks project late.",44997,1.65,1.0
+2026,11,1331774915392577536,NCAA ACC,2,North Carolina,MattyBent,4,7,0,117.28,56053,40145,15908,"Holds all its own picks, 2027–29.",21365,-0.291,1.0
+2026,11,1331774915392577536,NCAA ACC,3,Georgia Tech,spendawg,7,4,0,135.94,64534,52655,11879,"Traded away: 2027 1st (to Virginia Tech), 2028 2nd (to Virginia Tech)",35210,0.561,1.0
+2026,11,1331774915392577536,NCAA ACC,4,Virginia Tech,landonh12,5,6,0,115.36,74033,51908,22125,"Acquired: 2027 1st (Georgia Tech), 2027 3rd (Duke, early), 2027 3rd (Virginia), 2027 4th (NC State, late), 2028 2nd (Georgia Tech) · Traded away: 2027 4th (to Duke)",16207,-0.379,1.0
+2026,11,1331774915392577536,NCAA ACC,5,FSU,Yarby,6,5,0,138.75,55029,41814,13215,Traded away: 2027 1st (to Boston College),31729,0.689,1.0
+2026,11,1331774915392577536,NCAA ACC,6,Wake Forest,WhiskyScientist,3,8,0,123.3,67226,48642,18584,"Holds all its own picks, 2027–29. Own 2027 picks project early.",30449,-0.016,1.0
+2026,11,1331774915392577536,NCAA ACC,7,Duke,fatalbeast,3,8,0,112.52,61624,43461,18163,Acquired: 2027 4th (Virginia Tech) · Traded away: 2027 3rd (to Virginia Tech) Own 2027 picks project early.,24485,-0.508,1.0
+2026,11,1331774915392577536,NCAA ACC,8,Boston College,eperedetto,7,4,0,128.53,66897,47090,19807,"Acquired: 2027 1st (FSU), 2027 3rd (Miami, early)",22760,0.223,1.0
+2026,11,1331774915392577536,NCAA ACC,9,Miami,markandrewsisthegoat,3,8,0,103.31,46474,29096,17378,Traded away: 2027 3rd (to Boston College) Own 2027 picks project early.,11007,-0.929,1.0
+2026,11,1331775106527006720,NCAA PAC 12,1,Arizona,nshox2,2,9,0,104.51,55981,32198,23783,"Acquired: 2027 1st (USC), 2027 2nd (Oregon State), 2027 3rd (Oregon State), 2027 4th (Stanford, early), 2028 1st (USC), 2028 4th (Washington State) · Traded away: 2027 3rd (to Washington State), 2027 4th (to Washington State), 2028 3rd (to Washington State), 2028 4th (to Washington State) Own 2027 picks project early.",16255,-0.874,1.0
+2026,11,1331775106527006720,NCAA PAC 12,10,California,ImagineWiigons,3,8,0,93.69,46443,20022,26421,"Acquired: 2027 2nd (Arizona State, late), 2027 2nd (Washington), 2027 3rd (UCLA, late), 2028 1st (Washington), 2029 1st (Washington) Own 2027 picks project early.",11819,-1.368,1.0
+2026,11,1331775106527006720,NCAA PAC 12,11,Utah,seniormeow,4,7,0,119.69,59436,43528,15908,"Holds all its own picks, 2027–29.",24465,-0.181,1.0
+2026,11,1331775106527006720,NCAA PAC 12,12,UCLA,lmerkouSaints,8,3,0,134.35,66081,51019,15062,"Acquired: 2027 2nd (Washington State, late), 2027 3rd (Washington State, late) · Traded away: 2027 3rd (to California), 2027 4th (to Oregon), 2028 3rd (to Colorado) Own 2027 picks project late.",32907,0.489,1.0
+2026,11,1331775106527006720,NCAA PAC 12,2,USC,KamaraGOAT41,5,6,0,125.08,63613,52582,11031,"Acquired: 2028 3rd (Washington State) · Traded away: 2027 1st (to Arizona), 2027 3rd (to Oregon), 2028 1st (to Arizona)",38395,0.066,1.0
+2026,11,1331775106527006720,NCAA PAC 12,3,Oregon State,Dunebuggy619,5,6,0,129.81,69919,53071,16848,"Acquired: 2027 1st (Washington State, late), 2028 1st (Washington State), 2028 2nd (Washington State), 2029 3rd (Washington State) · Traded away: 2027 2nd (to Arizona), 2027 3rd (to Arizona), 2027 4th (to Washington State), 2028 3rd (to Washington State), 2028 4th (to Washington State), 2029 4th (to Washington State)",27498,0.281,1.0
+2026,11,1331775106527006720,NCAA PAC 12,4,Washington State,chzhead412,11,0,0,159.22,78551,66736,11815,"Acquired: 2027 3rd (Arizona, early), 2027 3rd (Colorado, late), 2027 4th (Arizona, early), 2027 4th (Oregon State), 2028 3rd (Arizona), 2028 3rd (Oregon State), 2028 4th (Arizona), 2028 4th (Oregon State), 2029 4th (Oregon State) · Traded away: 2027 1st (to Oregon State), 2027 2nd (to UCLA), 2027 3rd (to UCLA), 2027 4th (to Washington), 2028 1st (to Oregon State), 2028 2nd (to Oregon State), 2028 3rd (to USC), 2028 4th (to Arizona), 2029 3rd (to Oregon State)",44871,1.625,1.0
+2026,11,1331775106527006720,NCAA PAC 12,5,Stanford,laynemercer,3,8,0,128.38,55261,37549,17712,Traded away: 2027 4th (to Arizona) Own 2027 picks project early.,18175,0.216,1.0
+2026,11,1331775106527006720,NCAA PAC 12,6,Washington,samggannon,5,6,0,112.79,47597,36437,11160,"Acquired: 2027 4th (Washington State, late) · Traded away: 2027 2nd (to California), 2028 1st (to California), 2029 1st (to California)",19016,-0.496,1.0
+2026,11,1331775106527006720,NCAA PAC 12,7,Arizona State,wrightc214,9,2,0,160.69,82905,71382,11523,"Traded away: 2027 2nd (to California), 2027 4th (to Oregon), 2028 3rd (to Oregon), 2029 4th (to Oregon) Own 2027 picks project late.",46161,1.692,1.0
+2026,11,1331775106527006720,NCAA PAC 12,8,Colorado,keppin,10,1,0,150.63,73714,58353,15361,Acquired: 2028 3rd (UCLA) · Traded away: 2027 3rd (to Washington State) Own 2027 picks project late.,30911,1.232,1.0
+2026,11,1331775106527006720,NCAA PAC 12,9,Oregon,ScottyW13,1,10,0,89.53,50821,28021,22800,"Acquired: 2027 3rd (USC), 2027 4th (Arizona State, late), 2027 4th (UCLA, late), 2028 3rd (Arizona State), 2029 4th (Arizona State) Own 2027 picks project early.",10219,-1.558,1.0
+2026,11,1331775170712444928,NCAA SEC,1,Florida,tedman546,3,8,0,95.55,47941,29357,18584,"Holds all its own picks, 2027–29. Own 2027 picks project early.",16257,-1.283,1.0
+2026,11,1331775170712444928,NCAA SEC,10,South Carolina,Neilsondug,8,3,0,116.24,77037,60281,16756,"Acquired: 2027 2nd (Kentucky, late) Own 2027 picks project late.",39601,-0.338,1.0
+2026,11,1331775170712444928,NCAA SEC,11,Alabama,devbovino,2,9,0,89.65,70305,51721,18584,"Holds all its own picks, 2027–29. Own 2027 picks project early.",30546,-1.553,1.0
+2026,11,1331775170712444928,NCAA SEC,12,Arkansas,JosephMarin07,5,6,0,113.65,67299,51391,15908,"Holds all its own picks, 2027–29.",32328,-0.457,1.0
+2026,11,1331775170712444928,NCAA SEC,2,LSU,errand,8,3,0,134.03,61051,45687,15364,"Holds all its own picks, 2027–29. Own 2027 picks project late.",33464,0.474,1.0
+2026,11,1331775170712444928,NCAA SEC,3,Tennessee,ChadLowe,5,6,0,112.12,50944,35036,15908,"Holds all its own picks, 2027–29.",16255,-0.526,1.0
+2026,11,1331775170712444928,NCAA SEC,4,Auburn,egbdf,8,3,0,152.67,67581,52217,15364,"Holds all its own picks, 2027–29. Own 2027 picks project late.",32596,1.326,1.0
+2026,11,1331775170712444928,NCAA SEC,5,Ole Miss,ryank45,2,9,0,98.38,49364,30780,18584,"Holds all its own picks, 2027–29. Own 2027 picks project early.",19307,-1.154,1.0
+2026,11,1331775170712444928,NCAA SEC,6,Mississippi State,thatmansanti,6,5,0,147.02,74181,58273,15908,"Holds all its own picks, 2027–29.",40491,1.067,1.0
+2026,11,1331775170712444928,NCAA SEC,7,Georgia,kodakjack,6,5,0,117.35,51947,36039,15908,"Holds all its own picks, 2027–29.",21848,-0.288,1.0
+2026,11,1331775170712444928,NCAA SEC,8,Kentucky,Stumpy44,10,1,0,149.04,78209,66637,11572,"Traded away: 2027 1st (to Vanderbilt), 2027 2nd (to South Carolina) Own 2027 picks project late.",30984,1.16,1.0
+2026,11,1331775170712444928,NCAA SEC,9,Vanderbilt,Orphan,3,8,0,85.12,52435,31451,20984,"Acquired: 2027 1st (Kentucky, late) Own 2027 picks project early.",10567,-1.76,1.0
+2026,11,1331775206619885568,NCAA BIG EAST & CO.,1,Rutgers,sblau24,4,7,0,124.25,56437,40529,15908,"Holds all its own picks, 2027–29.",23088,0.027,1.0
+2026,11,1331775206619885568,NCAA BIG EAST & CO.,10,USF,MacATac,1,10,0,94.42,59015,39474,19541,"Acquired: 2027 3rd (Army, late) Own 2027 picks project early.",19432,-1.335,1.0
+2026,11,1331775206619885568,NCAA BIG EAST & CO.,11,Navy,Ianiners,4,7,0,94.92,58600,42692,15908,"Holds all its own picks, 2027–29.",20796,-1.312,1.0
+2026,11,1331775206619885568,NCAA BIG EAST & CO.,12,Notre Dame,ryno,4,7,0,124.79,70386,50742,19644,"Acquired: 2027 1st (UCONN, late), 2028 2nd (Syracuse)",26569,0.052,1.0
+2026,11,1331775206619885568,NCAA BIG EAST & CO.,2,Maryland,hurlken,4,7,0,106.96,49178,33270,15908,"Holds all its own picks, 2027–29.",16930,-0.762,1.0
+2026,11,1331775206619885568,NCAA BIG EAST & CO.,3,South Dakota State,averagedude23,3,8,0,121.42,56840,38256,18584,"Holds all its own picks, 2027–29. Own 2027 picks project early.",25713,-0.102,1.0
+2026,11,1331775206619885568,NCAA BIG EAST & CO.,4,Pittsburgh,vinceA762,8,3,0,137.85,66460,51096,15364,"Holds all its own picks, 2027–29. Own 2027 picks project late.",30122,0.649,1.0
+2026,11,1331775206619885568,NCAA BIG EAST & CO.,5,UCONN,NastyS8ntChance,8,3,0,140.99,63837,50873,12964,Traded away: 2027 1st (to Notre Dame) Own 2027 picks project late.,27863,0.792,1.0
+2026,11,1331775206619885568,NCAA BIG EAST & CO.,6,Coastal Carolina,joonbug,7,4,0,153.38,61213,45305,15908,"Holds all its own picks, 2027–29.",36441,1.358,1.0
+2026,11,1331775206619885568,NCAA BIG EAST & CO.,7,Syracuse,CodeKhaos,9,2,0,162.37,89705,74234,15471,"Acquired: 2027 1st (Army, late) · Traded away: 2027 3rd (to Army), 2028 2nd (to Notre Dame) Own 2027 picks project late.",52394,1.768,1.0
+2026,11,1331775206619885568,NCAA BIG EAST & CO.,8,Army,Claser,9,2,0,130.75,48784,35820,12964,"Acquired: 2027 3rd (Syracuse, late) · Traded away: 2027 1st (to Syracuse), 2027 3rd (to USF) Own 2027 picks project late.",24386,0.324,1.0
+2026,11,1331775206619885568,NCAA BIG EAST & CO.,9,UCF,JEANTY,5,6,0,116.04,61925,46017,15908,"Holds all its own picks, 2027–29.",26320,-0.348,1.0

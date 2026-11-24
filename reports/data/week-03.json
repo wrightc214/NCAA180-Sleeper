@@ -1,6 +1,6 @@
 {
  "week": 3,
- "avg": 128.75,
+ "avg": 128.81,
  "median": 127.81,
  "unbeaten": 31,
  "winless": 33,
@@ -159,7 +159,7 @@
    "Rank": 16,
    "Team": "South Carolina",
    "Lg": "SEC",
-   "Owner": "Orphan",
+   "Owner": "Neilsondug",
    "Rec": "3-0",
    "Pts": 457.5,
    "Luck": 0.8,
@@ -312,7 +312,7 @@
    "Owner": "Justahippo",
    "Rec": "3-0",
    "Pts": 352.64,
-   "Luck": 1.87,
+   "Luck": 1.88,
    "Move": 13
   },
   {
@@ -436,12 +436,12 @@
    "Avg": 131.83
   },
   {
-   "Lg": "CUSA",
-   "Avg": 130.82
+   "Lg": "Pac-12",
+   "Avg": 131.52
   },
   {
-   "Lg": "Pac-12",
-   "Avg": 130.6
+   "Lg": "CUSA",
+   "Avg": 130.82
   },
   {
    "Lg": "Ohio Valley",
@@ -520,7 +520,7 @@
   "lucky": {
    "Team": "Vanderbilt",
    "Lg": "SEC",
-   "Owner": "Neilsondug",
+   "Owner": "Orphan",
    "P": 82.38,
    "Opp": "Florida",
    "PA": 73.32,

@@ -115,3 +115,18 @@ Year,Week,Key,Kind,At,Data
 2026,11,final:w11-Big Ten-4,final,2026-11-23T08:14:54Z,"{""teams"": [{""league_id"": ""1316899936696016896"", ""roster_id"": ""2"", ""slot"": ""Big Ten:2"", ""name"": ""Nebraska"", ""points"": 120.68}, {""league_id"": ""1316899936696016896"", ""roster_id"": ""8"", ""slot"": ""Big Ten:8"", ""name"": ""Indiana"", ""points"": 76.64}], ""winner"": ""Big Ten:2"", ""label"": """"}"
 2026,11,window:sun-night,window,2026-11-23T08:14:54Z,
 2026,11,sunday,sunday,2026-11-23T08:14:54Z,
+2026,11,settled:w11-HBCU-5,settled,2026-11-24T20:22:33Z,"{""points"": [140.2, 67.58], ""winner"": ""HBCU:1"", ""flipped"": false}"
+2026,11,settled:w11-Big Sky-4,settled,2026-11-24T20:22:33Z,"{""points"": [125.56, 91.6], ""winner"": ""Big Sky:1"", ""flipped"": false}"
+2026,11,settled:w11-Big East-4,settled,2026-11-24T20:22:33Z,"{""points"": [108.4, 126.18], ""winner"": ""Big East:9"", ""flipped"": false}"
+2026,11,settled:w11-Big East-6,settled,2026-11-24T20:22:33Z,"{""points"": [141.66, 99.06], ""winner"": ""Big East:4"", ""flipped"": false}"
+2026,11,settled:w11-SEC-4,settled,2026-11-24T20:22:33Z,"{""points"": [132.98, 64.96], ""winner"": ""SEC:1"", ""flipped"": false}"
+2026,11,settled:w11-SEC-2,settled,2026-11-24T20:22:33Z,"{""points"": [91.76, 103.56], ""winner"": ""SEC:10"", ""flipped"": false}"
+2026,11,settled:w11-Pac-12-4,settled,2026-11-24T20:22:33Z,"{""points"": [87.56, 122.08], ""winner"": ""Pac-12:5"", ""flipped"": false}"
+2026,11,settled:w11-ACC-2,settled,2026-11-24T20:22:33Z,"{""points"": [70.7, 129.58], ""winner"": ""ACC:8"", ""flipped"": false}"
+2026,11,settled:w11-Big 12-1,settled,2026-11-24T20:22:33Z,"{""points"": [94.16, 80.1], ""winner"": ""Big 12:6"", ""flipped"": false}"
+2026,11,settled:w11-Big 12-5,settled,2026-11-24T20:22:33Z,"{""points"": [137.64, 143.84], ""winner"": ""Big 12:12"", ""flipped"": false}"
+2026,11,settled:w11-CUSA-3,settled,2026-11-24T20:22:33Z,"{""points"": [112.3, 147.04], ""winner"": ""CUSA:5"", ""flipped"": false}"
+2026,11,settled:w11-HBCU-1,settled,2026-11-24T20:22:33Z,"{""points"": [76.36, 138.14], ""winner"": ""HBCU:5"", ""flipped"": false}"
+2026,11,settled:w11-HBCU-3,settled,2026-11-24T20:22:33Z,"{""points"": [78.3, 82.2], ""winner"": ""HBCU:4"", ""flipped"": false}"
+2026,11,settled:w11-Ohio Valley-3,settled,2026-11-24T20:22:33Z,"{""points"": [120.8, 138.26], ""winner"": ""Ohio Valley:11"", ""flipped"": false}"
+2026,11,settled:w11-Big Ten-4,settled,2026-11-24T20:22:33Z,"{""points"": [120.68, 76.64], ""winner"": ""Big Ten:2"", ""flipped"": false}"

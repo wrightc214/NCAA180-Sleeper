@@ -1,7 +1,7 @@
 {
  "week": 6,
- "avg": 113.71,
- "median": 115.05,
+ "avg": 113.83,
+ "median": 115.72,
  "unbeaten": 9,
  "winless": 11,
  "top32": [
@@ -32,7 +32,7 @@
    "Owner": "keppin",
    "Rec": "6-0",
    "Pts": 979.4,
-   "Luck": 1.19,
+   "Luck": 1.2,
    "Move": 4
   },
   {
@@ -42,7 +42,7 @@
    "Owner": "Frankeen",
    "Rec": "6-0",
    "Pts": 975.94,
-   "Luck": 0.9,
+   "Luck": 0.91,
    "Move": 0
   },
   {
@@ -62,7 +62,7 @@
    "Owner": "Stumpy44",
    "Rec": "6-0",
    "Pts": 938.12,
-   "Luck": 1.46,
+   "Luck": 1.47,
    "Move": 2
   },
   {
@@ -72,7 +72,7 @@
    "Owner": "CrownMeKing",
    "Rec": "6-0",
    "Pts": 931.64,
-   "Luck": 1.55,
+   "Luck": 1.56,
    "Move": 2
   },
   {
@@ -82,7 +82,7 @@
    "Owner": "KlondikeBar",
    "Rec": "6-0",
    "Pts": 923.66,
-   "Luck": 1.54,
+   "Luck": 1.55,
    "Move": 2
   },
   {
@@ -92,7 +92,7 @@
    "Owner": "mssullivan2022",
    "Rec": "6-0",
    "Pts": 913.16,
-   "Luck": 1.55,
+   "Luck": 1.56,
    "Move": -3
   },
   {
@@ -122,7 +122,7 @@
    "Owner": "wrightc214",
    "Rec": "5-1",
    "Pts": 992.84,
-   "Luck": 0.22,
+   "Luck": 0.23,
    "Move": 5
   },
   {
@@ -132,7 +132,7 @@
    "Owner": "Beastchewy15",
    "Rec": "5-1",
    "Pts": 975.46,
-   "Luck": 0.05,
+   "Luck": 0.06,
    "Move": -12
   },
   {
@@ -182,7 +182,7 @@
    "Owner": "denvermanning",
    "Rec": "5-1",
    "Pts": 915.6,
-   "Luck": 0.35,
+   "Luck": 0.37,
    "Move": 3
   },
   {
@@ -192,7 +192,7 @@
    "Owner": "Yarby",
    "Rec": "5-1",
    "Pts": 908.76,
-   "Luck": 0.36,
+   "Luck": 0.37,
    "Move": 8
   },
   {
@@ -212,7 +212,7 @@
    "Owner": "JustTouchdown1221",
    "Rec": "5-1",
    "Pts": 900.22,
-   "Luck": 0.46,
+   "Luck": 0.47,
    "Move": 10
   },
   {
@@ -222,7 +222,7 @@
    "Owner": "FatPat1251",
    "Rec": "5-1",
    "Pts": 882.78,
-   "Luck": 0.66,
+   "Luck": 0.67,
    "Move": 6
   },
   {
@@ -242,7 +242,7 @@
    "Owner": "errand",
    "Rec": "5-1",
    "Pts": 864.26,
-   "Luck": 0.98,
+   "Luck": 0.99,
    "Move": 8
   },
   {
@@ -252,7 +252,7 @@
    "Owner": "alicho",
    "Rec": "5-1",
    "Pts": 858.6,
-   "Luck": 0.91,
+   "Luck": 0.92,
    "Move": 4
   },
   {
@@ -262,7 +262,7 @@
    "Owner": "bdub3",
    "Rec": "5-1",
    "Pts": 855.02,
-   "Luck": 1.5,
+   "Luck": 1.52,
    "Move": 7
   },
   {
@@ -272,17 +272,17 @@
    "Owner": "spendawg",
    "Rec": "5-1",
    "Pts": 845.3,
-   "Luck": 0.99,
+   "Luck": 1.01,
    "Move": 7
   },
   {
    "Rank": 28,
    "Team": "South Carolina",
    "Lg": "SEC",
-   "Owner": "Orphan",
+   "Owner": "Neilsondug",
    "Rec": "5-1",
    "Pts": 800.0,
-   "Luck": 1.71,
+   "Luck": 1.72,
    "Move": 10
   },
   {
@@ -302,7 +302,7 @@
    "Owner": "cobrapanther99",
    "Rec": "5-1",
    "Pts": 795.2,
-   "Luck": 1.55,
+   "Luck": 1.56,
    "Move": 10
   },
   {
@@ -322,7 +322,7 @@
    "Owner": "vinceA762",
    "Rec": "5-1",
    "Pts": 793.44,
-   "Luck": 1.58,
+   "Luck": 1.59,
    "Move": -20
   }
  ],
@@ -351,8 +351,8 @@
    "Owner": "chzhead412",
    "P": 170.54,
    "Opp": "Utah",
-   "PA": 105.76,
-   "Margin": 64.78
+   "PA": 127.56,
+   "Margin": 42.98
   },
   {
    "Team": "Montana State",
@@ -424,12 +424,12 @@
    "Avg": 123.6
   },
   {
-   "Lg": "Mountain West",
-   "Avg": 120.7
+   "Lg": "Pac-12",
+   "Avg": 121.7
   },
   {
-   "Lg": "Pac-12",
-   "Avg": 119.88
+   "Lg": "Mountain West",
+   "Avg": 120.7
   },
   {
    "Lg": "Ohio Valley",
@@ -520,7 +520,7 @@
   "lucky": {
    "Team": "Vanderbilt",
    "Lg": "SEC",
-   "Owner": "Neilsondug",
+   "Owner": "Orphan",
    "P": 52.06,
    "Opp": "Alabama",
    "PA": 29.38,

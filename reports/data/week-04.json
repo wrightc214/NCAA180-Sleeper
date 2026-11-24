@@ -1,7 +1,7 @@
 {
  "week": 4,
- "avg": 133.02,
- "median": 128.93,
+ "avg": 133.38,
+ "median": 129.8,
  "unbeaten": 19,
  "winless": 18,
  "top32": [
@@ -72,7 +72,7 @@
    "Owner": "Frankeen",
    "Rec": "4-0",
    "Pts": 657.38,
-   "Luck": 0.64,
+   "Luck": 0.65,
    "Move": 0
   },
   {
@@ -102,7 +102,7 @@
    "Owner": "GRIDIRONGANG81",
    "Rec": "4-0",
    "Pts": 627.58,
-   "Luck": 1.17,
+   "Luck": 1.18,
    "Move": -2
   },
   {
@@ -112,7 +112,7 @@
    "Owner": "keppin",
    "Rec": "4-0",
    "Pts": 613.86,
-   "Luck": 1.12,
+   "Luck": 1.13,
    "Move": 1
   },
   {
@@ -122,7 +122,7 @@
    "Owner": "denvermanning",
    "Rec": "4-0",
    "Pts": 613.6,
-   "Luck": 0.94,
+   "Luck": 0.95,
    "Move": 5
   },
   {
@@ -132,17 +132,17 @@
    "Owner": "Yarby",
    "Rec": "4-0",
    "Pts": 609.26,
-   "Luck": 1.0,
+   "Luck": 1.01,
    "Move": 2
   },
   {
    "Rank": 14,
    "Team": "South Carolina",
    "Lg": "SEC",
-   "Owner": "Orphan",
+   "Owner": "Neilsondug",
    "Rec": "4-0",
    "Pts": 601.5,
-   "Luck": 1.16,
+   "Luck": 1.17,
    "Move": 2
   },
   {
@@ -162,7 +162,7 @@
    "Owner": "Stumpy44",
    "Rec": "4-0",
    "Pts": 591.76,
-   "Luck": 1.33,
+   "Luck": 1.34,
    "Move": 13
   },
   {
@@ -172,7 +172,7 @@
    "Owner": "KlondikeBar",
    "Rec": "4-0",
    "Pts": 590.96,
-   "Luck": 1.38,
+   "Luck": 1.39,
    "Move": -3
   },
   {
@@ -232,7 +232,7 @@
    "Owner": "wrightc214",
    "Rec": "3-1",
    "Pts": 667.72,
-   "Luck": -0.16,
+   "Luck": -0.15,
    "Move": 12
   },
   {
@@ -242,7 +242,7 @@
    "Owner": "CodeKhaos",
    "Rec": "3-1",
    "Pts": 667.24,
-   "Luck": -0.26,
+   "Luck": -0.25,
    "Move": 14
   },
   {
@@ -252,7 +252,7 @@
    "Owner": "alicho",
    "Rec": "3-1",
    "Pts": 621.26,
-   "Luck": -0.2,
+   "Luck": -0.19,
    "Move": 17
   },
   {
@@ -282,7 +282,7 @@
    "Owner": "Resolhjk",
    "Rec": "3-1",
    "Pts": 617.46,
-   "Luck": 0.3,
+   "Luck": 0.31,
    "Move": 9
   },
   {
@@ -440,6 +440,10 @@
    "Avg": 135.05
   },
   {
+   "Lg": "Pac-12",
+   "Avg": 134.66
+  },
+  {
    "Lg": "SEC",
    "Avg": 134.37
   },
@@ -466,10 +470,6 @@
   {
    "Lg": "Big Sky",
    "Avg": 129.86
-  },
-  {
-   "Lg": "Pac-12",
-   "Avg": 129.34
   },
   {
    "Lg": "HBCU",
@@ -529,7 +529,7 @@
   "low": {
    "Team": "Vanderbilt",
    "Lg": "SEC",
-   "Owner": "Neilsondug",
+   "Owner": "Orphan",
    "P": 65.42,
    "Opp": "Tennessee",
    "PA": 163.68,
@@ -539,13 +539,13 @@
    "Team": "California",
    "Lg": "Pac-12",
    "Owner": "ImagineWiigons",
-   "P": 79.28,
+   "P": 86.28,
    "Opp": "Washington",
    "PA": 105.58,
-   "Margin": -26.3,
+   "Margin": -19.3,
    "Max": 185.22,
-   "Left": 105.94,
-   "Count": 52
+   "Left": 98.94,
+   "Count": 51
   },
   "coach": {
    "Team": "Georgetown",

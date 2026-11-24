@@ -1,6 +1,6 @@
 {
  "week": 1,
- "avg": 134.32,
+ "avg": 134.39,
  "median": 134.75,
  "unbeaten": 90,
  "winless": 90,
@@ -29,7 +29,7 @@
    "Rank": 3,
    "Team": "South Carolina",
    "Lg": "SEC",
-   "Owner": "Orphan",
+   "Owner": "Neilsondug",
    "Rec": "1-0",
    "Pts": 195.6,
    "Luck": 0.01,
@@ -348,7 +348,7 @@
   {
    "Team": "South Carolina",
    "Lg": "SEC",
-   "Owner": "Orphan",
+   "Owner": "Neilsondug",
    "P": 195.6,
    "Opp": "Vanderbilt",
    "PA": 124.46,
@@ -444,16 +444,16 @@
    "Avg": 136.08
   },
   {
+   "Lg": "Pac-12",
+   "Avg": 135.09
+  },
+  {
    "Lg": "Big 12",
    "Avg": 134.5
   },
   {
    "Lg": "Big East",
    "Avg": 134.24
-  },
-  {
-   "Lg": "Pac-12",
-   "Avg": 134.07
   },
   {
    "Lg": "Mountain West",
@@ -518,13 +518,13 @@
    "Margin": -0.5
   },
   "lucky": {
-   "Team": "California",
-   "Lg": "Pac-12",
-   "Owner": "ImagineWiigons",
-   "P": 89.06,
-   "Opp": "Oregon",
-   "PA": 85.16,
-   "Margin": 3.9
+   "Team": "Alabama A&M",
+   "Lg": "HBCU",
+   "Owner": "B41Pakman",
+   "P": 94.14,
+   "Opp": "Tuskegee",
+   "PA": 87.32,
+   "Margin": 6.82
   },
   "low": {
    "Team": "Weber State",
@@ -559,15 +559,15 @@
    "Eff": 0.977
   },
   "exceed": {
-   "Team": "Mississippi Valley State",
-   "Lg": "HBCU",
-   "Owner": "StrikerS091",
-   "P": 184.76,
-   "Opp": "Southern",
-   "PA": 149.76,
-   "Margin": 35.0,
-   "Proj": 122.79,
-   "Over": 61.97
+   "Team": "South Carolina",
+   "Lg": "SEC",
+   "Owner": "Neilsondug",
+   "P": 195.6,
+   "Opp": "Vanderbilt",
+   "PA": 124.46,
+   "Margin": 71.14,
+   "Proj": 130.6,
+   "Over": 65.0
   }
  },
  "players": [

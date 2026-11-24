@@ -9,10 +9,10 @@
 <meta name="theme-color" content="#14213a"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Dynasty Data"><script src="assets/app.js" defer></script>
 <style>
 /* Layout: stadium-scoreboard header, then a two-column stat sheet (poll left, week detail right) that stacks on phones */
-:root{--bg:#eef1f5;--panel:#ffffff;--ink:#14213a;--mute:#5d6a80;--line:#d5dbe5;--accent:#c8102e;--gold:#b8860b;--up:#1d7a43;--dn:#b3261e;
+:root{--bg:#eef1f5;--panel:#ffffff;--ink:#14213a;--mute:#5d6a80;--line:#d5dbe5;--accent:#c8102e;--gold:#b8860b;--up:var(--good,#1a7f37);--dn:var(--bad,#b42318);
 --disp:"Big Shoulders Display",Impact,"Arial Narrow",sans-serif;--body:"Barlow",system-ui,sans-serif;--num:"Barlow Condensed","Arial Narrow",sans-serif}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1526;--panel:#16213a;--ink:#e8edf6;--mute:#9aa7bd;--line:#2a3756;--accent:#ff5468;--gold:#e0b44a;--up:#4fc785;--dn:#ff7b72;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#0d1526;--panel:#16213a;--ink:#e8edf6;--mute:#9aa7bd;--line:#2a3756;--accent:#ff5468;--gold:#e0b44a;--up:#4fc785;--dn:#ff7b72;color-scheme:dark}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1526;--panel:#16213a;--ink:#e8edf6;--mute:#9aa7bd;--line:#2a3756;--accent:#ff5468;--gold:#e0b44a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0d1526;--panel:#16213a;--ink:#e8edf6;--mute:#9aa7bd;--line:#2a3756;--accent:#ff5468;--gold:#e0b44a;color-scheme:dark}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.4}
 .wrap{max-width:1100px;margin:0 auto;padding-inline:16px;padding-block:24px 40px;display:grid;gap:20px}
 header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;border-bottom:4px solid var(--accent);padding-bottom:12px}
@@ -40,7 +40,7 @@ td.tm{display:flex;align-items:center;gap:0}
 @media (max-width:640px){table{font-size:13px}td.tm{flex-wrap:wrap;white-space:normal}td.tm b{flex:1;min-width:0}td.tm small{flex-basis:100%;margin-left:18px!important;font-size:11px!important}td,th{padding:5px 3px}td.mv{width:26px;font-size:12px}th{letter-spacing:.06em}}
 td.tm b{font-weight:700}td.tm small{margin-left:8px;font-size:12px}
 td.mv{text-align:center;width:34px;font:600 13px var(--num)}
-.up{color:var(--up)}.dn{color:var(--dn)}.eq{color:var(--mute)}
+.up{color:var(--good,#1a7f37)}.dn{color:var(--bad,#b42318)}.eq{color:var(--mute)}
 tr:nth-child(-n+4) td:first-child{color:var(--accent);font-weight:600}
 .awards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
 .aw{background:var(--panel);padding:10px 12px;display:flex;flex-direction:column;gap:3px;text-align:center;align-items:center}
@@ -72,6 +72,7 @@ footer{font-size:12px;color:var(--mute)}
 .totop:hover,.totop:focus-visible{opacity:1}
 .totop[hidden]{display:none}
 @media print{.totop{display:none}}
+/* team logos on dark backgrounds (Chris, 2026-11-12): dark alt, else the glow file (site_common.logo_info) */@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .tl-d{display:none!important}}:root[data-theme="light"] .tl-d{display:none!important}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tl-hd{display:none!important}}:root[data-theme="dark"] .tl-hd{display:none!important}
 </style>
 <style>
     .wrap{width:max-content;min-width:760px;margin:0 auto;padding:24px}
@@ -95,11 +96,11 @@ footer{font-size:12px;color:var(--mute)}
     </style>
 </head><body><div class="wrap"><header><div><div class="eyebrow">Dynasty · now recruiting</div>
 <h1>NCAA 180 <em>Open Teams</em></h1></div><div class="kpi"><b>2</b><span>teams available</span></div></header>
-<div class="grid" style="--cols:2"><div class="oc"><div class="top" style="background:#73000A;color:#FFFFFF">
-<img src="../assets/logos/teams/South Carolina.png" alt=""><div><b>South Carolina</b><span>SEC</span></div></div>
-<div class="rk"><div><b>#2<small>/12</small></b><span>Dynasty<br>conf</span></div><div><b>#14<small>/180</small></b><span>Dynasty<br>all 180</span></div><div><b>#5<small>/12</small></b><span>Win-now<br>conf</span></div></div><div class="body"><h3>Key players</h3><ul><li>Bijan Robinson<small>RB · ATL</small></li><li>Kenneth Walker<small>RB · KC</small></li><li>Trey McBride<small>TE · ARI</small></li><li>Javonte Williams<small>RB · DAL</small></li><li>Christian Watson<small>WR · GB</small></li><li>TreVeyon Henderson<small>RB · NE</small></li></ul>
-<h3>Top draft picks <small>(13 owned)</small></h3><ul><li>2027 1st</li><li>2028 1st</li><li>2029 1st</li><li>2027 2nd (via Kentucky)</li></ul></div></div><div class="oc"><div class="top" style="background:#CC0000;color:#FFFFFF">
-<img src="../assets/logos/teams/Texas Tech.png" alt=""><div><b>Texas Tech</b><span>Big 12</span></div></div>
-<div class="rk"><div><b>#8<small>/12</small></b><span>Dynasty<br>conf</span></div><div><b>#110<small>/180</small></b><span>Dynasty<br>all 180</span></div><div><b>#9<small>/12</small></b><span>Win-now<br>conf</span></div></div><div class="body"><h3>Key players</h3><ul><li>Josh Allen<small>QB · BUF</small></li><li>Kyren Williams<small>RB · LAR</small></li><li>Carnell Tate<small>WR · TEN</small></li><li>Chase Brown<small>RB · CIN</small></li><li>A.J. Brown<small>WR · NE</small></li><li>Dak Prescott<small>QB · DAL</small></li></ul>
-<h3>Top draft picks <small>(12 owned)</small></h3><ul><li>2027 1st</li><li>2028 1st</li><li>2029 1st</li><li>2027 2nd</li></ul></div></div></div>
-<div class="asof">Values: FantasyCalc dynasty (players + picks) as of Nov 3, 2026</div></div></body></html>
+<div class="grid" style="--cols:2"><div class="oc"><div class="top" style="background:#CC0000;color:#FFFFFF">
+<img src="../assets/logos/teams/Texas%20Tech.png" alt=""><div><b>Texas Tech</b><span>Big 12</span></div></div>
+<div class="rk"><div><b>#8<small>/12</small></b><span>Dynasty<br>conf</span></div><div><b>#99<small>/180</small></b><span>Dynasty<br>all 180</span></div><div><b>#10<small>/12</small></b><span>Win-now<br>conf</span></div></div><div class="body"><h3>Key players</h3><ul><li>Josh Allen<small>QB · BUF</small></li><li>Carnell Tate<small>WR · TEN</small></li><li>Chase Brown<small>RB · CIN</small></li><li>Kyren Williams<small>RB · LAR</small></li><li>Emmett Johnson<small>RB · KC</small></li><li>Blake Corum<small>RB · LAR</small></li></ul>
+<h3>Top draft picks <small>(12 owned)</small></h3><ul><li>2027 1st</li><li>2028 1st</li><li>2029 1st</li><li>2027 2nd</li></ul></div></div><div class="oc"><div class="top" style="background:#CFAE70;color:#000000">
+<img src="../assets/logos/teams/Vanderbilt.png" alt=""><div><b>Vanderbilt</b><span>SEC</span></div></div>
+<div class="rk"><div><b>#8<small>/12</small></b><span>Dynasty<br>conf</span></div><div><b>#146<small>/180</small></b><span>Dynasty<br>all 180</span></div><div><b>#12<small>/12</small></b><span>Win-now<br>conf</span></div></div><div class="body"><h3>Key players</h3><ul><li>Caleb Williams<small>QB · CHI</small></li><li>Jordyn Tyson<small>WR · NO</small></li><li>Trevor Lawrence<small>QB · JAX</small></li><li>Cam Skattebo<small>RB · NYG</small></li><li>Ladd McConkey<small>WR · LAC</small></li><li>Tucker Kraft<small>TE · GB</small></li></ul>
+<h3>Top draft picks <small>(13 owned)</small></h3><ul><li>2027 1st (via Kentucky)</li><li>2027 1st</li><li>2028 1st</li><li>2029 1st</li></ul></div></div></div>
+<div class="asof">Values: FantasyCalc dynasty (players + picks) as of Nov 24, 2026</div></div></body></html>

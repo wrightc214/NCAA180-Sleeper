@@ -1,6 +1,6 @@
 {
  "week": 9,
- "avg": 117.23,
+ "avg": 117.66,
  "median": 118.36,
  "unbeaten": 3,
  "winless": 5,
@@ -12,7 +12,7 @@
    "Owner": "chzhead412",
    "Rec": "9-0",
    "Pts": 1485.84,
-   "Luck": 0.97,
+   "Luck": 0.98,
    "Move": 0
   },
   {
@@ -32,7 +32,7 @@
    "Owner": "mssullivan2022",
    "Rec": "9-0",
    "Pts": 1399.06,
-   "Luck": 1.84,
+   "Luck": 1.85,
    "Move": 2
   },
   {
@@ -42,7 +42,7 @@
    "Owner": "keppin",
    "Rec": "8-1",
    "Pts": 1433.66,
-   "Luck": 0.73,
+   "Luck": 0.75,
    "Move": -2
   },
   {
@@ -62,7 +62,7 @@
    "Owner": "Stumpy44",
    "Rec": "8-1",
    "Pts": 1389.08,
-   "Luck": 1.26,
+   "Luck": 1.27,
    "Move": -2
   },
   {
@@ -72,7 +72,7 @@
    "Owner": "dilbennett",
    "Rec": "8-1",
    "Pts": 1385.52,
-   "Luck": 1.26,
+   "Luck": 1.27,
    "Move": 3
   },
   {
@@ -102,7 +102,7 @@
    "Owner": "CrownMeKing",
    "Rec": "8-1",
    "Pts": 1340.98,
-   "Luck": 1.55,
+   "Luck": 1.56,
    "Move": 2
   },
   {
@@ -112,7 +112,7 @@
    "Owner": "bdub3",
    "Rec": "8-1",
    "Pts": 1328.44,
-   "Luck": 1.85,
+   "Luck": 1.87,
    "Move": 2
   },
   {
@@ -122,7 +122,7 @@
    "Owner": "DavidJimm",
    "Rec": "8-1",
    "Pts": 1228.4,
-   "Luck": 2.62,
+   "Luck": 2.63,
    "Move": 3
   },
   {
@@ -132,7 +132,7 @@
    "Owner": "DBGiants",
    "Rec": "8-1",
    "Pts": 1202.46,
-   "Luck": 2.68,
+   "Luck": 2.7,
    "Move": 3
   },
   {
@@ -142,7 +142,7 @@
    "Owner": "edgeofdefeat",
    "Rec": "8-1",
    "Pts": 1143.56,
-   "Luck": 3.27,
+   "Luck": 3.29,
    "Move": 3
   },
   {
@@ -162,7 +162,7 @@
    "Owner": "RicochetRay",
    "Rec": "7-2",
    "Pts": 1471.5,
-   "Luck": -0.44,
+   "Luck": -0.43,
    "Move": 3
   },
   {
@@ -172,7 +172,7 @@
    "Owner": "robertlouis7",
    "Rec": "7-2",
    "Pts": 1437.3,
-   "Luck": -0.44,
+   "Luck": -0.43,
    "Move": 3
   },
   {
@@ -182,7 +182,7 @@
    "Owner": "CodeKhaos",
    "Rec": "7-2",
    "Pts": 1423.8,
-   "Luck": -0.31,
+   "Luck": -0.3,
    "Move": 3
   },
   {
@@ -192,7 +192,7 @@
    "Owner": "Beastchewy15",
    "Rec": "7-2",
    "Pts": 1394.96,
-   "Luck": -0.08,
+   "Luck": -0.07,
    "Move": 3
   },
   {
@@ -212,7 +212,7 @@
    "Owner": "wrightc214",
    "Rec": "7-2",
    "Pts": 1391.0,
-   "Luck": 0.49,
+   "Luck": 0.5,
    "Move": 3
   },
   {
@@ -222,7 +222,7 @@
    "Owner": "Frankeen",
    "Rec": "7-2",
    "Pts": 1367.76,
-   "Luck": 0.05,
+   "Luck": 0.06,
    "Move": -14
   },
   {
@@ -232,7 +232,7 @@
    "Owner": "ethansherwood22",
    "Rec": "7-2",
    "Pts": 1346.76,
-   "Luck": 0.51,
+   "Luck": 0.52,
    "Move": 0
   },
   {
@@ -242,7 +242,7 @@
    "Owner": "denvermanning",
    "Rec": "7-2",
    "Pts": 1332.98,
-   "Luck": 0.25,
+   "Luck": 0.27,
    "Move": 3
   },
   {
@@ -252,7 +252,7 @@
    "Owner": "memphismaniac",
    "Rec": "7-2",
    "Pts": 1320.0,
-   "Luck": 0.24,
+   "Luck": 0.25,
    "Move": 3
   },
   {
@@ -262,7 +262,7 @@
    "Owner": "richardson98",
    "Rec": "7-2",
    "Pts": 1301.88,
-   "Luck": 0.64,
+   "Luck": 0.65,
    "Move": 5
   },
   {
@@ -272,7 +272,7 @@
    "Owner": "jtheadrick98",
    "Rec": "7-2",
    "Pts": 1298.76,
-   "Luck": 0.79,
+   "Luck": 0.8,
    "Move": -1
   },
   {
@@ -282,7 +282,7 @@
    "Owner": "Raidersforte",
    "Rec": "7-2",
    "Pts": 1293.08,
-   "Luck": 0.63,
+   "Luck": 0.64,
    "Move": 6
   },
   {
@@ -292,7 +292,7 @@
    "Owner": "EerieHush",
    "Rec": "7-2",
    "Pts": 1291.58,
-   "Luck": 0.79,
+   "Luck": 0.8,
    "Move": 0
   },
   {
@@ -312,7 +312,7 @@
    "Owner": "yoboihawks",
    "Rec": "7-2",
    "Pts": 1263.8,
-   "Luck": 0.84,
+   "Luck": 0.85,
    "Move": 4
   },
   {
@@ -322,7 +322,7 @@
    "Owner": "Hart123",
    "Rec": "7-2",
    "Pts": 1254.54,
-   "Luck": 1.04,
+   "Luck": 1.06,
    "Move": 5
   }
  ],
@@ -420,6 +420,10 @@
  ],
  "leagues": [
   {
+   "Lg": "Pac-12",
+   "Avg": 123.89
+  },
+  {
    "Lg": "Ivy",
    "Avg": 123.42
   },
@@ -446,10 +450,6 @@
   {
    "Lg": "Mountain West",
    "Avg": 118.97
-  },
-  {
-   "Lg": "Pac-12",
-   "Avg": 117.46
   },
   {
    "Lg": "Big East",
@@ -566,7 +566,7 @@
    "Opp": "Virginia",
    "PA": 103.9,
    "Margin": 13.4,
-   "WinPct": 25.2
+   "WinPct": 25.1
   },
   "exceed": {
    "Team": "Fresno State",

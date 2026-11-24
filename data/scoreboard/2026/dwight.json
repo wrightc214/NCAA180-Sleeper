@@ -1,0 +1,516 @@
+{
+  "season": 2026,
+  "start_week": 14,
+  "last_week": 17,
+  "bracket_size": 16,
+  "locked": false,
+  "status": "initial",
+  "members": [
+    "597246797479469056",
+    "460518714907815936",
+    "638193564806897664",
+    "457579310098673664",
+    "438178170542223360",
+    "519439276311531520",
+    "465934519652839424",
+    "460511267564548096",
+    "589001974318403584",
+    "650627977721245696",
+    "463453800313647104"
+  ],
+  "entrants": [
+    {
+      "league_id": "1331775106527006720",
+      "roster_id": "7",
+      "league": "NCAA PAC 12",
+      "team": "Arizona State",
+      "user_id": "597246797479469056",
+      "username": "wrightc214",
+      "display_name": "wrightc214",
+      "requested_handle": "wrightc214",
+      "seed": 1
+    },
+    {
+      "league_id": "1316899936696016896",
+      "roster_id": "7",
+      "league": "NCAA BIG 10",
+      "team": "Minnesota",
+      "user_id": "460518714907815936",
+      "username": "linkoftime1",
+      "display_name": "linkoftime1",
+      "requested_handle": "linkoftime1",
+      "seed": 2
+    },
+    {
+      "league_id": "1331774544905510912",
+      "roster_id": "11",
+      "league": "NCAA OHIO VALLEY",
+      "team": "North Alabama",
+      "user_id": "638193564806897664",
+      "username": "romantryert",
+      "display_name": "Romantryert",
+      "requested_handle": "romantryert",
+      "seed": 3
+    },
+    {
+      "league_id": "1331774454493122560",
+      "roster_id": "1",
+      "league": "NCAA WILD",
+      "team": "Montana",
+      "user_id": "457579310098673664",
+      "username": "lanceboneau",
+      "display_name": "LanceBoneau",
+      "requested_handle": "lanceboneau",
+      "seed": 4
+    },
+    {
+      "league_id": "1316899936696016896",
+      "roster_id": "2",
+      "league": "NCAA BIG 10",
+      "team": "Nebraska",
+      "user_id": "438178170542223360",
+      "username": "ethanh",
+      "display_name": "EthanH",
+      "requested_handle": "ethanh",
+      "seed": 5
+    },
+    {
+      "league_id": "1316899756005412864",
+      "roster_id": "4",
+      "league": "NCAA BIG SKY",
+      "team": "Eastern Washington",
+      "user_id": "519439276311531520",
+      "username": "elestial",
+      "display_name": "Elestial",
+      "requested_handle": "elestial",
+      "seed": 6
+    },
+    {
+      "league_id": "1316899756005412864",
+      "roster_id": "5",
+      "league": "NCAA BIG SKY",
+      "team": "Stony Brook",
+      "user_id": "465934519652839424",
+      "username": "agrakush",
+      "display_name": "agrakush",
+      "requested_handle": "agrakush",
+      "seed": 7
+    },
+    {
+      "league_id": "1316899936696016896",
+      "roster_id": "6",
+      "league": "NCAA BIG 10",
+      "team": "Wisconsin",
+      "user_id": "460511267564548096",
+      "username": "laxbro000",
+      "display_name": "laxbro000",
+      "requested_handle": "laxbro000",
+      "seed": 8
+    },
+    {
+      "league_id": "1331774599196585984",
+      "roster_id": "9",
+      "league": "NCAA MOUNTAIN WEST",
+      "team": "New Mexico",
+      "user_id": "589001974318403584",
+      "username": "mrhawke19",
+      "display_name": "Mrhawke19",
+      "requested_handle": "mrhawke19",
+      "seed": 9
+    },
+    {
+      "league_id": "1331774695346823168",
+      "roster_id": "12",
+      "league": "NCAA USA",
+      "team": "Louisiana Monroe",
+      "user_id": "650627977721245696",
+      "username": "broncozzz",
+      "display_name": "BroncoZzz",
+      "requested_handle": "broncozzz",
+      "seed": 10
+    },
+    {
+      "league_id": "1331774915392577536",
+      "roster_id": "6",
+      "league": "NCAA ACC",
+      "team": "Wake Forest",
+      "user_id": "463453800313647104",
+      "username": "whiskyscientist",
+      "display_name": "WhiskyScientist",
+      "requested_handle": "whiskyscientist",
+      "seed": 11
+    }
+  ],
+  "rounds": [
+    [
+      {
+        "a": {
+          "league_id": "1331775106527006720",
+          "roster_id": "7",
+          "league": "NCAA PAC 12",
+          "team": "Arizona State",
+          "user_id": "597246797479469056",
+          "username": "wrightc214",
+          "display_name": "wrightc214",
+          "requested_handle": "wrightc214",
+          "seed": 1
+        },
+        "b": null,
+        "winner": {
+          "league_id": "1331775106527006720",
+          "roster_id": "7",
+          "league": "NCAA PAC 12",
+          "team": "Arizona State",
+          "user_id": "597246797479469056",
+          "username": "wrightc214",
+          "display_name": "wrightc214",
+          "requested_handle": "wrightc214",
+          "seed": 1
+        },
+        "frozen": true,
+        "score_a": null,
+        "score_b": null,
+        "snapshot_a": null,
+        "snapshot_b": null
+      },
+      {
+        "a": {
+          "league_id": "1316899936696016896",
+          "roster_id": "6",
+          "league": "NCAA BIG 10",
+          "team": "Wisconsin",
+          "user_id": "460511267564548096",
+          "username": "laxbro000",
+          "display_name": "laxbro000",
+          "requested_handle": "laxbro000",
+          "seed": 8
+        },
+        "b": {
+          "league_id": "1331774599196585984",
+          "roster_id": "9",
+          "league": "NCAA MOUNTAIN WEST",
+          "team": "New Mexico",
+          "user_id": "589001974318403584",
+          "username": "mrhawke19",
+          "display_name": "Mrhawke19",
+          "requested_handle": "mrhawke19",
+          "seed": 9
+        },
+        "winner": null,
+        "frozen": false,
+        "score_a": 0.0,
+        "score_b": 0.0,
+        "snapshot_a": null,
+        "snapshot_b": null
+      },
+      {
+        "a": {
+          "league_id": "1331774454493122560",
+          "roster_id": "1",
+          "league": "NCAA WILD",
+          "team": "Montana",
+          "user_id": "457579310098673664",
+          "username": "lanceboneau",
+          "display_name": "LanceBoneau",
+          "requested_handle": "lanceboneau",
+          "seed": 4
+        },
+        "b": null,
+        "winner": {
+          "league_id": "1331774454493122560",
+          "roster_id": "1",
+          "league": "NCAA WILD",
+          "team": "Montana",
+          "user_id": "457579310098673664",
+          "username": "lanceboneau",
+          "display_name": "LanceBoneau",
+          "requested_handle": "lanceboneau",
+          "seed": 4
+        },
+        "frozen": true,
+        "score_a": null,
+        "score_b": null,
+        "snapshot_a": null,
+        "snapshot_b": null
+      },
+      {
+        "a": {
+          "league_id": "1316899936696016896",
+          "roster_id": "2",
+          "league": "NCAA BIG 10",
+          "team": "Nebraska",
+          "user_id": "438178170542223360",
+          "username": "ethanh",
+          "display_name": "EthanH",
+          "requested_handle": "ethanh",
+          "seed": 5
+        },
+        "b": null,
+        "winner": {
+          "league_id": "1316899936696016896",
+          "roster_id": "2",
+          "league": "NCAA BIG 10",
+          "team": "Nebraska",
+          "user_id": "438178170542223360",
+          "username": "ethanh",
+          "display_name": "EthanH",
+          "requested_handle": "ethanh",
+          "seed": 5
+        },
+        "frozen": true,
+        "score_a": null,
+        "score_b": null,
+        "snapshot_a": null,
+        "snapshot_b": null
+      },
+      {
+        "a": {
+          "league_id": "1316899936696016896",
+          "roster_id": "7",
+          "league": "NCAA BIG 10",
+          "team": "Minnesota",
+          "user_id": "460518714907815936",
+          "username": "linkoftime1",
+          "display_name": "linkoftime1",
+          "requested_handle": "linkoftime1",
+          "seed": 2
+        },
+        "b": null,
+        "winner": {
+          "league_id": "1316899936696016896",
+          "roster_id": "7",
+          "league": "NCAA BIG 10",
+          "team": "Minnesota",
+          "user_id": "460518714907815936",
+          "username": "linkoftime1",
+          "display_name": "linkoftime1",
+          "requested_handle": "linkoftime1",
+          "seed": 2
+        },
+        "frozen": true,
+        "score_a": null,
+        "score_b": null,
+        "snapshot_a": null,
+        "snapshot_b": null
+      },
+      {
+        "a": {
+          "league_id": "1316899756005412864",
+          "roster_id": "5",
+          "league": "NCAA BIG SKY",
+          "team": "Stony Brook",
+          "user_id": "465934519652839424",
+          "username": "agrakush",
+          "display_name": "agrakush",
+          "requested_handle": "agrakush",
+          "seed": 7
+        },
+        "b": {
+          "league_id": "1331774695346823168",
+          "roster_id": "12",
+          "league": "NCAA USA",
+          "team": "Louisiana Monroe",
+          "user_id": "650627977721245696",
+          "username": "broncozzz",
+          "display_name": "BroncoZzz",
+          "requested_handle": "broncozzz",
+          "seed": 10
+        },
+        "winner": null,
+        "frozen": false,
+        "score_a": 0.0,
+        "score_b": 0.0,
+        "snapshot_a": null,
+        "snapshot_b": null
+      },
+      {
+        "a": {
+          "league_id": "1331774544905510912",
+          "roster_id": "11",
+          "league": "NCAA OHIO VALLEY",
+          "team": "North Alabama",
+          "user_id": "638193564806897664",
+          "username": "romantryert",
+          "display_name": "Romantryert",
+          "requested_handle": "romantryert",
+          "seed": 3
+        },
+        "b": null,
+        "winner": {
+          "league_id": "1331774544905510912",
+          "roster_id": "11",
+          "league": "NCAA OHIO VALLEY",
+          "team": "North Alabama",
+          "user_id": "638193564806897664",
+          "username": "romantryert",
+          "display_name": "Romantryert",
+          "requested_handle": "romantryert",
+          "seed": 3
+        },
+        "frozen": true,
+        "score_a": null,
+        "score_b": null,
+        "snapshot_a": null,
+        "snapshot_b": null
+      },
+      {
+        "a": {
+          "league_id": "1316899756005412864",
+          "roster_id": "4",
+          "league": "NCAA BIG SKY",
+          "team": "Eastern Washington",
+          "user_id": "519439276311531520",
+          "username": "elestial",
+          "display_name": "Elestial",
+          "requested_handle": "elestial",
+          "seed": 6
+        },
+        "b": {
+          "league_id": "1331774915392577536",
+          "roster_id": "6",
+          "league": "NCAA ACC",
+          "team": "Wake Forest",
+          "user_id": "463453800313647104",
+          "username": "whiskyscientist",
+          "display_name": "WhiskyScientist",
+          "requested_handle": "whiskyscientist",
+          "seed": 11
+        },
+        "winner": null,
+        "frozen": false,
+        "score_a": 0.0,
+        "score_b": 0.0,
+        "snapshot_a": null,
+        "snapshot_b": null
+      }
+    ],
+    [
+      {
+        "a": {
+          "league_id": "1331775106527006720",
+          "roster_id": "7",
+          "league": "NCAA PAC 12",
+          "team": "Arizona State",
+          "user_id": "597246797479469056",
+          "username": "wrightc214",
+          "display_name": "wrightc214",
+          "requested_handle": "wrightc214",
+          "seed": 1
+        },
+        "b": null,
+        "winner": null,
+        "frozen": false,
+        "score_a": null,
+        "score_b": null,
+        "snapshot_a": null,
+        "snapshot_b": null
+      },
+      {
+        "a": {
+          "league_id": "1331774454493122560",
+          "roster_id": "1",
+          "league": "NCAA WILD",
+          "team": "Montana",
+          "user_id": "457579310098673664",
+          "username": "lanceboneau",
+          "display_name": "LanceBoneau",
+          "requested_handle": "lanceboneau",
+          "seed": 4
+        },
+        "b": {
+          "league_id": "1316899936696016896",
+          "roster_id": "2",
+          "league": "NCAA BIG 10",
+          "team": "Nebraska",
+          "user_id": "438178170542223360",
+          "username": "ethanh",
+          "display_name": "EthanH",
+          "requested_handle": "ethanh",
+          "seed": 5
+        },
+        "winner": null,
+        "frozen": false,
+        "score_a": 0.0,
+        "score_b": 0.0,
+        "snapshot_a": null,
+        "snapshot_b": null
+      },
+      {
+        "a": {
+          "league_id": "1316899936696016896",
+          "roster_id": "7",
+          "league": "NCAA BIG 10",
+          "team": "Minnesota",
+          "user_id": "460518714907815936",
+          "username": "linkoftime1",
+          "display_name": "linkoftime1",
+          "requested_handle": "linkoftime1",
+          "seed": 2
+        },
+        "b": null,
+        "winner": null,
+        "frozen": false,
+        "score_a": null,
+        "score_b": null,
+        "snapshot_a": null,
+        "snapshot_b": null
+      },
+      {
+        "a": {
+          "league_id": "1331774544905510912",
+          "roster_id": "11",
+          "league": "NCAA OHIO VALLEY",
+          "team": "North Alabama",
+          "user_id": "638193564806897664",
+          "username": "romantryert",
+          "display_name": "Romantryert",
+          "requested_handle": "romantryert",
+          "seed": 3
+        },
+        "b": null,
+        "winner": null,
+        "frozen": false,
+        "score_a": null,
+        "score_b": null,
+        "snapshot_a": null,
+        "snapshot_b": null
+      }
+    ],
+    [
+      {
+        "a": null,
+        "b": null,
+        "winner": null,
+        "frozen": false,
+        "score_a": null,
+        "score_b": null,
+        "snapshot_a": null,
+        "snapshot_b": null
+      },
+      {
+        "a": null,
+        "b": null,
+        "winner": null,
+        "frozen": false,
+        "score_a": null,
+        "score_b": null,
+        "snapshot_a": null,
+        "snapshot_b": null
+      }
+    ],
+    [
+      {
+        "a": null,
+        "b": null,
+        "winner": null,
+        "frozen": false,
+        "score_a": null,
+        "score_b": null,
+        "snapshot_a": null,
+        "snapshot_b": null
+      }
+    ]
+  ],
+  "warnings": [],
+  "champion": null
+}
