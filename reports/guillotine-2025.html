@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NCAA 180 The Guillotine 2025 replay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Barlow:wght@400;600;700&family=Barlow+Condensed:wght@500;600&display=swap">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="../assets/app/apple-touch-icon.png">
+<meta name="theme-color" content="#14213a"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Dynasty Data"><script src="assets/app.js" defer></script>
+<style>
+/* Layout: stadium-scoreboard header, then a two-column stat sheet (poll left, week detail right) that stacks on phones */
+:root{--bg:#eef1f5;--panel:#ffffff;--ink:#14213a;--mute:#5d6a80;--line:#d5dbe5;--accent:#c8102e;--gold:#b8860b;--up:var(--good,#1a7f37);--dn:var(--bad,#b42318);
+--disp:"Big Shoulders Display",Impact,"Arial Narrow",sans-serif;--body:"Barlow",system-ui,sans-serif;--num:"Barlow Condensed","Arial Narrow",sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1526;--panel:#16213a;--ink:#e8edf6;--mute:#9aa7bd;--line:#2a3756;--accent:#ff5468;--gold:#e0b44a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0d1526;--panel:#16213a;--ink:#e8edf6;--mute:#9aa7bd;--line:#2a3756;--accent:#ff5468;--gold:#e0b44a;color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.4}
+.wrap{max-width:1100px;margin:0 auto;padding-inline:16px;padding-block:24px 40px;display:grid;gap:20px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;border-bottom:4px solid var(--accent);padding-bottom:12px}
+.eyebrow{font:600 13px/1 var(--num);letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+h1{font:900 clamp(40px,8vw,72px)/.9 var(--disp);margin:6px 0 0;letter-spacing:.01em;text-transform:uppercase;text-wrap:balance}
+h1 em{font-style:normal;color:var(--accent)}
+.kpis{display:flex;gap:22px;flex-wrap:wrap}
+.kpi b{display:block;font:600 30px/1 var(--num);font-variant-numeric:tabular-nums}
+.kpi span{font:600 11px/1.2 var(--num);letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+h2{font:700 24px/1 var(--disp);text-transform:uppercase;letter-spacing:.03em;margin:0 0 10px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+h2 small{font:500 12px var(--num);letter-spacing:.1em;color:var(--mute)}
+section{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px;min-width:0}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
+.col{display:grid;gap:20px;min-width:0}
+@media (max-width:820px){.grid{grid-template-columns:1fr}}
+.n{font-family:var(--num);font-variant-numeric:tabular-nums}
+.chip{display:inline-block;width:10px;height:22px;border-radius:2px;flex:none;margin-right:8px;vertical-align:middle;box-shadow:inset 0 0 0 1px rgba(127,127,127,.35)}
+small{color:var(--mute);font-weight:400}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{white-space:nowrap;font:600 11px var(--num);letter-spacing:.12em;text-transform:uppercase;color:var(--mute);text-align:left;padding:4px 6px;border-bottom:2px solid var(--ink)}
+th.r,td.n{text-align:right}
+td{padding:5px 6px;border-bottom:1px solid var(--line);white-space:nowrap}
+td.tm{display:flex;align-items:center;gap:0}
+@media (max-width:640px){table{font-size:13px}td.tm{flex-wrap:wrap;white-space:normal}td.tm b{flex:1;min-width:0}td.tm small{flex-basis:100%;margin-left:18px!important;font-size:11px!important}td,th{padding:5px 3px}td.mv{width:26px;font-size:12px}th{letter-spacing:.06em}}
+td.tm b{font-weight:700}td.tm small{margin-left:8px;font-size:12px}
+td.mv{text-align:center;width:34px;font:600 13px var(--num)}
+.up{color:var(--good,#1a7f37)}.dn{color:var(--bad,#b42318)}.eq{color:var(--mute)}
+tr:nth-child(-n+4) td:first-child{color:var(--accent);font-weight:600}
+.awards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.aw{background:var(--panel);padding:10px 12px;display:flex;flex-direction:column;gap:3px;text-align:center;align-items:center}
+.aw:last-child:nth-child(odd){grid-column:1/-1}
+@media (min-width:1000px){.awards{grid-template-columns:repeat(var(--cols),minmax(0,1fr))}.aw:last-child:nth-child(odd){grid-column:auto}}
+.al{font:600 11px var(--num);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.av{font-size:28px;font-weight:600;line-height:1}.av small{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin-top:3px}
+.at{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;font-size:14px}.at small{margin-left:6px}
+.ao{font-size:12px;color:var(--mute)}
+.an{font-size:12px;color:var(--mute)}
+ol,ul{list-style:none;margin:0;padding:0}
+.list li{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line)}
+.list li:last-child{border-bottom:0}
+.list .rk{width:20px;color:var(--mute)}
+.nm{flex:1;min-width:0;display:grid}.nm small{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.v{font-size:20px;font-weight:600}
+.pos{font:600 12px var(--num);letter-spacing:.08em;width:38px;text-align:center;padding:3px 0;border:1px solid var(--ink);border-radius:3px}
+.lgs li{display:grid;grid-template-columns:104px 1fr 44px;align-items:center;gap:8px;padding:3px 0;font-size:14px}
+.bar{height:12px;background:var(--bg);border-radius:2px;overflow:hidden}.bar i{display:block;height:100%;background:var(--gold)}
+.lgs .n{text-align:right}
+.note{font-size:12px;color:var(--mute);margin:8px 0 0}
+footer{font-size:12px;color:var(--mute)}
+.logo{width:56px;height:56px;object-fit:contain;flex:none;display:block;margin:4px 0 2px}
+.ls{margin-top:auto;padding-top:14px;height:98px;display:flex;align-items:flex-end;justify-content:center}
+.ls img{max-height:84px;max-width:100%;object-fit:contain}
+.weeks{display:flex;flex-wrap:wrap;gap:6px;font:600 13px var(--num)}.weeks a{color:var(--mute);text-decoration:none;padding:2px 8px;border:1px solid var(--line);border-radius:3px}.weeks a[aria-current]{color:var(--panel);background:var(--ink);border-color:var(--ink)}
+.weeks.sub{font-size:12px;margin-top:8px;align-items:center}.weeks.sub span{color:var(--mute);margin-right:2px}.weeks.sub a{padding:1px 7px}
+.totop{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:50;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--ink);color:var(--bg);font:700 18px/1 var(--num);text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);opacity:.85}
+.totop:hover,.totop:focus-visible{opacity:1}
+.totop[hidden]{display:none}
+@media print{.totop{display:none}}
+/* team logos on dark backgrounds (Chris, 2026-11-12): dark alt, else the glow file (site_common.logo_info) */@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .tl-d{display:none!important}}:root[data-theme="light"] .tl-d{display:none!important}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tl-hd{display:none!important}}:root[data-theme="dark"] .tl-hd{display:none!important}
+</style>
+<style>
+.gwrap{max-width:900px}
+.gl-hdr{padding-bottom:10px;border-bottom:3px solid var(--accent);margin-bottom:6px}.gl-title{margin:8px 0 0;line-height:0}.gl-title img{display:block;width:100%;max-width:640px;height:auto}
+.tools{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.tools button{font:600 14px var(--num);padding:9px 12px;border:1px solid var(--line);border-radius:5px;background:var(--panel);color:var(--ink);cursor:pointer}
+.tools #updated{font-size:13px;color:var(--mute)}
+#error{padding:12px;background:#fff0d7;color:#722a00;border:1px solid #aa6d15;border-radius:5px}
+.gl-champ{display:flex;align-items:center;gap:14px;background:var(--panel);border:2px solid var(--gold);border-radius:10px;padding:12px 16px;margin:10px 0}
+.gl-champ{flex-wrap:wrap}.gl-champ img{width:min(320px,100%);height:auto}.gl-cname{display:flex;align-items:center;gap:8px;font:800 24px var(--num)}
+.gl-head{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:10px 0 6px}
+.gl-k{display:flex;flex-direction:column;align-items:center;text-align:center}.gl-k b{font:800 26px/1.1 var(--num)}
+.gl-k span{font:600 10px var(--body);text-transform:uppercase;letter-spacing:.05em;color:var(--mute)}.gl-k.proj b{color:var(--accent)}
+.gl-state{font:600 13px var(--body);color:var(--mute);margin:6px 2px}
+.gl-table{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.gl-h,.gl-r{display:grid;gap:6px;align-items:center;padding:6px 10px}
+.live-t .gl-h,.live-t .gl-r{grid-template-columns:22px minmax(0,1fr) 62px 54px 44px 58px}
+.fz-t .gl-h,.fz-t .gl-r{grid-template-columns:22px minmax(0,1fr) 62px 76px}
+.out-t .gl-h,.out-t .gl-r{grid-template-columns:22px minmax(0,1fr) 92px 62px}
+.gl-h{font:600 10px var(--body);text-transform:uppercase;letter-spacing:.04em;color:var(--mute);border-bottom:1px solid var(--line)}
+.gl-h span:nth-child(n+3){text-align:right}
+.gl-r{border-top:1px solid var(--line);min-height:34px}.gl-r:first-of-type{border-top:0}
+.gl-t{min-width:0;font-size:14px;line-height:1.15;overflow-wrap:anywhere}.gl-t small{display:block;font-size:11px;color:var(--mute)}
+.gl-n,.gl-w{text-align:right;font:600 15px var(--num);font-variant-numeric:tabular-nums}
+.gl-n.pj,.gl-n.mn,.gl-w{color:var(--mute);font-weight:500}.gl-n.od{font-weight:800}
+.gl-r.live .gl-n.sc{font-weight:900}.gl-r.bubble{background:var(--bad-soft)}
+.gl-r.mine{box-shadow:inset 4px 0 0 var(--accent)}.gl-r.gone{opacity:.5}
+.gl-cut{position:relative;height:22px;border-top:2px dashed var(--bad);margin:0 6px}
+.gl-cut span{position:absolute;right:0;top:-1px;background:var(--bad-fill);color:var(--on-fill);font:700 10px var(--body);text-transform:uppercase;letter-spacing:.05em;padding:2px 6px;border-radius:0 0 4px 4px}
+.gl-cut.final{border-top-style:solid}
+.team-icon{display:flex;width:22px;height:22px;align-items:center;justify-content:center;border-radius:3px;overflow:hidden}
+.team-icon img{width:100%;height:100%;object-fit:contain}
+.gl-out{margin-top:16px}.gl-out>summary{list-style:none;cursor:pointer}.gl-out>summary::-webkit-details-marker{display:none}
+.gl-out h3.sec small{font-weight:500;color:var(--mute)}
+.gl-rules{margin:16px 0;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 14px}
+.gl-rules summary{cursor:pointer;font:700 14px var(--body)}.gl-rules li{margin:6px 0;font-size:14px}
+.gl-weeks{margin-top:8px}
+@media(max-width:600px){.gl-head{grid-template-columns:repeat(2,minmax(0,1fr))}.gl-k b{font-size:22px}
+.live-t .gl-h,.live-t .gl-r{grid-template-columns:20px minmax(0,1fr) 56px 46px 34px 46px;gap:4px;padding:6px 6px}
+.gl-n,.gl-w{font-size:14px}.gl-t{font-size:13px}}
+[hidden]{display:none!important}
+.gl-champ .trophy{flex:none}
+.gl-replay{margin:10px 0;padding:10px 12px;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:6px;background:var(--panel);font-size:14px}
+
+@font-face{font-family:"Barlow Trophy";font-weight:700;font-display:block;src:url("../assets/fonts/barlow-latin-700-normal.woff2") format("woff2"),url("../assets/fonts/barlow-latin-700-normal.woff") format("woff")}
+@font-face{font-family:"Barlow Trophy";font-weight:400;font-display:block;src:url("../assets/fonts/barlow-latin-400-normal.woff2") format("woff2"),url("../assets/fonts/barlow-latin-400-normal.woff") format("woff")}
+.trophy{margin:0;width:min(var(--tw,180px),100%);flex:none}
+.trophy-art{position:relative;container-type:inline-size;line-height:0}
+.trophy-art>img{display:block;width:100%;height:auto;aspect-ratio:1}
+.trophy-plaque{position:absolute;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;overflow:hidden;font-family:"Barlow Trophy","Barlow",sans-serif;letter-spacing:-.02em;line-height:1.15;white-space:nowrap}
+.trophy-plaque span{display:block;max-width:100%}
+.trophy-plaque .tp-1{font-weight:700;color:inherit}.trophy-plaque .tp-2{font-weight:400;color:inherit}
+.trophy-plaque .tp-up{text-transform:uppercase}
+.trophy.fallback .trophy-art{aspect-ratio:auto;display:flex;flex-direction:column;align-items:center;gap:6%;padding:6% 4%;box-sizing:border-box;border:1px solid var(--line,#d5dbe5);border-radius:10px;background:var(--panel,#fff)}
+.trophy.fallback .trophy-art>img{width:46%;aspect-ratio:1;object-fit:contain}
+.trophy.fallback .trophy-plaque{position:relative;inset:auto;width:100%;aspect-ratio:4/1;background:#CFD4D8;border:2px solid #222934;border-radius:4px;box-sizing:border-box}
+</style>
+</head><body><a href="#" class="totop" aria-label="Back to top" hidden>&#8593;</a><script>(function(){var b=document.currentScript.previousElementSibling;function f(){b.hidden=window.scrollY<window.innerHeight*0.9;}window.addEventListener("scroll",f,{passive:true});window.addEventListener("load",f);b.addEventListener("click",function(ev){ev.preventDefault();var r=window.matchMedia("(prefers-reduced-motion: reduce)").matches;window.scrollTo({top:0,behavior:r?"auto":"smooth"});});})();</script><div class="wrap gwrap">
+<nav class="weeks" aria-label="Pages" data-current="special"></nav><nav class="weeks sub" aria-label="Special events" data-row="special"></nav><nav class="weeks sub" aria-label="Seasons" data-row="guillotine-seasons"></nav><script src="assets/menu.js"></script><noscript><a href="index.html">Home</a></noscript>
+<header class="sbh gl-hdr"><div class="eyebrow">NCAA 180 · special events · every team · postseason weeks</div>
+<h1 class="gl-title"><img id="gl-logo" src="../assets/logos/Guillotine/Guillotine.png" alt="The Guillotine"></h1></header>
+<div class="tools"><button id="refresh" type="button">↻ Refresh</button><span id="updated" role="status">Loading…</span></div>
+<p id="error" role="alert" hidden></p>
+<p class="gl-replay" role="note"><b>Replay, not an official result.</b> 2025 was not played as The Guillotine: these are 2025's real week 12–16 scores run through this season's rules.</p><div id="board" aria-live="polite" data-src="../data/replays/guillotine-2025.json"></div>
+</div>
+<script src="assets/scoreboard-core.js"></script><script src="assets/trophy.js"></script><script src="assets/guillotine-model.js"></script><script src="assets/guillotine.js" defer></script></body></html>

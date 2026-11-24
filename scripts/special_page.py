@@ -7,8 +7,10 @@ Static shell only: the page reads data/scoreboard/<season>/guillotine.json, the 
 projections, Sleeper and ESPN at view time. Rebuild after a design change; data changes need nothing.
 CWD = repo root.
 """
+import glob
 import html
 import os
+import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -33,7 +35,7 @@ CSS = """
 .gl-h,.gl-r{display:grid;gap:6px;align-items:center;padding:6px 10px}
 .live-t .gl-h,.live-t .gl-r{grid-template-columns:22px minmax(0,1fr) 62px 54px 44px 58px}
 .fz-t .gl-h,.fz-t .gl-r{grid-template-columns:22px minmax(0,1fr) 62px 76px}
-.out-t .gl-h,.out-t .gl-r{grid-template-columns:22px minmax(0,1fr) 54px 62px}
+.out-t .gl-h,.out-t .gl-r{grid-template-columns:22px minmax(0,1fr) 92px 62px}
 .gl-h{font:600 10px var(--body);text-transform:uppercase;letter-spacing:.04em;color:var(--mute);border-bottom:1px solid var(--line)}
 .gl-h span:nth-child(n+3){text-align:right}
 .gl-r{border-top:1px solid var(--line);min-height:34px}.gl-r:first-of-type{border-top:0}
@@ -57,6 +59,7 @@ CSS = """
 .gl-n,.gl-w{font-size:14px}.gl-t{font-size:13px}}
 [hidden]{display:none!important}
 .gl-champ .trophy{flex:none}
+.gl-replay{margin:10px 0;padding:10px 12px;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:6px;background:var(--panel);font-size:14px}
 """ + TR.CSS
 
 
@@ -69,7 +72,7 @@ def main():
     logo = g.get("logos", {}).get("wordmark", "")
     logo = html.escape("../" + logo.replace(" ", "%20")) if logo else ""
     body = f'''<div class="wrap gwrap">
-{menu_html("special", ["special"])}
+{menu_html("special", ["special", "guillotine-seasons"])}
 <header class="sbh gl-hdr"><div class="eyebrow">{brand} · special events · every team · postseason weeks</div>
 <h1 class="gl-title">{f'<img id="gl-logo" src="{logo}" alt="{name}">' if logo else f'{brand} <em>{name}</em>'}</h1></header>
 <div class="tools"><button id="refresh" type="button">↻ Refresh</button><span id="updated" role="status">Loading…</span></div>
@@ -79,6 +82,25 @@ def main():
 <script src="assets/scoreboard-core.js"></script><script src="assets/trophy.js"></script><script src="assets/guillotine-model.js"></script><script src="assets/guillotine.js" defer></script></body></html>'''
     with open("reports/special.html", "w", encoding="utf-8") as f:
         f.write(page_head(f"{brand} {g.get('name', 'The Guillotine')}", CSS) + body)
+
+    # Replays (Dev only, Chris 2026-11-24): a past season run through the Guillotine rules, to preview the
+    # finished page. data/replays/guillotine-<year>.json (scripts/guillotine.py --year Y --out-dir, json
+    # copied there) -> reports/guillotine-<year>.html. Kept out of data/scoreboard/ so the trophy ledger
+    # never reads a replay as a real champion. Menu: config/nav.json rows.guillotine-seasons (hidden-dev).
+    for src in sorted(glob.glob("data/replays/guillotine-*.json")):
+        year = re.search(r"guillotine-(\d{4})\.json$", src)
+        if not year:
+            continue
+        y = year.group(1)
+        note = (f'<p class="gl-replay" role="note"><b>Replay, not an official result.</b> {y} was not played as '
+                f'{name}: these are {y}\'s real week {g["first_week"]}–{g["last_week"]} scores run through this season\'s rules.</p>')
+        page = (body.replace('<div id="board" aria-live="polite"></div>',
+                             f'{note}<div id="board" aria-live="polite" data-src="../{html.escape(src)}"></div>')
+                .replace(menu_html("special", ["special", "guillotine-seasons"]),
+                         menu_html("special", ["special", "guillotine-seasons"])))
+        with open(f"reports/guillotine-{y}.html", "w", encoding="utf-8") as f:
+            f.write(page_head(f"{brand} {g.get('name', 'The Guillotine')} {y} replay", CSS) + page)
+        print(f"wrote reports/guillotine-{y}.html (replay)")
 
     # Dwight Fight is its own Special Events sub-page, drawn with the bracket component (task 5.18)
     import dwight_page

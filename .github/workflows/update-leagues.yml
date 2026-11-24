@@ -159,7 +159,7 @@ jobs:
           run playoff_field_draft   "playoff_field.py --auto" all
           run playoff_bracket_draft "playoff_bracket.py --auto" all
           run postseason_export     postseason_export.py     all
-          # The Guillotine (every team, weeks 13-17): no-op cuts until week 13 is final; writes the
+          # The Guillotine (every team, weeks 12-16): no-op cuts until week 12 is final; writes the
           # page data even before (all teams alive). Then the Special Events page shell.
           run guillotine            guillotine.py            all
           run dwight_fight          dwight_fight.py         all

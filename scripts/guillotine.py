@@ -1,5 +1,5 @@
 """
-guillotine.py -- The Guillotine: every team, weeks 13-17, about half cut each week.
+guillotine.py -- The Guillotine: every team, weeks first_week..last_week (12-16), about half cut each week.
 
 Rules (config/league.json -> postseason.guillotine; Chris 2026-11-04 / 11-14, claude/todo-guillotine.md):
   - Each week counts only that week's score (standard scoring from 2026, like every postseason game).

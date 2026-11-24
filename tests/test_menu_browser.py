@@ -74,7 +74,7 @@ class MenuBrowser(unittest.TestCase):
     def test_sub_rows_below_header(self):
         # Chris, 2026-11-20: sub-rows display directly below the page header, in their original order.
         for name, labels in (("week-05.html", ["Seasons", "Weeks"]), ("standings.html", ["Seasons"]),
-                             ("poll-how.html", ["Poll pages"]), ("special.html", ["Special events"]),
+                             ("poll-how.html", ["Poll pages"]), ("special.html", ["Special events", "Seasons"]),  # Seasons = guillotine-seasons (hidden unless Dev)
                              ("ccg-race.html", ["Selection Watch pages"]), ("selection-watch.html", ["Selection Watch pages"])):
             with self.subTest(page=name):
                 pg = self.page(name)
@@ -110,6 +110,24 @@ class MenuBrowser(unittest.TestCase):
         pg.check("#dev-tester")
         pg.wait_for_function("() => document.getElementById('dev-st').textContent.startsWith('Tester mode on')")
         self.assertTrue(pg.evaluate("JSON.parse(localStorage.getItem('ncaa180.push')).test"))
+        self.assertEqual(self.errors, [])
+        pg.close()
+
+    def test_guillotine_replay(self):
+        # 2025 replay (Chris, 2026-11-24): Dev-only page; public viewers never see the Seasons row.
+        pg = self.page("special.html")
+        self.assertTrue(pg.locator('nav.weeks.sub[data-row="guillotine-seasons"]').is_hidden())
+        pg.evaluate("localStorage.setItem('ncaa180.dev','1')")
+        pg.goto(self.base + "guillotine-2025.html", wait_until="domcontentloaded")
+        row = pg.locator('nav.weeks.sub[data-row="guillotine-seasons"]')
+        self.assertTrue(row.is_visible())
+        self.assertIn("2025 replay", row.inner_text())
+        self.assertEqual(pg.locator(".n180-devbar").count(), 1)
+        self.assertIn("Replay, not an official result", pg.inner_text(".gl-replay"))
+        pg.wait_for_selector(".gl-champ")
+        self.assertIn("Georgetown", pg.inner_text(".gl-champ"))
+        self.assertEqual(pg.locator(".gl-weeks a").count(), 5)
+        self.assertEqual(pg.locator(".fz-t .gl-r").count(), 11)  # week 17 final field
         self.assertEqual(self.errors, [])
         pg.close()
 
