@@ -21,12 +21,17 @@
     finally{clearTimeout(t);signal?.removeEventListener('abort',cancel);}
   }
   const wkName=(w,short)=>ScoreboardCore.weekLabel(cfg,w,short);
+  // Replay pages (guillotine-<year>.html, Dev only): a past season's leagues have other Sleeper IDs, so
+  // colors/logos/labels come from this season's league of the same name; the team name is the one played.
+  const replaySrc=document.getElementById('board')?.dataset.src||'';
+  let byName={};
+  const lid=t=>replaySrc?(byName[t.league]||t.l):t.l;
   const lname=id=>index.leagues[id]?.label||index.leagues[id]?.name||'';
-  const ident=t=>index.leagues[t.l]?.teams?.[String(t.r)]||{name:t.team};
+  const ident=t=>{const x=index.leagues[lid(t)]?.teams?.[String(t.r)];return replaySrc?{...(x||{}),name:t.team}:x||{name:t.team};};
   const darkBg=h=>{const m=/^#?([0-9a-f]{6})$/i.exec(String(h||''));if(!m)return false;const c=[0,2,4].map(i=>parseInt(m[1].slice(i,i+2),16)/255).map(v=>v<=.03928?v/12.92:((v+.055)/1.055)**2.4);return .2126*c[0]+.7152*c[1]+.0722*c[2]<.18;};
   const icon=t=>{const x=ident(t);return `<span class="team-icon" style="background:${esc(x.primary||'#14213a')}">${x.logo?`<img src="${esc(x.logo_forced||darkBg(x.primary)&&x.logo_dark||x.logo)}" alt="" onerror="this.hidden=true">`:''}</span>`;};
   let mine='';try{const m=window.NCAA180?.myTeam?.();if(m)mine=`${m.conf}:${m.roster}`;}catch(e){}
-  const isMine=t=>mine&&`${index.leagues[t.l]?.label||''}:${t.r}`===mine;
+  const isMine=t=>mine&&`${index.leagues[lid(t)]?.label||''}:${t.r}`===mine;
   function nflGames(data){
     if(Number(data.season?.year)!==season||Number(data.week?.number)!==week||!data.events?.length)throw Error('NFL schedule does not match the selected week');
     const games={};mnf={on:false,crunch:false};
@@ -58,7 +63,7 @@
   function champBanner(){
     if(!gd.champions?.length)return '';
     const co=gd.champions.length>1;
-    return `<section class="gl-champ"><img src="${esc(logoFor(gd.last_week))}" alt="${esc(gd.name)} final" onerror="this.hidden=true"><div><div class="eyebrow">${esc(gd.name)} ${co?'co-champions':'champion'}</div>${gd.champions.map(c=>`<div class="gl-cname">${icon(c)} ${esc(ident(c).name)}</div>`).join('')}</div>${trophies()}</section>`;
+    return `<section class="gl-champ"><img src="${esc(logoFor(gd.last_week))}" alt="${esc(gd.name)} final" onerror="this.hidden=true"><div><div class="eyebrow">${esc(gd.name)} ${co?'co-champions':'champion'}</div>${gd.champions.map(c=>gd.teams.find(t=>t.l===c.l&&t.r===c.r)||c).map(c=>`<div class="gl-cname">${icon(c)} ${esc(ident(c).name)}</div>`).join('')}</div>${trophies()}</section>`;
   }
   function rules(){
     const n=gd.entrants||gd.teams.length;
@@ -81,7 +86,7 @@
     if(!out.length)return '';
     return `<details class="gl-out sec-d" open><summary><h3 class="sec">Eliminated <small>${out.length} team${out.length===1?'':'s'}</small></h3></summary>
       <div class="gl-table out-t"><div class="gl-h"><span></span><span>Team</span><span>Out</span><span>Score</span></div>
-      ${out.map(t=>`<div class="gl-r${isMine(t)?' mine':''}">${icon(t)}<span class="gl-t">${esc(ident(t).name)}<small>${esc(lname(t.l))} · ${esc(t.owner)}</small></span><span class="gl-w">${esc(wkName(t.out,true))}</span><span class="gl-n">${Number(t.scores[t.out]??0).toFixed(2)}</span></div>`).join('')}</div></details>`;
+      ${out.map(t=>`<div class="gl-r${isMine(t)?' mine':''}">${icon(t)}<span class="gl-t">${esc(ident(t).name)}<small>${esc(lname(lid(t)))} · ${esc(t.owner)}</small></span><span class="gl-w">${esc(wkName(t.out,true))}</span><span class="gl-n">${Number(t.scores[t.out]??0).toFixed(2)}</span></div>`).join('')}</div></details>`;
   }
   function liveRows(){
     const field=gd.status==='final'?[]:alive();
@@ -116,7 +121,7 @@
     L.items.forEach(x=>{
       if(!drawn&&!last&&L.proj!=null&&x.m&&x.proj<L.proj-G.EPS){rows+=`<div class="gl-cut" aria-hidden="true"><span>Projected cut · ${L.proj.toFixed(1)}</span></div>`;drawn=true;}
       const m=x.m,cls=[m&&m.live?'live':'',isMine(x.t)?'mine':'',x.odds!=null&&x.odds>=20&&x.odds<=80?'bubble':''].filter(Boolean).join(' ');
-      rows+=`<div class="gl-r ${cls}">${icon(x.t)}<span class="gl-t">${esc(ident(x.t).name)}<small>${esc(lname(x.t.l))} · ${esc(x.t.owner)}${m?.incomplete?' · stats incomplete':''}</small></span>
+      rows+=`<div class="gl-r ${cls}">${icon(x.t)}<span class="gl-t">${esc(ident(x.t).name)}<small>${esc(lname(lid(x.t)))} · ${esc(x.t.owner)}${m?.incomplete?' · stats incomplete':''}</small></span>
         <span class="gl-n sc">${m&&(m.played||m.final)?m.actual.toFixed(2):'–'}</span><span class="gl-n pj">${m?x.proj.toFixed(1):'–'}</span>
         <span class="gl-n mn">${m?Math.round(m.minutes):'–'}</span><span class="gl-n od">${esc(pct(x.odds))}</span></div>`;
     });
@@ -132,7 +137,7 @@
     field.forEach(t=>{
       const through=last?t.status==='champion':t.out!==w,added=(t.added||[]).includes(w);
       if(!drawn&&!through&&!last){rows+=`<div class="gl-cut final" aria-hidden="true"><span>Cut line · ${Number(f.cutline).toFixed(2)}</span></div>`;drawn=true;}
-      rows+=`<div class="gl-r${through?'':' gone'}${isMine(t)?' mine':''}">${icon(t)}<span class="gl-t">${esc(ident(t).name)}<small>${esc(lname(t.l))} · ${esc(t.owner)}${added?' · added after stat corrections':''}</small></span><span class="gl-n sc">${t.scores[w].toFixed(2)}</span><span class="gl-w">${last?(t.status==='champion'?'Champion':t.status==='tied'?'Tied':''):through?'Survived':'Out'}</span></div>`;
+      rows+=`<div class="gl-r${through?'':' gone'}${isMine(t)?' mine':''}">${icon(t)}<span class="gl-t">${esc(ident(t).name)}<small>${esc(lname(lid(t)))} · ${esc(t.owner)}${added?' · added after stat corrections':''}</small></span><span class="gl-n sc">${t.scores[w].toFixed(2)}</span><span class="gl-w">${last?(t.status==='champion'?'Champion':t.status==='tied'?'Tied':''):through?'Survived':'Out'}</span></div>`;
     });
     const head=`<section class="gl-head card"><div class="gl-k"><b>${f.field}</b><span>played</span></div><div class="gl-k"><b>${f.advanced}</b><span>${last?'champion':'survived'}</span></div><div class="gl-k"><b>${Number(f.cutline).toFixed(2)}</b><span>${last?'winning score':'cut line'}</span></div>${f.added?`<div class="gl-k"><b>${f.added}</b><span>added by stat corrections</span></div>`:''}</section>`;
     return `${head}<p class="gl-state">${esc(wkName(w))} · Final</p><div class="gl-table fz-t"><div class="gl-h"><span></span><span>Team</span><span>Score</span><span></span></div>${rows}</div>`;
@@ -189,9 +194,13 @@
   }
   try{
     cfg=await get('../config/league.json');index=await get(`${cfg.data.scoreboard}/index.json`);season=Number(index.season);
-    gd=await get(`${cfg.data.scoreboard}/${season}/guillotine.json`);
+    if(replaySrc){
+      gd=await get(replaySrc);season=Number(gd.season);
+      for(const [id,l] of Object.entries(index.leagues))byName[l.name]=id;
+    }else gd=await get(`${cfg.data.scoreboard}/${season}/guillotine.json`);
     try{await window.NCAATrophy?.load('../');trophyRows=await window.NCAATrophy?.ledger('../')}catch(e){console.warn('trophy config unavailable',e)}
-    [metadata,colors]=await Promise.all([get(`${cfg.data.scoreboard}/${season}/players.json`),get(`${cfg.data.scoreboard}/leagues.json`)]);
+    // A replay is final: no live week, so no player feed.
+    if(!replaySrc)[metadata,colors]=await Promise.all([get(`${cfg.data.scoreboard}/${season}/players.json`),get(`${cfg.data.scoreboard}/leagues.json`)]);
     const want=Number(params.get('week'));
     const choices=[...(gd.weeks||[]).map(x=>x.week),liveWeek()].filter(Boolean);
     week=choices.includes(want)?want:liveWeek()||Math.max(...choices);
