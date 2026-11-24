@@ -115,7 +115,7 @@ test('live odds, modern frozen odds and reversed legacy fallback retain their pr
   h.setSummary({live: true, started: true, probability: 0, models: [{actual: 90},{actual: 102.4}]});
   await h.refresh();
   assert.equal(h.seen.at(-1), 0);
-  assert.match(h.element('sw-board-rows').innerHTML,/100%<\/small><small class="sw-margin"[^>]*>\+12\.4<\/small>/);
+  assert.match(h.element('sw-board-rows').innerHTML,/&gt;99%<\/small><small class="sw-margin"[^>]*>\+12\.4<\/small>/  /* live, not final: never 100% (Chris 2026-11-24) */);
   assert.match(h.element('sw-board-rows').innerHTML,/Live odds/);
   h.setSummary({probability: null});
   sides[1].WinPct = null;
