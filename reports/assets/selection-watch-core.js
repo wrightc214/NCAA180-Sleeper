@@ -165,12 +165,15 @@
       if(row)row.right=t;
       else rows.push({right:t});
     });
-    const inactive=thieves.filter(t=>!t.active);
-    const free=rows.filter(row=>!row.hold&&!row.right);
-    const overflow=Math.max(0,inactive.length-free.length);
+    // Each possible thief sits beside the team it would knock out (Chris, 2026-11-24): the most likely
+    // goes against the last team above the cut, the next most likely against the one above that, and so
+    // on. A held row (that team leads its own CCG) keeps its placard and does not take a thief. Thieves
+    // beyond the free rows stack above the board, least likely furthest from the cut.
+    const inactive=thieves.filter(t=>!t.active).sort((a,b)=>b.win-a.win||a.rank-b.rank||a.k.localeCompare(b.k));
+    const free=rows.filter(row=>row.left&&row.left.status!=='Below cut'&&!row.hold&&!row.right).reverse();
     inactive.forEach((t,i)=>{
-      if(i<overflow)rows.splice(i,0,{right:t});
-      else free[i-overflow].right=t;
+      if(i<free.length)free[i].right=t;
+      else rows.unshift({right:t});
     });
     return {atLarge,thieves,playIns:playInGames,cut,initialCut:d.field_size-playIns.size,
       projected,labels,steals,leading,possible,rows};
