@@ -1799,6 +1799,186 @@ Year,ThroughWeek,Bot,BotName,Rank,Team,LeagueID,RosterID,Value,ValueSource
 2026,10,allplay,Vegas,178,Weber State,1316899756005412864,9,0.6089,actual
 2026,10,allplay,Vegas,179,Northern Iowa,1316899756005412864,10,0.5084,actual
 2026,10,allplay,Vegas,180,UAB,1331774846710849536,10,0.4972,actual
+2026,11,allplay,Vegas,1,Washington State,1331775106527006720,4,9.3771,actual
+2026,11,allplay,Vegas,2,Baylor,1331774880181399552,5,9.2737,actual
+2026,11,allplay,Vegas,3,Iowa,1316899936696016896,11,9.2179,actual
+2026,11,allplay,Vegas,4,Syracuse,1331775206619885568,7,9.2067,actual
+2026,11,allplay,Vegas,5,Hawaii,1331774599196585984,1,9.1788,actual
+2026,11,allplay,Vegas,6,Georgetown,1331774741488369664,5,9.1369,actual
+2026,11,allplay,Vegas,7,William & Mary,1316899756005412864,3,8.9609,actual
+2026,11,allplay,Vegas,8,Brown,1331774741488369664,1,8.7737,actual
+2026,11,allplay,Vegas,9,Youngstown State,1316899756005412864,12,8.7514,actual
+2026,11,allplay,Vegas,10,Middle Tennessee State,1331774695346823168,7,8.6648,actual
+2026,11,allplay,Vegas,11,Clemson,1331774915392577536,12,8.6536,actual
+2026,11,allplay,Vegas,12,North Alabama,1331774544905510912,11,8.6034,actual
+2026,11,allplay,Vegas,13,ETSU,1331774544905510912,2,8.4888,actual
+2026,11,allplay,Vegas,14,Portland State,1316899756005412864,8,8.4832,actual
+2026,11,allplay,Vegas,15,Arizona State,1331775106527006720,7,8.4302,actual
+2026,11,allplay,Vegas,16,Campbell,1331774804222545920,8,8.3184,actual
+2026,11,allplay,Vegas,17,Georgia State,1331774695346823168,5,8.2989,actual
+2026,11,allplay,Vegas,18,BYU,1331774599196585984,6,8.2654,actual
+2026,11,allplay,Vegas,19,Colorado,1331775106527006720,8,8.1732,actual
+2026,11,allplay,Vegas,20,North Carolina A&T,1331774630620332032,1,8.0838,actual
+2026,11,allplay,Vegas,21,Old Dominion,1331774454493122560,10,8.0615,actual
+2026,11,allplay,Vegas,22,Nebraska,1316899936696016896,2,8.0447,actual
+2026,11,allplay,Vegas,23,Southern Miss,1331774846710849536,9,8.0419,actual
+2026,11,allplay,Vegas,24,Auburn,1331775170712444928,4,8.0391,actual
+2026,11,allplay,Vegas,25,Tulsa,1331774846710849536,6,8.0335,actual
+2026,11,allplay,Vegas,26,Montana,1331774454493122560,1,7.9972,actual
+2026,11,allplay,Vegas,27,Dartmouth,1331774741488369664,11,7.933,actual
+2026,11,allplay,Vegas,28,Coastal Carolina,1331775206619885568,6,7.9218,actual
+2026,11,allplay,Vegas,29,Kentucky,1331775170712444928,8,7.8994,actual
+2026,11,allplay,Vegas,30,Kansas State,1331774880181399552,7,7.8994,actual
+2026,11,allplay,Vegas,31,Fresno State,1331774599196585984,7,7.8743,actual
+2026,11,allplay,Vegas,32,NC State,1331774915392577536,10,7.8492,actual
+2026,11,allplay,Vegas,33,Colorado State,1331774599196585984,8,7.838,actual
+2026,11,allplay,Vegas,34,Minnesota,1316899936696016896,7,7.8156,actual
+2026,11,allplay,Vegas,35,Montana State,1316899756005412864,6,7.8101,actual
+2026,11,allplay,Vegas,36,Chattanooga,1331774544905510912,4,7.6453,actual
+2026,11,allplay,Vegas,37,Mississippi State,1331775170712444928,6,7.6089,actual
+2026,11,allplay,Vegas,38,Michigan,1316899936696016896,12,7.6089,actual
+2026,11,allplay,Vegas,39,Memphis,1331774846710849536,8,7.5615,actual
+2026,11,allplay,Vegas,40,UNLV,1331774599196585984,11,7.5084,actual
+2026,11,allplay,Vegas,41,Southern,1331774630620332032,4,7.3771,actual
+2026,11,allplay,Vegas,42,Stony Brook,1316899756005412864,5,7.3352,actual
+2026,11,allplay,Vegas,43,Colgate,1331774741488369664,8,7.3073,actual
+2026,11,allplay,Vegas,44,FSU,1331774915392577536,5,7.2849,actual
+2026,11,allplay,Vegas,45,James Madison,1331774454493122560,2,7.2514,actual
+2026,11,allplay,Vegas,46,Pittsburgh,1331775206619885568,4,7.2207,actual
+2026,11,allplay,Vegas,47,Texas A&M,1331774880181399552,4,7.2123,actual
+2026,11,allplay,Vegas,48,UCONN,1331775206619885568,5,7.1508,actual
+2026,11,allplay,Vegas,49,Murray State,1331774804222545920,3,7.1508,actual
+2026,11,allplay,Vegas,50,Arkansas State,1331774695346823168,8,7.1453,actual
+2026,11,allplay,Vegas,51,Illinois,1316899936696016896,10,7.0838,actual
+2026,11,allplay,Vegas,52,Temple,1331774846710849536,1,7.0838,actual
+2026,11,allplay,Vegas,53,Virginia,1331774915392577536,1,7.0279,actual
+2026,11,allplay,Vegas,54,Georgia Tech,1331774915392577536,3,7.0223,actual
+2026,11,allplay,Vegas,55,UT Martin,1331774804222545920,11,6.9553,actual
+2026,11,allplay,Vegas,56,Florida Atlantic,1331774695346823168,3,6.9274,actual
+2026,11,allplay,Vegas,57,West Virginia,1331774880181399552,8,6.8771,actual
+2026,11,allplay,Vegas,58,LSU,1331775170712444928,2,6.6704,actual
+2026,11,allplay,Vegas,59,Army,1331775206619885568,8,6.6257,actual
+2026,11,allplay,Vegas,60,UCLA,1331775106527006720,12,6.6229,actual
+2026,11,allplay,Vegas,61,Cornell,1331774741488369664,12,6.6061,actual
+2026,11,allplay,Vegas,62,Belmont,1331774544905510912,1,6.581,actual
+2026,11,allplay,Vegas,63,UNC Charlotte,1331774454493122560,12,6.5503,actual
+2026,11,allplay,Vegas,64,Davidson,1331774804222545920,12,6.4413,actual
+2026,11,allplay,Vegas,65,Troy,1331774695346823168,1,6.4302,actual
+2026,11,allplay,Vegas,66,Missouri,1331774880181399552,3,6.3855,actual
+2026,11,allplay,Vegas,67,Delaware,1331774544905510912,7,6.324,actual
+2026,11,allplay,Vegas,68,Holy Cross,1331774804222545920,2,6.324,actual
+2026,11,allplay,Vegas,69,Georgia Southern,1331774846710849536,7,6.2011,actual
+2026,11,allplay,Vegas,70,Purdue,1316899936696016896,1,6.1732,actual
+2026,11,allplay,Vegas,71,Wisconsin,1316899936696016896,6,6.162,actual
+2026,11,allplay,Vegas,72,North Carolina Central,1331774544905510912,12,6.1173,actual
+2026,11,allplay,Vegas,73,Stanford,1331775106527006720,5,6.1034,actual
+2026,11,allplay,Vegas,74,Boston College,1331774915392577536,8,6.0223,actual
+2026,11,allplay,Vegas,75,South Alabama,1331774695346823168,4,5.9497,actual
+2026,11,allplay,Vegas,76,Tuskegee,1331774630620332032,11,5.9162,actual
+2026,11,allplay,Vegas,77,Monmouth,1331774544905510912,10,5.9022,actual
+2026,11,allplay,Vegas,78,Eastern Washington,1316899756005412864,4,5.8771,actual
+2026,11,allplay,Vegas,79,Citadel,1331774454493122560,8,5.8268,actual
+2026,11,allplay,Vegas,80,USC,1331775106527006720,2,5.7542,actual
+2026,11,allplay,Vegas,81,Wyoming,1331774599196585984,3,5.7151,actual
+2026,11,allplay,Vegas,82,TCU,1331774880181399552,11,5.7067,actual
+2026,11,allplay,Vegas,83,Oregon State,1331775106527006720,3,5.6927,actual
+2026,11,allplay,Vegas,84,Wake Forest,1331774915392577536,6,5.6899,actual
+2026,11,allplay,Vegas,85,Oklahoma,1331774880181399552,9,5.6704,actual
+2026,11,allplay,Vegas,86,Bucknell,1331774741488369664,3,5.648,actual
+2026,11,allplay,Vegas,87,Rutgers,1331775206619885568,1,5.6425,actual
+2026,11,allplay,Vegas,88,Texas,1331774880181399552,6,5.6341,actual
+2026,11,allplay,Vegas,89,Ohio State,1316899936696016896,9,5.5782,actual
+2026,11,allplay,Vegas,90,Notre Dame,1331775206619885568,12,5.4693,actual
+2026,11,allplay,Vegas,91,Columbia,1331774741488369664,4,5.4162,actual
+2026,11,allplay,Vegas,92,South Dakota State,1331775206619885568,3,5.3129,actual
+2026,11,allplay,Vegas,93,Texas State,1331774695346823168,9,5.3101,actual
+2026,11,allplay,Vegas,94,UTSA,1331774846710849536,12,5.2402,actual
+2026,11,allplay,Vegas,95,Eastern Michigan,1331774454493122560,6,5.2291,actual
+2026,11,allplay,Vegas,96,Rhode Island,1316899756005412864,1,5.2179,actual
+2026,11,allplay,Vegas,97,Central Michigan,1331774454493122560,4,5.1899,actual
+2026,11,allplay,Vegas,98,Penn State,1316899936696016896,5,5.1844,actual
+2026,11,allplay,Vegas,99,Richmond,1316899756005412864,7,5.162,actual
+2026,11,allplay,Vegas,100,South Dakota,1331774454493122560,11,5.1564,actual
+2026,11,allplay,Vegas,101,Eastern Kentucky,1331774544905510912,5,5.1453,actual
+2026,11,allplay,Vegas,102,Utah,1331775106527006720,11,5.1117,actual
+2026,11,allplay,Vegas,103,Austin Peay,1331774804222545920,9,5.0838,actual
+2026,11,allplay,Vegas,104,Butler,1331774804222545920,4,5.067,actual
+2026,11,allplay,Vegas,105,Western Kentucky,1331774695346823168,6,5.0475,actual
+2026,11,allplay,Vegas,106,Florida A&M,1331774630620332032,5,5.0223,actual
+2026,11,allplay,Vegas,107,Dayton,1331774804222545920,7,5.0168,actual
+2026,11,allplay,Vegas,108,UCF,1331775206619885568,9,4.9497,actual
+2026,11,allplay,Vegas,109,NIU,1331774599196585984,5,4.8939,actual
+2026,11,allplay,Vegas,110,South Carolina,1331775170712444928,10,4.8827,actual
+2026,11,allplay,Vegas,111,SE Missouri State,1331774804222545920,6,4.8547,actual
+2026,11,allplay,Vegas,112,Tulane,1331774846710849536,3,4.8492,actual
+2026,11,allplay,Vegas,113,Marshall,1331774846710849536,5,4.8352,actual
+2026,11,allplay,Vegas,114,Louisiana Tech,1331774846710849536,11,4.824,actual
+2026,11,allplay,Vegas,115,Jacksonville State,1331774544905510912,9,4.8101,actual
+2026,11,allplay,Vegas,116,North Dakota State,1331774454493122560,3,4.7989,actual
+2026,11,allplay,Vegas,117,Wichita State,1331774454493122560,5,4.7514,actual
+2026,11,allplay,Vegas,118,Georgia,1331775170712444928,7,4.7263,actual
+2026,11,allplay,Vegas,119,Delaware State,1331774630620332032,3,4.7123,actual
+2026,11,allplay,Vegas,120,Lehigh,1331774741488369664,6,4.6816,actual
+2026,11,allplay,Vegas,121,North Carolina,1331774915392577536,2,4.6369,actual
+2026,11,allplay,Vegas,122,Jackson State,1331774630620332032,10,4.5978,actual
+2026,11,allplay,Vegas,123,Virginia Tech,1331774915392577536,4,4.595,actual
+2026,11,allplay,Vegas,124,Howard,1331774630620332032,6,4.581,actual
+2026,11,allplay,Vegas,125,San Diego State,1331774599196585984,12,4.5587,actual
+2026,11,allplay,Vegas,126,Wofford,1331774804222545920,1,4.4749,actual
+2026,11,allplay,Vegas,127,Alcorn State,1331774630620332032,8,4.4581,actual
+2026,11,allplay,Vegas,128,Furman,1331774804222545920,10,4.4134,actual
+2026,11,allplay,Vegas,129,Duke,1331774915392577536,7,4.405,actual
+2026,11,allplay,Vegas,130,Yale,1331774741488369664,9,4.3743,actual
+2026,11,allplay,Vegas,131,UTEP,1331774846710849536,2,4.324,actual
+2026,11,allplay,Vegas,132,Nevada,1331774599196585984,10,4.3101,actual
+2026,11,allplay,Vegas,133,Arkansas,1331775170712444928,12,4.2682,actual
+2026,11,allplay,Vegas,134,Washington,1331775106527006720,6,4.2542,actual
+2026,11,allplay,Vegas,135,Villanova,1316899756005412864,2,4.2402,actual
+2026,11,allplay,Vegas,136,New Mexico,1331774599196585984,9,4.2346,actual
+2026,11,allplay,Vegas,137,Louisiana Monroe,1331774695346823168,12,4.2067,actual
+2026,11,allplay,Vegas,138,Tennessee,1331775170712444928,3,4.1201,actual
+2026,11,allplay,Vegas,139,Louisville,1331774915392577536,11,4.0168,actual
+2026,11,allplay,Vegas,140,Maryland,1331775206619885568,2,3.9525,actual
+2026,11,allplay,Vegas,141,Florida International,1331774695346823168,10,3.9106,actual
+2026,11,allplay,Vegas,142,Penn,1331774741488369664,7,3.7765,actual
+2026,11,allplay,Vegas,143,Kennesaw State,1331774544905510912,3,3.7765,actual
+2026,11,allplay,Vegas,144,Boise State,1331774599196585984,2,3.7765,actual
+2026,11,allplay,Vegas,145,Charleston Southern,1331774544905510912,6,3.662,actual
+2026,11,allplay,Vegas,146,Mississippi Valley State,1331774630620332032,7,3.6536,actual
+2026,11,allplay,Vegas,147,Rice,1331774846710849536,4,3.4637,actual
+2026,11,allplay,Vegas,148,Miami,1331774915392577536,9,3.3771,actual
+2026,11,allplay,Vegas,149,Oklahoma State,1331774880181399552,12,3.3743,actual
+2026,11,allplay,Vegas,150,Maine,1316899756005412864,11,3.3184,actual
+2026,11,allplay,Vegas,151,Arizona,1331775106527006720,1,3.2346,actual
+2026,11,allplay,Vegas,152,Morehead State,1331774544905510912,8,3.2235,actual
+2026,11,allplay,Vegas,153,Harvard,1331774741488369664,2,3.1425,actual
+2026,11,allplay,Vegas,154,Bethune - Cookman,1331774630620332032,9,3.1397,actual
+2026,11,allplay,Vegas,155,Grambling State,1331774630620332032,12,3.0782,actual
+2026,11,allplay,Vegas,156,Navy,1331775206619885568,11,2.9302,actual
+2026,11,allplay,Vegas,157,San Jose State,1331774454493122560,7,2.8855,actual
+2026,11,allplay,Vegas,158,North Texas,1331774695346823168,2,2.8603,actual
+2026,11,allplay,Vegas,159,Ole Miss,1331775170712444928,5,2.8017,actual
+2026,11,allplay,Vegas,160,Princeton,1331774741488369664,10,2.5503,actual
+2026,11,allplay,Vegas,161,Louisiana,1331774695346823168,11,2.5363,actual
+2026,11,allplay,Vegas,162,USF,1331775206619885568,10,2.5,actual
+2026,11,allplay,Vegas,163,Tennessee State,1331774804222545920,5,2.4972,actual
+2026,11,allplay,Vegas,164,Florida,1331775170712444928,1,2.4749,actual
+2026,11,allplay,Vegas,165,Iowa State,1331774880181399552,2,2.3743,actual
+2026,11,allplay,Vegas,166,Alabama,1331775170712444928,11,2.3017,actual
+2026,11,allplay,Vegas,167,Texas Tech,1331774880181399552,1,2.2514,actual
+2026,11,allplay,Vegas,168,California,1331775106527006720,10,2.2346,actual
+2026,11,allplay,Vegas,169,Oregon,1331775106527006720,9,1.9665,actual
+2026,11,allplay,Vegas,170,Vanderbilt,1331775170712444928,9,1.905,actual
+2026,11,allplay,Vegas,171,Kansas,1331774880181399552,10,1.8883,actual
+2026,11,allplay,Vegas,172,Central Arkansas,1331774454493122560,9,1.7346,actual
+2026,11,allplay,Vegas,173,Air Force,1331774599196585984,4,1.3743,actual
+2026,11,allplay,Vegas,174,Michigan State,1316899936696016896,4,1.2123,actual
+2026,11,allplay,Vegas,175,Indiana,1316899936696016896,8,1.1453,actual
+2026,11,allplay,Vegas,176,Northwestern,1316899936696016896,3,0.9665,actual
+2026,11,allplay,Vegas,177,Alabama A&M,1331774630620332032,2,0.8156,actual
+2026,11,allplay,Vegas,178,Weber State,1316899756005412864,9,0.6089,actual
+2026,11,allplay,Vegas,179,Northern Iowa,1316899756005412864,10,0.5196,actual
+2026,11,allplay,Vegas,180,UAB,1331774846710849536,10,0.4916,actual
 2026,1,ceiling,Headliner,1,Portland State,1316899756005412864,8,248.56,actual
 2026,1,ceiling,Headliner,2,Kansas State,1331774880181399552,7,243.92,actual
 2026,1,ceiling,Headliner,3,South Carolina,1331775170712444928,10,231.74,actual
@@ -3599,6 +3779,186 @@ Year,ThroughWeek,Bot,BotName,Rank,Team,LeagueID,RosterID,Value,ValueSource
 2026,10,ceiling,Headliner,178,Weber State,1316899756005412864,9,100.93,actual
 2026,10,ceiling,Headliner,179,Northern Iowa,1316899756005412864,10,94.094,actual
 2026,10,ceiling,Headliner,180,Indiana,1316899936696016896,8,92.522,actual
+2026,11,ceiling,Headliner,1,Portland State,1316899756005412864,8,211.2273,actual
+2026,11,ceiling,Headliner,2,Baylor,1331774880181399552,5,203.5764,actual
+2026,11,ceiling,Headliner,3,Brown,1331774741488369664,1,201.0745,actual
+2026,11,ceiling,Headliner,4,Arizona State,1331775106527006720,7,199.6709,actual
+2026,11,ceiling,Headliner,5,Iowa,1316899936696016896,11,198.3909,actual
+2026,11,ceiling,Headliner,6,Syracuse,1331775206619885568,7,196.7127,actual
+2026,11,ceiling,Headliner,7,Auburn,1331775170712444928,4,195.4782,actual
+2026,11,ceiling,Headliner,8,William & Mary,1316899756005412864,3,195.0273,actual
+2026,11,ceiling,Headliner,9,Montana,1331774454493122560,1,193.9964,actual
+2026,11,ceiling,Headliner,10,Georgia State,1331774695346823168,5,191.4945,actual
+2026,11,ceiling,Headliner,11,Old Dominion,1331774454493122560,10,190.8764,actual
+2026,11,ceiling,Headliner,12,Clemson,1331774915392577536,12,189.1873,actual
+2026,11,ceiling,Headliner,13,Middle Tennessee State,1331774695346823168,7,189.0673,actual
+2026,11,ceiling,Headliner,14,North Carolina A&T,1331774630620332032,1,187.2709,actual
+2026,11,ceiling,Headliner,15,Georgetown,1331774741488369664,5,187.2073,actual
+2026,11,ceiling,Headliner,16,North Alabama,1331774544905510912,11,187.1709,actual
+2026,11,ceiling,Headliner,17,Kentucky,1331775170712444928,8,186.6964,actual
+2026,11,ceiling,Headliner,18,BYU,1331774599196585984,6,186.6382,actual
+2026,11,ceiling,Headliner,19,Hawaii,1331774599196585984,1,185.5382,actual
+2026,11,ceiling,Headliner,20,Colorado State,1331774599196585984,8,184.1727,actual
+2026,11,ceiling,Headliner,21,Colorado,1331775106527006720,8,183.8473,actual
+2026,11,ceiling,Headliner,22,Minnesota,1316899936696016896,7,183.2818,actual
+2026,11,ceiling,Headliner,23,UNLV,1331774599196585984,11,182.5327,actual
+2026,11,ceiling,Headliner,24,ETSU,1331774544905510912,2,182.4636,actual
+2026,11,ceiling,Headliner,25,Southern Miss,1331774846710849536,9,182.06,actual
+2026,11,ceiling,Headliner,26,Michigan,1316899936696016896,12,181.9855,actual
+2026,11,ceiling,Headliner,27,Mississippi State,1331775170712444928,6,181.8291,actual
+2026,11,ceiling,Headliner,28,Youngstown State,1316899756005412864,12,181.6091,actual
+2026,11,ceiling,Headliner,29,Montana State,1316899756005412864,6,181.2327,actual
+2026,11,ceiling,Headliner,30,South Carolina,1331775170712444928,10,180.4164,actual
+2026,11,ceiling,Headliner,31,Nebraska,1316899936696016896,2,179.6818,actual
+2026,11,ceiling,Headliner,32,Washington State,1331775106527006720,4,179.4727,actual
+2026,11,ceiling,Headliner,33,Cornell,1331774741488369664,12,179.3018,actual
+2026,11,ceiling,Headliner,34,Campbell,1331774804222545920,8,178.9073,actual
+2026,11,ceiling,Headliner,35,Butler,1331774804222545920,4,177.7073,actual
+2026,11,ceiling,Headliner,36,Virginia,1331774915392577536,1,176.9018,actual
+2026,11,ceiling,Headliner,37,Southern,1331774630620332032,4,176.7309,actual
+2026,11,ceiling,Headliner,38,Florida Atlantic,1331774695346823168,3,176.0218,actual
+2026,11,ceiling,Headliner,39,Dartmouth,1331774741488369664,11,175.5636,actual
+2026,11,ceiling,Headliner,40,Coastal Carolina,1331775206619885568,6,175.2964,actual
+2026,11,ceiling,Headliner,41,Colgate,1331774741488369664,8,174.6164,actual
+2026,11,ceiling,Headliner,42,Tulsa,1331774846710849536,6,173.9945,actual
+2026,11,ceiling,Headliner,43,Kansas State,1331774880181399552,7,173.5182,actual
+2026,11,ceiling,Headliner,44,Stony Brook,1316899756005412864,5,173.4109,actual
+2026,11,ceiling,Headliner,45,Marshall,1331774846710849536,5,173.0891,actual
+2026,11,ceiling,Headliner,46,Boston College,1331774915392577536,8,172.3127,actual
+2026,11,ceiling,Headliner,47,Missouri,1331774880181399552,3,172.1455,actual
+2026,11,ceiling,Headliner,48,Holy Cross,1331774804222545920,2,172.0127,actual
+2026,11,ceiling,Headliner,49,Fresno State,1331774599196585984,7,171.2818,actual
+2026,11,ceiling,Headliner,50,James Madison,1331774454493122560,2,171.1818,actual
+2026,11,ceiling,Headliner,51,Chattanooga,1331774544905510912,4,170.8909,actual
+2026,11,ceiling,Headliner,52,Murray State,1331774804222545920,3,170.8364,actual
+2026,11,ceiling,Headliner,53,NC State,1331774915392577536,10,170.2345,actual
+2026,11,ceiling,Headliner,54,UCONN,1331775206619885568,5,169.6164,actual
+2026,11,ceiling,Headliner,55,UT Martin,1331774804222545920,11,169.2073,actual
+2026,11,ceiling,Headliner,56,Wisconsin,1316899936696016896,6,168.7164,actual
+2026,11,ceiling,Headliner,57,UCLA,1331775106527006720,12,168.1055,actual
+2026,11,ceiling,Headliner,58,Oregon State,1331775106527006720,3,168.0473,actual
+2026,11,ceiling,Headliner,59,LSU,1331775170712444928,2,167.8236,actual
+2026,11,ceiling,Headliner,60,Delaware State,1331774630620332032,3,167.5018,actual
+2026,11,ceiling,Headliner,61,Rhode Island,1316899756005412864,1,167.3836,actual
+2026,11,ceiling,Headliner,62,West Virginia,1331774880181399552,8,167.3618,actual
+2026,11,ceiling,Headliner,63,Texas A&M,1331774880181399552,4,167.3291,actual
+2026,11,ceiling,Headliner,64,Illinois,1316899936696016896,10,166.4473,actual
+2026,11,ceiling,Headliner,65,South Dakota State,1331775206619885568,3,166.3,actual
+2026,11,ceiling,Headliner,66,Pittsburgh,1331775206619885568,4,166.2255,actual
+2026,11,ceiling,Headliner,67,Davidson,1331774804222545920,12,165.5909,actual
+2026,11,ceiling,Headliner,68,Memphis,1331774846710849536,8,165.2945,actual
+2026,11,ceiling,Headliner,69,Notre Dame,1331775206619885568,12,165.1073,actual
+2026,11,ceiling,Headliner,70,Troy,1331774695346823168,1,165.0418,actual
+2026,11,ceiling,Headliner,71,Tulane,1331774846710849536,3,164.8691,actual
+2026,11,ceiling,Headliner,72,Howard,1331774630620332032,6,164.5909,actual
+2026,11,ceiling,Headliner,73,Delaware,1331774544905510912,7,164.4891,actual
+2026,11,ceiling,Headliner,74,Tuskegee,1331774630620332032,11,163.8036,actual
+2026,11,ceiling,Headliner,75,FSU,1331774915392577536,5,163.5855,actual
+2026,11,ceiling,Headliner,76,Mississippi Valley State,1331774630620332032,7,163.4764,actual
+2026,11,ceiling,Headliner,77,UTEP,1331774846710849536,2,163.4545,actual
+2026,11,ceiling,Headliner,78,Arkansas State,1331774695346823168,8,163.3109,actual
+2026,11,ceiling,Headliner,79,Alabama,1331775170712444928,11,163.0836,actual
+2026,11,ceiling,Headliner,80,Georgia Southern,1331774846710849536,7,162.7836,actual
+2026,11,ceiling,Headliner,81,Monmouth,1331774544905510912,10,162.5582,actual
+2026,11,ceiling,Headliner,82,Louisiana Tech,1331774846710849536,11,162.2455,actual
+2026,11,ceiling,Headliner,83,Georgia Tech,1331774915392577536,3,162.2273,actual
+2026,11,ceiling,Headliner,84,Temple,1331774846710849536,1,162.0945,actual
+2026,11,ceiling,Headliner,85,Alcorn State,1331774630620332032,8,162.0109,actual
+2026,11,ceiling,Headliner,86,Columbia,1331774741488369664,4,161.8873,actual
+2026,11,ceiling,Headliner,87,Austin Peay,1331774804222545920,9,161.7782,actual
+2026,11,ceiling,Headliner,88,Utah,1331775106527006720,11,161.7364,actual
+2026,11,ceiling,Headliner,89,Wyoming,1331774599196585984,3,161.3655,actual
+2026,11,ceiling,Headliner,90,North Carolina Central,1331774544905510912,12,160.6036,actual
+2026,11,ceiling,Headliner,91,Eastern Kentucky,1331774544905510912,5,160.56,actual
+2026,11,ceiling,Headliner,92,UNC Charlotte,1331774454493122560,12,160.5145,actual
+2026,11,ceiling,Headliner,93,North Carolina,1331774915392577536,2,160.4873,actual
+2026,11,ceiling,Headliner,94,South Dakota,1331774454493122560,11,160.3455,actual
+2026,11,ceiling,Headliner,95,TCU,1331774880181399552,11,159.8455,actual
+2026,11,ceiling,Headliner,96,Texas,1331774880181399552,6,159.4364,actual
+2026,11,ceiling,Headliner,97,South Alabama,1331774695346823168,4,158.8709,actual
+2026,11,ceiling,Headliner,98,Wake Forest,1331774915392577536,6,158.5055,actual
+2026,11,ceiling,Headliner,99,SE Missouri State,1331774804222545920,6,158.4018,actual
+2026,11,ceiling,Headliner,100,Eastern Washington,1316899756005412864,4,158.3891,actual
+2026,11,ceiling,Headliner,101,Wichita State,1331774454493122560,5,158.34,actual
+2026,11,ceiling,Headliner,102,Stanford,1331775106527006720,5,158.0327,actual
+2026,11,ceiling,Headliner,103,Nevada,1331774599196585984,10,157.7655,actual
+2026,11,ceiling,Headliner,104,UCF,1331775206619885568,9,157.72,actual
+2026,11,ceiling,Headliner,105,Army,1331775206619885568,8,157.1255,actual
+2026,11,ceiling,Headliner,106,Ohio State,1316899936696016896,9,156.8891,actual
+2026,11,ceiling,Headliner,107,Purdue,1316899936696016896,1,156.8018,actual
+2026,11,ceiling,Headliner,108,Duke,1331774915392577536,7,156.64,actual
+2026,11,ceiling,Headliner,109,Jackson State,1331774630620332032,10,156.4036,actual
+2026,11,ceiling,Headliner,110,Texas State,1331774695346823168,9,156.34,actual
+2026,11,ceiling,Headliner,111,Florida A&M,1331774630620332032,5,156.2055,actual
+2026,11,ceiling,Headliner,112,Virginia Tech,1331774915392577536,4,156.0836,actual
+2026,11,ceiling,Headliner,113,Arkansas,1331775170712444928,12,155.8709,actual
+2026,11,ceiling,Headliner,114,Penn State,1316899936696016896,5,155.3018,actual
+2026,11,ceiling,Headliner,115,Belmont,1331774544905510912,1,154.9836,actual
+2026,11,ceiling,Headliner,116,Bethune - Cookman,1331774630620332032,9,154.5945,actual
+2026,11,ceiling,Headliner,117,North Texas,1331774695346823168,2,154.5491,actual
+2026,11,ceiling,Headliner,118,Oklahoma,1331774880181399552,9,154.2418,actual
+2026,11,ceiling,Headliner,119,Morehead State,1331774544905510912,8,154.1291,actual
+2026,11,ceiling,Headliner,120,Rutgers,1331775206619885568,1,154.0,actual
+2026,11,ceiling,Headliner,121,NIU,1331774599196585984,5,153.9145,actual
+2026,11,ceiling,Headliner,122,Central Arkansas,1331774454493122560,9,153.8164,actual
+2026,11,ceiling,Headliner,123,Richmond,1316899756005412864,7,153.5491,actual
+2026,11,ceiling,Headliner,124,Eastern Michigan,1331774454493122560,6,153.1873,actual
+2026,11,ceiling,Headliner,125,Texas Tech,1331774880181399552,1,152.9582,actual
+2026,11,ceiling,Headliner,126,Navy,1331775206619885568,11,151.6382,actual
+2026,11,ceiling,Headliner,127,San Diego State,1331774599196585984,12,150.9582,actual
+2026,11,ceiling,Headliner,128,New Mexico,1331774599196585984,9,150.3309,actual
+2026,11,ceiling,Headliner,129,Washington,1331775106527006720,6,150.2655,actual
+2026,11,ceiling,Headliner,130,North Dakota State,1331774454493122560,3,150.2618,actual
+2026,11,ceiling,Headliner,131,USC,1331775106527006720,2,149.9818,actual
+2026,11,ceiling,Headliner,132,Wofford,1331774804222545920,1,149.8836,actual
+2026,11,ceiling,Headliner,133,USF,1331775206619885568,10,149.6709,actual
+2026,11,ceiling,Headliner,134,Jacksonville State,1331774544905510912,9,149.6255,actual
+2026,11,ceiling,Headliner,135,Furman,1331774804222545920,10,149.2873,actual
+2026,11,ceiling,Headliner,136,UTSA,1331774846710849536,12,148.44,actual
+2026,11,ceiling,Headliner,137,Lehigh,1331774741488369664,6,148.3327,actual
+2026,11,ceiling,Headliner,138,Citadel,1331774454493122560,8,146.8927,actual
+2026,11,ceiling,Headliner,139,Yale,1331774741488369664,9,146.8382,actual
+2026,11,ceiling,Headliner,140,Harvard,1331774741488369664,2,146.7255,actual
+2026,11,ceiling,Headliner,141,Western Kentucky,1331774695346823168,6,146.4345,actual
+2026,11,ceiling,Headliner,142,Central Michigan,1331774454493122560,4,145.8273,actual
+2026,11,ceiling,Headliner,143,Dayton,1331774804222545920,7,145.7909,actual
+2026,11,ceiling,Headliner,144,Iowa State,1331774880181399552,2,144.5418,actual
+2026,11,ceiling,Headliner,145,Kansas,1331774880181399552,10,144.0455,actual
+2026,11,ceiling,Headliner,146,Bucknell,1331774741488369664,3,143.6309,actual
+2026,11,ceiling,Headliner,147,Grambling State,1331774630620332032,12,143.2527,actual
+2026,11,ceiling,Headliner,148,California,1331775106527006720,10,143.2345,actual
+2026,11,ceiling,Headliner,149,Ole Miss,1331775170712444928,5,141.6927,actual
+2026,11,ceiling,Headliner,150,Georgia,1331775170712444928,7,141.0036,actual
+2026,11,ceiling,Headliner,151,Louisiana Monroe,1331774695346823168,12,140.1327,actual
+2026,11,ceiling,Headliner,152,San Jose State,1331774454493122560,7,139.6473,actual
+2026,11,ceiling,Headliner,153,Boise State,1331774599196585984,2,139.3418,actual
+2026,11,ceiling,Headliner,154,Kennesaw State,1331774544905510912,3,139.0109,actual
+2026,11,ceiling,Headliner,155,Oklahoma State,1331774880181399552,12,138.0982,actual
+2026,11,ceiling,Headliner,156,Louisiana,1331774695346823168,11,137.9891,actual
+2026,11,ceiling,Headliner,157,Florida International,1331774695346823168,10,137.7327,actual
+2026,11,ceiling,Headliner,158,Charleston Southern,1331774544905510912,6,137.5364,actual
+2026,11,ceiling,Headliner,159,UAB,1331774846710849536,10,137.4255,actual
+2026,11,ceiling,Headliner,160,Tennessee,1331775170712444928,3,136.3055,actual
+2026,11,ceiling,Headliner,161,Louisville,1331774915392577536,11,135.3582,actual
+2026,11,ceiling,Headliner,162,Maine,1316899756005412864,11,135.2182,actual
+2026,11,ceiling,Headliner,163,Maryland,1331775206619885568,2,132.1164,actual
+2026,11,ceiling,Headliner,164,Arizona,1331775106527006720,1,131.64,actual
+2026,11,ceiling,Headliner,165,Miami,1331774915392577536,9,129.1818,actual
+2026,11,ceiling,Headliner,166,Florida,1331775170712444928,1,128.9291,actual
+2026,11,ceiling,Headliner,167,Penn,1331774741488369664,7,128.1182,actual
+2026,11,ceiling,Headliner,168,Rice,1331774846710849536,4,127.8164,actual
+2026,11,ceiling,Headliner,169,Villanova,1316899756005412864,2,127.4873,actual
+2026,11,ceiling,Headliner,170,Princeton,1331774741488369664,10,124.1764,actual
+2026,11,ceiling,Headliner,171,Oregon,1331775106527006720,9,123.2291,actual
+2026,11,ceiling,Headliner,172,Alabama A&M,1331774630620332032,2,122.4982,actual
+2026,11,ceiling,Headliner,173,Michigan State,1316899936696016896,4,121.8745,actual
+2026,11,ceiling,Headliner,174,Tennessee State,1331774804222545920,5,121.5473,actual
+2026,11,ceiling,Headliner,175,Northwestern,1316899936696016896,3,119.1,actual
+2026,11,ceiling,Headliner,176,Vanderbilt,1331775170712444928,9,118.3091,actual
+2026,11,ceiling,Headliner,177,Air Force,1331774599196585984,4,111.5691,actual
+2026,11,ceiling,Headliner,178,Weber State,1316899756005412864,9,101.0709,actual
+2026,11,ceiling,Headliner,179,Indiana,1316899936696016896,8,93.2364,actual
+2026,11,ceiling,Headliner,180,Northern Iowa,1316899756005412864,10,91.9927,actual
 2026,1,form,Bandwagon,1,Florida A&M,1331774630620332032,5,1.0,actual
 2026,1,form,Bandwagon,2,Kansas State,1331774880181399552,7,0.9944,actual
 2026,1,form,Bandwagon,3,South Carolina,1331775170712444928,10,0.9888,actual
@@ -5399,6 +5759,186 @@ Year,ThroughWeek,Bot,BotName,Rank,Team,LeagueID,RosterID,Value,ValueSource
 2026,10,form,Bandwagon,178,Northern Iowa,1316899756005412864,10,0.0317,actual
 2026,10,form,Bandwagon,179,Air Force,1331774599196585984,4,0.0298,actual
 2026,10,form,Bandwagon,180,UAB,1331774846710849536,10,0.0102,actual
+2026,11,form,Bandwagon,1,Arizona State,1331775106527006720,7,0.9693,actual
+2026,11,form,Bandwagon,2,Brown,1331774741488369664,1,0.9604,actual
+2026,11,form,Bandwagon,3,Syracuse,1331775206619885568,7,0.946,actual
+2026,11,form,Bandwagon,4,Clemson,1331774915392577536,12,0.9441,actual
+2026,11,form,Bandwagon,5,Fresno State,1331774599196585984,7,0.9423,actual
+2026,11,form,Bandwagon,6,Iowa,1316899936696016896,11,0.9348,actual
+2026,11,form,Bandwagon,7,Baylor,1331774880181399552,5,0.9237,actual
+2026,11,form,Bandwagon,8,ETSU,1331774544905510912,2,0.9116,actual
+2026,11,form,Bandwagon,9,Campbell,1331774804222545920,8,0.9078,actual
+2026,11,form,Bandwagon,10,Auburn,1331775170712444928,4,0.9013,actual
+2026,11,form,Bandwagon,11,Portland State,1316899756005412864,8,0.8985,actual
+2026,11,form,Bandwagon,12,William & Mary,1316899756005412864,3,0.8911,actual
+2026,11,form,Bandwagon,13,Hawaii,1331774599196585984,1,0.8846,actual
+2026,11,form,Bandwagon,14,Montana State,1316899756005412864,6,0.8762,actual
+2026,11,form,Bandwagon,15,Tulsa,1331774846710849536,6,0.8734,actual
+2026,11,form,Bandwagon,16,Colgate,1331774741488369664,8,0.8724,actual
+2026,11,form,Bandwagon,17,Georgia State,1331774695346823168,5,0.8683,actual
+2026,11,form,Bandwagon,18,Montana,1331774454493122560,1,0.8548,actual
+2026,11,form,Bandwagon,19,Minnesota,1316899936696016896,7,0.8501,actual
+2026,11,form,Bandwagon,20,Youngstown State,1316899756005412864,12,0.8482,actual
+2026,11,form,Bandwagon,21,Georgetown,1331774741488369664,5,0.8408,actual
+2026,11,form,Bandwagon,22,North Alabama,1331774544905510912,11,0.838,actual
+2026,11,form,Bandwagon,23,Mississippi State,1331775170712444928,6,0.8333,actual
+2026,11,form,Bandwagon,24,Colorado State,1331774599196585984,8,0.8212,actual
+2026,11,form,Bandwagon,25,Murray State,1331774804222545920,3,0.8203,actual
+2026,11,form,Bandwagon,26,NC State,1331774915392577536,10,0.8026,actual
+2026,11,form,Bandwagon,27,Wisconsin,1316899936696016896,6,0.7886,actual
+2026,11,form,Bandwagon,28,Dartmouth,1331774741488369664,11,0.7779,actual
+2026,11,form,Bandwagon,29,South Dakota,1331774454493122560,11,0.7719,actual
+2026,11,form,Bandwagon,30,North Carolina A&T,1331774630620332032,1,0.757,actual
+2026,11,form,Bandwagon,31,Washington State,1331775106527006720,4,0.7449,actual
+2026,11,form,Bandwagon,32,Old Dominion,1331774454493122560,10,0.7421,actual
+2026,11,form,Bandwagon,33,Troy,1331774695346823168,1,0.7365,actual
+2026,11,form,Bandwagon,34,BYU,1331774599196585984,6,0.7328,actual
+2026,11,form,Bandwagon,35,Oregon State,1331775106527006720,3,0.7272,actual
+2026,11,form,Bandwagon,36,Wyoming,1331774599196585984,3,0.7263,actual
+2026,11,form,Bandwagon,37,Michigan,1316899936696016896,12,0.7151,actual
+2026,11,form,Bandwagon,38,Pittsburgh,1331775206619885568,4,0.7086,actual
+2026,11,form,Bandwagon,39,Coastal Carolina,1331775206619885568,6,0.7039,actual
+2026,11,form,Bandwagon,40,Memphis,1331774846710849536,8,0.7007,actual
+2026,11,form,Bandwagon,41,TCU,1331774880181399552,11,0.6965,actual
+2026,11,form,Bandwagon,42,Florida Atlantic,1331774695346823168,3,0.6937,actual
+2026,11,form,Bandwagon,43,Texas A&M,1331774880181399552,4,0.6927,actual
+2026,11,form,Bandwagon,44,Middle Tennessee State,1331774695346823168,7,0.6909,actual
+2026,11,form,Bandwagon,45,Georgia Tech,1331774915392577536,3,0.6825,actual
+2026,11,form,Bandwagon,46,Washington,1331775106527006720,6,0.6788,actual
+2026,11,form,Bandwagon,47,UNLV,1331774599196585984,11,0.6778,actual
+2026,11,form,Bandwagon,48,Stanford,1331775106527006720,5,0.6774,actual
+2026,11,form,Bandwagon,49,Holy Cross,1331774804222545920,2,0.6741,actual
+2026,11,form,Bandwagon,50,Southern Miss,1331774846710849536,9,0.6685,actual
+2026,11,form,Bandwagon,51,James Madison,1331774454493122560,2,0.6639,actual
+2026,11,form,Bandwagon,52,Monmouth,1331774544905510912,10,0.6639,actual
+2026,11,form,Bandwagon,53,FSU,1331774915392577536,5,0.6602,actual
+2026,11,form,Bandwagon,54,Stony Brook,1316899756005412864,5,0.6546,actual
+2026,11,form,Bandwagon,55,Nebraska,1316899936696016896,2,0.6415,actual
+2026,11,form,Bandwagon,56,Arkansas State,1331774695346823168,8,0.6406,actual
+2026,11,form,Bandwagon,57,Jacksonville State,1331774544905510912,9,0.6387,actual
+2026,11,form,Bandwagon,58,Virginia,1331774915392577536,1,0.6359,actual
+2026,11,form,Bandwagon,59,UNC Charlotte,1331774454493122560,12,0.6299,actual
+2026,11,form,Bandwagon,60,Oklahoma State,1331774880181399552,12,0.6201,actual
+2026,11,form,Bandwagon,61,Purdue,1316899936696016896,1,0.6127,actual
+2026,11,form,Bandwagon,62,Columbia,1331774741488369664,4,0.6099,actual
+2026,11,form,Bandwagon,63,Kentucky,1331775170712444928,8,0.6089,actual
+2026,11,form,Bandwagon,64,Missouri,1331774880181399552,3,0.6089,actual
+2026,11,form,Bandwagon,65,UCLA,1331775106527006720,12,0.6062,actual
+2026,11,form,Bandwagon,66,Davidson,1331774804222545920,12,0.6052,actual
+2026,11,form,Bandwagon,67,UT Martin,1331774804222545920,11,0.5931,actual
+2026,11,form,Bandwagon,68,Army,1331775206619885568,8,0.5847,actual
+2026,11,form,Bandwagon,69,Belmont,1331774544905510912,1,0.5829,actual
+2026,11,form,Bandwagon,70,Citadel,1331774454493122560,8,0.5791,actual
+2026,11,form,Bandwagon,71,UCONN,1331775206619885568,5,0.5773,actual
+2026,11,form,Bandwagon,72,South Alabama,1331774695346823168,4,0.567,actual
+2026,11,form,Bandwagon,73,Florida,1331775170712444928,1,0.54,actual
+2026,11,form,Bandwagon,74,Georgia Southern,1331774846710849536,7,0.5363,actual
+2026,11,form,Bandwagon,75,Howard,1331774630620332032,6,0.5363,actual
+2026,11,form,Bandwagon,76,Maryland,1331775206619885568,2,0.5326,actual
+2026,11,form,Bandwagon,77,Rutgers,1331775206619885568,1,0.5307,actual
+2026,11,form,Bandwagon,78,West Virginia,1331774880181399552,8,0.527,actual
+2026,11,form,Bandwagon,79,Penn State,1316899936696016896,5,0.5251,actual
+2026,11,form,Bandwagon,80,Florida A&M,1331774630620332032,5,0.5251,actual
+2026,11,form,Bandwagon,81,Cornell,1331774741488369664,12,0.5242,actual
+2026,11,form,Bandwagon,82,Florida International,1331774695346823168,10,0.5196,actual
+2026,11,form,Bandwagon,83,Chattanooga,1331774544905510912,4,0.5182,actual
+2026,11,form,Bandwagon,84,Delaware,1331774544905510912,7,0.5177,actual
+2026,11,form,Bandwagon,85,North Carolina Central,1331774544905510912,12,0.5047,actual
+2026,11,form,Bandwagon,86,Central Michigan,1331774454493122560,4,0.5037,actual
+2026,11,form,Bandwagon,87,Rice,1331774846710849536,4,0.5028,actual
+2026,11,form,Bandwagon,88,NIU,1331774599196585984,5,0.5019,actual
+2026,11,form,Bandwagon,89,Colorado,1331775106527006720,8,0.4981,actual
+2026,11,form,Bandwagon,90,Furman,1331774804222545920,10,0.4953,actual
+2026,11,form,Bandwagon,91,North Carolina,1331774915392577536,2,0.4898,actual
+2026,11,form,Bandwagon,92,Rhode Island,1316899756005412864,1,0.4888,actual
+2026,11,form,Bandwagon,93,Nevada,1331774599196585984,10,0.486,actual
+2026,11,form,Bandwagon,94,Boston College,1331774915392577536,8,0.4832,actual
+2026,11,form,Bandwagon,95,Lehigh,1331774741488369664,6,0.4814,actual
+2026,11,form,Bandwagon,96,South Dakota State,1331775206619885568,3,0.4777,actual
+2026,11,form,Bandwagon,97,Louisiana Tech,1331774846710849536,11,0.4739,actual
+2026,11,form,Bandwagon,98,Tuskegee,1331774630620332032,11,0.4628,actual
+2026,11,form,Bandwagon,99,Bucknell,1331774741488369664,3,0.4618,actual
+2026,11,form,Bandwagon,100,Dayton,1331774804222545920,7,0.4581,actual
+2026,11,form,Bandwagon,101,Boise State,1331774599196585984,2,0.4544,actual
+2026,11,form,Bandwagon,102,Illinois,1316899936696016896,10,0.4516,actual
+2026,11,form,Bandwagon,103,Kansas State,1331774880181399552,7,0.4488,actual
+2026,11,form,Bandwagon,104,Louisville,1331774915392577536,11,0.4488,actual
+2026,11,form,Bandwagon,105,Richmond,1316899756005412864,7,0.4474,actual
+2026,11,form,Bandwagon,106,Texas,1331774880181399552,6,0.4432,actual
+2026,11,form,Bandwagon,107,UTEP,1331774846710849536,2,0.4358,actual
+2026,11,form,Bandwagon,108,Yale,1331774741488369664,9,0.4209,actual
+2026,11,form,Bandwagon,109,Utah,1331775106527006720,11,0.4199,actual
+2026,11,form,Bandwagon,110,Georgia,1331775170712444928,7,0.4195,actual
+2026,11,form,Bandwagon,111,Louisiana Monroe,1331774695346823168,12,0.419,actual
+2026,11,form,Bandwagon,112,UCF,1331775206619885568,9,0.4153,actual
+2026,11,form,Bandwagon,113,Wofford,1331774804222545920,1,0.4125,actual
+2026,11,form,Bandwagon,114,Ohio State,1316899936696016896,9,0.4088,actual
+2026,11,form,Bandwagon,115,Texas State,1331774695346823168,9,0.4088,actual
+2026,11,form,Bandwagon,116,Eastern Kentucky,1331774544905510912,5,0.406,actual
+2026,11,form,Bandwagon,117,Arizona,1331775106527006720,1,0.3994,actual
+2026,11,form,Bandwagon,118,LSU,1331775170712444928,2,0.3948,actual
+2026,11,form,Bandwagon,119,Western Kentucky,1331774695346823168,6,0.3915,actual
+2026,11,form,Bandwagon,120,Wichita State,1331774454493122560,5,0.3855,actual
+2026,11,form,Bandwagon,121,Oklahoma,1331774880181399552,9,0.3818,actual
+2026,11,form,Bandwagon,122,Temple,1331774846710849536,1,0.3808,actual
+2026,11,form,Bandwagon,123,Eastern Michigan,1331774454493122560,6,0.379,actual
+2026,11,form,Bandwagon,124,Wake Forest,1331774915392577536,6,0.3697,actual
+2026,11,form,Bandwagon,125,Eastern Washington,1316899756005412864,4,0.3659,actual
+2026,11,form,Bandwagon,126,USC,1331775106527006720,2,0.3659,actual
+2026,11,form,Bandwagon,127,Louisiana,1331774695346823168,11,0.3659,actual
+2026,11,form,Bandwagon,128,Jackson State,1331774630620332032,10,0.3631,actual
+2026,11,form,Bandwagon,129,Southern,1331774630620332032,4,0.3622,actual
+2026,11,form,Bandwagon,130,Penn,1331774741488369664,7,0.3566,actual
+2026,11,form,Bandwagon,131,SE Missouri State,1331774804222545920,6,0.3529,actual
+2026,11,form,Bandwagon,132,Mississippi Valley State,1331774630620332032,7,0.3492,actual
+2026,11,form,Bandwagon,133,Tulane,1331774846710849536,3,0.3454,actual
+2026,11,form,Bandwagon,134,South Carolina,1331775170712444928,10,0.3408,actual
+2026,11,form,Bandwagon,135,Maine,1316899756005412864,11,0.3371,actual
+2026,11,form,Bandwagon,136,Marshall,1331774846710849536,5,0.3305,actual
+2026,11,form,Bandwagon,137,Miami,1331774915392577536,9,0.3259,actual
+2026,11,form,Bandwagon,138,Arkansas,1331775170712444928,12,0.3175,actual
+2026,11,form,Bandwagon,139,Kennesaw State,1331774544905510912,3,0.3007,actual
+2026,11,form,Bandwagon,140,Morehead State,1331774544905510912,8,0.3007,actual
+2026,11,form,Bandwagon,141,San Diego State,1331774599196585984,12,0.298,actual
+2026,11,form,Bandwagon,142,Tennessee,1331775170712444928,3,0.2952,actual
+2026,11,form,Bandwagon,143,UTSA,1331774846710849536,12,0.284,actual
+2026,11,form,Bandwagon,144,Austin Peay,1331774804222545920,9,0.2719,actual
+2026,11,form,Bandwagon,145,Butler,1331774804222545920,4,0.2719,actual
+2026,11,form,Bandwagon,146,North Texas,1331774695346823168,2,0.2691,actual
+2026,11,form,Bandwagon,147,North Dakota State,1331774454493122560,3,0.2682,actual
+2026,11,form,Bandwagon,148,New Mexico,1331774599196585984,9,0.2654,actual
+2026,11,form,Bandwagon,149,Alabama,1331775170712444928,11,0.2654,actual
+2026,11,form,Bandwagon,150,Alcorn State,1331774630620332032,8,0.2607,actual
+2026,11,form,Bandwagon,151,Delaware State,1331774630620332032,3,0.2523,actual
+2026,11,form,Bandwagon,152,Bethune - Cookman,1331774630620332032,9,0.2458,actual
+2026,11,form,Bandwagon,153,Navy,1331775206619885568,11,0.2421,actual
+2026,11,form,Bandwagon,154,Harvard,1331774741488369664,2,0.2263,actual
+2026,11,form,Bandwagon,155,Virginia Tech,1331774915392577536,4,0.2207,actual
+2026,11,form,Bandwagon,156,Tennessee State,1331774804222545920,5,0.2207,actual
+2026,11,form,Bandwagon,157,Kansas,1331774880181399552,10,0.2095,actual
+2026,11,form,Bandwagon,158,USF,1331775206619885568,10,0.2048,actual
+2026,11,form,Bandwagon,159,Notre Dame,1331775206619885568,12,0.2021,actual
+2026,11,form,Bandwagon,160,California,1331775106527006720,10,0.1899,actual
+2026,11,form,Bandwagon,161,Vanderbilt,1331775170712444928,9,0.175,actual
+2026,11,form,Bandwagon,162,Oregon,1331775106527006720,9,0.1657,actual
+2026,11,form,Bandwagon,163,San Jose State,1331774454493122560,7,0.1611,actual
+2026,11,form,Bandwagon,164,Villanova,1316899756005412864,2,0.1425,actual
+2026,11,form,Bandwagon,165,Charleston Southern,1331774544905510912,6,0.1369,actual
+2026,11,form,Bandwagon,166,Ole Miss,1331775170712444928,5,0.1331,actual
+2026,11,form,Bandwagon,167,Alabama A&M,1331774630620332032,2,0.0968,actual
+2026,11,form,Bandwagon,168,Air Force,1331774599196585984,4,0.0922,actual
+2026,11,form,Bandwagon,169,Princeton,1331774741488369664,10,0.0875,actual
+2026,11,form,Bandwagon,170,Indiana,1316899936696016896,8,0.0857,actual
+2026,11,form,Bandwagon,171,Michigan State,1316899936696016896,4,0.0801,actual
+2026,11,form,Bandwagon,172,Duke,1331774915392577536,7,0.0764,actual
+2026,11,form,Bandwagon,173,Iowa State,1331774880181399552,2,0.0689,actual
+2026,11,form,Bandwagon,174,Central Arkansas,1331774454493122560,9,0.0661,actual
+2026,11,form,Bandwagon,175,Grambling State,1331774630620332032,12,0.0428,actual
+2026,11,form,Bandwagon,176,Texas Tech,1331774880181399552,1,0.0419,actual
+2026,11,form,Bandwagon,177,Northwestern,1316899936696016896,3,0.0391,actual
+2026,11,form,Bandwagon,178,Northern Iowa,1316899756005412864,10,0.0242,actual
+2026,11,form,Bandwagon,179,Weber State,1316899756005412864,9,0.0214,actual
+2026,11,form,Bandwagon,180,UAB,1331774846710849536,10,0.0065,actual
 2026,1,margin,Hammer,1,Louisiana Tech,1331774846710849536,11,1.0,actual
 2026,1,margin,Hammer,2,Chattanooga,1331774544905510912,4,0.9889,actual
 2026,1,margin,Hammer,3,Eastern Washington,1316899756005412864,4,0.9778,actual
@@ -7199,6 +7739,186 @@ Year,ThroughWeek,Bot,BotName,Rank,Team,LeagueID,RosterID,Value,ValueSource
 2026,10,margin,Hammer,178,Northern Iowa,1316899756005412864,10,-0.7333,actual
 2026,10,margin,Hammer,179,UAB,1331774846710849536,10,-0.7411,actual
 2026,10,margin,Hammer,180,Weber State,1316899756005412864,9,-0.8067,actual
+2026,11,margin,Hammer,1,Syracuse,1331775206619885568,7,0.6202,actual
+2026,11,margin,Hammer,2,Washington State,1331775106527006720,4,0.6152,actual
+2026,11,margin,Hammer,3,Baylor,1331774880181399552,5,0.5727,actual
+2026,11,margin,Hammer,4,Iowa,1316899936696016896,11,0.5535,actual
+2026,11,margin,Hammer,5,Colorado,1331775106527006720,8,0.5525,actual
+2026,11,margin,Hammer,6,Old Dominion,1331774454493122560,10,0.5222,actual
+2026,11,margin,Hammer,7,Clemson,1331774915392577536,12,0.5091,actual
+2026,11,margin,Hammer,8,Campbell,1331774804222545920,8,0.498,actual
+2026,11,margin,Hammer,9,Georgetown,1331774741488369664,5,0.4798,actual
+2026,11,margin,Hammer,10,Portland State,1316899756005412864,8,0.4707,actual
+2026,11,margin,Hammer,11,Southern Miss,1331774846710849536,9,0.4636,actual
+2026,11,margin,Hammer,12,Youngstown State,1316899756005412864,12,0.453,actual
+2026,11,margin,Hammer,13,Tulsa,1331774846710849536,6,0.4465,actual
+2026,11,margin,Hammer,14,William & Mary,1316899756005412864,3,0.4429,actual
+2026,11,margin,Hammer,15,Dartmouth,1331774741488369664,11,0.4384,actual
+2026,11,margin,Hammer,16,Kentucky,1331775170712444928,8,0.4323,actual
+2026,11,margin,Hammer,17,Brown,1331774741488369664,1,0.4247,actual
+2026,11,margin,Hammer,18,Hawaii,1331774599196585984,1,0.4232,actual
+2026,11,margin,Hammer,19,UNLV,1331774599196585984,11,0.4227,actual
+2026,11,margin,Hammer,20,North Carolina A&T,1331774630620332032,1,0.4202,actual
+2026,11,margin,Hammer,21,Middle Tennessee State,1331774695346823168,7,0.4172,actual
+2026,11,margin,Hammer,22,Arizona State,1331775106527006720,7,0.398,actual
+2026,11,margin,Hammer,23,Georgia State,1331774695346823168,5,0.3707,actual
+2026,11,margin,Hammer,24,Auburn,1331775170712444928,4,0.3697,actual
+2026,11,margin,Hammer,25,Kansas State,1331774880181399552,7,0.352,actual
+2026,11,margin,Hammer,26,BYU,1331774599196585984,6,0.3323,actual
+2026,11,margin,Hammer,27,ETSU,1331774544905510912,2,0.3318,actual
+2026,11,margin,Hammer,28,Southern,1331774630620332032,4,0.3273,actual
+2026,11,margin,Hammer,29,Illinois,1316899936696016896,10,0.3227,actual
+2026,11,margin,Hammer,30,Nebraska,1316899936696016896,2,0.3141,actual
+2026,11,margin,Hammer,31,Montana State,1316899756005412864,6,0.3111,actual
+2026,11,margin,Hammer,32,Monmouth,1331774544905510912,10,0.3051,actual
+2026,11,margin,Hammer,33,Temple,1331774846710849536,1,0.3,actual
+2026,11,margin,Hammer,34,Colorado State,1331774599196585984,8,0.2955,actual
+2026,11,margin,Hammer,35,NC State,1331774915392577536,10,0.2818,actual
+2026,11,margin,Hammer,36,Mississippi State,1331775170712444928,6,0.2808,actual
+2026,11,margin,Hammer,37,Arkansas State,1331774695346823168,8,0.2808,actual
+2026,11,margin,Hammer,38,Memphis,1331774846710849536,8,0.2788,actual
+2026,11,margin,Hammer,39,Chattanooga,1331774544905510912,4,0.2525,actual
+2026,11,margin,Hammer,40,UCONN,1331775206619885568,5,0.2505,actual
+2026,11,margin,Hammer,41,Minnesota,1316899936696016896,7,0.2455,actual
+2026,11,margin,Hammer,42,Missouri,1331774880181399552,3,0.2444,actual
+2026,11,margin,Hammer,43,Montana,1331774454493122560,1,0.2424,actual
+2026,11,margin,Hammer,44,Georgia Tech,1331774915392577536,3,0.2323,actual
+2026,11,margin,Hammer,45,Michigan,1316899936696016896,12,0.2273,actual
+2026,11,margin,Hammer,46,Pittsburgh,1331775206619885568,4,0.2202,actual
+2026,11,margin,Hammer,47,Purdue,1316899936696016896,1,0.2192,actual
+2026,11,margin,Hammer,48,Army,1331775206619885568,8,0.2141,actual
+2026,11,margin,Hammer,49,FSU,1331774915392577536,5,0.199,actual
+2026,11,margin,Hammer,50,North Alabama,1331774544905510912,11,0.1859,actual
+2026,11,margin,Hammer,51,Texas A&M,1331774880181399552,4,0.1838,actual
+2026,11,margin,Hammer,52,Florida A&M,1331774630620332032,5,0.1803,actual
+2026,11,margin,Hammer,53,Tuskegee,1331774630620332032,11,0.1747,actual
+2026,11,margin,Hammer,54,UT Martin,1331774804222545920,11,0.1737,actual
+2026,11,margin,Hammer,55,LSU,1331775170712444928,2,0.1737,actual
+2026,11,margin,Hammer,56,James Madison,1331774454493122560,2,0.1697,actual
+2026,11,margin,Hammer,57,Colgate,1331774741488369664,8,0.1611,actual
+2026,11,margin,Hammer,58,Davidson,1331774804222545920,12,0.1596,actual
+2026,11,margin,Hammer,59,Howard,1331774630620332032,6,0.149,actual
+2026,11,margin,Hammer,60,Stony Brook,1316899756005412864,5,0.1434,actual
+2026,11,margin,Hammer,61,Coastal Carolina,1331775206619885568,6,0.1364,actual
+2026,11,margin,Hammer,62,West Virginia,1331774880181399552,8,0.1359,actual
+2026,11,margin,Hammer,63,Fresno State,1331774599196585984,7,0.1338,actual
+2026,11,margin,Hammer,64,Virginia,1331774915392577536,1,0.1323,actual
+2026,11,margin,Hammer,65,UCLA,1331775106527006720,12,0.1313,actual
+2026,11,margin,Hammer,66,Belmont,1331774544905510912,1,0.1273,actual
+2026,11,margin,Hammer,67,Murray State,1331774804222545920,3,0.1263,actual
+2026,11,margin,Hammer,68,UNC Charlotte,1331774454493122560,12,0.1242,actual
+2026,11,margin,Hammer,69,Wyoming,1331774599196585984,3,0.1222,actual
+2026,11,margin,Hammer,70,Delaware State,1331774630620332032,3,0.1192,actual
+2026,11,margin,Hammer,71,Florida Atlantic,1331774695346823168,3,0.1071,actual
+2026,11,margin,Hammer,72,South Carolina,1331775170712444928,10,0.1071,actual
+2026,11,margin,Hammer,73,Citadel,1331774454493122560,8,0.098,actual
+2026,11,margin,Hammer,74,Wisconsin,1316899936696016896,6,0.095,actual
+2026,11,margin,Hammer,75,Eastern Washington,1316899756005412864,4,0.0879,actual
+2026,11,margin,Hammer,76,Texas,1331774880181399552,6,0.0854,actual
+2026,11,margin,Hammer,77,Georgia Southern,1331774846710849536,7,0.0838,actual
+2026,11,margin,Hammer,78,Boston College,1331774915392577536,8,0.0737,actual
+2026,11,margin,Hammer,79,Cornell,1331774741488369664,12,0.0692,actual
+2026,11,margin,Hammer,80,Troy,1331774695346823168,1,0.0586,actual
+2026,11,margin,Hammer,81,Dayton,1331774804222545920,7,0.0455,actual
+2026,11,margin,Hammer,82,Texas State,1331774695346823168,9,0.0444,actual
+2026,11,margin,Hammer,83,South Alabama,1331774695346823168,4,0.0374,actual
+2026,11,margin,Hammer,84,UTSA,1331774846710849536,12,0.0374,actual
+2026,11,margin,Hammer,85,Georgia,1331775170712444928,7,0.0273,actual
+2026,11,margin,Hammer,86,Holy Cross,1331774804222545920,2,0.0268,actual
+2026,11,margin,Hammer,87,Central Michigan,1331774454493122560,4,0.0268,actual
+2026,11,margin,Hammer,88,Delaware,1331774544905510912,7,0.0152,actual
+2026,11,margin,Hammer,89,Austin Peay,1331774804222545920,9,-0.001,actual
+2026,11,margin,Hammer,90,North Carolina Central,1331774544905510912,12,-0.002,actual
+2026,11,margin,Hammer,91,Oklahoma,1331774880181399552,9,-0.0152,actual
+2026,11,margin,Hammer,92,Arkansas,1331775170712444928,12,-0.0202,actual
+2026,11,margin,Hammer,93,Notre Dame,1331775206619885568,12,-0.0323,actual
+2026,11,margin,Hammer,94,Western Kentucky,1331774695346823168,6,-0.0333,actual
+2026,11,margin,Hammer,95,Tennessee,1331775170712444928,3,-0.0354,actual
+2026,11,margin,Hammer,96,Butler,1331774804222545920,4,-0.0374,actual
+2026,11,margin,Hammer,97,Ohio State,1316899936696016896,9,-0.0424,actual
+2026,11,margin,Hammer,98,South Dakota,1331774454493122560,11,-0.0455,actual
+2026,11,margin,Hammer,99,Utah,1331775106527006720,11,-0.0475,actual
+2026,11,margin,Hammer,100,Richmond,1316899756005412864,7,-0.0545,actual
+2026,11,margin,Hammer,101,Eastern Kentucky,1331774544905510912,5,-0.0556,actual
+2026,11,margin,Hammer,102,Wichita State,1331774454493122560,5,-0.0571,actual
+2026,11,margin,Hammer,103,New Mexico,1331774599196585984,9,-0.0596,actual
+2026,11,margin,Hammer,104,Alcorn State,1331774630620332032,8,-0.0616,actual
+2026,11,margin,Hammer,105,Rutgers,1331775206619885568,1,-0.0621,actual
+2026,11,margin,Hammer,106,San Diego State,1331774599196585984,12,-0.0657,actual
+2026,11,margin,Hammer,107,Mississippi Valley State,1331774630620332032,7,-0.0692,actual
+2026,11,margin,Hammer,108,UCF,1331775206619885568,9,-0.0697,actual
+2026,11,margin,Hammer,109,Villanova,1316899756005412864,2,-0.0697,actual
+2026,11,margin,Hammer,110,TCU,1331774880181399552,11,-0.0722,actual
+2026,11,margin,Hammer,111,Oregon State,1331775106527006720,3,-0.0778,actual
+2026,11,margin,Hammer,112,Tulane,1331774846710849536,3,-0.0798,actual
+2026,11,margin,Hammer,113,Virginia Tech,1331774915392577536,4,-0.0798,actual
+2026,11,margin,Hammer,114,North Dakota State,1331774454493122560,3,-0.0909,actual
+2026,11,margin,Hammer,115,Rhode Island,1316899756005412864,1,-0.0949,actual
+2026,11,margin,Hammer,116,USC,1331775106527006720,2,-0.1,actual
+2026,11,margin,Hammer,117,Columbia,1331774741488369664,4,-0.102,actual
+2026,11,margin,Hammer,118,Penn State,1316899936696016896,5,-0.1071,actual
+2026,11,margin,Hammer,119,UTEP,1331774846710849536,2,-0.1131,actual
+2026,11,margin,Hammer,120,Wofford,1331774804222545920,1,-0.1217,actual
+2026,11,margin,Hammer,121,Stanford,1331775106527006720,5,-0.1293,actual
+2026,11,margin,Hammer,122,Bucknell,1331774741488369664,3,-0.1313,actual
+2026,11,margin,Hammer,123,Bethune - Cookman,1331774630620332032,9,-0.1354,actual
+2026,11,margin,Hammer,124,North Carolina,1331774915392577536,2,-0.1359,actual
+2026,11,margin,Hammer,125,Louisiana Tech,1331774846710849536,11,-0.1404,actual
+2026,11,margin,Hammer,126,Washington,1331775106527006720,6,-0.1414,actual
+2026,11,margin,Hammer,127,Jackson State,1331774630620332032,10,-0.1434,actual
+2026,11,margin,Hammer,128,Jacksonville State,1331774544905510912,9,-0.1505,actual
+2026,11,margin,Hammer,129,Eastern Michigan,1331774454493122560,6,-0.1596,actual
+2026,11,margin,Hammer,130,Marshall,1331774846710849536,5,-0.1717,actual
+2026,11,margin,Hammer,131,Furman,1331774804222545920,10,-0.1818,actual
+2026,11,margin,Hammer,132,Louisiana Monroe,1331774695346823168,12,-0.1939,actual
+2026,11,margin,Hammer,133,SE Missouri State,1331774804222545920,6,-0.1949,actual
+2026,11,margin,Hammer,134,Penn,1331774741488369664,7,-0.197,actual
+2026,11,margin,Hammer,135,Yale,1331774741488369664,9,-0.2061,actual
+2026,11,margin,Hammer,136,Wake Forest,1331774915392577536,6,-0.2101,actual
+2026,11,margin,Hammer,137,NIU,1331774599196585984,5,-0.2152,actual
+2026,11,margin,Hammer,138,Florida International,1331774695346823168,10,-0.2258,actual
+2026,11,margin,Hammer,139,Lehigh,1331774741488369664,6,-0.2288,actual
+2026,11,margin,Hammer,140,South Dakota State,1331775206619885568,3,-0.2525,actual
+2026,11,margin,Hammer,141,Harvard,1331774741488369664,2,-0.2525,actual
+2026,11,margin,Hammer,142,Louisville,1331774915392577536,11,-0.255,actual
+2026,11,margin,Hammer,143,Florida,1331775170712444928,1,-0.2667,actual
+2026,11,margin,Hammer,144,Maryland,1331775206619885568,2,-0.2712,actual
+2026,11,margin,Hammer,145,California,1331775106527006720,10,-0.2828,actual
+2026,11,margin,Hammer,146,Nevada,1331774599196585984,10,-0.2854,actual
+2026,11,margin,Hammer,147,Maine,1316899756005412864,11,-0.2869,actual
+2026,11,margin,Hammer,148,San Jose State,1331774454493122560,7,-0.299,actual
+2026,11,margin,Hammer,149,Alabama,1331775170712444928,11,-0.3131,actual
+2026,11,margin,Hammer,150,Kennesaw State,1331774544905510912,3,-0.3152,actual
+2026,11,margin,Hammer,151,Oklahoma State,1331774880181399552,12,-0.3202,actual
+2026,11,margin,Hammer,152,Iowa State,1331774880181399552,2,-0.3253,actual
+2026,11,margin,Hammer,153,Morehead State,1331774544905510912,8,-0.3293,actual
+2026,11,margin,Hammer,154,Ole Miss,1331775170712444928,5,-0.3303,actual
+2026,11,margin,Hammer,155,Grambling State,1331774630620332032,12,-0.3333,actual
+2026,11,margin,Hammer,156,Rice,1331774846710849536,4,-0.3434,actual
+2026,11,margin,Hammer,157,USF,1331775206619885568,10,-0.3596,actual
+2026,11,margin,Hammer,158,Duke,1331774915392577536,7,-0.3631,actual
+2026,11,margin,Hammer,159,Charleston Southern,1331774544905510912,6,-0.3652,actual
+2026,11,margin,Hammer,160,Texas Tech,1331774880181399552,1,-0.3657,actual
+2026,11,margin,Hammer,161,Miami,1331774915392577536,9,-0.3843,actual
+2026,11,margin,Hammer,162,Navy,1331775206619885568,11,-0.3939,actual
+2026,11,margin,Hammer,163,Arizona,1331775106527006720,1,-0.3949,actual
+2026,11,margin,Hammer,164,Louisiana,1331774695346823168,11,-0.4207,actual
+2026,11,margin,Hammer,165,Vanderbilt,1331775170712444928,9,-0.4253,actual
+2026,11,margin,Hammer,166,North Texas,1331774695346823168,2,-0.4424,actual
+2026,11,margin,Hammer,167,Princeton,1331774741488369664,10,-0.4556,actual
+2026,11,margin,Hammer,168,Kansas,1331774880181399552,10,-0.4758,actual
+2026,11,margin,Hammer,169,Tennessee State,1331774804222545920,5,-0.4929,actual
+2026,11,margin,Hammer,170,Oregon,1331775106527006720,9,-0.5232,actual
+2026,11,margin,Hammer,171,Central Arkansas,1331774454493122560,9,-0.5313,actual
+2026,11,margin,Hammer,172,Air Force,1331774599196585984,4,-0.5485,actual
+2026,11,margin,Hammer,173,Northwestern,1316899936696016896,3,-0.553,actual
+2026,11,margin,Hammer,174,Boise State,1331774599196585984,2,-0.5556,actual
+2026,11,margin,Hammer,175,Indiana,1316899936696016896,8,-0.6263,actual
+2026,11,margin,Hammer,176,Alabama A&M,1331774630620332032,2,-0.6278,actual
+2026,11,margin,Hammer,177,Michigan State,1316899936696016896,4,-0.6485,actual
+2026,11,margin,Hammer,178,Northern Iowa,1316899756005412864,10,-0.6727,actual
+2026,11,margin,Hammer,179,Weber State,1316899756005412864,9,-0.7303,actual
+2026,11,margin,Hammer,180,UAB,1331774846710849536,10,-0.7616,actual
 2026,1,professor,Professor,1,Syracuse,1331775206619885568,7,0.944,actual
 2026,1,professor,Professor,2,Portland State,1316899756005412864,8,0.9373,actual
 2026,1,professor,Professor,3,Baylor,1331774880181399552,5,0.9282,actual
@@ -8999,6 +9719,186 @@ Year,ThroughWeek,Bot,BotName,Rank,Team,LeagueID,RosterID,Value,ValueSource
 2026,10,professor,Professor,178,Northern Iowa,1316899756005412864,10,0.0323,actual
 2026,10,professor,Professor,179,UAB,1331774846710849536,10,0.0284,actual
 2026,10,professor,Professor,180,Weber State,1316899756005412864,9,0.0279,actual
+2026,11,professor,Professor,1,Washington State,1331775106527006720,4,0.9857,actual
+2026,11,professor,Professor,2,Middle Tennessee State,1331774695346823168,7,0.9688,actual
+2026,11,professor,Professor,3,Iowa,1316899936696016896,11,0.9574,actual
+2026,11,professor,Professor,4,Clemson,1331774915392577536,12,0.9566,actual
+2026,11,professor,Professor,5,Campbell,1331774804222545920,8,0.9469,actual
+2026,11,professor,Professor,6,Baylor,1331774880181399552,5,0.9385,actual
+2026,11,professor,Professor,7,William & Mary,1316899756005412864,3,0.932,actual
+2026,11,professor,Professor,8,Brown,1331774741488369664,1,0.9238,actual
+2026,11,professor,Professor,9,Old Dominion,1331774454493122560,10,0.918,actual
+2026,11,professor,Professor,10,Syracuse,1331775206619885568,7,0.9163,actual
+2026,11,professor,Professor,11,Youngstown State,1316899756005412864,12,0.9078,actual
+2026,11,professor,Professor,12,Colorado,1331775106527006720,8,0.8964,actual
+2026,11,professor,Professor,13,Kentucky,1331775170712444928,8,0.8959,actual
+2026,11,professor,Professor,14,Arizona State,1331775106527006720,7,0.8906,actual
+2026,11,professor,Professor,15,UNLV,1331774599196585984,11,0.8855,actual
+2026,11,professor,Professor,16,NC State,1331774915392577536,10,0.8838,actual
+2026,11,professor,Professor,17,Memphis,1331774846710849536,8,0.8776,actual
+2026,11,professor,Professor,18,Southern Miss,1331774846710849536,9,0.8642,actual
+2026,11,professor,Professor,19,Tulsa,1331774846710849536,6,0.8592,actual
+2026,11,professor,Professor,20,ETSU,1331774544905510912,2,0.8509,actual
+2026,11,professor,Professor,21,BYU,1331774599196585984,6,0.8508,actual
+2026,11,professor,Professor,22,Dartmouth,1331774741488369664,11,0.8362,actual
+2026,11,professor,Professor,23,Minnesota,1316899936696016896,7,0.8249,actual
+2026,11,professor,Professor,24,Auburn,1331775170712444928,4,0.8215,actual
+2026,11,professor,Professor,25,Southern,1331774630620332032,4,0.8111,actual
+2026,11,professor,Professor,26,Monmouth,1331774544905510912,10,0.8102,actual
+2026,11,professor,Professor,27,Portland State,1316899756005412864,8,0.8097,actual
+2026,11,professor,Professor,28,Missouri,1331774880181399552,3,0.8029,actual
+2026,11,professor,Professor,29,Army,1331775206619885568,8,0.7994,actual
+2026,11,professor,Professor,30,Georgia State,1331774695346823168,5,0.7951,actual
+2026,11,professor,Professor,31,Hawaii,1331774599196585984,1,0.7917,actual
+2026,11,professor,Professor,32,Texas A&M,1331774880181399552,4,0.7905,actual
+2026,11,professor,Professor,33,Georgetown,1331774741488369664,5,0.7902,actual
+2026,11,professor,Professor,34,UCONN,1331775206619885568,5,0.7889,actual
+2026,11,professor,Professor,35,Kansas State,1331774880181399552,7,0.7889,actual
+2026,11,professor,Professor,36,Pittsburgh,1331775206619885568,4,0.7835,actual
+2026,11,professor,Professor,37,Temple,1331774846710849536,1,0.7825,actual
+2026,11,professor,Professor,38,Cornell,1331774741488369664,12,0.7736,actual
+2026,11,professor,Professor,39,North Alabama,1331774544905510912,11,0.7736,actual
+2026,11,professor,Professor,40,Montana,1331774454493122560,1,0.7695,actual
+2026,11,professor,Professor,41,Coastal Carolina,1331775206619885568,6,0.7656,actual
+2026,11,professor,Professor,42,Davidson,1331774804222545920,12,0.7648,actual
+2026,11,professor,Professor,43,North Carolina A&T,1331774630620332032,1,0.7641,actual
+2026,11,professor,Professor,44,UNC Charlotte,1331774454493122560,12,0.7622,actual
+2026,11,professor,Professor,45,Belmont,1331774544905510912,1,0.7523,actual
+2026,11,professor,Professor,46,Fresno State,1331774599196585984,7,0.7503,actual
+2026,11,professor,Professor,47,Nebraska,1316899936696016896,2,0.7403,actual
+2026,11,professor,Professor,48,UCLA,1331775106527006720,12,0.7382,actual
+2026,11,professor,Professor,49,Chattanooga,1331774544905510912,4,0.7345,actual
+2026,11,professor,Professor,50,Georgia Tech,1331774915392577536,3,0.7197,actual
+2026,11,professor,Professor,51,LSU,1331775170712444928,2,0.716,actual
+2026,11,professor,Professor,52,Arkansas State,1331774695346823168,8,0.7051,actual
+2026,11,professor,Professor,53,UT Martin,1331774804222545920,11,0.7026,actual
+2026,11,professor,Professor,54,James Madison,1331774454493122560,2,0.6992,actual
+2026,11,professor,Professor,55,Colorado State,1331774599196585984,8,0.698,actual
+2026,11,professor,Professor,56,Illinois,1316899936696016896,10,0.6908,actual
+2026,11,professor,Professor,57,Montana State,1316899756005412864,6,0.6795,actual
+2026,11,professor,Professor,58,Tuskegee,1331774630620332032,11,0.6736,actual
+2026,11,professor,Professor,59,Michigan,1316899936696016896,12,0.6669,actual
+2026,11,professor,Professor,60,FSU,1331774915392577536,5,0.6633,actual
+2026,11,professor,Professor,61,Murray State,1331774804222545920,3,0.6588,actual
+2026,11,professor,Professor,62,West Virginia,1331774880181399552,8,0.6541,actual
+2026,11,professor,Professor,63,Boston College,1331774915392577536,8,0.6517,actual
+2026,11,professor,Professor,64,South Carolina,1331775170712444928,10,0.6501,actual
+2026,11,professor,Professor,65,Florida A&M,1331774630620332032,5,0.6451,actual
+2026,11,professor,Professor,66,Texas,1331774880181399552,6,0.6292,actual
+2026,11,professor,Professor,67,Holy Cross,1331774804222545920,2,0.6218,actual
+2026,11,professor,Professor,68,Colgate,1331774741488369664,8,0.6156,actual
+2026,11,professor,Professor,69,Virginia,1331774915392577536,1,0.6141,actual
+2026,11,professor,Professor,70,Eastern Washington,1316899756005412864,4,0.6082,actual
+2026,11,professor,Professor,71,Purdue,1316899936696016896,1,0.6025,actual
+2026,11,professor,Professor,72,Columbia,1331774741488369664,4,0.5985,actual
+2026,11,professor,Professor,73,Mississippi State,1331775170712444928,6,0.5914,actual
+2026,11,professor,Professor,74,Wisconsin,1316899936696016896,6,0.591,actual
+2026,11,professor,Professor,75,Florida Atlantic,1331774695346823168,3,0.5899,actual
+2026,11,professor,Professor,76,Wyoming,1331774599196585984,3,0.5866,actual
+2026,11,professor,Professor,77,Troy,1331774695346823168,1,0.573,actual
+2026,11,professor,Professor,78,Stony Brook,1316899756005412864,5,0.5646,actual
+2026,11,professor,Professor,79,Howard,1331774630620332032,6,0.5534,actual
+2026,11,professor,Professor,80,South Dakota,1331774454493122560,11,0.5437,actual
+2026,11,professor,Professor,81,Dayton,1331774804222545920,7,0.5413,actual
+2026,11,professor,Professor,82,UTSA,1331774846710849536,12,0.5394,actual
+2026,11,professor,Professor,83,Austin Peay,1331774804222545920,9,0.5313,actual
+2026,11,professor,Professor,84,Texas State,1331774695346823168,9,0.5278,actual
+2026,11,professor,Professor,85,Ohio State,1316899936696016896,9,0.5272,actual
+2026,11,professor,Professor,86,Central Michigan,1331774454493122560,4,0.5131,actual
+2026,11,professor,Professor,87,Delaware State,1331774630620332032,3,0.5089,actual
+2026,11,professor,Professor,88,Georgia Southern,1331774846710849536,7,0.4889,actual
+2026,11,professor,Professor,89,Delaware,1331774544905510912,7,0.488,actual
+2026,11,professor,Professor,90,UCF,1331775206619885568,9,0.4832,actual
+2026,11,professor,Professor,91,Mississippi Valley State,1331774630620332032,7,0.4831,actual
+2026,11,professor,Professor,92,Villanova,1316899756005412864,2,0.4802,actual
+2026,11,professor,Professor,93,Georgia,1331775170712444928,7,0.4564,actual
+2026,11,professor,Professor,94,Citadel,1331774454493122560,8,0.4501,actual
+2026,11,professor,Professor,95,North Carolina Central,1331774544905510912,12,0.4475,actual
+2026,11,professor,Professor,96,Oklahoma,1331774880181399552,9,0.4403,actual
+2026,11,professor,Professor,97,Tulane,1331774846710849536,3,0.4346,actual
+2026,11,professor,Professor,98,New Mexico,1331774599196585984,9,0.4316,actual
+2026,11,professor,Professor,99,South Alabama,1331774695346823168,4,0.4316,actual
+2026,11,professor,Professor,100,Eastern Kentucky,1331774544905510912,5,0.4287,actual
+2026,11,professor,Professor,101,USC,1331775106527006720,2,0.4277,actual
+2026,11,professor,Professor,102,Virginia Tech,1331774915392577536,4,0.4231,actual
+2026,11,professor,Professor,103,Butler,1331774804222545920,4,0.4228,actual
+2026,11,professor,Professor,104,Notre Dame,1331775206619885568,12,0.4213,actual
+2026,11,professor,Professor,105,Eastern Michigan,1331774454493122560,6,0.4213,actual
+2026,11,professor,Professor,106,Oregon State,1331775106527006720,3,0.414,actual
+2026,11,professor,Professor,107,Alcorn State,1331774630620332032,8,0.408,actual
+2026,11,professor,Professor,108,Rutgers,1331775206619885568,1,0.407,actual
+2026,11,professor,Professor,109,Marshall,1331774846710849536,5,0.4066,actual
+2026,11,professor,Professor,110,TCU,1331774880181399552,11,0.3963,actual
+2026,11,professor,Professor,111,Western Kentucky,1331774695346823168,6,0.3897,actual
+2026,11,professor,Professor,112,Wichita State,1331774454493122560,5,0.3893,actual
+2026,11,professor,Professor,113,Richmond,1316899756005412864,7,0.3873,actual
+2026,11,professor,Professor,114,North Carolina,1331774915392577536,2,0.3869,actual
+2026,11,professor,Professor,115,Stanford,1331775106527006720,5,0.3811,actual
+2026,11,professor,Professor,116,Penn State,1316899936696016896,5,0.3732,actual
+2026,11,professor,Professor,117,San Diego State,1331774599196585984,12,0.3725,actual
+2026,11,professor,Professor,118,Rhode Island,1316899756005412864,1,0.3694,actual
+2026,11,professor,Professor,119,Bucknell,1331774741488369664,3,0.3645,actual
+2026,11,professor,Professor,120,Utah,1331775106527006720,11,0.3631,actual
+2026,11,professor,Professor,121,Jacksonville State,1331774544905510912,9,0.3579,actual
+2026,11,professor,Professor,122,Tennessee,1331775170712444928,3,0.3568,actual
+2026,11,professor,Professor,123,Wofford,1331774804222545920,1,0.3533,actual
+2026,11,professor,Professor,124,Penn,1331774741488369664,7,0.3513,actual
+2026,11,professor,Professor,125,Arkansas,1331775170712444928,12,0.3488,actual
+2026,11,professor,Professor,126,Louisiana Monroe,1331774695346823168,12,0.3446,actual
+2026,11,professor,Professor,127,Washington,1331775106527006720,6,0.3405,actual
+2026,11,professor,Professor,128,Duke,1331774915392577536,7,0.3394,actual
+2026,11,professor,Professor,129,Louisiana Tech,1331774846710849536,11,0.3287,actual
+2026,11,professor,Professor,130,UTEP,1331774846710849536,2,0.3227,actual
+2026,11,professor,Professor,131,Florida International,1331774695346823168,10,0.3184,actual
+2026,11,professor,Professor,132,Yale,1331774741488369664,9,0.2932,actual
+2026,11,professor,Professor,133,Charleston Southern,1331774544905510912,6,0.2825,actual
+2026,11,professor,Professor,134,South Dakota State,1331775206619885568,3,0.2816,actual
+2026,11,professor,Professor,135,Furman,1331774804222545920,10,0.2811,actual
+2026,11,professor,Professor,136,Wake Forest,1331774915392577536,6,0.281,actual
+2026,11,professor,Professor,137,Maryland,1331775206619885568,2,0.2791,actual
+2026,11,professor,Professor,138,NIU,1331774599196585984,5,0.2678,actual
+2026,11,professor,Professor,139,North Dakota State,1331774454493122560,3,0.2671,actual
+2026,11,professor,Professor,140,Kennesaw State,1331774544905510912,3,0.2459,actual
+2026,11,professor,Professor,141,Iowa State,1331774880181399552,2,0.2451,actual
+2026,11,professor,Professor,142,SE Missouri State,1331774804222545920,6,0.2398,actual
+2026,11,professor,Professor,143,Lehigh,1331774741488369664,6,0.239,actual
+2026,11,professor,Professor,144,Bethune - Cookman,1331774630620332032,9,0.2304,actual
+2026,11,professor,Professor,145,Louisville,1331774915392577536,11,0.2301,actual
+2026,11,professor,Professor,146,Jackson State,1331774630620332032,10,0.2239,actual
+2026,11,professor,Professor,147,Navy,1331775206619885568,11,0.2175,actual
+2026,11,professor,Professor,148,Nevada,1331774599196585984,10,0.2158,actual
+2026,11,professor,Professor,149,Maine,1316899756005412864,11,0.2039,actual
+2026,11,professor,Professor,150,Harvard,1331774741488369664,2,0.2011,actual
+2026,11,professor,Professor,151,Miami,1331774915392577536,9,0.1986,actual
+2026,11,professor,Professor,152,Oklahoma State,1331774880181399552,12,0.1805,actual
+2026,11,professor,Professor,153,Florida,1331775170712444928,1,0.1627,actual
+2026,11,professor,Professor,154,Texas Tech,1331774880181399552,1,0.1581,actual
+2026,11,professor,Professor,155,California,1331775106527006720,10,0.1493,actual
+2026,11,professor,Professor,156,Ole Miss,1331775170712444928,5,0.1471,actual
+2026,11,professor,Professor,157,Morehead State,1331774544905510912,8,0.1465,actual
+2026,11,professor,Professor,158,Vanderbilt,1331775170712444928,9,0.1447,actual
+2026,11,professor,Professor,159,San Jose State,1331774454493122560,7,0.1436,actual
+2026,11,professor,Professor,160,Alabama,1331775170712444928,11,0.1412,actual
+2026,11,professor,Professor,161,Grambling State,1331774630620332032,12,0.1401,actual
+2026,11,professor,Professor,162,Northwestern,1316899936696016896,3,0.1323,actual
+2026,11,professor,Professor,163,Rice,1331774846710849536,4,0.1271,actual
+2026,11,professor,Professor,164,Arizona,1331775106527006720,1,0.1186,actual
+2026,11,professor,Professor,165,North Texas,1331774695346823168,2,0.1172,actual
+2026,11,professor,Professor,166,Louisiana,1331774695346823168,11,0.115,actual
+2026,11,professor,Professor,167,Tennessee State,1331774804222545920,5,0.094,actual
+2026,11,professor,Professor,168,Central Arkansas,1331774454493122560,9,0.089,actual
+2026,11,professor,Professor,169,Boise State,1331774599196585984,2,0.0852,actual
+2026,11,professor,Professor,170,Princeton,1331774741488369664,10,0.0772,actual
+2026,11,professor,Professor,171,USF,1331775206619885568,10,0.0758,actual
+2026,11,professor,Professor,172,Indiana,1316899936696016896,8,0.0649,actual
+2026,11,professor,Professor,173,Kansas,1331774880181399552,10,0.06,actual
+2026,11,professor,Professor,174,Oregon,1331775106527006720,9,0.0587,actual
+2026,11,professor,Professor,175,Air Force,1331774599196585984,4,0.0568,actual
+2026,11,professor,Professor,176,Weber State,1316899756005412864,9,0.0506,actual
+2026,11,professor,Professor,177,Alabama A&M,1331774630620332032,2,0.0492,actual
+2026,11,professor,Professor,178,Michigan State,1316899936696016896,4,0.0382,actual
+2026,11,professor,Professor,179,UAB,1331774846710849536,10,0.0259,actual
+2026,11,professor,Professor,180,Northern Iowa,1316899756005412864,10,0.0247,actual
 2026,1,record,Scoreboard,1,Florida A&M,1331774630620332032,5,100203.3,actual
 2026,1,record,Scoreboard,2,Kansas State,1331774880181399552,7,100198.52,actual
 2026,1,record,Scoreboard,3,South Carolina,1331775170712444928,10,100195.6,actual
@@ -10799,6 +11699,186 @@ Year,ThroughWeek,Bot,BotName,Rank,Team,LeagueID,RosterID,Value,ValueSource
 2026,10,record,Scoreboard,178,UAB,1331774846710849536,10,669.5,actual
 2026,10,record,Scoreboard,179,Northern Iowa,1316899756005412864,10,642.24,actual
 2026,10,record,Scoreboard,180,Weber State,1316899756005412864,9,613.94,actual
+2026,11,record,Scoreboard,1,Washington State,1331775106527006720,4,1101751.46,actual
+2026,11,record,Scoreboard,2,Middle Tennessee State,1331774695346823168,7,1101693.16,actual
+2026,11,record,Scoreboard,3,Iowa,1316899936696016896,11,1001767.88,actual
+2026,11,record,Scoreboard,4,Clemson,1331774915392577536,12,1001757.6,actual
+2026,11,record,Scoreboard,5,Youngstown State,1316899756005412864,12,1001692.62,actual
+2026,11,record,Scoreboard,6,Campbell,1331774804222545920,8,1001692.3,actual
+2026,11,record,Scoreboard,7,Colorado,1331775106527006720,8,1001656.98,actual
+2026,11,record,Scoreboard,8,Old Dominion,1331774454493122560,10,1001644.7,actual
+2026,11,record,Scoreboard,9,Kentucky,1331775170712444928,8,1001639.48,actual
+2026,11,record,Scoreboard,10,UNLV,1331774599196585984,11,1001606.26,actual
+2026,11,record,Scoreboard,11,Syracuse,1331775206619885568,7,901786.06,actual
+2026,11,record,Scoreboard,12,Brown,1331774741488369664,1,901780.4,actual
+2026,11,record,Scoreboard,13,Baylor,1331774880181399552,5,901777.6,actual
+2026,11,record,Scoreboard,14,Arizona State,1331775106527006720,7,901767.62,actual
+2026,11,record,Scoreboard,15,William & Mary,1316899756005412864,3,901755.92,actual
+2026,11,record,Scoreboard,16,BYU,1331774599196585984,6,901670.76,actual
+2026,11,record,Scoreboard,17,Dartmouth,1331774741488369664,11,901623.56,actual
+2026,11,record,Scoreboard,18,Southern Miss,1331774846710849536,9,901603.68,actual
+2026,11,record,Scoreboard,19,NC State,1331774915392577536,10,901603.0,actual
+2026,11,record,Scoreboard,20,Tulsa,1331774846710849536,6,901602.72,actual
+2026,11,record,Scoreboard,21,Memphis,1331774846710849536,8,901543.9,actual
+2026,11,record,Scoreboard,22,Southern,1331774630620332032,4,901520.1,actual
+2026,11,record,Scoreboard,23,Missouri,1331774880181399552,3,901461.66,actual
+2026,11,record,Scoreboard,24,Army,1331775206619885568,8,901438.28,actual
+2026,11,record,Scoreboard,25,Monmouth,1331774544905510912,10,901392.0,actual
+2026,11,record,Scoreboard,26,Georgetown,1331774741488369664,5,801824.36,actual
+2026,11,record,Scoreboard,27,Hawaii,1331774599196585984,1,801784.4,actual
+2026,11,record,Scoreboard,28,ETSU,1331774544905510912,2,801723.36,actual
+2026,11,record,Scoreboard,29,Portland State,1316899756005412864,8,801720.08,actual
+2026,11,record,Scoreboard,30,Minnesota,1316899936696016896,7,801707.88,actual
+2026,11,record,Scoreboard,31,Auburn,1331775170712444928,4,801679.42,actual
+2026,11,record,Scoreboard,32,Georgia State,1331774695346823168,5,801624.4,actual
+2026,11,record,Scoreboard,33,North Carolina A&T,1331774630620332032,1,801617.54,actual
+2026,11,record,Scoreboard,34,Kansas State,1331774880181399552,7,801606.0,actual
+2026,11,record,Scoreboard,35,Fresno State,1331774599196585984,7,801598.96,actual
+2026,11,record,Scoreboard,36,UCONN,1331775206619885568,5,801550.94,actual
+2026,11,record,Scoreboard,37,Texas A&M,1331774880181399552,4,801519.94,actual
+2026,11,record,Scoreboard,38,Pittsburgh,1331775206619885568,4,801516.38,actual
+2026,11,record,Scoreboard,39,Arkansas State,1331774695346823168,8,801494.9,actual
+2026,11,record,Scoreboard,40,Temple,1331774846710849536,1,801492.42,actual
+2026,11,record,Scoreboard,41,UCLA,1331775106527006720,12,801477.86,actual
+2026,11,record,Scoreboard,42,LSU,1331775170712444928,2,801474.34,actual
+2026,11,record,Scoreboard,43,Cornell,1331774741488369664,12,801473.9,actual
+2026,11,record,Scoreboard,44,UNC Charlotte,1331774454493122560,12,801466.88,actual
+2026,11,record,Scoreboard,45,Belmont,1331774544905510912,1,801452.26,actual
+2026,11,record,Scoreboard,46,Davidson,1331774804222545920,12,801446.56,actual
+2026,11,record,Scoreboard,47,South Carolina,1331775170712444928,10,801278.66,actual
+2026,11,record,Scoreboard,48,North Alabama,1331774544905510912,11,701707.06,actual
+2026,11,record,Scoreboard,49,Montana,1331774454493122560,1,701706.12,actual
+2026,11,record,Scoreboard,50,Coastal Carolina,1331775206619885568,6,701687.16,actual
+2026,11,record,Scoreboard,51,Nebraska,1316899936696016896,2,701643.8,actual
+2026,11,record,Scoreboard,52,Montana State,1316899756005412864,6,701611.14,actual
+2026,11,record,Scoreboard,53,Chattanooga,1331774544905510912,4,701605.22,actual
+2026,11,record,Scoreboard,54,Colorado State,1331774599196585984,8,701596.32,actual
+2026,11,record,Scoreboard,55,James Madison,1331774454493122560,2,701524.48,actual
+2026,11,record,Scoreboard,56,Illinois,1316899936696016896,10,701509.3,actual
+2026,11,record,Scoreboard,57,Georgia Tech,1331774915392577536,3,701495.32,actual
+2026,11,record,Scoreboard,58,UT Martin,1331774804222545920,11,701493.8,actual
+2026,11,record,Scoreboard,59,West Virginia,1331774880181399552,8,701482.44,actual
+2026,11,record,Scoreboard,60,Boston College,1331774915392577536,8,701413.82,actual
+2026,11,record,Scoreboard,61,Wyoming,1331774599196585984,3,701408.98,actual
+2026,11,record,Scoreboard,62,Purdue,1316899936696016896,1,701407.28,actual
+2026,11,record,Scoreboard,63,Tuskegee,1331774630620332032,11,701391.48,actual
+2026,11,record,Scoreboard,64,Texas,1331774880181399552,6,701382.96,actual
+2026,11,record,Scoreboard,65,Eastern Washington,1316899756005412864,4,701363.22,actual
+2026,11,record,Scoreboard,66,Florida A&M,1331774630620332032,5,701323.7,actual
+2026,11,record,Scoreboard,67,Howard,1331774630620332032,6,701287.78,actual
+2026,11,record,Scoreboard,68,Mississippi Valley State,1331774630620332032,7,701214.28,actual
+2026,11,record,Scoreboard,69,Mississippi State,1331775170712444928,6,601617.22,actual
+2026,11,record,Scoreboard,70,Michigan,1316899936696016896,12,601565.72,actual
+2026,11,record,Scoreboard,71,Colgate,1331774741488369664,8,601547.08,actual
+2026,11,record,Scoreboard,72,Murray State,1331774804222545920,3,601535.88,actual
+2026,11,record,Scoreboard,73,FSU,1331774915392577536,5,601526.2,actual
+2026,11,record,Scoreboard,74,Florida Atlantic,1331774695346823168,3,601510.0,actual
+2026,11,record,Scoreboard,75,Stony Brook,1316899756005412864,5,601506.78,actual
+2026,11,record,Scoreboard,76,Virginia,1331774915392577536,1,601493.92,actual
+2026,11,record,Scoreboard,77,Troy,1331774695346823168,1,601486.12,actual
+2026,11,record,Scoreboard,78,Holy Cross,1331774804222545920,2,601427.28,actual
+2026,11,record,Scoreboard,79,Wisconsin,1316899936696016896,6,601419.32,actual
+2026,11,record,Scoreboard,80,Ohio State,1316899936696016896,9,601383.14,actual
+2026,11,record,Scoreboard,81,South Dakota,1331774454493122560,11,601377.46,actual
+2026,11,record,Scoreboard,82,Texas State,1331774695346823168,9,601347.26,actual
+2026,11,record,Scoreboard,83,UTSA,1331774846710849536,12,601343.12,actual
+2026,11,record,Scoreboard,84,Columbia,1331774741488369664,4,601338.62,actual
+2026,11,record,Scoreboard,85,Central Michigan,1331774454493122560,4,601326.96,actual
+2026,11,record,Scoreboard,86,Austin Peay,1331774804222545920,9,601312.66,actual
+2026,11,record,Scoreboard,87,Dayton,1331774804222545920,7,601306.3,actual
+2026,11,record,Scoreboard,88,Georgia,1331775170712444928,7,601290.8,actual
+2026,11,record,Scoreboard,89,Delaware State,1331774630620332032,3,601289.62,actual
+2026,11,record,Scoreboard,90,Villanova,1316899756005412864,2,601226.44,actual
+2026,11,record,Scoreboard,91,Georgia Southern,1331774846710849536,7,501452.42,actual
+2026,11,record,Scoreboard,92,Delaware,1331774544905510912,7,501442.46,actual
+2026,11,record,Scoreboard,93,South Alabama,1331774695346823168,4,501440.94,actual
+2026,11,record,Scoreboard,94,Oregon State,1331775106527006720,3,501427.92,actual
+2026,11,record,Scoreboard,95,Citadel,1331774454493122560,8,501396.62,actual
+2026,11,record,Scoreboard,96,Oklahoma,1331774880181399552,9,501391.08,actual
+2026,11,record,Scoreboard,97,USC,1331775106527006720,2,501375.92,actual
+2026,11,record,Scoreboard,98,Eastern Kentucky,1331774544905510912,5,501340.88,actual
+2026,11,record,Scoreboard,99,Eastern Michigan,1331774454493122560,6,501336.56,actual
+2026,11,record,Scoreboard,100,Penn State,1316899936696016896,5,501335.2,actual
+2026,11,record,Scoreboard,101,Tulane,1331774846710849536,3,501333.66,actual
+2026,11,record,Scoreboard,102,Richmond,1316899756005412864,7,501328.18,actual
+2026,11,record,Scoreboard,103,Western Kentucky,1331774695346823168,6,501326.58,actual
+2026,11,record,Scoreboard,104,Butler,1331774804222545920,4,501306.46,actual
+2026,11,record,Scoreboard,105,Wichita State,1331774454493122560,5,501281.66,actual
+2026,11,record,Scoreboard,106,UCF,1331775206619885568,9,501276.4,actual
+2026,11,record,Scoreboard,107,Marshall,1331774846710849536,5,501270.08,actual
+2026,11,record,Scoreboard,108,Virginia Tech,1331774915392577536,4,501268.92,actual
+2026,11,record,Scoreboard,109,Alcorn State,1331774630620332032,8,501266.32,actual
+2026,11,record,Scoreboard,110,San Diego State,1331774599196585984,12,501265.34,actual
+2026,11,record,Scoreboard,111,Arkansas,1331775170712444928,12,501250.18,actual
+2026,11,record,Scoreboard,112,New Mexico,1331774599196585984,9,501243.98,actual
+2026,11,record,Scoreboard,113,Washington,1331775106527006720,6,501240.74,actual
+2026,11,record,Scoreboard,114,Tennessee,1331775170712444928,3,501233.34,actual
+2026,11,record,Scoreboard,115,Louisiana Monroe,1331774695346823168,12,501209.56,actual
+2026,11,record,Scoreboard,116,Penn,1331774741488369664,7,501203.96,actual
+2026,11,record,Scoreboard,117,North Carolina Central,1331774544905510912,12,401401.46,actual
+2026,11,record,Scoreboard,118,TCU,1331774880181399552,11,401374.98,actual
+2026,11,record,Scoreboard,119,Notre Dame,1331775206619885568,12,401372.68,actual
+2026,11,record,Scoreboard,120,Rutgers,1331775206619885568,1,401366.7,actual
+2026,11,record,Scoreboard,121,Bucknell,1331774741488369664,3,401357.74,actual
+2026,11,record,Scoreboard,122,Rhode Island,1316899756005412864,1,401339.12,actual
+2026,11,record,Scoreboard,123,Utah,1331775106527006720,11,401316.6,actual
+2026,11,record,Scoreboard,124,Louisiana Tech,1331774846710849536,11,401301.96,actual
+2026,11,record,Scoreboard,125,North Carolina,1331774915392577536,2,401290.08,actual
+2026,11,record,Scoreboard,126,Wofford,1331774804222545920,1,401290.02,actual
+2026,11,record,Scoreboard,127,Jacksonville State,1331774544905510912,9,401279.2,actual
+2026,11,record,Scoreboard,128,Yale,1331774741488369664,9,401252.7,actual
+2026,11,record,Scoreboard,129,Furman,1331774804222545920,10,401215.72,actual
+2026,11,record,Scoreboard,130,Florida International,1331774695346823168,10,401214.08,actual
+2026,11,record,Scoreboard,131,UTEP,1331774846710849536,2,401209.58,actual
+2026,11,record,Scoreboard,132,Maryland,1331775206619885568,2,401176.56,actual
+2026,11,record,Scoreboard,133,Bethune - Cookman,1331774630620332032,9,401134.7,actual
+2026,11,record,Scoreboard,134,Charleston Southern,1331774544905510912,6,401128.94,actual
+2026,11,record,Scoreboard,135,Navy,1331775206619885568,11,401044.16,actual
+2026,11,record,Scoreboard,136,Iowa State,1331774880181399552,2,400979.48,actual
+2026,11,record,Scoreboard,137,Stanford,1331775106527006720,5,301412.14,actual
+2026,11,record,Scoreboard,138,Wake Forest,1331774915392577536,6,301356.26,actual
+2026,11,record,Scoreboard,139,South Dakota State,1331775206619885568,3,301335.62,actual
+2026,11,record,Scoreboard,140,NIU,1331774599196585984,5,301305.86,actual
+2026,11,record,Scoreboard,141,North Dakota State,1331774454493122560,3,301298.58,actual
+2026,11,record,Scoreboard,142,Jackson State,1331774630620332032,10,301279.48,actual
+2026,11,record,Scoreboard,143,Lehigh,1331774741488369664,6,301278.2,actual
+2026,11,record,Scoreboard,144,Duke,1331774915392577536,7,301237.74,actual
+2026,11,record,Scoreboard,145,Nevada,1331774599196585984,10,301233.4,actual
+2026,11,record,Scoreboard,146,Louisville,1331774915392577536,11,301206.94,actual
+2026,11,record,Scoreboard,147,Kennesaw State,1331774544905510912,3,301193.84,actual
+2026,11,record,Scoreboard,148,Miami,1331774915392577536,9,301136.44,actual
+2026,11,record,Scoreboard,149,Harvard,1331774741488369664,2,301133.8,actual
+2026,11,record,Scoreboard,150,Maine,1316899756005412864,11,301131.6,actual
+2026,11,record,Scoreboard,151,Florida,1331775170712444928,1,301051.1,actual
+2026,11,record,Scoreboard,152,California,1331775106527006720,10,301030.64,actual
+2026,11,record,Scoreboard,153,Vanderbilt,1331775170712444928,9,300936.3,actual
+2026,11,record,Scoreboard,154,Northwestern,1316899936696016896,3,300800.28,actual
+2026,11,record,Scoreboard,155,SE Missouri State,1331774804222545920,6,201292.04,actual
+2026,11,record,Scoreboard,156,Oklahoma State,1331774880181399552,12,201156.02,actual
+2026,11,record,Scoreboard,157,Rice,1331774846710849536,4,201152.44,actual
+2026,11,record,Scoreboard,158,Arizona,1331775106527006720,1,201149.58,actual
+2026,11,record,Scoreboard,159,Morehead State,1331774544905510912,8,201134.98,actual
+2026,11,record,Scoreboard,160,San Jose State,1331774454493122560,7,201097.12,actual
+2026,11,record,Scoreboard,161,Ole Miss,1331775170712444928,5,201082.2,actual
+2026,11,record,Scoreboard,162,Grambling State,1331774630620332032,12,201056.66,actual
+2026,11,record,Scoreboard,163,Tennessee State,1331774804222545920,5,201047.78,actual
+2026,11,record,Scoreboard,164,Texas Tech,1331774880181399552,1,200997.78,actual
+2026,11,record,Scoreboard,165,Alabama,1331775170712444928,11,200986.2,actual
+2026,11,record,Scoreboard,166,Central Arkansas,1331774454493122560,9,200942.5,actual
+2026,11,record,Scoreboard,167,North Texas,1331774695346823168,2,101097.96,actual
+2026,11,record,Scoreboard,168,Princeton,1331774741488369664,10,101079.66,actual
+2026,11,record,Scoreboard,169,Louisiana,1331774695346823168,11,101058.02,actual
+2026,11,record,Scoreboard,170,USF,1331775206619885568,10,101038.66,actual
+2026,11,record,Scoreboard,171,Kansas,1331774880181399552,10,100991.16,actual
+2026,11,record,Scoreboard,172,Oregon,1331775106527006720,9,100984.82,actual
+2026,11,record,Scoreboard,173,Air Force,1331774599196585984,4,100901.38,actual
+2026,11,record,Scoreboard,174,Indiana,1316899936696016896,8,100808.1,actual
+2026,11,record,Scoreboard,175,Alabama A&M,1331774630620332032,2,100781.34,actual
+2026,11,record,Scoreboard,176,Weber State,1316899756005412864,9,100674.24,actual
+2026,11,record,Scoreboard,177,Boise State,1331774599196585984,2,1180.08,actual
+2026,11,record,Scoreboard,178,Michigan State,1316899936696016896,4,879.28,actual
+2026,11,record,Scoreboard,179,UAB,1331774846710849536,10,711.68,actual
+2026,11,record,Scoreboard,180,Northern Iowa,1316899756005412864,10,697.92,actual
 2026,1,redraft,Bagman,1,Baylor,1331774880181399552,5,54273.0,carried
 2026,1,redraft,Bagman,2,Minnesota,1316899936696016896,7,54173.0,carried
 2026,1,redraft,Bagman,3,Hawaii,1331774599196585984,1,49737.0,carried
@@ -12599,6 +13679,186 @@ Year,ThroughWeek,Bot,BotName,Rank,Team,LeagueID,RosterID,Value,ValueSource
 2026,10,redraft,Bagman,178,Weber State,1316899756005412864,9,6943.0,actual
 2026,10,redraft,Bagman,179,Charleston Southern,1331774544905510912,6,5874.0,actual
 2026,10,redraft,Bagman,180,Northern Iowa,1316899756005412864,10,1801.0,actual
+2026,11,redraft,Bagman,1,Syracuse,1331775206619885568,7,52394.0,actual
+2026,11,redraft,Bagman,2,Baylor,1331774880181399552,5,50824.0,actual
+2026,11,redraft,Bagman,3,Hawaii,1331774599196585984,1,50276.0,actual
+2026,11,redraft,Bagman,4,Minnesota,1316899936696016896,7,48468.0,actual
+2026,11,redraft,Bagman,5,Brown,1331774741488369664,1,47965.0,actual
+2026,11,redraft,Bagman,6,William & Mary,1316899756005412864,3,46282.0,actual
+2026,11,redraft,Bagman,7,Arizona State,1331775106527006720,7,46161.0,actual
+2026,11,redraft,Bagman,8,Clemson,1331774915392577536,12,44997.0,actual
+2026,11,redraft,Bagman,9,Washington State,1331775106527006720,4,44871.0,actual
+2026,11,redraft,Bagman,10,Iowa,1316899936696016896,11,44528.0,actual
+2026,11,redraft,Bagman,11,Chattanooga,1331774544905510912,4,43898.0,actual
+2026,11,redraft,Bagman,12,Portland State,1316899756005412864,8,43554.0,actual
+2026,11,redraft,Bagman,13,North Alabama,1331774544905510912,11,42610.0,actual
+2026,11,redraft,Bagman,14,Old Dominion,1331774454493122560,10,42390.0,actual
+2026,11,redraft,Bagman,15,Georgia State,1331774695346823168,5,41864.0,actual
+2026,11,redraft,Bagman,16,Montana State,1316899756005412864,6,41509.0,actual
+2026,11,redraft,Bagman,17,Southern,1331774630620332032,4,41482.0,actual
+2026,11,redraft,Bagman,18,Youngstown State,1316899756005412864,12,41239.0,actual
+2026,11,redraft,Bagman,19,Southern Miss,1331774846710849536,9,41073.0,actual
+2026,11,redraft,Bagman,20,Mississippi State,1331775170712444928,6,40491.0,actual
+2026,11,redraft,Bagman,21,ETSU,1331774544905510912,2,40113.0,actual
+2026,11,redraft,Bagman,22,Middle Tennessee State,1331774695346823168,7,40108.0,actual
+2026,11,redraft,Bagman,23,Dartmouth,1331774741488369664,11,39956.0,actual
+2026,11,redraft,Bagman,24,South Carolina,1331775170712444928,10,39601.0,actual
+2026,11,redraft,Bagman,25,NC State,1331774915392577536,10,39257.0,actual
+2026,11,redraft,Bagman,26,USC,1331775106527006720,2,38395.0,actual
+2026,11,redraft,Bagman,27,BYU,1331774599196585984,6,38312.0,actual
+2026,11,redraft,Bagman,28,Michigan,1316899936696016896,12,37973.0,actual
+2026,11,redraft,Bagman,29,Davidson,1331774804222545920,12,36999.0,actual
+2026,11,redraft,Bagman,30,North Carolina A&T,1331774630620332032,1,36914.0,actual
+2026,11,redraft,Bagman,31,Coastal Carolina,1331775206619885568,6,36441.0,actual
+2026,11,redraft,Bagman,32,Virginia,1331774915392577536,1,35447.0,actual
+2026,11,redraft,Bagman,33,South Dakota,1331774454493122560,11,35362.0,actual
+2026,11,redraft,Bagman,34,Campbell,1331774804222545920,8,35336.0,actual
+2026,11,redraft,Bagman,35,Troy,1331774695346823168,1,35262.0,actual
+2026,11,redraft,Bagman,36,Georgia Tech,1331774915392577536,3,35210.0,actual
+2026,11,redraft,Bagman,37,Texas A&M,1331774880181399552,4,35100.0,actual
+2026,11,redraft,Bagman,38,UT Martin,1331774804222545920,11,34669.0,actual
+2026,11,redraft,Bagman,39,UNC Charlotte,1331774454493122560,12,34533.0,actual
+2026,11,redraft,Bagman,40,Montana,1331774454493122560,1,34390.0,actual
+2026,11,redraft,Bagman,41,Tulsa,1331774846710849536,6,34365.0,actual
+2026,11,redraft,Bagman,42,Cornell,1331774741488369664,12,34144.0,actual
+2026,11,redraft,Bagman,43,Delaware,1331774544905510912,7,34048.0,actual
+2026,11,redraft,Bagman,44,Colgate,1331774741488369664,8,34040.0,actual
+2026,11,redraft,Bagman,45,Georgetown,1331774741488369664,5,33667.0,actual
+2026,11,redraft,Bagman,46,Colorado State,1331774599196585984,8,33597.0,actual
+2026,11,redraft,Bagman,47,South Alabama,1331774695346823168,4,33465.0,actual
+2026,11,redraft,Bagman,48,LSU,1331775170712444928,2,33464.0,actual
+2026,11,redraft,Bagman,49,Murray State,1331774804222545920,3,33458.0,actual
+2026,11,redraft,Bagman,50,Fresno State,1331774599196585984,7,32999.0,actual
+2026,11,redraft,Bagman,51,UCLA,1331775106527006720,12,32907.0,actual
+2026,11,redraft,Bagman,52,Auburn,1331775170712444928,4,32596.0,actual
+2026,11,redraft,Bagman,53,Alcorn State,1331774630620332032,8,32485.0,actual
+2026,11,redraft,Bagman,54,Arkansas,1331775170712444928,12,32328.0,actual
+2026,11,redraft,Bagman,55,Kansas State,1331774880181399552,7,32063.0,actual
+2026,11,redraft,Bagman,56,UTEP,1331774846710849536,2,31990.0,actual
+2026,11,redraft,Bagman,57,FSU,1331774915392577536,5,31729.0,actual
+2026,11,redraft,Bagman,58,Illinois,1316899936696016896,10,31552.0,actual
+2026,11,redraft,Bagman,59,Bethune - Cookman,1331774630620332032,9,31427.0,actual
+2026,11,redraft,Bagman,60,Georgia Southern,1331774846710849536,7,31110.0,actual
+2026,11,redraft,Bagman,61,Memphis,1331774846710849536,8,31103.0,actual
+2026,11,redraft,Bagman,62,James Madison,1331774454493122560,2,31042.0,actual
+2026,11,redraft,Bagman,63,Kentucky,1331775170712444928,8,30984.0,actual
+2026,11,redraft,Bagman,64,Colorado,1331775106527006720,8,30911.0,actual
+2026,11,redraft,Bagman,65,Delaware State,1331774630620332032,3,30904.0,actual
+2026,11,redraft,Bagman,66,Florida International,1331774695346823168,10,30576.0,actual
+2026,11,redraft,Bagman,67,Alabama,1331775170712444928,11,30546.0,actual
+2026,11,redraft,Bagman,68,Wake Forest,1331774915392577536,6,30449.0,actual
+2026,11,redraft,Bagman,69,TCU,1331774880181399552,11,30333.0,actual
+2026,11,redraft,Bagman,70,Pittsburgh,1331775206619885568,4,30122.0,actual
+2026,11,redraft,Bagman,71,Monmouth,1331774544905510912,10,30067.0,actual
+2026,11,redraft,Bagman,72,Missouri,1331774880181399552,3,29829.0,actual
+2026,11,redraft,Bagman,73,North Carolina Central,1331774544905510912,12,29394.0,actual
+2026,11,redraft,Bagman,74,Arkansas State,1331774695346823168,8,29225.0,actual
+2026,11,redraft,Bagman,75,Wofford,1331774804222545920,1,28778.0,actual
+2026,11,redraft,Bagman,76,Stony Brook,1316899756005412864,5,28683.0,actual
+2026,11,redraft,Bagman,77,Marshall,1331774846710849536,5,28562.0,actual
+2026,11,redraft,Bagman,78,Florida Atlantic,1331774695346823168,3,28348.0,actual
+2026,11,redraft,Bagman,79,Wyoming,1331774599196585984,3,28253.0,actual
+2026,11,redraft,Bagman,80,UCONN,1331775206619885568,5,27863.0,actual
+2026,11,redraft,Bagman,81,Furman,1331774804222545920,10,27858.0,actual
+2026,11,redraft,Bagman,82,Florida A&M,1331774630620332032,5,27788.0,actual
+2026,11,redraft,Bagman,83,Mississippi Valley State,1331774630620332032,7,27784.0,actual
+2026,11,redraft,Bagman,84,Holy Cross,1331774804222545920,2,27683.0,actual
+2026,11,redraft,Bagman,85,Oregon State,1331775106527006720,3,27498.0,actual
+2026,11,redraft,Bagman,86,Louisiana Tech,1331774846710849536,11,27484.0,actual
+2026,11,redraft,Bagman,87,Columbia,1331774741488369664,4,27190.0,actual
+2026,11,redraft,Bagman,88,Wichita State,1331774454493122560,5,27065.0,actual
+2026,11,redraft,Bagman,89,Purdue,1316899936696016896,1,26880.0,actual
+2026,11,redraft,Bagman,90,Nebraska,1316899936696016896,2,26742.0,actual
+2026,11,redraft,Bagman,91,Notre Dame,1331775206619885568,12,26569.0,actual
+2026,11,redraft,Bagman,92,Belmont,1331774544905510912,1,26550.0,actual
+2026,11,redraft,Bagman,93,UCF,1331775206619885568,9,26320.0,actual
+2026,11,redraft,Bagman,94,Temple,1331774846710849536,1,26236.0,actual
+2026,11,redraft,Bagman,95,Yale,1331774741488369664,9,25820.0,actual
+2026,11,redraft,Bagman,96,UNLV,1331774599196585984,11,25805.0,actual
+2026,11,redraft,Bagman,97,South Dakota State,1331775206619885568,3,25713.0,actual
+2026,11,redraft,Bagman,98,Tuskegee,1331774630620332032,11,25218.0,actual
+2026,11,redraft,Bagman,99,West Virginia,1331774880181399552,8,25174.0,actual
+2026,11,redraft,Bagman,100,Texas State,1331774695346823168,9,25119.0,actual
+2026,11,redraft,Bagman,101,San Diego State,1331774599196585984,12,25058.0,actual
+2026,11,redraft,Bagman,102,SE Missouri State,1331774804222545920,6,24868.0,actual
+2026,11,redraft,Bagman,103,Oklahoma,1331774880181399552,9,24845.0,actual
+2026,11,redraft,Bagman,104,Eastern Michigan,1331774454493122560,6,24727.0,actual
+2026,11,redraft,Bagman,105,Duke,1331774915392577536,7,24485.0,actual
+2026,11,redraft,Bagman,106,Utah,1331775106527006720,11,24465.0,actual
+2026,11,redraft,Bagman,107,Army,1331775206619885568,8,24386.0,actual
+2026,11,redraft,Bagman,108,Nevada,1331774599196585984,10,24277.0,actual
+2026,11,redraft,Bagman,109,Wisconsin,1316899936696016896,6,24119.0,actual
+2026,11,redraft,Bagman,110,Texas,1331774880181399552,6,23895.0,actual
+2026,11,redraft,Bagman,111,Butler,1331774804222545920,4,23586.0,actual
+2026,11,redraft,Bagman,112,Rhode Island,1316899756005412864,1,23556.0,actual
+2026,11,redraft,Bagman,113,Morehead State,1331774544905510912,8,23399.0,actual
+2026,11,redraft,Bagman,114,Rutgers,1331775206619885568,1,23088.0,actual
+2026,11,redraft,Bagman,115,Tulane,1331774846710849536,3,23000.0,actual
+2026,11,redraft,Bagman,116,Boston College,1331774915392577536,8,22760.0,actual
+2026,11,redraft,Bagman,117,Bucknell,1331774741488369664,3,22350.0,actual
+2026,11,redraft,Bagman,118,Penn State,1316899936696016896,5,22335.0,actual
+2026,11,redraft,Bagman,119,Eastern Kentucky,1331774544905510912,5,22098.0,actual
+2026,11,redraft,Bagman,120,Central Arkansas,1331774454493122560,9,21875.0,actual
+2026,11,redraft,Bagman,121,Georgia,1331775170712444928,7,21848.0,actual
+2026,11,redraft,Bagman,122,Central Michigan,1331774454493122560,4,21668.0,actual
+2026,11,redraft,Bagman,123,Texas Tech,1331774880181399552,1,21658.0,actual
+2026,11,redraft,Bagman,124,Austin Peay,1331774804222545920,9,21482.0,actual
+2026,11,redraft,Bagman,125,Ohio State,1316899936696016896,9,21410.0,actual
+2026,11,redraft,Bagman,126,New Mexico,1331774599196585984,9,21371.0,actual
+2026,11,redraft,Bagman,127,North Carolina,1331774915392577536,2,21365.0,actual
+2026,11,redraft,Bagman,128,Grambling State,1331774630620332032,12,21357.0,actual
+2026,11,redraft,Bagman,129,Jackson State,1331774630620332032,10,21251.0,actual
+2026,11,redraft,Bagman,130,Eastern Washington,1316899756005412864,4,21106.0,actual
+2026,11,redraft,Bagman,131,Iowa State,1331774880181399552,2,20897.0,actual
+2026,11,redraft,Bagman,132,Navy,1331775206619885568,11,20796.0,actual
+2026,11,redraft,Bagman,133,Howard,1331774630620332032,6,20661.0,actual
+2026,11,redraft,Bagman,134,Western Kentucky,1331774695346823168,6,19900.0,actual
+2026,11,redraft,Bagman,135,UTSA,1331774846710849536,12,19857.0,actual
+2026,11,redraft,Bagman,136,NIU,1331774599196585984,5,19548.0,actual
+2026,11,redraft,Bagman,137,USF,1331775206619885568,10,19432.0,actual
+2026,11,redraft,Bagman,138,Jacksonville State,1331774544905510912,9,19403.0,actual
+2026,11,redraft,Bagman,139,Ole Miss,1331775170712444928,5,19307.0,actual
+2026,11,redraft,Bagman,140,Washington,1331775106527006720,6,19016.0,actual
+2026,11,redraft,Bagman,141,North Dakota State,1331774454493122560,3,18922.0,actual
+2026,11,redraft,Bagman,142,Louisiana Monroe,1331774695346823168,12,18866.0,actual
+2026,11,redraft,Bagman,143,Dayton,1331774804222545920,7,18790.0,actual
+2026,11,redraft,Bagman,144,Rice,1331774846710849536,4,18681.0,actual
+2026,11,redraft,Bagman,145,North Texas,1331774695346823168,2,18393.0,actual
+2026,11,redraft,Bagman,146,Oklahoma State,1331774880181399552,12,18218.0,actual
+2026,11,redraft,Bagman,147,Stanford,1331775106527006720,5,18175.0,actual
+2026,11,redraft,Bagman,148,Lehigh,1331774741488369664,6,18032.0,actual
+2026,11,redraft,Bagman,149,Louisville,1331774915392577536,11,17660.0,actual
+2026,11,redraft,Bagman,150,Villanova,1316899756005412864,2,17518.0,actual
+2026,11,redraft,Bagman,151,Citadel,1331774454493122560,8,17316.0,actual
+2026,11,redraft,Bagman,152,Maryland,1331775206619885568,2,16930.0,actual
+2026,11,redraft,Bagman,153,Boise State,1331774599196585984,2,16347.0,actual
+2026,11,redraft,Bagman,154,Florida,1331775170712444928,1,16257.0,actual
+2026,11,redraft,Bagman,155,Arizona,1331775106527006720,1,16255.0,actual
+2026,11,redraft,Bagman,155,Tennessee,1331775170712444928,3,16255.0,actual
+2026,11,redraft,Bagman,157,Virginia Tech,1331774915392577536,4,16207.0,actual
+2026,11,redraft,Bagman,158,Michigan State,1316899936696016896,4,14746.0,actual
+2026,11,redraft,Bagman,159,Harvard,1331774741488369664,2,14640.0,actual
+2026,11,redraft,Bagman,160,UAB,1331774846710849536,10,14610.0,actual
+2026,11,redraft,Bagman,161,Princeton,1331774741488369664,10,14591.0,actual
+2026,11,redraft,Bagman,162,Richmond,1316899756005412864,7,14467.0,actual
+2026,11,redraft,Bagman,163,Kennesaw State,1331774544905510912,3,14366.0,actual
+2026,11,redraft,Bagman,164,San Jose State,1331774454493122560,7,13246.0,actual
+2026,11,redraft,Bagman,165,Kansas,1331774880181399552,10,13230.0,actual
+2026,11,redraft,Bagman,166,Maine,1316899756005412864,11,13156.0,actual
+2026,11,redraft,Bagman,167,Northwestern,1316899936696016896,3,12581.0,actual
+2026,11,redraft,Bagman,168,Penn,1331774741488369664,7,12279.0,actual
+2026,11,redraft,Bagman,169,California,1331775106527006720,10,11819.0,actual
+2026,11,redraft,Bagman,170,Tennessee State,1331774804222545920,5,11509.0,actual
+2026,11,redraft,Bagman,171,Miami,1331774915392577536,9,11007.0,actual
+2026,11,redraft,Bagman,172,Alabama A&M,1331774630620332032,2,10824.0,actual
+2026,11,redraft,Bagman,173,Vanderbilt,1331775170712444928,9,10567.0,actual
+2026,11,redraft,Bagman,174,Indiana,1316899936696016896,8,10459.0,actual
+2026,11,redraft,Bagman,175,Louisiana,1331774695346823168,11,10386.0,actual
+2026,11,redraft,Bagman,176,Oregon,1331775106527006720,9,10219.0,actual
+2026,11,redraft,Bagman,177,Weber State,1316899756005412864,9,7382.0,actual
+2026,11,redraft,Bagman,178,Air Force,1331774599196585984,4,7351.0,actual
+2026,11,redraft,Bagman,179,Charleston Southern,1331774544905510912,6,5280.0,actual
+2026,11,redraft,Bagman,180,Northern Iowa,1316899756005412864,10,1318.0,actual
 2026,1,sor,SOR,1,Youngstown State,1316899756005412864,12,0.0,actual
 2026,1,sor,SOR,1,William & Mary,1316899756005412864,3,0.0,actual
 2026,1,sor,SOR,1,Eastern Washington,1316899756005412864,4,0.0,actual
@@ -14399,3 +15659,183 @@ Year,ThroughWeek,Bot,BotName,Rank,Team,LeagueID,RosterID,Value,ValueSource
 2026,10,sor,SOR,178,Weber State,1316899756005412864,9,-0.0,actual
 2026,10,sor,SOR,179,UAB,1331774846710849536,10,-0.0,actual
 2026,10,sor,SOR,180,Northern Iowa,1316899756005412864,10,-0.0,actual
+2026,11,sor,SOR,1,Youngstown State,1316899756005412864,12,0.9639,actual
+2026,11,sor,SOR,2,Middle Tennessee State,1331774695346823168,7,0.9507,actual
+2026,11,sor,SOR,3,Washington State,1331775106527006720,4,0.7144,actual
+2026,11,sor,SOR,4,Iowa,1316899936696016896,11,0.6877,actual
+2026,11,sor,SOR,5,BYU,1331774599196585984,6,0.6727,actual
+2026,11,sor,SOR,6,Brown,1331774741488369664,1,0.616,actual
+2026,11,sor,SOR,7,UNLV,1331774599196585984,11,0.6004,actual
+2026,11,sor,SOR,8,Arizona State,1331775106527006720,7,0.5948,actual
+2026,11,sor,SOR,9,Army,1331775206619885568,8,0.5616,actual
+2026,11,sor,SOR,10,Colorado,1331775106527006720,8,0.5152,actual
+2026,11,sor,SOR,11,Campbell,1331774804222545920,8,0.5135,actual
+2026,11,sor,SOR,12,NC State,1331774915392577536,10,0.4962,actual
+2026,11,sor,SOR,13,Texas A&M,1331774880181399552,4,0.4918,actual
+2026,11,sor,SOR,14,Kentucky,1331775170712444928,8,0.4539,actual
+2026,11,sor,SOR,15,Fresno State,1331774599196585984,7,0.4121,actual
+2026,11,sor,SOR,16,William & Mary,1316899756005412864,3,0.3956,actual
+2026,11,sor,SOR,17,ETSU,1331774544905510912,2,0.3507,actual
+2026,11,sor,SOR,18,Hawaii,1331774599196585984,1,0.3504,actual
+2026,11,sor,SOR,19,Clemson,1331774915392577536,12,0.3293,actual
+2026,11,sor,SOR,20,Missouri,1331774880181399552,3,0.3161,actual
+2026,11,sor,SOR,21,North Alabama,1331774544905510912,11,0.2923,actual
+2026,11,sor,SOR,22,Coastal Carolina,1331775206619885568,6,0.2739,actual
+2026,11,sor,SOR,23,Cornell,1331774741488369664,12,0.2314,actual
+2026,11,sor,SOR,24,UCLA,1331775106527006720,12,0.22,actual
+2026,11,sor,SOR,25,Minnesota,1316899936696016896,7,0.2133,actual
+2026,11,sor,SOR,26,Dartmouth,1331774741488369664,11,0.2096,actual
+2026,11,sor,SOR,27,Baylor,1331774880181399552,5,0.2048,actual
+2026,11,sor,SOR,28,Pittsburgh,1331775206619885568,4,0.1969,actual
+2026,11,sor,SOR,29,Memphis,1331774846710849536,8,0.1892,actual
+2026,11,sor,SOR,30,Tulsa,1331774846710849536,6,0.1697,actual
+2026,11,sor,SOR,31,Belmont,1331774544905510912,1,0.1592,actual
+2026,11,sor,SOR,32,Southern,1331774630620332032,4,0.1569,actual
+2026,11,sor,SOR,33,Old Dominion,1331774454493122560,10,0.1462,actual
+2026,11,sor,SOR,34,Auburn,1331775170712444928,4,0.1172,actual
+2026,11,sor,SOR,35,Davidson,1331774804222545920,12,0.0999,actual
+2026,11,sor,SOR,36,Kansas State,1331774880181399552,7,0.0789,actual
+2026,11,sor,SOR,37,UNC Charlotte,1331774454493122560,12,0.0728,actual
+2026,11,sor,SOR,38,Monmouth,1331774544905510912,10,0.0614,actual
+2026,11,sor,SOR,39,Eastern Washington,1316899756005412864,4,0.055,actual
+2026,11,sor,SOR,40,James Madison,1331774454493122560,2,0.0548,actual
+2026,11,sor,SOR,41,Southern Miss,1331774846710849536,9,0.0518,actual
+2026,11,sor,SOR,42,Montana,1331774454493122560,1,0.0512,actual
+2026,11,sor,SOR,43,LSU,1331775170712444928,2,0.0336,actual
+2026,11,sor,SOR,44,UCONN,1331775206619885568,5,0.0327,actual
+2026,11,sor,SOR,45,Syracuse,1331775206619885568,7,0.0322,actual
+2026,11,sor,SOR,46,Temple,1331774846710849536,1,0.0283,actual
+2026,11,sor,SOR,47,Nebraska,1316899936696016896,2,0.0277,actual
+2026,11,sor,SOR,48,Boston College,1331774915392577536,8,0.0274,actual
+2026,11,sor,SOR,49,Texas,1331774880181399552,6,0.0264,actual
+2026,11,sor,SOR,50,Georgetown,1331774741488369664,5,0.0264,actual
+2026,11,sor,SOR,51,West Virginia,1331774880181399552,8,0.0261,actual
+2026,11,sor,SOR,52,Portland State,1316899756005412864,8,0.0252,actual
+2026,11,sor,SOR,53,Chattanooga,1331774544905510912,4,0.0229,actual
+2026,11,sor,SOR,54,North Carolina A&T,1331774630620332032,1,0.0218,actual
+2026,11,sor,SOR,55,South Carolina,1331775170712444928,10,0.0215,actual
+2026,11,sor,SOR,56,Montana State,1316899756005412864,6,0.0174,actual
+2026,11,sor,SOR,57,UT Martin,1331774804222545920,11,0.0172,actual
+2026,11,sor,SOR,58,Murray State,1331774804222545920,3,0.0157,actual
+2026,11,sor,SOR,59,Georgia State,1331774695346823168,5,0.0137,actual
+2026,11,sor,SOR,60,Purdue,1316899936696016896,1,0.0133,actual
+2026,11,sor,SOR,61,Colorado State,1331774599196585984,8,0.0123,actual
+2026,11,sor,SOR,62,Ohio State,1316899936696016896,9,0.0108,actual
+2026,11,sor,SOR,63,Penn State,1316899936696016896,5,0.0106,actual
+2026,11,sor,SOR,64,Arkansas State,1331774695346823168,8,0.0074,actual
+2026,11,sor,SOR,65,Michigan,1316899936696016896,12,0.0069,actual
+2026,11,sor,SOR,66,Wyoming,1331774599196585984,3,0.0054,actual
+2026,11,sor,SOR,67,Colgate,1331774741488369664,8,0.0048,actual
+2026,11,sor,SOR,68,South Dakota,1331774454493122560,11,0.0045,actual
+2026,11,sor,SOR,69,Troy,1331774695346823168,1,0.0044,actual
+2026,11,sor,SOR,70,Florida Atlantic,1331774695346823168,3,0.004,actual
+2026,11,sor,SOR,71,Georgia Tech,1331774915392577536,3,0.0034,actual
+2026,11,sor,SOR,72,Holy Cross,1331774804222545920,2,0.0032,actual
+2026,11,sor,SOR,73,Central Michigan,1331774454493122560,4,0.003,actual
+2026,11,sor,SOR,74,Eastern Michigan,1331774454493122560,6,0.0027,actual
+2026,11,sor,SOR,75,Mississippi Valley State,1331774630620332032,7,0.0025,actual
+2026,11,sor,SOR,76,Stony Brook,1316899756005412864,5,0.0023,actual
+2026,11,sor,SOR,77,UCF,1331775206619885568,9,0.0021,actual
+2026,11,sor,SOR,78,Columbia,1331774741488369664,4,0.0019,actual
+2026,11,sor,SOR,79,Villanova,1316899756005412864,2,0.0017,actual
+2026,11,sor,SOR,80,Illinois,1316899936696016896,10,0.0017,actual
+2026,11,sor,SOR,81,Austin Peay,1331774804222545920,9,0.0016,actual
+2026,11,sor,SOR,82,FSU,1331774915392577536,5,0.001,actual
+2026,11,sor,SOR,83,Wisconsin,1316899936696016896,6,0.0009,actual
+2026,11,sor,SOR,84,Virginia Tech,1331774915392577536,4,0.0009,actual
+2026,11,sor,SOR,85,UTSA,1331774846710849536,12,0.0008,actual
+2026,11,sor,SOR,86,Tulane,1331774846710849536,3,0.0007,actual
+2026,11,sor,SOR,87,Tuskegee,1331774630620332032,11,0.0006,actual
+2026,11,sor,SOR,88,Florida A&M,1331774630620332032,5,0.0005,actual
+2026,11,sor,SOR,89,Duke,1331774915392577536,7,0.0004,actual
+2026,11,sor,SOR,90,Marshall,1331774846710849536,5,0.0003,actual
+2026,11,sor,SOR,91,Texas State,1331774695346823168,9,0.0002,actual
+2026,11,sor,SOR,92,Howard,1331774630620332032,6,0.0002,actual
+2026,11,sor,SOR,93,Virginia,1331774915392577536,1,0.0002,actual
+2026,11,sor,SOR,94,South Alabama,1331774695346823168,4,0.0002,actual
+2026,11,sor,SOR,95,Richmond,1316899756005412864,7,0.0002,actual
+2026,11,sor,SOR,96,Bucknell,1331774741488369664,3,0.0001,actual
+2026,11,sor,SOR,97,Oregon State,1331775106527006720,3,0.0001,actual
+2026,11,sor,SOR,98,Mississippi State,1331775170712444928,6,0.0001,actual
+2026,11,sor,SOR,99,Dayton,1331774804222545920,7,0.0001,actual
+2026,11,sor,SOR,100,San Diego State,1331774599196585984,12,0.0001,actual
+2026,11,sor,SOR,101,Washington,1331775106527006720,6,0.0001,actual
+2026,11,sor,SOR,102,Delaware State,1331774630620332032,3,0.0001,actual
+2026,11,sor,SOR,103,Georgia,1331775170712444928,7,0.0001,actual
+2026,11,sor,SOR,104,Eastern Kentucky,1331774544905510912,5,0.0001,actual
+2026,11,sor,SOR,105,Stanford,1331775106527006720,5,0.0001,actual
+2026,11,sor,SOR,106,Tennessee,1331775170712444928,3,0.0,actual
+2026,11,sor,SOR,107,Notre Dame,1331775206619885568,12,0.0,actual
+2026,11,sor,SOR,108,Georgia Southern,1331774846710849536,7,0.0,actual
+2026,11,sor,SOR,109,Louisiana Monroe,1331774695346823168,12,0.0,actual
+2026,11,sor,SOR,110,Jacksonville State,1331774544905510912,9,0.0,actual
+2026,11,sor,SOR,111,South Dakota State,1331775206619885568,3,0.0,actual
+2026,11,sor,SOR,112,Maryland,1331775206619885568,2,0.0,actual
+2026,11,sor,SOR,113,Citadel,1331774454493122560,8,0.0,actual
+2026,11,sor,SOR,114,Charleston Southern,1331774544905510912,6,0.0,actual
+2026,11,sor,SOR,115,Florida International,1331774695346823168,10,0.0,actual
+2026,11,sor,SOR,116,Penn,1331774741488369664,7,0.0,actual
+2026,11,sor,SOR,117,TCU,1331774880181399552,11,0.0,actual
+2026,11,sor,SOR,118,Wofford,1331774804222545920,1,0.0,actual
+2026,11,sor,SOR,119,UTEP,1331774846710849536,2,0.0,actual
+2026,11,sor,SOR,120,Yale,1331774741488369664,9,0.0,actual
+2026,11,sor,SOR,121,Furman,1331774804222545920,10,0.0,actual
+2026,11,sor,SOR,122,Maine,1316899756005412864,11,0.0,actual
+2026,11,sor,SOR,123,New Mexico,1331774599196585984,9,0.0,actual
+2026,11,sor,SOR,124,North Carolina,1331774915392577536,2,0.0,actual
+2026,11,sor,SOR,125,Louisiana Tech,1331774846710849536,11,0.0,actual
+2026,11,sor,SOR,126,Rhode Island,1316899756005412864,1,0.0,actual
+2026,11,sor,SOR,127,North Carolina Central,1331774544905510912,12,0.0,actual
+2026,11,sor,SOR,128,Oklahoma,1331774880181399552,9,0.0,actual
+2026,11,sor,SOR,129,USC,1331775106527006720,2,0.0,actual
+2026,11,sor,SOR,130,Delaware,1331774544905510912,7,0.0,actual
+2026,11,sor,SOR,131,Alcorn State,1331774630620332032,8,0.0,actual
+2026,11,sor,SOR,132,Wichita State,1331774454493122560,5,0.0,actual
+2026,11,sor,SOR,133,Butler,1331774804222545920,4,0.0,actual
+2026,11,sor,SOR,134,Western Kentucky,1331774695346823168,6,0.0,actual
+2026,11,sor,SOR,135,Arkansas,1331775170712444928,12,0.0,actual
+2026,11,sor,SOR,136,Utah,1331775106527006720,11,0.0,actual
+2026,11,sor,SOR,137,NIU,1331774599196585984,5,0.0,actual
+2026,11,sor,SOR,138,Rutgers,1331775206619885568,1,0.0,actual
+2026,11,sor,SOR,139,Navy,1331775206619885568,11,0.0,actual
+2026,11,sor,SOR,140,Bethune - Cookman,1331774630620332032,9,0.0,actual
+2026,11,sor,SOR,141,Iowa State,1331774880181399552,2,0.0,actual
+2026,11,sor,SOR,142,Lehigh,1331774741488369664,6,0.0,actual
+2026,11,sor,SOR,143,Nevada,1331774599196585984,10,0.0,actual
+2026,11,sor,SOR,144,North Dakota State,1331774454493122560,3,0.0,actual
+2026,11,sor,SOR,145,Wake Forest,1331774915392577536,6,0.0,actual
+2026,11,sor,SOR,146,Vanderbilt,1331775170712444928,9,0.0,actual
+2026,11,sor,SOR,147,Miami,1331774915392577536,9,0.0,actual
+2026,11,sor,SOR,148,Jackson State,1331774630620332032,10,0.0,actual
+2026,11,sor,SOR,149,Kennesaw State,1331774544905510912,3,0.0,actual
+2026,11,sor,SOR,150,Louisville,1331774915392577536,11,0.0,actual
+2026,11,sor,SOR,151,Northwestern,1316899936696016896,3,0.0,actual
+2026,11,sor,SOR,152,Harvard,1331774741488369664,2,0.0,actual
+2026,11,sor,SOR,153,California,1331775106527006720,10,0.0,actual
+2026,11,sor,SOR,154,Florida,1331775170712444928,1,0.0,actual
+2026,11,sor,SOR,155,Arizona,1331775106527006720,1,0.0,actual
+2026,11,sor,SOR,156,Central Arkansas,1331774454493122560,9,0.0,actual
+2026,11,sor,SOR,157,Rice,1331774846710849536,4,0.0,actual
+2026,11,sor,SOR,158,Morehead State,1331774544905510912,8,0.0,actual
+2026,11,sor,SOR,159,Oklahoma State,1331774880181399552,12,0.0,actual
+2026,11,sor,SOR,160,Tennessee State,1331774804222545920,5,0.0,actual
+2026,11,sor,SOR,161,SE Missouri State,1331774804222545920,6,0.0,actual
+2026,11,sor,SOR,162,Grambling State,1331774630620332032,12,0.0,actual
+2026,11,sor,SOR,163,San Jose State,1331774454493122560,7,0.0,actual
+2026,11,sor,SOR,164,Ole Miss,1331775170712444928,5,0.0,actual
+2026,11,sor,SOR,165,Texas Tech,1331774880181399552,1,0.0,actual
+2026,11,sor,SOR,166,Alabama,1331775170712444928,11,0.0,actual
+2026,11,sor,SOR,167,Indiana,1316899936696016896,8,0.0,actual
+2026,11,sor,SOR,168,Princeton,1331774741488369664,10,0.0,actual
+2026,11,sor,SOR,169,Oregon,1331775106527006720,9,0.0,actual
+2026,11,sor,SOR,170,Weber State,1316899756005412864,9,0.0,actual
+2026,11,sor,SOR,171,North Texas,1331774695346823168,2,0.0,actual
+2026,11,sor,SOR,172,Louisiana,1331774695346823168,11,0.0,actual
+2026,11,sor,SOR,173,Air Force,1331774599196585984,4,0.0,actual
+2026,11,sor,SOR,174,USF,1331775206619885568,10,0.0,actual
+2026,11,sor,SOR,175,Kansas,1331774880181399552,10,0.0,actual
+2026,11,sor,SOR,176,Alabama A&M,1331774630620332032,2,0.0,actual
+2026,11,sor,SOR,177,Boise State,1331774599196585984,2,-0.0,actual
+2026,11,sor,SOR,178,UAB,1331774846710849536,10,-0.0,actual
+2026,11,sor,SOR,179,Michigan State,1316899936696016896,4,-0.0,actual
+2026,11,sor,SOR,180,Northern Iowa,1316899756005412864,10,-0.0,actual

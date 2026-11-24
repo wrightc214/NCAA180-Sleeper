@@ -1,6 +1,6 @@
 {
  "week": 10,
- "avg": 124.81,
+ "avg": 125.02,
  "median": 119.72,
  "unbeaten": 2,
  "winless": 5,
@@ -12,7 +12,7 @@
    "Owner": "chzhead412",
    "Rec": "10-0",
    "Pts": 1615.62,
-   "Luck": 1.38,
+   "Luck": 1.39,
    "Move": 0
   },
   {
@@ -32,7 +32,7 @@
    "Owner": "Schuflakka",
    "Rec": "9-1",
    "Pts": 1615.28,
-   "Luck": 0.7,
+   "Luck": 0.71,
    "Move": 2
   },
   {
@@ -42,7 +42,7 @@
    "Owner": "dilbennett",
    "Rec": "9-1",
    "Pts": 1596.94,
-   "Luck": 1.28,
+   "Luck": 1.29,
    "Move": 3
   },
   {
@@ -52,7 +52,7 @@
    "Owner": "keppin",
    "Rec": "9-1",
    "Pts": 1549.68,
-   "Luck": 1.28,
+   "Luck": 1.3,
    "Move": -1
   },
   {
@@ -72,7 +72,7 @@
    "Owner": "CrownMeKing",
    "Rec": "9-1",
    "Pts": 1537.14,
-   "Luck": 1.61,
+   "Luck": 1.62,
    "Move": 3
   },
   {
@@ -82,7 +82,7 @@
    "Owner": "Stumpy44",
    "Rec": "9-1",
    "Pts": 1532.16,
-   "Luck": 1.57,
+   "Luck": 1.58,
    "Move": -2
   },
   {
@@ -92,7 +92,7 @@
    "Owner": "olddominion2020",
    "Rec": "9-1",
    "Pts": 1514.74,
-   "Luck": 1.63,
+   "Luck": 1.64,
    "Move": -1
   },
   {
@@ -102,7 +102,7 @@
    "Owner": "bdub3",
    "Rec": "9-1",
    "Pts": 1487.6,
-   "Luck": 2.04,
+   "Luck": 2.06,
    "Move": 1
   },
   {
@@ -122,7 +122,7 @@
    "Owner": "robertlouis7",
    "Rec": "8-2",
    "Pts": 1624.44,
-   "Luck": -0.35,
+   "Luck": -0.34,
    "Move": 5
   },
   {
@@ -132,7 +132,7 @@
    "Owner": "CodeKhaos",
    "Rec": "8-2",
    "Pts": 1613.36,
-   "Luck": -0.24,
+   "Luck": -0.22,
    "Move": 5
   },
   {
@@ -142,7 +142,7 @@
    "Owner": "FlynnD",
    "Rec": "8-2",
    "Pts": 1609.6,
-   "Luck": 0.19,
+   "Luck": 0.2,
    "Move": 6
   },
   {
@@ -152,7 +152,7 @@
    "Owner": "Beastchewy15",
    "Rec": "8-2",
    "Pts": 1607.52,
-   "Luck": -0.07,
+   "Luck": -0.06,
    "Move": 4
   },
   {
@@ -162,7 +162,7 @@
    "Owner": "wrightc214",
    "Rec": "8-2",
    "Pts": 1599.46,
-   "Luck": 0.52,
+   "Luck": 0.54,
    "Move": 5
   },
   {
@@ -182,7 +182,7 @@
    "Owner": "Frankeen",
    "Rec": "8-2",
    "Pts": 1517.88,
-   "Luck": 0.31,
+   "Luck": 0.32,
    "Move": 4
   },
   {
@@ -192,7 +192,7 @@
    "Owner": "denvermanning",
    "Rec": "8-2",
    "Pts": 1491.22,
-   "Luck": 0.46,
+   "Luck": 0.47,
    "Move": 5
   },
   {
@@ -202,7 +202,7 @@
    "Owner": "jtheadrick98",
    "Rec": "8-2",
    "Pts": 1483.2,
-   "Luck": 0.89,
+   "Luck": 0.9,
    "Move": 7
   },
   {
@@ -212,7 +212,7 @@
    "Owner": "EerieHush",
    "Rec": "8-2",
    "Pts": 1466.36,
-   "Luck": 0.91,
+   "Luck": 0.92,
    "Move": 8
   },
   {
@@ -222,7 +222,7 @@
    "Owner": "memphismaniac",
    "Rec": "8-2",
    "Pts": 1437.9,
-   "Luck": 0.78,
+   "Luck": 0.79,
    "Move": 3
   },
   {
@@ -232,7 +232,7 @@
    "Owner": "Raidersforte",
    "Rec": "8-2",
    "Pts": 1437.48,
-   "Luck": 0.92,
+   "Luck": 0.93,
    "Move": 5
   },
   {
@@ -242,7 +242,7 @@
    "Owner": "yoboihawks",
    "Rec": "8-2",
    "Pts": 1423.26,
-   "Luck": 1.03,
+   "Luck": 1.04,
    "Move": 7
   },
   {
@@ -251,8 +251,8 @@
    "Lg": "Sun Belt",
    "Owner": "bruceble",
    "Rec": "8-2",
-   "Pts": 1409.42,
-   "Luck": 1.07,
+   "Pts": 1410.42,
+   "Luck": 1.08,
    "Move": 5
   },
   {
@@ -262,7 +262,7 @@
    "Owner": "errand",
    "Rec": "8-2",
    "Pts": 1382.58,
-   "Luck": 1.59,
+   "Luck": 1.6,
    "Move": 7
   },
   {
@@ -272,7 +272,7 @@
    "Owner": "cobrapanther99",
    "Rec": "8-2",
    "Pts": 1381.4,
-   "Luck": 1.66,
+   "Luck": 1.67,
    "Move": 8
   },
   {
@@ -282,7 +282,7 @@
    "Owner": "lmerkouSaints",
    "Rec": "8-2",
    "Pts": 1360.96,
-   "Luck": 1.93,
+   "Luck": 1.94,
    "Move": 10
   },
   {
@@ -292,7 +292,7 @@
    "Owner": "DBGiants",
    "Rec": "8-2",
    "Pts": 1354.64,
-   "Luck": 1.93,
+   "Luck": 1.95,
    "Move": -16
   },
   {
@@ -302,7 +302,7 @@
    "Owner": "Mistafyer",
    "Rec": "8-2",
    "Pts": 1331.46,
-   "Luck": 2.03,
+   "Luck": 2.04,
    "Move": 7
   },
   {
@@ -312,7 +312,7 @@
    "Owner": "DavidJimm",
    "Rec": "8-2",
    "Pts": 1330.26,
-   "Luck": 2.32,
+   "Luck": 2.34,
    "Move": -19
   },
   {
@@ -322,7 +322,7 @@
    "Owner": "YikesOnBikes",
    "Rec": "8-2",
    "Pts": 1327.82,
-   "Luck": 2.12,
+   "Luck": 2.13,
    "Move": 4
   }
  ],
@@ -333,8 +333,8 @@
    "Owner": "joonbug",
    "P": 245.56,
    "Opp": "Navy",
-   "PA": 88.22,
-   "Margin": 157.34
+   "PA": 89.22,
+   "Margin": 156.34
   },
   {
    "Team": "Brown",
@@ -378,8 +378,8 @@
    "Owner": "Dunebuggy619",
    "P": 209.12,
    "Opp": "Arizona",
-   "PA": 80.94,
-   "Margin": 128.18
+   "PA": 81.94,
+   "Margin": 127.18
   },
   {
    "Team": "Arizona State",
@@ -441,7 +441,7 @@
   },
   {
    "Lg": "Big East",
-   "Avg": 128.61
+   "Avg": 128.7
   },
   {
    "Lg": "Wild",
@@ -453,7 +453,7 @@
   },
   {
    "Lg": "Pac-12",
-   "Avg": 122.55
+   "Avg": 125.29
   },
   {
    "Lg": "Big Ten",
@@ -461,11 +461,11 @@
   },
   {
    "Lg": "Big 12",
-   "Avg": 120.32
+   "Avg": 120.4
   },
   {
    "Lg": "Big Sky",
-   "Avg": 119.52
+   "Avg": 119.6
   },
   {
    "Lg": "SEC",
@@ -473,11 +473,11 @@
   },
   {
    "Lg": "Sun Belt",
-   "Avg": 116.22
+   "Avg": 116.31
   },
   {
    "Lg": "HBCU",
-   "Avg": 106.32
+   "Avg": 106.4
   }
  ],
  "awards": {
@@ -487,8 +487,8 @@
    "Owner": "joonbug",
    "P": 245.56,
    "Opp": "Navy",
-   "PA": 88.22,
-   "Margin": 157.34
+   "PA": 89.22,
+   "Margin": 156.34
   },
   "blowout": {
    "Team": "Coastal Carolina",
@@ -496,8 +496,8 @@
    "Owner": "joonbug",
    "P": 245.56,
    "Opp": "Navy",
-   "PA": 88.22,
-   "Margin": 157.34
+   "PA": 89.22,
+   "Margin": 156.34
   },
   "closest": {
    "Team": "Kentucky",
@@ -527,13 +527,13 @@
    "Margin": 23.28
   },
   "low": {
-   "Team": "California",
-   "Lg": "Pac-12",
-   "Owner": "ImagineWiigons",
-   "P": 34.26,
-   "Opp": "Colorado",
-   "PA": 116.02,
-   "Margin": -81.76
+   "Team": "Northern Iowa",
+   "Lg": "Big Sky",
+   "Owner": "thejockytype",
+   "P": 37.44,
+   "Opp": "Eastern Washington",
+   "PA": 60.72,
+   "Margin": -23.28
   },
   "ybs": {
    "Team": "Texas Tech",
@@ -553,8 +553,8 @@
    "Owner": "joonbug",
    "P": 245.56,
    "Opp": "Navy",
-   "PA": 88.22,
-   "Margin": 157.34,
+   "PA": 89.22,
+   "Margin": 156.34,
    "Max": 247.56,
    "Eff": 0.9919
   },
@@ -566,7 +566,7 @@
    "Opp": "Florida Atlantic",
    "PA": 162.58,
    "Margin": 5.12,
-   "WinPct": 23.7
+   "WinPct": 23.6
   },
   "exceed": {
    "Team": "Coastal Carolina",
@@ -574,8 +574,8 @@
    "Owner": "joonbug",
    "P": 245.56,
    "Opp": "Navy",
-   "PA": 88.22,
-   "Margin": 157.34,
+   "PA": 89.22,
+   "Margin": 156.34,
    "Proj": 147.38,
    "Over": 98.18
   }

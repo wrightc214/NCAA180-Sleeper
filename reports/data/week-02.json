@@ -1,7 +1,7 @@
 {
  "week": 2,
- "avg": 123.14,
- "median": 119.0,
+ "avg": 123.26,
+ "median": 119.5,
  "unbeaten": 53,
  "winless": 53,
  "top32": [
@@ -179,7 +179,7 @@
    "Rank": 18,
    "Team": "South Carolina",
    "Lg": "SEC",
-   "Owner": "Orphan",
+   "Owner": "Neilsondug",
    "Rec": "2-0",
    "Pts": 315.4,
    "Luck": 0.5,
@@ -262,7 +262,7 @@
    "Owner": "JustTouchdown1221",
    "Rec": "2-0",
    "Pts": 300.38,
-   "Luck": 0.56,
+   "Luck": 0.57,
    "Move": -15
   },
   {
@@ -282,7 +282,7 @@
    "Owner": "keppin",
    "Rec": "2-0",
    "Pts": 294.64,
-   "Luck": 0.65,
+   "Luck": 0.66,
    "Move": -13
   },
   {
@@ -464,16 +464,16 @@
    "Avg": 120.68
   },
   {
+   "Lg": "Pac-12",
+   "Avg": 120.48
+  },
+  {
    "Lg": "Mountain West",
    "Avg": 120.23
   },
   {
    "Lg": "Big 12",
    "Avg": 120.18
-  },
-  {
-   "Lg": "Pac-12",
-   "Avg": 118.67
   },
   {
    "Lg": "Big Sky",
@@ -545,7 +545,7 @@
    "Margin": -41.24,
    "Max": 194.28,
    "Left": 116.3,
-   "Count": 50
+   "Count": 49
   },
   "coach": {
    "Team": "Ohio State",
