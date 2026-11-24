@@ -134,10 +134,11 @@
       const rightIn=!leftIn&&l?.status!=='Coin toss'&&r?.active;
       const leftExtra=archive?'<small>#'+E(l?.rank)+'</small>':'<small>'+percent(odds[l?.k]||0)+'</small>';
       const leftHTML=l?formatTeam(l.k,!leftIn,leftExtra)+'<div class="sw-inline">'+E(l.status+entryNote(l.k))+'</div>':'';
-      const note=hold&&(hold.final?hold.conf+' Champion':
+      const note=hold&&(hold.final?hold.conf+' Champion':hold.plays?hold.conf+' CCG · '+name(l.k)+(hold.leads?' leads':' plays'):
         hold.conf+' CCG · '+name(l.k)+' leads'+(hold.pair?'':' — a win keeps this spot'));
+      const link=hold&&!hold.final?detail({game:hold.game,label:' '}):'';
       const rightHTML=hold?(hold.pair?formatTeam(hold.pair.k,true,metric(hold.pair))+
-        '<div class="sw-inline">'+E(note)+'</div>':'<div class="sw-placard">'+E(note)+'</div>'):
+        '<div class="sw-inline">'+E(note)+'</div>':'<div class="sw-placard">'+E(note)+link+'</div>'):
         r?formatTeam(r.k,!rightIn,metric(r))+'<div class="sw-inline">'+E(r.label)+detail(r)+'</div>':'';
       return '<div class="sw-cut-row"'+(hold?' data-held="'+(hold.pair?'pair':'placard')+'"':'')+'>'+
         '<div'+(l?' data-at-large="'+E(l.k)+'"':'')+'>'+leftHTML+'</div>'+
