@@ -35,7 +35,7 @@
     ]},
     "special": {"label": "Event", "items": [
       {"label": "The Guillotine", "href": "special.html", "icon": "../assets/logos/Guillotine/Guillotine%20G.png"},
-      {"label": "Dwight Fight", "href": "dwight-fight.html", "icon": "../assets/logos/Dwight%20Fight/Dwight%20Fight%20Glasses.png", "state": "hidden-dev"},
+      {"label": "Dwight Fight", "href": "dwight-fight.html", "icon": "../assets/logos/Dwight%20Fight/Dwight%20Fight%20Glasses.png", "state": "visible"},
       {"label": "Champions League", "href": "cl-standings.html", "match": "^cl-[a-z-]+\\.html$", "state": "hidden-dev"}
     ]},
     "champions-league": {"label": "", "items": [
