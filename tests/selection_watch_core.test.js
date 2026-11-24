@@ -130,3 +130,10 @@ test('a tied loser with a partial at-large path prevents a play-in tag',()=>{
     ccg:[{id:'g',a:'A',b:'D'}],tie:[['A','B']]};
   assert.deepEqual(core.cutBoard(d).playIns,[]);
 });
+test('each possible thief sits beside the team it would knock out', () => {
+  // Chris, 2026-11-24: most likely thief against the last team above the cut, then upward.
+  const d={field_size:6,order:'ABCDEFGHIJKL'.split('').map((k,i)=>({k,rank:i+1})),
+    ccg:[{id:'g1',a:'A',b:'J'},{id:'g2',a:'B',b:'K'},{id:'g3',a:'C',b:'L'}],tie:[]};
+  const b=core.cutBoard(d,{g1:'A',g2:'B',g3:'C'},{g1:.6,g2:.8,g3:.7},{},{});
+  assert.deepEqual(b.rows.map(r=>[r.left.k,r.right.k]),[['D','K'],['E','L'],['F','J']]);
+});
