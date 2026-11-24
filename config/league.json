@@ -1015,24 +1015,24 @@
       "live_label": "Unofficial"
     },
     "guillotine": {
-      "_note": "The Guillotine (Chris, 2026-11-04 / 11-14; claude/todo-guillotine.md): every team plays weeks first_week..last_week on its own standard score. Each week half of the field entering the week (rounded down) advances; everyone tied with the last spot advances too (PGA style). The top score in last_week wins; an exact tie there is broken by tiebreak_week's score, then co-champions. A rerun after stat corrections only ADDS teams to a frozen week (nobody already advanced is removed). Orphan teams play like everyone else.",
+      "_note": "The Guillotine (Chris, 2026-11-04 / 11-14; weeks 12-16 from 2026-11-24 -- CCG week is a dead week for most, and a week-16 final means no one plays for two trophies in one game; claude/todo-guillotine.md): every team plays weeks first_week..last_week on its own standard score. Each week half of the field entering the week (rounded down) advances; everyone tied with the last spot advances too (PGA style). The top score in last_week wins; an exact tie there is broken by tiebreak_week's score, then co-champions. A rerun after stat corrections only ADDS teams to a frozen week (nobody already advanced is removed). Orphan teams play like everyone else.",
       "name": "The Guillotine",
       "from_season": 2026,
-      "first_week": 13,
-      "last_week": 17,
-      "tiebreak_week": 18,
+      "first_week": 12,
+      "last_week": 16,
+      "tiebreak_week": 17,
       "logos": {
         "wordmark": "assets/logos/Guillotine/Guillotine.png",
         "mark": "assets/logos/Guillotine/Guillotine G.png",
         "weeks": {
-          "13": "assets/logos/Guillotine/Round 1.png",
-          "14": "assets/logos/Guillotine/Round 2.png",
-          "15": "assets/logos/Guillotine/Round 3.png",
-          "16": "assets/logos/Guillotine/Round 4.png",
-          "17": "assets/logos/Guillotine/Final.png"
+          "12": "assets/logos/Guillotine/Round 1.png",
+          "13": "assets/logos/Guillotine/Round 2.png",
+          "14": "assets/logos/Guillotine/Round 3.png",
+          "15": "assets/logos/Guillotine/Round 4.png",
+          "16": "assets/logos/Guillotine/Final.png"
         }
       },
-      "_logos_note": "Chris's logos (2026-11-14). wordmark = no round (default, out of season); mark = square G (Special Events sub-tab); weeks = the round logo shown for that week, Final = week 17 and the champion banner."
+      "_logos_note": "Chris's logos (2026-11-14). wordmark = no round (default, out of season); mark = square G (Special Events sub-tab); weeks = the round logo shown for that week, Final = last_week and the champion banner."
     }
   },
   "draft": {

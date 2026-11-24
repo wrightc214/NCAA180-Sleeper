@@ -131,6 +131,7 @@ class PushTests(unittest.TestCase):
 
     def ann(self):
         lc = gl.psc.config()[0]
+        lc["postseason"]["guillotine"]["first_week"] = 13  # fixture weeks are 13+ (live config starts week 12)
         smap = {"NCAA BIG SKY": "Big Sky"}
         return pa.guillotine_announcements(self.gdf(), 2026, smap, lc)[0]
 

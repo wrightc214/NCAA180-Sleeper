@@ -125,7 +125,7 @@ class MenuBrowser(unittest.TestCase):
         self.assertEqual(pg.locator(".n180-devbar").count(), 1)
         self.assertIn("Replay, not an official result", pg.inner_text(".gl-replay"))
         pg.wait_for_selector(".gl-champ")
-        self.assertIn("Washington State", pg.inner_text(".gl-champ"))
+        self.assertIn("Georgetown", pg.inner_text(".gl-champ"))
         self.assertEqual(pg.locator(".gl-weeks a").count(), 5)
         self.assertEqual(pg.locator(".fz-t .gl-r").count(), 11)  # week 17 final field
         self.assertEqual(self.errors, [])

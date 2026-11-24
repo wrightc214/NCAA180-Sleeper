@@ -93,7 +93,7 @@ def main():
             continue
         y = year.group(1)
         note = (f'<p class="gl-replay" role="note"><b>Replay, not an official result.</b> {y} was not played as '
-                f'{name}: these are {y}\'s real week 13–17 scores run through this season\'s rules.</p>')
+                f'{name}: these are {y}\'s real week {g["first_week"]}–{g["last_week"]} scores run through this season\'s rules.</p>')
         page = (body.replace('<div id="board" aria-live="polite"></div>',
                              f'{note}<div id="board" aria-live="polite" data-src="../{html.escape(src)}"></div>')
                 .replace(menu_html("special", ["special", "guillotine-seasons"]),

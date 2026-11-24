@@ -3,7 +3,7 @@
 Chris (2026-11-24): preview what the Guillotine page looks like finished, using 2025's real week 13–17 scores.
 
 - `data/replays/guillotine-2025.json`: `python scripts/guillotine.py --year 2025 --out-dir /tmp/g25`, json copied in.
-  Kept out of `data/scoreboard/` on purpose: `trophies.py` reads `data/scoreboard/<year>/guillotine.json`
+  Weeks 12–16 (Chris 2026-11-24). Kept out of `data/scoreboard/` on purpose: `trophies.py` reads `data/scoreboard/<year>/guillotine.json`
   and would have logged a 2025 Guillotine trophy. `Guillotine_Season.csv` untouched.
 - `special_page.py` writes `reports/guillotine-<year>.html` for every replay file, with a
   "Replay, not an official result" note. `guillotine.js` reads `data-src`, maps 2025 league IDs to this
