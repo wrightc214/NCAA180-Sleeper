@@ -264,7 +264,8 @@ test('What-if shows a held pair or placard while the natural team is leading, th
     await h.ready;
     const pick=(game,value)=>h.element('sw-picks').listeners.change({target:{dataset:{game},value:key(value)}});
     const board=()=>h.element('sw-board-rows').innerHTML;
-    assert.doesNotMatch(board(),/data-held/);
+    // Chris, 2026-11-24: an at-large team playing its own CCG always gets a placard + View game link.
+    assert.match(board(),/data-held="placard"[^]*Example CCG · Team 4 leads · Live odds · <a href="scoreboard\.html/);
     pick('x',8);
     pick('y',9);
     assert.match(h.element('sw-whatif-banner').textContent,/WHAT-IF/);

@@ -151,6 +151,18 @@
       const k=settled[g.id]||g.winner, row=k&&!playIns.has(g.id)&&byBubble.get(k);
       if(row&&row.status!=='Saved')row.status='Automatic bid';
     });
+    // Every at-large team still playing its own CCG gets a placard and takes no thief (Chris, 2026-11-24),
+    // not only a leader whose win saves its spot.
+    games.forEach(g=>{
+      if(playIns.has(g.id)||settled[g.id]||g.winner)return;
+      [g.a,g.b].forEach(k=>{
+        // Skip a team already on the board for this game (held, or a thief) and one whose opponent is
+        // stealing right now: that thief sits on its row instead.
+        if(!byBubble.has(k)||held.has(k)||held.get(opponent(g,k))?.game===g.id||thieves.some(t=>t.k===k||t.k===opponent(g,k)&&t.active))return;
+        held.set(k,{conf:team.get(k)?.conf||'Conference',game:g.id,final:false,pair:null,plays:true,
+          leads:holding[g.id]===k});
+      });
+    });
     // Thieves sort by live win chance once games start (pregame odds before kickoff).
     thieves.sort((a,b)=>a.win-b.win||a.rank-b.rank||a.k.localeCompare(b.k));
     for(const t of thieves)t.label=labels[t.game]==='Stolen'&&!t.active?'':labels[t.game];
