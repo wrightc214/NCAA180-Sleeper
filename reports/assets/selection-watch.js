@@ -11,8 +11,12 @@
     typeof value==='string' && value.trim() ? value.trim() : fallback;
   let preview=null;
   const dollar = x => Number(x).toFixed(2);
+  // Whole numbers only (Chris, 2026-11-24). 0% / 100% only once every CCG is final; before that a
+  // near-certain value shows <1% / >99% so the board never claims a result that hasn't happened.
+  let allFinal=false;
   const percent = x => !Number.isFinite(x) ? '—' :
-    x < .00001 ? '0%' : x > .99999 ? '100%' : (x*100).toFixed(1)+'%';
+    allFinal&&x<.005 ? '0%' : allFinal&&x>=.995 ? '100%' :
+    x < .005 ? '&lt;1%' : x >= .995 ? '&gt;99%' : Math.round(x*100)+'%';
   const clamp = x => Math.max(0,Math.min(1,x));
   let d,cfg,index,metadata,brand,featureName,exportPrefix,refreshMs,rankingOrder=false,modelCache=new Map(),liveScores={},
     lastGood=null,updated=null,timer=null,loading=false,absoluteLocks=null;
@@ -176,6 +180,7 @@
   function paint() {
     if(!lastGood)return;
     paintPicks();
+    allFinal=d.ccg.length>0&&d.ccg.every(g=>g.winner||liveScores[g.id]?.final);
     const games=gameById(),leaders={},p={},settled={},holding={};
     for(const g of d.ccg){
       const live=liveScores[g.id]||{},last=g.winner;
