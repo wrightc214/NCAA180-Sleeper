@@ -266,6 +266,8 @@ test('What-if shows a held pair or placard while the natural team is leading, th
     const board=()=>h.element('sw-board-rows').innerHTML;
     // Chris, 2026-11-24: an at-large team playing its own CCG always gets a placard + View game link.
     assert.match(board(),/data-held="placard"[^]*Example CCG · Team 4 leads · Live odds · <a href="scoreboard\.html/);
+    // The cut line stays with the below-cut rows; a plays/leads placard sits on the above-cut side (Chris, 2026-11-24).
+    assert.match(board(),/sw-cut-line[^]*data-held="placard"/);
     pick('x',8);
     pick('y',9);
     assert.match(h.element('sw-whatif-banner').textContent,/WHAT-IF/);
