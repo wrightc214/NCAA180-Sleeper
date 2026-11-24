@@ -9,14 +9,14 @@ PAGE = ROOT / "reports/selection-watch.html"
 
 
 def test_page_is_generated_and_menu_wired():
-    """The tab is public for CCG (Chris, 2026-11-20); this Playoffs page stays Dev-only through its
+    """The tab is public for CCG (Chris, 2026-11-20); the Playoffs page went public 2026-11-24 (Chris) through its
     sub-row item (config/nav.json rows.selection-watch), which also drives the DEV bar."""
     src = (ROOT / "scripts/selection_watch_page.py").read_text(encoding="utf-8")
     html = PAGE.read_text(encoding="utf-8")
     assert 'data-current="selection-watch"' in html and 'data-row="selection-watch"' in html
     nav = json.loads((ROOT / "config/nav.json").read_text(encoding="utf-8"))
     playoffs = [i for i in nav["rows"]["selection-watch"]["items"] if i["href"] == "selection-watch.html"]
-    assert playoffs and playoffs[0]["state"] == "hidden-dev"
+    assert playoffs and playoffs[0]["state"] == "visible"
     for name in ("sw-status-section", "sw-board", "sw-playins", "sw-final-playins", "sw-bubble", "sw-locks", "sw-noimpact"):
         assert f'id="{name}"' in html
         assert f'data-save="{name}"' in html

@@ -14,7 +14,7 @@
     {"id": "scoreboard", "label": "Games", "href": "scoreboard.html"},
     {"id": "poll", "label": "Poll", "href": "poll.html", "aliases": ["poll-how", "poll-bots"]},
     {"id": "postseason", "label": "Postseason", "href": "postseason.html"},
-    {"_note": "Selection Watch tab public since 2026-11-20 (Chris) for the CCG sub-page; Playoffs stays Dev-only via its sub-row item. The tab links to the first sub-page the viewer can see. Set state to hidden to turn off the board and its data publication.", "id": "selection-watch", "label": "Selection Watch", "href": "selection-watch.html", "state": "visible"},
+    {"_note": "Selection Watch tab public since 2026-11-20 (Chris) for the CCG sub-page; Playoffs (Steal Board) public since 2026-11-24 (Chris). The tab links to the first sub-page the viewer can see. Set state to hidden to turn off the board and its data publication.", "id": "selection-watch", "label": "Selection Watch", "href": "selection-watch.html", "state": "visible"},
     {"id": "special", "label": "Special Events", "href": "special.html"},
     {"id": "managers", "label": "Managers", "href": "managers.html"},
     {"id": "transactions", "label": "Transactions", "href": "transactions.html"},
@@ -31,7 +31,7 @@
     ]},
     "selection-watch": {"label": "", "items": [
       {"label": "CCG", "href": "ccg-race.html", "state": "visible"},
-      {"label": "Playoffs", "href": "selection-watch.html", "state": "hidden-dev"}
+      {"label": "Playoffs", "href": "selection-watch.html", "state": "visible"}
     ]},
     "special": {"label": "Event", "items": [
       {"label": "The Guillotine", "href": "special.html", "match": "^(special|guillotine-\\d{4})\\.html$", "icon": "../assets/logos/Guillotine/Guillotine%20G.png"},
