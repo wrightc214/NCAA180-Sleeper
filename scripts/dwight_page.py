@@ -42,6 +42,7 @@ SEASON_PAGE = "reports/dwight-fight-{}.html"
 STANDINGS_HIST = "data/Standings_Historic.csv"
 MATCHUPS_HIST = "data/Matchups_Historic.csv"
 SCOREBOARD = "data/scoreboard"
+ROLES = "data/Dwight_Roles.csv"  # past seasons: Season, Username, Role (Chris, 2026-11-24: option C)
 NBSP = "\u00a0"
 RECON_NOTE = "Reconstructed: field = that season's poll voters; the event was likely not held."
 
@@ -205,9 +206,24 @@ def role_labels():
     return d
 
 
-def make_role(current, R=None, short=None):
-    """role(username) -> label: official role (league_roles.py, highest wins), then config roles, then
-    the season default (default_current this season, default_past before)."""
+def season_roles(year, path=ROLES):
+    """{casefolded username: role} for one past season from data/Dwight_Roles.csv ({} without the file)."""
+    if year is None or not os.path.exists(path):
+        return {}
+    with open(path, newline="", encoding="utf-8-sig") as f:
+        return {r["Username"].strip().casefold(): r["Role"].strip() for r in csv.DictReader(f)
+                if str(r.get("Season", "")).strip() == str(year) and r.get("Username", "").strip() and r.get("Role", "").strip()}
+
+
+def make_role(current, R=None, short=None, season=None, table=None):
+    """role(username) -> label.
+    This season: official role (league_roles.py, highest wins), then config roles, then default_current.
+    Past seasons: that season's row in data/Dwight_Roles.csv (roles as they were then; today's staff
+    source doesn't know history), else default_past."""
+    if not current:
+        T = season_roles(season) if table is None else table
+        past = role_labels()["default_past"]
+        return lambda username: T.get(str(username or "").strip().casefold(), past)
     R = LR.roles() if R is None else R
     short = {v: k for k, v in ps.league_short().items()} if short is None else short
     L = role_labels()
@@ -240,7 +256,7 @@ def bracket_model(ev, current, col=None, role=None, now_label=None):
     """bracket.py model for an event."""
     c = conf()
     col = colors() if col is None else col
-    role = role or make_role(current)
+    role = role or make_role(current, season=ev["season"])
     names = {}
     for x in ev["entrants"]:
         if x:

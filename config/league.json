@@ -999,7 +999,7 @@
         "trophy": "assets/logos/Dwight Fight/Dwight Fight Trophy Blank.png"
       },
       "_art_note": "Images are copied from the dwight-fight art branch. Trophy winner/plaque text is HTML overlay, not generated art.",
-      "_roles_note": "Bracket second line = 'username · role' (Chris, 2026-11-24, task 5.18). Role order: (1) official role from the About page's staff source (scripts/league_roles.py: about.league_manager, about.data_contact, data/LeagueStaff.csv assistants; highest wins); (2) roles below (Sleeper username -> role text, any case) for roles the staff source can't tell; (3) everyone else gets role_labels.default_current (this season) or role_labels.default_past (earlier seasons). {conference} = the conference's short name.",
+      "_roles_note": "Bracket second line = 'username · role' (Chris, 2026-11-24, task 5.18). This season: (1) official role from the About page's staff source (scripts/league_roles.py: about.league_manager, about.data_contact, data/LeagueStaff.csv assistants; highest wins); (2) roles below (Sleeper username -> role text, any case) for roles the staff source can't tell; (3) role_labels.default_current. Past seasons (Chris, 2026-11-24): the role each person held THAT season from data/Dwight_Roles.csv (Season, Username, Role; prefilled with today's roles, edit to the real history), else role_labels.default_past. {conference} = the conference's short name.",
       "roles": {},
       "role_labels": {
         "league_manager": "Commissioner",

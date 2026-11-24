@@ -93,6 +93,23 @@ def test_roles_order_and_labels(monkeypatch):
     assert now("EthanH") == "Legacy Voter" and past("EthanH") == "Poll Voter"
 
 
+def test_past_seasons_use_their_own_role_table(tmp_path):
+    t = tmp_path / "roles.csv"
+    t.write_text("Season,Username,Role,Note\n2021,CodeKhaos,Big East Assistant,\n2022,linkoftime1,Commissioner,\n", encoding="utf-8")
+    r21 = D.make_role(False, table=D.season_roles(2021, t))
+    assert r21("codekhaos") == "Big East Assistant"
+    assert r21("linkoftime1") == "Poll Voter"  # no 2021 row: today's role does not leak into the past
+    assert D.make_role(False, table=D.season_roles(2022, t))("LinkOfTime1") == "Commissioner"
+    assert D.season_roles(2021, tmp_path / "missing.csv") == {}
+
+
+def test_role_table_prefilled_for_active_role_holders():
+    import csv
+    rows = list(csv.DictReader(open(D.ROLES, encoding="utf-8-sig")))
+    assert {(r["Season"], r["Username"], r["Role"]) for r in rows} >= {("2023", "wrightc214", "Data Manager"),
+                                                                       ("2023", "linkoftime1", "Commissioner")}
+
+
 def test_highest_official_role_wins():
     import league_roles as LR
     import pandas as pd
