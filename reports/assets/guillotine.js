@@ -93,7 +93,13 @@
     const have=items.filter(x=>x.m),started=have.some(x=>x.m.played),allFinal=have.length&&have.every(x=>x.m.final);
     for(const x of have){x.proj=started?x.m.projected:x.m.pregame;x.sd=allFinal?0:x.m.sd;}
     const odds=have.length===items.length?G.advanceOdds(have.map(x=>({mu:allFinal?x.m.actual:x.proj,sd:x.sd})),K):[];
-    have.forEach((x,i)=>{x.odds=odds[i]??null;});
+    // Live: 100% / 0% only when proven (config live_bounds); an estimate never reaches either.
+    const calls=started&&!allFinal&&have.length===items.length?G.provenCalls(have.map(x=>x.m),K,cfg.live_bounds):[];
+    have.forEach((x,i)=>{
+      const o=odds[i]??null;
+      x.call=calls[i]||null;
+      x.odds=x.call==='safe'?100:x.call==='cut'?0:o==null||allFinal||!started?o:Math.min(99.999,Math.max(0.001,o));
+    });
     items.sort((a,b)=>(b.m?b.proj:-1e9)-(a.m?a.proj:-1e9)||ident(a.t).name.localeCompare(ident(b.t).name));
     const cur=started?G.cutLine(have.map(x=>x.m.actual),K):null,proj=G.cutLine(have.map(x=>x.proj),K);
     return {items,K,cur,proj,started,allFinal,missing:items.length-have.length};

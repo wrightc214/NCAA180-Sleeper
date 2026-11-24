@@ -43,7 +43,6 @@ import pandas as pd
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import _postseason_common as ps  # noqa: E402
 import bowls as B  # noqa: E402
-import clinch_cap  # noqa: E402
 import league_config as lcfg  # noqa: E402
 from poll_page import colors, logo  # noqa: E402
 from site_common import menu_html, page_head  # noqa: E402
@@ -376,7 +375,7 @@ def odds_cards(O, col, short):
                             for t in ts)
             tl.append(f'<h3>{name} <small>{len(ts)}</small></h3><div class="ochips">{chips}</div>')
     po = (f'<section class="card" id="playoff-odds"><h2>Playoff odds <small>{O["sims"]:,} simulated seasons</small></h2>'
-          f'<p class="sub">Locks 99%+ · Likely 75–99% · Bubble 25–75% · Long shots 5–25%. "Clinched" only when no result can change it. {e(clinch_cap.note())}</p>'
+          f'<p class="sub">Locks 99%+ · Likely 75–99% · Bubble 25–75% · Long shots 5–25%. "Clinched" only when no result can change it.</p>'
           + "".join(tl) + '</section>')
     min_w = int(lcfg.cfg()["postseason"]["bowls"]["min_wins"])
 
@@ -492,7 +491,7 @@ def build(year):
     how = (f'<details class="how"><summary>How the projection works</summary>'
            f'<p><b>Odds</b> (impactful games, playoff odds, the full table): the rest of the season, the conference championships and the playoff are '
            f'simulated 10,000 times — this week from the Tuesday projections, later weeks from each team\'s scoring so far — and the real '
-           f'selection rules run on every one. "Clinched" and "Out" appear only when no result can change them. {e(clinch_cap.note())}</p>'
+           f'selection rules run on every one. "Clinched" and "Out" appear only when no result can change them.</p>'
            f'<p><b>Most likely field and bowls:</b> every remaining regular-season game (weeks {after + 1}–{lr}) and every conference championship game goes to '
            f'the team with the higher season scoring average. Then the real postseason rules run on those results: '
            f'conference champions get automatic bids (AQ), at-large spots go by record and the tiebreakers, and bowl teams '

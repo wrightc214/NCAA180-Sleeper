@@ -15,27 +15,20 @@ import numpy as np
 sys.path.insert(0, os.path.dirname(__file__))
 import _postseason_common as ps
 from postseason_odds import _Conf, MAX_ENUM
-import clinch_cap
 import league_config as lcfg
 
 
-def alive_members(members, divs, games, wins, points_for=None, caps=None):
-    """Exact existential contender test; ties on wins remain eligible unless the points-for tie is
-    already settled (5.15: a rival's points so far beat this team's points so far + its cap).
+def alive_members(members, divs, games, wins):
+    """Exact existential contender test; ties on wins remain eligible.
 
     members: global roster keys; divs: lists of keys; games: remaining key pairs;
-    wins: baseline wins by key; points_for / caps: by key (both or neither).
-    Use _Conf for the shared exhaustive enumeration.
+    wins: baseline wins by key. Use _Conf for the shared exhaustive enumeration.
     """
     at = {k: i for i, k in enumerate(members)}
     base = np.array([wins[k] for k in members], dtype=int)
-    pf = cp = None
-    if points_for is not None and caps is not None:
-        pf = np.array([float(points_for[k]) for k in members])
-        cp = np.array([float(caps[k]) for k in members])
     c = _Conf(list(range(len(members))),
               [[at[k] for k in d] for d in divs],
-              [(at[a], at[b]) for a, b in games], base, pf, cp)
+              [(at[a], at[b]) for a, b in games], base)
     out = []
     for d in divs:
         qualified = []
@@ -45,13 +38,9 @@ def alive_members(members, divs, games, wins, points_for=None, caps=None):
             if not rivals:
                 qualified.append(k)
             elif c.exact:
-                ok = np.ones(len(c.W), dtype=bool)
-                for j in rivals:
-                    ok &= (c.W[:, i] > c.W[:, j]) | ((c.W[:, i] == c.W[:, j]) & (not c.beats(j, i)))
-                if ok.any():
+                if np.any(c.W[:, i] >= c.W[:, rivals].max(axis=1)):
                     qualified.append(k)
-            elif all(base[i] + c.left[i] > base[j] or
-                     (base[i] + c.left[i] == base[j] and not c.beats(j, i)) for j in rivals):
+            elif base[i] + c.left[i] >= max(base[j] for j in rivals):
                 qualified.append(k)
         out.append(qualified)
     return out
@@ -126,18 +115,8 @@ def build(year=None, write=True):
             entries[b]["remaining_games"].append({"week": int(row.Week), "opponent_roster_id": a})
         if not games:
             raise ValueError("No remaining games for " + full)
-        rate, burst = clinch_cap.settings()
-        pf = caps = None
-        if clinch_cap.enabled(rate, burst):
-            slots = clinch_cap.starter_slots(year)
-            wcap = clinch_cap.week_cap(slots.get(league, max(slots.values(), default=0)), rate, burst)
-            drop = clinch_cap.max_drop()
-            left = {k: len(entries[k]["remaining_games"]) for k in members}
-            # Floor = points so far - drop per week left; ceiling = points so far + cap.
-            pf = {k: entries[k]["points_for"] - drop * left[k] for k in members}
-            caps = {k: (wcap + drop) * left[k] for k in members}
         alive = alive_members(members, [v for _, v in divkeys], games,
-                              {k: entries[k]["wins"] for k in members}, pf, caps)
+                              {k: entries[k]["wins"] for k in members})
         if full not in short:
             raise ValueError("Missing friendly short conference name: " + full)
         confs.append({

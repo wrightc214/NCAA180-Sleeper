@@ -5,7 +5,7 @@
   if(params.has('game')||params.has('post')||params.has('roster')||params.get('view')==='game')return;
   const $=id=>document.getElementById(id),C=window.ScoreboardCore,S=window.ScoreboardOverview;
   const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const pct=p=>p===null?'—':p<1?'<1%':p>99?'>99%':`${Math.round(p)}%`;
+  const pct=p=>p===null?'—':p===0?'0%':p===100?'100%':p<1?'<1%':p>99?'>99%':`${Math.round(p)}%`; // exactly 0 / 100 = proven (live_bounds) or a pregame record
   let cfg,index,metadata,baseline,colors,gotw={},season,week,generation=0,controller,timer,busy=false,failures=0,metadataAt=0;
   // Only reload on becoming visible if work was interrupted while hidden or data is over a minute old (avoids a duplicate load).
   let pausedHidden=false,loadedAt=Date.now();
@@ -120,7 +120,7 @@
   function card(g){
     if(g.post&&g.match.length>2)return groupCard(g);
     const {id,game,match,s,o}=g,league=index.leagues[id];
-    const p=s.probability===null?null:Math.round(s.probability),href=`scoreboard.html?${new URLSearchParams(g.post?{season,week,post:g.post.id,overview:$('league').value||'all'}:{season,week,league:id,game,overview:$('league').value||'all'})}`;
+    const p=s.probability===null?null:s.probability,href=`scoreboard.html?${new URLSearchParams(g.post?{season,week,post:g.post.id,overview:$('league').value||'all'}:{season,week,league:id,game,overview:$('league').value||'all'})}`;
     const status=s.active?`● Live · ${s.active} playing`:s.final?'Final':s.started?'In progress':s.next?kickTxt(s.next.kickoff):s.status;
     const order=cardOrder(g);
     const pre=s.live&&s.pregame!=null?`<div class="ew">Pregame: ${esc(league.teams[String(match[order[0]].roster_id)]?.name)} ${esc(pct(order[0]===0?s.pregame:100-s.pregame))}</div>`:'';

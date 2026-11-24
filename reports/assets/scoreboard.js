@@ -14,7 +14,7 @@
 
   const C=window.ScoreboardCore, $=id=>document.getElementById(id);
   const escape=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const money=x=>Number(x).toFixed(2), pct=x=>x<1?'<1%':x>99?'>99%':`${Math.round(x)}%`;
+  const money=x=>Number(x).toFixed(2), pct=x=>x===0?'0%':x===100?'100%':x<1?'<1%':x>99?'>99%':`${Math.round(x)}%`;
   let gotw={},cfg,index,baseline,metadata,leagueId,week,season,rosters=[],chosen=[],timer,lastGood=null,failures=0,busy=false,live=false,crunch=false;
   let metadataAt=0,metadataWarning='',abort,resumeNeeded=false,leagueInfo=null;
   const params=new URLSearchParams(location.search);
@@ -218,7 +218,11 @@
     if(isFinal) {
       const m=C.round(Math.abs(a.actual-b.actual)),w=a.actual>b.actual?chosen[0]:chosen[1];
       html+=`<div class="fin">${m<0.005?'Final · tie':`Final · ${escape(team(w.roster_id,w.leagueId).name)} by ${money(m)}`}</div>`;
-    } else if((a.actual!==0||b.actual!==0)&&!missing) html+=oddsBar(...chosen,C.probability(a,b),false,'LIVE WIN CHANCE · ESTIMATE');
+    } else if((a.actual!==0||b.actual!==0)&&!missing){
+      // Proven (config live_bounds, Chris 2026-11-23): 100% / 0% only when the trailer can't catch up.
+      const pv=C.decided(a,b,cfg.live_bounds),est=Math.min(99.999,Math.max(0.001,C.probability(a,b)));
+      html+=oddsBar(...chosen,pv==='a'?100:pv==='b'?0:est,false,pv?'LIVE · DECIDED (CAN\'T BE CAUGHT)':'LIVE WIN CHANCE · ESTIMATE');
+    }
     if(postGame){const x=postSide(chosen[0]);if(x)html+=oddsBar(...chosen,Number(x.WinPct),true,'PREGAME · TUESDAY');}
     const saved=postGame?null:baseline.odds.find(o=>o.LeagueID===leagueId && [o.RosterID,o.OpponentRosterID].includes(String(chosen[0].roster_id)));
     if(saved) html+=oddsBar(...chosen,saved.RosterID===String(chosen[0].roster_id)?Number(saved.WinPct):100-Number(saved.WinPct),true,'PREGAME · TUESDAY');
