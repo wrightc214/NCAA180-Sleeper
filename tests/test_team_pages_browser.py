@@ -67,6 +67,12 @@ class TeamPageBrowser(unittest.TestCase):
                 self.assertEqual(p.text_content(".tm-head h1"), "Air Force")
                 self.assertIn("Formerly Fresno State", p.inner_text(".tm-head"))
                 self.assertTrue(p.is_visible("#tm-roster li"))
+                self.assertGreaterEqual(p.locator("#tm-over .tm-tile").count(), 8)
+                self.assertGreaterEqual(p.locator("#tm-over-sec .snap-card-btn, #tm-over-sec .snap-btn").count(), 1, "overview Save image")
+                self.assertTrue(p.is_visible("#tm-mgr table"))
+                self.assertTrue(p.is_visible("#tm-picks li"))
+                self.assertGreaterEqual(p.locator("#tm-season-charts .tm-chart").count(), 3)
+                self.assertTrue(p.is_visible("#tm-h2h table"))
                 self.assertGreaterEqual(p.locator("#tm-trophies figure.trophy").count(), 1)
                 self.assertGreaterEqual(p.locator("#tm-trophies article .snap-card-btn").count(), 1, "trophy Save image")
                 self.assertGreaterEqual(p.locator("details.tm-season").count(), 8)
@@ -78,7 +84,7 @@ class TeamPageBrowser(unittest.TestCase):
                 self.assertTrue(p.is_visible("#tm-tx .tm-tx-item"))
                 self.assertEqual(p.evaluate("document.documentElement.scrollWidth - document.documentElement.clientWidth"), 0,
                                  "no sideways scroll")
-                p.click(".tm-more")
+                p.click("#tm-tx-sec .tm-more")
                 self.assertGreater(p.locator("#tm-tx .tm-tx-item:visible").count(), 25)
                 for el in p.query_selector_all("#tm-trophies figure.trophy img"):
                     el.scroll_into_view_if_needed()
@@ -86,6 +92,24 @@ class TeamPageBrowser(unittest.TestCase):
                 if OUT:
                     os.makedirs(OUT, exist_ok=True)
                     p.screenshot(path=os.path.join(OUT, f"team-{tag}.png"), full_page=True)
+
+    def test_chart_hover_tooltip(self):
+        p = self.open(f"reports/team.html?league={league_id('NCAA PAC 12')}&roster=7")
+        hit = p.locator("#tm-season-charts .tm-chart .hit").first
+        hit.hover()
+        tip = p.locator("#tm-season-charts .tm-chart .tm-tip").first
+        self.assertTrue(tip.is_visible())
+        self.assertRegex(tip.inner_text(), r"20\d\d")
+
+    def test_picker_shows_my_team(self):
+        p = self.open("reports/team.html")
+        self.assertIn("Set your team", p.inner_text(".tm-mine"))
+        p.evaluate("localStorage.setItem('ncaa180.push', JSON.stringify({myTeam: 'ncaa180|Pac-12:7'}))")
+        p.reload()
+        p.wait_for_selector("body[data-ready]", state="attached")
+        self.assertIn("Arizona State", p.inner_text(".tm-mine"))
+        self.assertIn("roster=7", p.get_attribute(".tm-mine a", "href"))
+        p.evaluate("localStorage.removeItem('ncaa180.push')")
 
     def test_past_league_id_lands_on_this_season(self):
         old = league_id("NCAA MOUNTAIN WEST", 2021)
@@ -116,7 +140,7 @@ class TeamPageBrowser(unittest.TestCase):
 
     def test_picker_and_unknown_team(self):
         p = self.open("reports/team.html")
-        self.assertEqual(p.locator("#tm-pick a").count(), 204)
+        self.assertEqual(p.locator("#tm-pick li a").count(), 204)
         self.assertEqual(p.locator("#tm-pick .tm-defunct a").count(), 24)
         p = self.open(f"reports/team.html?league={league_id('NCAA AMERICAN', 2019)}&roster=13")
         self.assertTrue(p.is_visible("#tm-error"))
