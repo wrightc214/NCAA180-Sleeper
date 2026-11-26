@@ -117,7 +117,7 @@
     if (d.place) meta.push(`${ord(d.place[0])} in ${esc(d.division || 'division')}`);
     const former = (d.former || []).map(f => `${esc(f.name)} (${f.from === f.to ? f.from : f.from + '–' + f.to})`).join(', ');
     return `<header class="tm-head" style="--team-bg:${esc(d.bg)};--team-ink:${esc(d.ink)}">` +
-      (d.logo ? `<img src="${esc(d.logo)}" alt="" onerror="this.remove()">` : '') +
+      (d.logo ? `<img src="${esc(d.logo)}" data-logo="${esc(d.logo)}" data-logo-inv="${esc(d.logo_inv || d.logo)}" alt="" onerror="this.remove()">` : '') +
       `<div><div class="eyebrow">${esc(d.short)}${d.division ? ' · ' + esc(d.division) : ''}</div>` +
       `<h1>${esc(d.name)}</h1><div class="tm-meta">${meta.map(m => `<span>${m}</span>`).join('')}</div>` +
       (former ? `<div class="tm-former">Formerly ${former}</div>` : '') + `</div></header>`;
@@ -424,6 +424,8 @@
       if (!['full', 'frame', 'site'].includes(m)) m = 'full';
       document.body.classList.remove('tm-c-full', 'tm-c-frame', 'tm-c-site');
       document.body.classList.add('tm-c-' + m);
+      const img = document.querySelector('.tm-head img[data-logo]');  // logo variant for the header's background
+      if (img) img.src = m === 'full' ? img.dataset.logoInv : img.dataset.logo;
       box.querySelectorAll('button').forEach(b => b.setAttribute('aria-checked', String(b.dataset.c === m)));
       try { localStorage.setItem(COLOR_KEY, m); } catch (e) { /* ignore */ }
     };

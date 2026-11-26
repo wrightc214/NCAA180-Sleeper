@@ -228,7 +228,8 @@ def identity(name):
         except Exception:
             pass
     info = logo_info(name, prefix="../")
-    return {"name": name, "bg": bg, "ink": ink, "accent": accent, "logo": fixed_bg_src(info, bg) if info else ""}
+    return {"name": name, "bg": bg, "ink": ink, "accent": accent, "logo": fixed_bg_src(info, bg) if info else "",
+            "logo_inv": fixed_bg_src(info, ink) if info else ""}  # the logo for the inverted header (Team mode)
 
 
 # ---- Seasons ------------------------------------------------------------------------------------
@@ -1142,7 +1143,8 @@ body.tm-c-full #tm-sections .tm-season{background:color-mix(in srgb,var(--t1) 80
 body.tm-c-full #tm-sections .tm-games tr.post td{background:color-mix(in srgb,var(--t1) 65%,#000)}
 body.tm-c-full #tm-sections a.team-link,body.tm-c-full #tm-sections .tm-star{color:var(--t1ink)}
 body.tm-c-full .tm-res{background:var(--panel);border-radius:999px;padding:1px 7px}
-/* the season's name label: inverted so it stands off the team-coloured block */
+/* the header block and the season's name label: inverted so they stand off the team-coloured page */
+body.tm-c-full .tm-head{background:var(--team-ink);color:var(--team-bg)}
 body.tm-c-full .tm-chip{background:var(--chip-ink,var(--t1ink));color:var(--chip-bg,var(--t1))}
 /* neutral islands: anything carrying status colours, grades, art or charts */
 body.tm-c-full #tm-sections .tm-ov,body.tm-c-full #tm-sections .tm-chart,body.tm-c-full #tm-sections .tm-trophies article,

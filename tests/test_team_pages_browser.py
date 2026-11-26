@@ -101,8 +101,12 @@ class TeamPageBrowser(unittest.TestCase):
         self.assertEqual(bg(), "rgb(140, 29, 64)", "Arizona State maroon")
         chip = p.evaluate("(()=>{const c=getComputedStyle(document.querySelector('.tm-chip'));return [c.backgroundColor,c.color]})()")
         self.assertEqual(chip, ["rgb(255, 198, 39)", "rgb(140, 29, 64)"], "season label inverted")
+        head = p.evaluate("(()=>{const c=getComputedStyle(document.querySelector('.tm-head'));return [c.backgroundColor,c.color]})()")
+        self.assertEqual(head, ["rgb(255, 198, 39)", "rgb(140, 29, 64)"], "header block inverted")
         p.click("#tm-colors [data-c=frame]")
         self.assertIn("tm-c-frame", p.get_attribute("body", "class"))
+        self.assertEqual(p.evaluate("getComputedStyle(document.querySelector('.tm-head')).backgroundColor"), "rgb(140, 29, 64)",
+                         "Accent mode keeps the team-coloured header")
         self.assertNotEqual(bg(), "rgb(140, 29, 64)")
         p.click("#tm-colors [data-c=site]")
         p.reload()

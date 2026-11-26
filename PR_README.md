@@ -27,7 +27,7 @@
 - **Team picker:** My team at the top, read from this device's app pick or its first followed team. "Set your team" links to the app page when none is set.
 
 - **Team colours, three ways:** a toggle under the header (Team / Accent / Site). Each device remembers the choice for every team page.
-  - **Team (default):** sections in the team's colour, headings in the accent colour. The accent is the team's secondary colour when it reads at 3:1 on the background, else the text colour. The season name label is inverted (text colour on the background) so it stands off the block. W/L sits in neutral pills. The overview card, charts, trophies and trade cards stay on neutral panels, so status colours and grades always read.
+  - **Team (default):** sections in the team's colour, headings in the accent colour. The accent is the team's secondary colour when it reads at 3:1 on the background, else the text colour. The header block and the season name label are inverted (text colour as the background, with the logo variant for it) so they stand off the team-coloured page. W/L sits in neutral pills. The overview card, charts, trophies and trade cards stay on neutral panels, so status colours and grades always read.
   - **Accent:** team-coloured heading bars and accent edge on a lightly tinted page.
   - **Site:** the site's own colours.
   - The colours sit in a `<style>` element, so saved images keep them.
@@ -60,3 +60,4 @@
 ![overview](docs/reviews/5-20b-team-pages/desktop-overview-managers-roster.png)
 ![charts](docs/reviews/5-20b-team-pages/desktop-season-charts.png)
 ![mobile](docs/reviews/5-20b-team-pages/mobile-dark-overview.png)
+![header](docs/reviews/5-20b-team-pages/mobile-header-inverted.png)
