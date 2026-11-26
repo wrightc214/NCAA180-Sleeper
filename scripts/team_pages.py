@@ -33,7 +33,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import league_config as lcfg  # noqa: E402
 import standard_results  # noqa: E402
 import team_names as tn  # noqa: E402
-from site_common import (SECTIONS_JS, fixed_bg_src, logo_info, menu_html, page_head,  # noqa: E402
+from site_common import (SECTIONS_JS, contrast, fixed_bg_src, logo_info, menu_html, page_head,  # noqa: E402
                          team_colors)
 
 CONFIG = "config/team_pages.json"
@@ -213,11 +213,22 @@ def ordinal(n):
 
 
 def identity(name):
-    """{name, bg, ink, logo} for a school name: team colours (standing rule) and the logo for that background."""
+    """{name, bg, ink, accent, logo} for a school name: team colours (standing rule), an accent for headings
+    on that background (the secondary colour when it reads at 3:1, else the text colour) and the logo."""
     c = tn.colors_row(name) or {}
     bg, ink = team_colors(c.get("Primary"), c.get("Secondary"), c.get("Background"), c.get("Text"), name=name)
+    accent = ink
+    for cand in (c.get("Secondary"), c.get("Primary")):
+        h = str(cand or "").strip()
+        h = h if h.startswith("#") else ("#" + h if h else "")
+        try:
+            if re.fullmatch(r"#[0-9a-fA-F]{6}", h) and h.lower() != bg.lower() and contrast(h, bg) >= 3:
+                accent = h
+                break
+        except Exception:
+            pass
     info = logo_info(name, prefix="../")
-    return {"name": name, "bg": bg, "ink": ink, "logo": fixed_bg_src(info, bg) if info else ""}
+    return {"name": name, "bg": bg, "ink": ink, "accent": accent, "logo": fixed_bg_src(info, bg) if info else ""}
 
 
 # ---- Seasons ------------------------------------------------------------------------------------
@@ -1103,6 +1114,45 @@ CSS = """
 .tm-mine{grid-column:1/-1;margin-bottom:6px}
 .tm-mine a{border-width:2px;max-width:340px}
 .tm-mine.none p{margin:0;color:var(--mute)}
+/* ---- Team colours, three ways (toggle at the top; this device remembers): full = sections in team
+   colours (status marks in neutral pills, cards and charts on neutral panels); frame = team-coloured
+   heading bars on a lightly tinted page; site = the site's own colours. --t1/--t1ink/--t2 come from
+   the team file (bg / readable text / accent) via a <style> element so saved images keep them. */
+.tm-colors{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:12px;color:var(--mute)}
+.tm-colors [role=radiogroup]{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.tm-colors button{font:700 12px var(--sans,sans-serif);padding:6px 10px;border:0;background:var(--panel);color:var(--ink);cursor:pointer}
+.tm-colors button+button{border-left:1px solid var(--line)}
+.tm-colors button[aria-checked=true]{background:var(--ink);color:var(--panel)}
+/* frame */
+body.tm-c-frame,html:has(body.tm-c-frame){background:color-mix(in srgb,var(--t1) 9%,var(--bg))}
+body.tm-c-frame #tm-sections section{border-left:5px solid var(--t2)}
+body.tm-c-frame #tm-sections section>h2,body.tm-c-frame #tm-sections section .sec-h h2{background:var(--t1);color:var(--t1ink);margin:-1px -1px 10px;padding:8px 12px;border-radius:8px 8px 0 0}
+body.tm-c-frame .tm-chip{box-shadow:0 0 0 2px var(--t2)}
+body.tm-c-frame .tm-season[open]>summary{border-bottom:2px solid var(--t2)}
+/* full */
+body.tm-c-full,html:has(body.tm-c-full){background:color-mix(in srgb,var(--t1) 82%,#000)}
+body.tm-c-full nav.weeks a,body.tm-c-full nav.weeks button,body.tm-c-full .fold-all,body.tm-c-full .tm-colors{color:var(--t1ink)}
+body.tm-c-full nav.weeks a,body.tm-c-full nav.weeks button,body.tm-c-full .fold-all{border-color:color-mix(in srgb,var(--t1ink) 40%,transparent);background:transparent}
+body.tm-c-full #tm-sections section{background:var(--t1);color:var(--t1ink);border-color:var(--t2)}
+body.tm-c-full #tm-sections section h2,body.tm-c-full #tm-sections section h3,body.tm-c-full #tm-sections .tm-chart figcaption{color:var(--t2)}
+body.tm-c-full #tm-sections small,body.tm-c-full #tm-sections .note,body.tm-c-full #tm-sections .tm-season .sum,
+body.tm-c-full #tm-sections .tm-games tr td.wk,body.tm-c-full #tm-sections .tm-tbl-plain th,body.tm-c-full #tm-sections .tm-roster li small{color:color-mix(in srgb,var(--t1ink) 75%,transparent)}
+body.tm-c-full #tm-sections td,body.tm-c-full #tm-sections th,body.tm-c-full #tm-sections li{border-color:color-mix(in srgb,var(--t1ink) 18%,transparent)}
+body.tm-c-full #tm-sections .tm-season{background:color-mix(in srgb,var(--t1) 80%,#000);border-color:color-mix(in srgb,var(--t2) 50%,transparent);color:var(--t1ink)}
+body.tm-c-full #tm-sections .tm-games tr.post td{background:color-mix(in srgb,var(--t1) 65%,#000)}
+body.tm-c-full #tm-sections a.team-link,body.tm-c-full #tm-sections .tm-star{color:var(--t1ink)}
+body.tm-c-full .tm-res{background:var(--panel);border-radius:999px;padding:1px 7px}
+/* the season's name label: inverted so it stands off the team-coloured block */
+body.tm-c-full .tm-chip{background:var(--chip-ink,var(--t1ink));color:var(--chip-bg,var(--t1))}
+/* neutral islands: anything carrying status colours, grades, art or charts */
+body.tm-c-full #tm-sections .tm-ov,body.tm-c-full #tm-sections .tm-chart,body.tm-c-full #tm-sections .tm-trophies article,
+body.tm-c-full #tm-sections .tx-card,body.tm-c-full #tm-sections .tm-move{background:var(--panel);color:var(--ink);border-color:var(--line)}
+body.tm-c-full #tm-sections .tm-chart{padding:8px 10px;border:1px solid var(--line);border-radius:10px}
+body.tm-c-full #tm-sections .tm-ov small,body.tm-c-full #tm-sections .tm-ov .note,body.tm-c-full #tm-sections .tm-chart .note,
+body.tm-c-full #tm-sections .tm-chart small,body.tm-c-full #tm-sections .tx-card small{color:var(--mute)}
+body.tm-c-full #tm-sections .tm-ov h3,body.tm-c-full #tm-sections .tm-chart figcaption{color:var(--ink)}
+body.tm-c-full #tm-sections .tm-ov td,body.tm-c-full #tm-sections .tm-ov li,body.tm-c-full #tm-sections .tm-chart td{border-color:var(--line)}
+body.tm-c-full .tm-more{background:var(--panel);color:var(--ink)}
 @media(max-width:520px){.tm-head{padding:12px;gap:10px}.tm-head>div{text-align:left}
 .tm-head img{width:52px;height:52px}.tm-trophies article{width:calc(50% - 6px)}}
 """
@@ -1117,6 +1167,8 @@ def write_page(path=PAGE):
 {menu_html("team")}
 <div id="tm-top"><header><div><div class="eyebrow">{html.escape(lcfg.brand())}</div><h1>Team</h1></div></header></div>
 <p class="tm-err" id="tm-error" hidden></p>
+<div class="tm-colors" id="tm-colors" hidden><span>Colors</span><span role="radiogroup" aria-label="Page colors">
+<button type="button" role="radio" data-c="full">Team</button><button type="button" role="radio" data-c="frame">Accent</button><button type="button" role="radio" data-c="site">Site</button></span></div>
 <div id="tm-sections" hidden>
 <section id="tm-over-sec"><h2>Overview</h2><div id="tm-over"></div></section>
 <section id="tm-mgr-sec"><h2>Managers</h2><div id="tm-mgr"></div></section>

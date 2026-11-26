@@ -1,6 +1,6 @@
 # 5.20 Team pages, round 2
 
-**Remove this file and `docs/reviews/5-20b-team-pages/` at merge.** Not yet in this PR: the whole-page team colours (A vs B is still waiting on your pick).
+**Remove this file and `docs/reviews/5-20b-team-pages/` at merge.**
 
 ## What changed
 - **No real names.** Draft history now marks reconstructed drafts with ‡ and the footnote "Reconstructed, not from Sleeper data; pick order may not be exact." Every team-page source file is reworded to use the role ("league data"). A test fails if a real name comes back.
@@ -26,6 +26,12 @@
 - **Head to head:** all-time record vs every team the roster has played, regular season and postseason, linked to their pages.
 - **Team picker:** My team at the top, read from this device's app pick or its first followed team. "Set your team" links to the app page when none is set.
 
+- **Team colours, three ways:** a toggle under the header (Team / Accent / Site). Each device remembers the choice for every team page.
+  - **Team (default):** sections in the team's colour, headings in the accent colour. The accent is the team's secondary colour when it reads at 3:1 on the background, else the text colour. The season name label is inverted (text colour on the background) so it stands off the block. W/L sits in neutral pills. The overview card, charts, trophies and trade cards stay on neutral panels, so status colours and grades always read.
+  - **Accent:** team-coloured heading bars and accent edge on a lightly tinted page.
+  - **Site:** the site's own colours.
+  - The colours sit in a `<style>` element, so saved images keep them.
+
 ## Data notes
 - **Schedule difficulty is stale:** `ScheduleDifficulty_Season.csv` only has through week 5, and the tiles say so.
 - **Odds are a week behind:** `reports/postseason/odds.json` is after week 10, so there's no week-11 odds file yet.
@@ -47,6 +53,7 @@
   - defunct teams have no current data
   - chart tooltip
   - My team card
+  - colour toggle (three modes, remembered, label inverted)
   - no real names
 
 ## Screenshots (Arizona State)

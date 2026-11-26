@@ -48,7 +48,7 @@
       grid.push(`<line x1="${M.l}" x2="${W - M.r}" y1="${Y(v)}" y2="${Y(v)}" class="g"/><text x="${M.l - 6}" y="${Y(v) + 4}" class="yl">${esc(fmtY(v))}</text>`);
     }
     const every = Math.ceil(x.length / (W < 400 ? 5 : 10));
-    const xl = x.map((l, i) => (i % every === 0 || i === x.length - 1) ? `<text x="${X(i)}" y="${H - 6}" class="xl">${esc(l)}</text>` : '').join('');
+    const xl = x.map((l, i) => ((i % every === 0 && x.length - 1 - i >= every) || i === x.length - 1) ? `<text x="${X(i)}" y="${H - 6}" class="xl">${esc(l)}</text>` : '').join('');
     const placed = [];  // end labels: keep at least 13px apart
     const labelY = y => { let v = y; while (placed.some(p => Math.abs(p - v) < 13)) v += 13; placed.push(v); return v; };
     const paths = series.map(s => {
@@ -410,6 +410,28 @@
     return `<div class="tm-mine"><h3>My team</h3><a href="${L.href(m.league, m.roster)}">${esc(m.name)}<small>${esc(m.manager)} · ${esc(INDEX.leagues[m.league].short)}</small></a></div>`;
   }
 
+  // Team colours, three ways (Team / Accent / Site), remembered on this device for every team page.
+  const COLOR_KEY = 'ncaa180.teamColors';
+  function colors(d) {
+    let st = document.getElementById('tm-team-vars');
+    if (!st) { st = document.createElement('style'); st.id = 'tm-team-vars'; document.head.append(st); }
+    const safe = c => /^#[0-9a-fA-F]{3,8}$/.test(c || '') ? c : '';
+    st.textContent = `body{--t1:${safe(d.bg) || '#14213a'};--t1ink:${safe(d.ink) || '#ffffff'};--t2:${safe(d.accent) || safe(d.ink) || '#ffffff'}}`;
+    let mode = 'full';
+    try { mode = localStorage.getItem(COLOR_KEY) || 'full'; } catch (e) { /* storage blocked: default */ }
+    const box = $('tm-colors');
+    const set = m => {
+      if (!['full', 'frame', 'site'].includes(m)) m = 'full';
+      document.body.classList.remove('tm-c-full', 'tm-c-frame', 'tm-c-site');
+      document.body.classList.add('tm-c-' + m);
+      box.querySelectorAll('button').forEach(b => b.setAttribute('aria-checked', String(b.dataset.c === m)));
+      try { localStorage.setItem(COLOR_KEY, m); } catch (e) { /* ignore */ }
+    };
+    box.querySelectorAll('button').forEach(b => b.addEventListener('click', () => set(b.dataset.c)));
+    box.hidden = false;
+    set(mode);
+  }
+
   async function main() {
     try { INDEX = await getJson('data/teams/index.json'); }
     catch (e) { $('tm-error').textContent = 'Team data could not be loaded. ' + e.message; $('tm-error').hidden = false; return; }
@@ -427,6 +449,7 @@
     catch (e) { $('tm-error').textContent = 'Team data could not be loaded. ' + e.message; $('tm-error').hidden = false; return; }
     document.title = `${d.name} · ${document.title.replace(/^Team · /, '')}`;
     $('tm-top').innerHTML = header(d);
+    colors(d);
     if (d.defunct) {  // no current data: the header says it's defunct
       ['tm-over-sec', 'tm-roster-sec', 'tm-picks-sec'].forEach(id => $(id).remove());
     } else {

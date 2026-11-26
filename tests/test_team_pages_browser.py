@@ -93,6 +93,25 @@ class TeamPageBrowser(unittest.TestCase):
                     os.makedirs(OUT, exist_ok=True)
                     p.screenshot(path=os.path.join(OUT, f"team-{tag}.png"), full_page=True)
 
+    def test_color_toggle_three_way(self):
+        p = self.open(f"reports/team.html?league={league_id('NCAA PAC 12')}&roster=7", 390)
+        self.assertIn("tm-c-full", p.get_attribute("body", "class"), "team colours by default")
+        sec = "#tm-roster-sec"
+        bg = lambda: p.evaluate(f"getComputedStyle(document.querySelector('{sec}')).backgroundColor")  # noqa: E731
+        self.assertEqual(bg(), "rgb(140, 29, 64)", "Arizona State maroon")
+        chip = p.evaluate("(()=>{const c=getComputedStyle(document.querySelector('.tm-chip'));return [c.backgroundColor,c.color]})()")
+        self.assertEqual(chip, ["rgb(255, 198, 39)", "rgb(140, 29, 64)"], "season label inverted")
+        p.click("#tm-colors [data-c=frame]")
+        self.assertIn("tm-c-frame", p.get_attribute("body", "class"))
+        self.assertNotEqual(bg(), "rgb(140, 29, 64)")
+        p.click("#tm-colors [data-c=site]")
+        p.reload()
+        p.wait_for_selector("body[data-ready]", state="attached")
+        self.assertIn("tm-c-site", p.get_attribute("body", "class"), "remembered on this device")
+        self.assertEqual(p.get_attribute("#tm-colors [data-c=site]", "aria-checked"), "true")
+        self.assertEqual(p.evaluate("document.documentElement.scrollWidth - document.documentElement.clientWidth"), 0)
+        p.evaluate("localStorage.removeItem('ncaa180.teamColors')")
+
     def test_chart_hover_tooltip(self):
         p = self.open(f"reports/team.html?league={league_id('NCAA PAC 12')}&roster=7")
         hit = p.locator("#tm-season-charts .tm-chart .hit").first
