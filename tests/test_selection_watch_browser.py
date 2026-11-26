@@ -96,7 +96,13 @@ class SelectionWatchBrowser(unittest.TestCase):
                 page.route("https://fonts.gstatic.com/**", lambda r: r.abort())
                 requests = []
                 page.on("request", lambda req: requests.append(req.url))
+                # In the CCG week the current season's page (correctly) loads live feeds, so live feeds are
+                # answered locally and only requests made after switching to archive seasons count (broke Nov 24).
+                page.route("https://api.sleeper.app/**", lambda r: r.fulfill(status=200, content_type="application/json", body="[]"))
+                page.route("https://site.api.espn.com/**", lambda r: r.fulfill(status=200, content_type="application/json", body="{}"))
                 page.goto(f"http://127.0.0.1:{server.server_port}/reports/selection-watch.html")
+                page.wait_for_load_state("networkidle")
+                requests.clear()
                 page.select_option("#sw-season", "2020")
                 page.get_by_role("button", name="View season").click()
                 page.locator("#sw-final").wait_for(state="visible")
