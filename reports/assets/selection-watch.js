@@ -131,7 +131,7 @@
     // Automatic bids can be safe even when their rank follows the last at-large bid.
     // Split the displayed row statuses, keeping Saved/held teams on the at-risk side.
     const qualified=status=>status==='Above cut'||status==='Automatic bid';
-    // A plays/leads placard (#141) is not at risk: only a saved-leader hold sits on the at-risk side.
+    // A plays/leads placard (PR 141) is not at risk: only a saved-leader hold sits on the at-risk side.
     const cutIndex=rows.findIndex(({left,hold})=>left&&(hold&&!hold.plays||!qualified(left.status)));
     const line='<div class="sw-cut-line" aria-hidden="true"></div>';
     const markup=rows.map(({left:l,right:r,hold})=>{
