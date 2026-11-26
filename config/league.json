@@ -1100,7 +1100,8 @@
     }
   },
   "draft_order": {
-    "_note": "Rookie draft order basis (Chris, 2026-11-26). max_pf_from: first season a league ordered its draft by max PF (null = not known / record-based). Inputs frozen in data/DraftBasis_<year>.csv (scripts/draft_basis.py).",
+    "_note": "Rookie draft order basis (Chris, 2026-11-26). A league orders its draft by max PF for a season when that season >= its own max_pf_from entry, or >= default_max_pf_from (covers every league, including ones added later). null = not set. Offseason: set default_max_pf_from to 2027 once all leagues switch. Inputs frozen in data/DraftBasis_<year>.csv (scripts/draft_basis.py); rule in scripts/draft_order_rules.py.",
+    "default_max_pf_from": null,
     "max_pf_from": {
       "NCAA ACC": null,
       "NCAA BIG 10": null,
