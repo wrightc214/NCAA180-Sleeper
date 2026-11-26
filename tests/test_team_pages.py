@@ -41,6 +41,16 @@ class Matching(unittest.TestCase):
         self.assertEqual(T.team_file("NCAA BIG EAST & CO.", 3), "ncaa-big-east-co-3.json")
 
 
+class NoRealNames(unittest.TestCase):
+    """The site is public: team-page files never name a real person (league data role instead)."""
+
+    def test_team_page_sources(self):
+        for f in ("scripts/team_pages.py", "reports/assets/team.js", "reports/assets/team-link.js", "config/team_pages.json",
+                  "tests/test_team_pages.py", "tests/test_team_pages_browser.py", "tests/team-link.test.js"):
+            text = (ROOT / f).read_text(encoding="utf-8")
+            self.assertNotRegex(text, r"\bChris(?!\s+(Godwin|Olave|Bell|Rodriguez))(?:'s)?\b", f)
+
+
 class Settings(unittest.TestCase):
     def test_defaults_and_bad_values(self):
         with tempfile.TemporaryDirectory() as d:
@@ -159,6 +169,37 @@ class RealData(unittest.TestCase):
         self.assertTrue(all(int(a["Season"]) >= int(b["Season"]) for a, b in zip(d["trophies"], d["trophies"][1:])))
         trades = [t for t in d["transactions"] if "html" in t]
         self.assertTrue(trades and all('class="tx-card' in t["html"] for t in trades), "trades use the Transactions page card")
+
+    def test_overview_roster_picks_charts(self):
+        d = self.team("NCAA PAC 12", 7)
+        o = d["overview"]
+        for k in ("map", "poll", "bots", "odds", "trend"):
+            self.assertIn(k, o)
+        self.assertEqual(len(o["map"]["dyn"]), 3, "value, rank, last week's rank")
+        first = d["first_value"]["value"]
+        for g in d["roster_groups"]:
+            vals = [p["value"] for p in g["players"]]
+            self.assertEqual(vals, sorted(vals, reverse=True), g["pos"])
+            for p in g["players"]:
+                self.assertEqual(bool(p.get("star")), p["value"] > first, p["name"])
+        self.assertTrue(d["picks"]["owned"] >= len(d["picks"]["picks"]))
+        s25 = next(s for s in d["seasons"] if s["year"] == 2025)
+        self.assertGreater(s25["record"]["max"], s25["record"]["pf"])
+        self.assertEqual(sum(s25["record"]["ap"]), 11 * 11, "all-play: 11 weeks x 11 opponents")
+        self.assertEqual(s25["poll"]["summary"]["cons"]["final"], s25["poll"]["cons"][-1][1])
+        mg = d["managers"]
+        self.assertEqual(sum(m["w"] for m in mg), sum(s["record"]["w"] for s in d["seasons"] if s["record"]))
+        self.assertEqual(sum(len(m["years"]) for m in mg), len(d["seasons"]))
+        h = d["h2h"]
+        self.assertTrue(h and all(x["w"] + x["l"] + x["t"] > 0 for x in h))
+        games = sum(1 for s in d["seasons"] for g in s["games"] if g.get("res") and g.get("opp_key"))
+        self.assertEqual(sum(x["w"] + x["l"] + x["t"] for x in h), games)
+
+    def test_defunct_has_no_current_data(self):
+        d = self.team("NCAA AMERICAN", 5)
+        for k in ("overview", "picks", "first_value"):
+            self.assertNotIn(k, d)
+        self.assertTrue(d["managers"] and d["h2h"])
 
     def test_manager_is_a_username(self):
         users = set(pd.read_csv("data/Rosters_Current.csv", dtype=str)["OwnerName"].dropna()) | {"Orphan"}

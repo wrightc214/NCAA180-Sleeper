@@ -33,7 +33,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import league_config as lcfg  # noqa: E402
 import standard_results  # noqa: E402
 import team_names as tn  # noqa: E402
-from site_common import (SECTIONS_JS, fixed_bg_src, logo_info, menu_html, page_head,  # noqa: E402
+from site_common import (SECTIONS_JS, contrast, fixed_bg_src, logo_info, menu_html, page_head,  # noqa: E402
                          team_colors)
 
 CONFIG = "config/team_pages.json"
@@ -53,6 +53,16 @@ TX_FILES = ["data/backfill/Transactions_2019_2020.csv", "data/Transactions_Histo
 ROSTERS = "data/Rosters_Current.csv"
 PLAYERS = "data/Players.csv"
 PLAYER_NAMES = "data/backfill/PlayerPositions_All.csv"
+POLL_FILES = ["data/Poll_Historic.csv", "data/Poll_Season.csv"]
+LINEUP_WEEKS = "data/LineupWeeks_Historic.csv"
+MAXPTS = "data/MaxPoints_Season.csv"
+ROSTER_VALUES = "data/RosterValues_Season.csv"
+SCHEDULE = "data/ScheduleDifficulty_Season.csv"
+NEXT_GAME = "data/MatchupProjections_Current.csv"
+PLAYER_VALUES = "data/PlayerValues_Current.csv"
+PICK_VALUES = "data/PickValues_Current.csv"
+FUTURE_PICKS = "data/FuturePicks_Current.csv"
+ODDS_DIR = "reports/postseason"
 
 DEFAULTS = {"position_order": ["QB", "RB", "WR", "TE", "K", "DEF"], "transactions_shown": 25,
             "startup_draft_min_rounds": 6, "current_season_open": True}
@@ -203,11 +213,23 @@ def ordinal(n):
 
 
 def identity(name):
-    """{name, bg, ink, logo} for a school name: team colours (standing rule) and the logo for that background."""
+    """{name, bg, ink, accent, logo} for a school name: team colours (standing rule), an accent for headings
+    on that background (the secondary colour when it reads at 3:1, else the text colour) and the logo."""
     c = tn.colors_row(name) or {}
     bg, ink = team_colors(c.get("Primary"), c.get("Secondary"), c.get("Background"), c.get("Text"), name=name)
+    accent = ink
+    for cand in (c.get("Secondary"), c.get("Primary")):
+        h = str(cand or "").strip()
+        h = h if h.startswith("#") else ("#" + h if h else "")
+        try:
+            if re.fullmatch(r"#[0-9a-fA-F]{6}", h) and h.lower() != bg.lower() and contrast(h, bg) >= 3:
+                accent = h
+                break
+        except Exception:
+            pass
     info = logo_info(name, prefix="../")
-    return {"name": name, "bg": bg, "ink": ink, "logo": fixed_bg_src(info, bg) if info else ""}
+    return {"name": name, "bg": bg, "ink": ink, "accent": accent, "logo": fixed_bg_src(info, bg) if info else "",
+            "logo_inv": fixed_bg_src(info, ink) if info else ""}  # the logo for the inverted header (Team mode)
 
 
 # ---- Seasons ------------------------------------------------------------------------------------
@@ -226,7 +248,7 @@ def matchup_rows(paths=MATCHUP_FILES):
 def season_records(m, std_from):
     """{(year, key): {w,l,t,pf,pa,pf_official,pa_official,games}}. W/L/T: Sleeper's official result before
     std_from (results are never flipped), standard scoring from std_from. PF/PA: standard totals in every
-    season (Chris, 5.20 review); Sleeper's official totals kept alongside (division ties before std_from)."""
+    season (league data, 5.20 review); Sleeper's official totals kept alongside (division ties before std_from)."""
     out = {}
     for r in m.itertuples():
         if r.Outcome not in standard_results.RESULTS:
@@ -322,6 +344,8 @@ def postseason_games(years, short):
                 else:
                     row["pa"] = others[0].get("points") if others else None
                     row["res"] = "W" if s.get("won") else "L"
+                    if others and others[0].get("league_name") and rid(others[0].get("roster_id")):
+                        row["opp_key"] = season_key(others[0]["league_name"], others[0]["roster_id"])
                 out.setdefault((y, season_key(s["league_name"], s["roster_id"])), []).append(row)
     if os.path.exists(POSTSEASON_SEASON):
         p = read(POSTSEASON_SEASON)
@@ -339,6 +363,9 @@ def postseason_games(years, short):
                 op = [num(x, None) for x in r.OpponentPoints.split("|")]
                 row["pa"] = op[0] if len(op) == 1 else None
                 row["res"] = (r.Outcome or "")[:1]
+            ors = [x.strip() for x in str(r.OpponentRosterID).split("|")]
+            if len(ors) == 1 and rid(ors[0]) and opp_lgs[0].strip():
+                row["opp_key"] = season_key(opp_lgs[0], ors[0])
             out.setdefault((int(r.Year), season_key(r.LeagueName, r.RosterID)), []).append(row)
     for v in out.values():
         v.sort(key=lambda g: g["w"])
@@ -405,7 +432,8 @@ def trophies(lids):
 
 
 def drafts(cfg, names):
-    """{key: [{year, label, picks: [...]}]} newest first. Sleeper's picks, plus Chris's sheets
+    """{key: [{year, label, picks: [...]}]} newest first. Sleeper's picks, plus the reconstructed
+    draft sheets
     (DraftPicksManual_Historic.csv) for drafts Sleeper has no picks for."""
     d = read(DRAFT_FILES)
     meta = {r.DraftID: (int(r.Season), int(r.Rounds or 0), int(r.Teams or 12), r.Status, r.Type) for r in d.itertuples()}
@@ -518,8 +546,282 @@ def transactions(lids, names):
     return out
 
 
+# ---- Season charts: polls, max PF, all-play ---------------------------------------------------
+def poll_history(lids, paths=POLL_FILES):
+    """{(year, key): {cons: [[week, rank]], top: [[week, rank, status]], final: [rank, status] | None,
+    fpv: first-place votes (Top 25 + final polls), summary}}. cons = bot consensus (all 180 every week);
+    top/final = the official poll (status Ranked or ORV = others receiving votes)."""
+    out = {}
+    p = read(paths)
+    for r in p.to_dict("records"):
+        lg = lids.get(str(r["LeagueID"]))
+        name = lg[1] if lg else norm_league(r["LeagueName"])
+        d = out.setdefault((int(r["Year"]), season_key(name, r["RosterID"])), {"cons": [], "top": [], "final": None, "fpv": 0})
+        wk, rank = int(num(r["ThroughWeek"])), int(num(r["Rank"]))
+        if r["PollType"] == "BotConsensus":
+            d["cons"].append([wk, rank])
+        elif r["PollType"] == "Top25":
+            d["top"].append([wk, rank, r["Status"]])
+            d["fpv"] += int(num(r["FirstPlaceVotes"]))
+        elif r["PollType"] == "Final":
+            d["final"] = [rank, r["Status"]]
+            d["fpv"] += int(num(r["FirstPlaceVotes"]))
+    for d in out.values():
+        d["cons"].sort()
+        d["top"].sort()
+        d["summary"] = poll_summary(d)
+    return out
+
+
+def poll_summary(d):
+    """Peak / low / final for each poll. The official poll only counts weeks the team was Ranked; it is None
+    when the team was never ranked that season."""
+    s = {"fpv": d["fpv"]}
+    if d["cons"]:
+        ranks = [r for _, r in d["cons"]]
+        s["cons"] = {"peak": min(ranks), "low": max(ranks), "final": d["cons"][-1][1]}
+    ranked = [r for _, r, st in d["top"] if st == "Ranked"]
+    fin = d["final"][0] if d["final"] and d["final"][1] == "Ranked" else None
+    if fin is not None:
+        ranked.append(fin)
+    if ranked:
+        last = d["top"][-1] if d["top"] else None
+        final = fin if d["final"] else (last[1] if last and last[2] == "Ranked" else None)
+        s["official"] = {"peak": min(ranked), "low": max(ranked), "final": final,
+                         "weeks": sum(1 for _, _, st in d["top"] if st == "Ranked")}
+    return s
+
+
+def max_points(m):
+    """{(year, key): Max PF} over the regular-season weeks played: LineupWeeks_Historic 'Best' (finished seasons)
+    and MaxPoints_Season (this season). Max PF is Sleeper's best possible lineup score."""
+    played = {(r.Y, r.Key, r.W) for r in m.itertuples() if r.Outcome in standard_results.RESULTS}
+    out = {}
+    for path, col in ((LINEUP_WEEKS, "Best"), (MAXPTS, "MaxPoints")):
+        if not os.path.exists(path):
+            continue
+        for r in read(path).to_dict("records"):
+            k = (int(r["Year"]), season_key(r["LeagueName"], r["RosterID"]), int(num(r["Week"])))
+            if k in played and str(r.get(col, "")).strip():
+                out[k[:2]] = out.get(k[:2], 0.0) + num(r[col])
+    return {k: round(v, 2) for k, v in out.items()}
+
+
+def all_play(m):
+    """{(year, key): {ap: [w, l, t], med: [w, l, t], xw}} per regular season on the scores shown (standard):
+    all-play = every week vs every other team in the league; med = vs the league's weekly median;
+    xw = expected wins (sum of weekly all-play win shares)."""
+    out = {}
+    pm = m[m["Outcome"].isin(standard_results.RESULTS)].copy()
+    pm["Lg"] = pm["Key"].str.split("|").str[0]
+    pm["P"] = pd.to_numeric(pm["PointsFor"], errors="coerce").fillna(0.0).round(2)
+    for (y, _, _), g in pm.groupby(["Y", "Lg", "W"]):
+        pts = list(g["P"])
+        n = len(pts)
+        med = float(pd.Series(pts).median())
+        for key, s in zip(g["Key"], pts):
+            d = out.setdefault((y, key), {"ap": [0, 0, 0], "med": [0, 0, 0], "xw": 0.0})
+            w = sum(o < s for o in pts)
+            ln = sum(o > s for o in pts)
+            t = n - 1 - w - ln
+            d["ap"][0] += w
+            d["ap"][1] += ln
+            d["ap"][2] += t
+            if n > 1:
+                d["xw"] += (w + 0.5 * t) / (n - 1)
+            d["med"][0 if s > med else 1 if s < med else 2] += 1
+    for d in out.values():
+        d["xw"] = round(d["xw"], 2)
+    return out
+
+
+def head_to_head(seasons, names_by_key):
+    """All-time record vs every team this roster has played (regular season + postseason), most games first."""
+    h = {}
+    for s in seasons:
+        for g in s["games"]:
+            k = g.get("opp_key")
+            if not k or not g.get("res"):
+                continue
+            d = h.setdefault(k, {"key": k, "w": 0, "l": 0, "t": 0, "pf": 0.0, "pa": 0.0, "last": s["year"], "post": 0})
+            d[{"W": "w", "L": "l", "T": "t"}[g["res"]]] += 1
+            d["pf"] += num(g.get("pf"))
+            d["pa"] += num(g.get("pa"))
+            d["last"] = max(d["last"], s["year"])
+            d["post"] += g["kind"] == "post"
+    out = []
+    for d in h.values():
+        d["pf"], d["pa"] = round(d["pf"], 2), round(d["pa"], 2)
+        d["name"] = names_by_key.get(d["key"], d["key"].split("|")[0].title())
+        out.append(d)
+    out.sort(key=lambda d: (-(d["w"] + d["l"] + d["t"]), -d["last"], d["name"]))
+    return out
+
+
+def manager_history(seasons):
+    """Each manager who ran the roster, newest first: seasons, regular-season W-L-T, postseason W-L, titles.
+    Grouped by Sleeper user (owner ID) so a username change stays one manager."""
+    out = {}
+    for s in sorted(seasons, key=lambda s: s["year"]):
+        who = s.get("owner_id") or s.get("manager") or "Orphan"
+        d = out.setdefault(who, {"manager": s.get("manager") or "Orphan", "years": [], "w": 0, "l": 0, "t": 0,
+                                 "pw": 0, "pl": 0, "titles": 0})
+        d["manager"] = s.get("manager") or d["manager"]
+        d["years"].append(s["year"])
+        rec = s.get("record") or {}
+        for k in ("w", "l", "t"):
+            d[k] += rec.get(k, 0)
+        for g in s["games"]:
+            if g["kind"] == "post" and g.get("res") in ("W", "L"):
+                d["pw" if g["res"] == "W" else "pl"] += 1
+        d["titles"] += s.get("post", "").startswith("National champion")
+    return sorted(out.values(), key=lambda d: -d["years"][-1])
+
+
+# ---- Overview (current teams) -----------------------------------------------------------------
+def _ranked(df, col, by=None, asc=False):
+    return df.groupby(by)[col].rank(ascending=asc, method="min") if by else df[col].rank(ascending=asc, method="min")
+
+
+def overview_sources(lids, cur, short):
+    """{key: {...}} current-season snapshot for the overview card, each rank with last week's for the change.
+    Sources: Roster Map (RosterValues_Season), lineup efficiency (MaxPoints_Season), polls, schedule
+    difficulty, postseason odds (reports/postseason/odds*.json), next-game projection."""
+    key_of = lambda lid, r: season_key(lids.get(str(lid), (0, ""))[1], r)  # noqa: E731
+    out = {}
+
+    def put(key, k, v):
+        out.setdefault(key, {})[k] = v
+
+    if os.path.exists(ROSTER_VALUES):
+        rv = pd.read_csv(ROSTER_VALUES, dtype={"LeagueID": str, "RosterID": str})
+        rv = rv[rv["Year"] == cur].copy()
+        weeks = sorted(rv["Week"].unique())
+        cols = {"dyn": "DynastyTotal", "pv": "PickValue", "red": "LineupRedraft", "con": "Contender", "ppg": "PPG"}
+        for c in cols.values():
+            rv[c + "R"] = rv.groupby("Week")[c].rank(ascending=False, method="min")
+        rv["DynLgR"] = rv.groupby(["Week", "LeagueName"])["DynastyTotal"].rank(ascending=False, method="min")
+        last = rv[rv["Week"] == weeks[-1]] if weeks else rv
+        prev = {(r.LeagueID, r.RosterID): r for r in rv[rv["Week"] == weeks[-2]].itertuples()} if len(weeks) > 1 else {}
+        for r in last.itertuples():
+            key = key_of(r.LeagueID, r.RosterID)
+            p = prev.get((r.LeagueID, r.RosterID))
+            rm = {"week": int(r.Week)}
+            for k, c in cols.items():
+                rm[k] = [round(float(getattr(r, c)), 2 if k == "ppg" else 0), int(getattr(r, c + "R")),
+                         int(getattr(p, c + "R")) if p is not None else None]
+            rm["dyn_lg"] = [int(r.DynLgR), int(getattr(p, "DynLgR")) if p is not None else None]
+            put(key, "map", rm)
+        for (lid, rr), g in rv.sort_values("Week").groupby(["LeagueID", "RosterID"]):
+            put(key_of(lid, rr), "trend", [[int(w), int(v), int(k)] for w, v, k in zip(g["Week"], g["DynastyTotal"], g["DynastyTotalR"])])
+    if os.path.exists(MAXPTS):
+        mx = pd.read_csv(MAXPTS, dtype={"LeagueID": str, "RosterID": str})
+        mx = mx[(mx["Year"] == cur) & (mx["Week"] <= lcfg.last_regular_week())]
+        wks = sorted(mx["Week"].unique())
+        res = {}
+        for tag, upto in (("now", wks[-1] if wks else 0), ("prev", wks[-2] if len(wks) > 1 else None)):
+            if upto is None:
+                continue
+            e = mx[mx["Week"] <= upto].groupby(["LeagueID", "RosterID"]).agg(pf=("PointsFor", "sum"), mx=("MaxPoints", "sum"))
+            e["eff"] = e["pf"] / e["mx"]
+            e["r"] = e["eff"].rank(ascending=False, method="min")
+            res[tag] = e
+        for (lid, rr), r in res.get("now", pd.DataFrame()).iterrows():
+            p = res.get("prev")
+            put(key_of(lid, rr), "eff", [round(float(r["eff"]) * 100, 1), int(r["r"]),
+                                        int(p.loc[(lid, rr), "r"]) if p is not None and (lid, rr) in p.index else None])
+    polls = read(POLL_FILES[1:])
+    if not polls.empty:
+        polls = polls[polls["Year"].astype(int) == cur]
+        for ptype, tag in (("Top25", "poll"), ("BotConsensus", "bots")):
+            pp = polls[polls["PollType"] == ptype]
+            wks = sorted(pp["ThroughWeek"].astype(int).unique())
+            if not wks:
+                continue
+            now = pp[pp["ThroughWeek"].astype(int) == wks[-1]]
+            before = {(r["LeagueID"], rid(r["RosterID"])): r for r in pp[pp["ThroughWeek"].astype(int) == wks[-2]].to_dict("records")} if len(wks) > 1 else {}
+            for r in now.to_dict("records"):
+                b = before.get((r["LeagueID"], rid(r["RosterID"])))
+                put(key_of(r["LeagueID"], r["RosterID"]), tag, {
+                    "week": int(wks[-1]), "rank": int(num(r["Rank"])), "status": r["Status"],
+                    "prev": int(num(b["Rank"])) if b else None, "prev_status": b["Status"] if b else None,
+                    "fpv": int(num(r["FirstPlaceVotes"])), "bot_avg": num(r["BotAvgRank"], None)})
+    if os.path.exists(SCHEDULE):
+        sd = pd.read_csv(SCHEDULE, dtype={"LeagueID": str, "RosterID": str})
+        sd = sd[sd["Year"] == cur]
+        wks = sorted(sd["ThroughWeek"].unique())
+        if wks:
+            before = {(r.LeagueID, r.RosterID): r for r in sd[sd["ThroughWeek"] == wks[-2]].itertuples()} if len(wks) > 1 else {}
+            for r in sd[sd["ThroughWeek"] == wks[-1]].itertuples():
+                b = before.get((r.LeagueID, r.RosterID))
+                put(key_of(r.LeagueID, r.RosterID), "sched", {
+                    "week": int(wks[-1]), "sos": [int(r.Rank), int(b.Rank) if b is not None else None],
+                    "sor": [int(r.SORRank), int(b.SORRank) if b is not None else None]})
+    odds_now = os.path.join(ODDS_DIR, "odds.json")
+    if os.path.exists(odds_now):
+        o = json.load(open(odds_now, encoding="utf-8"))
+        cols = o.get("columns", [])
+        prev_file = os.path.join(ODDS_DIR, f"odds-wk{int(o.get('after_week', 0)) - 1:02d}.json")
+        prev = {}
+        if os.path.exists(prev_file):
+            prev = {(t["LeagueID"], rid(t["RosterID"])): t for t in json.load(open(prev_file, encoding="utf-8")).get("teams", [])}
+        for t in o.get("teams", []):
+            p = prev.get((t["LeagueID"], rid(t["RosterID"])), {})
+            put(key_of(t["LeagueID"], t["RosterID"]), "odds", {
+                "after_week": o.get("after_week"), "cols": cols,
+                "now": {c: t.get(c) for c in cols}, "prev": {c: p.get(c) for c in cols} if p else None,
+                "flags": t.get("flags", {})})
+    if os.path.exists(NEXT_GAME):
+        for r in read(NEXT_GAME).to_dict("records"):  # one row per game: fill both sides
+            win = num(r["WinPct"], None)
+            put(key_of(r["LeagueID"], r["RosterID"]), "next", {
+                "week": int(num(r["Week"])), "opp": r["OppTeam"], "opp_key": key_of(r["LeagueID"], r["OpponentRosterID"]),
+                "win": win, "proj": num(r["Proj"], None), "opp_proj": num(r["OppProj"], None)})
+            ok = key_of(r["LeagueID"], r["OpponentRosterID"])
+            if "next" not in out.get(ok, {}):
+                put(ok, "next", {"week": int(num(r["Week"])), "opp": r["Team"], "opp_key": key_of(r["LeagueID"], r["RosterID"]),
+                                 "win": None if win is None else round(100 - win, 1),
+                                 "proj": num(r["OppProj"], None), "opp_proj": num(r["Proj"], None)})
+    return out
+
+
+def roster_values():
+    """({player id: dynasty value}, average 1st-round value of the next draft) -- FantasyCalc via
+    player_values.py / draft pick values. A player worth more than an average next-draft 1st is starred."""
+    vals = {}
+    if os.path.exists(PLAYER_VALUES):
+        pv = read(PLAYER_VALUES)
+        vals = {str(r.SleeperID): int(num(r.DynastyValue)) for r in pv.itertuples()}
+    first = None
+    if os.path.exists(PICK_VALUES) and os.path.exists(FUTURE_PICKS):
+        fp = read(FUTURE_PICKS)
+        nxt = int(fp["Season"].astype(int).min()) if len(fp) else None
+        pk = read(PICK_VALUES)
+        row = pk[(pk["Season"].astype(int) == nxt) & (pk["Round"].astype(int) == 1)] if nxt else pk.iloc[0:0]
+        if len(row):
+            first = {"season": nxt, "value": int(num(row["Value"].iloc[0]))}
+    return vals, first
+
+
+def team_picks(teams):
+    """{key: {picks: [...], owned}} -- the orphan card's pick list (orphan_card.assets: best owned picks by
+    value, 'via' for acquired ones, and how many the team owns)."""
+    try:
+        import orphan_card
+        rows = pd.DataFrame([{"LeagueName": t["league"], "RosterID": t["roster"], "Team": t["name"], "League": t["league"]}
+                             for t in teams])
+        got = orphan_card.assets(rows, orphan_card.team_names())
+    except Exception as e:  # missing pick/value files on a fresh checkout: section says so
+        print(f"WARNING: picks unavailable ({e})")
+        return {}
+    return {season_key(t["league"], t["roster"]): {"picks": g["picks"], "owned": g["n_picks"]} for t, g in zip(teams, got)}
+
+
 # ---- Build --------------------------------------------------------------------------------------
-def current_roster(league_name, roster, rosters, names, order):
+def current_roster(league_name, roster, rosters, names, order, values=None, first=None):
+    """Current roster by position (config order), highest dynasty value first. 'star': worth more than an
+    average 1st in the next draft (first = {'season', 'value'})."""
+    values = values or {}
     rows = rosters[(rosters["LeagueName"].map(norm_league) == norm_league(league_name)) & (rosters["RosterID"].map(rid) == rid(roster))]
     groups = {}
     for r in rows.itertuples():
@@ -528,9 +830,13 @@ def current_roster(league_name, roster, rosters, names, order):
         nm, pos, nfl = (r.FullName, r.Position, r.Team) if r.FullName else player_label(r.PlayerID, names)
         pos = (pos or "").upper()
         pos = {"DST": "DEF", "D/ST": "DEF", "PK": "K", "FB": "RB"}.get(pos, pos)
-        groups.setdefault(pos if pos in order else "Other", []).append({"name": nm, "nfl": nfl or "FA", "id": str(r.PlayerID)})
+        v = values.get(str(r.PlayerID), 0)
+        p = {"name": nm, "nfl": nfl or "FA", "id": str(r.PlayerID), "value": v}
+        if first and v > first["value"]:
+            p["star"] = True
+        groups.setdefault(pos if pos in order else "Other", []).append(p)
     for v in groups.values():
-        v.sort(key=lambda p: p["name"])
+        v.sort(key=lambda p: (-p["value"], p["name"]))
     return [{"pos": p, "players": groups[p]} for p in order + ["Other"] if p in groups]
 
 
@@ -559,6 +865,12 @@ def build(out_dir=OUT_DIR, page=PAGE):
     for (y, key) in post:
         keys_by_year.setdefault(y, set()).add(key)
     trophy_rows = trophies(lids)
+    polls = poll_history(lids)
+    maxpf = max_points(m)
+    ap = all_play(m)
+    values, first = roster_values()
+    over = overview_sources(lids, cur, short)
+    phase = "post" if any(y == cur for (y, _) in post) else "reg"
     draft_rows = drafts(cfg, names)
     tx = transactions(lids, names)
     rosters = read(ROSTERS)
@@ -597,6 +909,8 @@ def build(out_dir=OUT_DIR, page=PAGE):
                       "lid": lid, "division": divs.get((last, key), {}).get("division", ""), "defunct": True,
                       "first": years[-1], "last": last})
 
+    names_by_key = {season_key(x["league"], x["roster"]): x["name"] for x in specs}
+    picks = team_picks([x for x in specs if not x["defunct"]])
     for t in specs:
         lg, r, lid, name = norm_league(t["league"]), t["roster"], t["lid"], t["name"]
         key = season_key(lg, r)
@@ -608,9 +922,18 @@ def build(out_dir=OUT_DIR, page=PAGE):
             sd = divs.get((y, key), {})
             pl = places.get((y, key))
             games = weeks.get((y, key), []) + post.get((y, key), [])
-            s = {"year": y, "name": nm, "manager": sd.get("manager", ""), "division": sd.get("division", ""),
+            if rec is not None:
+                rec = dict(rec)
+                if (y, key) in maxpf:
+                    rec["max"] = maxpf[(y, key)]
+                rec.update(ap.get((y, key), {}))
+            pd_ = polls.get((y, key))
+            s = {"year": y, "name": nm, "manager": sd.get("manager", ""), "owner_id": sd.get("owner_id", ""),
+                 "division": sd.get("division", ""),
                  "record": rec, "place": list(pl) if pl and rec else None,
                  "post": postseason_summary(post.get((y, key), [])), "games": games}
+            if pd_:
+                s["poll"] = {"cons": pd_["cons"], "top": pd_["top"], "final": pd_["final"], "summary": pd_["summary"]}
             if nm != name:
                 s["identity"] = identity(nm)
             if y >= std_from:
@@ -630,7 +953,10 @@ def build(out_dir=OUT_DIR, page=PAGE):
                 mgr = owner_rows["OwnerName"].iloc[0] or mgr
             data_now = {"record": now.get("record"), "place": now.get("place"),
                         "rank": int(o["Playoff Rank"]) if o.get("Playoff Rank") else None, "of": len(overall) or None,
-                        "roster_groups": current_roster(lg, r, rosters, names, cfg["position_order"])}
+                        "roster_groups": current_roster(lg, r, rosters, names, cfg["position_order"], values, first),
+                        "first_value": first, "picks": picks.get(key),
+                        "overview": dict(over.get(key, {}), phase=phase,
+                                         post=[g for g in post.get((cur, key), [])])}
         data = {
             "key": key, "league_id": lid, "league": t["league"], "short": short_n.get(lg, t["league"]),
             "roster": r, "season": cur, **ident, "manager": mgr or "Orphan",
@@ -639,7 +965,9 @@ def build(out_dir=OUT_DIR, page=PAGE):
             **data_now,
             "former": [{"name": n, "from": a, "to": b} for n, a, b in tn.former_names(t["league"], r) if n != name],
             "trophies": trophy_rows.get(key, []),
+            "managers": manager_history(seasons),
             "seasons": seasons,
+            "h2h": head_to_head(seasons, names_by_key),
             "drafts": draft_rows.get(key, []),
             "transactions": tx.get(key, []),
             "settings": {"transactions_shown": cfg["transactions_shown"], "current_season_open": cfg["current_season_open"]},
@@ -729,6 +1057,104 @@ CSS = """
 .tm-more{font:700 13px var(--sans,sans-serif);padding:8px 14px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:inherit;cursor:pointer;margin-top:10px}
 .tm-empty{color:var(--mute)}
 .tm-err{padding:14px;border:1px solid var(--bad);border-radius:8px}
+/* two-series chart colours (dataviz categorical slots 1-2, validated light on #fff and dark on #16213a) */
+:root{--s1:#257de0;--s2:#f47230}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--s1:#338ced;--s2:#e76624}}
+:root[data-theme=dark]{--s1:#338ced;--s2:#e76624}
+.tm-ov{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:12px}
+.tm-ov-head{display:flex;flex-wrap:wrap;justify-content:flex-start;gap:4px 16px;padding-right:44px!important;font-weight:800;font-size:16px;margin:0 0 8px;padding:0;border:0}
+.tm-ov-next{margin:0 0 10px;font-size:14px}
+.tm-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:8px}
+.tm-tile{border:1px solid var(--line);border-radius:8px;padding:8px 10px;position:relative}
+.tm-tile b{display:block;font:800 20px var(--num,sans-serif);font-variant-numeric:tabular-nums}
+.tm-tile span{display:block;font-size:12px;color:var(--mute);line-height:1.3;padding-right:34px}
+.tm-tile .tm-mv,.tm-odds .tm-mv{position:absolute;top:8px;right:8px}
+.tm-mv{font:700 12px var(--num,sans-serif);font-variant-numeric:tabular-nums;white-space:nowrap}
+.tm-mv.up{color:var(--good)}.tm-mv.dn{color:var(--bad)}.tm-mv.flat{color:var(--mute)}
+.tm-ov-post h3{margin:14px 0 6px;font-size:14px}
+.tm-ov-post ul{margin:0;padding-left:18px;font-size:14px}
+.tm-odds{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px}
+.tm-odds div{border:1px solid var(--line);border-radius:8px;padding:8px 10px;position:relative}
+.tm-odds b{display:block;font:800 18px var(--num,sans-serif)}
+.tm-odds span{display:block;font-size:12px;color:var(--mute);padding-right:30px}
+.tm-roster li.star span{font-weight:700}
+.tm-star{color:var(--gold)}
+.tm-picks{margin:0;padding-left:18px}
+.tm-picks li{padding:3px 0}
+.tm-picks-n{margin:0 0 6px}
+.tm-scroll{overflow-x:auto;width:0;min-width:100%}
+.tm-tbl-plain{width:100%;border-collapse:collapse;font-size:13px}
+.tm-tbl-plain th{text-align:left;font-size:11px;color:var(--mute);letter-spacing:.04em;padding:4px;border-bottom:1px solid var(--line)}
+.tm-tbl-plain tr td:first-child{color:inherit}
+.tm-tbl-plain td{padding:5px 4px;border-bottom:1px solid var(--line);white-space:normal}
+.tm-tbl-plain .n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tm-tbl-plain small{color:var(--mute)}
+.tm-sub{margin:16px 0 6px;font-size:15px}
+.tm-charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,400px),1fr));gap:12px;margin-bottom:8px}
+.tm-chart{margin:0 0 10px;position:relative;max-width:680px}
+.tm-chart figcaption{font-weight:700;font-size:13px;margin-bottom:4px}
+.tm-chart svg{width:100%;height:auto;display:block;overflow:visible}
+.tm-chart .g{stroke:var(--line);stroke-width:1}
+.tm-chart .yl{font:12px var(--num,sans-serif);fill:var(--mute);text-anchor:end}
+.tm-chart .xl{font:12px var(--num,sans-serif);fill:var(--mute);text-anchor:middle}
+.tm-chart .el{font:600 12px var(--num,sans-serif);fill:var(--ink)}
+.tm-chart path.s1{fill:none;stroke:var(--s1);stroke-width:2}.tm-chart path.s2{fill:none;stroke:var(--s2);stroke-width:2}
+.tm-chart circle.s1{fill:var(--s1);stroke:var(--panel);stroke-width:2}.tm-chart circle.s2{fill:var(--s2);stroke:var(--panel);stroke-width:2}
+.tm-chart .cross{stroke:var(--mute);stroke-width:1;stroke-dasharray:3 3}
+.tm-chart .hit{fill:transparent;cursor:crosshair}
+.tm-legend{display:flex;gap:12px;font-size:12px;color:var(--ink);margin-bottom:2px}
+.tm-legend i{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:middle;margin-right:5px}
+.tm-legend i.dot{width:9px;height:9px;border-radius:50%}
+.tm-legend i.s1{background:var(--s1)}.tm-legend i.s2{background:var(--s2)}
+.tm-tip{position:absolute;top:28px;z-index:3;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:12px;box-shadow:0 4px 14px rgba(0,0,0,.15);pointer-events:none;white-space:nowrap}
+.tm-tip b,.tm-tip span{display:block}
+.tm-tbl summary{font-size:12px;color:var(--mute);cursor:pointer}
+.tm-tbl{overflow-x:auto;width:0;min-width:100%}
+.tm-tbl table{font-size:12px;border-collapse:collapse;margin-top:4px}
+.tm-tbl td,.tm-tbl th{padding:2px 8px;text-align:right;border-bottom:1px solid var(--line)}
+.tm-mine{grid-column:1/-1;margin-bottom:6px}
+.tm-mine a{border-width:2px;max-width:340px}
+.tm-mine.none p{margin:0;color:var(--mute)}
+/* ---- Team colours, three ways (toggle at the top; this device remembers): full = sections in team
+   colours (status marks in neutral pills, cards and charts on neutral panels); frame = team-coloured
+   heading bars on a lightly tinted page; site = the site's own colours. --t1/--t1ink/--t2 come from
+   the team file (bg / readable text / accent) via a <style> element so saved images keep them. */
+.tm-colors{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:12px;color:var(--mute)}
+.tm-colors [role=radiogroup]{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.tm-colors button{font:700 12px var(--sans,sans-serif);padding:6px 10px;border:0;background:var(--panel);color:var(--ink);cursor:pointer}
+.tm-colors button+button{border-left:1px solid var(--line)}
+.tm-colors button[aria-checked=true]{background:var(--ink);color:var(--panel)}
+/* frame */
+body.tm-c-frame,html:has(body.tm-c-frame){background:color-mix(in srgb,var(--t1) 9%,var(--bg))}
+body.tm-c-frame #tm-sections section{border-left:5px solid var(--t2)}
+body.tm-c-frame #tm-sections section>h2,body.tm-c-frame #tm-sections section .sec-h h2{background:var(--t1);color:var(--t1ink);margin:-1px -1px 10px;padding:8px 12px;border-radius:8px 8px 0 0}
+body.tm-c-frame .tm-chip{box-shadow:0 0 0 2px var(--t2)}
+body.tm-c-frame .tm-season[open]>summary{border-bottom:2px solid var(--t2)}
+/* full */
+body.tm-c-full,html:has(body.tm-c-full){background:color-mix(in srgb,var(--t1) 82%,#000)}
+body.tm-c-full nav.weeks a,body.tm-c-full nav.weeks button,body.tm-c-full .fold-all,body.tm-c-full .tm-colors{color:var(--t1ink)}
+body.tm-c-full nav.weeks a,body.tm-c-full nav.weeks button,body.tm-c-full .fold-all{border-color:color-mix(in srgb,var(--t1ink) 40%,transparent);background:transparent}
+body.tm-c-full #tm-sections section{background:var(--t1);color:var(--t1ink);border-color:var(--t2)}
+body.tm-c-full #tm-sections section h2,body.tm-c-full #tm-sections section h3,body.tm-c-full #tm-sections .tm-chart figcaption{color:var(--t2)}
+body.tm-c-full #tm-sections small,body.tm-c-full #tm-sections .note,body.tm-c-full #tm-sections .tm-season .sum,
+body.tm-c-full #tm-sections .tm-games tr td.wk,body.tm-c-full #tm-sections .tm-tbl-plain th,body.tm-c-full #tm-sections .tm-roster li small{color:color-mix(in srgb,var(--t1ink) 75%,transparent)}
+body.tm-c-full #tm-sections td,body.tm-c-full #tm-sections th,body.tm-c-full #tm-sections li{border-color:color-mix(in srgb,var(--t1ink) 18%,transparent)}
+body.tm-c-full #tm-sections .tm-season{background:color-mix(in srgb,var(--t1) 80%,#000);border-color:color-mix(in srgb,var(--t2) 50%,transparent);color:var(--t1ink)}
+body.tm-c-full #tm-sections .tm-games tr.post td{background:color-mix(in srgb,var(--t1) 65%,#000)}
+body.tm-c-full #tm-sections a.team-link,body.tm-c-full #tm-sections .tm-star{color:var(--t1ink)}
+body.tm-c-full .tm-res{background:var(--panel);border-radius:999px;padding:1px 7px}
+/* the header block and the season's name label: inverted so they stand off the team-coloured page */
+body.tm-c-full .tm-head{background:var(--team-ink);color:var(--team-bg)}
+body.tm-c-full .tm-chip{background:var(--chip-ink,var(--t1ink));color:var(--chip-bg,var(--t1))}
+/* neutral islands: anything carrying status colours, grades, art or charts */
+body.tm-c-full #tm-sections .tm-ov,body.tm-c-full #tm-sections .tm-chart,body.tm-c-full #tm-sections .tm-trophies article,
+body.tm-c-full #tm-sections .tx-card,body.tm-c-full #tm-sections .tm-move{background:var(--panel);color:var(--ink);border-color:var(--line)}
+body.tm-c-full #tm-sections .tm-chart{padding:8px 10px;border:1px solid var(--line);border-radius:10px}
+body.tm-c-full #tm-sections .tm-ov small,body.tm-c-full #tm-sections .tm-ov .note,body.tm-c-full #tm-sections .tm-chart .note,
+body.tm-c-full #tm-sections .tm-chart small,body.tm-c-full #tm-sections .tx-card small{color:var(--mute)}
+body.tm-c-full #tm-sections .tm-ov h3,body.tm-c-full #tm-sections .tm-chart figcaption{color:var(--ink)}
+body.tm-c-full #tm-sections .tm-ov td,body.tm-c-full #tm-sections .tm-ov li,body.tm-c-full #tm-sections .tm-chart td{border-color:var(--line)}
+body.tm-c-full .tm-more{background:var(--panel);color:var(--ink)}
 @media(max-width:520px){.tm-head{padding:12px;gap:10px}.tm-head>div{text-align:left}
 .tm-head img{width:52px;height:52px}.tm-trophies article{width:calc(50% - 6px)}}
 """
@@ -743,11 +1169,17 @@ def write_page(path=PAGE):
 {menu_html("team")}
 <div id="tm-top"><header><div><div class="eyebrow">{html.escape(lcfg.brand())}</div><h1>Team</h1></div></header></div>
 <p class="tm-err" id="tm-error" hidden></p>
+<div class="tm-colors" id="tm-colors" hidden><span>Colors</span><span role="radiogroup" aria-label="Page colors">
+<button type="button" role="radio" data-c="full">Team</button><button type="button" role="radio" data-c="frame">Accent</button><button type="button" role="radio" data-c="site">Site</button></span></div>
 <div id="tm-sections" hidden>
+<section id="tm-over-sec"><h2>Overview</h2><div id="tm-over"></div></section>
+<section id="tm-mgr-sec"><h2>Managers</h2><div id="tm-mgr"></div></section>
 <section id="tm-roster-sec"><h2>Current roster</h2><div id="tm-roster"></div></section>
+<section id="tm-picks-sec"><h2>Draft picks</h2><div id="tm-picks"></div></section>
 <section id="tm-trophy-sec"><h2>Trophies</h2><div id="tm-trophies"></div></section>
-<section id="tm-season-sec" data-nosnap><h2>Season by season</h2><div id="tm-seasons"></div>
+<section id="tm-season-sec" data-nosnap><h2>Season by season</h2><div id="tm-season-charts"></div><div id="tm-seasons"></div>
 <p class="note" id="tm-season-note"></p></section>
+<section id="tm-h2h-sec"><h2>Head to head</h2><div id="tm-h2h"></div></section>
 <section id="tm-draft-sec"><h2>Draft history</h2><div id="tm-drafts"></div></section>
 <section id="tm-tx-sec" data-nosnap><h2>Transactions</h2><div class="tm-tx" id="tm-tx"></div></section>
 </div>

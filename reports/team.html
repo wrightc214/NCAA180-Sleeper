@@ -129,6 +129,104 @@ footer{font-size:12px;color:var(--mute)}
 .tm-more{font:700 13px var(--sans,sans-serif);padding:8px 14px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:inherit;cursor:pointer;margin-top:10px}
 .tm-empty{color:var(--mute)}
 .tm-err{padding:14px;border:1px solid var(--bad);border-radius:8px}
+/* two-series chart colours (dataviz categorical slots 1-2, validated light on #fff and dark on #16213a) */
+:root{--s1:#257de0;--s2:#f47230}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--s1:#338ced;--s2:#e76624}}
+:root[data-theme=dark]{--s1:#338ced;--s2:#e76624}
+.tm-ov{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:12px}
+.tm-ov-head{display:flex;flex-wrap:wrap;justify-content:flex-start;gap:4px 16px;padding-right:44px!important;font-weight:800;font-size:16px;margin:0 0 8px;padding:0;border:0}
+.tm-ov-next{margin:0 0 10px;font-size:14px}
+.tm-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:8px}
+.tm-tile{border:1px solid var(--line);border-radius:8px;padding:8px 10px;position:relative}
+.tm-tile b{display:block;font:800 20px var(--num,sans-serif);font-variant-numeric:tabular-nums}
+.tm-tile span{display:block;font-size:12px;color:var(--mute);line-height:1.3;padding-right:34px}
+.tm-tile .tm-mv,.tm-odds .tm-mv{position:absolute;top:8px;right:8px}
+.tm-mv{font:700 12px var(--num,sans-serif);font-variant-numeric:tabular-nums;white-space:nowrap}
+.tm-mv.up{color:var(--good)}.tm-mv.dn{color:var(--bad)}.tm-mv.flat{color:var(--mute)}
+.tm-ov-post h3{margin:14px 0 6px;font-size:14px}
+.tm-ov-post ul{margin:0;padding-left:18px;font-size:14px}
+.tm-odds{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px}
+.tm-odds div{border:1px solid var(--line);border-radius:8px;padding:8px 10px;position:relative}
+.tm-odds b{display:block;font:800 18px var(--num,sans-serif)}
+.tm-odds span{display:block;font-size:12px;color:var(--mute);padding-right:30px}
+.tm-roster li.star span{font-weight:700}
+.tm-star{color:var(--gold)}
+.tm-picks{margin:0;padding-left:18px}
+.tm-picks li{padding:3px 0}
+.tm-picks-n{margin:0 0 6px}
+.tm-scroll{overflow-x:auto;width:0;min-width:100%}
+.tm-tbl-plain{width:100%;border-collapse:collapse;font-size:13px}
+.tm-tbl-plain th{text-align:left;font-size:11px;color:var(--mute);letter-spacing:.04em;padding:4px;border-bottom:1px solid var(--line)}
+.tm-tbl-plain tr td:first-child{color:inherit}
+.tm-tbl-plain td{padding:5px 4px;border-bottom:1px solid var(--line);white-space:normal}
+.tm-tbl-plain .n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tm-tbl-plain small{color:var(--mute)}
+.tm-sub{margin:16px 0 6px;font-size:15px}
+.tm-charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,400px),1fr));gap:12px;margin-bottom:8px}
+.tm-chart{margin:0 0 10px;position:relative;max-width:680px}
+.tm-chart figcaption{font-weight:700;font-size:13px;margin-bottom:4px}
+.tm-chart svg{width:100%;height:auto;display:block;overflow:visible}
+.tm-chart .g{stroke:var(--line);stroke-width:1}
+.tm-chart .yl{font:12px var(--num,sans-serif);fill:var(--mute);text-anchor:end}
+.tm-chart .xl{font:12px var(--num,sans-serif);fill:var(--mute);text-anchor:middle}
+.tm-chart .el{font:600 12px var(--num,sans-serif);fill:var(--ink)}
+.tm-chart path.s1{fill:none;stroke:var(--s1);stroke-width:2}.tm-chart path.s2{fill:none;stroke:var(--s2);stroke-width:2}
+.tm-chart circle.s1{fill:var(--s1);stroke:var(--panel);stroke-width:2}.tm-chart circle.s2{fill:var(--s2);stroke:var(--panel);stroke-width:2}
+.tm-chart .cross{stroke:var(--mute);stroke-width:1;stroke-dasharray:3 3}
+.tm-chart .hit{fill:transparent;cursor:crosshair}
+.tm-legend{display:flex;gap:12px;font-size:12px;color:var(--ink);margin-bottom:2px}
+.tm-legend i{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:middle;margin-right:5px}
+.tm-legend i.dot{width:9px;height:9px;border-radius:50%}
+.tm-legend i.s1{background:var(--s1)}.tm-legend i.s2{background:var(--s2)}
+.tm-tip{position:absolute;top:28px;z-index:3;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:12px;box-shadow:0 4px 14px rgba(0,0,0,.15);pointer-events:none;white-space:nowrap}
+.tm-tip b,.tm-tip span{display:block}
+.tm-tbl summary{font-size:12px;color:var(--mute);cursor:pointer}
+.tm-tbl{overflow-x:auto;width:0;min-width:100%}
+.tm-tbl table{font-size:12px;border-collapse:collapse;margin-top:4px}
+.tm-tbl td,.tm-tbl th{padding:2px 8px;text-align:right;border-bottom:1px solid var(--line)}
+.tm-mine{grid-column:1/-1;margin-bottom:6px}
+.tm-mine a{border-width:2px;max-width:340px}
+.tm-mine.none p{margin:0;color:var(--mute)}
+/* ---- Team colours, three ways (toggle at the top; this device remembers): full = sections in team
+   colours (status marks in neutral pills, cards and charts on neutral panels); frame = team-coloured
+   heading bars on a lightly tinted page; site = the site's own colours. --t1/--t1ink/--t2 come from
+   the team file (bg / readable text / accent) via a <style> element so saved images keep them. */
+.tm-colors{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:12px;color:var(--mute)}
+.tm-colors [role=radiogroup]{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.tm-colors button{font:700 12px var(--sans,sans-serif);padding:6px 10px;border:0;background:var(--panel);color:var(--ink);cursor:pointer}
+.tm-colors button+button{border-left:1px solid var(--line)}
+.tm-colors button[aria-checked=true]{background:var(--ink);color:var(--panel)}
+/* frame */
+body.tm-c-frame,html:has(body.tm-c-frame){background:color-mix(in srgb,var(--t1) 9%,var(--bg))}
+body.tm-c-frame #tm-sections section{border-left:5px solid var(--t2)}
+body.tm-c-frame #tm-sections section>h2,body.tm-c-frame #tm-sections section .sec-h h2{background:var(--t1);color:var(--t1ink);margin:-1px -1px 10px;padding:8px 12px;border-radius:8px 8px 0 0}
+body.tm-c-frame .tm-chip{box-shadow:0 0 0 2px var(--t2)}
+body.tm-c-frame .tm-season[open]>summary{border-bottom:2px solid var(--t2)}
+/* full */
+body.tm-c-full,html:has(body.tm-c-full){background:color-mix(in srgb,var(--t1) 82%,#000)}
+body.tm-c-full nav.weeks a,body.tm-c-full nav.weeks button,body.tm-c-full .fold-all,body.tm-c-full .tm-colors{color:var(--t1ink)}
+body.tm-c-full nav.weeks a,body.tm-c-full nav.weeks button,body.tm-c-full .fold-all{border-color:color-mix(in srgb,var(--t1ink) 40%,transparent);background:transparent}
+body.tm-c-full #tm-sections section{background:var(--t1);color:var(--t1ink);border-color:var(--t2)}
+body.tm-c-full #tm-sections section h2,body.tm-c-full #tm-sections section h3,body.tm-c-full #tm-sections .tm-chart figcaption{color:var(--t2)}
+body.tm-c-full #tm-sections small,body.tm-c-full #tm-sections .note,body.tm-c-full #tm-sections .tm-season .sum,
+body.tm-c-full #tm-sections .tm-games tr td.wk,body.tm-c-full #tm-sections .tm-tbl-plain th,body.tm-c-full #tm-sections .tm-roster li small{color:color-mix(in srgb,var(--t1ink) 75%,transparent)}
+body.tm-c-full #tm-sections td,body.tm-c-full #tm-sections th,body.tm-c-full #tm-sections li{border-color:color-mix(in srgb,var(--t1ink) 18%,transparent)}
+body.tm-c-full #tm-sections .tm-season{background:color-mix(in srgb,var(--t1) 80%,#000);border-color:color-mix(in srgb,var(--t2) 50%,transparent);color:var(--t1ink)}
+body.tm-c-full #tm-sections .tm-games tr.post td{background:color-mix(in srgb,var(--t1) 65%,#000)}
+body.tm-c-full #tm-sections a.team-link,body.tm-c-full #tm-sections .tm-star{color:var(--t1ink)}
+body.tm-c-full .tm-res{background:var(--panel);border-radius:999px;padding:1px 7px}
+/* the header block and the season's name label: inverted so they stand off the team-coloured page */
+body.tm-c-full .tm-head{background:var(--team-ink);color:var(--team-bg)}
+body.tm-c-full .tm-chip{background:var(--chip-ink,var(--t1ink));color:var(--chip-bg,var(--t1))}
+/* neutral islands: anything carrying status colours, grades, art or charts */
+body.tm-c-full #tm-sections .tm-ov,body.tm-c-full #tm-sections .tm-chart,body.tm-c-full #tm-sections .tm-trophies article,
+body.tm-c-full #tm-sections .tx-card,body.tm-c-full #tm-sections .tm-move{background:var(--panel);color:var(--ink);border-color:var(--line)}
+body.tm-c-full #tm-sections .tm-chart{padding:8px 10px;border:1px solid var(--line);border-radius:10px}
+body.tm-c-full #tm-sections .tm-ov small,body.tm-c-full #tm-sections .tm-ov .note,body.tm-c-full #tm-sections .tm-chart .note,
+body.tm-c-full #tm-sections .tm-chart small,body.tm-c-full #tm-sections .tx-card small{color:var(--mute)}
+body.tm-c-full #tm-sections .tm-ov h3,body.tm-c-full #tm-sections .tm-chart figcaption{color:var(--ink)}
+body.tm-c-full #tm-sections .tm-ov td,body.tm-c-full #tm-sections .tm-ov li,body.tm-c-full #tm-sections .tm-chart td{border-color:var(--line)}
+body.tm-c-full .tm-more{background:var(--panel);color:var(--ink)}
 @media(max-width:520px){.tm-head{padding:12px;gap:10px}.tm-head>div{text-align:left}
 .tm-head img{width:52px;height:52px}.tm-trophies article{width:calc(50% - 6px)}}
 
@@ -210,11 +308,17 @@ footer{font-size:12px;color:var(--mute)}
 <nav class="weeks" aria-label="Pages" data-current="team" data-state="hidden-dev"></nav><script src="assets/menu.js"></script><noscript><a href="index.html">Home</a></noscript>
 <div id="tm-top"><header><div><div class="eyebrow">NCAA 180</div><h1>Team</h1></div></header></div>
 <p class="tm-err" id="tm-error" hidden></p>
+<div class="tm-colors" id="tm-colors" hidden><span>Colors</span><span role="radiogroup" aria-label="Page colors">
+<button type="button" role="radio" data-c="full">Team</button><button type="button" role="radio" data-c="frame">Accent</button><button type="button" role="radio" data-c="site">Site</button></span></div>
 <div id="tm-sections" hidden>
+<section id="tm-over-sec"><h2>Overview</h2><div id="tm-over"></div></section>
+<section id="tm-mgr-sec"><h2>Managers</h2><div id="tm-mgr"></div></section>
 <section id="tm-roster-sec"><h2>Current roster</h2><div id="tm-roster"></div></section>
+<section id="tm-picks-sec"><h2>Draft picks</h2><div id="tm-picks"></div></section>
 <section id="tm-trophy-sec"><h2>Trophies</h2><div id="tm-trophies"></div></section>
-<section id="tm-season-sec" data-nosnap><h2>Season by season</h2><div id="tm-seasons"></div>
+<section id="tm-season-sec" data-nosnap><h2>Season by season</h2><div id="tm-season-charts"></div><div id="tm-seasons"></div>
 <p class="note" id="tm-season-note"></p></section>
+<section id="tm-h2h-sec"><h2>Head to head</h2><div id="tm-h2h"></div></section>
 <section id="tm-draft-sec"><h2>Draft history</h2><div id="tm-drafts"></div></section>
 <section id="tm-tx-sec" data-nosnap><h2>Transactions</h2><div class="tm-tx" id="tm-tx"></div></section>
 </div>
