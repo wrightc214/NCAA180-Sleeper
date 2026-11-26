@@ -1,0 +1,300 @@
+{
+  "_note": "Shared season-matching cases for scripts/team_pages.py (tests/test_team_pages.py) and reports/assets/team-link.js (tests/team-link.test.js). Task 5.20. A team = league NAME + roster ID; Sleeper league IDs change every season. Defunct teams (retired league or roster) resolve to the league ID of their last season (index entries marked defunct).",
+  "index": {
+    "season": 2026,
+    "leagues": {
+      "MW2026": {
+        "name": "NCAA MOUNTAIN WEST",
+        "short": "Mountain West"
+      },
+      "PAC2026": {
+        "name": "NCAA PAC 12",
+        "short": "Pac-12"
+      },
+      "OV2026": {
+        "name": "NCAA OHIO VALLEY",
+        "short": "Ohio Valley"
+      },
+      "AM2019": {
+        "name": "NCAA AMERICAN",
+        "short": "American",
+        "defunct": true,
+        "last": 2019
+      },
+      "MW2022": {
+        "name": "NCAA MOUNTAIN WEST",
+        "short": "Mountain West",
+        "defunct": true,
+        "last": 2022
+      }
+    },
+    "ids": {
+      "MW2019": "NCAA MOUNTAIN WEST",
+      "MW2021": "NCAA MOUNTAIN WEST",
+      "MW2026": "NCAA MOUNTAIN WEST",
+      "PAC2019": "NCAA PAC 12",
+      "PAC2026": "NCAA PAC 12",
+      "OV2021": "NCAA OHIO VALLEY",
+      "OV2026": "NCAA OHIO VALLEY",
+      "AM2019": "NCAA AMERICAN",
+      "MW2022": "NCAA MOUNTAIN WEST"
+    },
+    "teams": {
+      "MW2026": {
+        "4": {
+          "name": "Air Force"
+        },
+        "7": {
+          "name": "Utah State"
+        }
+      },
+      "PAC2026": {
+        "7": {
+          "name": "Arizona State"
+        }
+      },
+      "OV2026": {
+        "3": {
+          "name": "Tennessee Tech"
+        }
+      },
+      "AM2019": {
+        "5": {
+          "name": "Ohio",
+          "defunct": true,
+          "last": 2019
+        }
+      },
+      "MW2022": {
+        "13": {
+          "name": "Hawaii",
+          "defunct": true,
+          "last": 2022
+        }
+      }
+    }
+  },
+  "current_team": [
+    {
+      "_case": "renamed school: Fresno State (2021 league ID) is today's Air Force roster",
+      "in": {
+        "leagueId": "MW2021",
+        "roster": "4"
+      },
+      "out": [
+        "MW2026",
+        "4"
+      ]
+    },
+    {
+      "_case": "first season's league ID, numeric roster",
+      "in": {
+        "leagueId": "MW2019",
+        "roster": 4
+      },
+      "out": [
+        "MW2026",
+        "4"
+      ]
+    },
+    {
+      "_case": "roster as a float string",
+      "in": {
+        "leagueId": "MW2019",
+        "roster": "4.0"
+      },
+      "out": [
+        "MW2026",
+        "4"
+      ]
+    },
+    {
+      "_case": "2019 league name with a trailing space",
+      "in": {
+        "leagueName": "NCAA PAC 12 ",
+        "roster": "7"
+      },
+      "out": [
+        "PAC2026",
+        "7"
+      ]
+    },
+    {
+      "_case": "league name wins over ID, case-insensitive",
+      "in": {
+        "leagueName": "ncaa  mountain west",
+        "leagueId": "PAC2019",
+        "roster": "7"
+      },
+      "out": [
+        "MW2026",
+        "7"
+      ]
+    },
+    {
+      "_case": "this season's ID",
+      "in": {
+        "leagueId": "OV2026",
+        "roster": "3"
+      },
+      "out": [
+        "OV2026",
+        "3"
+      ]
+    },
+    {
+      "_case": "defunct team in a retired league (2019 American): its 2019 page",
+      "in": {
+        "leagueId": "AM2019",
+        "roster": "5"
+      },
+      "out": [
+        "AM2019",
+        "5"
+      ]
+    },
+    {
+      "_case": "defunct team by name",
+      "in": {
+        "leagueName": "NCAA American",
+        "roster": 5
+      },
+      "out": [
+        "AM2019",
+        "5"
+      ]
+    },
+    {
+      "_case": "defunct roster in a league that still exists: its last season's page",
+      "in": {
+        "leagueId": "MW2019",
+        "roster": "13"
+      },
+      "out": [
+        "MW2022",
+        "13"
+      ]
+    },
+    {
+      "_case": "still-active roster wins over a defunct entry of the same league",
+      "in": {
+        "leagueId": "MW2022",
+        "roster": "4"
+      },
+      "out": [
+        "MW2026",
+        "4"
+      ]
+    },
+    {
+      "_case": "roster that never existed",
+      "in": {
+        "leagueId": "AM2019",
+        "roster": "13"
+      },
+      "out": null
+    },
+    {
+      "_case": "unknown league ID",
+      "in": {
+        "leagueId": "nope",
+        "roster": "4"
+      },
+      "out": null
+    },
+    {
+      "_case": "no roster",
+      "in": {
+        "leagueId": "MW2019"
+      },
+      "out": null
+    }
+  ],
+  "season_key": [
+    [
+      [
+        "NCAA PAC 12 ",
+        "7"
+      ],
+      "NCAA PAC 12|7"
+    ],
+    [
+      [
+        "NCAA BIG EAST & CO.",
+        12
+      ],
+      "NCAA BIG EAST & CO.|12"
+    ],
+    [
+      [
+        "ncaa ohio valley",
+        "3.0"
+      ],
+      "NCAA OHIO VALLEY|3"
+    ]
+  ],
+  "matching_seasons": {
+    "_note": "keys_by_year: the season keys that existed each year. A manager change keeps the key (the roster is the team); a renamed school keeps the key; a season where the league didn't exist has no key.",
+    "keys_by_year": {
+      "2019": [
+        "NCAA MOUNTAIN WEST|4",
+        "NCAA PAC 12|7",
+        "NCAA AMERICAN|5"
+      ],
+      "2020": [
+        "NCAA MOUNTAIN WEST|4",
+        "NCAA PAC 12|7"
+      ],
+      "2021": [
+        "NCAA MOUNTAIN WEST|4",
+        "NCAA PAC 12|7",
+        "NCAA OHIO VALLEY|3"
+      ],
+      "2026": [
+        "NCAA MOUNTAIN WEST|4",
+        "NCAA PAC 12|7",
+        "NCAA OHIO VALLEY|3"
+      ]
+    },
+    "cases": [
+      [
+        [
+          "NCAA MOUNTAIN WEST",
+          "4"
+        ],
+        [
+          2026,
+          2021,
+          2020,
+          2019
+        ]
+      ],
+      [
+        [
+          "NCAA OHIO VALLEY",
+          "3"
+        ],
+        [
+          2026,
+          2021
+        ]
+      ],
+      [
+        [
+          "NCAA AMERICAN",
+          "5"
+        ],
+        [
+          2019
+        ]
+      ],
+      [
+        [
+          "NCAA AMERICAN",
+          "13"
+        ],
+        []
+      ]
+    ]
+  }
+}

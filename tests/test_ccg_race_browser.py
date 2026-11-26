@@ -276,6 +276,12 @@ class CCGRaceBrowser(unittest.TestCase):
                 page.route("https://site.api.espn.com/**", lambda r: r.fulfill(status=200, content_type="application/json", body=json.dumps(espn)))
                 for url in ("https://fonts.googleapis.com/**", "https://fonts.gstatic.com/**"):
                     page.route(url, lambda route: route.abort())
+                # Pin the scoreboard index to week 11: once the real index rolls to the CCG week the page
+                # (correctly) shows its availability message instead of races, which broke this test on Nov 24.
+                index = json.loads((ROOT / "data/scoreboard/index.json").read_text(encoding="utf-8"))
+                index["week"] = 11
+                page.route("**/data/scoreboard/index.json",
+                           lambda r: r.fulfill(status=200, content_type="application/json", body=json.dumps(index)))
                 page.goto(f"http://127.0.0.1:{server.server_port}/reports/ccg-race.html")
                 page.wait_for_function(f"document.querySelectorAll('#ccg-{pac} .race-team').length > 0", timeout=30000)
                 got = page.evaluate(f"""() => ({{
