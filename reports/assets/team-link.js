@@ -6,7 +6,8 @@
  * seen in any season is matched by league NAME + roster ID (index.ids maps every season's ID to its name).
  *
  *   NCAATeamLink.seasonKey(leagueName, roster)                 'NCAA ACC|12'
- *   NCAATeamLink.currentTeam(index, {leagueId|leagueName, roster})  {league, roster} this season, or null
+ *   NCAATeamLink.currentTeam(index, {leagueId|leagueName, roster})  {league, roster} of its page (this season's
+ *       league ID, or a defunct team's last-season ID), or null
  *   NCAATeamLink.matchingSeasons(key, keysByYear)             years the team existed, newest first
  *   NCAATeamLink.href(league, roster)                          'team.html?league=<id>&roster=<id>'
  *   NCAATeamLink.on()                                          links shown? follows config/nav.json's
@@ -28,12 +29,15 @@
   }
   const seasonKey = (leagueName, roster) => `${normLeague(leagueName)}|${rid(roster)}`;
 
+  // A team still in the league -> this season's league ID; a defunct team (retired league or roster)
+  // -> the league ID of its last season (index entries marked "defunct"). null = no page.
   function currentTeam(index, {leagueId, leagueName, roster} = {}) {
     const name = leagueName ? normLeague(leagueName) : ((index && index.ids) || {})[String(leagueId ?? '')] || '';
     const r = rid(roster);
     if (!name || !r) return null;
-    for (const [lid, lg] of Object.entries((index && index.leagues) || {})) {
-      if (normLeague(lg.name) === name) return ((index.teams || {})[lid] || {})[r] ? {league: lid, roster: r} : null;
+    const leagues = Object.entries((index && index.leagues) || {}).sort((a, b) => !!a[1].defunct - !!b[1].defunct);
+    for (const [lid, lg] of leagues) {
+      if (normLeague(lg.name) === name && ((index.teams || {})[lid] || {})[r]) return {league: lid, roster: r};
     }
     return null;
   }

@@ -116,10 +116,22 @@ class TeamPageBrowser(unittest.TestCase):
 
     def test_picker_and_unknown_team(self):
         p = self.open("reports/team.html")
-        self.assertEqual(p.locator("#tm-pick a").count(), 180)
-        p = self.open(f"reports/team.html?league={league_id('NCAA AMERICAN', 2019)}&roster=5")
+        self.assertEqual(p.locator("#tm-pick a").count(), 204)
+        self.assertEqual(p.locator("#tm-pick .tm-defunct a").count(), 24)
+        p = self.open(f"reports/team.html?league={league_id('NCAA AMERICAN', 2019)}&roster=13")
         self.assertTrue(p.is_visible("#tm-error"))
         self.assertTrue(p.is_visible("#tm-pick a"))
+
+    def test_defunct_team_page(self):
+        p = self.open(f"reports/team.html?league={league_id('NCAA AMERICAN', 2019)}&roster=5", 390)
+        self.assertEqual(p.text_content(".tm-head h1"), "Ohio")
+        self.assertIn("Defunct", p.inner_text(".tm-head"))
+        self.assertEqual(p.locator("#tm-roster-sec").count(), 0, "no current-roster section")
+        self.assertEqual(p.get_attribute("details.tm-season[open]", "data-year"), "2019")
+        self.assertGreaterEqual(p.locator("#tm-trophies figure.trophy").count(), 1)
+        self.assertEqual(p.evaluate("document.documentElement.scrollWidth - document.documentElement.clientWidth"), 0)
+        if OUT:
+            p.screenshot(path=os.path.join(OUT, "team-defunct-mobile.png"), full_page=True)
 
 
 if __name__ == "__main__":

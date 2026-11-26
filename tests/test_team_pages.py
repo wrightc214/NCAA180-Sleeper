@@ -77,8 +77,27 @@ class RealData(unittest.TestCase):
 
     def test_every_current_team_has_a_file(self):
         teams = pd.read_csv("data/Teams.csv", dtype=str, encoding="utf-8-sig")
-        self.assertEqual(len(self.files), len(teams))
-        self.assertEqual(sum(len(v) for v in self.index["teams"].values()), len(teams))
+        current = [d for d in self.files.values() if not d.get("defunct")]
+        self.assertEqual(len(current), len(teams))
+        self.assertEqual(sum(1 for v in self.index["teams"].values() for t in v.values() if not t.get("defunct")), len(teams))
+
+    def test_defunct_teams_get_pages(self):
+        defunct = {d["key"]: d for d in self.files.values() if d.get("defunct")}
+        self.assertEqual(len(defunct), 24)  # 2019 American + 2020 Southland
+        ohio = self.team("NCAA AMERICAN", 5)
+        self.assertEqual((ohio["name"], ohio["defunct"], ohio["roster_groups"]), ("Ohio", {"first": 2019, "last": 2019}, []))
+        self.assertTrue(ohio["trophies"] and ohio["seasons"] and ohio["transactions"])
+        lid = T.current_team(self.index, league_name="NCAA AMERICAN", roster=5)[0]
+        self.assertEqual(T.league_ids()[lid], (2019, "NCAA AMERICAN"))
+        self.assertTrue(self.index["leagues"][lid]["defunct"])
+        self.assertEqual(self.team("NCAA SOUTHLAND", 8)["defunct"]["last"], 2020)
+        all_trophies = len(pd.concat([pd.read_csv(f, dtype=str) for f in T.TROPHY_FILES]))
+        self.assertEqual(sum(len(d["trophies"]) for d in self.files.values()), all_trophies, "every trophy is on a page")
+
+    def test_history_links_cover_defunct_teams(self):
+        links = T.team_links(2019)
+        self.assertEqual(links["Ohio"], list(T.current_team(self.index, league_name="NCAA AMERICAN", roster=5)))
+        self.assertEqual(links["Fresno State"], list(T.current_team(self.index, league_name="NCAA MOUNTAIN WEST", roster=4)))
 
     def test_renamed_school(self):
         d = self.team("NCAA MOUNTAIN WEST", 4)  # Fresno State 2019-2021, Air Force since 2022
@@ -96,6 +115,14 @@ class RealData(unittest.TestCase):
         mgr = {s["year"]: s["manager"] for s in d["seasons"]}
         self.assertNotEqual(mgr[2019], mgr[2025])  # one roster, several managers: still one team
         self.assertEqual(len(d["seasons"]), len({s["year"] for s in d["seasons"]}))
+
+    def test_pf_pa_are_standard_totals(self):
+        d = self.team("NCAA MOUNTAIN WEST", 4)
+        for s in d["seasons"]:
+            reg = [g for g in s["games"] if g["kind"] == "reg" and "pf" in g]
+            if s["record"]:
+                self.assertAlmostEqual(s["record"]["pf"], sum(g["pf"] for g in reg), places=1)
+                self.assertAlmostEqual(s["record"]["pa"], sum(g["pa"] for g in reg), places=1)
 
     def test_season_where_roster_did_not_exist(self):
         d = self.team("NCAA OHIO VALLEY", 1)  # league founded 2021
@@ -119,7 +146,8 @@ class RealData(unittest.TestCase):
                 checked += 1
                 rec = s["record"]
                 self.assertEqual((rec["w"], rec["l"], rec["t"]), (r["Wins"], r["Losses"], r["Ties"]), (y, r["Team"]))
-                self.assertAlmostEqual(rec["pf"], r["Points"], places=1)
+                # PF is shown on standard totals; the Standings files carry the points that season ranked on
+                self.assertAlmostEqual(rec["pf"] if y >= T.standard_results.standard_from() else rec["pf_official"], r["Points"], places=1)
                 self.assertEqual(s["place"][0], r["Division Place"], (y, r["Team"]))
         self.assertGreater(checked, 800)
 
@@ -135,7 +163,8 @@ class RealData(unittest.TestCase):
     def test_manager_is_a_username(self):
         users = set(pd.read_csv("data/Rosters_Current.csv", dtype=str)["OwnerName"].dropna()) | {"Orphan"}
         for d in self.files.values():
-            self.assertIn(d["manager"], users)
+            if not d.get("defunct"):
+                self.assertIn(d["manager"], users)
 
 
 if __name__ == "__main__":

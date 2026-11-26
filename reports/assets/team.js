@@ -29,7 +29,8 @@
 
   // ---- header -------------------------------------------------------------------------------
   function header(d) {
-    const meta = [`Manager: ${esc(d.manager)}`];
+    const meta = [`${d.defunct ? 'Last manager' : 'Manager'}: ${esc(d.manager)}`];
+    if (d.defunct) meta.push(`Defunct · played ${d.defunct.first === d.defunct.last ? d.defunct.first : d.defunct.first + '–' + d.defunct.last}`);
     if (d.record) meta.push(`${d.season}: ${rec(d.record)}`);
     if (d.rank) meta.push(`#${d.rank}${d.of ? ' of ' + d.of : ''} overall`);
     if (d.place) meta.push(`${ord(d.place[0])} in ${esc(d.division || 'division')}`);
@@ -80,13 +81,17 @@
   function seasons(d) {
     if (!d.seasons.length) return '<p class="tm-empty">No seasons on file.</p>';
     const open = d.settings.current_season_open !== false;
+    const openYear = d.defunct ? d.defunct.last : d.season;
     return d.seasons.map(s => {
       const id = s.identity || {bg: d.bg, ink: d.ink};
       const bits = [];
-      if (s.record) bits.push(`${rec(s.record)} · PF ${pts(s.record.pf)} · PA ${pts(s.record.pa)}`);
+      if (s.record) {
+        const r = s.record, off = r.pf_official != null && (Math.abs(r.pf - r.pf_official) > 0.005 || Math.abs(r.pa - r.pa_official) > 0.005);
+        bits.push(`${rec(r)} · PF ${pts(r.pf)} · PA ${pts(r.pa)}${off ? ` <small>(† Sleeper ${pts(r.pf_official)}–${pts(r.pa_official)})</small>` : ''}`);
+      }
       if (s.place) bits.push(`${ord(s.place[0])} of ${s.place[1]} in ${esc(s.division || 'division')}`);
       const sum = [s.post || (s.year === d.season ? '' : 'No postseason'), s.manager ? 'Manager: ' + s.manager : ''].filter(Boolean).join(' · ');
-      return `<details class="tm-season" data-year="${s.year}"${open && s.year === d.season ? ' open' : ''}><summary>` +
+      return `<details class="tm-season" data-year="${s.year}"${open && s.year === openYear ? ' open' : ''}><summary>` +
         `<span class="yr">${s.year}</span><span class="tm-chip" style="--chip-bg:${esc(id.bg)};--chip-ink:${esc(id.ink)}">${esc(s.name)}</span>` +
         `<span>${bits.join(' · ')}</span>${sum ? `<span class="sum">${esc(sum)}</span>` : ''}</summary>` +
         `<div class="body"><table class="tm-games"><colgroup><col class="c-wk"><col><col class="c-sc"><col class="c-r"></colgroup><tbody>${s.games.map(gameRow).join('')}</tbody></table></div></details>`;
@@ -153,9 +158,13 @@
   function picker(msg) {
     if (msg) { $('tm-error').textContent = msg; $('tm-error').hidden = false; }
     $('tm-picker').hidden = false;
-    $('tm-pick').innerHTML = Object.entries(INDEX.leagues).map(([lid, lg]) => `<div><h3>${esc(lg.short)}</h3><ul>` +
+    const group = ([lid, lg]) => `<div><h3>${esc(lg.short)}${lg.defunct ? ` <small>(through ${lg.last})</small>` : ''}</h3><ul>` +
       Object.entries(INDEX.teams[lid] || {}).sort((a, b) => a[1].name.localeCompare(b[1].name))
-        .map(([r, t]) => `<li><a href="${L.href(lid, r)}">${esc(t.name)}<small>${esc(t.manager)}</small></a></li>`).join('') + '</ul></div>').join('');
+        .map(([r, t]) => `<li><a href="${L.href(lid, r)}">${esc(t.name)}<small>${esc(t.manager)}</small></a></li>`).join('') + '</ul></div>';
+    const all = Object.entries(INDEX.leagues);
+    const gone = all.filter(([, lg]) => lg.defunct);
+    $('tm-pick').innerHTML = all.filter(([, lg]) => !lg.defunct).map(group).join('') +
+      (gone.length ? `<div class="tm-defunct"><h3>Defunct teams</h3><div class="tm-pick">${gone.map(group).join('')}</div></div>` : '');
   }
 
   async function main() {
@@ -166,7 +175,7 @@
     if (!league && !roster) { picker(); return finish(); }
     if (!(INDEX.teams[league] || {})[roster]) {  // a past season's league ID: match by league name + roster
       const cur = L.currentTeam(INDEX, {leagueId: league, roster});
-      if (!cur) { picker('That team is not in the league this season. Pick a team:'); return finish(); }
+      if (!cur) { picker('No team page found for that team. Pick a team:'); return finish(); }
       league = cur.league; roster = cur.roster;
       history.replaceState(null, '', L.href(league, roster));
     }
@@ -175,10 +184,12 @@
     catch (e) { $('tm-error').textContent = 'Team data could not be loaded. ' + e.message; $('tm-error').hidden = false; return; }
     document.title = `${d.name} · ${document.title.replace(/^Team · /, '')}`;
     $('tm-top').innerHTML = header(d);
-    $("tm-roster").innerHTML = rosterHtml(d);
+    if (d.defunct) $('tm-roster-sec').remove();  // no current roster: the header says it's defunct
+    else $('tm-roster').innerHTML = rosterHtml(d);
     $('tm-trophies').innerHTML = await trophies(d);
     $('tm-seasons').innerHTML = seasons(d);
-    $('tm-season-note').textContent = `Scores are on standard scoring (the score that should have occurred). Results from ${d.seasons.some(s => s.standard) ? Math.min(...d.seasons.filter(s => s.standard).map(s => s.year)) : d.season} on are decided on standard scoring; earlier results, records and PF/PA are as recorded by Sleeper, the same as the Standings pages. † marks Sleeper's official score where it differs.`;
+    const stdFrom = d.seasons.some(s => s.standard) ? Math.min(...d.seasons.filter(s => s.standard).map(s => s.year)) : d.season;
+    $('tm-season-note').textContent = `Scores and PF/PA are on standard scoring (the score that should have occurred). Results from ${stdFrom} on are decided on standard scoring; earlier results and records are as recorded by Sleeper and never flipped. † marks Sleeper's official score where it differs.`;
     $('tm-drafts').innerHTML = drafts(d);
     transactions(d);
     $('tm-sections').hidden = false;

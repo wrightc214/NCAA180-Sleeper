@@ -108,16 +108,18 @@ def team_file(league_name, roster_id):
 
 
 def current_team(index, league_id=None, league_name=None, roster=None):
-    """(current league id, roster id) for a team seen in any season, or None when that league or roster
-    doesn't exist this season. league_id: that season's Sleeper ID (resolved through index['ids']);
-    league_name wins when given."""
+    """(page league id, roster id) for a team seen in any season, or None when it has no page.
+    A team still in the league resolves to this season's league ID; a defunct team (retired league or
+    roster) to the league ID of its last season (index entries marked "defunct").
+    league_id: any season's Sleeper ID (resolved through index['ids']); league_name wins when given."""
     name = norm_league(league_name) if league_name else index.get("ids", {}).get(str(league_id or ""), "")
     r = rid(roster)
     if not name or not r:
         return None
-    for lid, lg in index.get("leagues", {}).items():
-        if norm_league(lg.get("name")) == name:
-            return (lid, r) if r in index.get("teams", {}).get(lid, {}) else None
+    leagues = sorted(index.get("leagues", {}).items(), key=lambda kv: bool(kv[1].get("defunct")))
+    for lid, lg in leagues:  # current leagues first, then defunct ones
+        if norm_league(lg.get("name")) == name and r in index.get("teams", {}).get(lid, {}):
+            return (lid, r)
     return None
 
 
@@ -127,18 +129,24 @@ def matching_seasons(key, keys_by_year):
 
 
 def team_links(year):
-    """{team name that season: [current league id, roster]} for every team of that season whose roster
-    still exists (league name + roster ID). Pages pass this to NCAATeamLink.wrap()."""
+    """{team name that season: [page league id, roster]} for every team of that season. Pages pass this to
+    NCAATeamLink.wrap(). A team still in the league -> this season's league ID; a defunct team -> its
+    last season's league ID (the same rule as current_team)."""
     lids = league_ids()
-    cur = max(y for y, _ in lids.values())
-    cur_lid = {name: lid for lid, (y, name) in lids.items() if y == cur}
-    now = {(norm_league(lg), rid(r)) for lg, r in zip(tn.names(cur)["LeagueName"], tn.names(cur)["RosterID"])}
+    lid_of = {(y, name): lid for lid, (y, name) in lids.items()}
+    last = {}
+    for y in sorted({y for y, _ in lids.values()}):
+        n = tn.names(y)
+        for lg, r in zip(n["LeagueName"], n["RosterID"]):
+            if (y, norm_league(lg)) in lid_of:
+                last[(norm_league(lg), rid(r))] = y
     n = tn.names(year)
     out = {}
     for lg, r, team in zip(n["LeagueName"], n["RosterID"], n["Team"]):
         k = (norm_league(lg), rid(r))
-        if k in now and k[0] in cur_lid:
-            out[str(team).strip()] = [cur_lid[k[0]], k[1]]
+        lid = lid_of.get((last.get(k), k[0]))
+        if lid:
+            out[str(team).strip()] = [lid, k[1]]
     return out
 
 
@@ -216,30 +224,37 @@ def matchup_rows(paths=MATCHUP_FILES):
 
 
 def season_records(m, std_from):
-    """{(year, key): {w,l,t,pf,pa,games}}. Results/points: Sleeper's official before std_from
-    (as recorded, same as the Standings pages); standard scoring from std_from (decides results)."""
+    """{(year, key): {w,l,t,pf,pa,pf_official,pa_official,games}}. W/L/T: Sleeper's official result before
+    std_from (results are never flipped), standard scoring from std_from. PF/PA: standard totals in every
+    season (Chris, 5.20 review); Sleeper's official totals kept alongside (division ties before std_from)."""
     out = {}
     for r in m.itertuples():
         if r.Outcome not in standard_results.RESULTS:
             continue
-        d = out.setdefault((r.Y, r.Key), {"w": 0, "l": 0, "t": 0, "pf": 0.0, "pa": 0.0, "games": 0})
+        d = out.setdefault((r.Y, r.Key), {"w": 0, "l": 0, "t": 0, "pf": 0.0, "pa": 0.0,
+                                          "pf_official": 0.0, "pa_official": 0.0, "games": 0})
         d[{"Win": "w", "Loss": "l", "Tie": "t"}[r.Outcome]] += 1
-        std = r.Y >= std_from
-        d["pf"] += num(r.PointsFor if std else r.PointsOfficial)
-        d["pa"] += num(r.PointsAgainst if std else r.PointsAgainstOfficial)
+        d["pf"] += num(r.PointsFor)
+        d["pa"] += num(r.PointsAgainst)
+        d["pf_official"] += num(r.PointsOfficial)
+        d["pa_official"] += num(r.PointsAgainstOfficial)
         d["games"] += 1
-    for d in out.values():
-        d["pf"], d["pa"] = round(d["pf"], 2), round(d["pa"], 2)
+    for (y, _), d in out.items():
+        for k in ("pf", "pa", "pf_official", "pa_official"):
+            d[k] = round(d[k], 2)
+        d["std"] = y >= std_from
     return out
 
 
 def division_places(records, divisions):
     """{(year, key): (place, size)} within league + division: wins (ties = half) then points for, exact
-    ties share a place -- the standings.py rule."""
+    ties share a place -- the standings.py rule, on the points that season's standings used (official
+    before standard_from), so places match the Standings pages."""
     groups = {}
     for (y, key), d in records.items():
         div = divisions.get((y, key), {}).get("division", "")
-        groups.setdefault((y, key.split("|")[0], div), []).append((y, key, (d["w"] + 0.5 * d["t"], round(d["pf"], 2))))
+        pf = d["pf"] if d.get("std", True) else d.get("pf_official", d["pf"])  # the standings that season used
+        groups.setdefault((y, key.split("|")[0], div), []).append((y, key, (d["w"] + 0.5 * d["t"], round(pf, 2))))
     out = {}
     for teams in groups.values():
         vals = sorted((v for *_, v in teams), reverse=True)
@@ -554,20 +569,41 @@ def build(out_dir=OUT_DIR, page=PAGE):
     index = {"season": cur, "leagues": {}, "ids": {lid: name for lid, (_, name) in sorted(lids.items())}, "teams": {}}
     os.makedirs(out_dir, exist_ok=True)
     written = set()
+
+    # Who gets a page: every current team, plus every defunct team -- a roster (league name + roster ID)
+    # seen in any season that isn't in the league now (retired leagues: 2019 American, 2020 Southland).
+    specs = []
     for t in teams.to_dict("records"):
-        t = type("Team", (), {"Team": t["Team"].strip(), "LeagueName": t["LeagueName"], "RosterID": t["RosterID"],
-                              "Division": t.get("Division Name", "")})
-        lg = norm_league(t.LeagueName)
-        r = rid(t.RosterID)
-        lid = cur_lid.get(lg)
-        if not lid:
-            print(f"WARNING: no {cur} league ID for {t.LeagueName}; {t.Team} skipped")
+        lg = norm_league(t["LeagueName"])
+        if not cur_lid.get(lg):
+            print(f"WARNING: no {cur} league ID for {t['LeagueName']}; {t['Team']} skipped")
             continue
+        specs.append({"league": t["LeagueName"].strip(), "roster": rid(t["RosterID"]), "name": t["Team"].strip(),
+                      "lid": cur_lid[lg], "division": str(t.get("Division Name", "")).strip().title(), "defunct": False})
+    current_keys = {season_key(x["league"], x["roster"]) for x in specs}
+    seen = set().union(*keys_by_year.values()) | set(trophy_rows)
+    lid_of = {(y, name): lid for lid, (y, name) in lids.items()}
+    for key in sorted(seen - current_keys):
+        lg, r = key.split("|")
+        years = matching_seasons(key, keys_by_year)
+        if not years or not r:
+            continue
+        last = years[0]
+        lid = lid_of.get((last, lg))
+        if not lid:
+            print(f"WARNING: no {last} league ID for {lg}; defunct roster {r} skipped")
+            continue
+        specs.append({"league": lg, "roster": r, "name": tn.season_name(last, lg, r) or f"{lg} roster {r}",
+                      "lid": lid, "division": divs.get((last, key), {}).get("division", ""), "defunct": True,
+                      "first": years[-1], "last": last})
+
+    for t in specs:
+        lg, r, lid, name = norm_league(t["league"]), t["roster"], t["lid"], t["name"]
         key = season_key(lg, r)
-        ident = identity(t.Team)
+        ident = identity(name)
         seasons = []
         for y in matching_seasons(key, keys_by_year):
-            nm = tn.season_name(y, t.LeagueName.strip(), r) or t.Team
+            nm = tn.season_name(y, t["league"], r) or name
             rec = records.get((y, key))
             sd = divs.get((y, key), {})
             pl = places.get((y, key))
@@ -575,25 +611,33 @@ def build(out_dir=OUT_DIR, page=PAGE):
             s = {"year": y, "name": nm, "manager": sd.get("manager", ""), "division": sd.get("division", ""),
                  "record": rec, "place": list(pl) if pl and rec else None,
                  "post": postseason_summary(post.get((y, key), [])), "games": games}
-            if nm != t.Team:
+            if nm != name:
                 s["identity"] = identity(nm)
             if y >= std_from:
                 s["standard"] = True
             seasons.append(s)
-        now = next((s for s in seasons if s["year"] == cur), None)
-        o = rank.get((lg, t.Team), {})
-        mgr = (now or {}).get("manager") or ""
-        owner_rows = rosters[(rosters["LeagueName"].map(norm_league) == lg) & (rosters["RosterID"].map(rid) == r)]
-        if len(owner_rows):
-            mgr = owner_rows["OwnerName"].iloc[0] or mgr
+        if t["defunct"]:
+            last = seasons[0] if seasons else {}
+            mgr = last.get("manager") or ""
+            data_now = {"record": None, "place": None, "rank": None, "of": None, "roster_groups": [],
+                        "defunct": {"first": t["first"], "last": t["last"]}}
+        else:
+            now = next((s for s in seasons if s["year"] == cur), None) or {}
+            o = rank.get((lg, name), {})
+            mgr = now.get("manager") or ""
+            owner_rows = rosters[(rosters["LeagueName"].map(norm_league) == lg) & (rosters["RosterID"].map(rid) == r)]
+            if len(owner_rows):
+                mgr = owner_rows["OwnerName"].iloc[0] or mgr
+            data_now = {"record": now.get("record"), "place": now.get("place"),
+                        "rank": int(o["Playoff Rank"]) if o.get("Playoff Rank") else None, "of": len(overall) or None,
+                        "roster_groups": current_roster(lg, r, rosters, names, cfg["position_order"])}
         data = {
-            "key": key, "league_id": lid, "league": t.LeagueName.strip(), "short": short_n.get(lg, t.LeagueName),
+            "key": key, "league_id": lid, "league": t["league"], "short": short_n.get(lg, t["league"]),
             "roster": r, "season": cur, **ident, "manager": mgr or "Orphan",
-            "division": (now or {}).get("division", "") or str(t.Division).strip().title(),
-            "record": (now or {}).get("record"), "place": (now or {}).get("place"),
-            "rank": int(o["Playoff Rank"]) if o.get("Playoff Rank") else None, "of": len(overall) or None,
-            "former": [{"name": n, "from": a, "to": b} for n, a, b in tn.former_names(t.LeagueName.strip(), r)],
-            "roster_groups": current_roster(lg, r, rosters, names, cfg["position_order"]),
+            "division": (seasons[0].get("division") if t["defunct"] and seasons else
+                         next((s["division"] for s in seasons if s["year"] == cur), "")) or t["division"],
+            **data_now,
+            "former": [{"name": n, "from": a, "to": b} for n, a, b in tn.former_names(t["league"], r) if n != name],
             "trophies": trophy_rows.get(key, []),
             "seasons": seasons,
             "drafts": draft_rows.get(key, []),
@@ -603,12 +647,18 @@ def build(out_dir=OUT_DIR, page=PAGE):
         f = team_file(lg, r)
         _write_json(os.path.join(out_dir, f), data)
         written.add(f)
-        index["leagues"].setdefault(lid, {"name": t.LeagueName.strip(), "short": short_n.get(lg, t.LeagueName), "slug": slug(lg)})
-        index["teams"].setdefault(lid, {})[r] = {"name": t.Team, "manager": mgr or "Orphan", "file": f}
+        lg_row = {"name": t["league"], "short": short_n.get(lg, t["league"]), "slug": slug(lg)}
+        if t["defunct"]:
+            lg_row.update(defunct=True, last=t["last"])
+        index["leagues"].setdefault(lid, lg_row)
+        team_row = {"name": name, "manager": mgr or "Orphan", "file": f}
+        if t["defunct"]:
+            team_row.update(defunct=True, last=t["last"])
+        index["teams"].setdefault(lid, {})[r] = team_row
     for old in glob.glob(os.path.join(out_dir, "*.json")):
         if os.path.basename(old) not in written and os.path.basename(old) != "index.json":
-            os.remove(old)  # a team that left the league
-    index["leagues"] = dict(sorted(index["leagues"].items(), key=lambda kv: kv[1]["short"]))
+            os.remove(old)  # nothing left to show (no season, trophy, draft or transaction on file)
+    index["leagues"] = dict(sorted(index["leagues"].items(), key=lambda kv: (bool(kv[1].get("defunct")), kv[1]["short"])))
     index["teams"] = {lid: dict(sorted(v.items(), key=lambda kv: int(kv[0]))) for lid, v in index["teams"].items()}
     _write_json(os.path.join(out_dir, "index.json"), index)
     write_page(page)
@@ -657,8 +707,8 @@ CSS = """
 .tm-season .sum{flex-basis:100%;font-weight:600;font-size:13px;color:var(--mute)}
 .tm-season .body{padding:0 12px 12px}
 .tm-games{width:100%;min-width:0;table-layout:fixed;border-collapse:collapse;font-size:13px}
-.tm-games col.c-wk{width:46px}.tm-games col.c-sc{width:112px}.tm-games col.c-r{width:26px}
-.tm-games td{white-space:normal;overflow-wrap:anywhere;padding:5px 4px;border-bottom:1px solid var(--line);vertical-align:top}
+.tm-games col.c-wk{width:40px}.tm-games col.c-sc{width:92px}.tm-games col.c-r{width:22px}
+.tm-games td{white-space:normal;overflow-wrap:break-word;padding:5px 4px;border-bottom:1px solid var(--line);vertical-align:top}
 .tm-games td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 .tm-games tr td.wk{white-space:nowrap;color:var(--mute);font-weight:700}
 .tm-games small{display:block;color:var(--mute);font-size:11px}
