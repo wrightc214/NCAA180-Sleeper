@@ -1,5 +1,8 @@
 name: PR validation (read-only)
-on: pull_request
+on:
+  pull_request:
+  push:
+    branches: [main]
 permissions:
   contents: read
 jobs:
