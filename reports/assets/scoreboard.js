@@ -100,12 +100,14 @@
     return right?b+a:a+b;
   }
   function paired(a,b,slots,color=true) {return slots.map((s,i)=>`<div class="pr">${cell(a[i],false,color)}<div class="sb s-${escape(s)}">${escape(s)}</div>${cell(b[i],true,color)}</div>`).join('');}
+  // Team page link (task 5.20): shown only while the team page's nav state allows it (team-link.js).
+  function teamLink(h,r) {return window.NCAATeamLink?window.NCAATeamLink.wrap(h,r.leagueId,r.roster_id):h;}
   function header(r,model,right,final=false,pregame=false) {
     const t=team(r.roster_id,r.leagueId),odds=postGame?null:baseline.odds.find(o=>o.LeagueID===leagueId && [o.RosterID,o.OpponentRosterID].includes(String(r.roster_id)));
     const ps=postGame?postSide(r):null;
     const mine=odds&&odds.RosterID===String(r.roster_id),record=ps?ps.Rec:odds?(mine?odds.Rec:odds.OppRec):'',rank=ps?(postGame.round==='Playoff'&&ps.Seed?`(${ps.Seed})`:''):odds?(mine?odds.Rank:odds.OppRank):'';
     const changed=Math.abs(model.actual-model.official)>.011;
-    return `<div class="tm${right?' r':''}">${t.logo?(t.logo_dark?`<img class="logo tl-hd" src="${escape(t.logo)}" alt="" onerror="this.hidden=true"><img class="logo tl-d" src="${escape(t.logo_dark)}" alt="" onerror="this.hidden=true">`:`<img class="logo" src="${escape(t.logo)}" alt="" onerror="this.hidden=true">`):''}<div><span class="pt" style="background:${escape(t.background)};color:${escape(t.text)}">${rank?`${String(rank).startsWith('(')?'':'#'}${escape(rank)} `:''}${escape(t.name)}</span><small>${escape(r.ownerName||'Unassigned')} ${record?`· ${escape(record)}`:''}</small></div><div class="sc"><div class="big">${money(model.actual)}${changed?'†':''}</div>${final?`<small>proj ${model.pregame.toFixed(1)}</small>`:`<small>${pregame?'proj':'live proj'} ${model.projected.toFixed(1)} · ${Math.round(model.minutes)} min left</small>`}${Math.abs(model.adjustment)>.01?`<small>Includes ${model.adjustment>0?'+':''}${money(model.adjustment)} team adjustment</small>`:''}${changed?`<small>† Sleeper shows ${money(model.official)}</small>`:''}</div></div>`;
+    return `<div class="tm${right?' r':''}">${t.logo?(t.logo_dark?`<img class="logo tl-hd" src="${escape(t.logo)}" alt="" onerror="this.hidden=true"><img class="logo tl-d" src="${escape(t.logo_dark)}" alt="" onerror="this.hidden=true">`:`<img class="logo" src="${escape(t.logo)}" alt="" onerror="this.hidden=true">`):''}<div><span class="pt" style="background:${escape(t.background)};color:${escape(t.text)}">${rank?`${String(rank).startsWith('(')?'':'#'}${escape(rank)} `:''}${teamLink(escape(t.name),r)}</span><small>${escape(r.ownerName||'Unassigned')} ${record?`· ${escape(record)}`:''}</small></div><div class="sc"><div class="big">${money(model.actual)}${changed?'†':''}</div>${final?`<small>proj ${model.pregame.toFixed(1)}</small>`:`<small>${pregame?'proj':'live proj'} ${model.projected.toFixed(1)} · ${Math.round(model.minutes)} min left</small>`}${Math.abs(model.adjustment)>.01?`<small>Includes ${model.adjustment>0?'+':''}${money(model.adjustment)} team adjustment</small>`:''}${changed?`<small>† Sleeper shows ${money(model.official)}</small>`:''}</div></div>`;
   }
   function oddsBar(a,b,p,pre=false,label='LIVE WIN CHANCE · ESTIMATE') {
     const ca=team(a.roster_id,a.leagueId),cb=team(b.roster_id,b.leagueId);
@@ -144,7 +146,7 @@
     const out=i=>isFinal?models[i].actual<top:started&&ch&&ch[i]<0.1;
     const lineup=i=>models[i].starters.map(p=>`<div class="gp">${cell(p)}</div>`).join('');
     const th=i=>{const r=chosen[i],t=team(r.roster_id,r.leagueId),x=postSide(r)||{};
-      return `<span class="pt" style="background:${escape(t.background)};color:${escape(t.text)}">${escape(t.name)}</span><small>${escape(r.ownerName||'')}${x.Rec?` · ${escape(x.Rec)}`:''}</small>`;};
+      return `<span class="pt" style="background:${escape(t.background)};color:${escape(t.text)}">${teamLink(escape(t.name),r)}</span><small>${escape(r.ownerName||'')}${x.Rec?` · ${escape(x.Rec)}`:''}</small>`;};
     const lbl=isFinal?'Advances':started?'Live adv %':'Pregame adv %';
     let html=`<div class="eyebrow">${escape(gLabel(postGame))} · ${season} · ${escape(wkName(week))}</div>`;
     html+=`<div class="gtop"><div class="mid">${badges().map(b=>`<img class="gbadge" src="${b.src}" alt="${escape(b.alt)}" title="${escape(b.alt)}">`).join('')}<div class="mid-status">${center}</div></div>`;

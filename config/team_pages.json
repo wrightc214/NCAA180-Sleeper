@@ -1,0 +1,11 @@
+{
+  "_note": "Team pages (task 5.20): one page per roster (league + Sleeper roster_id), reports/team.html?league=<current league id>&roster=<id>, filled in the browser from data/teams/<league slug>-<roster>.json (scripts/team_pages.py). The page is listed in config/nav.json; links to it from Standings and Games follow that tab's state (hidden-dev = Dev view only).",
+  "position_order": ["QB", "RB", "WR", "TE", "K", "DEF"],
+  "_position_order_note": "Current-roster groups in this order; any other position (or none) goes in a last 'Other' group.",
+  "transactions_shown": 25,
+  "_transactions_shown_note": "Transactions listed before 'Show more'; each press shows this many more. Safe default 25.",
+  "startup_draft_min_rounds": 6,
+  "_startup_draft_min_rounds_note": "A draft with more rounds than this is labelled a startup draft (2019 founding leagues, 2020/2021 expansion leagues); otherwise a rookie draft.",
+  "current_season_open": true,
+  "_current_season_open_note": "Season by season: the current season's block starts open, past seasons start closed."
+}

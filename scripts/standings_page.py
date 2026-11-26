@@ -15,6 +15,7 @@ import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from site_common import SECTIONS_JS, menu_html, page_head  # noqa: E402
+from team_pages import team_links  # noqa: E402 (task 5.20: team names link to the team page)
 import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 SRC = "data/OverallStandings_Season.csv"
@@ -109,14 +110,18 @@ def write(df, disp, year, years, cur, out, csv_url, eyebrow, extra_note):
   {extra_note}</p>
 </section>
 </div>
+<script src="assets/team-link.js"></script>
 <script>
+const TL = {json.dumps(team_links(year), ensure_ascii=False)}, ti = {cols.index("Team") if "Team" in cols else -1};
 const C = {json.dumps(cols)}, R = {json.dumps(rows, default=str)}, D = {json.dumps({cols.index(k): v for k, v in disp.items()})}, NUM = new Set({json.dumps([cols.index(c) for c in num])});
 const tb = document.querySelector('#t tbody'), sel = document.getElementById('lg'), li = C.indexOf('League');
 let key = 0, dir = 1;
+const escH = v => String(v).replace(/[&<>]/g, c => ({{'&':'&amp;','<':'&lt;','>':'&gt;'}}[c]));
+const cell = (v, i) => i === ti && TL[v] && window.NCAATeamLink ? NCAATeamLink.wrap(escH(v), TL[v][0], TL[v][1]) : escH(v);
 function render() {{
   const f = sel.value, rs = R.filter(r => !f || r[li] === f).sort((a, b) =>
     (NUM.has(key) ? (a[key] - b[key]) : String(a[key]).localeCompare(String(b[key]))) * dir);
-  tb.innerHTML = rs.map(r => '<tr>' + r.map((v, i) => (D[i] ? (v = D[i][R.indexOf(r)], 0) : 0, v)).map((v, i) => `<td${{NUM.has(i) ? ' class="n"' : ''}}>${{String(v).replace(/[&<>]/g, c => ({{'&':'&amp;','<':'&lt;','>':'&gt;'}}[c]))}}</td>`).join('') + '</tr>').join('');
+  tb.innerHTML = rs.map(r => '<tr>' + r.map((v, i) => (D[i] ? (v = D[i][R.indexOf(r)], 0) : 0, v)).map((v, i) => `<td${{NUM.has(i) ? ' class="n"' : ''}}>${{cell(v, i)}}</td>`).join('') + '</tr>').join('');
   document.querySelectorAll('th').forEach((th, i) => th.setAttribute('aria-sort', i === key ? (dir > 0 ? 'ascending' : 'descending') : 'none'));
 }}
 document.querySelectorAll('th button').forEach(b => b.onclick = () => {{ const i = +b.dataset.i; dir = i === key ? -dir : (NUM.has(i) && i !== 0 ? -1 : 1); key = i; render(); }});

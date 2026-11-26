@@ -1,0 +1,53 @@
+{
+  "_note": "Shared season-matching cases for scripts/team_pages.py (tests/test_team_pages.py) and reports/assets/team-link.js (tests/team-link.test.js). Task 5.20. A team = league NAME + roster ID; Sleeper league IDs change every season.",
+  "index": {
+    "season": 2026,
+    "leagues": {
+      "MW2026": {"name": "NCAA MOUNTAIN WEST", "short": "Mountain West"},
+      "PAC2026": {"name": "NCAA PAC 12", "short": "Pac-12"},
+      "OV2026": {"name": "NCAA OHIO VALLEY", "short": "Ohio Valley"}
+    },
+    "ids": {
+      "MW2019": "NCAA MOUNTAIN WEST", "MW2021": "NCAA MOUNTAIN WEST", "MW2026": "NCAA MOUNTAIN WEST",
+      "PAC2019": "NCAA PAC 12", "PAC2026": "NCAA PAC 12",
+      "OV2021": "NCAA OHIO VALLEY", "OV2026": "NCAA OHIO VALLEY",
+      "AM2019": "NCAA AMERICAN"
+    },
+    "teams": {
+      "MW2026": {"4": {"name": "Air Force"}, "7": {"name": "Utah State"}},
+      "PAC2026": {"7": {"name": "Arizona State"}},
+      "OV2026": {"3": {"name": "Tennessee Tech"}}
+    }
+  },
+  "current_team": [
+    {"_case": "renamed school: Fresno State (2021 league ID) is today's Air Force roster", "in": {"leagueId": "MW2021", "roster": "4"}, "out": ["MW2026", "4"]},
+    {"_case": "first season's league ID, numeric roster", "in": {"leagueId": "MW2019", "roster": 4}, "out": ["MW2026", "4"]},
+    {"_case": "roster as a float string", "in": {"leagueId": "MW2019", "roster": "4.0"}, "out": ["MW2026", "4"]},
+    {"_case": "2019 league name with a trailing space", "in": {"leagueName": "NCAA PAC 12 ", "roster": "7"}, "out": ["PAC2026", "7"]},
+    {"_case": "league name wins over ID, case-insensitive", "in": {"leagueName": "ncaa  mountain west", "leagueId": "PAC2019", "roster": "7"}, "out": ["MW2026", "7"]},
+    {"_case": "this season's ID", "in": {"leagueId": "OV2026", "roster": "3"}, "out": ["OV2026", "3"]},
+    {"_case": "retired league (2019 American): no team this season", "in": {"leagueId": "AM2019", "roster": "5"}, "out": null},
+    {"_case": "roster that doesn't exist this season", "in": {"leagueId": "MW2019", "roster": "13"}, "out": null},
+    {"_case": "unknown league ID", "in": {"leagueId": "nope", "roster": "4"}, "out": null},
+    {"_case": "no roster", "in": {"leagueId": "MW2019"}, "out": null}
+  ],
+  "season_key": [
+    [["NCAA PAC 12 ", "7"], "NCAA PAC 12|7"],
+    [["NCAA BIG EAST & CO.", 12], "NCAA BIG EAST & CO.|12"],
+    [["ncaa ohio valley", "3.0"], "NCAA OHIO VALLEY|3"]
+  ],
+  "matching_seasons": {
+    "_note": "keys_by_year: the season keys that existed each year. A manager change keeps the key (the roster is the team); a renamed school keeps the key; a season where the league didn't exist has no key.",
+    "keys_by_year": {
+      "2019": ["NCAA MOUNTAIN WEST|4", "NCAA PAC 12|7"],
+      "2020": ["NCAA MOUNTAIN WEST|4", "NCAA PAC 12|7"],
+      "2021": ["NCAA MOUNTAIN WEST|4", "NCAA PAC 12|7", "NCAA OHIO VALLEY|3"],
+      "2026": ["NCAA MOUNTAIN WEST|4", "NCAA PAC 12|7", "NCAA OHIO VALLEY|3"]
+    },
+    "cases": [
+      [["NCAA MOUNTAIN WEST", "4"], [2026, 2021, 2020, 2019]],
+      [["NCAA OHIO VALLEY", "3"], [2026, 2021]],
+      [["NCAA AMERICAN", "5"], []]
+    ]
+  }
+}
