@@ -1,10 +1,4 @@
-name: Trim team logos
-
-# Runs on every team, CCG or bowl logo upload (teams: Chris 2026-11-12; CCG + bowls 2026-11-17)
-# and on demand:
-#   1. logo_trim.py  -- crop empty canvas, web-size copies (masters kept in assets/logos/source/)
-#   2. logo_glow.py  -- glow version of every team logo for dark backgrounds (teams/glow-dark/)
-# Its own commit is made with the workflow token, which never starts another run (no loop).
+name: Validate logos and generate team glow
 on:
   push:
     branches: [main]
@@ -13,12 +7,14 @@ on:
       - '!assets/logos/teams/glow-dark/**'
       - 'assets/logos/CCG/**'
       - 'assets/logos/Bowls/**'
+      - 'assets/logos/badges/**'
+      - 'assets/logos/Playoffs/**'
   workflow_dispatch:
     inputs:
       folder:
-        description: 'Logo folder to trim'
-        required: true
-        default: 'assets/logos/teams'
+        description: Configured folder to validate. Leave blank to validate all configured folders.
+        required: false
+        type: string
 
 permissions:
   contents: write
@@ -28,28 +24,34 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  trim:
+  validate-and-glow:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install "Pillow==12.3.0"  # pinned: same version as requirements.txt
-      - name: Trim
+      - run: python -m pip install Pillow==12.3.0
+      - name: Validate logos
+        env:
+          LOGO_FOLDER: ${{ inputs.folder }}
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            python scripts/logo_trim.py "${{ github.event.inputs.folder }}"
+          if [ -n "$LOGO_FOLDER" ]; then
+            python scripts/logo_trim.py "$LOGO_FOLDER"
           else
-            python scripts/logo_trim.py assets/logos/teams assets/logos/teams/alt-dark assets/logos/CCG assets/logos/Bowls
+            python scripts/logo_trim.py
           fi
       - run: python scripts/logo_glow.py
-      - name: Commit
+      - name: Commit generated glow
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add assets/logos
-          if git diff --cached --quiet; then echo "Nothing to trim."; exit 0; fi
-          git commit -m "Trim logos + glow versions"
-          for i in 1 2 3; do git pull --rebase -q && git push && exit 0; sleep 10; done
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- assets/logos/teams/glow-dark
+          if git diff --cached --quiet; then echo 'Glow is current.'; exit 0; fi
+          git commit -m 'Refresh generated team logo glow'
+          for attempt in 1 2 3; do
+            git pull --rebase -q && git push origin HEAD:refs/heads/main && exit 0
+            sleep 10
+          done
           exit 1

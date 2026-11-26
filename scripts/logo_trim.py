@@ -1,36 +1,15 @@
-"""Logos for the site: trimmed to their visible pixels and capped at web size.
-
-Upload logos at the best quality you have into the normal folder (e.g. assets/logos/teams/).
-For each PNG this script:
-  1. keeps the high-quality master: a file larger than MAX_SIDE is moved untouched to
-     assets/logos/source/<folder>/ (once; a master already there is the source from then on).
-     A NEW upload over an existing logo moves the old master to source/<folder>/retired/ --
-     masters are never deleted;
-  2. writes the web copy the pages use: transparent margin trimmed to a small even margin and
-     scaled down to MAX_SIDE on the longer side.
-Why (Chris, 2026-10-30): browsers unpack every image to full size; a 3840x2160 logo costs
-~33 MB of phone memory even when drawn at 40 px, and pages can show 180 logos. Masters stay
-for print, posters and future crops. Re-running is safe: unchanged files come out identical.
-
-Usage: python scripts/logo_trim.py [folder ...]   (default: assets/logos/teams)
-"""
-import glob
-import os
-import shutil
+"""Validate web logos without writing artwork."""
+import json
+from pathlib import Path
 import sys
 
 from PIL import Image
 
-MARGIN = 0.04       # margin on each side, as a share of the logo's longer side
-TOLERANCE = 0.02    # skip files whose existing margins are already this close to the target
-ALPHA_MIN = 8       # pixels at or below this alpha count as empty
-MAX_SIDE = 512      # web copy: longest side in pixels (pages show logos at <= ~200 px)
-
-
-def source_path(path):
-    folder, name = os.path.split(path)
-    rel = os.path.relpath(folder, "assets/logos")
-    return os.path.join("assets/logos/source", rel, name)
+ROOT = Path(__file__).resolve().parents[1]
+MARGIN = 0.04
+TOLERANCE = 0.02
+ALPHA_MIN = 8
+MAX_SIDE = 512
 
 
 def trimmed(im):
@@ -90,53 +69,44 @@ def same_pixels(a, b):
     return big <= DIFF_SHARE * a.size[0] * a.size[1]
 
 
-def retire(src):
-    """Move a replaced master to source/<folder>/retired/ instead of deleting it (Chris,
-    2026-11-17): a new upload still wins, and nothing is lost if the check misfires."""
-    import datetime
-    folder, name = os.path.split(src)
-    stem, ext = os.path.splitext(name)
-    dest_dir = os.path.join(folder, "retired")
-    os.makedirs(dest_dir, exist_ok=True)
-    dest = os.path.join(dest_dir, f"{stem} {datetime.date.today().isoformat()}{ext}")
-    n = 2
-    while os.path.exists(dest):
-        dest = os.path.join(dest_dir, f"{stem} {datetime.date.today().isoformat()} ({n}){ext}")
-        n += 1
-    shutil.move(src, dest)
-    print(f"Retired master: {src} -> {dest}")
-    return dest
+def validate(root, selection=None):
+    folders = json.loads((root / "config/logo_check.json").read_text(encoding="utf-8"))["folders"]
+    if selection is not None:
+        if selection not in folders:
+            raise ValueError(f"Folder is outside configured logo validation scope: {selection}")
+        folders = [selection]
+    problems = []
+    for folder in folders:
+        for path in sorted((root / folder).glob("*.png")):
+            reasons = []
+            try:
+                with Image.open(path, formats=["PNG"]) as image:
+                    rgba = image.convert("RGBA")
+                if max(rgba.size) > MAX_SIDE:
+                    reasons.append(f"{rgba.width}x{rgba.height} exceeds {MAX_SIDE}px")
+                if trimmed(rgba) is not None:
+                    reasons.append("transparent margins exceed trim tolerance")
+            except (OSError, ValueError, Image.DecompressionBombError) as error:
+                reasons.append(f"invalid PNG: {error}")
+            if reasons:
+                problems.append(f"{path.relative_to(root).as_posix()}: {', '.join(reasons)}")
+    return problems
 
 
-def process(path):
-    src = source_path(path)
-    before = open(path, "rb").read()
-    # Compare pixels, not PNG bytes: the same image encodes to different bytes across Pillow
-    # versions / optimize settings, and a byte mismatch here used to read as "new upload" and
-    # delete the master (found 2026-11-14 running this on assets/logos/Bowls: every bowl master
-    # would have been removed).
-    if os.path.exists(src):
-        if same_pixels(web_copy(src)[1], Image.open(path)):
-            return False  # web copy already made from this master (any Pillow): leave it alone
-        # The web file isn't the master's web copy: it's a NEW upload (2026-11-11 fix: a replaced
-        # logo used to be overwritten by its old master). The old master is moved to retired/
-        # (never deleted); a big upload becomes the new master.
-        retire(src)
-    if not os.path.exists(src) and max(Image.open(path).size) > MAX_SIDE:
-        os.makedirs(os.path.dirname(src), exist_ok=True)
-        shutil.copy2(path, src)  # keep the high-quality original untouched
-    base = src if os.path.exists(src) else path
-    im, out = web_copy(base)
-    if base == path and out is im:
-        return False  # already trimmed and web-sized
-    out.save(path, optimize=True)
-    return open(path, "rb").read() != before
-
-
-def main(folders):
-    changed = [p for f in folders for p in sorted(glob.glob(f"{f}/*.png")) if process(p)]
-    print(f"Logos: {len(changed)} web copy(ies) written" + (": " + ", ".join(changed) if changed and len(changed) <= 10 else ""))
+def main(selection=None):
+    try:
+        problems = validate(ROOT, selection)
+    except ValueError as error:
+        print(error, file=sys.stderr)
+        return 1
+    if problems:
+        print("\n".join(problems), file=sys.stderr)
+        return 1
+    print("Logo validation passed")
+    return 0
 
 
 if __name__ == "__main__":
-    main(sys.argv[1:] or ["assets/logos/teams"])
+    if len(sys.argv) > 2:
+        sys.exit("Usage: python scripts/logo_trim.py [configured folder]")
+    sys.exit(main(sys.argv[1] if len(sys.argv) > 1 else None))
