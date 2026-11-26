@@ -177,6 +177,9 @@
       if(row)row.right=t;
       else rows.push({right:t});
     });
+    // A team below the cut keeps the thief that knocked it out on its row; its own bid protection becomes
+    // a compact note under the team (Chris, 2026-11-25).
+    for(const row of rows)if(row.right?.active&&row.hold?.plays){row.protect=row.hold;delete row.hold;}
     // Each possible thief sits beside the team it would knock out (Chris, 2026-11-24): the most likely
     // goes against the last team above the cut, the next most likely against the one above that, and so
     // on. A held row (that team leads its own CCG) keeps its placard and does not take a thief. Thieves

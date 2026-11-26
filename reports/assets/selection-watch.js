@@ -137,11 +137,13 @@
     // A plays/leads placard (#141) is not at risk: only a saved-leader hold sits on the at-risk side.
     const cutIndex=rows.findIndex(({left,hold})=>left&&(hold&&!hold.plays||!qualified(left.status)));
     const line='<div class="sw-cut-line" aria-hidden="true"></div>';
-    const markup=rows.map(({left:l,right:r,hold})=>{
+    const markup=rows.map(({left:l,right:r,hold,protect})=>{
       const leftIn=l&&(qualified(l.status)||l.status==='Saved'||hold);
       const rightIn=!leftIn&&l?.status!=='Coin toss'&&r?.active;
       const leftExtra=archive?'<small>#'+E(l?.rank)+'</small>':'<small>'+percent(odds[l?.k]||0)+'</small>';
       const leftHTML=l?formatTeam(l.k,!leftIn,leftExtra)+'<div class="sw-inline">'+E(l.status+entryNote(l.k))+'</div>':'';
+      const protectNote=protect?'<div class="sw-protect-note">'+PROTECT_ICON+'<span>'+E(protect.conf)+' Championship · win → automatic bid · '+
+        percent(protect.win)+detail({game:protect.game,label:' '})+'</span></div>':'';
       const note=hold&&(hold.final?hold.conf+' Champion':hold.plays?hold.conf+' CCG · '+name(l.k)+(hold.leads?' leads':' plays'):
         hold.conf+' CCG · '+name(l.k)+' leads'+(hold.pair?'':' — a win keeps this spot'));
       // Bid protection card (Chris, 2026-11-25 mock): a team playing its own CCG. Caption carries the odds
@@ -156,7 +158,7 @@
         '<div class="sw-inline">'+E(note)+'</div>':card):
         r?formatTeam(r.k,!rightIn,metric(r))+'<div class="sw-inline">'+E(r.label)+detail(r)+'</div>':'';
       return '<div class="sw-cut-row"'+(hold?' data-held="'+(hold.pair?'pair':'placard')+'"':'')+'>'+
-        '<div'+(l?' data-at-large="'+E(l.k)+'"':'')+'>'+leftHTML+'</div>'+
+        '<div'+(l?' data-at-large="'+E(l.k)+'"':'')+'>'+leftHTML+protectNote+'</div>'+
         '<div'+(r||hold?.pair?' data-thief="'+E((r||hold.pair).k)+'"':'')+'>'+rightHTML+'</div></div>';
     });
     if(rows.length)markup.splice(cutIndex<0?markup.length:cutIndex,0,line);
