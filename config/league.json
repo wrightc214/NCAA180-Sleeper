@@ -90,7 +90,14 @@
   "live_bounds": {
     "_note": "Proven results on live pages (Chris, 2026-11-23): a game, CCG race, or Guillotine cut is called (100% / 0%, Clinched / Out, Safe / Cut) when one side's floor beats the other's ceiling. Ceiling = points so far + remaining projection (each starter still to play: Tuesday projection x share of his game left) + ONE big-game allowance = the largest of team_upside x share of the lineup's minutes left, the biggest player_upside[position] x share of that player's game left among starters still to play, and burst if anyone is still to play. Floor = points so far - max_drop while any starter is still to play (one big negative at most: a defense's standard-scoring floor is -11 = -4 for 35+ allowed, -7 for 550+ yards; worst other starter on record QB -7.66). Values from 38k starter games 2019-2025: best team week vs projection +99.5 (sd 25); best single-player game vs projection QB +37.7, RB +38.3, WR +43.5, TE +33.6, K +20.0, DEF +28.9. LIVE DISPLAY ONLY: nothing the weekly run writes, posts or logs (postseason flags, CCG snapshot, Standings, bowl projection, push notifications and their ledger) uses these bounds; those keep the strict rule (every points-for tie unknown). Remove this block to turn proven calls off.",
     "team_upside": 100,
-    "player_upside": {"QB": 40, "RB": 40, "WR": 45, "TE": 35, "K": 20, "DEF": 30},
+    "player_upside": {
+      "QB": 40,
+      "RB": 40,
+      "WR": 45,
+      "TE": 35,
+      "K": 20,
+      "DEF": 30
+    },
     "player_upside_default": 45,
     "burst": 18,
     "max_drop": 11.01
@@ -1090,6 +1097,26 @@
     "data_contact": {
       "sleeper": "wrightc214",
       "discord": "Wrightc214"
+    }
+  },
+  "draft_order": {
+    "_note": "Rookie draft order basis (Chris, 2026-11-26). max_pf_from: first season a league ordered its draft by max PF (null = not known / record-based). Inputs frozen in data/DraftBasis_<year>.csv (scripts/draft_basis.py).",
+    "max_pf_from": {
+      "NCAA ACC": null,
+      "NCAA BIG 10": null,
+      "NCAA BIG 12": null,
+      "NCAA BIG EAST & CO.": null,
+      "NCAA BIG SKY": null,
+      "NCAA HISTORICALLY BLACK": null,
+      "NCAA IVY": null,
+      "NCAA MOUNTAIN WEST": null,
+      "NCAA OHIO VALLEY": null,
+      "NCAA PAC 12": null,
+      "NCAA PIONEER": null,
+      "NCAA SEC": null,
+      "NCAA SUN BELT": null,
+      "NCAA USA": null,
+      "NCAA WILD": null
     }
   }
 }
