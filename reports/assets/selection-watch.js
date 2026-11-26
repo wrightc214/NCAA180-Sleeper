@@ -55,8 +55,14 @@
     const t=team(k),note=byKey()[k];
     const logo=t.logoHtml || (t.logo?'<img src="'+E(t.logo)+'" alt="" loading="lazy" onerror="this.hidden=true">':'');
     const fill=dim?'':teamFill(t.primary);
+    // CCG badge on every team playing a conference championship this week (Chris, 2026-11-26).
+    // Art: assets/logos/CCG/<conference> CCG.png (same pattern as config/trophies.json); swap when the
+    // logo overhaul lands.
+    const conf=note?.conf||'';
+    const ccg=conf&&d?.ccg?.some(g=>g.a===k||g.b===k)?'<img class="sw-ccg-badge" src="../assets/logos/CCG/'+
+      E(encodeURIComponent(conf+' CCG'))+'.png" alt="'+E(conf)+' CCG" title="'+E(conf)+' CCG" loading="lazy" onerror="this.hidden=true">':'';
     return '<div class="sw-team'+(dim?' dim':fill?' admitted':'')+'" style="--team:'+E(t.primary)+fill+'">'+
-      '<span class="sw-logo">'+logo+'</span><div class="sw-name">'+E(t.short||t.name)+
+      '<span class="sw-logo">'+logo+ccg+'</span><div class="sw-name">'+E(t.short||t.name)+
       '<small>#'+E(t.rank)+' · '+E(note?.conf||'')+'</small></div>'+
       '<div class="sw-number">'+(extra||'')+'</div></div>';
   }
@@ -69,7 +75,9 @@
   function leading(g) {
     const result=liveScores[g.id];
     if(g.winner)return g.winner;
-    if(result?.leader)return result.leader;
+    // Projected winner = higher win chance until the game is final, not whoever leads on the scoreboard
+    // right now (Chris, 2026-11-25: Georgia Tech led at 19% and showed as stealing).
+    if(result?.final&&result.leader)return result.leader;
     return (result?.pA??.5)>=.5?g.a:g.b;
   }
   let timeline={}, checkpoints=[];
@@ -122,6 +130,7 @@
     return '<small class="sw-margin" aria-label="Live margin '+E(delta.toFixed(1))+'">'+
       (delta>0?'+':'')+E(delta.toFixed(1))+'</small>';
   }
+  const PROTECT_ICON='<svg class="sw-protect-icon" viewBox="0 0 40 46" aria-hidden="true"><path d="M20 2 37 8v14c0 11-7 18-17 22C10 40 3 33 3 22V8z" fill="none" stroke="currentColor" stroke-width="3"/><path d="M13 13h14v6a7 7 0 0 1-14 0zM13 15H9c0 4 2 6 5 6M27 15h4c0 4-2 6-5 6M20 26v5M15 34h10M17 31h6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   const winMetric=(t,extra='')=>'<small class="sw-win">'+percent(t.win)+'</small>'+extra;
   function cutHTML(board, {archive=false,odds={},formatTeam,name,detail=()=>'',metric=winMetric,exceptions=[]}){
     // Owner-listed admin errors (config field_exceptions): the board stays by rule; ‡ marks the swapped teams.
@@ -134,16 +143,27 @@
     // A plays/leads placard (PR 141) is not at risk: only a saved-leader hold sits on the at-risk side.
     const cutIndex=rows.findIndex(({left,hold})=>left&&(hold&&!hold.plays||!qualified(left.status)));
     const line='<div class="sw-cut-line" aria-hidden="true"></div>';
-    const markup=rows.map(({left:l,right:r,hold})=>{
+    const markup=rows.map(({left:l,right:r,hold,protect})=>{
       const leftIn=l&&(qualified(l.status)||l.status==='Saved'||hold);
       const rightIn=!leftIn&&l?.status!=='Coin toss'&&r?.active;
       const leftExtra=archive?'<small>#'+E(l?.rank)+'</small>':'<small>'+percent(odds[l?.k]||0)+'</small>';
-      const leftHTML=l?formatTeam(l.k,!leftIn,leftExtra)+'<div class="sw-inline">'+E(l.status+entryNote(l.k))+'</div>':'';
+      // Below the cut and playing its own CCG: the thief keeps this row and the team's caption carries its
+      // protection in gold (Chris, 2026-11-26) instead of a separate block.
+      const leftHTML=l?formatTeam(l.k,!leftIn,leftExtra)+(protect?'<div class="sw-inline sw-protect-cap">'+E(l.status)+' · '+
+        E(protect.conf)+' CCG win → automatic bid · '+percent(protect.win)+detail({game:protect.game,label:' '})+'</div>':
+        '<div class="sw-inline">'+E(l.status+entryNote(l.k))+'</div>'):'';
       const note=hold&&(hold.final?hold.conf+' Champion':hold.plays?hold.conf+' CCG · '+name(l.k)+(hold.leads?' leads':' plays'):
         hold.conf+' CCG · '+name(l.k)+' leads'+(hold.pair?'':' — a win keeps this spot'));
-      const link=hold&&!hold.final?detail({game:hold.game,label:' '}):'';
+      // Bid protection card (Chris, 2026-11-25 mock): a team playing its own CCG. Caption carries the odds
+      // source and View game link like a thief row.
+      const card=hold&&!hold.pair?'<div class="sw-placard" role="note">'+PROTECT_ICON+
+        '<div class="sw-protect-text"><b>'+(hold.final?'Automatic bid':'Bid protection')+'</b>'+
+        '<span>'+E(name(l.k))+' · '+E(hold.conf)+' Championship'+(hold.leads&&!hold.final?' · leads':'')+'</span>'+
+        '<strong>'+(hold.final?'Won CCG → Automatic bid':'Win CCG → Automatic bid')+'</strong></div>'+
+        '<span class="sw-protect-pct">'+(hold.final?'Won':percent(hold.win))+'</span></div>'+
+        (hold.final?'':'<div class="sw-inline">Bid protection'+detail({game:hold.game,label:' '})+'</div>'):'';
       const rightHTML=hold?(hold.pair?formatTeam(hold.pair.k,true,metric(hold.pair))+
-        '<div class="sw-inline">'+E(note)+'</div>':'<div class="sw-placard">'+E(note)+link+'</div>'):
+        '<div class="sw-inline">'+E(note)+'</div>':card):
         r?formatTeam(r.k,!rightIn,metric(r))+'<div class="sw-inline">'+E(r.label)+detail(r)+'</div>':'';
       return '<div class="sw-cut-row"'+(hold?' data-held="'+(hold.pair?'pair':'placard')+'"':'')+'>'+
         '<div'+(l?' data-at-large="'+E(l.k)+'"':'')+'>'+leftHTML+'</div>'+

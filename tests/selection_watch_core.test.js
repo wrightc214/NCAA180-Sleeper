@@ -137,3 +137,11 @@ test('each possible thief sits beside the team it would knock out', () => {
   const b=core.cutBoard(d,{g1:'A',g2:'B',g3:'C'},{g1:.6,g2:.8,g3:.7},{},{});
   assert.deepEqual(b.rows.map(r=>[r.left.k,r.right.k]),[['D','K'],['E','L'],['F','J']]);
 });
+test('a below-cut team playing its own CCG keeps its thief; protection becomes a note', () => {
+  // Chris, 2026-11-25: Montana's steal stays on Auburn's row; Auburn's own protection shows as a compact note.
+  const d={field_size:6,order:'ABCDEFGHIJKL'.split('').map((k,i)=>({k,rank:i+1})),
+    ccg:[{id:'g1',a:'A',b:'J'},{id:'g2',a:'B',b:'K'},{id:'g3',a:'C',b:'F'}],tie:[]};
+  const row=core.cutBoard(d,{g1:'J',g2:'K',g3:'C'},{g1:.3,g2:.3,g3:.7},{},{}).rows.find(r=>r.left?.k==='F');
+  assert.equal(row.right.k,'K');assert.equal(row.right.active,true);
+  assert.equal(row.hold,undefined);assert.equal(row.protect.game,'g3');
+});

@@ -38,7 +38,18 @@ CSS = """
 .sw-order{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
 .sw-order button{border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:6px 9px}
 .sw-order button[aria-pressed=true]{border-color:var(--accent)}
-.sw-placard{border:1px dashed var(--line);border-radius:6px;color:var(--mute);padding:6px;overflow-wrap:anywhere}
+.sw-placard{--protect:var(--protect-gold);display:flex;align-items:center;gap:10px;border:2px solid var(--protect);border-left-width:6px;border-radius:8px;background:var(--panel);padding:8px 10px;min-width:0}
+:root{--protect-gold:#9A730C}@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--protect-gold:#E0B84C}}:root[data-theme=dark]{--protect-gold:#E0B84C}
+.sw-cut-row .sw-inline.sw-protect-cap{--protect:var(--protect-gold);color:var(--protect);font-weight:600}.sw-cut-row .sw-protect-cap a{color:inherit}
+.sw-team .sw-logo{position:relative}.sw-ccg-badge{position:absolute;right:-7px;bottom:-7px;width:22px;height:22px;object-fit:contain;background:var(--panel);border:1px solid var(--line);border-radius:50%;padding:1px}
+.sw-team.dim .sw-ccg-badge{opacity:1}
+.sw-protect-icon{flex:none;width:34px;height:40px;color:var(--protect)}
+.sw-protect-text{display:flex;flex-direction:column;min-width:0;flex:1 1 90px;line-height:1.25;overflow-wrap:break-word;word-break:normal}
+.sw-protect-text b{color:var(--protect);text-transform:uppercase;letter-spacing:.03em}
+.sw-protect-text span{font-size:.85em;color:var(--mute)}
+.sw-placard{flex-wrap:wrap}
+.sw-protect-pct{flex:none;border:2px solid var(--protect);border-radius:999px;padding:2px 10px;font-weight:800;color:var(--protect)}
+@media (max-width:560px){.sw-ccg-badge{width:16px;height:16px;right:-4px;bottom:-4px}.sw-placard{gap:6px;padding:6px;border-left-width:4px}.sw-protect-icon{width:22px;height:26px}.sw-protect-text{font-size:.85em}.sw-protect-text b{letter-spacing:0}.sw-protect-pct{padding:1px 6px;font-size:.85em}}
 .sw-playin-game p{margin:8px 0 0}.sw-playin-game .sw-pair>div{min-width:0;overflow-wrap:anywhere}
 .sw-playin-winner{display:block;font-weight:800}
 .sw-metrics{display:flex;align-items:baseline;gap:4px 8px;flex-wrap:wrap}

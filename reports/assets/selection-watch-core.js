@@ -123,7 +123,7 @@
         const conf=team.get(k)?.conf||team.get(other)?.conf||'Conference';
         const row=byBubble.get(k);
         row.status=final?'Saved':'Leading CCG';
-        held.set(k,{conf,game:g.id,final,pair:otherOutside?thief(other):null});
+        held.set(k,{conf,game:g.id,final,win:win(k),pair:otherOutside?thief(other):null});
       }else if(outside||otherOutside){
         thieves.push(thief(outside?k:other));
       }
@@ -159,7 +159,7 @@
         // Skip a team already on the board for this game (held, or a thief) and one whose opponent is
         // stealing right now: that thief sits on its row instead.
         if(!byBubble.has(k)||held.has(k)||held.get(opponent(g,k))?.game===g.id||thieves.some(t=>t.k===k||t.k===opponent(g,k)&&t.active))return;
-        held.set(k,{conf:team.get(k)?.conf||'Conference',game:g.id,final:false,pair:null,plays:true,
+        held.set(k,{conf:team.get(k)?.conf||'Conference',game:g.id,final:false,pair:null,plays:true,win:chance(g,k,probabilities),
           leads:holding[g.id]===k});
       });
     });
@@ -177,6 +177,9 @@
       if(row)row.right=t;
       else rows.push({right:t});
     });
+    // A team below the cut keeps the thief that knocked it out on its row; its own bid protection becomes
+    // a compact note under the team (Chris, 2026-11-25).
+    for(const row of rows)if(row.right?.active&&row.hold?.plays){row.protect=row.hold;delete row.hold;}
     // Each possible thief sits beside the team it would knock out (Chris, 2026-11-24): the most likely
     // goes against the last team above the cut, the next most likely against the one above that, and so
     // on. A held row (that team leads its own CCG) keeps its placard and does not take a thief. Thieves
