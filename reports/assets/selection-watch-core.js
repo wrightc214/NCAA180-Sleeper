@@ -123,7 +123,7 @@
         const conf=team.get(k)?.conf||team.get(other)?.conf||'Conference';
         const row=byBubble.get(k);
         row.status=final?'Saved':'Leading CCG';
-        held.set(k,{conf,game:g.id,final,pair:otherOutside?thief(other):null});
+        held.set(k,{conf,game:g.id,final,win:win(k),pair:otherOutside?thief(other):null});
       }else if(outside||otherOutside){
         thieves.push(thief(outside?k:other));
       }
@@ -159,7 +159,7 @@
         // Skip a team already on the board for this game (held, or a thief) and one whose opponent is
         // stealing right now: that thief sits on its row instead.
         if(!byBubble.has(k)||held.has(k)||held.get(opponent(g,k))?.game===g.id||thieves.some(t=>t.k===k||t.k===opponent(g,k)&&t.active))return;
-        held.set(k,{conf:team.get(k)?.conf||'Conference',game:g.id,final:false,pair:null,plays:true,
+        held.set(k,{conf:team.get(k)?.conf||'Conference',game:g.id,final:false,pair:null,plays:true,win:chance(g,k,probabilities),
           leads:holding[g.id]===k});
       });
     });

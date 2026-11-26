@@ -265,7 +265,7 @@ test('What-if shows a held pair or placard while the natural team is leading, th
     const pick=(game,value)=>h.element('sw-picks').listeners.change({target:{dataset:{game},value:key(value)}});
     const board=()=>h.element('sw-board-rows').innerHTML;
     // Chris, 2026-11-24: an at-large team playing its own CCG always gets a placard + View game link.
-    assert.match(board(),/data-held="placard"[^]*Example CCG · Team 4 leads · Live odds · <a href="scoreboard\.html/);
+    assert.match(board(),/data-held="placard"[^]*Bid protection<\/b><span>Team 4 · Example Championship · leads[^]*Bid protection · Live odds · <a href="scoreboard\.html/);
     // The cut line stays with the below-cut rows; a plays/leads placard sits on the above-cut side (Chris, 2026-11-24).
     assert.match(board(),/sw-cut-line[^]*data-held="placard"/);
     pick('x',8);
@@ -274,15 +274,30 @@ test('What-if shows a held pair or placard while the natural team is leading, th
     if(outside) {
       assert.match(board(),/data-held="pair"[^]*data-thief="conf\|6"[^]*Example CCG · Team 4 leads</);
     } else {
-      assert.match(board(),/data-held="placard"[^]*Example CCG · Team 4 leads — a win keeps this spot/);
+      assert.match(board(),/data-held="placard"[^]*Bid protection<\/b><span>Team 4 · Example Championship<\/span><strong>Win CCG → Automatic bid/);
     }
     pick('ccg',4);
     assert.match(board(),/Saved/);
     assert.match(board(),/Example Champion/);
+    if(!outside)assert.match(board(),/Automatic bid<\/b>[^]*>Won<\/span>/);
     if(outside){
       pick('ccg',6);
       assert.doesNotMatch(board(),/data-held="pair"/);
       assert.match(board(),/data-thief="conf\|6"[^]*Stolen/);
     }
   }
+});
+
+test('A scoreboard leader with a low win chance is not projected to steal', async () => {
+  // Chris, 2026-11-25: Georgia Tech led at 19% and showed as taking a bid.
+  const key=i=>'conf|'+i;
+  const h=setup({}, {}, {scores:{ccg:{pA:.81,leader:key(8),live:true,scoreA:40,scoreB:52,source:'Live odds'}},liveData:{
+    field_size:5,play_ins:[],
+    order:Array.from({length:9},(_,i)=>({k:key(i+1),rank:i+1,team:'Team '+(i+1),conf:'Example'})),
+    ccg:[{id:'ccg',a:key(1),b:key(8)}],
+  }});
+  await h.ready;
+  const board=h.element('sw-board-rows').innerHTML;
+  assert.match(board,/data-thief="conf\|8"[^]*Possible steal/);
+  assert.doesNotMatch(board,/data-thief="conf\|8"[^]*?<div class="sw-inline">Stolen/);
 });
