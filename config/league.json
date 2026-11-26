@@ -1103,21 +1103,22 @@
     "_note": "Rookie draft order basis (Chris, 2026-11-26). Default: max PF for every league, including ones added later. A league orders by record (Sleeper's default) only with an override: record_through = the last season (the one whose results set the order) it uses record; later seasons go back to max PF automatically. null = no override. Inputs frozen in data/DraftBasis_<year>.csv (scripts/draft_basis.py); rule in scripts/draft_order_rules.py.",
     "default_basis": "max_pf",
     "record_through": {
-      "NCAA ACC": null,
-      "NCAA BIG 10": null,
-      "NCAA BIG 12": null,
-      "NCAA BIG EAST & CO.": null,
-      "NCAA BIG SKY": null,
-      "NCAA HISTORICALLY BLACK": null,
-      "NCAA IVY": null,
-      "NCAA MOUNTAIN WEST": null,
-      "NCAA OHIO VALLEY": null,
-      "NCAA PAC 12": null,
-      "NCAA PIONEER": null,
-      "NCAA SEC": null,
-      "NCAA SUN BELT": null,
-      "NCAA USA": null,
-      "NCAA WILD": null
-    }
+      "NCAA ACC": 2026,
+      "NCAA BIG 10": 2026,
+      "NCAA BIG 12": 2026,
+      "NCAA BIG EAST & CO.": 2026,
+      "NCAA BIG SKY": 2026,
+      "NCAA HISTORICALLY BLACK": 2026,
+      "NCAA IVY": 2026,
+      "NCAA MOUNTAIN WEST": 2026,
+      "NCAA OHIO VALLEY": 2026,
+      "NCAA PAC 12": 2026,
+      "NCAA PIONEER": 2026,
+      "NCAA SEC": 2026,
+      "NCAA SUN BELT": 2026,
+      "NCAA USA": 2026,
+      "NCAA WILD": 2026
+    },
+    "_record_note": "Chris, 2026-11-26: all leagues order the draft set by the 2026 season by record; he corrects any league at draft time. From 2027 every league falls back to max PF."
   }
 }
