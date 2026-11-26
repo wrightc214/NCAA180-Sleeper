@@ -1100,9 +1100,9 @@
     }
   },
   "draft_order": {
-    "_note": "Rookie draft order basis (Chris, 2026-11-26). A league orders its draft by max PF for a season when that season >= its own max_pf_from entry, or >= default_max_pf_from (covers every league, including ones added later). null = not set. Offseason: set default_max_pf_from to 2027 once all leagues switch. Inputs frozen in data/DraftBasis_<year>.csv (scripts/draft_basis.py); rule in scripts/draft_order_rules.py.",
-    "default_max_pf_from": null,
-    "max_pf_from": {
+    "_note": "Rookie draft order basis (Chris, 2026-11-26). Default: max PF for every league, including ones added later. A league orders by record (Sleeper's default) only with an override: record_through = the last season (the one whose results set the order) it uses record; later seasons go back to max PF automatically. null = no override. Inputs frozen in data/DraftBasis_<year>.csv (scripts/draft_basis.py); rule in scripts/draft_order_rules.py.",
+    "default_basis": "max_pf",
+    "record_through": {
       "NCAA ACC": null,
       "NCAA BIG 10": null,
       "NCAA BIG 12": null,

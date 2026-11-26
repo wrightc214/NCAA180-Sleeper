@@ -12,7 +12,7 @@ Scores are on the standard rules (Chris, 2026-11-26): each team-week must equal 
 data/ScoresStandard_Season.csv, or the script stops (a league off the standard ruleset would also
 need its max PF restated). Max PF from data/MaxPoints_Season.csv. Also fails if any team is missing a
 week or the totals disagree with data/Standings_Season.csv. Which leagues order by max PF, and from
-which season, is config/league.json -> draft_order.max_pf_from.
+which season, is config/league.json -> draft_order (default max PF; record only by override).
 
 Usage (repo root): python scripts/draft_basis.py --year 2026 --through 11
 """
