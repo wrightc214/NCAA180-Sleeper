@@ -59,8 +59,10 @@
     // Art: assets/logos/CCG/<conference> CCG.png (same pattern as config/trophies.json); swap when the
     // logo overhaul lands.
     const conf=note?.conf||'';
-    const ccg=conf&&d?.ccg?.some(g=>g.a===k||g.b===k)?'<img class="sw-ccg-badge" src="../assets/logos/CCG/'+
-      E(encodeURIComponent(conf+' CCG'))+'.png" alt="'+E(conf)+' CCG" title="'+E(conf)+' CCG" loading="lazy" onerror="this.hidden=true">':'';
+    // A CSS background, not an <img>: a missing logo just shows nothing, and the DOM never changes after
+    // render (an onerror hide raced the browser tests' snapshot comparisons).
+    const ccg=conf&&d?.ccg?.some(g=>g.a===k||g.b===k)?'<span class="sw-ccg-badge" role="img" aria-label="'+E(conf)+' CCG" title="'+
+      E(conf)+' CCG" style="background-image:url(&quot;../assets/logos/CCG/'+E(encodeURIComponent(conf+' CCG'))+'.png&quot;)"></span>':'';
     return '<div class="sw-team'+(dim?' dim':fill?' admitted':'')+'" style="--team:'+E(t.primary)+fill+'">'+
       '<span class="sw-logo">'+logo+ccg+'</span><div class="sw-name">'+E(t.short||t.name)+
       '<small>#'+E(t.rank)+' · '+E(note?.conf||'')+'</small></div>'+
