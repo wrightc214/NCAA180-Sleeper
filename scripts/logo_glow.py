@@ -1,16 +1,15 @@
-"""Glow versions of every team logo, for dark backgrounds (Chris, 2026-11-12).
+"""Glow versions of every team logo, for dark backgrounds.
 
 Every normal logo in assets/logos/teams gets a copy with a thin white glow around it in
 assets/logos/teams/glow-dark/<Team>.png. On a dark background pages use, in order:
-  1. assets/logos/teams/alt-dark/<Team>.png   (Chris's hand-picked dark alt -- overrides the glow)
+  1. assets/logos/teams/alt-dark/<Team>.png   (owner-selected dark alt -- overrides the glow)
   2. assets/logos/teams/glow-dark/<Team>.png  (this script)
   3. the normal logo
 Light backgrounds always use the normal logo. The glow is baked into the image (not a CSS
 effect) so saved images and generated cards show it too.
 
-Runs after logo_trim.py in the "Trim team logos" workflow, which runs on every logo upload.
-Rebuilds every glow file each time (deterministic: unchanged logos produce identical files) and
-removes glow files whose logo is gone.  python scripts/logo_glow.py
+Runs after logo validation. Writes changed glow files and removes orphaned output.
+Run with python scripts/logo_glow.py.
 """
 import glob
 import os
@@ -55,9 +54,18 @@ def main():
         name = os.path.basename(path)
         have.add(name)
         dst = os.path.join(OUT, name)
-        before = open(dst, "rb").read() if os.path.exists(dst) else b""
-        glow(Image.open(path)).save(dst, optimize=True)
-        wrote += open(dst, "rb").read() != before
+        with Image.open(path) as source:
+            output = glow(source)
+        if os.path.exists(dst):
+            try:
+                with Image.open(dst) as existing:
+                    rgba = existing.convert("RGBA")
+                if rgba.size == output.size and rgba.tobytes() == output.tobytes():
+                    continue
+            except OSError:
+                pass  # Rebuild broken generated output.
+        output.save(dst, optimize=True)
+        wrote += 1
     gone = [f for f in os.listdir(OUT) if f.endswith(".png") and f not in have]
     for f in gone:
         os.remove(os.path.join(OUT, f))
