@@ -23,11 +23,12 @@ def test_historical_ceremonies_and_awards_navigation(tmp_path, monkeypatch):
     assert "<small>Stagg Bowl - NIT Champ</small>" in championship
     past_final = (tmp_path / "ceremony-2022-18.html").read_text(encoding="utf-8")
     assert "Dwight Fight" in past_final
-    rows = menu_data(str(tmp_path))["rows"]
+    menu = menu_data(str(tmp_path))
+    rows = menu["rows"]
     assert any(item["label"] == "2019" for item in rows["awards-seasons"]["items"])
-    assert {"label": "CCG", "href": ccg["href"], "state": "hidden-dev"} in rows["awards-weeks-2025"]["items"]
-    assert all(item["state"] == "hidden-dev" for item in rows["awards-seasons"]["items"])
-    assert menu_data(str(tmp_path))["awards"] is None
+    assert {"label": "CCG", "href": ccg["href"]} in rows["awards-weeks-2025"]["items"]
+    assert all(item.get("state", "visible") == "visible" for item in rows["awards-seasons"]["items"])
+    assert menu["awards"] in {item["href"] for item in rows["awards-seasons"]["items"]}
     assert ceremony.build() == manifest
 
 
