@@ -23,7 +23,7 @@ def public_json(url):
     ]))
 
 
-def previews(year, selected, out):
+def previews(year, selected, out, *, ledger_path):
     expected = {
         trophies.short_names().get(name, name): league_id
         for (season, name), league_id in trophies.league_ids().items()
@@ -31,7 +31,7 @@ def previews(year, selected, out):
     }
     if selected and selected not in expected:
         raise SystemExit("Use the official conference short name for this season.")
-    with open(trophies.SEASON, encoding="utf-8-sig", newline="") as ledger:
+    with open(ledger_path, encoding="utf-8-sig", newline="") as ledger:
         rows = list(csv.DictReader(ledger))
     out.mkdir(parents=True, exist_ok=True)
     posts = []
@@ -77,7 +77,7 @@ def previews(year, selected, out):
     return posts
 
 
-def send(year, league_id, image, caption, *, token):
+def send(year, league_id, image, caption, *, token, intended_league=None):
     if not token:
         raise SystemExit("The SLEEPER_SESSION_TOKEN Actions secret is missing.")
 
@@ -109,7 +109,7 @@ def send(year, league_id, image, caption, *, token):
         "query": query,
         "variables": {
             "parentId": league_id,
-            "clientId": str(uuid.uuid5(uuid.NAMESPACE_URL, f"ncaa180.ccg/{year}/{league_id}")),
+            "clientId": str(uuid.uuid5(uuid.NAMESPACE_URL, f"ncaa180.ccg/{year}/{league_id}/{intended_league or league_id}")),
             "text": caption,
             "keys": ["url", "url_original", "width", "height", "pre_optimized"],
             "values": [*urls, *size, "true"],
@@ -149,14 +149,24 @@ def main():
     parser.add_argument("--conference", default="")
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--send", action="store_true")
+    parser.add_argument("--replay-2025", action="store_true")
     args = parser.parse_args()
     if not re.fullmatch(r"[0-9]{4}", args.year):
         parser.error("use a four-digit season")
+    if args.replay_2025 and (args.year != "2025" or args.send or args.conference):
+        parser.error("replay requires season 2025 and is independent of live send")
     if args.send and not args.conference:
         parser.error("select exactly one conference to send")
     token = os.environ.pop("SLEEPER_SESSION_TOKEN", None)
-    posts = previews(args.year, args.conference, args.out)
-    if args.send:
+    ledger = trophies.HIST if args.replay_2025 else trophies.SEASON
+    posts = previews(args.year, args.conference, args.out, ledger_path=ledger)
+    if args.replay_2025:
+        if len(posts) != 15 or len({post[0] for post in posts}) != 15:
+            raise SystemExit("Replay requires 15 verified awards. No test posts were sent.")
+        for intended_league, image, caption in posts:
+            print(f"Replaying award for league {intended_league} into test league {TEST_LEAGUE}.", flush=True)
+            send(args.year, TEST_LEAGUE, image, caption, token=token, intended_league=intended_league)
+    elif args.send:
         if len(posts) != 1:
             raise SystemExit("No verified final award to send.")
         send(args.year, *posts[0], token=token)
