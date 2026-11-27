@@ -10,7 +10,7 @@ from pathlib import Path
 
 import league_config as lcfg
 import trophies as tr
-from site_common import SECTIONS_JS, menu_html, page_head
+from site_common import SECTIONS_JS, awards_ceremony_state, menu_html, page_head
 
 REPORTS = Path("reports")
 MANIFEST = Path("trophy-ceremonies.json")
@@ -118,6 +118,7 @@ def build():
     manifest = []
     previous = load_json(REPORTS / MANIFEST, [])
     weekly = {}
+    public = awards_ceremony_state() == "visible"
     for (year, week), rows in sorted(groups.items(), key=lambda item: (item[0][0], item[0][1] or 99)):
         rows.sort(key=lambda row: sort_key(row, points))
         picker, heading = ceremony_labels(config, week, rows)
@@ -132,7 +133,7 @@ def build():
         week_href = f"week-{year}-{week:02d}.html" if year != current and week else ""
         if year == current and week:
             week_href = f"week-{week:02d}.html"
-        regular = bool(week and week <= config["schedule"]["last_regular_week"]
+        regular = bool(public and week and week <= config["schedule"]["last_regular_week"]
                        and (REPORTS / week_href).is_file())
         if regular:
             weekly[week_href] = section("Trophies", year, rows)
@@ -168,6 +169,9 @@ def pending_posts(manifest, ledger, year, destination):
 
 
 def publish(check=False):
+    if check and awards_ceremony_state() != "visible":
+        print("pending=false")
+        return
     webhook = os.environ.get("DISCORD_WEBHOOK_AWARDS") or os.environ.get("DISCORD_WEBHOOK_TEAM_STATS")
     if not webhook:
         if check:
