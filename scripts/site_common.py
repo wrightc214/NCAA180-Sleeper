@@ -104,17 +104,29 @@ def menu_rows(out_dir=None):
             m = re.fullmatch(r"week-(\d{4})-(\d{2})\.html", f)
             if m:
                 past.setdefault(int(m.group(1)), []).append(int(m.group(2)))
-        # Awards: season row (past seasons open on their last week) + a week row per season
-        if past and weeks:
-            items = [{"label": str(y), "href": f"week-{y}-{max(w):02d}.html", "match": f"^week-{y}-\\d+\\.html$"} for y, w in sorted(past.items())]
-            items.append({"label": str(cur), "href": f"week-{max(weeks):02d}.html", "match": "^week-\\d{2}\\.html$"})
-            rows["awards-seasons"] = {"label": "Season", "aria": "Seasons", "items": items}
-        for y, w in sorted(past.items()):
-            rows[f"awards-weeks-{y}"] = {"label": "Week", "aria": "Weeks", "min": 2,
-                                         "items": [{"label": f"Wk {x}", "href": f"week-{y}-{x:02d}.html"} for x in sorted(w)]}
+        # Awards reuses the same season and week rows for reports and ceremonies.
+        import league_config as lcfg
+        regular = lcfg.cfg()["postseason"]["display"]["week_labels"]["regular"][1]
+        by_year = {
+            year: [{"label": regular.format(n=week), "href": f"week-{year}-{week:02d}.html"}
+                   for week in sorted(numbers)]
+            for year, numbers in past.items() if year != cur
+        }
         if weeks:
-            rows[f"awards-weeks-{cur}"] = {"label": "Week", "aria": "Weeks", "min": 2,
-                                           "items": [{"label": f"Wk {x}", "href": f"week-{x:02d}.html"} for x in weeks]}
+            by_year[cur] = [{"label": regular.format(n=week), "href": f"week-{week:02d}.html"} for week in weeks]
+        manifest = Path(OUT_DIR) / "trophy-ceremonies.json"
+        if manifest.is_file():
+            for item in json.loads(manifest.read_text(encoding="utf-8")):
+                if not item["inline"] and (Path(OUT_DIR) / item["href"]).is_file():
+                    by_year.setdefault(item["year"], []).append({"label": item["label"], "href": item["href"]})
+        season_items = []
+        for year, items in sorted(by_year.items()):
+            week_pattern = r"week-\d{2}" if year == cur else rf"week-{year}-\d{{2}}"
+            match = rf"^(?:{week_pattern}|ceremony-{year}-(?:\d{{2}}|year-end))\.html$"
+            season_items.append({"label": str(year), "href": items[-1]["href"], "match": match})
+            rows[f"awards-weeks-{year}"] = {"label": "Week", "aria": "Weeks", "min": 2, "items": items}
+        if season_items:
+            rows["awards-seasons"] = {"label": "Season", "aria": "Seasons", "items": season_items}
         # Standings: past seasons + this season (standings.html)
         sy = [int(m.group(1)) for f in _files("standings-*.html") if (m := re.fullmatch(r"standings-(\d{4})\.html", f))]
         rows["standings-seasons"] = {"label": "Season", "aria": "Seasons",
@@ -136,7 +148,7 @@ def menu_rows(out_dir=None):
         rows["projection-archive"] = {"label": "Projection", "aria": "Projection archive", "min": 2,
                                       "items": [{"label": f"After wk {w}", "href": f"postseason-proj-wk{w:02d}.html",
                                                  **({"match": f"^postseason(-proj-wk{w:02d})?\\.html$"} if w == pw[-1] else {})} for w in pw]}
-        return rows, (f"week-{max(weeks):02d}.html" if weeks else None)
+        return rows, (f"week-{max(weeks):02d}.html" if weeks else season_items[-1]["href"] if season_items else None)
     finally:
         OUT_DIR = keep
 
