@@ -61,15 +61,15 @@ jobs:
 
           query = """
           mutation create_message(
-            $parentId: String!, $parentType: String!, $clientId: String,
+            $parentId: String!, $parentType: String!, $clientId: String, $text: String,
             $attachmentType: String, $attachmentDataKeys: [String],
             $attachmentDataValues: [String]
           ) {
             create_message(
-              parent_id: $parentId, parent_type: $parentType, client_id: $clientId,
+              parent_id: $parentId, parent_type: $parentType, client_id: $clientId, text: $text,
               attachment_type: $attachmentType,
               k_attachment_data: $attachmentDataKeys, v_attachment_data: $attachmentDataValues
-            ) { message_id parent_id attachment }
+            ) { message_id parent_id attachment text_map }
           }
           """
           body = {
@@ -79,6 +79,7 @@ jobs:
                   "parentId": league_id,
                   "parentType": "league",
                   "clientId": str(uuid.uuid4()),
+                  "text": "@wrightc214 CCG trophy mention test 🏆",
                   "attachmentType": "photo",
                   "attachmentDataKeys": ["url", "url_original", "width", "height", "pre_optimized"],
                   "attachmentDataValues": [*urls, *dimensions, "true"],
@@ -107,5 +108,6 @@ jobs:
           if not posted.get("attachment"):
               raise SystemExit("Sleeper confirmed the post but did not return attachment metadata.")
 
+          print(f"Sleeper returned mention metadata: {bool(posted.get('text_map'))}.")
           print(f"Sleeper confirmed photo message {posted['message_id']} in league {league_id}.")
           PY
