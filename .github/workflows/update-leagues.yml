@@ -240,7 +240,7 @@ jobs:
           python scripts/trophy_ceremony.py || { echo "trophy_ceremony" >> /tmp/failed_scripts.txt; exit 1; }
           if [ "$EVENT_NAME" = schedule ] || [ "$POST" = true ] || [ "$SELECTED_SCRIPT" = all ] || [ "$SELECTED_SCRIPT" = trophies ] || [ "$SELECTED_SCRIPT" = trophies_allow_changes ]; then
             if [ -z "$(tr -d '[:space:]' < /tmp/failed_scripts.txt)" ]; then
-              python scripts/trophy_ceremony.py --check-post >> "$GITHUB_OUTPUT"
+              python scripts/trophy_ceremony.py --check-post >> "$GITHUB_OUTPUT" || { echo "trophy_ceremony_post" >> /tmp/failed_scripts.txt; exit 1; }
             fi
           fi
 
