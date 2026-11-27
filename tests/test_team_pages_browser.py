@@ -93,6 +93,43 @@ class TeamPageBrowser(unittest.TestCase):
                     os.makedirs(OUT, exist_ok=True)
                     p.screenshot(path=os.path.join(OUT, f"team-{tag}.png"), full_page=True)
 
+    def test_mobile_trophy_shelves_and_exports(self):
+        from PIL import Image
+
+        path = f"reports/team.html?league={league_id('NCAA PAC 12')}&roster=7"
+        for width in (320, 390):
+            with self.subTest(width=width):
+                p = self.open(path, width, "dark")
+                case = p.locator(".tm-trophies")
+                cards = case.locator("article")
+                self.assertEqual([label.strip() for label in cards.locator("header").all_text_contents()], [
+                    "2025 · National Championship", "2025 · Rose Bowl", "2025 · Cotton Bowl",
+                    "2024 · Tangerine Bowl", "2021 · Holiday Bowl", "2025 · Dwight Fight",
+                    "2023 · Dwight Fight", "2022 · Dwight Fight",
+                ])
+                bounds = case.bounding_box()
+                feature, left, right = [cards.nth(i).bounding_box() for i in range(3)]
+                last = cards.last.bounding_box()
+                self.assertAlmostEqual(feature["width"], bounds["width"] - 2)
+                self.assertLess(feature["y"], left["y"])
+                self.assertEqual(left["y"], right["y"])
+                self.assertLess(left["x"], right["x"])
+                self.assertAlmostEqual(last["x"] + last["width"] / 2, bounds["x"] + bounds["width"] / 2)
+                self.assertTrue(case.evaluate("el => el.scrollWidth <= el.clientWidth"))
+                if width == 390:
+                    p.evaluate("Object.defineProperty(navigator, 'share', {value: undefined})")
+                    buttons = [p.locator("#tm-trophy-sec > .snap-btn"), cards.first.locator(".snap-card-btn")]
+                    heights = []
+                    for button in buttons:
+                        with p.expect_download() as saving:
+                            button.click()
+                        with Image.open(saving.value.path()) as png:
+                            self.assertEqual(png.format, "PNG")
+                            self.assertEqual(png.width, 800)
+                            heights.append(png.height)
+                    self.assertGreater(heights[0], heights[1])
+                p.close()
+
     def test_color_modes_and_team_override(self):
         p = self.open(f"reports/team.html?league={league_id('NCAA PAC 12')}&roster=7", 390)
         self.assertIn("tm-c-full", p.get_attribute("body", "class"), "team colours by default")

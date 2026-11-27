@@ -421,6 +421,16 @@ def postseason_summary(games):
 
 
 # ---- Trophies, drafts, transactions ---------------------------------------------------------------
+def trophy_display_points():
+    """Weights for trophy wins. A playoff round win earns the next advancement bonus."""
+    points = lcfg.cfg()["managers"]["legend_points"]
+    event_keys = {"CCG": "conference", "NIT": "nit_champ", "Bowl": "bowl",
+                  "DwightFight": "dwight_fight", "Guillotine": "guillotine"}
+    round_keys = {"Sweet 16": "e8", "Second Round": "e8", "Elite 8": "f4", "Final Four": "final"}
+    return {**{event: points.get(key, 0) for event, key in event_keys.items()},
+            "PlayoffRound": {round_name: points.get(key, 0) for round_name, key in round_keys.items()}}
+
+
 def trophies(lids):
     """{key: [ledger rows]} newest first, matched by that season's league (ID -> name) + roster."""
     out = {}
@@ -1050,10 +1060,22 @@ CSS = """
 .tm-roster ul{list-style:none;margin:0;padding:0}
 .tm-roster li{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid var(--line);font-size:14px}
 .tm-roster li small{color:var(--mute);font-variant-numeric:tabular-nums}
-.tm-trophies{display:flex;flex-wrap:wrap;gap:12px}
-.tm-trophies article{border:1px solid var(--line);border-radius:10px;background:var(--panel);overflow:hidden;width:min(200px,calc(50% - 6px))}
-.tm-trophies article>header{margin:0;padding:6px 8px;font-size:11px;font-weight:700;color:var(--mute);border-bottom:1px solid var(--line)}
-.tm-trophies .trophy{--tw:200px;width:100%}
+.tm-trophies{display:flex;flex-wrap:wrap;justify-content:center;background:var(--panel);border:1px solid var(--line);border-radius:12px}
+.tm-trophy-card{box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+  width:25%;min-width:0;padding-top:10px;background:var(--panel);color:var(--ink)}
+.tm-trophy-card.tm-trophy-featured{width:100%}
+.tm-trophy-card .trophy{width:min(90%,180px)}
+.tm-trophy-featured .trophy{width:min(70%,230px)}
+.tm-trophy-card>header{box-sizing:border-box;display:block;width:100%;min-height:calc(2.6em + 16px);border:0;
+  border-top:2px solid var(--gold);margin:0;padding:6px 8px 8px;text-align:center;color:var(--ink);
+  font-size:12px;font-weight:700;line-height:1.3;overflow-wrap:anywhere}
+.tm-trophy-card[data-snap-card]>header:has(>.snap-card-btn){padding-right:32px}
+.tm-trophy-card .snap-card-btn{width:24px;height:24px;top:4px;right:4px}
+.snapwrap .tm-trophy-card .snap-card-btn{display:none}
+.snapwrap .tm-trophy-card[data-snap-card]>header:has(>.snap-card-btn){padding-right:8px}
+.snapwrap #tm-sections>.tm-trophy-card{width:100%}
+@media(max-width:640px){.tm-trophy-card{width:50%}}
+
 .tm-season{border:1px solid var(--line);border-radius:10px;margin:0 0 10px;background:var(--panel)}
 .tm-season>summary{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;padding:10px 12px;cursor:pointer;font-weight:700}
 .tm-season>summary::-webkit-details-marker{display:none}
@@ -1207,7 +1229,7 @@ body:is(.tm-c-full,.tm-c-inverted) #tm-sections .tm-ov h3,body:is(.tm-c-full,.tm
 body:is(.tm-c-full,.tm-c-inverted) #tm-sections .tm-ov td,body:is(.tm-c-full,.tm-c-inverted) #tm-sections .tm-ov li,body:is(.tm-c-full,.tm-c-inverted) #tm-sections .tm-chart td{border-color:var(--line)}
 body:is(.tm-c-full,.tm-c-inverted) .tm-more{background:var(--panel);color:var(--ink)}
 @media(max-width:520px){.tm-head{padding:12px;gap:10px}.tm-head>div{text-align:left}
-.tm-head img{width:52px;height:52px}.tm-trophies article{width:calc(50% - 6px)}}
+.tm-head img{width:52px;height:52px}}
 """
 
 
@@ -1237,6 +1259,7 @@ def write_page(path=PAGE):
 </div>
 <section id="tm-picker" hidden><h2>Pick a team</h2><div class="tm-pick" id="tm-pick"></div></section>
 </div>
+<script id="tm-trophy-points" type="application/json">{json.dumps(trophy_display_points())}</script>
 <script src="assets/trophy.js"></script><script src="assets/team-link.js"></script><script src="assets/team.js"></script>
 """
     out = page_head(f"Team · {lcfg.brand()}", css) + body + "</body></html>\n"
