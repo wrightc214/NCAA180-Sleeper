@@ -32,11 +32,16 @@
   const icon=t=>{const x=ident(t);return `<span class="team-icon" style="background:${esc(x.primary||'#14213a')}">${x.logo?`<img src="${esc(x.logo_forced||darkBg(x.primary)&&x.logo_dark||x.logo)}" alt="" onerror="this.hidden=true">`:''}</span>`;};
   let mine='';try{const m=window.NCAA180?.myTeam?.();if(m)mine=`${m.conf}:${m.roster}`;}catch(e){}
   const isMine=t=>mine&&`${index.leagues[lid(t)]?.label||''}:${t.r}`===mine;
+  const teamHex=value=>/^#[0-9a-f]{3}(?:[0-9a-f]{3})?$/i.test(value)
+    ? value.replace(/^#(.)(.)(.)$/,'#$1$1$2$2$3$3') : null;
+  const adjustInk=(color,background)=>window.NCAA180?.access?.adjust(color,background)||color;
   function myRowStyle(t){
-    const primary=String(ident(t).primary||'').replace(/^#([0-9a-f])([0-9a-f])([0-9a-f])$/i,'#$1$1$2$2$3$3');
-    const color=/^#[0-9a-f]{3}(?:[0-9a-f]{3})?$/i.test(primary)?primary:'var(--accent)';
-    const ink=color==='var(--accent)'?'var(--on-fill,#fff)':darkBg(color)?'#fff':'#000';
-    return ` style="background:${color};color:${ink};--mute:${ink};box-shadow:none;opacity:1"`;
+    const team=ident(t),primary=teamHex(team.primary),secondary=teamHex(team.secondary);
+    const background=primary||'var(--accent)';
+    const ink=primary&&secondary?adjustInk(secondary,primary)
+      :primary?(darkBg(primary)?'#fff':'#000'):'var(--on-fill,#fff)';
+    const pillInk=adjustInk(secondary||primary||'#14213a','#ffffff');
+    return ` style="background:${background};color:${ink};--mute:${ink};--my-odds-ink:${pillInk};box-shadow:none;opacity:1"`;
   }
   const myLabel=' · <b>My Team</b>';
   const resultMark=advanced=>advanced
@@ -164,8 +169,9 @@
       const bubble=x.odds!=null&&x.odds<50;
       hasBubble ||= bubble;
       const mineRow=isMine(x.t),m=x.m;
-      const warning=bubble&&mineRow?`<strong role="img" aria-label="Less than 50% chance to ${last?'win':'survive'}">!</strong> `:'';
-      const oddsStyle=bubble?` style="background:var(--bad-soft);border-radius:4px;${mineRow?'color:var(--ink);font-weight:800;':''}"`:'';
+      const warning=bubble&&mineRow?`<strong role="img" aria-label="Less than 50% chance to ${last?'win':'survive'}" style="color:var(--on-fill);background:var(--bad-fill);border-radius:3px;padding:0 2px">!</strong> `:'';
+      const oddsStyle=mineRow?' style="background:#fff;color:var(--my-odds-ink);border-radius:999px;padding:1px 3px;text-align:center;white-space:nowrap"'
+        :bubble?' style="background:var(--bad-soft);border-radius:4px"':'';
       const cls=[m&&m.live?'live':'',mineRow?'mine':''].filter(Boolean).join(' ');
       rows+=`<div class="gl-r ${cls}"${mineRow?myRowStyle(x.t):''}>${icon(x.t)}<span class="gl-t">${esc(ident(x.t).name)}<small>${esc(lname(lid(x.t)))} · ${esc(x.t.owner)}${mineRow?myLabel:''}${m?.incomplete?' · stats incomplete':''}</small></span>
         <span class="gl-n sc">${m&&(m.played||m.final)?m.actual.toFixed(2):'–'}</span><span class="gl-n pj">${m?x.proj.toFixed(1):'–'}</span>
@@ -173,7 +179,7 @@
     });
     const state=L.allFinal?'Final · waiting for the weekly run to lock the cut':L.started?'Live':'Preview · Tuesday projections';
     const line=baseline?`<p class="gl-state">${esc(wkName(week))} · ${esc(state)}${L.missing?` · ${L.missing} team${L.missing===1?'':'s'} not loaded`:''}</p>`:'';
-    const legend=hasBubble?`<p class="gl-state">Shaded odds indicate less than a 50% chance to ${last?'win':'survive'}.</p>`:'';
+    const legend=hasBubble?`<p class="gl-state">Shading or ! indicates less than a 50% chance to ${last?'win':'survive'}.</p>`:'';
     return `${head}${line}${legend}
       <div class="gl-table live-t"><div class="gl-h"><span></span>${sortHeader('team','Team')}${sortHeader('score','Score')}${sortHeader('projection',L.started&&!L.allFinal?'Live proj':'Proj')}${sortHeader('minutes','Min left')}${sortHeader('odds',label)}</div>${rows}</div>`;
   }
