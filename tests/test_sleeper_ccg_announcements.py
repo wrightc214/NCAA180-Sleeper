@@ -16,7 +16,7 @@ def test_weekly_and_manual_sends_share_delivery_state(tmp_path, monkeypatch, con
     monkeypatch.setattr(announcements, "POSTS", records_path)
     league_id = "1234"
     key = f"2026/CCG/{league_id}"
-    caption = "Congrats Clemson (@manager) for winning the 2026 ACC conference championship game!"
+    caption = "Congrats Clemson & @manager for winning the 2026 ACC conference championship game!"
     calls = []
 
     def previews(year, conference, out, *, ledger_path, already_recorded):
