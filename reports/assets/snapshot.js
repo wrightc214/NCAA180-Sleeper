@@ -96,7 +96,7 @@
       await Promise.all([...w.document.images].map(im => im.complete ? 0 : new Promise(r => { im.onload = im.onerror = r; })));
       const el = w.document.getElementById('snap');
       prepareDetails(w, el);
-      plainColors(w, el);
+      plainColors(w, w.document.documentElement);
       const canvas = await w.html2canvas(el, {scale, windowWidth: width, useCORS: true, logging: false,
         backgroundColor: w.getComputedStyle(w.document.body).backgroundColor});
       return await new Promise(r => canvas.toBlob(r, 'image/png'));
