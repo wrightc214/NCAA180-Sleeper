@@ -109,6 +109,20 @@
     const cur=started?G.cutLine(have.map(x=>x.m.actual),K):null,proj=G.cutLine(have.map(x=>x.proj),K);
     return {items,K,cur,proj,started,allFinal,missing:items.length-have.length};
   }
+  let sortColumn='projection',sortDirection=-1;
+  const scoreValue=x=>x.m&&(x.m.played||x.m.final)?x.m.actual:null;
+  const sortValues={
+    team:x=>ident(x.t).name,
+    score:scoreValue,
+    projection:x=>x.proj,
+    minutes:x=>x.m?Math.round(x.m.minutes):null,
+    odds:x=>x.odds,
+  };
+  function sortHeader(column,label){
+    const active=column===sortColumn;
+    const direction=sortDirection===1?'ascending':'descending';
+    return `<span><button type="button" data-gl-sort="${column}" aria-label="${label}${active?`, sorted ${direction}`:''}" style="font:inherit;color:inherit;text-transform:inherit;letter-spacing:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:inherit">${label}${active?` <span aria-hidden="true">${sortDirection===1?'↑':'↓'}</span>`:''}</button></span>`;
+  }
   function liveView(){
     const L=liveRows(),last=week>=gd.last_week,n=L.items.length;
     const label=last?'% to win':'% to survive';
@@ -117,18 +131,38 @@
       <div class="gl-k"><b>${L.K}</b><span>${last?'champion':'survive'}</span></div>
       <div class="gl-k"><b>${L.cur==null?'—':L.cur.toFixed(2)}</b><span>${last?'leading score':'current cut line'}</span></div>
       <div class="gl-k proj"><b>${L.proj==null?'—':L.proj.toFixed(1)}</b><span>${last?'projected winning score':'projected cut line'}</span></div></section>`;
-    let rows='',drawn=false;
+    const value=sortValues[sortColumn];
+    L.items.sort((a,b)=>{
+      const left=value(a),right=value(b);
+      if(left==null||right==null)return Number(left==null)-Number(right==null);
+      return sortDirection*(sortColumn==='team'?left.localeCompare(right):left-right);
+    });
+    const projectedCut=sortColumn==='projection';
+    const oddsCut=sortColumn==='odds';
+    const cut=last?null:projectedCut?L.proj:sortColumn==='score'?L.cur:oddsCut?50:null;
+    const cutLabel=cut==null?'':oddsCut?'50% to advance':projectedCut?`Projected cut · ${cut.toFixed(1)}`:`Current cut · ${cut.toFixed(2)}`;
+    let rows='',previousBelow=null,hasBubble=false;
     L.items.forEach(x=>{
-      if(!drawn&&!last&&L.proj!=null&&x.m&&x.proj<L.proj-G.EPS){rows+=`<div class="gl-cut" aria-hidden="true"><span>Projected cut · ${L.proj.toFixed(1)}</span></div>`;drawn=true;}
-      const m=x.m,cls=[m&&m.live?'live':'',isMine(x.t)?'mine':'',x.odds!=null&&x.odds>=20&&x.odds<=80?'bubble':''].filter(Boolean).join(' ');
+      const points=value(x);
+      if(cut!=null&&points!=null){
+        const below=points<cut-(oddsCut?0:G.EPS);
+        if(previousBelow!=null&&previousBelow!==below){
+          rows+=`<div class="gl-cut"><span>${cutLabel}</span></div>`;
+        }
+        previousBelow=below;
+      }
+      const bubble=x.odds!=null&&x.odds<50;
+      hasBubble ||= bubble;
+      const m=x.m,cls=[m&&m.live?'live':'',isMine(x.t)?'mine':'',bubble?'bubble':''].filter(Boolean).join(' ');
       rows+=`<div class="gl-r ${cls}">${icon(x.t)}<span class="gl-t">${esc(ident(x.t).name)}<small>${esc(lname(lid(x.t)))} · ${esc(x.t.owner)}${m?.incomplete?' · stats incomplete':''}</small></span>
         <span class="gl-n sc">${m&&(m.played||m.final)?m.actual.toFixed(2):'–'}</span><span class="gl-n pj">${m?x.proj.toFixed(1):'–'}</span>
         <span class="gl-n mn">${m?Math.round(m.minutes):'–'}</span><span class="gl-n od">${esc(pct(x.odds))}</span></div>`;
     });
     const state=L.allFinal?'Final · waiting for the weekly run to lock the cut':L.started?'Live':'Preview · Tuesday projections';
     const line=baseline?`<p class="gl-state">${esc(wkName(week))} · ${esc(state)}${L.missing?` · ${L.missing} team${L.missing===1?'':'s'} not loaded`:''}</p>`:'';
-    return `${head}${line}
-      <div class="gl-table live-t"><div class="gl-h"><span></span><span>Team</span><span>Score</span><span>${L.started&&!L.allFinal?'Live proj':'Proj'}</span><span>Min left</span><span>${label}</span></div>${rows}</div>`;
+    const legend=hasBubble?`<p class="gl-state">Shaded rows have less than a 50% chance to ${last?'win':'survive'}.</p>`:'';
+    return `${head}${line}${legend}
+      <div class="gl-table live-t"><div class="gl-h"><span></span>${sortHeader('team','Team')}${sortHeader('score','Score')}${sortHeader('projection',L.started&&!L.allFinal?'Live proj':'Proj')}${sortHeader('minutes','Min left')}${sortHeader('odds',label)}</div>${rows}</div>`;
   }
   function frozenView(w){
     const f=frozen(w),last=w>=gd.last_week;
@@ -151,7 +185,9 @@
     if(gd.status==='upcoming'&&!baseline)body+=`<p class="gl-state">Starts ${esc(wkName(gd.first_week,true))}: all ${gd.entrants} teams. Projections appear here once that week's postseason games are set.</p>`;
     if(frozen(week))body+=frozenView(week);else if(week===liveWeek())body+=liveView();
     body+=outList()+rules();
+    const focusedSort=document.activeElement?.dataset.glSort;
     $('board').innerHTML=body;
+    if(focusedSort)$('board').querySelector(`[data-gl-sort="${focusedSort}"]`)?.focus({preventScroll:true});
   }
   // ---------- data ----------
   function schedule(){
@@ -204,6 +240,14 @@
     const want=Number(params.get('week'));
     const choices=[...(gd.weeks||[]).map(x=>x.week),liveWeek()].filter(Boolean);
     week=choices.includes(want)?want:liveWeek()||Math.max(...choices);
+    $('board').addEventListener('click',event=>{
+      const button=event.target.closest('button[data-gl-sort]');
+      if(!button)return;
+      const column=button.dataset.glSort;
+      sortDirection=column===sortColumn?-sortDirection:column==='team'?1:-1;
+      sortColumn=column;
+      paint();
+    });
     $('refresh').addEventListener('click',()=>{failures=0;refresh();});
     document.addEventListener('visibilitychange',()=>{if(document.hidden){clearTimeout(timer);timer=null;}else if(mnf.on)refresh();});
     await select();
