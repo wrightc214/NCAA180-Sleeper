@@ -158,10 +158,10 @@
     if (!d.managers || !d.managers.length) return '<p class="tm-empty">No managers on file.</p>';
     const span = ys => { const a = Math.min(...ys), b = Math.max(...ys); return a === b ? `${a}` : `${a}–${b}`; };
     const wp = m => { const g = m.w + m.l + m.t; return g ? ((m.w + m.t / 2) / g).toFixed(3).replace(/^0/, '') : '—'; };
-    return `<div class="tm-scroll"><table class="tm-tbl-plain"><thead><tr><th>Manager</th><th>Seasons</th><th class="n">Record</th><th class="n">Pct</th><th class="n">Post</th><th class="n">Titles</th></tr></thead><tbody>` +
+    return `<div class="tm-scroll"><table class="tm-tbl-plain"><thead><tr><th>Manager</th><th>Seasons</th><th class="n">Record</th><th class="n">Pct</th><th class="n">Post seasons</th><th class="n">Post record</th><th class="n">Titles</th></tr></thead><tbody>` +
       d.managers.map(m => `<tr><td><b>${esc(m.manager)}</b></td><td>${span(m.years)} <small>(${m.years.length})</small></td>` +
-        `<td class="n">${m.w}-${m.l}${m.t ? '-' + m.t : ''}</td><td class="n">${wp(m)}</td><td class="n">${m.pw}-${m.pl}</td><td class="n">${m.titles || ''}</td></tr>`).join('') +
-      '</tbody>'+footer(['Total',new Set(d.managers.flatMap(m=>m.years)).size,rec(combined(d.managers)),wp(combined(d.managers)),sum(d.managers,'pw')+'-'+sum(d.managers,'pl'),sum(d.managers,'titles')])+'</table></div><p class="note">Regular-season record; Post = postseason games won-lost.</p>';
+        `<td class="n">${m.w}-${m.l}${m.t ? '-' + m.t : ''}</td><td class="n">${wp(m)}</td><td class="n">${m.appearances ?? '—'}</td><td class="n">${m.pw}-${m.pl}</td><td class="n">${m.titles || ''}</td></tr>`).join('') +
+      '</tbody>'+footer(['Total',new Set(d.managers.flatMap(m=>m.years)).size,rec(combined(d.managers)),wp(combined(d.managers)),sum(d.managers,'appearances'),sum(d.managers,'pw')+'-'+sum(d.managers,'pl'),sum(d.managers,'titles')])+'</table></div><p class="note">Regular-season record; Post seasons = postseason appearances; Post record = postseason games won-lost.</p>';
   }
 
   function h2hHtml(d) {
@@ -509,7 +509,7 @@
     if (tok) obs.observe(tok, {childList: true, characterData: true, subtree: true});
     obs.observe(document.documentElement, {attributes: true, attributeFilter: ['data-theme']});
     document.body.dataset.snapTag = d.name;
-    if (!d.defunct) { document.body.dataset.snapState = 'live'; document.body.dataset.snapTime = new Date().toISOString(); }
+    if (!d.defunct) { document.body.dataset.snapState = 'snapshot'; document.body.dataset.snapTime = new Date().toISOString(); }
     await finish();
   }
   main();
