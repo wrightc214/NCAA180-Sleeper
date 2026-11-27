@@ -32,7 +32,20 @@
   // ---- line chart (SVG, one y axis, hover crosshair + tooltip, direct end labels) ------------------
   // series: [{name, values (null = gap), cls: 's1'|'s2', dots?: only draw markers}], x: labels.
   let CHART_ID = 0;
-  function lineChart({x, series, invert = false, yMin, yMax, fmtY = fmt, title, height = 220, note = '', width = (window.innerWidth < 560 ? 360 : 520)}) {
+  function marker(s,x,y,r=3) {
+    const c = 'series-marker '+s.cls;
+    if(s.cls==='s2') return `<rect class="${c}" x="${x-r}" y="${y-r}" width="${2*r}" height="${2*r}"/>`;
+    if(s.cls==='s3') return `<polygon class="${c}" points="${x},${y-r} ${x-r},${y+r} ${x+r},${y+r}"/>`;
+    if(s.cls==='s4') return `<polygon class="${c}" points="${x},${y-r} ${x-r},${y} ${x},${y+r} ${x+r},${y}"/>`;
+    return `<circle class="${c}" cx="${x}" cy="${y}" r="${r}"/>`;
+  }
+  const sum = (rows,k) => rows.reduce((a,r)=>a+(Number(r[k])||0),0);
+  const combined = rows => Object.fromEntries(['w','l','t','pf','pa','pw','pl','titles','xw'].map(k=>[k,sum(rows,k)]));
+  const footer = cells => '<tfoot><tr>'+cells.map(v=>'<td>'+v+'</td>').join('')+'</tr></tfoot>';
+  const validEff = r => Number.isFinite(r.pf_official) && Number.isFinite(r.max) && r.max>0;
+  const efficiency = rows => {const a=rows.filter(validEff);return a.length?100*sum(a,'pf_official')/sum(a,'max'):null;};
+  const mean = a => {a=a.filter(Number.isFinite);return a.length?a.reduce((x,y)=>x+y,0)/a.length:null;};
+  function lineChart({x, series, invert = false, yMin, yMax, fmtY = fmt, title, height = 220, note = '', totals = null, width = (window.innerWidth < 560 ? 360 : 520)}) {
     const id = 'tmc' + (++CHART_ID);
     const W = width, H = height, M = {l: 48, r: 58, t: 14, b: 26};
     const all = series.flatMap(s => s.values).filter(v => v != null && Number.isFinite(v));
@@ -54,12 +67,12 @@
     const paths = series.map(s => {
       let d = '', pen = false;
       s.values.forEach((v, i) => { if (v == null) { pen = false; return; } d += `${pen ? 'L' : 'M'}${X(i).toFixed(1)},${Y(v).toFixed(1)}`; pen = true; });
-      const dots = s.values.map((v, i) => v == null ? '' : `<circle cx="${X(i)}" cy="${Y(v)}" r="${s.dots ? 4.5 : 3}" class="${s.cls}"/>`).join('');
+      const dots = s.values.map((v, i) => v == null ? '' : marker(s,X(i),Y(v),s.dots ? 4.5 : 3)).join('');
       const li = s.values.map((v, i) => v == null ? -1 : i).filter(i => i >= 0).pop();
       const end = li >= 0 && !s.dots ? `<text x="${X(li) + 8}" y="${labelY(Y(s.values[li]) + 4)}" class="el">${esc(s.short || s.name)}</text>` : '';
-      return (s.dots ? '' : `<path d="${d}" class="${s.cls}"/>`) + dots + end;
+      return (s.dots ? '' : `<path d="${d}" class="series-line ${s.cls}"/>`) + dots + end;
     }).join('');
-    const legend = series.length > 1 ? `<div class="tm-legend">${series.map(s => `<span><i class="${s.cls}${s.dots ? ' dot' : ''}"></i>${esc(s.name)}</span>`).join('')}</div>` : '';
+    const legend = series.length > 1 ? `<div class="tm-legend">${series.map(s => `<span><svg viewBox="0 0 30 14" aria-hidden="true">${s.dots ? '' : `<path class="series-line ${s.cls}" d="M0 7H30"/>`}${marker(s,15,7,4)}</svg>${esc(s.name)}</span>`).join('')}</div>` : '';
     const rows = x.map((l, i) => `<tr><td>${esc(l)}</td>${series.map(s => `<td>${s.values[i] == null ? '—' : esc(fmtY(s.values[i]))}</td>`).join('')}</tr>`).join('');
     return `<figure class="tm-chart" id="${id}" data-x='${esc(JSON.stringify(x))}'>` +
       (title ? `<figcaption>${esc(title)}</figcaption>` : '') + legend +
@@ -67,13 +80,13 @@
       `<line class="cross" y1="${M.t}" y2="${H - M.b}" x1="0" x2="0" visibility="hidden"/>` +
       `<rect class="hit" x="${M.l - 10}" y="0" width="${W - M.l - M.r + 20}" height="${H}" data-l="${M.l}" data-r="${M.r}" data-w="${W}" data-n="${x.length}"/></svg>` +
       `<div class="tm-tip" hidden></div>` +
-      `<details class="tm-tbl"><summary>Table</summary><table><thead><tr><th></th>${series.map(s => `<th>${esc(s.name)}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></details>` +
+      `<details class="tm-tbl"><summary>Table</summary><table><thead><tr><th></th>${series.map(s => `<th>${esc(s.name)}</th>`).join('')}</tr></thead><tbody>${rows}</tbody>${totals ? footer(['Total',...totals.map(v=>v==null?'—':esc(fmtY(v)))]) : ''}</table></details>` +
       (note ? `<p class="note">${note}</p>` : '') + `</figure>`;
   }
   // One delegated handler: hover/tap a chart -> crosshair + tooltip from its own table.
   function wireCharts(root) {
     root.querySelectorAll('.tm-chart').forEach(fig => {
-      const hit = fig.querySelector('.hit'), svg = fig.querySelector('svg'), tip = fig.querySelector('.tm-tip'), cross = fig.querySelector('.cross');
+      const hit = fig.querySelector('.hit'), svg = hit && hit.ownerSVGElement, tip = fig.querySelector('.tm-tip'), cross = fig.querySelector('.cross');
       if (!hit) return;
       const n = +hit.dataset.n, l = +hit.dataset.l, r = +hit.dataset.r, w = +hit.dataset.w;
       const heads = [...fig.querySelectorAll('.tm-tbl th')].slice(1).map(t => t.textContent);
@@ -148,7 +161,7 @@
     return `<div class="tm-scroll"><table class="tm-tbl-plain"><thead><tr><th>Manager</th><th>Seasons</th><th class="n">Record</th><th class="n">Pct</th><th class="n">Post</th><th class="n">Titles</th></tr></thead><tbody>` +
       d.managers.map(m => `<tr><td><b>${esc(m.manager)}</b></td><td>${span(m.years)} <small>(${m.years.length})</small></td>` +
         `<td class="n">${m.w}-${m.l}${m.t ? '-' + m.t : ''}</td><td class="n">${wp(m)}</td><td class="n">${m.pw}-${m.pl}</td><td class="n">${m.titles || ''}</td></tr>`).join('') +
-      '</tbody></table></div><p class="note">Regular-season record; Post = postseason games won-lost.</p>';
+      '</tbody>'+footer(['Total',new Set(d.managers.flatMap(m=>m.years)).size,rec(combined(d.managers)),wp(combined(d.managers)),sum(d.managers,'pw')+'-'+sum(d.managers,'pl'),sum(d.managers,'titles')])+'</table></div><p class="note">Regular-season record; Post = postseason games won-lost.</p>';
   }
 
   function h2hHtml(d) {
@@ -161,7 +174,7 @@
         `<td class="n">${pts(x.pf)}</td><td class="n">${pts(x.pa)}</td><td class="n">${x.last}</td></tr>`;
     };
     return `<div class="tm-scroll"><table class="tm-tbl-plain" id="tm-h2h-t"><thead><tr><th>Opponent</th><th class="n">Record</th><th class="n">PF</th><th class="n">PA</th><th class="n">Last</th></tr></thead><tbody>` +
-      h.map((x, i) => row(x).replace('<tr>', `<tr${i >= 12 ? ' hidden' : ''}>`)).join('') + '</tbody></table></div>' +
+      h.map((x, i) => row(x).replace('<tr>', `<tr${i >= 12 ? ' hidden' : ''}>`)).join('') + '</tbody>'+footer(['Total ('+h.length+' opponents)',rec(combined(h)),pts(sum(h,'pf')),pts(sum(h,'pa')),'—'])+'</table></div>' +
       (h.length > 12 ? `<button type="button" class="tm-more" id="tm-h2h-more">Show all ${h.length}</button>` : '') +
       '<p class="note">Every game this roster has played, regular season and postseason. Opponents are listed under their current name.</p>';
   }
@@ -251,15 +264,18 @@
     const ss = d.seasons.filter(s => s.record && s.record.games).slice().sort((a, b) => a.year - b.year);
     if (!ss.length) return '';
     const x = ss.map(s => String(s.year));
+    const records = ss.map(s=>s.record);
     const pf = lineChart({x, title: 'Points for vs max possible (regular season)',
       series: [{name: 'Points for', short: 'PF', values: ss.map(s => s.record.pf), cls: 's1'},
                {name: 'Max PF', short: 'Max', values: ss.map(s => s.record.max ?? null), cls: 's2'}],
+      totals: [sum(records,'pf'),records.some(r=>r.max!=null)?sum(records,'max'):null],
       note: 'Points for on standard scoring; Max PF is the best possible lineup each week (Sleeper).'});
-    const eff = lineChart({x, title: 'Lineup efficiency (PF ÷ Max PF)', fmtY: v => v.toFixed(0) + '%', height: 170,
-      series: [{name: 'Efficiency', values: ss.map(s => s.record.max ? s.record.pf_official / s.record.max * 100 : null), cls: 's1'}]});
+    const eff = lineChart({x, title: 'Lineup efficiency (PF ÷ Max PF)', fmtY: v => v.toFixed(1) + '%', height: 170,
+      series: [{name: 'Efficiency', values: records.map(r=>efficiency([r])), cls: 's1'}, {name:'League average',short:'Avg',values:ss.map(s=>s.league_eff ?? null),cls:'s2'}], totals:[efficiency(records),mean(ss.map(s=>s.league_eff))], note:'League average: equally weighted NCAA 180 team efficiencies using official PF and Max PF. Career team efficiency uses combined PF and Max PF; benchmark total is the mean of displayed annual averages.'});
     const wins = lineChart({x, title: 'Wins vs expected wins', fmtY: v => v.toFixed(1),
       series: [{name: 'Wins', values: ss.map(s => s.record.w + s.record.t / 2), cls: 's1'},
                {name: 'Expected wins', short: 'xW', values: ss.map(s => s.record.xw ?? null), cls: 's2'}],
+      totals:[sum(records,'w')+sum(records,'t')/2,records.some(r=>r.xw!=null)?sum(records,'xw'):null],
       note: 'Expected wins = each week\'s share of the league this score would have beaten (all-play).'});
     const polls = d.seasons.filter(s => s.poll && s.poll.summary);
     const pr = v => v == null ? '—' : '#' + v;
