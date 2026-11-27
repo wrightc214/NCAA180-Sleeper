@@ -410,28 +410,102 @@
     return `<div class="tm-mine"><h3>My team</h3><a href="${L.href(m.league, m.roster)}">${esc(m.name)}<small>${esc(m.manager)} · ${esc(INDEX.leagues[m.league].short)}</small></a></div>`;
   }
 
-  // Team colours, three ways (Team / Accent / Site), remembered on this device for every team page.
+  // Device-local global preference and stable-team overrides.
   const COLOR_KEY = 'ncaa180.teamColors';
+  const TEAM_COLOR_KEY = COLOR_KEY + '.byTeam';
+  const COLOR_MODES = ['full', 'inverted', 'frame', 'site'];
   function colors(d) {
     let st = document.getElementById('tm-team-vars');
     if (!st) { st = document.createElement('style'); st.id = 'tm-team-vars'; document.head.append(st); }
-    const safe = c => /^#[0-9a-fA-F]{3,8}$/.test(c || '') ? c : '';
-    st.textContent = `body{--t1:${safe(d.bg) || '#14213a'};--t1ink:${safe(d.ink) || '#ffffff'};--t2:${safe(d.accent) || safe(d.ink) || '#ffffff'}}`;
-    let mode = 'full';
-    try { mode = localStorage.getItem(COLOR_KEY) || 'full'; } catch (e) { /* storage blocked: default */ }
-    const box = $('tm-colors');
-    const set = m => {
-      if (!['full', 'frame', 'site'].includes(m)) m = 'full';
-      document.body.classList.remove('tm-c-full', 'tm-c-frame', 'tm-c-site');
-      document.body.classList.add('tm-c-' + m);
-      const img = document.querySelector('.tm-head img[data-logo]');  // logo variant for the header's background
-      if (img) img.src = m === 'full' ? img.dataset.logoInv : img.dataset.logo;
-      box.querySelectorAll('button').forEach(b => b.setAttribute('aria-checked', String(b.dataset.c === m)));
-      try { localStorage.setItem(COLOR_KEY, m); } catch (e) { /* ignore */ }
+    const safe = c => /^#[0-9a-fA-F]{6}$/.test(c || '') ? c : '';
+    const bg = safe(d.bg) || '#14213a', ink = safe(d.ink) || '#ffffff';
+    const luminance = c => {
+      const v = [1,3,5].map(i => parseInt(c.slice(i,i+2),16)/255).map(x => x <= .04045 ? x/12.92 : ((x+.055)/1.055)**2.4);
+      return .2126*v[0]+.7152*v[1]+.0722*v[2];
     };
-    box.querySelectorAll('button').forEach(b => b.addEventListener('click', () => set(b.dataset.c)));
+    const contrast = (a,b) => (Math.max(luminance(a),luminance(b))+.05)/(Math.min(luminance(a),luminance(b))+.05);
+    const readable = (fg,bg) => contrast(fg,bg)>=4.5 ? fg : contrast('#ffffff',bg)>=4.5 ? '#ffffff' : '#000000';
+    const accent = safe(d.accent) || ink;
+    st.textContent = 'body{--t1:'+bg+';--t1ink:'+ink+';--t2:'+accent+';--tm-full-heading:'+readable(accent,bg)+';--tm-inverted-heading:'+readable(bg,ink)+';--tm-full-text:'+readable(ink,bg)+';--tm-inverted-text:'+readable(bg,ink)+'}';
+    const valid = m => COLOR_MODES.includes(m);
+    let storage, globalMode = 'full', mode, overridden = false;
+    const key = typeof d.key === 'string' && d.key ? d.key : null;
+    const readMap = () => {
+      let raw = storage.getItem(TEAM_COLOR_KEY), obj;
+      try { obj = JSON.parse(raw); } catch (e) { obj = null; }
+      return Object.assign(Object.create(null), obj && typeof obj === 'object' && !Array.isArray(obj) ? obj : {});
+    };
+    const readGlobal = () => {
+      const m = storage.getItem(COLOR_KEY);
+      return valid(m) ? m : 'full';
+    };
+    try {
+      storage = localStorage;
+      globalMode = readGlobal();
+      const probe = COLOR_KEY + '.probe';
+      const old = storage.getItem(probe);
+      storage.setItem(probe, '1');
+      if (old === null) storage.removeItem(probe); else storage.setItem(probe, old);
+      const map = readMap();
+      overridden = !!key && valid(map[key]);
+      mode = overridden ? map[key] : globalMode;
+    } catch (e) { storage = null; }
+    mode = mode || globalMode;
+    const box = $('tm-colors'), toggle = $('tm-color-override');
+    if (!box) return;
+    const buttons = [...box.querySelectorAll('button[data-c]')];
+    const apply = m => {
+      mode = valid(m) ? m : 'full';
+      document.body.classList.remove(...COLOR_MODES.map(x => 'tm-c-' + x));
+      document.body.classList.add('tm-c-' + mode);
+      const img = document.querySelector('.tm-head img[data-logo]');
+      if (img) img.src = mode === 'full' ? img.dataset.logoInv : img.dataset.logo;
+      buttons.forEach(b => {
+        b.setAttribute('aria-checked', String(b.dataset.c === mode));
+        b.tabIndex = b.dataset.c === mode ? 0 : -1;
+      });
+      if (toggle) {
+        toggle.setAttribute('aria-checked', String(overridden));
+        toggle.hidden = !storage || !key;
+      }
+    };
+    const failed = () => { storage = null; overridden = false; };
+    const select = m => {
+      if (!valid(m)) return;
+      if (storage) try {
+        if (overridden) {
+          const map = readMap(); map[key] = m;
+          storage.setItem(TEAM_COLOR_KEY, JSON.stringify(map));
+        } else { storage.setItem(COLOR_KEY, m); globalMode = m; }
+      } catch (e) { failed(); }
+      apply(m);
+    };
+    buttons.forEach((b,i) => {
+      b.addEventListener('click', () => select(b.dataset.c));
+      b.addEventListener('keydown', e => {
+        const delta = ['ArrowRight','ArrowDown'].includes(e.key) ? 1 : ['ArrowLeft','ArrowUp'].includes(e.key) ? -1 : 0;
+        if (!delta && !['Home','End'].includes(e.key)) return;
+        e.preventDefault();
+        const next = buttons[e.key === 'Home' ? 0 : e.key === 'End' ? buttons.length-1 : (i+delta+buttons.length)%buttons.length];
+        select(next.dataset.c); next.focus();
+      });
+    });
+    if (toggle) toggle.addEventListener('click', () => {
+      if (!storage || !key) return;
+      try {
+        const map = readMap();
+        if (overridden) {
+          globalMode = readGlobal(); delete map[key];
+          storage.setItem(TEAM_COLOR_KEY, JSON.stringify(map));
+          overridden = false; apply(globalMode);
+        } else {
+          map[key] = mode; storage.setItem(TEAM_COLOR_KEY, JSON.stringify(map));
+          overridden = true; apply(mode);
+        }
+      } catch (e) { failed(); apply(mode); }
+    });
     box.hidden = false;
-    set(mode);
+    apply(mode);
   }
 
   async function main() {
