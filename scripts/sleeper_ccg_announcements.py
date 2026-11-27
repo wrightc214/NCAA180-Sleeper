@@ -1,4 +1,11 @@
-"""Preview and post the Trophy Room's final CCG awards to Sleeper."""
+"""Preview and post the Trophy Room's final CCG awards to Sleeper.
+
+To reconcile a pending record in data/SleeperTrophyPosts.json, check the
+destination league's chat for the trophy post. If it was delivered, change
+the record's status to sent and set message_id to the Sleeper message ID.
+If you confirm it was not delivered, delete the record to allow a resend.
+Commit the reconciliation to main before rerunning.
+"""
 import argparse
 import csv
 import json
@@ -24,12 +31,16 @@ def public_json(url):
     ]))
 
 
-def previews(year, selected, out, *, ledger_path, already_recorded=()):
-    expected = {
+def conference_league_ids(year):
+    return {
         trophies.short_names().get(name, name): league_id
         for (season, name), league_id in trophies.league_ids().items()
         if season == year
     }
+
+
+def previews(year, selected, out, *, ledger_path, already_recorded=()):
+    expected = conference_league_ids(year)
     if selected and selected not in expected:
         raise SystemExit("Use the official conference short name for this season.")
     with open(ledger_path, encoding="utf-8-sig", newline="") as ledger:
@@ -168,11 +179,24 @@ def publish_final_ccgs(year, conference, out, token):
     if not token:
         raise SystemExit("The SLEEPER_SESSION_TOKEN Actions secret is missing.")
     records = json.loads(POSTS.read_text(encoding="utf-8")) if POSTS.exists() else {}
+    if conference:
+        league_id = conference_league_ids(year).get(conference)
+        if not league_id:
+            raise SystemExit("Use the official conference short name for this season.")
+        record = records.get(f"{year}/CCG/{league_id}")
+        if record and record["status"] == "sent":
+            print(f"{conference}: already sent (Sleeper message {record['message_id']}).")
+            return
+        if record and record["status"] == "pending":
+            raise SystemExit(f"{conference}: prior delivery needs reconciliation. Check league chat.")
+
     unresolved = [key for key, record in records.items()
                   if key.startswith(f"{year}/CCG/") and record["status"] == "pending"]
     for key in unresolved:
         print(f"{key}: prior delivery needs reconciliation. Skipping automatic resend.")
     posts = previews(year, conference, out, ledger_path=trophies.SEASON, already_recorded=records)
+    if conference and not posts:
+        raise SystemExit("No verified final award to send.")
     failed = False
     for league_id, image, caption in posts:
         key = f"{year}/CCG/{league_id}"
@@ -183,15 +207,19 @@ def publish_final_ccgs(year, conference, out, token):
 
         try:
             message_id = send(year, league_id, image, caption, token=token, before_post=reserve)
+            records[key].update(status="sent", message_id=message_id)
+            save_post_state(records, f"Confirm Sleeper trophy post {key}")
+        except subprocess.CalledProcessError as error:
+            print(f"{key}: could not save the delivery record to main (git exit {error.returncode}). "
+                  "Stopping further sends. Check league chat and the ledger on main.")
+            failed = True
+            break
         except SystemExit as error:
             # Before reservation, an upload failure leaves the award eligible for a retry.
             # After reservation, further sends require someone to check the league chat.
             print(f"{key}: {error}")
             failed = True
             continue
-
-        records[key].update(status="sent", message_id=message_id)
-        save_post_state(records, f"Confirm Sleeper trophy post {key}")
     if failed:
         raise SystemExit("One or more Sleeper CCG notifications need review.")
 
