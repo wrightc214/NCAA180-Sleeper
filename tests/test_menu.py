@@ -39,7 +39,7 @@ class Config(unittest.TestCase):
         """Every tab the site showed before the rebuild stays visible, in the same order."""
         vis = [t["label"] for t in CFG["tabs"] if t.get("state", "visible") == "visible"]
         self.assertEqual(vis, ["Awards", "Roster Map", "Standings", "Games", "Poll", "Postseason",
-                               "Selection Watch", "Special Events", "Managers", "Transactions", "Records", "About",
+                               "Selection Watch", "Special Events", "Teams", "Managers", "Transactions", "Records", "About",
                                "Accessibility", "Notification settings"])
 
     def test_selection_watch_ccg_public_playoffs_dev(self):

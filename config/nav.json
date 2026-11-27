@@ -7,7 +7,7 @@
     "aliases: other page keys (data-current) that highlight this tab. href '@awards' = the latest week's awards page.",
     "rows: fixed sub-rows (a page asks for one with data-row). Data-driven rows (seasons, weeks, projection archive) are built from the pages in reports/."
   ],
-  "awards_ceremonies": {"state": "hidden-dev"},
+  "awards_ceremonies": {"state": "visible"},
   "tabs": [
     {"id": "awards", "label": "Awards", "href": "@awards"},
     {"id": "map", "label": "Roster Map", "href": "roster-map.html"},
@@ -17,7 +17,7 @@
     {"id": "postseason", "label": "Postseason", "href": "postseason.html"},
     {"_note": "Selection Watch tab public since 2026-11-20 (CW) for the CCG sub-page; Playoffs (Steal Board) public since 2026-11-24 (CW). The tab links to the first sub-page the viewer can see. Set state to hidden to turn off the board and its data publication.", "id": "selection-watch", "label": "Selection Watch", "href": "selection-watch.html", "state": "visible"},
     {"id": "special", "label": "Special Events", "href": "special.html"},
-    {"_note": "Team pages (task 5.20): Dev view only until the league data manager makes them visible. Team-name links on Standings and Games follow this state (hidden-dev = Dev view only).", "id": "team", "label": "Teams", "href": "team.html", "state": "hidden-dev"},
+    {"_note": "Team pages (task 5.20): Team-name links on Standings and Games follow this state.", "id": "team", "label": "Teams", "href": "team.html", "state": "visible"},
     {"id": "managers", "label": "Managers", "href": "managers.html"},
     {"id": "transactions", "label": "Transactions", "href": "transactions.html"},
     {"id": "records", "label": "Records", "href": "records.html"},

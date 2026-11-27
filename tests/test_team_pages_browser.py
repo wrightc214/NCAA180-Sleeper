@@ -274,17 +274,13 @@ class TeamPageBrowser(unittest.TestCase):
                                 p.wait_for_function("document.querySelector('.tm-head img')?.naturalWidth > 0")
                         p.close()
 
-    def test_standings_links_follow_dev_view(self):
+    def test_standings_links_are_public(self):
         p = self.open_plain("reports/standings-2021.html")
-        self.assertEqual(p.locator("a.team-link").count(), 0, "hidden-dev: no links for the public")
-        p.evaluate("NCAA180.menu.setDev(true)")  # the About page's Dev view switch
-        p.reload()
         p.wait_for_selector("a.team-link")
         link = p.locator("#t a.team-link", has_text="Fresno State").first
         link.click()
         p.wait_for_selector("body[data-ready]", state="attached")
         self.assertEqual(p.text_content(".tm-head h1"), "Air Force")
-        p.evaluate("NCAA180.menu.setDev(false)")
 
     def open_plain(self, path):
         p = self.browser.new_page(service_workers="block")
