@@ -365,7 +365,7 @@ def winner_row(year, etype, event, rnd, team, *, league="", rid="", lid="", week
         uid, un = str(user_id), username or un
     row = {"Season": str(year), "EventType": etype, "Event": event, "Round": rnd, "Team": team,
            "Conference": short_names().get(league, league), "LeagueID": lid, "RosterID": str(rid or ""),
-           "ManagerUserID": uid, "ManagerName": un, "Status": status, "Source": source}
+           "ManagerUserID": uid, "ManagerName": un, "Status": status, "Source": source, "Week": week}
     row["ArtKey"] = art_key(row)
     return row
 
@@ -463,6 +463,16 @@ def from_special_events(year, root=SCOREBOARD):
                                   rid=c.get("roster_id", ""), lid=c.get("league_id", ""), week=d.get("last_week"),
                                   source="dwight.json", user_id=c.get("user_id", ""), username=c.get("username", "")))
     return out
+
+
+def trophy_display_points():
+    """Weights for trophy wins. A playoff round win earns the next advancement bonus."""
+    points = json.load(open(_path(LEAGUE_CONFIG), encoding="utf-8"))["managers"]["legend_points"]
+    event_keys = {"CCG": "conference", "NIT": "nit_champ", "Bowl": "bowl",
+                  "DwightFight": "dwight_fight", "Guillotine": "guillotine"}
+    round_keys = {"Sweet 16": "e8", "Second Round": "e8", "Elite 8": "f4", "Final Four": "final"}
+    return {**{event: points.get(key, 0) for event, key in event_keys.items()},
+            "PlayoffRound": {round_name: points.get(key, 0) for round_name, key in round_keys.items()}}
 
 
 def frame(rows):
