@@ -75,11 +75,11 @@ class TeamPageBrowser(unittest.TestCase):
                 self.assertTrue(p.is_visible("#tm-h2h table"))
                 self.assertGreaterEqual(p.locator("#tm-trophies figure.trophy").count(), 1)
                 self.assertGreaterEqual(p.locator("#tm-trophies article .snap-card-btn").count(), 1, "trophy Save image")
-                self.assertGreaterEqual(p.locator("details.tm-season").count(), 8)
-                self.assertEqual(p.locator("details.tm-season[open]").count(), 1)
-                self.assertEqual(p.get_attribute("details.tm-season[open]", "data-year"), str(json.loads(
+                self.assertGreaterEqual(p.locator("#tm-seasons details.tm-season").count(), 8)
+                self.assertEqual(p.locator("#tm-seasons details.tm-season[open]").count(), 1)
+                self.assertEqual(p.get_attribute("#tm-seasons details.tm-season[open]", "data-year"), str(json.loads(
                     (ROOT / "data/teams/index.json").read_text())["season"]))
-                self.assertIn("Fresno State", p.inner_text("details.tm-season[data-year='2021'] summary"))
+                self.assertIn("Fresno State", p.inner_text("#tm-seasons details.tm-season[data-year='2021'] summary"))
                 self.assertTrue(p.is_visible(".tm-draft li"))
                 self.assertTrue(p.is_visible("#tm-tx .tm-tx-item"))
                 self.assertEqual(p.evaluate("document.documentElement.scrollWidth - document.documentElement.clientWidth"), 0,
@@ -146,6 +146,27 @@ class TeamPageBrowser(unittest.TestCase):
         self.assertEqual(row.locator("td").nth(0).inner_text(), "California")
         self.assertEqual(row.locator("td").nth(1).inner_text(), "3-5 (0-2)")
         self.assertIn("postseason records in parentheses", p.locator("#tm-h2h-sec .note").inner_text())
+
+    def test_postseason_section_shows_latest_appearance_and_history(self):
+        pac = league_id("NCAA PAC 12")
+        p = self.open(f"reports/team.html?league={pac}&roster=7", 390)
+        section = p.locator("#tm-post-sec")
+        self.assertEqual(section.locator("h2").text_content(), "Postseason")
+        self.assertEqual(section.locator("details[open]").count(), 1)
+        years = section.locator("details").evaluate_all("items => items.map(item => Number(item.dataset.year))")
+        self.assertEqual(years, sorted(years, reverse=True))
+        self.assertEqual(section.locator("details[open]").get_attribute("data-year"), str(years[0]))
+        self.assertIn("National champion", section.locator("details[data-year='2025'] summary").inner_text())
+        self.assertGreater(section.locator("details[open] tbody tr.post").count(), 0)
+        self.assertEqual(section.locator("tbody tr.reg").count(), 0)
+        older = section.locator("details[data-year='2024']")
+        older.locator("summary").click()
+        self.assertIn("Tangerine Bowl", older.locator("tbody").inner_text())
+        p.evaluate("navigator.canShare = () => false")
+        with p.expect_download(timeout=60000) as pending:
+            section.locator("button.snap-btn").click()
+        self.assertIn("Postseason", pending.value.suggested_filename)
+        self.assertEqual(pending.value.path().read_bytes()[:8], bytes((137, 80, 78, 71, 13, 10, 26, 10)))
 
     def test_chart_hover_tooltip(self):
         p = self.open(f"reports/team.html?league={league_id('NCAA PAC 12')}&roster=7")
@@ -247,7 +268,7 @@ class TeamPageBrowser(unittest.TestCase):
         self.assertEqual(p.text_content(".tm-head h1"), "Ohio")
         self.assertIn("Defunct", p.inner_text(".tm-head"))
         self.assertEqual(p.locator("#tm-roster-sec").count(), 0, "no current-roster section")
-        self.assertEqual(p.get_attribute("details.tm-season[open]", "data-year"), "2019")
+        self.assertEqual(p.get_attribute("#tm-seasons details.tm-season[open]", "data-year"), "2019")
         self.assertGreaterEqual(p.locator("#tm-trophies figure.trophy").count(), 1)
         self.assertEqual(p.evaluate("document.documentElement.scrollWidth - document.documentElement.clientWidth"), 0)
         if OUT:
