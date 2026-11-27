@@ -138,13 +138,14 @@
       return sortDirection*(sortColumn==='team'?left.localeCompare(right):left-right);
     });
     const projectedCut=sortColumn==='projection';
-    const cut=last?null:projectedCut?L.proj:sortColumn==='score'?L.cur:null;
-    const cutLabel=cut==null?'':projectedCut?`Projected cut · ${cut.toFixed(1)}`:`Current cut · ${cut.toFixed(2)}`;
+    const oddsCut=sortColumn==='odds';
+    const cut=last?null:projectedCut?L.proj:sortColumn==='score'?L.cur:oddsCut?50:null;
+    const cutLabel=cut==null?'':oddsCut?'50% to advance':projectedCut?`Projected cut · ${cut.toFixed(1)}`:`Current cut · ${cut.toFixed(2)}`;
     let rows='',previousBelow=null,hasBubble=false;
     L.items.forEach(x=>{
       const points=value(x);
       if(cut!=null&&points!=null){
-        const below=points<cut-G.EPS;
+        const below=points<cut-(oddsCut?0:G.EPS);
         if(previousBelow!=null&&previousBelow!==below){
           rows+=`<div class="gl-cut"><span>${cutLabel}</span></div>`;
         }
