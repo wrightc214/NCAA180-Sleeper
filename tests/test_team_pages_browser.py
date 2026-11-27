@@ -75,11 +75,11 @@ class TeamPageBrowser(unittest.TestCase):
                 self.assertTrue(p.is_visible("#tm-h2h table"))
                 self.assertGreaterEqual(p.locator("#tm-trophies figure.trophy").count(), 1)
                 self.assertGreaterEqual(p.locator("#tm-trophies article .snap-card-btn").count(), 1, "trophy Save image")
-                self.assertGreaterEqual(p.locator("details.tm-season").count(), 8)
-                self.assertEqual(p.locator("details.tm-season[open]").count(), 1)
-                self.assertEqual(p.get_attribute("details.tm-season[open]", "data-year"), str(json.loads(
+                self.assertGreaterEqual(p.locator("#tm-seasons details.tm-season").count(), 8)
+                self.assertEqual(p.locator("#tm-seasons details.tm-season[open]").count(), 1)
+                self.assertEqual(p.get_attribute("#tm-seasons details.tm-season[open]", "data-year"), str(json.loads(
                     (ROOT / "data/teams/index.json").read_text())["season"]))
-                self.assertIn("Fresno State", p.inner_text("details.tm-season[data-year='2021'] summary"))
+                self.assertIn("Fresno State", p.inner_text("#tm-seasons details.tm-season[data-year='2021'] summary"))
                 self.assertTrue(p.is_visible(".tm-draft li"))
                 self.assertTrue(p.is_visible("#tm-tx .tm-tx-item"))
                 self.assertEqual(p.evaluate("document.documentElement.scrollWidth - document.documentElement.clientWidth"), 0,
@@ -268,7 +268,7 @@ class TeamPageBrowser(unittest.TestCase):
         self.assertEqual(p.text_content(".tm-head h1"), "Ohio")
         self.assertIn("Defunct", p.inner_text(".tm-head"))
         self.assertEqual(p.locator("#tm-roster-sec").count(), 0, "no current-roster section")
-        self.assertEqual(p.get_attribute("details.tm-season[open]", "data-year"), "2019")
+        self.assertEqual(p.get_attribute("#tm-seasons details.tm-season[open]", "data-year"), "2019")
         self.assertGreaterEqual(p.locator("#tm-trophies figure.trophy").count(), 1)
         self.assertEqual(p.evaluate("document.documentElement.scrollWidth - document.documentElement.clientWidth"), 0)
         if OUT:
