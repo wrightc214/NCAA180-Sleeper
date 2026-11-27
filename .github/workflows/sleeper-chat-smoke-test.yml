@@ -1,0 +1,65 @@
+name: Sleeper chat smoke test
+
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  send-test-message:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Post to the NCAA 180 test league
+        env:
+          SLEEPER_SESSION_TOKEN: ${{ secrets.SLEEPER_SESSION_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import urllib.error
+          import urllib.request
+          import uuid
+
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self, request, fp, code, msg, headers, newurl):
+                  return None
+
+          token = os.environ.get("SLEEPER_SESSION_TOKEN")
+          if not token:
+              raise SystemExit("Set the SLEEPER_SESSION_TOKEN Actions secret for SLM.")
+
+          league_id = "1432137859359313920"
+          message = "NCAA 180 test message from Super League Manager."
+          client_id = str(uuid.uuid4())
+          operation = "create_message"
+          query = (
+              'mutation create_message($text: String) { create_message('
+              f'parent_id: "{league_id}", client_id: "{client_id}", '
+              'parent_type: "league", text: $text) '
+              '{ message_id parent_id author_display_name } }'
+          )
+          body = {"operationName": operation, "query": query, "variables": {"text": message}}
+          request = urllib.request.Request(
+              "https://sleeper.com/graphql",
+              data=json.dumps(body).encode(),
+              headers={
+                  "Authorization": token,
+                  "Content-Type": "application/json",
+                  "X-Sleeper-GraphQL-Op": operation,
+              },
+          )
+          try:
+              with urllib.request.build_opener(NoRedirect()).open(request, timeout=20) as response:
+                  payload = json.load(response)
+          except urllib.error.HTTPError as error:
+              raise SystemExit(f"Sleeper returned HTTP {error.code}. Check test chat before rerunning.")
+          except (OSError, ValueError):
+              raise SystemExit("Delivery could not be confirmed. Check test chat before rerunning.")
+
+          posted = (payload.get("data") or {}).get(operation) or {}
+          if not posted.get("message_id") or posted.get("parent_id") != league_id:
+              raise SystemExit("Sleeper did not confirm the post. Check test chat before rerunning.")
+
+          print(f"Sleeper confirmed message {posted['message_id']} in league {league_id}.")
+          PY
