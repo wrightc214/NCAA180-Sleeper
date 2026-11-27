@@ -81,7 +81,7 @@ article[data-snap-card]>header:has(>.snap-card-btn){position:relative;padding-ri
       e.stopPropagation(); btn.disabled = true; btn.classList.add('busy');
       try {
         await S.save(makeImage());
-      } catch (err) { btn.title = 'Image could not be made (' + (err && err.message || err) + ')'; console.error(err); }
+      } catch (err) { btn.title = 'Image could not be made (' + (err && err.message || err) + ')'; console.error(err); window.alert(btn.title); }
       finally { btn.disabled = false; btn.classList.remove('busy'); }
     });
   }
