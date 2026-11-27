@@ -641,7 +641,7 @@ def head_to_head(seasons, names_by_key):
     for s in seasons:
         for g in s["games"]:
             k = g.get("opp_key")
-            if not k or not g.get("res"):
+            if not k or not g.get("res") or g.get("place"):
                 continue
             d = h.setdefault(k, {"key": k, "w": 0, "l": 0, "t": 0, "pf": 0.0, "pa": 0.0, "last": s["year"], "post": 0})
             d[{"W": "w", "L": "l", "T": "t"}[g["res"]]] += 1
@@ -867,6 +867,12 @@ def build(out_dir=OUT_DIR, page=PAGE):
     trophy_rows = trophies(lids)
     polls = poll_history(lids)
     maxpf = max_points(m)
+    league_eff = {}
+    for (year, key), record in records.items():
+        maximum = maxpf.get((year, key))
+        if maximum and maximum > 0 and record.get("pf_official") is not None:
+            league_eff.setdefault(year, []).append(100 * record["pf_official"] / maximum)
+    league_eff = {year: round(sum(vals) / len(vals), 1) for year, vals in league_eff.items()}
     ap = all_play(m)
     values, first = roster_values()
     over = overview_sources(lids, cur, short)
@@ -928,7 +934,7 @@ def build(out_dir=OUT_DIR, page=PAGE):
                     rec["max"] = maxpf[(y, key)]
                 rec.update(ap.get((y, key), {}))
             pd_ = polls.get((y, key))
-            s = {"year": y, "name": nm, "manager": sd.get("manager", ""), "owner_id": sd.get("owner_id", ""),
+            s = {"year": y, "league_eff": league_eff.get(y), "name": nm, "manager": sd.get("manager", ""), "owner_id": sd.get("owner_id", ""),
                  "division": sd.get("division", ""),
                  "record": rec, "place": list(pl) if pl and rec else None,
                  "post": postseason_summary(post.get((y, key), [])), "games": games}
@@ -1098,8 +1104,11 @@ CSS = """
 .tm-chart .yl{font:12px var(--num,sans-serif);fill:var(--mute);text-anchor:end}
 .tm-chart .xl{font:12px var(--num,sans-serif);fill:var(--mute);text-anchor:middle}
 .tm-chart .el{font:600 12px var(--num,sans-serif);fill:var(--ink)}
-.tm-chart path.s1{fill:none;stroke:var(--s1);stroke-width:2}.tm-chart path.s2{fill:none;stroke:var(--s2);stroke-width:2}
-.tm-chart circle.s1{fill:var(--s1);stroke:var(--panel);stroke-width:2}.tm-chart circle.s2{fill:var(--s2);stroke:var(--panel);stroke-width:2}
+.tm-chart .series-line{fill:none;stroke-width:2}.tm-chart .series-line.s1{stroke:var(--s1)}.tm-chart .series-line.s2{stroke:var(--s2);stroke-dasharray:7 4}.tm-chart .series-line.s3{stroke:var(--s3);stroke-dasharray:2 4}.tm-chart .series-line.s4{stroke:var(--s4);stroke-dasharray:8 3 2 3}
+.tm-chart .series-marker{stroke:var(--panel);stroke-width:1}.tm-chart .series-marker.s1{fill:var(--s1)}.tm-chart .series-marker.s2{fill:var(--s2)}.tm-chart .series-marker.s3{fill:var(--s3)}.tm-chart .series-marker.s4{fill:var(--s4)}
+.tm-chart .tm-legend svg{display:inline-block;width:30px;height:14px;vertical-align:middle;margin-right:4px}.tm-legend{flex-wrap:wrap}
+#tm-sections tfoot td{font-weight:700;border-top:2px solid var(--line)}
+#tm-sections section.fold>h2{padding-right:70px}#tm-sections section.fold>.snap-btn{right:30px}
 .tm-chart .cross{stroke:var(--mute);stroke-width:1;stroke-dasharray:3 3}
 .tm-chart .hit{fill:transparent;cursor:crosshair}
 .tm-legend{display:flex;gap:12px;font-size:12px;color:var(--ink);margin-bottom:2px}
