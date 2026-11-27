@@ -343,6 +343,27 @@
       return '<tr><td colspan="2">'+(kind==='reg'?'Regular season':'Postseason')+' total</td><td class="n">'+pts(sum(rows,'pf'))+'–'+pts(sum(rows,'pa'))+'</td><td>'+rec(r)+'</td></tr>';
     }).join('');
   }
+  function gamesTable(games, header = '') {
+    return `<table class="tm-games"><colgroup><col class="c-wk"><col><col class="c-sc"><col class="c-r"></colgroup>` +
+      header + `<tbody>${games.map(gameRow).join('')}</tbody><tfoot>${gameTotals(games)}</tfoot></table>`;
+  }
+
+  function postseason(d) {
+    const seasons = d.seasons.map(season => ({
+      year: season.year,
+      summary: season.post,
+      games: season.games.filter(game => game.kind === 'post'),
+    })).filter(season => season.games.length).sort((a, b) => b.year - a.year);
+    if (!seasons.length) return '<p class="tm-empty">No postseason games on file.</p>';
+    const header = '<thead><tr><th scope="col">Week</th><th scope="col">Event / opponent</th>' +
+      '<th scope="col">Score</th><th scope="col" aria-label="Result">W/L</th></tr></thead>';
+    return seasons.map(({year, summary, games}, index) =>
+      `<details class="tm-season" data-year="${year}"${index === 0 ? ' open' : ''}><summary>` +
+      `<span class="yr">${year}</span>${summary ? `<span>${esc(summary)}</span>` : ''}</summary>` +
+      `<div class="body">${gamesTable(games, header)}</div></details>`
+    ).join('');
+  }
+
   function seasons(d) {
     if (!d.seasons.length) return '<p class="tm-empty">No seasons on file.</p>';
     const open = d.settings.current_season_open !== false;
@@ -360,7 +381,7 @@
       return `<details class="tm-season" data-year="${s.year}"${open && s.year === openYear ? ' open' : ''}><summary>` +
         `<span class="yr">${s.year}</span><span class="tm-chip" style="--chip-bg:${esc(id.bg)};--chip-ink:${esc(id.ink)}">${esc(s.name)}</span>` +
         `<span>${bits.join(' · ')}</span>${sum ? `<span class="sum">${esc(sum)}</span>` : ''}</summary>` +
-        `<div class="body">${seasonPoll(s)}<table class="tm-games"><colgroup><col class="c-wk"><col><col class="c-sc"><col class="c-r"></colgroup><tbody>${s.games.map(gameRow).join('')}</tbody><tfoot>${gameTotals(s.games)}</tfoot></table></div></details>`;
+        `<div class="body">${seasonPoll(s)}${gamesTable(s.games)}</div></details>`;
     }).join('');
   }
 
@@ -603,6 +624,8 @@
     $('tm-trophies').innerHTML = await trophies(d);
     $('tm-season-charts').innerHTML = seasonCharts(d);
     $('tm-seasons').innerHTML = seasons(d);
+    const post = $('tm-post');
+    if (post) post.innerHTML = postseason(d);
     const stdFrom = d.seasons.some(s => s.standard) ? Math.min(...d.seasons.filter(s => s.standard).map(s => s.year)) : d.season;
     $('tm-season-note').textContent = `Scores and PF/PA are on standard scoring (the score that should have occurred). Results from ${stdFrom} on are decided on standard scoring; earlier results and records are as recorded by Sleeper and never flipped. † marks Sleeper's official score where it differs.`;
     $('tm-drafts').innerHTML = drafts(d);

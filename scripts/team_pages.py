@@ -1230,6 +1230,7 @@ def write_page(path=PAGE):
 <section id="tm-trophy-sec"><h2>Trophies</h2><div id="tm-trophies"></div></section>
 <section id="tm-season-sec"><h2>Season by season</h2><div id="tm-season-charts"></div><div id="tm-seasons"></div>
 <p class="note" id="tm-season-note"></p></section>
+<section id="tm-post-sec"><h2>Postseason</h2><div id="tm-post"></div></section>
 <section id="tm-h2h-sec"><h2>Head to head</h2><div id="tm-h2h"></div></section>
 <section id="tm-draft-sec"><h2>Draft history</h2><div id="tm-drafts"></div></section>
 <section id="tm-tx-sec" data-nosnap><h2>Transactions</h2><div class="tm-tx" id="tm-tx"></div></section>

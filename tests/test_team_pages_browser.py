@@ -147,6 +147,27 @@ class TeamPageBrowser(unittest.TestCase):
         self.assertEqual(row.locator("td").nth(1).inner_text(), "3-5 (0-2)")
         self.assertIn("postseason records in parentheses", p.locator("#tm-h2h-sec .note").inner_text())
 
+    def test_postseason_section_shows_latest_appearance_and_history(self):
+        pac = league_id("NCAA PAC 12")
+        p = self.open(f"reports/team.html?league={pac}&roster=7", 390)
+        section = p.locator("#tm-post-sec")
+        self.assertEqual(section.locator("h2").text_content(), "Postseason")
+        self.assertEqual(section.locator("details[open]").count(), 1)
+        years = section.locator("details").evaluate_all("items => items.map(item => Number(item.dataset.year))")
+        self.assertEqual(years, sorted(years, reverse=True))
+        self.assertEqual(section.locator("details[open]").get_attribute("data-year"), str(years[0]))
+        self.assertIn("National champion", section.locator("details[data-year='2025'] summary").inner_text())
+        self.assertGreater(section.locator("details[open] tbody tr.post").count(), 0)
+        self.assertEqual(section.locator("tbody tr.reg").count(), 0)
+        older = section.locator("details[data-year='2024']")
+        older.locator("summary").click()
+        self.assertIn("Tangerine Bowl", older.locator("tbody").inner_text())
+        p.evaluate("navigator.canShare = () => false")
+        with p.expect_download(timeout=60000) as pending:
+            section.locator("button.snap-btn").click()
+        self.assertIn("Postseason", pending.value.suggested_filename)
+        self.assertEqual(pending.value.path().read_bytes()[:8], bytes((137, 80, 78, 71, 13, 10, 26, 10)))
+
     def test_chart_hover_tooltip(self):
         p = self.open(f"reports/team.html?league={league_id('NCAA PAC 12')}&roster=7")
         hit = p.locator("#tm-season-charts .tm-chart .hit").first
