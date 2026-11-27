@@ -130,3 +130,5 @@ Year,Week,Key,Kind,At,Data
 2026,11,settled:w11-HBCU-3,settled,2026-11-24T20:22:33Z,"{""points"": [78.3, 82.2], ""winner"": ""HBCU:4"", ""flipped"": false}"
 2026,11,settled:w11-Ohio Valley-3,settled,2026-11-24T20:22:33Z,"{""points"": [120.8, 138.26], ""winner"": ""Ohio Valley:11"", ""flipped"": false}"
 2026,11,settled:w11-Big Ten-4,settled,2026-11-24T20:22:33Z,"{""points"": [120.68, 76.64], ""winner"": ""Big Ten:2"", ""flipped"": false}"
+2026,12,window:wed-2026-11-25,window,2026-11-27T14:19:38Z,
+2026,12,window:thu-2026-11-26,window,2026-11-27T14:19:38Z,
