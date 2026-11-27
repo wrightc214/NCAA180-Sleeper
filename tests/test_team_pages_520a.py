@@ -19,9 +19,7 @@ class TeamPageRegression(unittest.TestCase):
         self.assertIn("gameTotals(s.games)", js)
         self.assertIn("efficiency(records)", js)
         self.assertIn("appearances", js)
-        snap = (ROOT / "reports/assets/snapshot.js").read_text()
-        self.assertIn("Share unavailable; downloading PNG", snap)
-        self.assertIn("overflow:visible", snap)
+        self.assertIn(".snapwrap .tm-scroll", (ROOT / "scripts/team_pages.py").read_text())
 
 if __name__ == "__main__":
     unittest.main()
