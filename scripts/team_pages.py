@@ -1237,7 +1237,7 @@ def write_page(path=PAGE):
 </div>
 <section id="tm-picker" hidden><h2>Pick a team</h2><div class="tm-pick" id="tm-pick"></div></section>
 </div>
-<script src="assets/trophy.js"></script><script src="assets/team-link.js"></script><script src="assets/team.js"></script>
+<script src="assets/trophy.js"></script><script src="assets/team-link.js"></script><script src="assets/team.js?v=postseason-1"></script>
 """
     out = page_head(f"Team · {lcfg.brand()}", css) + body + "</body></html>\n"
     Path(path).parent.mkdir(parents=True, exist_ok=True)
