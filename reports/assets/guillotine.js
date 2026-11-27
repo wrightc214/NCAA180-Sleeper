@@ -120,7 +120,7 @@
     let rows='',drawn=false,hasBubble=false;
     L.items.forEach(x=>{
       if(!drawn&&!last&&L.proj!=null&&x.m&&x.proj<L.proj-G.EPS){rows+=`<div class="gl-cut" aria-hidden="true"><span>Projected cut · ${L.proj.toFixed(1)}</span></div>`;drawn=true;}
-      const bubble=x.odds!=null&&x.odds>=40&&x.odds<50;
+      const bubble=x.odds!=null&&x.odds<50;
       hasBubble ||= bubble;
       const m=x.m,cls=[m&&m.live?'live':'',isMine(x.t)?'mine':'',bubble?'bubble':''].filter(Boolean).join(' ');
       rows+=`<div class="gl-r ${cls}">${icon(x.t)}<span class="gl-t">${esc(ident(x.t).name)}<small>${esc(lname(lid(x.t)))} · ${esc(x.t.owner)}${m?.incomplete?' · stats incomplete':''}</small></span>
@@ -129,7 +129,7 @@
     });
     const state=L.allFinal?'Final · waiting for the weekly run to lock the cut':L.started?'Live':'Preview · Tuesday projections';
     const line=baseline?`<p class="gl-state">${esc(wkName(week))} · ${esc(state)}${L.missing?` · ${L.missing} team${L.missing===1?'':'s'} not loaded`:''}</p>`:'';
-    const legend=hasBubble?`<p class="gl-state">Shaded rows have a 40% to under 50% chance to ${last?'win':'survive'}.</p>`:'';
+    const legend=hasBubble?`<p class="gl-state">Shaded rows have less than a 50% chance to ${last?'win':'survive'}.</p>`:'';
     return `${head}${line}${legend}
       <div class="gl-table live-t"><div class="gl-h"><span></span><span>Team</span><span>Score</span><span>${L.started&&!L.allFinal?'Live proj':'Proj'}</span><span>Min left</span><span>${label}</span></div>${rows}</div>`;
   }
