@@ -421,14 +421,6 @@ def postseason_summary(games):
 
 
 # ---- Trophies, drafts, transactions ---------------------------------------------------------------
-def trophy_display_points():
-    """Weights for trophy wins. A playoff round win earns the next advancement bonus."""
-    points = lcfg.cfg()["managers"]["legend_points"]
-    event_keys = {"CCG": "conference", "NIT": "nit_champ", "Bowl": "bowl",
-                  "DwightFight": "dwight_fight", "Guillotine": "guillotine"}
-    round_keys = {"Sweet 16": "e8", "Second Round": "e8", "Elite 8": "f4", "Final Four": "final"}
-    return {**{event: points.get(key, 0) for event, key in event_keys.items()},
-            "PlayoffRound": {round_name: points.get(key, 0) for round_name, key in round_keys.items()}}
 
 
 def trophies(lids):
@@ -1259,7 +1251,7 @@ def write_page(path=PAGE):
 </div>
 <section id="tm-picker" hidden><h2>Pick a team</h2><div class="tm-pick" id="tm-pick"></div></section>
 </div>
-<script id="tm-trophy-points" type="application/json">{json.dumps(trophy_display_points())}</script>
+<script id="tm-trophy-points" type="application/json">{json.dumps(TR.trophy_display_points())}</script>
 <script src="assets/trophy.js"></script><script src="assets/team-link.js"></script><script src="assets/team.js"></script>
 """
     out = page_head(f"Team · {lcfg.brand()}", css) + body + "</body></html>\n"

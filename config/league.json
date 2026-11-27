@@ -919,6 +919,12 @@
     },
     "display": {
       "_note": "Display names only; history files keep the names used at the time (Chris, 2026-10-28).",
+      "awards_labels": {
+        "ccg": {"picker": "CCG", "heading": "Conference Championships"},
+        "championship": "Championship Week",
+        "year_end": "Year-End Awards",
+        "unknown_bowls": "Bowl Trophies · Week Unknown"
+      },
       "week_labels": {
         "regular": [
           "Week {n}",
