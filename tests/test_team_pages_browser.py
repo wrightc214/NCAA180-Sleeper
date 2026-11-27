@@ -151,7 +151,7 @@ class TeamPageBrowser(unittest.TestCase):
         pac = league_id("NCAA PAC 12")
         p = self.open(f"reports/team.html?league={pac}&roster=7", 390)
         section = p.locator("#tm-post-sec")
-        heading = section.get_by_role("button", name="Postseason")
+        heading = section.locator("h2[role=button]")
         self.assertEqual(heading.get_attribute("aria-expanded"), "true")
         heading.click()
         self.assertFalse(section.locator("#tm-post").is_visible())
