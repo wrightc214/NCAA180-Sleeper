@@ -1,25 +1,39 @@
+"""Regression coverage for the 5.20a team generator and generated page."""
+import sys
+import tempfile
 import unittest
 from pathlib import Path
 
+import pandas as pd
+
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
+
+import team_pages as T
+
 
 class TeamPageRegression(unittest.TestCase):
-    def test_chart_patterns_and_markers(self):
-        js = (ROOT / "reports/assets/team.js").read_text()
-        css = (ROOT / "scripts/team_pages.py").read_text()
-        for cls in ("s1", "s2", "s3", "s4"):
-            self.assertIn("series-marker." + cls, css)
-            self.assertIn("series-line." + cls, css)
-        self.assertIn("hit.ownerSVGElement", js)
-        self.assertIn("League average", js)
+    def test_efficiency_excludes_missing_official_pf_and_keeps_real_zero(self):
+        def game(team, points):
+            return dict(Y=2026, Key=team, Outcome="Win", PointsFor="95",
+                        PointsAgainst="90", PointsOfficial=points, PointsAgainstOfficial="90")
 
-    def test_totals_and_export(self):
-        js = (ROOT / "reports/assets/team.js").read_text()
-        self.assertIn("<tfoot>", js)
-        self.assertIn("gameTotals(s.games)", js)
-        self.assertIn("efficiency(records)", js)
-        self.assertIn("appearances", js)
-        self.assertIn(".snapwrap .tm-scroll", (ROOT / "scripts/team_pages.py").read_text())
+        games = pd.DataFrame([
+            game("zero", "0"), game("full", "100"),
+            game("partial", "80"), game("partial", ""),
+            game("missing_max", "100"),
+        ])
+        records = T.season_records(games, 2026)
+        maxima = {(2026, "zero"): 25, (2026, "full"): 100, (2026, "partial"): 150}
+        self.assertEqual(T.annual_efficiencies(records, maxima), {2026: 50.0})
+        self.assertEqual(T.annual_efficiencies(records, {}), {})
+
+    def test_committed_template_matches_generator(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            generated = Path(tmp) / "team.html"
+            T.write_page(generated)
+            self.assertEqual(generated.read_bytes(), (ROOT / "reports/team.html").read_bytes())
+
 
 if __name__ == "__main__":
     unittest.main()

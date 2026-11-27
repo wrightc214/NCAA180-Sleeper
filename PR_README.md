@@ -1,9 +1,11 @@
-# 5.20a Team page changes
+# 5.20a Team page review
 
-Owner approves and merges; reviewer runs tests and regenerates artifacts. Keep hidden-dev.
+The Team page remains hidden-dev. Shared Save Image changes are in #152. The owner handles merging.
 
-Changed team_pages.py and team.js for annual equal-team efficiency, complete Max PF coverage, patterned charts, totals, manager appearances and unknown/orphan distinction. Shared exporter changes moved to a separate PR. Team-specific snapshot table CSS remains here. Color customization excluded.
+The generated HTML is committed and tested against the template. Run `python scripts/team_pages.py` to refresh `data/teams` before approving or publishing. The generated JSON adds the annual benchmark, official PF coverage and manager appearances, and recalculates Max PF coverage. Efficiency uses completed regular-season result rows and includes genuine zero PF. A team with incomplete official PF or a missing or unusable Max PF denominator is excluded. Existing standings retain their PF fields.
 
-Reviewer: run existing tests, python -m unittest discover -s tests -p test_team_pages_520a.py, and node --check on changed JS. Regenerate team artifacts. Verify annual benchmark against official PF and Max PF, missing/zero denominators, ties, historical managers, orphan detection, appearances, hidden H2H rows and placement-only games. Check all footers against underlying data. Test charts, marker-only polls, crosshair, legends and header controls at 320/390/1280px in light/dark and existing color modes. Save every enabled section/card on desktop and mobile; inspect PNG, logos, timestamps, colors, table clipping and shared exporter on other pages. Verify hidden-dev remains.
+Charts and game-table snapshots use the existing section exporter. Expand the desired season and chart table before saving. Transactions retain their existing export exclusion. Weekly poll rank tables have no total because ranks cannot be added. Draft and roster lists are not aggregate statistics. The timestamp records the page capture session and does not represent the source refresh time.
 
-Limitations: tests not run as instructed. Static regression checks do not replace behavioral tests. Export root cause not confirmed in browser; asynchronous share activation and tooltip-only errors are suspected. Capture timestamp is not source refresh time. Verify roster OwnerID schema and official PF missing-data handling. Existing data-nosnap exclusions retained. Generated artifacts not committed. No totals for individual poll charts or non-tabular lists.
+Run `python -m unittest discover -s tests -p 'test_team_pages*.py'` from the root. Use `RUN_SCOREBOARD_BROWSER_TESTS=1` for the browser suite. Verify the same annual benchmark across teams, aggregate rates, hidden H2H rows, placement rows, and orphan versus missing historical ownership. Verify chart patterns and footer readability on light and dark themes at 320, 390 and 1280 px. Check that Save Image and collapse act independently.
+
+Verify actual PNGs with #152 applied locally. The reported no-action failure remains unconfirmed on the owner's device. This branch surfaces Team exporter initialization errors and exposes the season section to the shared exporter. Inspect chart patterns, table totals, colors, logos, labels and table clipping in the saved images.

@@ -42,7 +42,7 @@
   const sum = (rows,k) => rows.reduce((a,r)=>a+(Number(r[k])||0),0);
   const combined = rows => Object.fromEntries(['w','l','t','pf','pa','pw','pl','titles','xw'].map(k=>[k,sum(rows,k)]));
   const footer = cells => '<tfoot><tr>'+cells.map(v=>'<td>'+v+'</td>').join('')+'</tr></tfoot>';
-  const validEff = r => Number.isFinite(r.pf_official) && Number.isFinite(r.max) && r.max>0;
+  const validEff = r => r.official_pf_complete !== false && Number.isFinite(r.pf_official) && Number.isFinite(r.max) && r.max>0;
   const efficiency = rows => {const a=rows.filter(validEff);return a.length?100*sum(a,'pf_official')/sum(a,'max'):null;};
   const mean = a => {a=a.filter(Number.isFinite);return a.length?a.reduce((x,y)=>x+y,0)/a.length:null;};
   function lineChart({x, series, invert = false, yMin, yMax, fmtY = fmt, title, height = 220, note = '', totals = null, width = (window.innerWidth < 560 ? 360 : 520)}) {
@@ -298,7 +298,7 @@
       ap.slice().reverse().map(s => { const r = s.record, w = r.w + r.t / 2, apg = r.ap[0] + r.ap[1] + r.ap[2];
         return `<tr><td>${s.year}</td><td class="n">${rec(r)}</td><td class="n">${r.ap[0]}-${r.ap[1]}${r.ap[2] ? '-' + r.ap[2] : ''} <small>${apg ? ((r.ap[0] + r.ap[2] / 2) / apg).toFixed(3).replace(/^0/, '') : ''}</small></td>` +
           `<td class="n">${r.med[0]}-${r.med[1]}${r.med[2] ? '-' + r.med[2] : ''}</td><td class="n">${(+r.xw).toFixed(1)}</td><td class="n">${(w - r.xw >= 0 ? '+' : '') + (w - r.xw).toFixed(1)}</td>` +
-          `<td class="n">${r.max ? (r.pf_official / r.max * 100).toFixed(1) + '%' : '—'}</td></tr>`; }).join('') + '</tbody>'+footer(['Total',rec(ac),trRec(apTotal)+' '+(apPct?((apTotal[0]+apTotal[2]/2)/apPct).toFixed(3):'—'),trRec(medTotal),ac.xw.toFixed(1),(ac.w+ac.t/2-ac.xw).toFixed(1),efficiency(ar)==null?'—':efficiency(ar).toFixed(1)+'%'])+'</table></div>' : '';
+          `<td class="n">${validEff(r) ? efficiency([r]).toFixed(1) + '%' : '—'}</td></tr>`; }).join('') + '</tbody>'+footer(['Total',rec(ac),trRec(apTotal)+' '+(apPct?((apTotal[0]+apTotal[2]/2)/apPct).toFixed(3):'—'),trRec(medTotal),ac.xw.toFixed(1),(ac.w+ac.t/2-ac.xw).toFixed(1),efficiency(ar)==null?'—':efficiency(ar).toFixed(1)+'%'])+'</table></div>' : '';
     return `<div class="tm-charts">${pf}${wins}${eff}</div>${ptable}${aptable}`;
   }
 
@@ -322,7 +322,7 @@
 
   function gameTotals(games) {
     return ['reg','post'].map(kind=>{
-      const rows=games.filter(g=>g.kind===kind&&g.res&&!g.place);
+      const rows=games.filter(g=>g.kind===kind&&g.res&&!('place' in g));
       if(!rows.length)return '';
       const r={w:rows.filter(g=>g.res==='W').length,l:rows.filter(g=>g.res==='L').length,t:rows.filter(g=>g.res==='T').length};
       return '<tr><td colspan="2">'+(kind==='reg'?'Regular season':'Postseason')+' total</td><td class="n">'+pts(sum(rows,'pf'))+'–'+pts(sum(rows,'pa'))+'</td><td>'+rec(r)+'</td></tr>';
@@ -399,11 +399,28 @@
   }
 
   function loadScript(src) {
-    return new Promise(res => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = () => { console.error('Unable to load '+src); res(); }; document.body.append(s); });
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = resolve;
+      script.onerror = () => reject(new Error('Unable to load ' + src));
+      document.body.append(script);
+    });
   }
   async function finish() {
-    await loadScript('assets/snapshot.js');
-    await loadScript('assets/sections.js');
+    try {
+      await loadScript('assets/snapshot.js');
+      if (!window.NCAASnap) throw new Error('Image export did not initialize');
+    } catch (error) {
+      $('tm-error').textContent = 'Save Image is unavailable. ' + error.message;
+      $('tm-error').hidden = false;
+    }
+    try {
+      await loadScript('assets/sections.js');
+    } catch (error) {
+      $('tm-error').textContent = 'Section controls are unavailable. ' + error.message;
+      $('tm-error').hidden = false;
+    }
     document.body.dataset.ready = '1';
   }
 
@@ -509,7 +526,10 @@
     if (tok) obs.observe(tok, {childList: true, characterData: true, subtree: true});
     obs.observe(document.documentElement, {attributes: true, attributeFilter: ['data-theme']});
     document.body.dataset.snapTag = d.name;
-    if (!d.defunct) { document.body.dataset.snapState = 'snapshot'; document.body.dataset.snapTime = new Date().toISOString(); }
+    if (!d.defunct) {
+      document.body.dataset.snapState = 'snapshot';
+      document.body.dataset.snapTime = new Date().toISOString();
+    }
     await finish();
   }
   main();
