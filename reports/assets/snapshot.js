@@ -76,7 +76,7 @@
       `<meta charset="utf-8"><meta name="viewport" content="width=${width}"><base href="${esc(location.href)}">${css}` +
       `<script src="${esc(LIB)}"><\/script><style>body{margin:0;background:var(--bg,#fff)}.snapwrap{padding:12px 12px 6px;max-width:none}` +
       `.snap-foot{margin:10px 0 0;font:600 11px var(--sans,sans-serif);color:var(--mute,#667);text-align:center}` +
-      `.snap-btn,.fold-bar{display:none!important}.snapwrap .tm-scroll,.snapwrap .tm-tbl{overflow:visible;width:auto;min-width:0}` +
+      `.snap-btn,.fold-bar{display:none!important}` +
       `.snap-lab{margin:0 0 8px;padding:6px 9px;border-radius:6px;font:600 11px var(--sans,sans-serif);letter-spacing:.02em;` +
       `background:#fff4d6;color:#5c4400;border:1px solid #e0b84a}.snap-lab b{font-weight:800}` +
       `.snap-lab.live b{color:#b42318}.snap-lab.wi{background:#4a1d96;color:#fff;border-color:#4a1d96;font-size:12px}</style></head>` +
@@ -108,7 +108,8 @@
     if (!blob || !blob.size) throw new Error('Image is too large; narrow the view or save a smaller section');
     const file = new File([blob], `${name || 'ncaa180'}.png`.replace(/[^\w .-]+/g, '').replace(/\s+/g, '-'), {type: 'image/png'});
     if (navigator.canShare && navigator.canShare({files: [file]})) {
-      try { await navigator.share({files: [file], title: title || name}); return; } catch (e) { if (e?.name === 'AbortError') return; console.warn('Share unavailable; downloading PNG', e); }
+      try { await navigator.share({files: [file], title: title || name}); } catch (e) { if (e?.name !== 'AbortError') throw e; }
+      return;
     }
     const a = document.createElement('a');
     a.href = URL.createObjectURL(file); a.download = file.name; document.body.append(a); a.click();
