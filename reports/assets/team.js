@@ -249,11 +249,18 @@
   async function trophies(d) {
     if (!d.trophies.length) return `<p class="tm-empty">${esc(d.name)} hasn't won a trophy yet.</p>`;
     try { await window.NCAATrophy.load(BASE); } catch (e) { console.warn('trophy config', e); }
-    return '<div class="tm-trophies">' + d.trophies.map(t => {
+    const points = JSON.parse($('tm-trophy-points')?.textContent || '{}');
+    const impact = t => (t.EventType === 'PlayoffRound' ? points.PlayoffRound?.[t.Round] : points[t.EventType]) || 0;
+    const titlePriority = t => Number(t.EventType === 'NationalTitle');
+    const ranked = [...d.trophies].sort((a, b) =>
+      titlePriority(b) - titlePriority(a) || impact(b) - impact(a) ||
+      Number(b.Season) - Number(a.Season) || a.Event.localeCompare(b.Event));
+    return '<div class="tm-trophies">' + ranked.map(t => {
       const title = `${t.Season} ${t.Event} · ${t.Team}`;
       let fig = '';
       try { fig = window.NCAATrophy.html(t, null, null, null, {width: 200}); } catch (e) { fig = `<p>${esc(t.Event)}</p>`; }
-      return `<article data-snap-card="${esc(title)}"><header>${esc(t.Season)} · ${esc(t.Event)}</header>${fig}</article>`;
+      const featured = t.EventType === 'NationalTitle' ? ' tm-trophy-featured' : '';
+      return `<article class="tm-trophy-card${featured}" data-snap-card="${esc(title)}">${fig}<header>${esc(t.Season)} · ${esc(t.Event)}</header></article>`;
     }).join('') + '</div>';
   }
 
