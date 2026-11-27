@@ -5,7 +5,7 @@ Sources (no year hardcoded):
   data/Teams.csv               current names (used for any year not in the historic file)
   data/Colors - Teams.csv      colors keyed by school name (current AND former names)
 
-Display rules (Chris, 2026-10-07):
+Display rules (CW, 2026-10-07):
   - Snapshot views (one season: a bracket, bowl results, a past poll) and record-book entries
     (one moment: highest score, game of the year): that season's name AND that season's colors.
   - Multi-year views (team page, all-time tables): current name and current colors;
@@ -13,7 +13,7 @@ Display rules (Chris, 2026-10-07):
   - Colors for a former name with no palette row fall back to the slot's current colors;
     retired slots with no current team (e.g. 2019 American, 2020 Southland) use `default`.
 
-No duplicate names (Chris, 2026-10-08): a school name may appear on only one slot per season.
+No duplicate names (CW, 2026-10-08): a school name may appear on only one slot per season.
 A rename that would duplicate another slot's name is rejected and the slot keeps its previous name.
 
 Fixing a name: edit one row in TeamNames_Historic.csv (or Teams.csv for the current season).
@@ -103,7 +103,7 @@ def former_names(league, roster_id):
 
 
 def short_name(team):
-    """Approved short name for a team, '' if none (Chris, 2026-11-13). Teams.csv has a ShortName
+    """Approved short name for a team, '' if none (CW, 2026-11-13). Teams.csv has a ShortName
     column that starts empty; graphics use the full name and fall back to the short name only when
     space is tight AND an entry exists. data/TeamShortNames_Draft.csv is the unreviewed draft list
     (off-season review) -- not used by any page."""

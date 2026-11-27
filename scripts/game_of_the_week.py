@@ -1,5 +1,5 @@
 """
-game_of_the_week.py -- pick the Game of the Week (Chris, 2026-11-04).
+game_of_the_week.py -- pick the Game of the Week (CW, 2026-11-04).
 
 Every game of the week is scored:
   quality    the WORSE team's poll rank (so 1 v 90 doesn't score as a #1 game)
@@ -9,7 +9,7 @@ Every game of the week is scored:
              grows through the season
   rivalry    small bonus (data/rivalries, certainty 4+), only between good teams
   score = .55 * quality*(.5+.5*closeness) + .30 * stakes*gate + .15 * rivalry*gate
-Premier rule (Chris): if any game has BOTH teams in the poll's top premier_max_rank (15), the pick
+Premier rule (CW): if any game has BOTH teams in the poll's top premier_max_rank (15), the pick
 comes from those games -- skipping a top matchup would cost the feature its credibility.
 A manual pick in data/scoreboard/<season>/game-of-the-week.json (a two-name list) always wins.
 

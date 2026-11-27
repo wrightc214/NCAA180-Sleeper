@@ -1,4 +1,4 @@
-"""Restate Postseason_Historic scores on standard scoring (Chris, 2026-10-08).
+"""Restate Postseason_Historic scores on standard scoring (CW, 2026-10-08).
 ScoreA/ScoreB = standard points; OfficialScoreA/OfficialScoreB = Sleeper's official points,
 filled only where they differ. Winners are never changed (results stand as played); a
 winner that would differ is reported. Needs data/ScoresStandard_Historic.csv (standard_scores.py).

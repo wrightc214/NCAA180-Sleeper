@@ -13,7 +13,7 @@
   $('game').hidden=true;$('overview-help').hidden=false;
   const ccgW=()=>cfg.schedule.ccg_week;
   const wkName=w=>ScoreboardCore.weekLabel(cfg,w);
-  // Postseason weeks 13+ (Chris, 2026-11-04): games come from the frozen baseline (published pairings), cross-league.
+  // Postseason weeks 13+ (CW, 2026-11-04): games come from the frozen baseline (published pairings), cross-league.
   const isPost=()=>baseline?.event==='postseason';
   const PR=r=>(cfg.postseason?.playoff?.rounds||['First Round','Sweet 16','Elite 8','Final Four','National Championship'])[Number(r)-1];
   const SECT=[['Playoff','Playoff'],['Bowl','Bowls'],['NIT','NIT']];
@@ -63,7 +63,7 @@
   function oddsRow(id,a,b){return baseline.odds.find(o=>String(o.LeagueID)===String(id)&&[String(o.RosterID),String(o.OpponentRosterID)].sort().join(',')===[String(a),String(b)].sort().join(','));}
   function side(o,rid){if(!o)return {rec:'',rank:''};const mine=String(o.RosterID)===String(rid);return {rec:mine?o.Rec:o.OppRec,rank:mine?o.Rank:o.OppRank};}
   const kickTxt=t=>new Date(t).toLocaleString('en-US',{timeZone:'America/New_York',weekday:'short',hour:'numeric',minute:'2-digit'})+' ET';
-  // Team tiles: a dark tile color gets the dark-background logo (alt, else glow file; Chris, 2026-11-12; same rule as site_common.is_dark)
+  // Team tiles: a dark tile color gets the dark-background logo (alt, else glow file; CW, 2026-11-12; same rule as site_common.is_dark)
   const darkBg=h=>{const m=/^#?([0-9a-f]{6})$/i.exec(String(h||''));if(!m)return false;const c=[0,2,4].map(i=>parseInt(m[1].slice(i,i+2),16)/255).map(v=>v<=.03928?v/12.92:((v+.055)/1.055)**2.4);return .2126*c[0]+.7152*c[1]+.0722*c[2]<.18;};
   // Rank ordering is based on the smallest published poll rank; preserve original order for ties/unranked.
   const validRank=x=>{const n=Number(x);return x!==''&&x!=null&&Number.isInteger(n)&&n>0?n:Infinity;};
@@ -86,18 +86,18 @@
   };
   const winStrength=p=>p==null||!Number.isFinite(Number(p))?0:Math.min(1,Math.abs(Number(p)-50)/50);
   const chanceStyle=p=>p==null?'':` style="--win-mix:${(winStrength(p)*100).toFixed(1)}%;--win-pre-mix:${(winStrength(p)*60).toFixed(1)}%;--win-final-mix:${(winStrength(p)*30).toFixed(1)}%"`;
-  // One row: logo | team (+ record) | Score | Proj | Win %. Same columns in every state (Chris, 2026-10-30).
+  // One row: logo | team (+ record) | Score | Proj | Win %. Same columns in every state (CW, 2026-10-30).
   function row(r,model,proj,probability,s,winner,info){
     const t=index.leagues[r.leagueId].teams[String(r.roster_id)]||{name:`Roster ${r.roster_id}`};
     const changed=Math.abs(model.actual-model.official)>.011;
     const score=model.played||s.final?`${model.actual.toFixed(2)}${changed?'†':''}`:'–';
     return `<div class="score-row r3${s.final?' final-odds':s.live?' live-odds':' pre-odds'}${probability!=null&&probability>50?' favorite':''}${probability!=null&&probability<50?' underdog':''}${s.final&&winner?' winner':''}"><span class="team-icon" style="background:${esc(t.primary)}">${t.logo?(()=>{const dk=darkBg(t.primary);return `<img src="${esc(t.logo_forced||dk&&t.logo_dark||t.logo)}" alt="" onerror="this.hidden=true">`;})():''}</span><span class="school">${info.seed?`<b class="rk seed">${esc(info.seed)}</b> `:''}${info.rank?`<b class="rk">#${esc(info.rank)}</b> `:''}${esc(t.name)}${info.tag?`<b class="ldtag ${info.tag[0]}">${esc(info.tag[1])}</b>`:''}${info.rec?`<small class="rec">${esc(info.rec)}</small>`:''}</span><span class="score${model.played||s.final?'':' dash'}" title="${changed?`Sleeper: ${model.official.toFixed(2)}`:'Standard score'}">${score}</span><span class="proj">${proj.toFixed(1)}</span><span class="chance"${chanceStyle(probability)}>${esc(pct(probability))}</span></div>`;
   }
-  // Game of the Week (Chris, 2026-11-04): one game per regular-season week, picked in data/scoreboard/<season>/game-of-the-week.json
+  // Game of the Week (CW, 2026-11-04): one game per regular-season week, picked in data/scoreboard/<season>/game-of-the-week.json
   // Blue badge in the regular season, gold ("GOTW Postseason") from CCG week on.
   const badge=()=>week>=(cfg.schedule?.ccg_week||12)?'../assets/logos/badges/GOTW%20Postseason.png':'../assets/logos/badges/GOTW.png';
   // Entry: ["A","B"] (manual) or {teams:[A,B],reason,source:"auto"} (scripts/game_of_the_week.py)
-  // National Championship: the natty logo, not the GotW badge (Chris, 2026-11-04).
+  // National Championship: the natty logo, not the GotW badge (CW, 2026-11-04).
   const nattyLogo='../assets/logos/Playoffs/National%20Championship.png';
   const featBadge=g=>g?.post?nattyLogo:badge(),featAlt=g=>g?.post?'National Championship':'Game of the Week';
   const gotwPick=()=>{const p=gotw?.[String(week)];return Array.isArray(p)?{teams:p}:p&&Array.isArray(p.teams)?p:null;};
@@ -129,7 +129,7 @@
     return `<a class="mini-match" href="${esc(href)}" aria-label="${esc(league.teams[String(match[order[0]].roster_id)]?.name)} versus ${esc(league.teams[String(match[order[1]].roster_id)]?.name)} — player details">${pt}<div class="hdr3"><span>${isGotw(g)?`<img class="gotw-mini" src="${featBadge(g)}" alt="${featAlt(g)}" title="${featAlt(g)}">`:''}</span><span class="match-status${s.active?' is-live':''}">${esc(status)}</span><span>Score</span><span>${s.live?'Live proj':'Proj'}</span><span>${s.live?'Live %':'Pre %'}</span></div>${order.map(i=>row(match[i],s.models[i],s.proj[i],p===null?null:i===0?p:100-p,s,s.models[i].actual>s.models[1-i].actual,g.post?pside(g,i):side(o,match[i].roster_id))).join('')}${pre}${ew}</a>`;
   }
   function pside(g,i){const r=g.match[i],x=g.post.sides.find(y=>String(y.RosterID)===String(r.roster_id)&&String(y.LeagueID)===String(r.leagueId))||{};return {rec:x.Rec,seed:g.post.round==='Playoff'?x.Seed:''};}
-  // Lucky dog race (Chris, 2026-11-06): realigned NIT group stages advance every group leader plus the
+  // Lucky dog race (CW, 2026-11-06): realigned NIT group stages advance every group leader plus the
   // best-scoring non-leaders ("lucky dogs"). Live order = current score once games start, projection before.
   const raceTag=new Map();
   function luckyDogs(groups){
@@ -213,7 +213,7 @@
     return {games:list,allFinal,warning};
   }
   const lname=id=>index.leagues[id].label||index.leagues[id].name;
-  // Follows first (Chris, 2026-11-14; todo-games-follows.md). The notification picks saved on this device
+  // Follows first (CW, 2026-11-14; todo-games-follows.md). The notification picks saved on this device
   // (app.html -> localStorage "ncaa180.push": {follows:[{kind,key}]}) decide what comes first:
   // followed teams, followed conferences, followed events, then featured games, then everything else.
   // Keys: team "ncaa180|<conf>:<roster>", league "ncaa180|<conf>", event "ncaa180|<event>".
@@ -236,7 +236,7 @@
   function liveSum(gs){const live=gs.filter(g=>g.s.active).length,fin=gs.filter(g=>g.s.final).length;return [nG(gs.length),live&&`${live} live`,fin&&`${fin} final`].filter(Boolean).join(' · ');}
   function fsec(id,title,small,body){const f=folded();return `<details class="sec-d fsec" data-id="${esc(id)}"${f.has(id)?'':' open'}><summary><h3 class="sec">${title}${small?` <small>${small}</small>`:''}</h3></summary>${body}</details>`;}
   const editLink='<a class="fol-edit" href="app.html">Edit follows</a>';
-  // Followed teams: the only follow section with an empty-state message (Chris, 2026-11-14).
+  // Followed teams: the only follow section with an empty-state message (CW, 2026-11-14).
   function followTeams(F,all,tag){
     if(F.none)return F.app?`<div class="fol-banner">Follow your teams to see them here. <a href="app.html">Choose teams</a></div>`:'';
     // My team's game has its own full board above, so it is left out of these cards; if it was the only
@@ -248,7 +248,7 @@
     const body=gs.length?`<div class="feat">${gs.map(g=>`<section class="feat-card">${tag?tag(g):''}${card(g)}</section>`).join('')}</div>`:`<p class="conference-note">No followed teams playing this week. ${editLink}</p>`;
     return fsec('fol-teams','Your teams',`${gs.length?nG(gs.length)+' · ':''}${editLink}`,body);
   }
-  // My team (Chris, 2026-11-14): one full game board, the game page itself in an iframe. It lives in
+  // My team (CW, 2026-11-14): one full game board, the game page itself in an iframe. It lives in
   // #my-board outside #board, because #board is re-rendered on every refresh and moving or rewriting
   // an iframe reloads it. The embedded page refreshes on its own timer.
   function myBoard(F,all,use){
@@ -269,7 +269,7 @@
     if(fr.getAttribute('src')!==src)fr.setAttribute('src',src);
     box.hidden=false;
   }
-  // Game of the Week gets top billing, above My team (Chris, 2026-11-14): its own slot before #my-board
+  // Game of the Week gets top billing, above My team (CW, 2026-11-14): its own slot before #my-board
   // and #board. Plain HTML, so it is simply rewritten on each paint.
   function topSlot(html){
     let el=$('gotw-slot');
@@ -284,7 +284,7 @@
   function wireToggle(){$('fol-first')?.addEventListener('change',e=>{try{localStorage.setItem('sb-follows-first',e.target.checked?'1':'0');}catch(x){}paint(curIds);});}
   let curIds=[];
   // Folded conferences are a per-viewer convenience (this browser only).
-  // Collapse / expand all sections (Chris, 2026-11-06). One button; label follows the current state.
+  // Collapse / expand all sections (CW, 2026-11-06). One button; label follows the current state.
   const FOLD_SEL='details.conference,details.sec-d';
   function foldBar(){return `<div class="fold-bar"><button type="button" id="fold-all" class="fold-all"></button></div>`;}
   function wireFold(){

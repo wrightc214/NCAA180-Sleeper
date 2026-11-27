@@ -126,7 +126,7 @@ def b_median(r, extra):
 
 @bot("margin")
 def b_margin(r, extra):
-    """Hammer (margin only, Chris 2026-10-08): per game, win = + margin percentile among that week's
+    """Hammer (margin only, CW 2026-10-08): per game, win = + margin percentile among that week's
     winning margins (biggest blowout +1, median win +0.5, a squeaker ~0); loss = - the same among
     that week's losing margins; tie = 0. Season value = mean. Margins on game-time (official) scores so they
     agree with the result that stands."""
@@ -146,7 +146,7 @@ def b_margin(r, extra):
     return g["S"] + g["PF"] * 1e-9
 
 
-SOR_TOP = 25  # Strength of Record benchmark: top N teams by season all-play (Chris 2026-10-13)
+SOR_TOP = 25  # Strength of Record benchmark: top N teams by season all-play (CW 2026-10-13)
 
 
 def sor_table(r, top=SOR_TOP):
@@ -292,7 +292,7 @@ def load_prior(year):
     return {}
 
 
-# ---------------------------------------------------------------- missing data (Chris 2026-10-08)
+# ---------------------------------------------------------------- missing data (CW 2026-10-08)
 def bridge(by_week, week):
     """Fill a weekly input that is missing for `week` (or for some teams that week).
     by_week = {week: {key: value}}. Per team: actual if present; else straight line between

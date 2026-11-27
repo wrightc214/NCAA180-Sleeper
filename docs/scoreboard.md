@@ -93,7 +93,7 @@ in those tests. Enable browser checks with `RUN_SCOREBOARD_BROWSER_TESTS=1` and
 optionally `SCOREBOARD_BROWSER=/path/to/chromium`. No GitHub workflow or Discord
 post is needed for local checks.
 
-Merge/publishing requires Chris's approval. Rollback: revert the scoreboard commit;
+Merge/publishing requires CW's approval. Rollback: revert the scoreboard commit;
 existing data/poll/standings behavior is unchanged. Public Pages will serve the new
 page after the branch is merged and deployed; a branch URL is source, not a live page.
 

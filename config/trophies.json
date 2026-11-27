@@ -29,7 +29,7 @@
     }
   },
   "events": {
-    "_note": "EventType -> art, engraving and fallback logo. Placeholders: {year} {conference} {event} (the bowl, aliased by bowl_art for art and bowl_labels for text) {round} {team}. art/logo are repo paths. line2 = plaque line 2; alt = the trophy's alt text. generic = the event's stand-in art when its own file doesn't exist (PLACEHOLDER art drawn 2026-11-22; offseason todo: Chris's real generic design). Order: own art -> generic -> fallback block (logo + the same two lines), never a broken image.",
+    "_note": "EventType -> art, engraving and fallback logo. Placeholders: {year} {conference} {event} (the bowl, aliased by bowl_art for art and bowl_labels for text) {round} {team}. art/logo are repo paths. line2 = plaque line 2; alt = the trophy's alt text. generic = the event's stand-in art when its own file doesn't exist (PLACEHOLDER art drawn 2026-11-22; offseason todo: CW's real generic design). Order: own art -> generic -> fallback block (logo + the same two lines), never a broken image.",
     "CCG": {
       "_note": "Conference championship game winner. {conference} = league short name (data/LeagueShortNames.csv).",
       "art": "assets/trophies/conferences/{conference}.png",
@@ -98,7 +98,7 @@
     "Chick-fil-A Bowl": "Peach Bowl"
   },
   "bowl_labels": {
-    "_note": "Bowl name to ENGRAVE when the season's name was a sponsor's (no-sponsor rule). Everything else is engraved as played. Open question for Chris: Belk, Duke's Mayonnaise, Outback, EA Sports, FedEx, Geico, Ice, PlayStation, Xbox (see PR_README).",
+    "_note": "Bowl name to ENGRAVE when the season's name was a sponsor's (no-sponsor rule). Everything else is engraved as played. Open question for CW: Belk, Duke's Mayonnaise, Outback, EA Sports, FedEx, Geico, Ice, PlayStation, Xbox (see PR_README).",
     "Capital One Bowl": "Citrus Bowl",
     "TaxSlayer Bowl": "Gator Bowl",
     "Chick-fil-A Bowl": "Peach Bowl"

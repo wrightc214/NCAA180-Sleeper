@@ -91,7 +91,7 @@ def post_games(year, wk, path="data/PostseasonProjections_Historic.csv"):
                                "Rec": r["Rec"], "Proj": float(r["Proj"]), "WinPct": float(r["WinPct"])})
     for g in games.values():
         g["sides"].sort(key=lambda x: (int(x["Seed"]) if x["Seed"].isdigit() else 99, -x["WinPct"]))
-    order = {"Playoff": 0, "Bowl": 1, "NIT": 2}  # Chris, 2026-11-04: Playoff, Bowls, NIT
+    order = {"Playoff": 0, "Bowl": 1, "NIT": 2}  # CW, 2026-11-04: Playoff, Bowls, NIT
     return sorted(games.values(), key=lambda g: (order.get(g["round"], 9), g["id"]))
 
 
@@ -147,7 +147,7 @@ def build(offline=False):
         raise ValueError("Scoring snapshot does not cover every league")
     standard = standard_settings(scoring)
     colors = {r["Team"]: r for r in rows("data/Colors - Teams.csv")}
-    def logo_fields(team):  # dark-background logo: alt, else glow file (Chris, 2026-11-12; site_common.logo_info)
+    def logo_fields(team):  # dark-background logo: alt, else glow file (CW, 2026-11-12; site_common.logo_info)
         i = logo_info(team)  # logo_forced: logos.force file for team-colour blocks, wins over logo_dark (task 5.14)
         return {"logo": i["src"] if i else "", "logo_dark": i["dark"] if i else "",
                 "logo_forced": i["forced"] if i else ""}

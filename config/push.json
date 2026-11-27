@@ -2,7 +2,7 @@
   "_note": "Push notifications (todo-pwa.md). Read by the site (reports/assets/app.js, via reports/data/push.json) and by scripts/notify.py. Public values only: the private VAPID key and the admin token are repo/Worker secrets, never committed.",
   "app_name": "Dynasty Data",
   "group": "ncaa180",
-  "_group_note": "Super-league id (Chris, 2026-10-30: keep the door open to more super leagues in one app). Every follow stored in the push store is prefixed '<group>|' (e.g. 'ncaa180|Big Sky:6'); this pipeline only reads its own group's follows.",
+  "_group_note": "Super-league id (CW, 2026-10-30: keep the door open to more super leagues in one app). Every follow stored in the push store is prefixed '<group>|' (e.g. 'ncaa180|Big Sky:6'); this pipeline only reads its own group's follows.",
   "worker_url": "https://ncaa180-push.wrightc214.workers.dev",
   "_worker_url_note": "Set after the Cloudflare Worker is deployed, e.g. https://ncaa180-push.<account>.workers.dev (no trailing slash). Empty = push UI shows 'coming soon' and the sender skips push.",
   "vapid_public_key": "BAyU4KWODLn8qoh-FykglSjtfa8oKqUeKaOnUXiIBY6xxMZohfWn_ASfXDNYBbgmybXAThOk-BrivTU-lH-mojE",
@@ -63,7 +63,7 @@
         "nit_results",
         "champions"
       ],
-      "_auto_on_note": "Chris, 2026-11-14: a phone that already had every event above on gets this one too. Until the phone saves its picks again (app.html adds a 'seen:guillotine' marker), the sender treats it as on; after that, its own tick decides."
+      "_auto_on_note": "CW, 2026-11-14: a phone that already had every event above on gets this one too. Until the phone saves its picks again (app.html adds a 'seen:guillotine' marker), the sender treats it as on; after that, its own tick decides."
     }
   ],
   "game_frequencies": [
@@ -85,7 +85,7 @@
       "label": "Off (postseason results only)"
     }
   ],
-  "_game_frequencies_note": "Game notifications for followed teams (scripts/game_notify.py). One setting per phone, stored as an event follow 'freq:<key>' (Chris, 2026-11-03; a per-team override may come later).",
+  "_game_frequencies_note": "Game notifications for followed teams (scripts/game_notify.py). One setting per phone, stored as an event follow 'freq:<key>' (CW, 2026-11-03; a per-team override may come later).",
   "_events_note": "Only events the sender produces today are listed. Polls and weekly awards get added here when they are wired (todo-pwa.md MVP).",
   "prestige": [
     "Playoff",
@@ -94,9 +94,9 @@
     "Guillotine",
     "CCG"
   ],
-  "_prestige_note": "Order of games inside a push after the device's own followed teams (Chris, 2026-10-30): playoff, bowl, NIT. CCG only appears in CCG week, so its place is moot.",
+  "_prestige_note": "Order of games inside a push after the device's own followed teams (CW, 2026-10-30): playoff, bowl, NIT. CCG only appears in CCG week, so its place is moot.",
   "champions_to_team_followers": true,
-  "_champions_note": "National champion + Stagg Bowl winner go to every device that follows at least one team, whatever its event toggles (Chris, 2026-10-30).",
+  "_champions_note": "National champion + Stagg Bowl winner go to every device that follows at least one team, whatever its event toggles (CW, 2026-10-30).",
   "discord_events": [],
-  "_discord_events_note": "Events that ALSO post to the league Discord channel through announce(). Empty until Chris turns one on: push launched without changing what Discord gets today."
+  "_discord_events_note": "Events that ALSO post to the league Discord channel through announce(). Empty until CW turns one on: push launched without changing what Discord gets today."
 }

@@ -218,7 +218,7 @@ def write_menu(out_dir=None):
     return data
 
 
-# Back-to-top button (Chris, 2026-10-14): fixed bottom-right, appears only after scrolling about a screen,
+# Back-to-top button (CW, 2026-10-14): fixed bottom-right, appears only after scrolling about a screen,
 # small so it doesn't sit over content for long; hidden when printing. Styles live in the template's <style>.
 TOTOP = ('<a href="#" class="totop" aria-label="Back to top" hidden>&#8593;</a>'
          '<script>(function(){var b=document.currentScript.previousElementSibling;'
@@ -351,12 +351,12 @@ def team_colors(primary, secondary, background=None, text=None, name=None,
         return default
 
 
-# Standard section treatment (Chris, 2026-11-08): fold + Collapse all + save image on every section.
+# Standard section treatment (CW, 2026-11-08): fold + Collapse all + save image on every section.
 SECTIONS_JS = '<script src="assets/snapshot.js"></script><script src="assets/sections.js"></script>'
 
 
-# ---- Team logos by background (Chris, 2026-11-12) -------------------------------------
-# Dark backgrounds only: Chris's dark alt (assets/logos/teams/alt-dark/<Team>.png) if there is one,
+# ---- Team logos by background (CW, 2026-11-12) -------------------------------------
+# Dark backgrounds only: CW's dark alt (assets/logos/teams/alt-dark/<Team>.png) if there is one,
 # else the glow version (glow-dark/<Team>.png, logo_glow.py), else the normal logo. Light
 # backgrounds use the normal logo. Theme-following pages emit both images and CSS picks
 # (.tl-hd / .tl-d in the shared stylesheet); blocks with a fixed color (team-color chips) decide here.

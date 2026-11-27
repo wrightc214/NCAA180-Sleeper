@@ -8,7 +8,7 @@ For each PNG this script:
      masters are never deleted;
   2. writes the web copy the pages use: transparent margin trimmed to a small even margin and
      scaled down to MAX_SIDE on the longer side.
-Why (Chris, 2026-10-30): browsers unpack every image to full size; a 3840x2160 logo costs
+Why (CW, 2026-10-30): browsers unpack every image to full size; a 3840x2160 logo costs
 ~33 MB of phone memory even when drawn at 40 px, and pages can show 180 logos. Masters stay
 for print, posters and future crops. Re-running is safe: unchanged files come out identical.
 
@@ -91,7 +91,7 @@ def same_pixels(a, b):
 
 
 def retire(src):
-    """Move a replaced master to source/<folder>/retired/ instead of deleting it (Chris,
+    """Move a replaced master to source/<folder>/retired/ instead of deleting it (CW,
     2026-11-17): a new upload still wins, and nothing is lost if the check misfires."""
     import datetime
     folder, name = os.path.split(src)

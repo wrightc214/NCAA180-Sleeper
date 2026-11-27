@@ -59,7 +59,7 @@ LAST_REGULAR_WEEK = lcfg.last_regular_week()
 LEAGUE_COLORS = "data/Colors - Leagues.csv"
 N_LEAGUES = 15
 UPSET_FIRST_WEEK = 5  # earlier weeks have too few games for a meaningful pregame estimate
-# Pregame sim (Chris's Excel method, refined 2026-10-13 by backtest on 4,859 games 2021-2026):
+# Pregame sim (CW's Excel method, refined 2026-10-13 by backtest on 4,859 games 2021-2026):
 SIM_MEAN_SHRINK = 1  # each team's mean includes this many league-average games (pulls early hot/cold starts in)
 SIM_SD_SHRINK = 4    # each team's spread blends in this many games at the league-wide spread
 # Scores use Student-t odds (df = games of both teams - 2 + SIM_SD_SHRINK): fatter tails with fewer games.
@@ -142,7 +142,7 @@ def game(r):
 
 
 def win_prob(a, b, league_mean, league_sd):
-    """Pregame P(A beats B) from each team's prior scores (Series of points). Chris's sim, refined:
+    """Pregame P(A beats B) from each team's prior scores (Series of points). CW's sim, refined:
     mean = (n x own mean + SIM_MEAN_SHRINK x league mean) / (n + SIM_MEAN_SHRINK);
     sd^2 = ((n-1) x own var + SIM_SD_SHRINK x league var) / (n - 1 + SIM_SD_SHRINK), widened by
     (1 + 1/n) for the uncertainty in the mean itself; P = Student-t CDF of the mean gap over the
@@ -406,7 +406,7 @@ def render(d, weeks, colors, tpl, updated, lcolors, ranks=None, year=None, past=
     out = out.replace("Bars start at 115 points.", f"Bars start at {lo:.0f} points.")
     if not d["players"]:
         out = out.replace('<ul class="list"></ul>', '<p class="note">Player scores aren\'t kept for this season.</p>')
-    # standard sections: fold + collapse all + save image (Chris, 2026-11-08)
+    # standard sections: fold + collapse all + save image (CW, 2026-11-08)
     return out.replace("</body></html>", SECTIONS_JS + "</body></html>") if "</body></html>" in out else out.replace("</body>", SECTIONS_JS + "</body>")
 
 
@@ -462,7 +462,7 @@ def main():
     os.makedirs(os.path.join(OUT_DIR, "data"), exist_ok=True)
     year = int(m["Year"].iloc[0])
     hist = past_seasons()
-    for y, hm in hist:  # past seasons (Chris, 2026-11-08): rebuilt each run, cheap
+    for y, hm in hist:  # past seasons (CW, 2026-11-08): rebuilt each run, cheap
         if only:
             break
         wk = sorted(set(hm["Week"]))

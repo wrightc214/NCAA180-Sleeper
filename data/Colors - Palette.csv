@@ -70,14 +70,14 @@ Austin Peay,Team,5,#FFFFFF,White,Neutral,https://www.apsu.edu/identity/colors.ph
 Austin Peay,Team,6,#9F1C37,Shadow Red,Accent,https://www.apsu.edu/identity/colors.php
 Baylor,Team,1,#154734,Baylor Green,Primary,https://brand.web.baylor.edu/brand-standards/official-brand-colors
 Baylor,Team,2,#FFB81C,University Gold,Secondary,https://brand.web.baylor.edu/brand-standards/official-brand-colors
-Belmont,Team,1,#002147,Belmont Blue,Primary,"https://www.belmont.edu (Brand colors page, Digital Expanded Colors; screenshot from Chris 2026-10-07)"
-Belmont,Team,2,#CC0000,Belmont Red,Secondary,"https://www.belmont.edu (Brand colors page, Digital Expanded Colors; screenshot from Chris 2026-10-07)"
-Belmont,Team,3,#6AB3E7,Sky Blue (Digital),Accent,"https://www.belmont.edu (Brand colors page, Digital Expanded Colors; screenshot from Chris 2026-10-07)"
-Belmont,Team,4,#862633,Tower Red (Digital),Accent,"https://www.belmont.edu (Brand colors page, Digital Expanded Colors; screenshot from Chris 2026-10-07)"
-Belmont,Team,5,#2874AF,Fountain Blue (Digital),Accent,"https://www.belmont.edu (Brand colors page, Digital Expanded Colors; screenshot from Chris 2026-10-07)"
-Belmont,Team,6,#1D4289,Admissions Blue (Digital),Accent,"https://www.belmont.edu (Brand colors page, Digital Expanded Colors; screenshot from Chris 2026-10-07)"
-Belmont,Team,7,#F5F5F5,Light Gray (Digital),Neutral,"https://www.belmont.edu (Brand colors page, Digital Expanded Colors; screenshot from Chris 2026-10-07)"
-Belmont,Team,8,#3D3D3D,Dark Gray (Digital),Neutral,"https://www.belmont.edu (Brand colors page, Digital Expanded Colors; screenshot from Chris 2026-10-07)"
+Belmont,Team,1,#002147,Belmont Blue,Primary,"https://www.belmont.edu (Brand colors page, Digital Expanded Colors; screenshot from CW 2026-10-07)"
+Belmont,Team,2,#CC0000,Belmont Red,Secondary,"https://www.belmont.edu (Brand colors page, Digital Expanded Colors; screenshot from CW 2026-10-07)"
+Belmont,Team,3,#6AB3E7,Sky Blue (Digital),Accent,"https://www.belmont.edu (Brand colors page, Digital Expanded Colors; screenshot from CW 2026-10-07)"
+Belmont,Team,4,#862633,Tower Red (Digital),Accent,"https://www.belmont.edu (Brand colors page, Digital Expanded Colors; screenshot from CW 2026-10-07)"
+Belmont,Team,5,#2874AF,Fountain Blue (Digital),Accent,"https://www.belmont.edu (Brand colors page, Digital Expanded Colors; screenshot from CW 2026-10-07)"
+Belmont,Team,6,#1D4289,Admissions Blue (Digital),Accent,"https://www.belmont.edu (Brand colors page, Digital Expanded Colors; screenshot from CW 2026-10-07)"
+Belmont,Team,7,#F5F5F5,Light Gray (Digital),Neutral,"https://www.belmont.edu (Brand colors page, Digital Expanded Colors; screenshot from CW 2026-10-07)"
+Belmont,Team,8,#3D3D3D,Dark Gray (Digital),Neutral,"https://www.belmont.edu (Brand colors page, Digital Expanded Colors; screenshot from CW 2026-10-07)"
 Bethune - Cookman,Team,1,#6F263D,Maroon,Primary,https://teamcolorcodes.com/bethune-cookman-wildcats-colors/
 Bethune - Cookman,Team,2,#F2A900,Gold,Secondary,https://teamcolorcodes.com/bethune-cookman-wildcats-colors/
 Bethune - Cookman,Team,3,#000000,Black,Neutral,https://teamcolorcodes.com/bethune-cookman-wildcats-colors/
@@ -361,7 +361,7 @@ James Madison,Team,3,#333333,Slate Gray,Neutral,https://www.jmu.edu/identity/our
 James Madison,Team,4,#FFFFFF,White,Neutral,https://www.jmu.edu/identity/our-style/color.shtml
 Kansas,Team,1,#0051BA,Kansas Blue,Primary,https://brand.ku.edu/guidelines/color
 Kansas,Team,2,#E8000D,Crimson,Secondary,https://brand.ku.edu/guidelines/color
-Kansas,Team,3,#FFFFFF,White,Neutral,"Official school color per Chris (league data manager), 2026-10-07"
+Kansas,Team,3,#FFFFFF,White,Neutral,"Official school color per CW (league data manager), 2026-10-07"
 Kansas,Team,4,#FFC82D,Jayhawk Yellow,Accent,https://brand.ku.edu/guidelines/color
 Kansas,Team,5,#85898A,Signature Gray,Neutral,https://brand.ku.edu/guidelines/color
 Kansas State,Team,1,#512888,K-State Purple,Primary,https://www.k-state.edu/communications-marketing/brand-style/visual-language/color/
@@ -471,8 +471,8 @@ Mississippi State,Team,3,#C1C6C8,Light Grey,Neutral,https://brand.msstate.edu/as
 Mississippi State,Team,4,#777777,Dark Grey,Neutral,https://brand.msstate.edu/assets/materials/msstatecolors.pdf
 Mississippi Valley State,Team,1,#006F3C,Green,Primary,https://www.brandcolorcode.com/mississippi-valley-state-university-mvsu
 Mississippi Valley State,Team,2,#E51836,Red,Secondary,https://www.brandcolorcode.com/mississippi-valley-state-university-mvsu
-Mississippi Valley State,Team,3,#FFFFFF,White,Neutral,"Official school color per Chris (league data manager), 2026-10-07"
-Mississippi Valley State,Team,4,#000000,Black,Neutral,"Official school color per Chris (league data manager), 2026-10-07"
+Mississippi Valley State,Team,3,#FFFFFF,White,Neutral,"Official school color per CW (league data manager), 2026-10-07"
+Mississippi Valley State,Team,4,#000000,Black,Neutral,"Official school color per CW (league data manager), 2026-10-07"
 Mississippi Valley State,Team,5,#EFB211,Gold,Accent,https://www.brandcolorcode.com/mississippi-valley-state-university-mvsu
 Missouri,Team,1,#FDB719,Mizzou Gold,Primary,https://brand.missouri.edu/visual-identity/colors/
 Missouri,Team,2,#000000,Tiger Paw Black,Neutral,https://brand.missouri.edu/visual-identity/colors/
@@ -1033,7 +1033,7 @@ NIT,League,1,#563B87,"Purple (current value, unverified)",Primary,https://www.ni
 NIT,League,2,#E0902F,"Orange (current value, unverified)",Secondary,https://www.nit.com/
 NCAA ACC,League,1,#013CA6,ACC Blue (PMS 293 C),Primary,https://www.brandcolorcode.com/atlantic-coast-conference
 NCAA ACC,League,2,#A5A9AB,Silver (PMS 10077 C),Secondary,https://www.brandcolorcode.com/atlantic-coast-conference
-NCAA ACC,League,3,#FFFFFF,White,Neutral,"Official color per Chris (league data manager), 2026-10-21"
+NCAA ACC,League,3,#FFFFFF,White,Neutral,"Official color per CW (league data manager), 2026-10-21"
 NCAA American,League,1,#002D62,"Navy (theamerican.org site theme color, 2025 rebrand)",Primary,https://theamerican.org/news/2025/7/20/about-american-conference-launches-modernized-brand-identity-ahead-of-football-media-days.aspx
 NCAA American,League,2,#EE2231,"Red (PMS 485 C, 2020-21 AAC guide)",Secondary,https://theamerican.org/news/2025/7/20/about-american-conference-launches-modernized-brand-identity-ahead-of-football-media-days.aspx
 NCAA American,League,3,#041E41,"Navy (PMS 282 C, 2020-21 AAC guide)",Accent,https://theamerican.org/news/2025/7/20/about-american-conference-launches-modernized-brand-identity-ahead-of-football-media-days.aspx
@@ -1052,10 +1052,10 @@ NCAA USA,League,1,#003865,CUSA Blue (PMS 2955 C),Primary,https://www.brandcolorc
 NCAA USA,League,2,#A6192E,CUSA Red (PMS 187 C),Secondary,https://www.brandcolorcode.com/conference-usa
 NCAA USA,League,3,#75787B,Gray (Cool Gray 9),Neutral,https://www.brandcolorcode.com/conference-usa
 NCAA USA,League,4,#BBBCBC,Light Gray (Cool Gray 4),Neutral,https://www.brandcolorcode.com/conference-usa
-NCAA HISTORICALLY BLACK,League,1,#5D141E,Maroon,Primary,"Sampled from the league logo (assets/logos/Leagues/HBCU.png), Chris 2026-10-21"
-NCAA HISTORICALLY BLACK,League,2,#C19239,Gold,Secondary,"Sampled from the league logo (assets/logos/Leagues/HBCU.png), Chris 2026-10-21"
-NCAA HISTORICALLY BLACK,League,3,#000000,Black,Accent,"Logo star; SWAC black (8 of 12 teams are SWAC), Chris 2026-10-21"
-NCAA HISTORICALLY BLACK,League,4,#FFFFFF,White,Neutral,"Official color per Chris (league data manager), 2026-10-21"
+NCAA HISTORICALLY BLACK,League,1,#5D141E,Maroon,Primary,"Sampled from the league logo (assets/logos/Leagues/HBCU.png), CW 2026-10-21"
+NCAA HISTORICALLY BLACK,League,2,#C19239,Gold,Secondary,"Sampled from the league logo (assets/logos/Leagues/HBCU.png), CW 2026-10-21"
+NCAA HISTORICALLY BLACK,League,3,#000000,Black,Accent,"Logo star; SWAC black (8 of 12 teams are SWAC), CW 2026-10-21"
+NCAA HISTORICALLY BLACK,League,4,#FFFFFF,White,Neutral,"Official color per CW (league data manager), 2026-10-21"
 NCAA Ivy,League,1,#026937,Ivy Green,Primary,https://www.brandcolorcode.com/ivy-league
 NCAA Ivy,League,2,#FFFFFF,White,Neutral,https://www.brandcolorcode.com/ivy-league
 NCAA Mountain West,League,1,#4F2D7F,MW Purple (PMS 268 C),Primary,https://www.brandcolorcode.com/mountain-west-conference
@@ -1067,7 +1067,7 @@ NCAA PAC 12,League,2,#FFFFFF,White,Neutral,https://pac-12.com/news/2026/4/27/gen
 NCAA PAC 12,League,3,#000000,Black (2026 primary mark),Neutral,https://pac-12.com/news/2026/4/27/general-pac-12-unveils-new-primary-mark-as-the-foundation-of-the-new-leagues-brand-identity.aspx
 NCAA Pioneer,League,1,#95694F,Brown,Primary,"Sampled from the league logo (assets/logos/Leagues/Pioneer.png), 2026-10-21"
 NCAA Pioneer,League,2,#DCDEE2,"Light Gray (current value, unverified)",Secondary,https://pioneer-football.org/
-NCAA Pioneer,League,3,#FFFFFF,White,Neutral,"Official color per Chris (league data manager), 2026-10-21"
+NCAA Pioneer,League,3,#FFFFFF,White,Neutral,"Official color per CW (league data manager), 2026-10-21"
 NCAA SEC,League,1,#002D72,SEC Blue (PMS 288),Primary,https://a.espncdn.com/sec/media/2020/SEC%20Style%20Guide.pdf
 NCAA SEC,League,2,#FED141,SEC Gold (PMS 122),Secondary,https://a.espncdn.com/sec/media/2020/SEC%20Style%20Guide.pdf
 NCAA SEC,League,3,#D29F13,"Gold, beveled logos only (PMS 131)",Accent,https://a.espncdn.com/sec/media/2020/SEC%20Style%20Guide.pdf
@@ -1081,10 +1081,10 @@ NIU,Team,3,#FFFFFF,White,Neutral,https://www.niu.edu/brand/
 Houston Baptist,Team,1,#1C4E9D,Blue,Primary,https://teamcolorcodes.com/houston-baptist-huskies-colors/
 Houston Baptist,Team,2,#F3652C,Orange,Secondary,https://teamcolorcodes.com/houston-baptist-huskies-colors/
 Houston Baptist,Team,3,#FFFFFF,White,Neutral,https://teamcolorcodes.com/houston-baptist-huskies-colors/
-Hampton,Team,1,#003EA5,Hampton Blue,Primary,"Sampled from the logo Chris uploaded (assets/logos/teams), 2026-10-27"
+Hampton,Team,1,#003EA5,Hampton Blue,Primary,"Sampled from the logo CW uploaded (assets/logos/teams), 2026-10-27"
 Hampton,Team,2,#FFFFFF,White,Secondary,https://www.brandcolorcode.com/hampton-pirates-and-lady-pirates
-Houston Christian,Team,1,#003387,Royal Blue,Primary,"Sampled from the logo Chris uploaded (assets/logos/teams), 2026-10-27"
-Houston Christian,Team,2,#D04821,Orange,Secondary,"Sampled from the logo Chris uploaded (assets/logos/teams), 2026-10-27"
+Houston Christian,Team,1,#003387,Royal Blue,Primary,"Sampled from the logo CW uploaded (assets/logos/teams), 2026-10-27"
+Houston Christian,Team,2,#D04821,Orange,Secondary,"Sampled from the logo CW uploaded (assets/logos/teams), 2026-10-27"
 Houston Christian,Team,3,#FFFFFF,White,Neutral,"Same school as Houston Baptist (renamed 2022), 2026-10-27"
 Appalachian State,Team,1,#222222,Black,Primary,https://teamcolorcodes.com/appalachian-state-mountaineers-color-codes/
 Appalachian State,Team,2,#FFCC00,Gold,Secondary,https://teamcolorcodes.com/appalachian-state-mountaineers-color-codes/

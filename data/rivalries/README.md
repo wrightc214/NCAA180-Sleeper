@@ -7,13 +7,13 @@ Clean rivalry tables built from the research workbook (`notes/NCAA180_Rivalry_Fa
 |---|---|
 | `football.csv` | One row per school pair (505). Name, trophy, multi-team series, first/last meeting, total meetings, certainty, sources, notes. |
 | `series.csv` | Multi-team trophies and series (Commander-in-Chief's, Florida Cup, Sgt. York, Big Three, Beanpot…). Pair rows point here through the `series` column. |
-| `other_sports.csv` | Supplemental non-football rivalries, for teams without a strong football rival (Chris's intent). |
+| `other_sports.csv` | Supplemental non-football rivalries, for teams without a strong football rival (CW's intent). |
 
 ## Columns (football)
 - `team_a`, `team_b`: team names (our names for league schools), alphabetical within the pair (one row per pair).
 - `name`: the rivalry's actual name. **Blank when the series has none.** Plain "A–B" labels and descriptions ("former Big East rivalry") are not names.
 - `trophy`: the head-to-head trophy only. Multi-team trophies go in `series`.
-- `first_year`, `last_year`, `meetings`: real-life series history, kept **only as evidence that the rivalry exists** (Chris: never displayed, accuracy not critical). `numbers_through` says how current they are.
+- `first_year`, `last_year`, `meetings`: real-life series history, kept **only as evidence that the rivalry exists** (CW: never displayed, accuracy not critical). `numbers_through` says how current they are.
 - `peak_intensity` (1–10): how intense the rivalry was **at its peak**, even if that was 1931 (from the workbook; blank for rows the workbook didn't have). `current_relevance` (1–10): how much it matters today. Historical rivalries count; a low current relevance doesn't mean a pair should be removed.
 - `certainty`: confidence that the pairing is a real rivalry (scale below). `status` restates it as a word.
 - `sources`, `notes`: where each fact came from, and any conflicts.
@@ -21,7 +21,7 @@ Clean rivalry tables built from the research workbook (`notes/NCAA180_Rivalry_Fa
 ## Certainty
 | Value | Status | Rule |
 |---|---|---|
-| 5 | confirmed | Named rivalry or trophy on Wikipedia's rivalry list, or confirmed from school or press sources (searched 2026-10-28), or Chris's call. |
+| 5 | confirmed | Named rivalry or trophy on Wikipedia's rivalry list, or confirmed from school or press sources (searched 2026-10-28), or CW's call. |
 | 4 | established series | On Wikipedia's rivalry or most-played lists without a name, a recognised multi-team series pair, or a workbook row with official sources and a name. |
 | 3 | probable | Workbook row whose series facts come from official sources, but no rivalry label was found. |
 | 2 | possible | Workbook row with some series data but no evidence of a rivalry. |
@@ -76,10 +76,10 @@ Every workbook row that had no outside evidence (all of the 1s and 2s) was revie
 - **Added:** the Battle of the Piney Woods (Sam Houston State–Stephen F. Austin), which both public lists missed.
 - No candidates (certainty 1) remain.
 
-**Update (Chris, 2026-10-28):** rivalries that faded because the schools moved to different levels of play still count. 20 of the 25 dropped pairs were restored at certainty 2 with their peak-intensity scores. Alabama–FSU, Auburn–FSU, Oklahoma–Texas Tech, Penn State–Texas Tech and USC–Washington stay out.
+**Update (CW, 2026-10-28):** rivalries that faded because the schools moved to different levels of play still count. 20 of the 25 dropped pairs were restored at certainty 2 with their peak-intensity scores. Alabama–FSU, Auburn–FSU, Oklahoma–Texas Tech, Penn State–Texas Tech and USC–Washington stay out.
 
 ## Known gaps / next steps
-- **Weak football histories lean on other sports (Chris: over-index rather than under-index).** `other_sports.csv` adds basketball and other rivalries for:
+- **Weak football histories lean on other sports (CW: over-index rather than under-index).** `other_sports.csv` adds basketball and other rivalries for:
   - Belmont: Lipscomb and Middle Tennessee.
   - Wichita State: Tulsa, Creighton and others.
   - Northern Iowa: Drake and the Iowa Big Four.

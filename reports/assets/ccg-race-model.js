@@ -1,7 +1,7 @@
 /* Pure CCG race probability model. Same inputs in browser and Node tests.
  * A real coin toss is NEVER simulated: an unresolved n-way tie awards 1/n
  * probability to each team. Score comparisons are rounded to 0.01.
- * Clinched / Out (Chris, 2026-11-23): with options.bounds (config live_bounds, via
+ * Clinched / Out (CW, 2026-11-23): with options.bounds (config live_bounds, via
  * ScoreboardCore.bounds), a tie on wins is settled when one team's points-for floor
  * beats the other's ceiling. Each model carries `upside` (most it can still add) and
  * `drop` (most it can still lose) for this week; a model without them settles nothing.

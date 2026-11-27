@@ -1,4 +1,4 @@
-"""Push follow matching, ordering and privacy rules (Chris, 2026-10-30; todo-pwa.md)."""
+"""Push follow matching, ordering and privacy rules (CW, 2026-10-30; todo-pwa.md)."""
 import sys
 import unittest
 from pathlib import Path

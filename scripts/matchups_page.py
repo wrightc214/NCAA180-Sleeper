@@ -1,11 +1,11 @@
 """
 matchups_page.py -- the week's pregame projections and win chance: data/MatchupProjections_Current.csv
 and the frozen record in MatchupProjections_Historic.csv (the scoreboard's pregame odds read it).
-The Matchups page itself is retired (Chris, 2026-10-30): reports/matchups.html now forwards to the
+The Matchups page itself is retired (CW, 2026-10-30): reports/matchups.html now forwards to the
 scoreboard, the one Games page all week.
 
 PREGAME = the week's Tuesday BASELINE snapshot (the FIRST snapshot file for that week). A later
-manual snapshot never changes the posted odds (Chris, 2026-10-14). Each week's rows are also
+manual snapshot never changes the posted odds (CW, 2026-10-14). Each week's rows are also
 appended ONCE to data/MatchupProjections_Historic.csv (odds never rewritten; only the rank/record labels are refreshed, see refresh_labels); that file is
 the record of pregame expectations for predictive measures. Game-time projections for awards and
 manager stats live separately (gametime_projections.py).
@@ -163,7 +163,7 @@ POST_KEEP = ["Round", "Stage", "GameID", "BowlName", "PlayoffRound", "Seed"]
 
 def post_games(season, wk):
     """{GameID: [rows]} for one bowl/playoff/NIT week from PUBLISHED Postseason_Season.csv rows
-    (drafts live in data/postseason_drafts until Chris approves them, so approval stays the gate)."""
+    (drafts live in data/postseason_drafts until CW approves them, so approval stays the gate)."""
     f = "data/Postseason_Season.csv"
     if not os.path.exists(f) or os.path.getsize(f) <= 1:
         return {}
@@ -366,7 +366,7 @@ def standings(season, wk):
 
 
 def write_redirect():
-    """The Matchups page is retired (Chris, 2026-10-30): the scoreboard is the one Games page all
+    """The Matchups page is retired (CW, 2026-10-30): the scoreboard is the one Games page all
     week (projections before kickoff, live scores after). Old links land there."""
     with open(OUT, "w", encoding="utf-8") as f:
         f.write('<!doctype html><html lang="en"><head><meta charset="utf-8">'

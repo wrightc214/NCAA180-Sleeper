@@ -178,7 +178,7 @@ BODY = """
 
   function render() {
     var first = !state.follows;  // first visit: event defaults on
-    // My team (Chris, 2026-11-14): one team per device, saved right away (no Save needed); the
+    // My team (CW, 2026-11-14): one team per device, saved right away (no Save needed); the
     // "follow" box (default on) keeps that team's checkbox in the team list ticked.
     $("myteam").innerHTML = '<option value="">Choose your team</option>' + lists.leagues.map(function (lg) {
       return '<optgroup label="' + esc(lg.name) + '">' + lg.teams.map(function (t) {
@@ -198,7 +198,7 @@ BODY = """
         lg.teams.map(function (t) { return box("team", t.key, t.name, chosen("team", t.key)); }).join("") + "</div></details>";
     }).join("");
     $("leagues").innerHTML = lists.leagues.map(function (lg) { return box("league", lg.key, lg.name, chosen("league", lg.key)); }).join("");
-    // A new event (Chris, 2026-11-14) starts ticked on a phone that already had every older event on and
+    // A new event (CW, 2026-11-14) starts ticked on a phone that already had every older event on and
     // hasn't saved since it was added (no "seen" marker); the sender treats that phone the same way.
     var autoOn = function (e) {
       return !!(e.auto_on_with && !chosen("event", e.seen) && e.auto_on_with.every(function (k) { return chosen("event", k); }));

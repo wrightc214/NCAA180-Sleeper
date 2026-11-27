@@ -23,7 +23,7 @@
     const next=starters.filter(p=>p.phase==='pre').map(p=>p.game).sort((a,b)=>Date.parse(a.kickoff)-Date.parse(b.kickoff))[0];
     const final=!active.length&&!next&&!unknown&&(starters.some(p=>p.phase==='post')||Object.values(games).every(g=>g.state==='post'));
     const started=starters.some(p=>p.phase==='post'||p.phase==='in'||p.actual!==0);
-    const missing=unknown||incomplete; // no Tuesday projection = projected 0 (Chris, 2026-11-22)
+    const missing=unknown||incomplete; // no Tuesday projection = projected 0 (CW, 2026-11-22)
     // Postseason weeks: pregame chance per side from the frozen game (win / finish top of the group).
     const key=r=>`${r.leagueId}|${r.roster_id}`,mine=new Set(rosters.map(key));
     const pg=(baseline.games||[]).find(g=>g.sides.length===rosters.length&&g.sides.every(x=>mine.has(`${x.LeagueID}|${x.RosterID}`)));
@@ -32,7 +32,7 @@
       [String(o.RosterID),String(o.OpponentRosterID)].sort().join(',')===rosters.map(r=>String(r.roster_id)).sort().join(','));
     const pregame=pregames?pregames[0]:saved?(String(saved.RosterID)===String(rosters[0].roster_id)?Number(saved.WinPct):100-Number(saved.WinPct)):null;
     const group=rosters.length>2,chances=group?(final||!started?pregames:missing||unknown?null:C.chanceTop(models)):null;
-    // Proj column (Chris, 2026-10-30, Sleeper-style): pregame until the game's starters play, then
+    // Proj column (CW, 2026-10-30, Sleeper-style): pregame until the game's starters play, then
     // adjusted by known outcomes, back to the pregame value once the game is final.
     const proj=models.map(m=>final||!started?m.pregame:m.projected);
     // Live: a proven result (config live_bounds) shows 100 / 0; an estimate never reaches either.

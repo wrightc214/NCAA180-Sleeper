@@ -77,7 +77,7 @@ def _follows(device, group=None):
         key = str(f.get("key", ""))
         if f.get("kind") in out and key.startswith(pre):
             out[f["kind"]].add(key[len(pre):])
-    # New events (config events[].auto_on_with; Chris, 2026-11-14): a phone that follows every listed
+    # New events (config events[].auto_on_with; CW, 2026-11-14): a phone that follows every listed
     # event gets the new one too, until it saves its picks on app.html again -- that save adds a
     # "seen:<key>" marker, and from then on its own tick decides.
     for e in _events():
@@ -259,7 +259,7 @@ def send_discord(ann):
         print("Discord webhook not set; skipped.")
         return False
     # "quiet" items (per-team Guillotine lines) never go to the channel; "discord_extra" lines do
-    # (Chris, 2026-11-14: rounds 1-4 = just the cut; the final gets the full announcement).
+    # (CW, 2026-11-14: rounds 1-4 = just the cut; the final gets the full announcement).
     lines = [f"**{ann['title']}**"] + [it["text"] for it in sorted(ann.get("items", []),
                                                                   key=lambda i: _prestige(i, cfg()))
                                        if not it.get("quiet")] + list(ann.get("discord_extra", []))

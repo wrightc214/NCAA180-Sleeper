@@ -12,7 +12,7 @@ Announcements (each sent once; data/push/Announced_Season.csv is the ledger):
   - champions: national championship game final; NIT final (Stagg Bowl) final
   - guillotine: each finished week's cut (folded into that week's results push when both go out
     in the same run) and the champion (data/Guillotine_Season.csv, scripts/guillotine.py)
-Pairings (bowl/NIT draws) are not announced here yet: they wait for Chris's review.
+Pairings (bowl/NIT draws) are not announced here yet: they wait for CW's review.
 
 Usage: python scripts/postseason_announce.py [--dry-run] [--season-file F] [--field-file F]
   --dry-run prints every announcement and a sample push instead of sending.
@@ -88,7 +88,7 @@ EVENT = {"CCG": "ccg_results", "Playoff": "playoff_results", "Bowl": "bowl_resul
 
 
 def result_announcements(season, year, smap, conf, league_cfg):
-    """One results push per postseason week (Chris: one push, the device's own teams first, then
+    """One results push per postseason week (CW: one push, the device's own teams first, then
     playoff -> bowl -> NIT), sent once every game of that week is final. Title games go out
     separately as champion pushes."""
     out = []
@@ -168,7 +168,7 @@ def field_announcement(field, year, smap, league_cfg):
 
 
 def guillotine_announcements(gdf, year, smap, lc):
-    """The Guillotine (Chris, 2026-11-14): one announcement per finished week (who survived the cut,
+    """The Guillotine (CW, 2026-11-14): one announcement per finished week (who survived the cut,
     who was eliminated) and one for the champion. Per-team lines are "quiet": only phones following
     that team or league see them; Guillotine event followers get the summary line."""
     g = lc["postseason"].get("guillotine") or {}
@@ -194,9 +194,9 @@ def guillotine_announcements(gdf, year, smap, lc):
                               "slots": [notify.slot_key(sh, r["RosterID"])], "leagues": [sh]})
             rnd = f"Round {week - int(g['first_week']) + 1}"
             out.append({"id": f"{year}-w{week}-guillotine", "event": "guillotine", "fold_into": f"{year}-w{week}-results",
-                        "title": f"{name}: {rnd} cut", "url": "special.html",  # rounds, not weeks (Chris, 2026-11-19)
+                        "title": f"{name}: {rnd} cut", "url": "special.html",  # rounds, not weeks (CW, 2026-11-19)
                         "summary": f"{n_adv} of {len(wk)} survive · cut line {line}", "items": items,  # event followers see the summary
-                        # league channel: just the cut (Chris, 2026-11-14)
+                        # league channel: just the cut (CW, 2026-11-14)
                         "discord_extra": [f"🪓 {name}, {rnd}: {n_adv} of {len(wk)} survive · cut line {line}"]})
         else:
             champs = wk[wk["Status"] == "Champion"]
@@ -210,7 +210,7 @@ def guillotine_announcements(gdf, year, smap, lc):
                 items.append({"text": f"{name} {'co-' if co else ''}champion: {r['Team']} ({_pts(r['Score'])})",
                               "tier": "Guillotine", "order": i, "event": "guillotine",
                               "slots": [notify.slot_key(sh, r["RosterID"])], "leagues": [sh]})
-            # league channel: the full final -- every finalist, ranked (Chris, 2026-11-14)
+            # league channel: the full final -- every finalist, ranked (CW, 2026-11-14)
             fin = [f"{int(r['Rank'])}. {r['Team']} ({_short(r['LeagueName'], smap)}) {_pts(r['Score'])}"
                    + (f" · tiebreak {_pts(r['TiebreakScore'])}" if str(r.get('TiebreakScore', '')) else "")
                    for _, r in wk.iterrows()]
@@ -222,7 +222,7 @@ def guillotine_announcements(gdf, year, smap, lc):
 
 
 def fold(anns, gann, sent=notify.already_sent):
-    """One push per device per run (Chris): a week's Guillotine cut rides along with that week's
+    """One push per device per run (CW): a week's Guillotine cut rides along with that week's
     postseason results push when both are going out now. Otherwise it goes on its own."""
     by_id = {a["id"]: a for a in anns}
     out = list(anns)

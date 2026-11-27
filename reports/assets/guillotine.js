@@ -1,4 +1,4 @@
-/* Special Events → The Guillotine (Chris, 2026-11-14; claude/todo-guillotine.md).
+/* Special Events → The Guillotine (CW, 2026-11-14; claude/todo-guillotine.md).
    Every team still alive, sorted by live projection, with score, minutes left and the chance to survive
    the cut; the current and projected cut lines on top; eliminated teams (and the week they went) below.
    Data: data/scoreboard/<season>/guillotine.json (scripts/guillotine.py) for who is still alive and every
@@ -39,7 +39,7 @@
       const game={state:type.state,period:Number(st.period||0),clock:st.displayClock||'',kickoff:ev.date,id:ev.id};
       if(type.state==='post'&&!type.completed)game.state='unknown';
       if(type.state==='in'&&!/^\d+:\d\d$/.test(game.clock))throw Error('Live NFL clock unavailable');
-      // Monday Night Football in progress: the only time this page refreshes on its own (Chris, 2026-11-14).
+      // Monday Night Football in progress: the only time this page refreshes on its own (CW, 2026-11-14).
       const day=new Date(ev.date).toLocaleString('en-US',{timeZone:'America/New_York',weekday:'short'});
       if(type.state==='in'&&day==='Mon'){mnf.on=true;if(game.period>=4)mnf.crunch=true;}
       for(const comp of ev.competitions||[])for(const side of comp.competitors||[]){const a=side.team?.abbreviation;games[({WSH:'WAS',LA:'LAR',JAC:'JAX'})[a]||a]=game;}
@@ -142,7 +142,7 @@
     const head=`<section class="gl-head card"><div class="gl-k"><b>${f.field}</b><span>played</span></div><div class="gl-k"><b>${f.advanced}</b><span>${last?'champion':'survived'}</span></div><div class="gl-k"><b>${Number(f.cutline).toFixed(2)}</b><span>${last?'winning score':'cut line'}</span></div>${f.added?`<div class="gl-k"><b>${f.added}</b><span>added by stat corrections</span></div>`:''}</section>`;
     return `${head}<p class="gl-state">${esc(wkName(w))} · Final</p><div class="gl-table fz-t"><div class="gl-h"><span></span><span>Team</span><span>Score</span><span></span></div>${rows}</div>`;
   }
-  // Chris's logos: the round logo for the week on screen; the plain wordmark before the first week.
+  // CW's logos: the round logo for the week on screen; the plain wordmark before the first week.
   function logoFor(w){const L=gd.logos||{},src=L.weeks?.[String(w)]||L.wordmark||'';return src?'../'+src.split(' ').join('%20'):'';}
   function paint(){
     const lg=$('gl-logo'),src=logoFor(gd.status==='upcoming'&&!frozen(week)&&!baseline?null:week);

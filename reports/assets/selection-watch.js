@@ -11,7 +11,7 @@
     typeof value==='string' && value.trim() ? value.trim() : fallback;
   let preview=null;
   const dollar = x => Number(x).toFixed(2);
-  // Whole numbers only (Chris, 2026-11-24). 0% / 100% only once every CCG is final; before that a
+  // Whole numbers only (CW, 2026-11-24). 0% / 100% only once every CCG is final; before that a
   // near-certain value shows <1% / >99% so the board never claims a result that hasn't happened.
   let allFinal=false;
   const percent = x => !Number.isFinite(x) ? '—' :
@@ -55,7 +55,7 @@
     const t=team(k),note=byKey()[k];
     const logo=t.logoHtml || (t.logo?'<img src="'+E(t.logo)+'" alt="" loading="lazy" onerror="this.hidden=true">':'');
     const fill=dim?'':teamFill(t.primary);
-    // CCG badge on every team playing a conference championship this week (Chris, 2026-11-26).
+    // CCG badge on every team playing a conference championship this week (CW, 2026-11-26).
     // Art: assets/logos/CCG/<conference> CCG.png (same pattern as config/trophies.json); swap when the
     // logo overhaul lands.
     const conf=note?.conf||'';
@@ -78,7 +78,7 @@
     const result=liveScores[g.id];
     if(g.winner)return g.winner;
     // Projected winner = higher win chance until the game is final, not whoever leads on the scoreboard
-    // right now (Chris, 2026-11-25: Georgia Tech led at 19% and showed as stealing).
+    // right now (CW, 2026-11-25: Georgia Tech led at 19% and showed as stealing).
     if(result?.final&&result.leader)return result.leader;
     return (result?.pA??.5)>=.5?g.a:g.b;
   }
@@ -150,13 +150,13 @@
       const rightIn=!leftIn&&l?.status!=='Coin toss'&&r?.active;
       const leftExtra=archive?'<small>#'+E(l?.rank)+'</small>':'<small>'+percent(odds[l?.k]||0)+'</small>';
       // Below the cut and playing its own CCG: the thief keeps this row and the team's caption carries its
-      // protection in gold (Chris, 2026-11-26) instead of a separate block.
+      // protection in gold (CW, 2026-11-26) instead of a separate block.
       const leftHTML=l?formatTeam(l.k,!leftIn,leftExtra)+(protect?'<div class="sw-inline sw-protect-cap">'+E(l.status)+' · '+
         E(protect.conf)+' CCG win → automatic bid · '+percent(protect.win)+detail({game:protect.game,label:' '})+'</div>':
         '<div class="sw-inline">'+E(l.status+entryNote(l.k))+'</div>'):'';
       const note=hold&&(hold.final?hold.conf+' Champion':hold.plays?hold.conf+' CCG · '+name(l.k)+(hold.leads?' leads':' plays'):
         hold.conf+' CCG · '+name(l.k)+' leads'+(hold.pair?'':' — a win keeps this spot'));
-      // Bid protection card (Chris, 2026-11-25 mock): a team playing its own CCG. Caption carries the odds
+      // Bid protection card (CW, 2026-11-25 mock): a team playing its own CCG. Caption carries the odds
       // source and View game link like a thief row.
       const card=hold&&!hold.pair?'<div class="sw-placard" role="note">'+PROTECT_ICON+
         '<div class="sw-protect-text"><b>'+(hold.final?'Automatic bid':'Bid protection')+'</b>'+

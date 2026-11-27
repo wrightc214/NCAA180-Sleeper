@@ -1,5 +1,5 @@
 """
-special_page.py -- reports/special.html, the Special Events tab (Chris, 2026-11-14).
+special_page.py -- reports/special.html, the Special Events tab (CW, 2026-11-14).
 
 One sub-tab per non-standard event (config/nav.json rows.special). Today: The Guillotine
 (scripts/guillotine.py writes its data; reports/assets/guillotine.js draws it live in the browser).
@@ -83,7 +83,7 @@ def main():
     with open("reports/special.html", "w", encoding="utf-8") as f:
         f.write(page_head(f"{brand} {g.get('name', 'The Guillotine')}", CSS) + body)
 
-    # Replays (Dev only, Chris 2026-11-24): a past season run through the Guillotine rules, to preview the
+    # Replays (Dev only, CW 2026-11-24): a past season run through the Guillotine rules, to preview the
     # finished page. data/replays/guillotine-<year>.json (scripts/guillotine.py --year Y --out-dir, json
     # copied there) -> reports/guillotine-<year>.html. Kept out of data/scoreboard/ so the trophy ledger
     # never reads a replay as a real champion. Menu: config/nav.json rows.guillotine-seasons (hidden-dev).

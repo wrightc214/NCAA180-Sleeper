@@ -11,7 +11,7 @@
   var base = here ? here.replace(/assets\/app\.js.*$/, "") : "";
 
   function store() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } }
-  // Existing follows (Chris, 2026-11-14): a device that follows teams but has no My team gets its first
+  // Existing follows (CW, 2026-11-14): a device that follows teams but has no My team gets its first
   // followed team as My team (follows keep list order, so this is the first one ticked on app.html).
   // Flagged myTeamAuto so the notifications page can ask them to confirm it.
   (function () {
@@ -21,7 +21,7 @@
     s.myTeam = t.key; s.myTeamAuto = true;
     try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {}
   })();
-  // My team (Chris, 2026-11-14): the team this device's manager runs, picked on app.html. Any page can
+  // My team (CW, 2026-11-14): the team this device's manager runs, picked on app.html. Any page can
   // use it for team-specific visuals: NCAA180.myTeam() -> {key, conf, roster} or null.
   window.NCAA180 = window.NCAA180 || {};
   window.NCAA180.myTeam = function () {
@@ -46,7 +46,7 @@
   }
 
   function showPrompt() {
-    if (!installed()) return;  // Chris, 2026-10-31: the full-screen prompt is for the installed app only; browsers use the bell
+    if (!installed()) return;  // CW, 2026-10-31: the full-screen prompt is for the installed app only; browsers use the bell
     if (/\/app\.html$/.test(location.pathname)) return;     // already on setup
     try { if (sessionStorage.getItem(SNOOZE)) return; } catch (e) {}
     if (!needsSetup()) return;

@@ -1,11 +1,11 @@
-/* snapshot.js -- "Save image" for any part of any page (Chris, 2026-11-07: every collapsible section
+/* snapshot.js -- "Save image" for any part of any page (CW, 2026-11-07: every collapsible section
  * gets an image button; part of the site design from here on).
  *
  *   NCAASnap.save({html, name, footer, title, stamp, whatif, width, scale})   -> PNG via share sheet (phones) or download
  *     scale:  pixel ratio of the image (default 2; the bracket's full-size image offers 1.5 for iPhone canvas limits)
  *     stamp:  {state: 'live'|'pregame'|'final'|'projection', time: Date, note}  -> label on top of the image
  *     whatif: ['Wyoming beats Boise State', ...]                                 -> WHAT-IF banner
- *   Labeling rule (Chris, 2026-11-07, site-wide): anything reacting to a live situation carries a
+ *   Labeling rule (CW, 2026-11-07, site-wide): anything reacting to a live situation carries a
  *   timestamp and an "Unofficial" declaration; what-if images carry a clear WHAT-IF banner.
  *   NCAASnap.button(label)                       -> a small save-image <button> for a section header
  *

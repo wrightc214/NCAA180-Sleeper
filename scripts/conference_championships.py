@@ -45,7 +45,7 @@ def main():
     for (lid, lname), g in st.groupby(["LeagueID", "LeagueName"]):
         champs = []
         for div, d in g.groupby("Division"):
-            r, ties, _ = ps.rank_ties(d, games, real_toss=True)  # real toss only (Chris, 2026-11-12)
+            r, ties, _ = ps.rank_ties(d, games, real_toss=True)  # real toss only (CW, 2026-11-12)
             tied = next((t for t in ties if r.iloc[0]["Team"] in t), [])
             if tied:
                 problems.append(f"{lname} / {div}: division title tied after every tiebreaker ({', '.join(tied)}) -- "

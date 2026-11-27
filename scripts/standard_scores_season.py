@@ -1,4 +1,4 @@
-"""Current-season standard scores (Chris, 2026-10-15 / 2026-10-28).
+"""Current-season standard scores (CW, 2026-10-15 / 2026-10-28).
 
 From config postseason.standard_scoring_from (2026) results are decided on the standard ruleset:
 the season's majority league ruleset plus config scoring.overrides (the same rules the live
@@ -13,7 +13,7 @@ Writes
   data/ScoringFlags_Season.csv     games whose winner differs between Sleeper and standard
   data/standard/<season>/stats_wkNN.json   slim cache: restated stats of the starters involved
 
-Red alert (Chris): a NEW winner change posts to lm-private-data and pings Chris
+Red alert (CW): a NEW winner change posts to lm-private-data and pings CW
 (DISCORD_WEBHOOK_LM_PRIVATE_DATA; STANDARD_ALERT=0 disables). State: data/StandardAlerts_Season.json.
 
 Run after score_details.py (needs Scores_Season.csv + Matchups_Season.csv). Needs Sleeper

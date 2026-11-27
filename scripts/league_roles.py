@@ -25,7 +25,7 @@ def staff():
     'staff': every LeagueStaff row}. Same rules the About page has always used."""
     a = lcfg.cfg().get("about", {})
     st = pd.read_csv(STAFF, dtype=str, keep_default_na=False) if os.path.exists(STAFF) else pd.DataFrame()
-    # accounts without a team (Chris, 2026-11-07): users with no roster in any league they're in
+    # accounts without a team (CW, 2026-11-07): users with no roster in any league they're in
     if len(st):
         has = st.groupby("DisplayName")["HasRoster"].apply(lambda x: (x == "True").any())
         special = {n: sorted(st[st["DisplayName"] == n]["LeagueName"]) for n in has[~has].index}

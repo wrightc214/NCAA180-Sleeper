@@ -1,6 +1,6 @@
 """zero_game_check.py -- block publishing when a finished week has a 0-0 game.
 
-Why (Chris, 2026-11-03): on 2026-11-03 league_matchups.py crashed, week 8 stayed at 0.00 for
+Why (CW, 2026-11-03): on 2026-11-03 league_matchups.py crashed, week 8 stayed at 0.00 for
 every team, and the run still posted a Top 25 and sent false standard-scoring alerts. A 0-0
 game in a finished week means the Sleeper points never arrived (or Sleeper hasn't scored the
 week yet), so nothing built from it should go out.
@@ -46,7 +46,7 @@ def zero_games(year):
 
 
 def summary(bad, n_leagues):
-    """Short on purpose (Chris): a couple of games -> list them; one or two leagues -> name
+    """Short on purpose (CW): a couple of games -> list them; one or two leagues -> name
     them; every league -> catastrophic, just say so."""
     leagues = pd.Series([b[0] for b in bad]).value_counts()
     weeks = "wk " + "/".join(sorted({str(b[1]) for b in bad}, key=int))

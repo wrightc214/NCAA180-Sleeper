@@ -33,7 +33,7 @@
     el.replaceChildren(...options.map(([v,label])=>{const o=document.createElement('option');o.value=v;o.textContent=label;return o;}));
     if(value!==undefined) el.value=String(value);
   }
-  // Game badges in the center column (Chris, 2026-11-04). One list so bowl / playoff / rivalry badges
+  // Game badges in the center column (CW, 2026-11-04). One list so bowl / playoff / rivalry badges
   // plug in here when the postseason game views are built. Each: {src, alt}.
   function badges(){
     const out=[],names=chosen.map(r=>String(team(r.roster_id,r.leagueId).name).toLowerCase()).sort().join('|');
@@ -124,7 +124,7 @@
     const right=p<1||p>99?pct(100-p):`${100-Math.round(p)}%`;
     return `<div class="olab"><span>${escape(ca.name)} ${escape(pct(p))}</span><span>${label}</span><span>${escape(cb.name)} ${escape(right)}</span></div><div class="bar${pre?' pre':''}" role="img" aria-label="${escape(label)}: ${escape(ca.name)} ${escape(pct(p))}"><span style="width:${p}%;background:${escape(colorA)}"></span><span style="flex:1;background:${escape(colorB)}"></span></div>`;
   }
-  // ---- Postseason weeks 13+ (Chris, 2026-11-04) ----
+  // ---- Postseason weeks 13+ (CW, 2026-11-04) ----
   let postGame=null;const leagueCache=new Map();
   const ccgW=()=>cfg.schedule.ccg_week,wkName=w=>ScoreboardCore.weekLabel(cfg,w);
   const isPost=()=>baseline?.event==='postseason';
@@ -133,7 +133,7 @@
     if(g.round==='Bowl')return g.bowl||'Bowl';return `${g.stage||'NIT'}${g.sides.length>2?` · Group ${String(g.id).split('-').pop()}`:''}`;}
   const postSide=r=>postGame?.sides.find(x=>String(x.RosterID)===String(r.roster_id)&&String(x.LeagueID)===String(r.leagueId));
   function postList(){const sel=$('league').value;return (baseline.games||[]).filter(g=>!sel||sel==='all'||g.sides.some(x=>String(x.LeagueID)===sel));}
-  // NIT group: phone = ranked list, tap a team for its lineup; desktop = side-by-side lineup columns (Chris).
+  // NIT group: phone = ranked list, tap a team for its lineup; desktop = side-by-side lineup columns (CW).
   function renderGroup(models,playerSets,warns,games) {
     const center=title(games,models),isFinal=center.includes('FINAL');
     const started=models.some(m=>m.starters.some(p=>['in','post'].includes(p.phase)||p.actual!==0));
@@ -221,7 +221,7 @@
       const m=C.round(Math.abs(a.actual-b.actual)),w=a.actual>b.actual?chosen[0]:chosen[1];
       html+=`<div class="fin">${m<0.005?'Final · tie':`Final · ${escape(team(w.roster_id,w.leagueId).name)} by ${money(m)}`}</div>`;
     } else if((a.actual!==0||b.actual!==0)&&!missing){
-      // Proven (config live_bounds, Chris 2026-11-23): 100% / 0% only when the trailer can't catch up.
+      // Proven (config live_bounds, CW 2026-11-23): 100% / 0% only when the trailer can't catch up.
       const pv=C.decided(a,b,cfg.live_bounds),est=Math.min(99.999,Math.max(0.001,C.probability(a,b)));
       html+=oddsBar(...chosen,pv==='a'?100:pv==='b'?0:est,false,pv?'LIVE · DECIDED (CAN\'T BE CAUGHT)':'LIVE WIN CHANCE · ESTIMATE');
     }
@@ -232,7 +232,7 @@
     $('board').innerHTML=html;
     return [...new Set([...warns,...(metadataWarning?[metadataWarning]:[])])];
   }
-  // Bench (Chris, 2026-11-14): folded by default (remembered on this device). Open = the notable bench;
+  // Bench (CW, 2026-11-14): folded by default (remembered on this device). Open = the notable bench;
   // "Show all bench" adds every other player with points. 0 pts / bye / out stay a count.
   const pref=(k,v)=>{try{if(v===undefined)return localStorage.getItem(k)==='1';localStorage.setItem(k,v?'1':'0');}catch(e){return false;}};
   function benchHtml(benches,pregame){
@@ -242,16 +242,16 @@
     return `<details class="bench-d"${pref('sb-bench-open')?' open':''}><summary><h2>Bench · ${label}</h2></summary>${paired(benches[0].players,benches[1].players,Array(n).fill('BN'),false)}${all}<div class="bz">${benches.map(x=>`<span>${x.zeros} more · bye / out / no projection</span>`).join('')}</div></details>`;
   }
   document.addEventListener('toggle',e=>{const d=e.target;if(d.classList?.contains('bench-d'))pref('sb-bench-open',d.open);else if(d.classList?.contains('bench-all'))pref('sb-bench-all',d.open);},true);
-  // Image copy (Chris, 2026-11-14, option b): always starters + the notable bench, whatever is folded.
+  // Image copy (CW, 2026-11-14, option b): always starters + the notable bench, whatever is folded.
   function snapHtml(){const c=$('board').cloneNode(true);
     c.querySelectorAll('.bench-all').forEach(x=>x.remove());
     c.querySelectorAll('details.bench-d').forEach(d=>{const h=d.querySelector('summary h2');d.querySelector('summary').replaceWith(h);d.replaceWith(...d.childNodes);});
     return c.outerHTML;}
-  // Save image (Chris, 2026-11-07): a PNG of this game exactly as a phone shows it -- header, odds,
+  // Save image (CW, 2026-11-07): a PNG of this game exactly as a phone shows it -- header, odds,
   // starters and the notable bench ("would have helped / close calls"). The board is copied into a
   // hidden 400px-wide frame so the phone layout applies from any device; html2canvas 1.4.1 (vendored,
   // MIT) draws it from the laid-out boxes. Phone: share sheet; computer: download.
-  // Save image (Chris, 2026-11-07): a PNG of this game exactly as a phone shows it -- header, odds,
+  // Save image (CW, 2026-11-07): a PNG of this game exactly as a phone shows it -- header, odds,
   // starters and the notable bench ("would have helped / close calls"). Drawn by the shared
   // assets/snapshot.js (phone layout from any device; share sheet on phones, download on computers).
   let snapState='live';

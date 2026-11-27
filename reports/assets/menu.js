@@ -189,7 +189,7 @@ function createNCAA180Accessibility() {
     }
     return answer;
   }
-  // "No colour" (5.12.2, Chris): shown disabled on the Accessibility page until its non-colour cues
+  // "No colour" (5.12.2, CW): shown disabled on the Accessibility page until its non-colour cues
   // exist. A stored "none" stays stored (read() still returns it) but paints exactly like Standard.
   // The none palette, monochrome fills and forced emphasis below are kept for when it ships.
   var NONE_AVAILABLE = false;
@@ -387,7 +387,7 @@ function createNCAA180Accessibility() {
   }
 
   // Sub-rows display directly below the page header, not between the main menu and the header
-  // (Chris, 2026-11-20). Pages keep writing the placeholders next to the main menu (site_common.menu_html);
+  // (CW, 2026-11-20). Pages keep writing the placeholders next to the main menu (site_common.menu_html);
   // this moves them after the <header> that follows them as a sibling, skipping only script/noscript/nav
   // and the dev bar. No such header: the row stays where it is. Order of several rows is kept.
   var SKIP = {SCRIPT: 1, NOSCRIPT: 1, NAV: 1, STYLE: 1, LINK: 1};

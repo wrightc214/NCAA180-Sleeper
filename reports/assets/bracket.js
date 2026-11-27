@@ -1,4 +1,4 @@
-/* bracket.js -- the bracket component's browser side (Chris, 2026-11-20, task 5.13; markup from
+/* bracket.js -- the bracket component's browser side (CW, 2026-11-20, task 5.13; markup from
  * scripts/bracket.py).
  *
  * Phone (ESPN bracket-app model): one round in focus, packed top to bottom; the next round peeks at

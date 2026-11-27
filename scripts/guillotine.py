@@ -1,7 +1,7 @@
 """
 guillotine.py -- The Guillotine: every team, weeks first_week..last_week (12-16), about half cut each week.
 
-Rules (config/league.json -> postseason.guillotine; Chris 2026-11-04 / 11-14, claude/todo-guillotine.md):
+Rules (config/league.json -> postseason.guillotine; CW 2026-11-04 / 11-14, claude/todo-guillotine.md):
   - Each week counts only that week's score (standard scoring from 2026, like every postseason game).
   - Weeks first_week..last_week-1: half of the field entering the week, rounded down, advances.
     Everyone tied with the last advancing score advances too (PGA style), so a field can be bigger

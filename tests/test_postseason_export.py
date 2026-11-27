@@ -1,4 +1,4 @@
-"""Postseason export display rules (Chris, 2026-10-28)."""
+"""Postseason export display rules (CW, 2026-10-28)."""
 import sys
 import unittest
 from pathlib import Path

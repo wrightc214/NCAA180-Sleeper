@@ -1,7 +1,7 @@
 """
 gametime_projections.py -- GAME-TIME projections for COMPLETED weeks (awards + manager stats).
 
-Two projection sets, kept apart on purpose (Chris, 2026-10-14):
+Two projection sets, kept apart on purpose (CW, 2026-10-14):
   PREGAME   = Tuesday baseline snapshot of the UPCOMING week (projection_snapshot.py), used for
               predictive measures (matchups page win chance, MatchupProjections_Historic.csv).
               Never overwritten or changed by anything here.

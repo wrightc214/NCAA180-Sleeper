@@ -1,4 +1,4 @@
-"""Standard-scoring layer for history (Chris, 2026-10-08).
+"""Standard-scoring layer for history (CW, 2026-10-08).
 
 Every historical score is restated on ONE scoring system: each season's majority league
 settings. Official Sleeper numbers are never overwritten; this script derives:
@@ -7,7 +7,7 @@ settings. Official Sleeper numbers are never overwritten; this script derives:
                                     PointsOfficial, PointsStandard, Delta  (every team-week)
   data/ScoringFlags_Historic.csv    footnotes (Type = Game | DivisionTitle)
 
-Rules (Chris, 2026-10-08):
+Rules (CW, 2026-10-08):
   - Scores are SHOWN on standard scoring ("as they should have been").
   - OUTCOMES STAND as decided at game time: W/L, records, division titles, CCG/playoff/bowl/NIT
     appearances and results, draft orders. Where the standard score would have reversed a

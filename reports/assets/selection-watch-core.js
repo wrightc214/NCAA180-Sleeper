@@ -151,7 +151,7 @@
       const k=settled[g.id]||g.winner, row=k&&!playIns.has(g.id)&&byBubble.get(k);
       if(row&&row.status!=='Saved')row.status='Automatic bid';
     });
-    // Every at-large team still playing its own CCG gets a placard and takes no thief (Chris, 2026-11-24),
+    // Every at-large team still playing its own CCG gets a placard and takes no thief (CW, 2026-11-24),
     // not only a leader whose win saves its spot.
     games.forEach(g=>{
       if(playIns.has(g.id)||settled[g.id]||g.winner)return;
@@ -178,9 +178,9 @@
       else rows.push({right:t});
     });
     // A team below the cut keeps the thief that knocked it out on its row; its own bid protection becomes
-    // a compact note under the team (Chris, 2026-11-25).
+    // a compact note under the team (CW, 2026-11-25).
     for(const row of rows)if(row.right?.active&&row.hold?.plays){row.protect=row.hold;delete row.hold;}
-    // Each possible thief sits beside the team it would knock out (Chris, 2026-11-24): the most likely
+    // Each possible thief sits beside the team it would knock out (CW, 2026-11-24): the most likely
     // goes against the last team above the cut, the next most likely against the one above that, and so
     // on. A held row (that team leads its own CCG) keeps its placard and does not take a thief. Thieves
     // beyond the free rows stack above the board, least likely furthest from the cut.

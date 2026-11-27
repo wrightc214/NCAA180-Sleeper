@@ -1,6 +1,6 @@
 name: Trim team logos
 
-# Runs on every team, CCG or bowl logo upload (teams: Chris 2026-11-12; CCG + bowls 2026-11-17)
+# Runs on every team, CCG or bowl logo upload (teams: CW 2026-11-12; CCG + bowls 2026-11-17)
 # and on demand:
 #   1. logo_trim.py  -- crop empty canvas, web-size copies (masters kept in assets/logos/source/)
 #   2. logo_glow.py  -- glow version of every team logo for dark backgrounds (teams/glow-dark/)

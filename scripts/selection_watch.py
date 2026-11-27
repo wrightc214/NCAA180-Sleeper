@@ -1,5 +1,5 @@
 """
-selection_watch.py -- data for the Selection Watch page during CCG week (Chris, 2026-11-12).
+selection_watch.py -- data for the Selection Watch page during CCG week (CW, 2026-11-12).
 
 Once the regular season is final the at-large order is fixed and only the 15 conference
 championship games (CCGs) are left. This writes everything the page needs to work the playoff
@@ -208,7 +208,7 @@ def odds(d, p):
     return chance
 
 
-# ---------- coin-toss alert (Chris, 2026-11-13) ----------
+# ---------- coin-toss alert (CW, 2026-11-13) ----------
 # After the regular season, any tie that could go to a REAL coin toss is reported to the league
 # manager feed (lm-private-data): a division title tied after every tiebreaker (decided now), or an
 # exact tie that would straddle the last playoff spot in at least one set of CCG results.

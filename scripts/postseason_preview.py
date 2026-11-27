@@ -1,7 +1,7 @@
 """
-postseason_preview.py -- show Chris the postseason drafts waiting for his approval (lm-private-data).
+postseason_preview.py -- show CW the postseason drafts waiting for his approval (lm-private-data).
 
-Chris, 2026-11-03: the real selections after CCG week are approved by him before anything is public.
+CW, 2026-11-03: the real selections after CCG week are approved by him before anything is public.
 Each selection script writes a DRAFT (data/postseason_drafts/) instead of publishing; this renders
 every draft that isn't published yet as cards and posts them to lm-private-data with the script
 that approves it:

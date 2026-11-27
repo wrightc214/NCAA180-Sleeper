@@ -1,4 +1,4 @@
-/* Proven calls on live pages (Chris, 2026-11-23; config live_bounds). Run: node tests/live-bounds.test.js
+/* Proven calls on live pages (CW, 2026-11-23; config live_bounds). Run: node tests/live-bounds.test.js
  * ScoreboardCore.bounds / decided, CCG race Clinched / Out, Guillotine Safe / Cut. */
 'use strict';
 const assert=require('node:assert/strict');
@@ -41,7 +41,7 @@ b=C.bounds(team(80,[...done(10),P('TE','unknown',0,6)]),lb);near(b.ceil,80+6+35)
 b=C.bounds(team(80,[...done(10),{id:'0',phase:'out',minutes:0,baseline:0}]),lb);near(b.ceil,80);
 assert.equal(C.bounds(team(80,done(11)),undefined),null);
 
-// decided(): Chris's game -- up ~135, both with one starter (60 minutes) left.
+// decided(): CW's game -- up ~135, both with one starter (60 minutes) left.
 const asu=team(250,[...done(10),P('WR','pre',60,14)]),cal=team(115,[...done(10),P('WR','pre',60,14)]);
 assert.equal(C.decided(asu,cal,lb),'a');assert.equal(C.decided(cal,asu,lb),'b');
 // Leader 1 point up with its kicker still to play, trailer done: open (one negative could flip it).

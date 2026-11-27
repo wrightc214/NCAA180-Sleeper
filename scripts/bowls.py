@@ -1,11 +1,11 @@
 """
 bowls.py -- bowl selection and pairings (rules: config/league.json -> postseason.bowls).
 
-Redesign (Chris, 2026-10-28). The pool is unchanged: non-playoff teams with min_wins+ regular-season
+Redesign (CW, 2026-10-28). The pool is unchanged: non-playoff teams with min_wins+ regular-season
 wins; if the count is odd the best bump_wins team moves up (max_bumps); surplus beyond the bowl
 slots falls to the NIT. Tiers then fill in order:
 
-Bowl order (rank, Chris 2026-11-03): config rank.method. poll_per_win = poll rank minus
+Bowl order (rank, CW 2026-11-03): config rank.method. poll_per_win = poll rank minus
 poll_spots_per_win x wins (default 25: one fewer win needs 25+ poll spots to pass you); record =
 wins + tiebreakers. "Top-ranked" below means this order.
 
@@ -29,8 +29,8 @@ Everywhere: never two teams from the same league, and no pairing of two franchis
 roster slot) that met in any postseason game or NIT group in the last repeat_seasons seasons
 (Marquee: heavy penalty; random draws: hard rule, retried within the seeded stream).
 
-Review step (Chris, 2026-10-27): the draw is written as a DRAFT (data/postseason_drafts/
-Bowls_<year>.csv) with its random seed, so a rerun reproduces it exactly. Chris reviews, then
+Review step (CW, 2026-10-27): the draw is written as a DRAFT (data/postseason_drafts/
+Bowls_<year>.csv) with its random seed, so a rerun reproduces it exactly. CW reviews, then
 --publish moves it into Postseason_Season.csv (locked; later runs only refresh scores).
 
   python scripts/bowls.py [--year Y] [--publish | --redraw | --preview] [--data-dir DIR]
@@ -99,7 +99,7 @@ def order_pool(pool, year, cfg, notes):
 
 
 def build_pool(year, field_path, cfg):
-    """(pool, notes): eligible non-playoff teams, best first. Flexible count (Chris, 2026-10-27):
+    """(pool, notes): eligible non-playoff teams, best first. Flexible count (CW, 2026-10-27):
     every non-playoff team with min_wins+ gets a bowl; odd count -> the best bump_wins team moves up."""
     st = ps.standings(year)
     field = pd.read_csv(field_path, dtype=str)

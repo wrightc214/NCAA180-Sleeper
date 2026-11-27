@@ -275,7 +275,7 @@ def main():
                       "dynR": int(r.DynastyTotalRank), "redR": int(r.LineupRedraftRank),
                       "conR": int(r.ContenderRank), "ppgR": int(r.PPGRank),
                       "logo": f"../{LOGO_DIR}/{r.Team}.png" if logo else None,
-                      # dark backgrounds: alt, else glow file (Chris, 2026-11-12); unencoded like "logo" (the page encodes)
+                      # dark backgrounds: alt, else glow file (CW, 2026-11-12); unencoded like "logo" (the page encodes)
                       "logoDark": next((f"../{LOGO_DIR}/{d}/{r.Team}.png" for d in ("alt-dark", "glow-dark")
                                         if logo and os.path.exists(os.path.join(LOGO_DIR, d, f"{r.Team}.png"))), None)})
     payload = {"teams": teams, "colors": colors, "tcolors": team_colors, "week": week, "w": round(w, 2),

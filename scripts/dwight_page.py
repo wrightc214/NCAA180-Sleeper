@@ -42,7 +42,7 @@ SEASON_PAGE = "reports/dwight-fight-{}.html"
 STANDINGS_HIST = "data/Standings_Historic.csv"
 MATCHUPS_HIST = "data/Matchups_Historic.csv"
 SCOREBOARD = "data/scoreboard"
-ROLES = "data/Dwight_Roles.csv"  # past seasons: Season, Username, Role (Chris, 2026-11-24: option C)
+ROLES = "data/Dwight_Roles.csv"  # past seasons: Season, Username, Role (CW, 2026-11-24: option C)
 NBSP = "\u00a0"
 RECON_NOTE = "Reconstructed: field = that season's poll voters; the event was likely not held."
 

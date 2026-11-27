@@ -48,7 +48,7 @@
       },
       "final_four_rule": true,
       "_note": "Same bots as the Top 25. Postseason games that needed a lineup (CCG, Playoff, Bowl, every NIT round) are extra games for Scoreboard (win %), plus the retired Bracketologist/Monday Morning QB when enabled; all other bots (incl. SOR, frozen by decision 2026-10-13) stay at week 11. NIT group = one game, result = share of rivals outscored. Bumps are added to Score per win (standard deviations): playoff by round R1..Final, CCG/Bowl flat, NIT x share. One regular-season win is worth about +0.13 (max +0.165), so every CCG/Bowl/playoff win counts more; NIT is a deliberate exception (weak field, up to 5 games). final_four_rule: a semifinal/final winner is raised directly above the team it beat (backstop; never fired 2024-2025). Decided 2026-10-07.",
-      "_bump_align": "'final': playoff bumps count back from the title game, so a shorter bracket (2019: 4 rounds) gives its title game the title bump. Group rounds (2020 playoff round 1) earn the round bump x share of group rivals outscored, like the NIT. PlayoffThird (2020 third-place game) counts as a game; the winner gets the bowl bump (Chris 2026-10-08)."
+      "_bump_align": "'final': playoff bumps count back from the title game, so a shorter bracket (2019: 4 rounds) gives its title game the title bump. Group rounds (2020 playoff round 1) earn the round bump x share of group rivals outscored, like the NIT. PlayoffThird (2020 third-place game) counts as a game; the winner gets the bowl bump (CW 2026-10-08)."
     }
   },
   "_points": "'linear' = size, size-1, ... 1 for ranks 1..size. Or an explicit list, e.g. [25,24,23,...].",
@@ -254,7 +254,7 @@
         "data/backfill/TeamProjections_History.csv"
       ],
       "psv_rank": "data/PreseasonRank_Historic.csv",
-      "_psv_rank": "Seasons with a preseason starter ranking instead of values (2021: Chris file 9/6/21). Used as the PSV input (rank 1 = best) when the season has no PSV values; unresolved slots get no PSV (renormalized)."
+      "_psv_rank": "Seasons with a preseason starter ranking instead of values (2021: CW file 9/6/21). Used as the PSV input (rank 1 = best) when the season has no PSV values; unresolved slots get no PSV (renormalized)."
     },
     "exclude_value_years": [],
     "_exclude_value_years": "Seasons whose value capture is not preseason are listed here and ignored (weight renormalized). 2022 now uses the 9/13/22 sheet (after week 1, before week 2), so nothing is excluded."

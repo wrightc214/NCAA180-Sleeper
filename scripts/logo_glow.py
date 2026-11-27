@@ -1,8 +1,8 @@
-"""Glow versions of every team logo, for dark backgrounds (Chris, 2026-11-12).
+"""Glow versions of every team logo, for dark backgrounds (CW, 2026-11-12).
 
 Every normal logo in assets/logos/teams gets a copy with a thin white glow around it in
 assets/logos/teams/glow-dark/<Team>.png. On a dark background pages use, in order:
-  1. assets/logos/teams/alt-dark/<Team>.png   (Chris's hand-picked dark alt -- overrides the glow)
+  1. assets/logos/teams/alt-dark/<Team>.png   (CW's hand-picked dark alt -- overrides the glow)
   2. assets/logos/teams/glow-dark/<Team>.png  (this script)
   3. the normal logo
 Light backgrounds always use the normal logo. The glow is baked into the image (not a CSS

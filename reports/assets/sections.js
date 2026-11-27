@@ -1,4 +1,4 @@
-/* sections.js -- the site's standard section treatment (Chris, 2026-11-08: every page gets collapsible
+/* sections.js -- the site's standard section treatment (CW, 2026-11-08: every page gets collapsible
  * sections, a Collapse all / Expand all button and a save-image button on each section).
  *
  * Works on any page: every <section> inside .wrap whose first-level child is an <h2> becomes foldable

@@ -1,5 +1,5 @@
 {
-  "_about": "Champions League (Chris, 2026-11-21; planning repo todo/todo-champions-league.md + todo-champions-league-build.md). A shadow event computed from home-league scores: 33 teams chosen from the previous season, three-team pods every week (weeks 1-16, fixed schedule), then the Triad Cup (top 3, weeks 17-18). Special events keep their own config file; shared league values (season, scoring basis, standard tiebreak order) come from config/league.json. Pages: reports/cl-*.html (hidden-dev).",
+  "_about": "Champions League (CW, 2026-11-21; planning repo todo/todo-champions-league.md + todo-champions-league-build.md). A shadow event computed from home-league scores: 33 teams chosen from the previous season, three-team pods every week (weeks 1-16, fixed schedule), then the Triad Cup (top 3, weeks 17-18). Special events keep their own config file; shared league values (season, scoring basis, standard tiebreak order) come from config/league.json. Pages: reports/cl-*.html (hidden-dev).",
   "name": "Champions League",
   "cup_name": "Triad Cup",
   "_seasons_note": "Seasons the event is computed for. dev_seasons: computed and shown only in Dev view (the pages carry a DEV PREVIEW banner); seasons: official. A field file data/champions_league/field_<season>.csv must exist for a season to run.",
@@ -36,7 +36,7 @@
     "h2h_last_week": 11,
     "coin_toss_results": []
   },
-  "_ownership_note": "A place belongs to the owner who earned it (Chris, 2026-11-21). If a team's owner (Sleeper user ID) at the start of the season is not the owner recorded when the field was locked, the team gives up its place and the selection is rerun without it. Before schedule_publish_date the whole field is re-seeded; after it the replacement takes the vacated seed. The field locks at week 1: no replacements after that (in-season orphans follow the standard orphan rules).",
+  "_ownership_note": "A place belongs to the owner who earned it (CW, 2026-11-21). If a team's owner (Sleeper user ID) at the start of the season is not the owner recorded when the field was locked, the team gives up its place and the selection is rerun without it. Before schedule_publish_date the whole field is re-seeded; after it the replacement takes the vacated seed. The field locks at week 1: no replacements after that (in-season orphans follow the standard orphan rules).",
   "schedule_publish_date": {"2026": "2026-08-20"},
   "orphans_note": "Standard orphan rules are not built yet (offseason). Orphan teams keep their place in season and score whatever their lineup scores."
 }

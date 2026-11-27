@@ -99,7 +99,7 @@ test('generated reports/assets/menu.js parses and excludes fully hidden tabs', (
   assert.ok(tabs.length > 0);
   assert.ok(!tabs.some((t) => t.state === 'hidden'));
   assert.ok(tabs.some(t => t.id === 'about' && t.href === 'about.html'), 'public About page remains in menu');
-  assert.ok(tabs.some(t => t.id === 'access' && (t.state || 'visible') === 'visible'), 'Accessibility is public (Chris, 2026-11-22)');
+  assert.ok(tabs.some(t => t.id === 'access' && (t.state || 'visible') === 'visible'), 'Accessibility is public (CW, 2026-11-22)');
 });
 
 test('built-in icons: named glyphs are icon-only tabs; image paths are not', () => {
@@ -110,7 +110,7 @@ test('built-in icons: named glyphs are icon-only tabs; image paths are not', () 
   assert.ok(!M.mainModel('awards', false).some((t) => t.label === 'Accessibility'));
 });
 
-// Sub-rows sit below the page header (Chris, 2026-11-20): headerAfter finds the <header> that follows a
+// Sub-rows sit below the page header (CW, 2026-11-20): headerAfter finds the <header> that follows a
 // sub-row as a sibling, skipping only script/noscript/nav/style/link and the dev bar.
 test('headerAfter: finds the page header past the menu siblings, nothing else', () => {
   const M = load(DATA);

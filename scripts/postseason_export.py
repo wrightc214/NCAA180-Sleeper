@@ -1,5 +1,5 @@
 """Postseason export: one JSON per season for the Postseason page, the scoreboard's postseason
-mode and the Discord bracket cards (Chris, 2026-10-28).
+mode and the Discord bracket cards (CW, 2026-10-28).
 
 Writes data/postseason/<year>.json:
   season, weeks [{week, label, short, subtitle}], games [...], champions {...}
@@ -52,7 +52,7 @@ def round_name(event, year, raw):
 
 
 def stagg():
-    """NIT Final display name (Chris, 2026-10-28: past finals relabeled too)."""
+    """NIT Final display name (CW, 2026-10-28: past finals relabeled too)."""
     return lcfg.cfg()["postseason"]["bowls"].get("nit_final_label", "")
 
 

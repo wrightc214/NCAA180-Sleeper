@@ -43,7 +43,7 @@ class Config(unittest.TestCase):
                                "Accessibility", "Notification settings"])
 
     def test_selection_watch_ccg_public_playoffs_dev(self):
-        """Chris, 2026-11-20: CCG public; Playoffs stays Dev-only until approved."""
+        """CW, 2026-11-20: CCG public; Playoffs stays Dev-only until approved."""
         items = {i["label"]: i.get("state", "visible") for i in CFG["rows"]["selection-watch"]["items"]}
         self.assertEqual(items, {"CCG": "visible", "Playoffs": "visible"})
 

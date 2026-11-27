@@ -1,10 +1,10 @@
 """
-about_page.py -- reports/about.html: what NCAA 180 is, in one page (Chris, 2026-11-07).
+about_page.py -- reports/about.html: what NCAA 180 is, in one page (CW, 2026-11-07).
 
-Draft for Chris to edit: rules wording comes from the bylaws (project doc claude/bylaws.md) and, where
+Draft for CW to edit: rules wording comes from the bylaws (project doc claude/bylaws.md) and, where
 the scripts enforce a rule, straight from config/league.json so the page can't drift from what the
 site does. Conferences/divisions come from data/Teams.csv; champions from Postseason_Historic.csv.
-Not linked from the site nav until Chris approves it (direct link only).
+Not linked from the site nav until CW approves it (direct link only).
 Top: copy-the-site-link button (short link "home") + Discord invite (config about.discord_invite).
 Every section folds and has a save-image button (site design rule).
 
@@ -56,7 +56,7 @@ def champions():
 def discord_link(dc):
     """One tap to the person's Discord profile (then Message): https://discord.com/users/<numeric id>.
     The id comes from config about.data_contact.discord_id, else the DISCORD_CONTACT_ID the weekly job
-    already uses to tag Chris (Chris, 2026-11-07: only his Discord for now). No id -> plain text."""
+    already uses to tag CW (CW, 2026-11-07: only his Discord for now). No id -> plain text."""
     name = dc.get("discord", "")
     did = str(dc.get("discord_id", "") or os.environ.get("DISCORD_CONTACT_ID", "")).strip()
     if did.isdigit():
@@ -66,7 +66,7 @@ def discord_link(dc):
 
 def directory(term, short, col=None):
     """League manager, then the data contact and each conference's assistant(s) with LM powers, then the
-    special accounts (Chris, 2026-11-07). Names are Sleeper display names; tap one to copy it (Sleeper has
+    special accounts (CW, 2026-11-07). Names are Sleeper display names; tap one to copy it (Sleeper has
     no public link that opens a DM)."""
     a = lcfg.cfg().get("about", {})
     # who holds which role: one lookup shared with the Dwight Fight bracket (league_roles.py, task 5.18)
@@ -75,7 +75,7 @@ def directory(term, short, col=None):
     dc = a.get("data_contact", {})
     un = lambda n: f'<button type="button" class="un" data-u="{e(n)}" title="Copy Sleeper name">@{e(n)}</button>' if n else ""  # noqa: E731
     taken = {lm_name, dc.get("sleeper", ""), *special}
-    # Sleeper name, then the team they manage, in its colors (Chris, 2026-11-07)
+    # Sleeper name, then the team they manage, in its colors (CW, 2026-11-07)
     col = col or {}
     ro = pd.read_csv("data/RosterOwners_LastSeen.csv", dtype=str, keep_default_na=False)
     tm = pd.read_csv("data/Teams.csv", dtype=str, encoding="utf-8-sig")
@@ -143,7 +143,7 @@ def build():
     top = (f'<div class="share"><button type="button" id="copy-home" data-url="{e(home)}">Copy site link</button>'
            + (f'<a class="btn" href="{e(invite)}" target="_blank" rel="noopener">Join the Discord</a>' if invite else "")
            + f'<span id="copied" role="status" aria-live="polite"></span></div>'
-           # install = add the site to the home screen (Chris: link a prefilled search, one per platform)
+           # install = add the site to the home screen (CW: link a prefilled search, one per platform)
            + '<p class="inst"><b>Install the app:</b> '
            + " · ".join(f'<a href="https://letmegooglethat.com/?q={quote_plus(q)}" target="_blank" rel="noopener">{lbl}</a>'
                         for lbl, q in (("iPhone (Safari)", "how to add a website to the home screen on iPhone Safari"),
@@ -243,7 +243,7 @@ const t=x.textContent;x.textContent='Copied';setTimeout(()=>{x.textContent=t;},1
     return OUT
 
 
-# Hidden dev menu (Chris, 2026-11-16; todo-about-page.md section 6): tap the page title 5 times within
+# Hidden dev menu (CW, 2026-11-16; todo-about-page.md section 6): tap the page title 5 times within
 # 3 seconds to open it. Per-device switches: Tester notifications (the same push `test` flag as the
 # notifications page's own title-tap trick, saved via app.js NCAA180.setTester) and Dev view (shows
 # hidden-dev menu entries, assets/menu.js). A div, not a section card, so it never folds or saves as an image.

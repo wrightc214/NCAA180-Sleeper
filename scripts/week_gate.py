@@ -13,7 +13,7 @@ full, successful scheduled run covered. Scheduled runs go ahead only when Sleepe
 If Sleeper can't be reached, a scheduled run is skipped (the next wake-up retries).
 
 Readiness (added 2026-10-06): Sleeper flips the shared NFL week at once, but finishes each
-league's end-of-week processing over roughly an hour (Chris's leagues: 11:12-12:05 ET). So a
+league's end-of-week processing over roughly an hour (CW's leagues: 11:12-12:05 ET). So a
 scheduled run also waits until EVERY league for the season reports settings.last_scored_leg >=
 the week just finished. Leagues without that field count as ready (warning). Safety valve: after
 READY_DEADLINE (Wed 12:00 UTC) it runs anyway with a warning, so a stuck league can't block the

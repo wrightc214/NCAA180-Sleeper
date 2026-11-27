@@ -144,7 +144,7 @@ Season,EventType,Event,Round,Team,Conference,LeagueID,RosterID,ManagerUserID,Man
 2021,Bowl,Texas Bowl,,West Virginia,Big 12,652822871495749632,8,543929284962770944,alicho,assets/trophies/bowls/Bluebonnet Bowl.png,Final,Postseason_Historic.csv
 2021,NationalTitle,National Championship,,Youngstown State,Big Sky,652822938654937088,12,519767126595325952,mssullivan2022,assets/trophies/special/National Championship.png,Final,Postseason_Historic.csv
 2021,NIT,NIT,,Eastern Kentucky,Ohio Valley,644097339790827520,5,474662041341128704,Dreev,assets/trophies/special/Stagg Bowl.png,Final,Postseason_Historic.csv
-2021,DwightFight,Dwight Fight,,Villanova,Big Sky,652822938654937088,2,439255136309604352,PapaCrowther,assets/logos/Dwight Fight/Dwight Fight Trophy Blank.png,Final,Dwight_Historic.csv: Confirmed (Chris 2026-11-19)
+2021,DwightFight,Dwight Fight,,Villanova,Big Sky,652822938654937088,2,439255136309604352,PapaCrowther,assets/logos/Dwight Fight/Dwight Fight Trophy Blank.png,Final,Dwight_Historic.csv: Confirmed (CW 2026-11-19)
 2022,CCG,ACC Championship,,Clemson,ACC,787122703772614656,12,302575527556825088,dilbennett,assets/trophies/conferences/ACC.png,Final,Postseason_Historic.csv
 2022,CCG,Big 12 Championship,,Texas,Big 12,787428826962571264,6,335910160469880832,elianbruger,assets/trophies/conferences/Big 12.png,Final,Postseason_Historic.csv
 2022,CCG,Big East Championship,,Army,Big East,787469620847190016,8,456167283761344512,Claser,assets/trophies/conferences/Big East.png,Final,Postseason_Historic.csv
@@ -194,7 +194,7 @@ Season,EventType,Event,Round,Team,Conference,LeagueID,RosterID,ManagerUserID,Man
 2022,PlayoffRound,Sugar Bowl,Elite 8,Clemson,ACC,787122703772614656,12,302575527556825088,dilbennett,assets/trophies/bowls/Sugar Bowl.png,Final,Postseason_Historic.csv
 2022,NationalTitle,National Championship,,Charleston Southern,Ohio Valley,787469585417945088,6,331558449374593024,leathershoe4,assets/trophies/special/National Championship.png,Final,Postseason_Historic.csv
 2022,NIT,NIT,,Washington State,Pac-12,787122632301649920,4,477666723663704064,chzhead412,assets/trophies/special/Stagg Bowl.png,Final,Postseason_Historic.csv
-2022,DwightFight,Dwight Fight,,Arizona State,Pac-12,787122632301649920,7,597246797479469056,wrightc214,assets/logos/Dwight Fight/Dwight Fight Trophy Blank.png,Final,Dwight_Historic.csv: Confirmed (Chris 2026-11-19)
+2022,DwightFight,Dwight Fight,,Arizona State,Pac-12,787122632301649920,7,597246797479469056,wrightc214,assets/logos/Dwight Fight/Dwight Fight Trophy Blank.png,Final,Dwight_Historic.csv: Confirmed (CW 2026-11-19)
 2023,CCG,ACC Championship,,Clemson,ACC,921152041332871168,12,302575527556825088,dilbennett,assets/trophies/conferences/ACC.png,Final,Postseason_Historic.csv
 2023,CCG,Big 12 Championship,,Baylor,Big 12,921152073054457856,5,464117743042424832,robertlouis7,assets/trophies/conferences/Big 12.png,Final,Postseason_Historic.csv
 2023,CCG,Big East Championship,,Syracuse,Big East,921152169275957248,7,456159345906806784,CodeKhaos,assets/trophies/conferences/Big East.png,Final,Postseason_Historic.csv
@@ -303,7 +303,7 @@ Season,EventType,Event,Round,Team,Conference,LeagueID,RosterID,ManagerUserID,Man
 2024,PlayoffRound,Sugar Bowl,Final Four,Washington State,Pac-12,1051381777098473472,4,477666723663704064,chzhead412,assets/trophies/bowls/Sugar Bowl.png,Final,Postseason_Historic.csv
 2024,NationalTitle,National Championship,,Washington State,Pac-12,1051381777098473472,4,477666723663704064,chzhead412,assets/trophies/special/National Championship.png,Final,Postseason_Historic.csv
 2024,NIT,NIT,,Middle Tennessee State,CUSA,1051381357190053888,7,651857322645241856,ridinroundinarover,assets/trophies/special/Stagg Bowl.png,Final,Postseason_Historic.csv
-2024,DwightFight,Dwight Fight,,New Mexico,Mountain West,1051381233009295360,9,589001974318403584,Mrhawke19,assets/logos/Dwight Fight/Dwight Fight Trophy Blank.png,Reconstructed,Dwight_Historic.csv: Reconstructed (field = poll voters; event likely not held) (Chris 2026-11-19)
+2024,DwightFight,Dwight Fight,,New Mexico,Mountain West,1051381233009295360,9,589001974318403584,Mrhawke19,assets/logos/Dwight Fight/Dwight Fight Trophy Blank.png,Reconstructed,Dwight_Historic.csv: Reconstructed (field = poll voters; event likely not held) (CW 2026-11-19)
 2025,CCG,ACC Championship,,Clemson,ACC,1192383069776863232,12,302575527556825088,dilbennett,assets/trophies/conferences/ACC.png,Final,Postseason_Historic.csv
 2025,CCG,Big 12 Championship,,Kansas State,Big 12,1192383107391332352,7,425386065373691904,Frankeen,assets/trophies/conferences/Big 12.png,Final,Postseason_Historic.csv
 2025,CCG,Big East Championship,,Pittsburgh,Big East,1183984327853932544,4,456129190995947520,vinceA762,assets/trophies/conferences/Big East.png,Final,Postseason_Historic.csv
@@ -357,4 +357,4 @@ Season,EventType,Event,Round,Team,Conference,LeagueID,RosterID,ManagerUserID,Man
 2025,PlayoffRound,Sugar Bowl,Final Four,Montana,Wild,1197683625282244608,1,457579310098673664,LanceBoneau,assets/trophies/bowls/Sugar Bowl.png,Final,Postseason_Historic.csv
 2025,NationalTitle,National Championship,,Arizona State,Pac-12,1192383038721757184,7,597246797479469056,wrightc214,assets/trophies/special/National Championship.png,Final,Postseason_Historic.csv
 2025,NIT,NIT,,Tuskegee,HBCU,1197683812742483968,11,327614483000217600,Jerryb83,assets/trophies/special/Stagg Bowl.png,Final,Postseason_Historic.csv
-2025,DwightFight,Dwight Fight,,Arizona State,Pac-12,1192383038721757184,7,597246797479469056,wrightc214,assets/logos/Dwight Fight/Dwight Fight Trophy Blank.png,Reconstructed,Dwight_Historic.csv: Reconstructed (field = poll voters; event likely not held) (Chris 2026-11-19)
+2025,DwightFight,Dwight Fight,,Arizona State,Pac-12,1192383038721757184,7,597246797479469056,wrightc214,assets/logos/Dwight Fight/Dwight Fight Trophy Blank.png,Reconstructed,Dwight_Historic.csv: Reconstructed (field = poll voters; event likely not held) (CW 2026-11-19)
