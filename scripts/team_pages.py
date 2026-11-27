@@ -1141,7 +1141,6 @@ body.tm-c-full{--tm-base:var(--t1);--tm-fg:var(--tm-full-text);--tm-heading:var(
 body.tm-c-inverted{--tm-base:var(--t1ink);--tm-fg:var(--tm-inverted-text);--tm-heading:var(--tm-inverted-heading);--tm-header:var(--t1);--tm-header-text:var(--tm-full-text)}
 body:is(.tm-c-full,.tm-c-inverted){--tm-surface:color-mix(in srgb,var(--tm-base) 94%,var(--tm-fg))}
 html:has(body:is(.tm-c-full,.tm-c-inverted)){background:var(--bg)}
-body.tm-c-inverted .tm-chip{background:var(--chip-bg,var(--tm-base));color:var(--chip-ink,var(--tm-fg))}
 /* full */
 body:is(.tm-c-full,.tm-c-inverted){background:var(--tm-surface)}
 body:is(.tm-c-full,.tm-c-inverted) nav.weeks a,body:is(.tm-c-full,.tm-c-inverted) nav.weeks button,body:is(.tm-c-full,.tm-c-inverted) .fold-all,body:is(.tm-c-full,.tm-c-inverted) .tm-colors{color:var(--tm-fg)}
@@ -1157,7 +1156,8 @@ body:is(.tm-c-full,.tm-c-inverted) #tm-sections a.team-link,body:is(.tm-c-full,.
 body:is(.tm-c-full,.tm-c-inverted) .tm-res{background:var(--panel);border-radius:999px;padding:1px 7px}
 /* the header block and the season's name label: inverted so they stand off the team-coloured page */
 body:is(.tm-c-full,.tm-c-inverted) .tm-head{background:var(--tm-header);color:var(--tm-header-text)}
-body:is(.tm-c-full,.tm-c-inverted) .tm-chip{background:var(--chip-ink,var(--tm-fg));color:var(--chip-bg,var(--tm-base))}
+body.tm-c-full .tm-chip{background:var(--chip-ink,var(--tm-fg));color:var(--chip-bg,var(--tm-base))}
+body.tm-c-inverted .tm-chip{background:var(--chip-bg,var(--tm-base));color:var(--chip-ink,var(--tm-fg))}
 /* neutral islands: anything carrying status colours, grades, art or charts */
 body:is(.tm-c-full,.tm-c-inverted) #tm-sections .tm-ov,body:is(.tm-c-full,.tm-c-inverted) #tm-sections .tm-chart,body:is(.tm-c-full,.tm-c-inverted) #tm-sections .tm-trophies article,
 body:is(.tm-c-full,.tm-c-inverted) #tm-sections .tx-card,body:is(.tm-c-full,.tm-c-inverted) #tm-sections .tm-move{background:var(--panel);color:var(--ink);border-color:var(--line)}
