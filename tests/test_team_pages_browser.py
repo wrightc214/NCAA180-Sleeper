@@ -93,7 +93,7 @@ class TeamPageBrowser(unittest.TestCase):
                     os.makedirs(OUT, exist_ok=True)
                     p.screenshot(path=os.path.join(OUT, f"team-{tag}.png"), full_page=True)
 
-    def test_color_toggle_three_way(self):
+    def test_color_modes_and_team_override(self):
         p = self.open(f"reports/team.html?league={league_id('NCAA PAC 12')}&roster=7", 390)
         self.assertIn("tm-c-full", p.get_attribute("body", "class"), "team colours by default")
         sec = "#tm-roster-sec"
@@ -103,6 +103,18 @@ class TeamPageBrowser(unittest.TestCase):
         self.assertEqual(chip, ["rgb(255, 198, 39)", "rgb(140, 29, 64)"], "season label inverted")
         head = p.evaluate("(()=>{const c=getComputedStyle(document.querySelector('.tm-head'));return [c.backgroundColor,c.color]})()")
         self.assertEqual(head, ["rgb(255, 198, 39)", "rgb(140, 29, 64)"], "header block inverted")
+        switch = p.get_by_role("switch", name="This team only")
+        switch.click()
+        self.assertEqual(switch.get_attribute("aria-checked"), "true")
+        p.get_by_role("radio", name="Team", exact=True).press("ArrowRight")
+        self.assertEqual(p.get_by_role("radio", name="Inverted").get_attribute("aria-checked"), "true")
+        self.assertEqual(bg(), "rgb(255, 198, 39)", "Inverted mode uses Arizona State gold")
+        p.reload()
+        p.wait_for_selector("body[data-ready]", state="attached")
+        self.assertIn("tm-c-inverted", p.get_attribute("body", "class"))
+        switch.click()
+        self.assertEqual(switch.get_attribute("aria-checked"), "false")
+        self.assertEqual(bg(), "rgb(140, 29, 64)", "switching off restores the global mode")
         p.click("#tm-colors [data-c=frame]")
         self.assertIn("tm-c-frame", p.get_attribute("body", "class"))
         self.assertEqual(p.evaluate("getComputedStyle(document.querySelector('.tm-head')).backgroundColor"), "rgb(140, 29, 64)",
