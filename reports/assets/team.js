@@ -426,7 +426,7 @@
     const contrast = (a,b) => (Math.max(luminance(a),luminance(b))+.05)/(Math.min(luminance(a),luminance(b))+.05);
     const readable = (fg,bg) => contrast(fg,bg)>=4.5 ? fg : contrast('#ffffff',bg)>=4.5 ? '#ffffff' : '#000000';
     const accent = safe(d.accent) || ink;
-    st.textContent = 'body{--t1:'+bg+';--t1ink:'+ink+';--t2:'+accent+';--tm-full-heading:'+readable(accent,bg)+';--tm-inverted-heading:'+readable(accent,ink)+';--tm-full-text:'+readable(ink,bg)+';--tm-inverted-text:'+readable(bg,ink)+'}';
+    st.textContent = 'body{--t1:'+bg+';--t1ink:'+ink+';--t2:'+accent+';--tm-full-heading:'+readable(accent,bg)+';--tm-inverted-heading:'+readable(bg,ink)+';--tm-full-text:'+readable(ink,bg)+';--tm-inverted-text:'+readable(bg,ink)+'}';
     const valid = m => COLOR_MODES.includes(m);
     let storage, globalMode = 'full', mode, overridden = false;
     const key = typeof d.key === 'string' && d.key ? d.key : null;
