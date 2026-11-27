@@ -250,6 +250,7 @@ jobs:
         env:
           DISCORD_WEBHOOK_AWARDS: ${{ secrets.DISCORD_WEBHOOK_AWARDS }}
           DISCORD_WEBHOOK_TEAM_STATS: ${{ secrets.DISCORD_WEBHOOK_TEAM_STATS }}
+          DISCORD_CONTACT_ID: ${{ vars.DISCORD_CONTACT_ID }}
         run: |
           pip install playwright
           python -m playwright install --with-deps --only-shell chromium
