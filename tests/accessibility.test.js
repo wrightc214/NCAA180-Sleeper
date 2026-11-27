@@ -240,7 +240,7 @@ test('generated menu matches source template exactly except embedded navigation 
   // Function replacers: the accessibility source contains "$&", which a string replacement would expand.
   assert.strictEqual(template.replace('/*__ACCESSIBILITY__*/', () => a11y)
     .replace('/*__DATA__*/null', () => embedded[1]), built);
-  assert.ok(JSON.parse(embedded[1]).tabs.some(t => t.id === 'access' && (t.state || 'visible') === 'visible'));  // public since 2026-11-22 (Chris)
+  assert.ok(JSON.parse(embedded[1]).tabs.some(t => t.id === 'access' && (t.state || 'visible') === 'visible'));  // public since 2026-11-22 (CW)
   // Regression (#109 review): a JS string replacement once turned this "$&$&" into the placeholder text.
   assert.ok(built.includes('h.replace(/./g, "$&$&")'), '3-digit hex expansion intact in the built bundle');
   assert.ok(!built.includes('__ACCESSIBILITY__'), 'no unexpanded or duplicated placeholder in the built bundle');

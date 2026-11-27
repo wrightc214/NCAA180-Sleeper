@@ -1,7 +1,7 @@
 """
 trophies.py -- the trophy ledger and the shared trophy component (task 5.1).
 
-One list of trophies, images drawn on demand (Chris): every trophy ever won is ONE ROW; the picture is
+One list of trophies, images drawn on demand (CW): every trophy ever won is ONE ROW; the picture is
 the shared art (assets/trophies/..., config/trophies.json) with the plaque engraved from that row at
 view time. Adding history or a new event adds rows, never image files.
 
@@ -208,7 +208,7 @@ def engraving(event, winner=None, year=None, line2=None, fallback=False):
 
 
 def logo_for(en):
-    """Fallback logo path or '' (bowl logos: Chris's approved list only)."""
+    """Fallback logo path or '' (bowl logos: CW's approved list only)."""
     p = en["logo"]
     if not p or not os.path.exists(_path(p)):
         return ""

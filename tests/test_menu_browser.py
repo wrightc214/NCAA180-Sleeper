@@ -67,12 +67,12 @@ class MenuBrowser(unittest.TestCase):
         pg = self.page("special.html")
         special = pg.inner_text('nav.weeks.sub[data-row="special"]')
         self.assertIn("The Guillotine", special)
-        self.assertIn("Dwight Fight", special)  # public since 889a0a0 (Chris, Nov 24)
+        self.assertIn("Dwight Fight", special)  # public since 889a0a0 (CW, Nov 24)
         self.assertEqual(pg.locator('nav.weeks.sub[data-row="special"] img').count(), 2)
         pg.close()
 
     def test_sub_rows_below_header(self):
-        # Chris, 2026-11-20: sub-rows display directly below the page header, in their original order.
+        # CW, 2026-11-20: sub-rows display directly below the page header, in their original order.
         for name, labels in (("week-05.html", ["Seasons", "Weeks"]), ("standings.html", ["Seasons"]),
                              ("poll-how.html", ["Poll pages"]), ("special.html", ["Special events", "Seasons"]),  # Seasons = guillotine-seasons (hidden unless Dev)
                              ("ccg-race.html", ["Selection Watch pages"]), ("selection-watch.html", ["Selection Watch pages"])):
@@ -114,7 +114,7 @@ class MenuBrowser(unittest.TestCase):
         pg.close()
 
     def test_guillotine_replay(self):
-        # 2025 replay (Chris, 2026-11-24): Dev-only page; public viewers never see the Seasons row.
+        # 2025 replay (CW, 2026-11-24): Dev-only page; public viewers never see the Seasons row.
         pg = self.page("special.html")
         self.assertTrue(pg.locator('nav.weeks.sub[data-row="guillotine-seasons"]').is_hidden())
         pg.evaluate("localStorage.setItem('ncaa180.dev','1')")

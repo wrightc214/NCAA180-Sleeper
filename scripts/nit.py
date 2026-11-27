@@ -10,7 +10,7 @@ Pool: every team not in the playoff field or a (published) bowl.
 Same-league avoidance is best effort: groups minimise same-league teams, and Group Stage 2
 spreads a league's winners across bracket branches so they meet as late as possible.
 
-REALIGNED FORMAT from postseason.nit.realigned_from (2026; Chris, 2026-11-04; project doc
+REALIGNED FORMAT from postseason.nit.realigned_from (2026; CW, 2026-11-04; project doc
 nit-format-2026.md). Earlier seasons keep the format above (history replays).
   Round 1 (week 13): groups of 4 (some 3s), World Cup pots from the final bot poll, one team per
     pot per group, same-league spreading. Advance: group winners + "lucky dogs" (best scores among
@@ -23,7 +23,7 @@ nit-format-2026.md). Earlier seasons keep the format above (history replays).
   Ties (group wins, lucky dogs, pots, seeds): every-week head-to-head among the tied teams, then
     wins, then points.
 
-Review step (Chris, 2026-10-27): each random draw (Group Stage 1, Group Stage 2) is written
+Review step (CW, 2026-10-27): each random draw (Group Stage 1, Group Stage 2) is written
 as a DRAFT with its seed recorded; --publish locks it; --redraw makes a new draft. Results
 and the bracket are refreshed every run. An exact tie for a group/game win is flagged.
 
@@ -41,7 +41,7 @@ import _postseason_common as ps
 import team_names as tn
 
 _NIT = ps.config()[1]["nit"]
-# Display names (Chris, 2026-10-28): Opening Groups -> Qualifier Groups. History rows keep the names used then.
+# Display names (CW, 2026-10-28): Opening Groups -> Qualifier Groups. History rows keep the names used then.
 STAGE1, STAGE2 = _NIT["group_stage_1"]["name"], _NIT["group_stage_2"]["name"]
 HISTORY_NAMES = {STAGE1: set(_NIT["group_stage_1"]["history_names"]) | {STAGE1},
                  STAGE2: set(_NIT["group_stage_2"]["history_names"]) | {STAGE2}}
@@ -56,7 +56,7 @@ def assign_groups(teams, sizes, rng, branch_of=None, met=None):
     """Greedy best-effort same-league avoidance. Most-represented leagues placed first.
     branch_of(i) -> (pairing, half) for bracket spreading (Group Stage 2).
     met: franchise pairs that met in recent postseasons -- avoided too, but ranked below the
-    league rules (Chris, 2026-10-28: soft rule)."""
+    league rules (CW, 2026-10-28: soft rule)."""
     met = met or set()
     key = lambda t: (str(t["LeagueName"]).strip(), str(t["RosterID"]))  # noqa: E731
     groups = [[] for _ in sizes]
@@ -467,7 +467,7 @@ def realigned(year, a, cfg, team, pool, nit, season_path, draft_or_publish, prob
             by_pts = {key(t): i for i, t in enumerate(rank(adv1, lambda t: pts1[key(t)], W))}
             by_poll = {key(t): i for i, t in enumerate(rank(adv1, lambda t: -pr.get(key(t), 999), W))}
             order2 = sorted(adv1, key=lambda t: ((by_pts[key(t)] + by_poll[key(t)]) / 2, by_pts[key(t)]))
-            # Hard (Chris, 2026-11-04): no round-1 group-mates and no regular-season rematch. Leagues play a
+            # Hard (CW, 2026-11-04): no round-1 group-mates and no regular-season rematch. Leagues play a
             # full round robin, so a regular-season rematch = same league.
             same_g1 = lambda x, y: gid1[key(x)] == gid1[key(y)]  # noqa: E731
             groups = pot_draw(order2, ng, random.Random(seed), hard=lambda x, y: same_g1(x, y) or x["LeagueID"] == y["LeagueID"], soft=soft)

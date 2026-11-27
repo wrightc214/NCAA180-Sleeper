@@ -62,7 +62,7 @@ class CCGRaceBrowser(unittest.TestCase):
                     names = page.locator("#conferences > section > h2").all_inner_texts()
                     self.assertEqual(names, sorted(names, key=str.casefold))
                     self.assertEqual(len(names), 15)
-                    # Colour strength = odds (Chris, 2026-11-20): none for <1% / Out, full for Clinched, and the
+                    # Colour strength = odds (CW, 2026-11-20): none for <1% / Out, full for Clinched, and the
                     # name and chance read at 4.5:1 or better on every card's blended background.
                     fills = page.evaluate("""() => {
                         const lum = c => { const m = c.match(/\\d+(\\.\\d+)?/g).slice(0, 3).map(x => +x / 255)
@@ -90,7 +90,7 @@ class CCGRaceBrowser(unittest.TestCase):
             server.shutdown()
 
     def test_dark_mode_colour_swap(self):
-        """Dark-mode swap (Chris, 2026-11-20): a team whose main colour vanishes on the dark panel uses its
+        """Dark-mode swap (CW, 2026-11-20): a team whose main colour vanishes on the dark panel uses its
         text colour as the card colour. Auburn (#0C2340 / #E87722) at 26% in the midweek preview."""
         from playwright.sync_api import sync_playwright
 
@@ -154,7 +154,7 @@ class CCGRaceBrowser(unittest.TestCase):
                 self.assertLessEqual(abs(x - y), 1, theme)
 
     def test_game_indicator_line(self):
-        """Game indicator (Chris, 2026-11-20). The midweek fixture has Big 12 pregame, Pac-12 final and the
+        """Game indicator (CW, 2026-11-20). The midweek fixture has Big 12 pregame, Pac-12 final and the
         rest live, so each state appears; PF = season PF + projection before final, actual total after."""
         import json, re
         from playwright.sync_api import sync_playwright
@@ -223,7 +223,7 @@ class CCGRaceBrowser(unittest.TestCase):
         self.assertEqual(seen, {"pregame", "live", "final"})
 
     def test_projection_gap_keeps_conference(self):
-        """Chris, 2026-11-22: one starter with no Tuesday projection (Josh Johnson, ARI QB, id 260) blanked
+        """CW, 2026-11-22: one starter with no Tuesday projection (Josh Johnson, ARI QB, id 260) blanked
         the whole Pac-12 and Pioneer. The conference must still render with him projected at 0 and no note,
         and any issue banner names conferences, never league IDs."""
         import csv, json

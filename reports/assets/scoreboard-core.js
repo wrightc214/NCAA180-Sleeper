@@ -65,7 +65,7 @@
     if (variance<1e-10) return a.projected===b.projected?50:(a.projected>b.projected?100:0);
     return 50*(1+erf((a.projected-b.projected)/Math.sqrt(2*variance)));
   }
-  // Proven results (Chris, 2026-11-23; config live_bounds). LIVE DISPLAY ONLY: the Python twin
+  // Proven results (CW, 2026-11-23; config live_bounds). LIVE DISPLAY ONLY: the Python twin
   // (live_model.py: push notifications + their ledger) and the weekly run never use these.
   // Ceiling = points so far + remaining projection (Tuesday projection x share of each game left)
   //   + ONE big-game allowance: max(team_upside x share of lineup minutes left,
@@ -140,7 +140,7 @@
     const rest=pregame?[]:[...keep.slice(5),...plain].sort((a,b)=>b.actual-a.actual||b.baseline-a.baseline);
     return {players:pregame?keep:keep.slice(0,5),rest,zeros,others:candidates.length-zeros-(pregame?keep.length:Math.min(5,keep.length))};
   }
-  // Week labels (Chris, 2026-11-17): one source for every page -- config postseason.display.week_labels
+  // Week labels (CW, 2026-11-17): one source for every page -- config postseason.display.week_labels
   // [long, short] per phase, from schedule.ccg_week / postseason_start_week. {n} = NFL week, {p} = postseason week.
   function weekLabel(cfg, week, short) {
     const w = Number(week), sch = (cfg && cfg.schedule) || {};

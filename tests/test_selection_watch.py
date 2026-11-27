@@ -1,6 +1,6 @@
 """Selection Watch (stage 1): the data, the field rule, the Steal Board and the odds.
 
-Validated against the real 2024 and 2025 seasons (Chris, 2026-11-12): the board built from the
+Validated against the real 2024 and 2025 seasons (CW, 2026-11-12): the board built from the
 final standings + actual CCG results gives exactly the actual playoff field."""
 import os
 import random

@@ -1,5 +1,5 @@
 /* The Guillotine: pure model functions (browser + Node tests). Uses ScoreboardCore for scoring.
-   Rules: config postseason.guillotine; claude/todo-guillotine.md (Chris, 2026-11-14). */
+   Rules: config postseason.guillotine; claude/todo-guillotine.md (CW, 2026-11-14). */
 (function(root,factory){if(typeof module==='object'&&module.exports)module.exports=factory(require('./scoreboard-core.js'));else root.GuillotineModel=factory(root.ScoreboardCore);})(typeof globalThis!=='undefined'?globalThis:this,function(C){
   'use strict';
   const EPS=1e-9;
@@ -47,7 +47,7 @@
     }
     return Array.from(hits,h=>100*h/sims);
   }
-  // Proven calls (Chris, 2026-11-23; config live_bounds, ScoreboardCore.bounds). LIVE DISPLAY ONLY.
+  // Proven calls (CW, 2026-11-23; config live_bounds, ScoreboardCore.bounds). LIVE DISPLAY ONLY.
   // Safe: at most k-1 other teams can still finish above this team's floor (ties at the line survive).
   // Cut: at least k other teams are already certain to finish above this team's ceiling.
   function provenCalls(models,k,lb){

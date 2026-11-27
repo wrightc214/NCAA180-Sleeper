@@ -1,7 +1,7 @@
 name: Announce page
 
-# Manual only (run when Chris says). Posts a "new page" graphic + short link to the league channel (team-stats),
-# once per page (data/Announcements.json). Run after Chris approves the card.
+# Manual only (run when CW says). Posts a "new page" graphic + short link to the league channel (team-stats),
+# once per page (data/Announcements.json). Run after CW approves the card.
 on:
   workflow_dispatch:
     inputs:

@@ -1,5 +1,5 @@
 """
-league_staff.py -- who runs each conference league (Chris, 2026-11-07, About page Directory).
+league_staff.py -- who runs each conference league (CW, 2026-11-07, About page Directory).
 
 For every league this season (found through the lookup account, like users.py), Sleeper's league users
 list marks commissioners with is_owner. Writes data/LeagueStaff.csv:

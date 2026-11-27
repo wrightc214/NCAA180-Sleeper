@@ -1,7 +1,7 @@
 """
 postseason_page.py -- the Postseason page: every season's real postseason (2019 on), one page each.
 
-Chris, 2026-10-28 (display decisions) / 2026-11-04 (build): one page per season with a season
+CW, 2026-10-28 (display decisions) / 2026-11-04 (build): one page per season with a season
 picker; champions on top; then the Playoff (latest round first), Bowls by tier (Prestige first),
 the NIT and the conference championships. Past seasons come from data/Postseason_Historic.csv
 (names as played); the current season from data/Postseason_Season.csv (published rows only --
@@ -218,7 +218,7 @@ def bowl_src(name):
 
 
 def bracket_html(po, col, year, short, current=None, T=None):
-    """The Playoff bracket (Chris, 2026-11-20, task 5.13; scripts/bracket.py draws it): desktop board,
+    """The Playoff bracket (CW, 2026-11-20, task 5.13; scripts/bracket.py draws it): desktop board,
     phone round-by-round view and Save image exports. '' when the playoff isn't a clean knockout."""
     cfg = ps.config()[1]
     pc, dcfg = cfg["playoff"], cfg["display"].get("bracket", {})
@@ -300,7 +300,7 @@ def build_season(year, years):
             f'<div class="card champ">{lg.replace("<img ", "<img class=ev ", 1)}<div><h3>{e(t)}</h3>{chip(w, col, short)}</div></div>'
             for t, lg, w in champ) + "</div>")
 
-    # bracket: the traditional view (Chris, 2026-11-08), then the round-by-round cards
+    # bracket: the traditional view (CW, 2026-11-08), then the round-by-round cards
     brk = bracket_html(po, col, year, short, T=T) if po else ""
     if brk:
         secs.append(section("Bracket", "", brk, "bracket"))
@@ -369,7 +369,7 @@ def build_season(year, years):
     return (page_head(f"{lcfg.brand()} postseason {year}", CSS) +
             f'<div class="wrap">{menu_html("postseason", ["postseason-seasons"])}'
             f'<header><h1>{lcfg.brand()} <em>{year} Postseason</em></h1></header>' + "".join(secs) + note
-            # fold + save image on every section (Chris, 2026-11-07 site design rule)
+            # fold + save image on every section (CW, 2026-11-07 site design rule)
             + bp.FOLD_JS + bp.snap_js(0, foot=f"{lcfg.brand()} · {year} Postseason · {bp.LINK.replace('https://', '')}", tag=str(year), projection=False)
             + "</div></body></html>")
 

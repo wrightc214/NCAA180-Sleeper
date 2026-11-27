@@ -15,7 +15,7 @@
     {"id": "scoreboard", "label": "Games", "href": "scoreboard.html"},
     {"id": "poll", "label": "Poll", "href": "poll.html", "aliases": ["poll-how", "poll-bots"]},
     {"id": "postseason", "label": "Postseason", "href": "postseason.html"},
-    {"_note": "Selection Watch tab public since 2026-11-20 (Chris) for the CCG sub-page; Playoffs (Steal Board) public since 2026-11-24 (Chris). The tab links to the first sub-page the viewer can see. Set state to hidden to turn off the board and its data publication.", "id": "selection-watch", "label": "Selection Watch", "href": "selection-watch.html", "state": "visible"},
+    {"_note": "Selection Watch tab public since 2026-11-20 (CW) for the CCG sub-page; Playoffs (Steal Board) public since 2026-11-24 (CW). The tab links to the first sub-page the viewer can see. Set state to hidden to turn off the board and its data publication.", "id": "selection-watch", "label": "Selection Watch", "href": "selection-watch.html", "state": "visible"},
     {"id": "special", "label": "Special Events", "href": "special.html"},
     {"_note": "Team pages (task 5.20): Dev view only until the league data manager makes them visible. Team-name links on Standings and Games follow this state (hidden-dev = Dev view only).", "id": "team", "label": "Teams", "href": "team.html", "state": "hidden-dev"},
     {"id": "managers", "label": "Managers", "href": "managers.html"},

@@ -93,7 +93,7 @@ def load():
 
 def card(title, sub, rows, cfg, ranks, n, col, drop, show_lg=True):
     """Page colours: every rank (overall and bot) on the good -> bad scale over the FULL field, 1 (best) .. n (worst),
-    so a Top 25 card doesn't stretch 1-25 across the whole good/bad range (Chris, 5.12.2). The PNG keeps its
+    so a Top 25 card doesn't stretch 1-25 across the whole good/bad range (CW, 5.12.2). The PNG keeps its
     card-relative Standard shading (shade(), applied in shoot())."""
     meta = [m for m in cfg["bots"] if m.get("enabled", True)]
     # PNG only: shade() spans this card's COUNTED votes (each row minus its best and worst); dropped votes

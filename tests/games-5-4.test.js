@@ -57,7 +57,7 @@ test('50 percent is neutral and favorites remain bold without relying on color',
   assert.match(source,/s\.final\?' final-odds'/);
   assert.match(source,/probability!=null&&probability>50\?' favorite'/); // final still gets green, but not bold
   assert.match(probabilityRules,/\.r3\.final-odds\.favorite \.chance\{/);
-  assert.doesNotMatch(source,/Pregame %/); // does not fit the 38-44px column; finals use 'Pre %' (Chris, 2026-11-17)
+  assert.doesNotMatch(source,/Pregame %/); // does not fit the 38-44px column; finals use 'Pre %' (CW, 2026-11-17)
   assert.match(accessibility,/var TOKENS_LIGHT = \{"--good":/);
   assert.match(accessibility,/var TOKENS_DARK = \{"--good":/);
 });

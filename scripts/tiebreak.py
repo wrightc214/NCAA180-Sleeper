@@ -1,6 +1,6 @@
 """tiebreak.py -- one ranking rule for every place teams are compared.
 
-The order lives in config/league.json -> tiebreakers.order (Chris, 2026-10-30). Keys:
+The order lives in config/league.json -> tiebreakers.order (CW, 2026-10-30). Keys:
   win_pct       (wins + half of ties) / games played
   wins          raw wins
   points_for    regular-season points for
@@ -12,7 +12,7 @@ compares teams that are exactly level on everything above it. Teams level after 
 key stay tied and are reported. Every coin toss used is reported too.
 Sleeper's default (support.sleeper.com, checked 2026-10-30): points for, points against, coin toss.
 
-Real coin toss (Chris, 2026-11-12): where a tie decides a real outcome -- the last playoff at-large
+Real coin toss (CW, 2026-11-12): where a tie decides a real outcome -- the last playoff at-large
 spot or a division title -- there is NO hidden toss. order(..., real_toss=True) skips coin_toss; a
 tie still standing is reported, and a real toss is held with both managers present. Its result is
 recorded in config/league.json -> tiebreakers.coin_toss_results and applied on the next run:

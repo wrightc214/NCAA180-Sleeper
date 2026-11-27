@@ -1,5 +1,5 @@
 """
-game_notify.py -- game notifications for followed teams (todo-pwa.md, Chris 2026-11-01/03).
+game_notify.py -- game notifications for followed teams (todo-pwa.md, CW 2026-11-01/03).
 
 Each phone picks one frequency (Notifications page; stored as an event follow "freq:<x>"):
   windows  after each NFL window closes (Thu, Sun early, Sun late, Sun night, Mon)

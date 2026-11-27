@@ -38,7 +38,7 @@ Rows: `awards-seasons`, `awards-weeks-<year>`, `standings-seasons`, `postseason-
 `projection-archive`, `poll`, `special`. Sub-row items are highlighted by the page's file name.
 The script is synchronous on purpose (small, cached): the menu is drawn before first paint.
 
-**Sub-rows display directly below the page header** (Chris, 2026-11-20), on every page. Pages keep writing the
+**Sub-rows display directly below the page header** (CW, 2026-11-20), on every page. Pages keep writing the
 placeholders next to the main menu as above; `menu.js` moves each row to just after the `<header>` that follows it
 as a sibling (skipping script/noscript/nav and the dev bar), keeping the order of several rows. A row stays hidden
 until that header is parsed, so nothing jumps. A page with no such header keeps the row where it was written.

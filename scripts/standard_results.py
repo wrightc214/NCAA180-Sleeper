@@ -1,6 +1,6 @@
 """One place that puts matchup rows on standard (common-scheme) scoring.
 
-Rules (Chris, 2026-10-08 / 2026-10-15):
+Rules (CW, 2026-10-08 / 2026-10-15):
   - Scores are SHOWN on standard scoring in every season (data/ScoresStandard_*.csv).
   - Results: from config postseason.standard_scoring_from (2026) W/L/T are decided on the
     standard scores. Earlier seasons keep Sleeper's official outcome (footnoted elsewhere).

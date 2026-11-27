@@ -155,7 +155,7 @@ function createNCAA180Accessibility() {
     }
     return answer;
   }
-  // "No colour" (5.12.2, Chris): shown disabled on the Accessibility page until its non-colour cues
+  // "No colour" (5.12.2, CW): shown disabled on the Accessibility page until its non-colour cues
   // exist. A stored "none" stays stored (read() still returns it) but paints exactly like Standard.
   // The none palette, monochrome fills and forced emphasis below are kept for when it ships.
   var NONE_AVAILABLE = false;

@@ -1,5 +1,5 @@
 """
-postseason_odds.py -- postseason odds + the week's most impactful games (Chris, 2026-11-07).
+postseason_odds.py -- postseason odds + the week's most impactful games (CW, 2026-11-07).
 
 Replaces "every team scores its average" with probabilities. The rest of the regular season, the
 conference championships and the playoff are simulated SIMS times; every run goes through a fast
@@ -343,7 +343,7 @@ def deterministic(year):
 
 
 # ------------------------------------------------------------------ proofs (Clinched / Out)
-# Chris, 2026-11-11: sharper calls. Conferences play only themselves in the regular season, so each
+# CW, 2026-11-11: sharper calls. Conferences play only themselves in the regular season, so each
 # one's remaining games are enumerated (every win/loss combination) and the worst / best case for a
 # team is the sum of each conference's own worst / best case. Equal wins count AGAINST the team for a
 # clinch and FOR it for an out (points-for tiebreaks are unknown in advance). A conference with more
@@ -512,9 +512,9 @@ def build(year, sims=None, seed=None, write=True):
             top.append({"week": int(w), "a": teams[a]["Team"], "b": teams[b]["Team"], "league": teams[a]["League"],
                         "pwin_a": round(na / max(L_["n"], 1), 4), **best})
     top.sort(key=lambda x: -x["swing"])
-    # Page + Discord (Chris, 2026-11-07): one row per TEAM, split into a playoff and a bowl list,
+    # Page + Discord (CW, 2026-11-07): one row per TEAM, split into a playoff and a bowl list,
     # each ranked by swing (with-win minus with-loss); swings under min_swing are left out.
-    tg = settings()["top_games"]  # a number, or "leagues" = one row per league (Chris, 2026-11-07)
+    tg = settings()["top_games"]  # a number, or "leagues" = one row per league (CW, 2026-11-07)
     n_top = len({t["League"] for t in teams}) if str(tg) == "leagues" else int(tg)
     floor = float(settings()["min_swing"])
     by = {"Playoff": [], "Postseason": []}
@@ -532,7 +532,7 @@ def build(year, sims=None, seed=None, write=True):
                                   "with_loss": round(pl_, 4), "swing": round(pw_ - pl_, 4), "pwin": round(nw / max(L_["n"], 1), 4)})
     for o in by:
         by[o].sort(key=lambda x: -x["swing"])
-        # Chris, 2026-11-07: the top `top_games` swings, then one row (its biggest swing) for every
+        # CW, 2026-11-07: the top `top_games` swings, then one row (its biggest swing) for every
         # league not already in them -- unless that league has nothing above the floor.
         top_, seen = by[o][:n_top], {g["league"] for g in by[o][:n_top]}
         extra = []

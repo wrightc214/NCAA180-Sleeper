@@ -6,8 +6,8 @@ announce_cards.py -- one-time "new page" announcement graphics for Discord (team
                                                       not on the card) to DISCORD_WEBHOOK_TEAM_STATS
 
 Numbers come from the live data files (Managers_AllTime.csv, Records_AllTime.csv), so the card
-matches the page on the day it posts. Links come from config/short_links.json (Chris's short links).
-Posting is manual (Announce page workflow, run when Chris says so) and happens once per page: data/Announcements.json
+matches the page on the day it posts. Links come from config/short_links.json (CW's short links).
+Posting is manual (Announce page workflow, run when CW says so) and happens once per page: data/Announcements.json
 records what went out; FORCE=1 reposts. Needs Playwright for `render`. CWD must be repo root.
 """
 import html
@@ -230,7 +230,7 @@ def matchups_html():
 
 
 # Scoreboard card = a screenshot of the real game page (served locally, live Sleeper/ESPN data at render time).
-# Game chosen by Chris for the launch post: week 7 Top 25 matchup, #2 Hawaii vs #10 BYU (Mountain West).
+# Game chosen by CW for the launch post: week 7 Top 25 matchup, #2 Hawaii vs #10 BYU (Mountain West).
 SCOREBOARD_GAME = {"league": "1331774599196585984", "week": 7, "roster": 1}
 SHOT_ROWS = 4  # starter rows kept in the screenshot
 
@@ -343,7 +343,7 @@ def post(which):
         print(f"::notice::{which} was already announced on {state[which]}; nothing posted (FORCE=1 to repost)")
         return
     png = os.path.join(OUT_DIR, f"{which}.png")
-    # Real Discord mention (<@id>): clickable, and it pings Chris so he knows the post went out (Chris, 2026-10-21).
+    # Real Discord mention (<@id>): clickable, and it pings CW so he knows the post went out (CW, 2026-10-21).
     # Only his ID is allowed to ping; @everyone/roles stay blocked.
     uid = str(json.load(open("config/league.json"))["contact"]["discord_user_id"])
     payload = {"content": TEXT[which].format(link=LINKS[which], contact=f"<@{uid}>"),

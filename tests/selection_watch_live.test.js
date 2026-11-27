@@ -115,7 +115,7 @@ test('live odds, modern frozen odds and reversed legacy fallback retain their pr
   h.setSummary({live: true, started: true, probability: 0, models: [{actual: 90},{actual: 102.4}]});
   await h.refresh();
   assert.equal(h.seen.at(-1), 0);
-  assert.match(h.element('sw-board-rows').innerHTML,/&gt;99%<\/small><small class="sw-margin"[^>]*>\+12\.4<\/small>/  /* live, not final: never 100% (Chris 2026-11-24) */);
+  assert.match(h.element('sw-board-rows').innerHTML,/&gt;99%<\/small><small class="sw-margin"[^>]*>\+12\.4<\/small>/  /* live, not final: never 100% (CW 2026-11-24) */);
   assert.match(h.element('sw-board-rows').innerHTML,/Live odds/);
   h.setSummary({probability: null});
   sides[1].WinPct = null;
@@ -264,9 +264,9 @@ test('What-if shows a held pair or placard while the natural team is leading, th
     await h.ready;
     const pick=(game,value)=>h.element('sw-picks').listeners.change({target:{dataset:{game},value:key(value)}});
     const board=()=>h.element('sw-board-rows').innerHTML;
-    // Chris, 2026-11-24: an at-large team playing its own CCG always gets a placard + View game link.
+    // CW, 2026-11-24: an at-large team playing its own CCG always gets a placard + View game link.
     assert.match(board(),/data-held="placard"[^]*Bid protection<\/b><span>Team 4 · Example Championship · leads[^]*Bid protection · Live odds · <a href="scoreboard\.html/);
-    // The cut line stays with the below-cut rows; a plays/leads placard sits on the above-cut side (Chris, 2026-11-24).
+    // The cut line stays with the below-cut rows; a plays/leads placard sits on the above-cut side (CW, 2026-11-24).
     assert.match(board(),/sw-cut-line[^]*data-held="placard"/);
     pick('x',8);
     pick('y',9);
@@ -289,7 +289,7 @@ test('What-if shows a held pair or placard while the natural team is leading, th
 });
 
 test('A scoreboard leader with a low win chance is not projected to steal', async () => {
-  // Chris, 2026-11-25: Georgia Tech led at 19% and showed as taking a bid.
+  // CW, 2026-11-25: Georgia Tech led at 19% and showed as taking a bid.
   const key=i=>'conf|'+i;
   const h=setup({}, {}, {scores:{ccg:{pA:.81,leader:key(8),live:true,scoreA:40,scoreB:52,source:'Live odds'}},liveData:{
     field_size:5,play_ins:[],

@@ -1,5 +1,5 @@
 """
-playoff_bracket.py -- fixed-seed single-elimination playoff (Chris, 2026-10-27: 1v32, 2v31...,
+playoff_bracket.py -- fixed-seed single-elimination playoff (CW, 2026-10-27: 1v32, 2v31...,
 no reseeding, no byes). Round r is played in week playoff.first_week + r - 1.
 
 Seeds come from postseason.playoff.seeding:
@@ -8,7 +8,7 @@ Seeds come from postseason.playoff.seeding:
   --seeds history  -> the seeds actually used that year (Postseason_Historic; replays only)
 Rebuilt deterministically every run from seeds + finished results (nothing random to lock).
 A tie in a game is flagged and stops that branch (exit 1).
-Review step (Chris, 2026-11-03; postseason.playoff.review_before_publish): until the bracket is
+Review step (CW, 2026-11-03; postseason.playoff.review_before_publish): until the bracket is
 published, a run writes a DRAFT (data/postseason_drafts/Playoff_<year>.csv: seeds + first-round
 pairings), from the live field or, if that isn't published yet, the field draft. --publish needs
 the published field, checks the pairings still match the draft, then writes the live bracket.

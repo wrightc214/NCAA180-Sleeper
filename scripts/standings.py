@@ -38,7 +38,7 @@ LAST_REGULAR_WEEK = lcfg.last_regular_week()
 LEAGUE_DISPLAY = lcfg.league_display()  # friendly names: data/LeagueShortNames.csv
 
 
-HISTORY_DIR = "data/standings"  # OverallStandings_<year>.csv, one per finished season (Chris, 2026-11-11)
+HISTORY_DIR = "data/standings"  # OverallStandings_<year>.csv, one per finished season (CW, 2026-11-11)
 
 
 def overall(reg, teams):

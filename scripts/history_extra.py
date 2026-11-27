@@ -10,7 +10,7 @@ Writes only to data/backfill/. Nothing existing is modified.
 2. ScoringSettings_History.csv : each league's scoring settings per season (scoring-drift check).
 3. Extra2021.txt : any 2021 "NCAA" league not in LeagueIDs_AllYears.csv ("NCAA 192" question).
 4. ProjectionTest.txt : do Sleeper's projections endpoints still serve past weeks, and do
-   computed team totals match the app's pregame numbers (Chris's 2026 wk1 / 2020 wk6 PAC 12
+   computed team totals match the app's pregame numbers (CW's 2026 wk1 / 2020 wk6 PAC 12
    screenshots)?
 """
 import gzip

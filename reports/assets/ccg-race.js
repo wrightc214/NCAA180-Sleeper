@@ -46,7 +46,7 @@
  function renderShell(){
    const host=$('conferences');host.replaceChildren();
    const byId=new Map(data.conferences.map(c=>[String(c.league_id),c]));
-   // Conferences in alphabetical order by short name (Chris, 2026-11-20).
+   // Conferences in alphabetical order by short name (CW, 2026-11-20).
    const ids=[...byId.keys()].sort((a,b)=>String(byId.get(a).name).localeCompare(String(byId.get(b).name),'en',{sensitivity:'base',numeric:true}));
    for(const id of ids){
      const conf=byId.get(id),sec=document.createElement('section');sec.id='ccg-'+id;
@@ -59,7 +59,7 @@
      const script=document.createElement('script');script.src='assets/sections.js';document.body.append(script);
    }
  }
- // Colour strength = chance to win the division (Chris, 2026-11-20): the card is the team colour
+ // Colour strength = chance to win the division (CW, 2026-11-20): the card is the team colour
  // blended into the card background by the odds (Colorado 70% -> 70% colour, ASU 30% -> 30%);
  // <1% and Out get none, Clinched is full. Text and logo are picked for the blended colour, so every
  // card stays readable at any strength. Out teams are also dimmed (eliminated rule).
@@ -88,7 +88,7 @@
  }
  const ratioHex=(a,b)=>{const x=lumHex(a),y=lumHex(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05);};
  const HEX=/^#[\da-f]{6}$/i;
- // Dark-mode colour swap (Chris, 2026-11-20): on the dark panel a team whose main colour nearly matches
+ // Dark-mode colour swap (CW, 2026-11-20): on the dark panel a team whose main colour nearly matches
  // the card (Auburn #0C2340 on #16213a is 1.01:1) would show no tint at any odds. When its text colour
  // stands out from the panel, use that as the card colour and the main colour as the preferred text.
  // Thresholds live in config (ccg.dark_swap); light mode never swaps.
@@ -99,7 +99,7 @@
      return {team:text,text:bg,swapped:true};
    return {team:bg,text:text,swapped:false};
  }
- // Game lines (Chris, 2026-11-20):
+ // Game lines (CW, 2026-11-20):
  //   Record line   7-3 · PF 1467.32        actual: season PF + points scored so far (all of them once final)
  //   Game line     pregame: vs Vanderbilt   live: Trailing by 3.82 vs Vanderbilt   final: W 141.20–118.94 vs Oregon
  //   Proj line     not final only: Proj L by 8.50; PF 1675.12   (projected margin; season PF + this week's projection)
@@ -174,7 +174,7 @@
      const divs=conf.divisions.map((d,i)=>{
        const status=result.divisions[i];
        const byId=new Map(d.contenders.map(t=>[String(t.roster_id),t]));
-       // Highlight and order by the page's own odds (Chris, 2026-11-20): clinched team first, then
+       // Highlight and order by the page's own odds (CW, 2026-11-20): clinched team first, then
        // highest chance, Out last; projected record only breaks exact ties.
        const ids=CCGRaceOrder(status,result.odds);
        const leader=ids[0];
@@ -206,7 +206,7 @@
      if(group.length!==2)throw Error('Incomplete matchup in '+id);
      const match=group.map(r=>({...r,leagueId:id}));
      const summary=S.summarize(match,metadata,baseline,events,stats,scoring,cfg,false);
-     // Data gaps no longer drop the whole conference (Chris, 2026-11-22: one starter without a Tuesday
+     // Data gaps no longer drop the whole conference (CW, 2026-11-22: one starter without a Tuesday
      // projection, Josh Johnson ARI QB, blanked Pac-12 and Pioneer). A starter with no Tuesday projection is
      // simply projected 0 — nothing else changes (2026-11-22). One with no game data counts only what he has
      // scored; that gap and delayed stats are listed on the affected cards.

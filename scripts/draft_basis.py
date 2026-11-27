@@ -1,14 +1,14 @@
 """
 draft_basis.py -- freeze each team's regular-season record, points and max PF for draft orders.
 
-Chris (2026-11-26): some leagues may already order their rookie draft by max PF, so every team's
+CW (2026-11-26): some leagues may already order their rookie draft by max PF, so every team's
 record, points for/against and max PF through the regular season (weeks 1-11) is captured once,
 before postseason weeks are added to the season files.
 
 Writes data/DraftBasis_<year>.csv (frozen: not run by any workflow; rerun only on purpose):
   Year, LeagueID, LeagueName, RosterID, TeamName, OwnerName, DivisionName,
   Wins, Losses, Ties, PointsFor, PointsAgainst, MaxPF, Efficiency, ThroughWeek
-Scores are on the standard rules (Chris, 2026-11-26): each team-week must equal PointsStandard in
+Scores are on the standard rules (CW, 2026-11-26): each team-week must equal PointsStandard in
 data/ScoresStandard_Season.csv, or the script stops (a league off the standard ruleset would also
 need its max PF restated). Max PF from data/MaxPoints_Season.csv. Also fails if any team is missing a
 week or the totals disagree with data/Standings_Season.csv. Which leagues order by max PF, and from

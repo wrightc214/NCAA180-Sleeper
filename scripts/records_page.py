@@ -1,7 +1,7 @@
 """
 records_page.py -- reports/records.html: All-Time Records (v1) + data/Records_AllTime.csv.
 
-Rules (Chris, 2026-10-14):
+Rules (CW, 2026-10-14):
   - Single-game lists include the current season live (marked); SEASON lists (perfect seasons,
     most wins, Cinderella, best Lineup Skill season) stop at the last completed season -- the
     current season joins them through the end-of-season script.
@@ -79,7 +79,7 @@ def load():
 
 def adjudicate(m, from_year=None):
     """Regular-season rows with the opponent's points (PA2) and Res: from 2026 results are decided on the
-    standard-scoring points (Chris, 2026-10-15); earlier seasons keep Sleeper's official outcome."""
+    standard-scoring points (CW, 2026-10-15); earlier seasons keep Sleeper's official outcome."""
     from_year = from_year or standard_results.standard_from()
     a = m.copy()
     a["RosterID"], a["OpponentRosterID"] = a["RosterID"].astype(str), a["OpponentRosterID"].astype(str)
@@ -188,7 +188,7 @@ def entry(cat, rank, value, year, team, owner, league, detail, dagger=False, liv
 def top(df, cat, sort, asc, fn, n=TOP, by=None):
     """Top n by `sort`; equal values list oldest first (Year, then Week).
 
-    Conference filter (Chris, 2026-11-08): returns the CANDIDATES in overall order -- the overall top n
+    Conference filter (CW, 2026-11-08): returns the CANDIDATES in overall order -- the overall top n
     (Shown) plus every conference's own top n -- each tagged with the conferences it counts for
     (`by`: row -> league names; default the row's League). The page filters and takes the first n,
     so a conference's list and the overall list both come from this one ranking."""
@@ -478,7 +478,7 @@ def build():
         return f"{how} {who} {r.PF:.2f}–{r.PA2:.2f}, week {int(r.Week)} {int(r.Year)}"
 
     def managers(seg):
-        """One manager: the name. Several: 'Jones (8), Smith (4)'; up to 3 names, 4+ = top 2 then '+N more' (Chris)."""
+        """One manager: the name. Several: 'Jones (8), Smith (4)'; up to 3 names, 4+ = top 2 then '+N more' (CW)."""
         cnt = {}
         for r in seg:
             if not r.Orphan:

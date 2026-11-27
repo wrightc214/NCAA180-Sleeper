@@ -29,7 +29,7 @@ from site_common import built_weeks  # noqa: E402
 import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 
 PNG = "reports/latest.png"
-SHORT_LINK = json.load(open("config/short_links.json"))["home"]  # Chris's short links
+SHORT_LINK = json.load(open("config/short_links.json"))["home"]  # CW's short links
 MAX_BYTES = 9_500_000  # stay under Discord's smallest upload limit
 PARTS = "reports/discord/*.png"  # one image per report section (legible on phones); max 10 per message
 
@@ -54,7 +54,7 @@ def poll_posts_to_league():
 
 def images():
     """Section images if report_png.py made them, else the single full-page image. The Top 25
-    section is left out when the poll post sends it (Chris, 2026-11-17: no duplicate Top 25)."""
+    section is left out when the poll post sends it (CW, 2026-11-17: no duplicate Top 25)."""
     parts = sorted(glob.glob(PARTS))
     if poll_posts_to_league():
         parts = [f for f in parts if "top-25" not in os.path.basename(f)]

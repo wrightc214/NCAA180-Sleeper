@@ -40,7 +40,7 @@ A team missing an input gets the other weights rescaled to 100%. Nothing is left
 |---|---|---|---|---|
 | 2019 | - | yes | - | - (first season) |
 | 2020 | - | yes | - | yes (new leagues: -) |
-| 2021 | yes (Chris's 9/6/21 ranking; 3 slots unresolved) | yes | - | yes (Ohio Valley: -) |
+| 2021 | yes (CW's 9/6/21 ranking; 3 slots unresolved) | yes | - | yes (Ohio Valley: -) |
 | 2022 | yes (9/13/22 sheet, after week 1) | yes | yes | yes |
 | 2023 | yes | yes | yes | yes |
 | 2024-2025 | yes (FantasyCalc) | yes | yes | yes |

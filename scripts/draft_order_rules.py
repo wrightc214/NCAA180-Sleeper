@@ -1,4 +1,4 @@
-"""Which basis orders a league's rookie draft (Chris, 2026-11-26).
+"""Which basis orders a league's rookie draft (CW, 2026-11-26).
 
 config/league.json -> draft_order:
   default_basis   "max_pf" for every league, including ones added later

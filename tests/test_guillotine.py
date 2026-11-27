@@ -1,4 +1,4 @@
-"""The Guillotine (scripts/guillotine.py, Chris 2026-11-14): cut rules, PGA ties, add-only stat
+"""The Guillotine (scripts/guillotine.py, CW 2026-11-14): cut rules, PGA ties, add-only stat
 corrections, the last-week tiebreak, and its pushes (postseason_announce + notify)."""
 import os
 import sys

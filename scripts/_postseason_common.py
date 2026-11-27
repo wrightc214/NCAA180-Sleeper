@@ -179,7 +179,7 @@ def regular_games(year):
 
 def playoff_round_bowls(year):
     """{playoff round: [host bowl per game, in bracket order]} for a season (config playoff.bowl_rotation):
-    semifinal pair rotates yearly, the other two pairs host the Elite 8 (Chris, 2026-11-04)."""
+    semifinal pair rotates yearly, the other two pairs host the Elite 8 (CW, 2026-11-04)."""
     pc = config()[1]["playoff"]
     pairs = pc.get("bowl_rotation") or []
     if len(pairs) != 3:

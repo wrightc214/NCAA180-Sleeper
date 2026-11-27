@@ -8,7 +8,7 @@ LINEUP SKILL (2019 on) = sum(actual - worst) / sum(best - worst) over the manage
   worst = worst legal lineup from the same roster that week, built only from players who actually
           scored (nonzero points) plus anyone the manager started. A bye / inactive / IR player isn't
           a real alternative; letting zeros fill the worst lineup made every real lineup look good
-          (range compressed to 0.61-0.87). This matches the 2026-10-07 prototype (Chris 0.788, #3).
+          (range compressed to 0.61-0.87). This matches the 2026-10-07 prototype (CW 0.788, #3).
   1.0 = perfect lineup every week, 0 = worst possible every week. Pooled sums, so weeks with
   little real choice (best ~ worst) barely count, and a thin roster can't score ~100% by default.
   Companions: points left on the bench per game (best - actual) and perfect-lineup weeks.
@@ -53,7 +53,7 @@ WEEKS_SEASON = "data/LineupWeeks_Season.csv"
 OUT_SEASON = "data/ManagerLineup_Season.csv"
 OUT_CAREER = "data/ManagerLineup_Career.csv"
 LAST_REGULAR_WEEK = lcfg.last_regular_week()
-CAREER_MIN_GAMES = lcfg.cfg()["managers"]["career_min_games"]  # career leaderboard minimum (Chris, 2026-10-15: a round number)
+CAREER_MIN_GAMES = lcfg.cfg()["managers"]["career_min_games"]  # career leaderboard minimum (CW, 2026-10-15: a round number)
 ALL_POS = set().union(*ELIGIBLE.values())
 
 

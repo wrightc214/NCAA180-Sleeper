@@ -1,4 +1,4 @@
-"""Real coin toss (Chris, 2026-11-12): no hidden toss for division titles or the playoff cut.
+"""Real coin toss (CW, 2026-11-12): no hidden toss for division titles or the playoff cut.
 
 A tie that survives win %, points for and points against stays tied in real-toss mode until a
 real toss is recorded in config tiebreakers.coin_toss_results; lower-stakes orders keep the

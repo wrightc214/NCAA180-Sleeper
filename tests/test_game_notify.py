@@ -1,4 +1,4 @@
-"""Game notifications (Chris, 2026-11-01/03): frequencies, finals at 0 minutes, windows, no repeats,
+"""Game notifications (CW, 2026-11-01/03): frequencies, finals at 0 minutes, windows, no repeats,
 Tuesday flips. Offline: Sleeper/ESPN are replaced by the week-6 Big Sky fixture."""
 import json
 import sys

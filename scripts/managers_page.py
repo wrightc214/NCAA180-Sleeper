@@ -4,7 +4,7 @@ managers_page.py -- reports/managers.html: All-Time Managers, default sort = Leg
 One row per manager (Sleeper OwnerID, shown under the latest username); tap a row for season
 lines. Data files: data/Managers_AllTime.csv, data/ManagerSeasons_AllTime.csv.
 
-LEGEND SCORE (Chris, 2026-10-14) -- points for outcomes, printed on the page so anyone can redo it:
+LEGEND SCORE (CW, 2026-10-14) -- points for outcomes, printed on the page so anyone can redo it:
   regular-season win 1 (tie 1/2) · unbeaten regular season (11-0) +5 · division title (CCG
   appearance) 3 · conference title (CCG win) +5 · bowl win 2 (2020 third-place game winner too)
   · NIT champion 4 / runner-up 2 · playoff appearance 5 · reached Sweet 16 +3 · Elite 8 +4 ·

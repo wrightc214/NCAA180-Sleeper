@@ -1,4 +1,4 @@
-"""Champions League engine (scripts/champions_league.py; Chris, 2026-11-21)."""
+"""Champions League engine (scripts/champions_league.py; CW, 2026-11-21)."""
 import json
 import os
 import sys

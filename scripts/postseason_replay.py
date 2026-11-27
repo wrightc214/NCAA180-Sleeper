@@ -1,6 +1,6 @@
 """
 postseason_replay.py -- replay a finished postseason through the postseason scripts and check
-them against Postseason_Historic.csv (Chris, 2026-10-27). Writes only to a scratch folder.
+them against Postseason_Historic.csv (CW, 2026-10-27). Writes only to a scratch folder.
 
 Exact checks (must match history): CCG pairings + winners; playoff field; bracket built from
 that year's real seeds, every round's pairings + winners; bowl and NIT pools; NIT advancement

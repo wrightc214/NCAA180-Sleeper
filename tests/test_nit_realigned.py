@@ -1,4 +1,4 @@
-"""Realigned NIT (2026 format, Chris 2026-11-04): tiebreak, pot draw rules, quarterfinal halves."""
+"""Realigned NIT (2026 format, CW 2026-11-04): tiebreak, pot draw rules, quarterfinal halves."""
 import os
 import random
 import sys

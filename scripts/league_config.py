@@ -52,7 +52,7 @@ def brand():
 
 def term(plural=False, cap=False):
     """What one Sleeper league is called on pages/posts (config unit_term; NCAA 180: "conference").
-    Chris, 2026-11-07: use this on rebuilt pages instead of hard-coding "league"."""
+    CW, 2026-11-07: use this on rebuilt pages instead of hard-coding "league"."""
     t = cfg().get("unit_term", {})
     w = t.get("plural" if plural else "singular", "leagues" if plural else "league")
     return w[:1].upper() + w[1:] if cap else w
@@ -96,7 +96,7 @@ def last_regular_week():
 
 
 def week_label(week, short=False):
-    """Display label for a week (Chris, 2026-11-17), same rule as ScoreboardCore.weekLabel in the browser:
+    """Display label for a week (CW, 2026-11-17), same rule as ScoreboardCore.weekLabel in the browser:
     postseason.display.week_labels [long, short] per phase; {n} = NFL week, {p} = postseason week."""
     w, sch = int(week), cfg()["schedule"]
     ccg = int(sch["ccg_week"])

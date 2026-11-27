@@ -9,7 +9,7 @@ PAGE = ROOT / "reports/selection-watch.html"
 
 
 def test_page_is_generated_and_menu_wired():
-    """The tab is public for CCG (Chris, 2026-11-20); the Playoffs page went public 2026-11-24 (Chris) through its
+    """The tab is public for CCG (CW, 2026-11-20); the Playoffs page went public 2026-11-24 (CW) through its
     sub-row item (config/nav.json rows.selection-watch), which also drives the DEV bar."""
     src = (ROOT / "scripts/selection_watch_page.py").read_text(encoding="utf-8")
     html = PAGE.read_text(encoding="utf-8")

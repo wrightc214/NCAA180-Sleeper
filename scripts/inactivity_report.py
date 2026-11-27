@@ -36,7 +36,7 @@ import league_config as lcfg  # noqa: E402 (shared settings: config/league.json)
 SRC = "data/LineupStreaks_Season.csv"
 MATCHUPS = "data/Matchups_Season.csv"
 LIMIT = 1900  # Discord message cap is 2000 chars
-# 🟡 Watch rows are listed only while 🔴 Likely inactive is short enough to act on (Chris, 2026-10-06).
+# 🟡 Watch rows are listed only while 🔴 Likely inactive is short enough to act on (CW, 2026-10-06).
 # Hidden watches still go in the attached CSV. Override with repo variable LM_WATCH_MAX_INACTIVE.
 WATCH_MAX_INACTIVE = int(os.environ.get("LM_WATCH_MAX_INACTIVE") or 10)
 LEAGUE_SHORT = lcfg.league_display()  # friendly names: data/LeagueShortNames.csv
@@ -116,7 +116,7 @@ def main():
         t[2].append(reason)
 
     # 1) Tank / lineup concerns: ALL leagues together in their own message(s), most serious first
-    #    (Chris, 2026-10-06: these are a serious concern, kept apart from routine activity).
+    #    (CW, 2026-10-06: these are a serious concern, kept apart from routine activity).
     tank_lines = []
     for r in (tank.sort_values(["Tier", "Ratio"]).itertuples() if not tank.empty else []):
         ben = ", ".join(r.Benched.split(", ")[:3])

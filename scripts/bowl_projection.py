@@ -1,7 +1,7 @@
 """
 bowl_projection.py -- the Postseason page while the season is on: projected playoff field + bowls.
 
-Chris, 2026-11-03. Remaining regular-season games and the CCG are projected (each team scores
+CW, 2026-11-03. Remaining regular-season games and the CCG are projected (each team scores
 its season average under this season's scoring; the higher average wins), then the REAL
 postseason code runs on the projected standings: conference_championships -> playoff_field ->
 bowls (config postseason.bowls: poll-per-win order, division-leader Marquee seat, tie-ins).
@@ -17,13 +17,13 @@ Projected seeds (background only, never shown): latest consensus poll Score + se
 projected remaining win (CCG included) - seed_per_loss per loss. The real seeds come from the
 bots' Seeding ballot after the CCG.
 
-Posting (Chris approved the format 2026-11-03; it now posts weekly with the awards and poll):
+Posting (CW approved the format 2026-11-03; it now posts weekly with the awards and poll):
   python scripts/bowl_projection.py            build the page + data
   python scripts/bowl_projection.py --render   + screenshot the Discord cards (playoff, Prestige, Marquee)
   python scripts/bowl_projection.py --shoot    screenshot the existing page only (workflow render step)
   python scripts/bowl_projection.py --publish  post the STORED cards to the league channel (never
                                                rebuilds). The weekly job does this with the other
-                                               weekly posts (Chris, 2026-11-03: no LM preview step)
+                                               weekly posts (CW, 2026-11-03: no LM preview step)
   python scripts/bowl_projection.py --preview  optional: the same post to lm-private-data
 Config: postseason.bowls.projection (enabled, from_week, seed_per_win/loss).
 """
@@ -255,7 +255,7 @@ def team(t, col, short, badge="", tag=""):
 
 
 def bowl_logo(name):
-    """Only logos Chris approved (postseason.bowls.approved_logos: no sponsor branding); else none."""
+    """Only logos CW approved (postseason.bowls.approved_logos: no sponsor branding); else none."""
     if name not in lcfg.cfg()["postseason"]["bowls"].get("approved_logos", []):
         return ""
     for folder in ("assets/logos/Bowls", "assets/logos/Playoffs"):  # playoff bowls + National Championship
@@ -307,7 +307,7 @@ def field_card(P, col, short, prev, foot):
             f'{pairs}{bub}<p class="foot">{e(foot)}</p></section>')
 
 
-# Collapsible sections + Collapse all / Expand all, like the Games page (Chris, 2026-11-07).
+# Collapsible sections + Collapse all / Expand all, like the Games page (CW, 2026-11-07).
 # Tap a section title to fold it; folds persist per browser. Pages open expanded when nothing is
 # stored, so the headless Discord screenshots always capture full cards.
 FOLD_JS = """<script>(()=>{const K='pp-folded',get=()=>{try{return new Set(JSON.parse(localStorage.getItem(K)||'[]'))}catch(e){return new Set()}},
@@ -380,7 +380,7 @@ def odds_cards(O, col, short):
     min_w = int(lcfg.cfg()["postseason"]["bowls"]["min_wins"])
 
     def cell(t, k):
-        # Chris, 2026-11-07: NIT shows a dash once a team has min_wins (6) -- bowl eligible, so the
+        # CW, 2026-11-07: NIT shows a dash once a team has min_wins (6) -- bowl eligible, so the
         # NIT only happens in edge cases the odds never produce (not "Out": that is only for proofs).
         if k == "NIT" and int(t["Rec"].split("-")[0]) >= min_w:
             return f'<td data-v="{t[k]:.4f}" class="na" title="{min_w}+ wins: bowl eligible">\u2014</td>'
@@ -413,13 +413,13 @@ const l=document.getElementById('o-l'),q=document.getElementById('o-q'),f=()=>{c
 [...tb.rows].forEach(r=>{r.hidden=!!((lv&&r.dataset.l!==lv)||(qv&&!r.dataset.n.includes(qv)));});};l.addEventListener('change',f);q.addEventListener('input',f);})();</script>"""
 
 
-# Save image on every section (Chris, 2026-11-07; site-wide design rule): a small button at the top
+# Save image on every section (CW, 2026-11-07; site-wide design rule): a small button at the top
 # right of each card makes a phone-width PNG of the whole card (even when folded) via the shared
 # assets/snapshot.js. The odds table saves what is on screen (filter + sort); unfiltered, the first 25 rows.
 def snap_js(after, foot=None, tag=None, projection=True):
     """after: projection week (default footer/name); season pages pass their own foot + tag (e.g. '2025')
     and projection=False (official results: no label). Projection images carry the site label rule
-    (Chris, 2026-11-07): PROJECTION · UNOFFICIAL · as of <build time>."""
+    (CW, 2026-11-07): PROJECTION · UNOFFICIAL · as of <build time>."""
     import datetime as _dt
     stamp = ({"state": "projection", "time": _dt.datetime.now(_dt.timezone.utc).isoformat(), "note": f"after week {int(after)}"}
              if projection else None)
@@ -568,8 +568,8 @@ WORDS = {1: "One week", 2: "Two weeks", 3: "Three weeks", 4: "Four weeks", 5: "F
 
 
 def league_message(meta, contact=""):
-    """The league post (wording locked with Chris, 2026-11-03): three cards + the short link (Discord
-    link preview on, like the other weekly posts) + "Questions? Ask @Chris" like the awards post."""
+    """The league post (wording locked with CW, 2026-11-03): three cards + the short link (Discord
+    link preview on, like the other weekly posts) + "Questions? Ask @CW" like the awards post."""
     left = ps.last_regular_week() - int(meta["after_week"])
     lead = f"{WORDS.get(left, f'{left} weeks')} left. " if left > 0 else ""
     def lines(rows, what):

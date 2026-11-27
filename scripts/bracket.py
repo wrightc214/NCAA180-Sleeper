@@ -1,5 +1,5 @@
 """
-bracket.py -- reusable single-elimination bracket component (Chris, 2026-11-20, task 5.13).
+bracket.py -- reusable single-elimination bracket component (CW, 2026-11-20, task 5.13).
 
 One data model, four renderings:
   model(...)          -> plain dict: rounds of games, each game two sides (or TBD), quads, champion
@@ -11,7 +11,7 @@ The Playoff uses it today (postseason_page.py). NIT / CCG brackets can feed it t
 model from ordered rounds and call the renderers (nothing here knows about the Playoff except the
 optional quad / bowl / champion fields, which are simply left empty).
 
-Look (Chris's approved mockup): every team row in its own colours (site_common.team_colors pair),
+Look (CW's approved mockup): every team row in its own colours (site_common.team_colors pair),
 seed . logo . name (conference on a second line) . score; losers dimmed (opacity + grayscale from
 config postseason.display.bracket) only once their game is final; connector lines in the colour of
 the team that advanced; Elite 8 / Final Four bowls named and shown with their logo; champion card
@@ -549,7 +549,7 @@ def quad_export(B, k, dim):
 
 
 def elite_export(B, dim):
-    """Elite 8 -> Final Four -> Championship -> champion (Chris's old Excel layout): each game a tall
+    """Elite 8 -> Final Four -> Championship -> champion (CW's old Excel layout): each game a tall
     block, team A on top, the bowl logo large in the middle, team B at the bottom; each next-round
     block's rows sit at the midpoints of its two feeder blocks."""
     R = B["rounds"]

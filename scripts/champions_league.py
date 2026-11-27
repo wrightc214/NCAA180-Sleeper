@@ -1,5 +1,5 @@
 """
-champions_league.py -- the Champions League (config/champions_league.json; Chris, 2026-11-21).
+champions_league.py -- the Champions League (config/champions_league.json; CW, 2026-11-21).
 
 A shadow event computed from home-league scores. 33 teams chosen from the previous season play
 three-team pods every week (weeks 1-16, fixed schedule data/champions_league/schedule.csv), then the

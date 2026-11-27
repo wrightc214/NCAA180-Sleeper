@@ -9,8 +9,8 @@ At-large spots = field_size - auto bids (calculated, never typed). At-large rank
 season only (weeks 1..last_regular_week), Wins then PointsFor; a tie across the last spot is
 flagged, never guessed (exit 1). Needs every CCG final.
 
-Review step (Chris, 2026-11-03; postseason.playoff.review_before_publish): the field is written as a
-DRAFT (data/postseason_drafts/PlayoffField_<year>.csv) and previewed to Chris in lm-private-data
+Review step (CW, 2026-11-03; postseason.playoff.review_before_publish): the field is written as a
+DRAFT (data/postseason_drafts/PlayoffField_<year>.csv) and previewed to CW in lm-private-data
 (postseason_preview.py). --publish recomputes it, checks it still matches the draft, and only then
 writes the live file (site, announcements). Once published it is locked. --data-dir runs
 (replays, the projection) skip the review and write directly.
@@ -77,7 +77,7 @@ def main():
     n_at = int(pc["field_size"]) - len(keys)
     if n_at < 0:
         sys.exit(f"FATAL: {len(keys)} auto bids exceed field size {pc['field_size']}")
-    # no hidden toss for the last spot (Chris, 2026-11-12): a tie across the cut waits for a real toss
+    # no hidden toss for the last spot (CW, 2026-11-12): a tie across the cut waits for a real toss
     pool, unresolved, _ = ps.rank_ties(st[[(l, r) not in keys for l, r in zip(st["LeagueID"], st["RosterID"])]], real_toss=True)
     rows, complete = [], True
     for l, r, bid in auto:

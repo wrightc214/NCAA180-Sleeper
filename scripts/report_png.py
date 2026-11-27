@@ -5,7 +5,7 @@ Needs Playwright + Chromium (installed by the workflow step that calls this).
 Rendered at 1200px wide, 2x pixel density, light theme, after web fonts load.
 
 Also saves one image per page section to reports/discord/NN-<name>.png for the Discord
-post (Chris, 2026-10-06: the single full-page image was illegible on phones once Discord
+post (CW, 2026-10-06: the single full-page image was illegible on phones once Discord
 compressed it). Sections render at a 600px phone-width viewport, 2x density. The HTML page
 itself is not changed.
 CWD must be repo root.

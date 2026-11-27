@@ -156,7 +156,7 @@
   }
 
   // Sub-rows display directly below the page header, not between the main menu and the header
-  // (Chris, 2026-11-20). Pages keep writing the placeholders next to the main menu (site_common.menu_html);
+  // (CW, 2026-11-20). Pages keep writing the placeholders next to the main menu (site_common.menu_html);
   // this moves them after the <header> that follows them as a sibling, skipping only script/noscript/nav
   // and the dev bar. No such header: the row stays where it is. Order of several rows is kept.
   var SKIP = {SCRIPT: 1, NOSCRIPT: 1, NAV: 1, STYLE: 1, LINK: 1};

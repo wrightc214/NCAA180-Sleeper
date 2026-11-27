@@ -1,4 +1,4 @@
-/* Special Events → Champions League (Chris, 2026-11-21; planning repo todo/todo-champions-league*.md).
+/* Special Events → Champions League (CW, 2026-11-21; planning repo todo/todo-champions-league*.md).
    One script for the Standings, Schedule, Scoreboard, Field and Selection pages (window.CL_PAGE).
    Data: data/scoreboard/<season>/champions-league.json (scripts/champions_league.py, weekly job).
    Team logos/colours: data/scoreboard/index.json (same as the Games page). ?season=YYYY shows another season. */

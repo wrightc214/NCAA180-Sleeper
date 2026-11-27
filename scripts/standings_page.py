@@ -36,7 +36,7 @@ td,th{white-space:nowrap}
 
 
 def extra_columns(df):
-    """Page-only columns (Chris, 2026-11-08); the CSV stays the poll-sheet export.
+    """Page-only columns (CW, 2026-11-08); the CSV stays the poll-sheet export.
     Max PF: the best possible lineup's points, regular season to date (MaxPoints_Season.csv).
     Playoff %: from the postseason odds (postseason_odds.py) while they are current; Clinched/Out
     only when proven. Returns (df, {column: display texts})."""
@@ -71,7 +71,7 @@ def main():
     if not os.path.exists(SRC):
         print(f"{SRC} missing; skipping standings page.")
         return
-    # Past seasons (Chris, 2026-11-11): one page + CSV per finished season (standings.py --history).
+    # Past seasons (CW, 2026-11-11): one page + CSV per finished season (standings.py --history).
     past = sorted((int(os.path.basename(f)[17:21]), f) for f in glob.glob(os.path.join(HIST, "OverallStandings_*.csv")))
     cur = int(pd.read_csv("data/Matchups_Season.csv", usecols=["Year"])["Year"].max())
     years = [y for y, _ in past]

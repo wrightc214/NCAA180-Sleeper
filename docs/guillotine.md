@@ -32,7 +32,7 @@ Ties at the line survive.
 **Refresh:** automatic only while Monday Night Football is on (5 minutes, 30 seconds in Q4/OT). Otherwise it
 uses the Refresh button. The page fetches only conferences that still have a team alive.
 
-**Logos** (Chris, 2026-11-14) live in `assets/logos/Guillotine/`, mapped in `postseason.guillotine.logos`:
+**Logos** (CW, 2026-11-14) live in `assets/logos/Guillotine/`, mapped in `postseason.guillotine.logos`:
 - `Guillotine.png` (the wordmark) is the default, shown before week 13.
 - `Round 1`–`Round 4` and `Final.png` show for weeks 13–17 on the page header. `Final.png` also heads the champion banner.
 - `Guillotine G.png` is the Special Events sub-tab icon.

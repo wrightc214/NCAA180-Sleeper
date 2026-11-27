@@ -1,4 +1,4 @@
-"""Opt-in browser check: follows first on the Games overview (Chris, 2026-11-14).
+"""Opt-in browser check: follows first on the Games overview (CW, 2026-11-14).
 RUN_SCOREBOARD_BROWSER_TESTS=1 python -m pytest tests/test_games_follows_browser.py
 Every Sleeper league request is served the week-6 fixture rosters, so each conference shows the
 same 6 pairings; enough to check section order and visibility."""

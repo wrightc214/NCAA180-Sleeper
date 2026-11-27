@@ -3,7 +3,7 @@ apply_orphan_overrides.py -- relabel specific historic team-seasons as orphans, 
 data/OrphanOverrides_Historic.csv (Year, LeagueName, RosterID, OwnerID, OwnerName, Note).
 
 Why: the "one team per owner" rule had two historic exceptions (a 2019 founder running
-6 teams; a 2021 owner with 2). Chris's ruling: those extra teams are orphans, so career /
+6 teams; a 2021 owner with 2). CW's ruling: those extra teams are orphans, so career /
 manager stats never merge them into one person. Same label as the live orphan rule:
 OwnerID = OwnerName = "Orphan"; team identity stays LeagueID/LeagueName + RosterID.
 

@@ -1,7 +1,7 @@
 {
   "brand": "NCAA 180",
   "unit_term": {
-    "_note": "What one Sleeper league is called on pages and posts (Chris, 2026-11-07: in NCAA 180 each league is a conference). Use league_config.term() / config unit_term on rebuilt pages instead of hard-coding 'league'.",
+    "_note": "What one Sleeper league is called on pages and posts (CW, 2026-11-07: in NCAA 180 each league is a conference). Use league_config.term() / config unit_term on rebuilt pages instead of hard-coding 'league'.",
     "singular": "conference",
     "plural": "conferences"
   },
@@ -88,7 +88,7 @@
     "DEF": 6.5
   },
   "live_bounds": {
-    "_note": "Proven results on live pages (Chris, 2026-11-23): a game, CCG race, or Guillotine cut is called (100% / 0%, Clinched / Out, Safe / Cut) when one side's floor beats the other's ceiling. Ceiling = points so far + remaining projection (each starter still to play: Tuesday projection x share of his game left) + ONE big-game allowance = the largest of team_upside x share of the lineup's minutes left, the biggest player_upside[position] x share of that player's game left among starters still to play, and burst if anyone is still to play. Floor = points so far - max_drop while any starter is still to play (one big negative at most: a defense's standard-scoring floor is -11 = -4 for 35+ allowed, -7 for 550+ yards; worst other starter on record QB -7.66). Values from 38k starter games 2019-2025: best team week vs projection +99.5 (sd 25); best single-player game vs projection QB +37.7, RB +38.3, WR +43.5, TE +33.6, K +20.0, DEF +28.9. LIVE DISPLAY ONLY: nothing the weekly run writes, posts or logs (postseason flags, CCG snapshot, Standings, bowl projection, push notifications and their ledger) uses these bounds; those keep the strict rule (every points-for tie unknown). Remove this block to turn proven calls off.",
+    "_note": "Proven results on live pages (CW, 2026-11-23): a game, CCG race, or Guillotine cut is called (100% / 0%, Clinched / Out, Safe / Cut) when one side's floor beats the other's ceiling. Ceiling = points so far + remaining projection (each starter still to play: Tuesday projection x share of his game left) + ONE big-game allowance = the largest of team_upside x share of the lineup's minutes left, the biggest player_upside[position] x share of that player's game left among starters still to play, and burst if anyone is still to play. Floor = points so far - max_drop while any starter is still to play (one big negative at most: a defense's standard-scoring floor is -11 = -4 for 35+ allowed, -7 for 550+ yards; worst other starter on record QB -7.66). Values from 38k starter games 2019-2025: best team week vs projection +99.5 (sd 25); best single-player game vs projection QB +37.7, RB +38.3, WR +43.5, TE +33.6, K +20.0, DEF +28.9. LIVE DISPLAY ONLY: nothing the weekly run writes, posts or logs (postseason flags, CCG snapshot, Standings, bowl projection, push notifications and their ledger) uses these bounds; those keep the strict rule (every points-for tie unknown). Remove this block to turn proven calls off.",
     "team_upside": 100,
     "player_upside": {
       "QB": 40,
@@ -135,10 +135,10 @@
     "ccg_week": 12,
     "postseason_start_week": 13,
     "postseason_end_week": 17,
-    "_note": "Season phases (Chris, 2026-11-17): regular season 1..last_regular_week, CCG = ccg_week, postseason postseason_start_week..postseason_end_week. Pages derive week labels from these plus postseason.display.week_labels."
+    "_note": "Season phases (CW, 2026-11-17): regular season 1..last_regular_week, CCG = ccg_week, postseason postseason_start_week..postseason_end_week. Pages derive week labels from these plus postseason.display.week_labels."
   },
   "tiebreakers": {
-    "_note": "Order used to rank teams everywhere they are compared: division titles (CCG), playoff at-large, bowl and NIT pools. Matches Sleeper's default (support.sleeper.com, checked 2026-10-30): record, then points for, then points against, then coin toss. Keys: win_pct (ties count half), wins, points_for, points_against (higher ranks higher), head_to_head (games between the teams still tied), coin_toss (reproducible: fixed hash of season + team; every toss is printed in the run log). Teams tied after the last key are flagged. Real coin toss (Chris, 2026-11-12): division titles and the last playoff at-large spot never use the simulated toss -- a tie still standing there waits for a real toss with both managers present, recorded in coin_toss_results ({year, teams, order, note}). Bowl/NIT pools and projections use the simulated toss and note it.",
+    "_note": "Order used to rank teams everywhere they are compared: division titles (CCG), playoff at-large, bowl and NIT pools. Matches Sleeper's default (support.sleeper.com, checked 2026-10-30): record, then points for, then points against, then coin toss. Keys: win_pct (ties count half), wins, points_for, points_against (higher ranks higher), head_to_head (games between the teams still tied), coin_toss (reproducible: fixed hash of season + team; every toss is printed in the run log). Teams tied after the last key are flagged. Real coin toss (CW, 2026-11-12): division titles and the last playoff at-large spot never use the simulated toss -- a tie still standing there waits for a real toss with both managers present, recorded in coin_toss_results ({year, teams, order, note}). Bowl/NIT pools and projections use the simulated toss and note it.",
     "order": [
       "win_pct",
       "points_for",
@@ -148,7 +148,7 @@
     "coin_toss_results": []
   },
   "postseason": {
-    "_note": "Postseason rules (Chris/commissioner). Weeks: CCG = schedule.ccg_week; playoff rounds start the week after.",
+    "_note": "Postseason rules (CW/commissioner). Weeks: CCG = schedule.ccg_week; playoff rounds start the week after.",
     "standard_scoring_from": 2026,
     "tied_game": "higher_seed",
     "_tied_game_note": "A postseason game tied on points goes to the higher seed (Sleeper's rule); for games without seeds (CCG), the better-ranked team.",
@@ -166,7 +166,7 @@
       "seeding": "bots",
       "manual_seeds_file": "data/PlayoffSeeds_Season.csv",
       "review_before_publish": true,
-      "_review_note": "Chris, 2026-11-03: the field and the seeded bracket are drafts until he approves (script playoff_publish). Preview goes to lm-private-data. Bowls and NIT draws already work this way (bowls/nit review_before_publish).",
+      "_review_note": "CW, 2026-11-03: the field and the seeded bracket are drafts until he approves (script playoff_publish). Preview goes to lm-private-data. Bowls and NIT draws already work this way (bowls/nit review_before_publish).",
       "first_week": 13,
       "rounds": [
         "First Round",
@@ -190,7 +190,7 @@
         ]
       ],
       "bowl_rotation_anchor": 2025,
-      "_bowl_rotation_note": "Chris, 2026-11-04: the semifinal (Final Four) pair rotates every year; the other four host the Elite 8. Year Y uses pair (Y - anchor) mod 3 for the semis (2025 = Rose/Sugar, 2026 = Orange/Cotton, 2027 = Peach/Fiesta). Elite 8 = the next two pairs in order, by bracket game (1-seed, 4-seed, 2-seed, 3-seed quadrants); semifinal 1 = winners of Elite 8 games 1-2, semifinal 2 = games 3-4. National Championship has no bowl name.",
+      "_bowl_rotation_note": "CW, 2026-11-04: the semifinal (Final Four) pair rotates every year; the other four host the Elite 8. Year Y uses pair (Y - anchor) mod 3 for the semis (2025 = Rose/Sugar, 2026 = Orange/Cotton, 2027 = Peach/Fiesta). Elite 8 = the next two pairs in order, by bracket game (1-seed, 4-seed, 2-seed, 3-seed quadrants); semifinal 1 = winners of Elite 8 games 1-2, semifinal 2 = games 3-4. National Championship has no bowl name.",
       "championship_sites": {
         "2024": {
           "city": "Atlanta",
@@ -223,28 +223,28 @@
           "country": "USA"
         }
       },
-      "_championship_sites_note": "Chris, 2026-11-04: the National Championship is 'played' where the real CFP title game is that season (season year = the fall it starts). City only, no sponsor venue names. 2024-2026 confirmed; 2027-2029 reported, not official (checked 2026-11-04) -- update as the CFP announces. A missing year shows no location."
+      "_championship_sites_note": "CW, 2026-11-04: the National Championship is 'played' where the real CFP title game is that season (season year = the fall it starts). City only, no sponsor venue names. 2024-2026 confirmed; 2027-2029 reported, not official (checked 2026-11-04) -- update as the CFP announces. A missing year shows no location."
     },
     "bowls": {
-      "_note": "Bowl rules (Chris, 2026-10-28 redesign). Tiers fill in order: Prestige (top-ranked), Marquee (each league's best + rank, tie-in fit), Showcase (service + international, always played), Opening (flexible; bottom of the list sits out). Names/locations are 2026+; history keeps the names played.",
+      "_note": "Bowl rules (CW, 2026-10-28 redesign). Tiers fill in order: Prestige (top-ranked), Marquee (each league's best + rank, tie-in fit), Showcase (service + international, always played), Opening (flexible; bottom of the list sits out). Names/locations are 2026+; history keeps the names played.",
       "min_wins": 6,
       "bump_wins": 5,
       "max_bumps": 1,
       "rank": {
-        "_note": "Bowl order (Chris, 2026-11-03). poll_per_win: rank by poll rank - poll_spots_per_win x wins, i.e. a team with one fewer win must be poll_spots_per_win+ spots higher in the poll to pass you; same record -> poll decides. record: wins, then the tiebreakers.order. Poll = poll_type through the last regular week (latest available). Comparison: claude/rank-source-comparison-2026-11-03.md.",
+        "_note": "Bowl order (CW, 2026-11-03). poll_per_win: rank by poll rank - poll_spots_per_win x wins, i.e. a team with one fewer win must be poll_spots_per_win+ spots higher in the poll to pass you; same record -> poll decides. record: wins, then the tiebreakers.order. Poll = poll_type through the last regular week (latest available). Comparison: claude/rank-source-comparison-2026-11-03.md.",
         "method": "poll_per_win",
         "poll_spots_per_win": 25,
         "poll_type": "BotConsensus"
       },
       "marquee_league_seat": "division_leaders",
-      "_marquee_league_seat_note": "Marquee seat per league. division_leaders (Chris, 2026-11-03): after playoff + Prestige teams are out, only each division's top remaining team is a candidate; the better of them (bowl order) takes the seat -- a division's 4th place never passes its own 3rd. best_ranked: the league's best remaining team in bowl order.",
+      "_marquee_league_seat_note": "Marquee seat per league. division_leaders (CW, 2026-11-03): after playoff + Prestige teams are out, only each division's top remaining team is a candidate; the better of them (bowl order) takes the seat -- a division's 4th place never passes its own 3rd. best_ranked: the league's best remaining team in bowl order.",
       "projection": {
-        "_note": "Weekly bowl projection (scripts/bowl_projection.py, Chris 2026-11-03). Runs in the weekly job once from_week regular-season weeks are final (8 = first drop the Tuesday after week 8, the same week the real CFP's first rankings come out -- Chris, 2026-11-03) until the regular season ends. Cards: playoff field (projected seeds, AQs) + Prestige + Marquee; Posts to the league channel with the other weekly posts (Chris, 2026-11-03: format approved, no LM preview step); held whenever the weekly post is held.",
+        "_note": "Weekly bowl projection (scripts/bowl_projection.py, CW 2026-11-03). Runs in the weekly job once from_week regular-season weeks are final (8 = first drop the Tuesday after week 8, the same week the real CFP's first rankings come out -- CW, 2026-11-03) until the regular season ends. Cards: playoff field (projected seeds, AQs) + Prestige + Marquee; Posts to the league channel with the other weekly posts (CW, 2026-11-03: format approved, no LM preview step); held whenever the weekly post is held.",
         "enabled": true,
         "from_week": 8,
         "seed_per_win": 0.1,
         "seed_per_loss": 0.1,
-        "_seed_note": "Projected playoff seeds (Chris, 2026-11-03): latest consensus poll Score + seed_per_win per projected remaining win (CCG included) - seed_per_loss per projected loss. Background only; the card shows first-round pairings.",
+        "_seed_note": "Projected playoff seeds (CW, 2026-11-03): latest consensus poll Score + seed_per_win per projected remaining win (CCG included) - seed_per_loss per projected loss. Background only; the card shows first-round pairings.",
         "bubble_width": 6
       },
       "review_before_publish": true,
@@ -718,7 +718,7 @@
                 "lat": 29.95,
                 "lon": -90.07
               },
-              "origin": "MEAC vs SWAC champions: Durham NC 1972, New Orleans 1974–75 (location matches Chris's logo; Chris, 2026-11-04: takes Heritage's slot and HBCU lean)"
+              "origin": "MEAC vs SWAC champions: Durham NC 1972, New Orleans 1974–75 (location matches CW's logo; CW, 2026-11-04: takes Heritage's slot and HBCU lean)"
             },
             {
               "name": "Freedom Bowl",
@@ -800,7 +800,7 @@
                 "lat": 33.75,
                 "lon": -84.39
               },
-              "origin": "1991–99 MEAC vs SWAC (Miami, Tallahassee, Atlanta) (moved to the end of the Opening order, no lean -- Chris, 2026-11-04)"
+              "origin": "1991–99 MEAC vs SWAC (Miami, Tallahassee, Atlanta) (moved to the end of the Opening order, no lean -- CW, 2026-11-04)"
             }
           ]
         }
@@ -871,7 +871,7 @@
         "Sugar Bowl",
         "National Championship"
       ],
-      "_approved_logos_note": "Chris, 2026-11-03: only these bowl logos are drawn (site + Discord); any other bowl shows its name only. Sponsor-branded files stay unused until replaced with a clean version (no corporate sponsor), then added here. Upload to assets/logos/Bowls/<Bowl Name>.png and run the Trim logos workflow with folder assets/logos/Bowls. Playoff bowls + National Championship live in assets/logos/Playoffs/ (Chris's 2026 set)."
+      "_approved_logos_note": "CW, 2026-11-03: only these bowl logos are drawn (site + Discord); any other bowl shows its name only. Sponsor-branded files stay unused until replaced with a clean version (no corporate sponsor), then added here. Upload to assets/logos/Bowls/<Bowl Name>.png and run the Trim logos workflow with folder assets/logos/Bowls. Playoff bowls + National Championship live in assets/logos/Playoffs/ (CW's 2026 set)."
     },
     "nit": {
       "review_before_publish": true,
@@ -903,7 +903,7 @@
       },
       "realigned_from": 2026,
       "realigned": {
-        "_note": "Chris, 2026-11-04 (project doc nit-format-2026.md). group_size 4 (remainder -> some 3s); round-2 field 28, or 21 when the NIT pool is below small_field_below; 8 reach the QF (round-2 winners + lucky dogs). weights rank QF conflicts: league > round 2 group > round 1 group.",
+        "_note": "CW, 2026-11-04 (project doc nit-format-2026.md). group_size 4 (remainder -> some 3s); round-2 field 28, or 21 when the NIT pool is below small_field_below; 8 reach the QF (round-2 winners + lucky dogs). weights rank QF conflicts: league > round 2 group > round 1 group.",
         "group_size": 4,
         "round2_field": 28,
         "round2_field_small": 21,
@@ -918,7 +918,7 @@
       }
     },
     "display": {
-      "_note": "Display names only; history files keep the names used at the time (Chris, 2026-10-28).",
+      "_note": "Display names only; history files keep the names used at the time (CW, 2026-10-28).",
       "awards_labels": {
         "ccg": {"picker": "CCG", "heading": "Conference Championships"},
         "championship": "Championship Week",
@@ -938,7 +938,7 @@
           "Week {n} · Postseason Week {p}",
           "Wk {n} · PS{p}"
         ],
-        "_note": "[long, short] per phase. {n} = NFL week (what Sleeper shows), {p} = postseason week (1 = postseason_start_week). Chris 2026-11-19: postseason long label leads with the NFL week (what Sleeper shows), then the postseason week, e.g. \"Week 13 · Postseason Week 1\"; short label \"Wk 13 · PS1\" (same order; used in dropdowns and week buttons). CCG week is its own week (postseason week zero): \"Week 12 · CCG Week\" / \"Wk 12 · CCG\".",
+        "_note": "[long, short] per phase. {n} = NFL week (what Sleeper shows), {p} = postseason week (1 = postseason_start_week). CW 2026-11-19: postseason long label leads with the NFL week (what Sleeper shows), then the postseason week, e.g. \"Week 13 · Postseason Week 1\"; short label \"Wk 13 · PS1\" (same order; used in dropdowns and week buttons). CCG week is its own week (postseason week zero): \"Week 12 · CCG Week\" / \"Wk 12 · CCG\".",
         "hide_weeks": [
           18
         ]
@@ -985,14 +985,14 @@
       },
       "_prefix_note": "Playoff rounds show without a prefix unless the same week has an NIT round of the same name; NIT rounds always prefixed.",
       "bracket": {
-        "_note": "Playoff bracket look (Chris, 2026-11-20, task 5.13). loser_opacity / loser_grayscale dim a team once its game is final (winners stay full colour; live and upcoming games are never dimmed). quad_label names each 8-team quad after its Elite 8 bowl: {bowl} = the bowl name without 'Bowl' (Orange Bowl -> 'Orange Quad'); bowls come from playoff.bowl_rotation (current/future seasons) or as played (past seasons).",
+        "_note": "Playoff bracket look (CW, 2026-11-20, task 5.13). loser_opacity / loser_grayscale dim a team once its game is final (winners stay full colour; live and upcoming games are never dimmed). quad_label names each 8-team quad after its Elite 8 bowl: {bowl} = the bowl name without 'Bowl' (Orange Bowl -> 'Orange Quad'); bowls come from playoff.bowl_rotation (current/future seasons) or as played (past seasons).",
         "loser_opacity": 0.35,
         "loser_grayscale": 0.6,
         "quad_label": "{bowl} Quad"
       }
     },
     "odds": {
-      "_note": "scripts/postseason_odds.py (Chris, 2026-11-07). Most impactful games: top_games biggest swings per subsection (playoff / bowl; \"leagues\" = as many as there are leagues, 15), then one row for every other league whose biggest swing is at least min_swing.",
+      "_note": "scripts/postseason_odds.py (CW, 2026-11-07). Most impactful games: top_games biggest swings per subsection (playoff / bowl; \"leagues\" = as many as there are leagues, 15), then one row for every other league whose biggest swing is at least min_swing.",
       "sims": 10000,
       "shrink_games": 4,
       "seed": 2026,
@@ -1012,7 +1012,7 @@
         "trophy": "assets/logos/Dwight Fight/Dwight Fight Trophy Blank.png"
       },
       "_art_note": "Images are copied from the dwight-fight art branch. Trophy winner/plaque text is HTML overlay, not generated art.",
-      "_roles_note": "Bracket second line = 'username · role' (Chris, 2026-11-24, task 5.18). This season: (1) official role from the About page's staff source (scripts/league_roles.py: about.league_manager, about.data_contact, data/LeagueStaff.csv assistants; highest wins); (2) roles below (Sleeper username -> role text, any case) for roles the staff source can't tell; (3) role_labels.default_current. Past seasons (Chris, 2026-11-24): the role each person held THAT season from data/Dwight_Roles.csv (Season, Username, Role; prefilled with today's roles, edit to the real history), else role_labels.default_past. {conference} = the conference's short name.",
+      "_roles_note": "Bracket second line = 'username · role' (CW, 2026-11-24, task 5.18). This season: (1) official role from the About page's staff source (scripts/league_roles.py: about.league_manager, about.data_contact, data/LeagueStaff.csv assistants; highest wins); (2) roles below (Sleeper username -> role text, any case) for roles the staff source can't tell; (3) role_labels.default_current. Past seasons (CW, 2026-11-24): the role each person held THAT season from data/Dwight_Roles.csv (Season, Username, Role; prefilled with today's roles, edit to the real history), else role_labels.default_past. {conference} = the conference's short name.",
       "roles": {},
       "role_labels": {
         "league_manager": "Commissioner",
@@ -1028,7 +1028,7 @@
       "live_label": "Unofficial"
     },
     "guillotine": {
-      "_note": "The Guillotine (Chris, 2026-11-04 / 11-14; weeks 12-16 from 2026-11-24 -- CCG week is a dead week for most, and a week-16 final means no one plays for two trophies in one game; claude/todo-guillotine.md): every team plays weeks first_week..last_week on its own standard score. Each week half of the field entering the week (rounded down) advances; everyone tied with the last spot advances too (PGA style). The top score in last_week wins; an exact tie there is broken by tiebreak_week's score, then co-champions. A rerun after stat corrections only ADDS teams to a frozen week (nobody already advanced is removed). Orphan teams play like everyone else.",
+      "_note": "The Guillotine (CW, 2026-11-04 / 11-14; weeks 12-16 from 2026-11-24 -- CCG week is a dead week for most, and a week-16 final means no one plays for two trophies in one game; claude/todo-guillotine.md): every team plays weeks first_week..last_week on its own standard score. Each week half of the field entering the week (rounded down) advances; everyone tied with the last spot advances too (PGA style). The top score in last_week wins; an exact tie there is broken by tiebreak_week's score, then co-champions. A rerun after stat corrections only ADDS teams to a frozen week (nobody already advanced is removed). Orphan teams play like everyone else.",
       "name": "The Guillotine",
       "from_season": 2026,
       "first_week": 12,
@@ -1045,7 +1045,7 @@
           "16": "assets/logos/Guillotine/Final.png"
         }
       },
-      "_logos_note": "Chris's logos (2026-11-14). wordmark = no round (default, out of season); mark = square G (Special Events sub-tab); weeks = the round logo shown for that week, Final = last_week and the champion banner."
+      "_logos_note": "CW's logos (2026-11-14). wordmark = no round (default, out of season); mark = square G (Special Events sub-tab); weeks = the round logo shown for that week, Final = last_week and the champion banner."
     }
   },
   "draft": {
@@ -1095,7 +1095,7 @@
     }
   },
   "about": {
-    "_note": "About page (scripts/about_page.py). Not linked in the site nav until Chris approves it. Directory: league_manager / data_contact = Sleeper display names only (Chris, 2026-11-07: no real names anywhere); conference assistants = everyone else with LM powers (data/LeagueStaff.csv, scripts/league_staff.py); accounts without a team = users with no roster in any league they're in (computed).",
+    "_note": "About page (scripts/about_page.py). Not linked in the site nav until CW approves it. Directory: league_manager / data_contact = Sleeper display names only (CW, 2026-11-07: no real names anywhere); conference assistants = everyone else with LM powers (data/LeagueStaff.csv, scripts/league_staff.py); accounts without a team = users with no roster in any league they're in (computed).",
     "discord_invite": "https://discord.gg/UdtSXkjpq",
     "league_manager": {
       "sleeper": ""
@@ -1106,7 +1106,7 @@
     }
   },
   "draft_order": {
-    "_note": "Rookie draft order basis (Chris, 2026-11-26). Default: max PF for every league, including ones added later. A league orders by record (Sleeper's default) only with an override: record_through = the last season (the one whose results set the order) it uses record; later seasons go back to max PF automatically. null = no override. Inputs frozen in data/DraftBasis_<year>.csv (scripts/draft_basis.py); rule in scripts/draft_order_rules.py.",
+    "_note": "Rookie draft order basis (CW, 2026-11-26). Default: max PF for every league, including ones added later. A league orders by record (Sleeper's default) only with an override: record_through = the last season (the one whose results set the order) it uses record; later seasons go back to max PF automatically. null = no override. Inputs frozen in data/DraftBasis_<year>.csv (scripts/draft_basis.py); rule in scripts/draft_order_rules.py.",
     "default_basis": "max_pf",
     "record_through": {
       "NCAA ACC": 2026,
@@ -1125,6 +1125,6 @@
       "NCAA USA": 2026,
       "NCAA WILD": 2026
     },
-    "_record_note": "Chris, 2026-11-26: all leagues order the draft set by the 2026 season by record; he corrects any league at draft time. From 2027 every league falls back to max PF."
+    "_record_note": "CW, 2026-11-26: all leagues order the draft set by the 2026 season by record; he corrects any league at draft time. From 2027 every league falls back to max PF."
   }
 }
