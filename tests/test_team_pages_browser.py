@@ -93,7 +93,7 @@ class TeamPageBrowser(unittest.TestCase):
                     os.makedirs(OUT, exist_ok=True)
                     p.screenshot(path=os.path.join(OUT, f"team-{tag}.png"), full_page=True)
 
-    def test_color_toggle_three_way(self):
+    def test_color_modes_and_team_override(self):
         p = self.open(f"reports/team.html?league={league_id('NCAA PAC 12')}&roster=7", 390)
         self.assertIn("tm-c-full", p.get_attribute("body", "class"), "team colours by default")
         sec = "#tm-roster-sec"
@@ -103,6 +103,18 @@ class TeamPageBrowser(unittest.TestCase):
         self.assertEqual(chip, ["rgb(255, 198, 39)", "rgb(140, 29, 64)"], "season label inverted")
         head = p.evaluate("(()=>{const c=getComputedStyle(document.querySelector('.tm-head'));return [c.backgroundColor,c.color]})()")
         self.assertEqual(head, ["rgb(255, 198, 39)", "rgb(140, 29, 64)"], "header block inverted")
+        switch = p.get_by_role("switch", name="This team only")
+        switch.click()
+        self.assertEqual(switch.get_attribute("aria-checked"), "true")
+        p.get_by_role("radio", name="Team", exact=True).press("ArrowRight")
+        self.assertEqual(p.get_by_role("radio", name="Inverted").get_attribute("aria-checked"), "true")
+        self.assertEqual(bg(), "rgb(255, 198, 39)", "Inverted mode uses Arizona State gold")
+        p.reload()
+        p.wait_for_selector("body[data-ready]", state="attached")
+        self.assertIn("tm-c-inverted", p.get_attribute("body", "class"))
+        switch.click()
+        self.assertEqual(switch.get_attribute("aria-checked"), "false")
+        self.assertEqual(bg(), "rgb(140, 29, 64)", "switching off restores the global mode")
         p.click("#tm-colors [data-c=frame]")
         self.assertIn("tm-c-frame", p.get_attribute("body", "class"))
         self.assertEqual(p.evaluate("getComputedStyle(document.querySelector('.tm-head')).backgroundColor"), "rgb(140, 29, 64)",
@@ -134,11 +146,53 @@ class TeamPageBrowser(unittest.TestCase):
         self.assertIn("roster=7", p.get_attribute(".tm-mine a", "href"))
         p.evaluate("localStorage.removeItem('ncaa180.push')")
 
-    def test_past_league_id_lands_on_this_season(self):
+    def test_override_survives_historical_url(self):
+        current = league_id("NCAA MOUNTAIN WEST")
         old = league_id("NCAA MOUNTAIN WEST", 2021)
-        p = self.open(f"reports/team.html?league={old}&roster=4")
+        p = self.open(f"reports/team.html?league={current}&roster=4")
+        p.get_by_role("switch", name="This team only").click()
+        p.get_by_role("radio", name="Inverted").click()
+        p.goto(self.base + f"reports/team.html?league={old}&roster=4")
+        p.wait_for_selector("body[data-ready]", state="attached")
         self.assertEqual(p.text_content(".tm-head h1"), "Air Force")
-        self.assertIn(f"league={league_id('NCAA MOUNTAIN WEST')}", p.url)
+        self.assertIn(f"league={current}", p.url)
+        self.assertIn("tm-c-inverted", p.get_attribute("body", "class"))
+        self.assertEqual(p.get_by_role("switch", name="This team only").get_attribute("aria-checked"), "true")
+
+    def test_color_controls_and_neutral_tables_at_supported_widths(self):
+        teams = (("NCAA SEC", 11, "Alabama"), ("NCAA BIG 10", 11, "Iowa"), ("NCAA BIG 10", 12, "Michigan"))
+        for conference, roster, name in teams:
+            for width in (320, 390, 1280):
+                for theme in ("light", "dark"):
+                    with self.subTest(team=name, width=width, theme=theme):
+                        p = self.open(f"reports/team.html?league={league_id(conference)}&roster={roster}", width, theme)
+                        self.assertEqual(p.text_content(".tm-head h1"), name)
+                        radios = p.locator("#tm-colors [role=radio]")
+                        self.assertEqual(radios.all_text_contents(), ["Team", "Inverted", "Accent", "Site"])
+                        for radio in radios.all():
+                            radio.click()
+                            self.assertTrue(p.locator("#tm-colors").evaluate("el => el.scrollWidth <= el.clientWidth"))
+                            if radio.get_attribute("data-c") in ("full", "inverted"):
+                                self.assertTrue(p.locator("#tm-mgr table").evaluate("""el =>
+                                    getComputedStyle(el).backgroundColor ===
+                                    getComputedStyle(document.querySelector('.tm-chart')).backgroundColor
+                                """))
+                                contrast = p.locator("#tm-mgr-sec h2").evaluate(r"""el => {
+                                    const luminance = rgb => rgb.match(/\d+/g).map(Number)
+                                        .map(v => v / 255)
+                                        .map(v => v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4)
+                                        .reduce((sum, v, i) => sum + v * [.2126, .7152, .0722][i], 0);
+                                    const a = luminance(getComputedStyle(el).color);
+                                    const b = luminance(getComputedStyle(el.parentElement).backgroundColor);
+                                    return (Math.max(a, b) + .05) / (Math.min(a, b) + .05);
+                                }""")
+                                self.assertGreaterEqual(contrast, 4.5)
+                                self.assertTrue(p.locator(".tm-head img").evaluate("""el =>
+                                    el.getAttribute('src') === (document.body.classList.contains('tm-c-full')
+                                        ? el.dataset.logoInv : el.dataset.logo)
+                                """))
+                                p.wait_for_function("document.querySelector('.tm-head img')?.naturalWidth > 0")
+                        p.close()
 
     def test_standings_links_follow_dev_view(self):
         p = self.open_plain("reports/standings-2021.html")
