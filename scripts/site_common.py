@@ -57,6 +57,10 @@ def tab_state(tab):
     return tab.get("state", "visible")
 
 
+def awards_ceremony_state():
+    return tab_state(nav_config().get("awards_ceremonies", {}))
+
+
 def page_state(current):
     """Return the configured state for a page or alias, or visible when unconfigured."""
     for t in nav_config().get("tabs", []):
@@ -115,15 +119,23 @@ def menu_rows(out_dir=None):
         if weeks:
             by_year[cur] = [{"label": regular.format(n=week), "href": f"week-{week:02d}.html"} for week in weeks]
         manifest = Path(OUT_DIR) / "trophy-ceremonies.json"
-        if manifest.is_file():
+        ceremony_state = awards_ceremony_state()
+        if manifest.is_file() and ceremony_state != "hidden":
             for item in json.loads(manifest.read_text(encoding="utf-8")):
                 if not item["inline"] and (Path(OUT_DIR) / item["href"]).is_file():
-                    by_year.setdefault(item["year"], []).append({"label": item["label"], "href": item["href"]})
+                    link = {"label": item["label"], "href": item["href"]}
+                    if ceremony_state != "visible":
+                        link["state"] = ceremony_state
+                    by_year.setdefault(item["year"], []).append(link)
         season_items = []
         for year, items in sorted(by_year.items()):
             week_pattern = r"week-\d{2}" if year == cur else rf"week-{year}-\d{{2}}"
             match = rf"^(?:{week_pattern}|ceremony-{year}-(?:\d{{2}}|year-end))\.html$"
-            season_items.append({"label": str(year), "href": items[-1]["href"], "match": match})
+            public = [item for item in items if tab_state(item) == "visible"]
+            season = {"label": str(year), "href": (public or items)[-1]["href"], "match": match}
+            if not public:
+                season["state"] = "hidden-dev"
+            season_items.append(season)
             rows[f"awards-weeks-{year}"] = {"label": "Week", "aria": "Weeks", "min": 2, "items": items}
         if season_items:
             rows["awards-seasons"] = {"label": "Season", "aria": "Seasons", "items": season_items}
@@ -148,7 +160,8 @@ def menu_rows(out_dir=None):
         rows["projection-archive"] = {"label": "Projection", "aria": "Projection archive", "min": 2,
                                       "items": [{"label": f"After wk {w}", "href": f"postseason-proj-wk{w:02d}.html",
                                                  **({"match": f"^postseason(-proj-wk{w:02d})?\\.html$"} if w == pw[-1] else {})} for w in pw]}
-        return rows, (f"week-{max(weeks):02d}.html" if weeks else season_items[-1]["href"] if season_items else None)
+        public_seasons = [item for item in season_items if tab_state(item) == "visible"]
+        return rows, (f"week-{max(weeks):02d}.html" if weeks else public_seasons[-1]["href"] if public_seasons else None)
     finally:
         OUT_DIR = keep
 
