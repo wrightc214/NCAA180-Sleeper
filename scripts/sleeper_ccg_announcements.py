@@ -165,6 +165,7 @@ def main():
         if len(posts) != 15 or len({post[0] for post in posts}) != 15:
             raise SystemExit("Replay requires 15 verified awards. No test posts were sent.")
         for intended_league, image, caption in posts:
+            caption = re.sub(r" \((@[A-Za-z0-9_]+)\) for winning the ", r" & \1 for winning the ", caption, count=1)
             print(f"Replaying award for league {intended_league} into test league {TEST_LEAGUE}.", flush=True)
             send(args.year, TEST_LEAGUE, image, caption, token=token, intended_league=intended_league)
     elif args.send:
