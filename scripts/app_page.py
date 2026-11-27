@@ -221,7 +221,7 @@ BODY = """
   }
 
   function picked() {
-    var out = Array.prototype.map.call(document.querySelectorAll("input[type=checkbox]:checked, input[type=radio]:checked"), function (i) {
+    var out = Array.prototype.map.call(document.querySelectorAll("input[data-kind]:checked"), function (i) {
       return { kind: i.dataset.kind, key: i.value };
     });
     // "seen" markers: this phone has made its own choice on the newer events, so the sender stops
