@@ -38,6 +38,9 @@
     return ` style="background:color-mix(in srgb,${color} 12%,var(--panel));box-shadow:inset 4px 0 0 ${color}"`;
   }
   const myLabel=' · <b>My Team</b>';
+  const resultMark=advanced=>advanced
+    ? '<strong aria-hidden="true" style="color:var(--good)">✓</strong> '
+    : '<strong aria-hidden="true" style="color:var(--bad)">×</strong> ';
   function nflGames(data){
     if(Number(data.season?.year)!==season||Number(data.week?.number)!==week||!data.events?.length)throw Error('NFL schedule does not match the selected week');
     const games={};mnf={on:false,crunch:false};
@@ -92,7 +95,7 @@
     if(!out.length)return '';
     return `<details class="gl-out sec-d" open><summary><h3 class="sec">Eliminated <small>${out.length} team${out.length===1?'':'s'}</small></h3></summary>
       <div class="gl-table out-t"><div class="gl-h"><span></span><span>Team</span><span>Out</span><span>Score</span></div>
-      ${out.map(t=>`<div class="gl-r${isMine(t)?' mine':''}"${isMine(t)?myRowStyle(t):''}>${icon(t)}<span class="gl-t">${esc(ident(t).name)}<small>${esc(lname(lid(t)))} · ${esc(t.owner)}${isMine(t)?myLabel:''}</small></span><span class="gl-w">${esc(wkName(t.out,true))}</span><span class="gl-n">${Number(t.scores[t.out]??0).toFixed(2)}</span></div>`).join('')}</div></details>`;
+      ${out.map(t=>`<div class="gl-r${isMine(t)?' mine':''}"${isMine(t)?myRowStyle(t):''}>${icon(t)}<span class="gl-t">${esc(ident(t).name)}<small>${esc(lname(lid(t)))} · ${esc(t.owner)}${isMine(t)?myLabel:''}</small></span><span class="gl-w">${isMine(t)?resultMark(false):''}${esc(wkName(t.out,true))}</span><span class="gl-n">${Number(t.scores[t.out]??0).toFixed(2)}</span></div>`).join('')}</div></details>`;
   }
   function liveRows(){
     const field=gd.status==='final'?[]:alive();
@@ -180,7 +183,9 @@
     field.forEach(t=>{
       const through=last?t.status==='champion':t.out!==w,added=(t.added||[]).includes(w);
       if(!drawn&&!through&&!last){rows+=`<div class="gl-cut final" aria-hidden="true"><span>Cut line · ${Number(f.cutline).toFixed(2)}</span></div>`;drawn=true;}
-      rows+=`<div class="gl-r${through?'':' gone'}${isMine(t)?' mine':''}"${isMine(t)?myRowStyle(t):''}>${icon(t)}<span class="gl-t">${esc(ident(t).name)}<small>${esc(lname(lid(t)))} · ${esc(t.owner)}${isMine(t)?myLabel:''}${added?' · added after stat corrections':''}</small></span><span class="gl-n sc">${t.scores[w].toFixed(2)}</span><span class="gl-w">${last?(t.status==='champion'?'Champion':t.status==='tied'?'Tied':''):through?'Survived':'Out'}</span></div>`;
+      const result=through?(last?'Champion':'Survived'):last&&t.status==='tied'?'Tied':t.out===w?'Out':'';
+      const mark=isMine(t)&&(through||result==='Out')?resultMark(through):'';
+      rows+=`<div class="gl-r${through?'':' gone'}${isMine(t)?' mine':''}"${isMine(t)?myRowStyle(t):''}>${icon(t)}<span class="gl-t">${esc(ident(t).name)}<small>${esc(lname(lid(t)))} · ${esc(t.owner)}${isMine(t)?myLabel:''}${added?' · added after stat corrections':''}</small></span><span class="gl-n sc">${t.scores[w].toFixed(2)}</span><span class="gl-w">${mark}${result}</span></div>`;
     });
     const head=`<section class="gl-head card"><div class="gl-k"><b>${f.field}</b><span>played</span></div><div class="gl-k"><b>${f.advanced}</b><span>${last?'champion':'survived'}</span></div><div class="gl-k"><b>${Number(f.cutline).toFixed(2)}</b><span>${last?'winning score':'cut line'}</span></div>${f.added?`<div class="gl-k"><b>${f.added}</b><span>added by stat corrections</span></div>`:''}</section>`;
     return `${head}<p class="gl-state">${esc(wkName(w))} · Final</p><div class="gl-table fz-t"><div class="gl-h"><span></span><span>Team</span><span>Score</span><span></span></div>${rows}</div>`;
