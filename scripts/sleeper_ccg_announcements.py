@@ -77,8 +77,7 @@ def previews(year, selected, out):
     return posts
 
 
-def send(year, league_id, image, caption):
-    token = os.environ.get("SLEEPER_SESSION_TOKEN")
+def send(year, league_id, image, caption, *, token):
     if not token:
         raise SystemExit("The SLEEPER_SESSION_TOKEN Actions secret is missing.")
 
@@ -155,11 +154,12 @@ def main():
         parser.error("use a four-digit season")
     if args.send and not args.conference:
         parser.error("select exactly one conference to send")
+    token = os.environ.pop("SLEEPER_SESSION_TOKEN", None)
     posts = previews(args.year, args.conference, args.out)
     if args.send:
         if len(posts) != 1:
             raise SystemExit("No verified final award to send.")
-        send(args.year, *posts[0])
+        send(args.year, *posts[0], token=token)
 
 
 if __name__ == "__main__":
