@@ -199,6 +199,43 @@ class BracketBrowser(unittest.TestCase):
         self.assertTrue(m.locator('.bk-menu input[value=e8]').is_disabled())
         self.assertIn('Available once the Elite 8 is set', m.locator('.bk-menu').inner_text())
 
+    def test_share_dialog_download_failure_allows_bracket_retry(self):
+        from playwright.sync_api import expect
+
+        p = self.open('s16-live', 390)
+        p.evaluate("""() => {
+            navigator.canShare = () => true;
+            navigator.share = async () => {};
+            const createObjectURL = URL.createObjectURL.bind(URL);
+            URL.createObjectURL = blob => {
+                if (blob instanceof File && blob.type === 'image/png') throw new Error('Download blocked');
+                return createObjectURL(blob);
+            };
+        }""")
+        p.click('#bracket .snap-btn')
+        p.click('.bk-menu .go')
+        dialog = p.get_by_role('dialog', name='Image ready')
+        dialog.get_by_role('button', name='Download PNG').click(timeout=60000)
+        expect(dialog).to_have_count(0)
+        expect(p.locator('.bk-menu .bk-err')).to_contain_text('Download blocked')
+        expect(p.locator('.bk-menu .go')).to_be_enabled()
+
+        p.evaluate("""() => {
+            navigator.share = async ({files}) => {
+                const file = files[0];
+                const bytes = new Uint8Array(await file.slice(0, 8).arrayBuffer());
+                window.testBracketShare = {name: file.name, signature: Array.from(bytes)};
+            };
+        }""")
+        p.click('.bk-menu .go')
+        expect(dialog).to_be_visible(timeout=60000)
+        self.assertFalse(p.evaluate('Boolean(window.testBracketShare)'))
+        dialog.get_by_role('button', name='Share image').click()
+        expect(p.locator('.bk-menu')).to_have_count(0)
+        shared = p.evaluate('window.testBracketShare')
+        self.assertTrue(shared['name'].endswith('.png'))
+        self.assertEqual(shared['signature'], [137, 80, 78, 71, 13, 10, 26, 10])
+
     def test_full_bracket_sizes(self):
         p = self.open('final', 1280)
         name, (w, h) = self.save(p, 'full', 1.5)

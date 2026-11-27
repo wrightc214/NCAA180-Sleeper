@@ -72,6 +72,15 @@ article[data-snap-card]>header:has(>.snap-card-btn){position:relative;padding-ri
     copy.querySelectorAll('.snap-btn,[data-nosnap-part],.tools').forEach(node => node.remove());
     return copy;
   }
+  function snapshotMarkup(source, copy) {
+    const teamSections = source.closest('#tm-sections');
+    if (!teamSections) return copy.outerHTML;
+    // Team color rules are scoped to this container in the live page.
+    const wrapper = teamSections.cloneNode(false);
+    wrapper.append(copy);
+    return wrapper.outerHTML;
+  }
+
   function saveButton(host, label, makeImage, className) {
     const btn = S.button(label);
     if (className) btn.classList.add(className);
@@ -81,7 +90,7 @@ article[data-snap-card]>header:has(>.snap-card-btn){position:relative;padding-ri
       e.stopPropagation(); btn.disabled = true; btn.classList.add('busy');
       try {
         await S.save(makeImage());
-      } catch (err) { btn.title = 'Image could not be made (' + (err && err.message || err) + ')'; console.error(err); }
+      } catch (err) { btn.title = 'Image could not be made (' + (err && err.message || err) + ')'; console.error(err); window.alert(btn.title); }
       finally { btn.disabled = false; btn.classList.remove('busy'); }
     });
   }
@@ -102,7 +111,7 @@ article[data-snap-card]>header:has(>.snap-card-btn){position:relative;padding-ri
       });
       const wide = Math.max(0, ...[...s.querySelectorAll('table')].map(t => t.scrollWidth));
       const width = Math.min(1100, Math.max(400, wide + 56));
-      return {width, html: cl.outerHTML, name: [page, title, d.snapTag].filter(Boolean).join(' '),
+      return {width, html: snapshotMarkup(s, cl), name: [page, title, d.snapTag].filter(Boolean).join(' '),
         footer: d.snapFoot || undefined, title, stamp};
     });
   });
@@ -112,7 +121,7 @@ article[data-snap-card]>header:has(>.snap-card-btn){position:relative;padding-ri
     if (!host) return;
     const title = card.dataset.snapCard;
     saveButton(host, title, () => ({
-      html: cloneContent(card).outerHTML, name: [title, d.snapTag].filter(Boolean).join(' '),
+      html: snapshotMarkup(card, cloneContent(card)), name: [title, d.snapTag].filter(Boolean).join(' '),
       footer: d.snapFoot || undefined, title, stamp,
     }), 'snap-card-btn');
   });

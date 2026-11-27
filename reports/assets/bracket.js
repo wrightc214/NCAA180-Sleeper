@@ -187,6 +187,7 @@
     btn.addEventListener('keydown', ev => ev.stopPropagation());
     btn.addEventListener('click', ev => {
       ev.stopPropagation();
+      if (btn.classList.contains('busy')) return;
       if (panel) { close(); return; }
       const focus = ph ? ph.focus : 0;
       const rnd = T.find(t => t.dataset.key === `round-${focus}`);
@@ -229,7 +230,7 @@
         } finally { go.disabled = false; btn.classList.remove('busy'); }
       });
     });
-    document.addEventListener('click', ev => { if (panel && !panel.contains(ev.target) && ev.target !== btn) close(); });
+    document.addEventListener('click', ev => { if (panel && !btn.classList.contains('busy') && !panel.contains(ev.target) && ev.target !== btn) close(); });
 
     async function save(what, scale) {
       const host = document.createElement('div');

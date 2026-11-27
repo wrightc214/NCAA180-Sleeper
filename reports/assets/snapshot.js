@@ -96,7 +96,7 @@
       await Promise.all([...w.document.images].map(im => im.complete ? 0 : new Promise(r => { im.onload = im.onerror = r; })));
       const el = w.document.getElementById('snap');
       prepareDetails(w, el);
-      plainColors(w, el);
+      plainColors(w, w.document.documentElement);
       const canvas = await w.html2canvas(el, {scale, windowWidth: width, useCORS: true, logging: false,
         backgroundColor: w.getComputedStyle(w.document.body).backgroundColor});
       return await new Promise(r => canvas.toBlob(r, 'image/png'));
@@ -107,10 +107,49 @@
     const blob = await render(html, footer ?? `${location.host}${location.pathname.replace(/[^/]*$/, '')}`, labels(stamp, whatif), width || 400, scale || 2);
     if (!blob || !blob.size) throw new Error('Image is too large; narrow the view or save a smaller section');
     const file = new File([blob], `${name || 'ncaa180'}.png`.replace(/[^\w .-]+/g, '').replace(/\s+/g, '-'), {type: 'image/png'});
-    if (navigator.canShare && navigator.canShare({files: [file]})) {
-      try { await navigator.share({files: [file], title: title || name}); } catch (e) { if (e?.name !== 'AbortError') throw e; }
-      return;
+    if (typeof navigator.share === 'function' && navigator.canShare?.({files: [file]}) &&
+        typeof HTMLDialogElement !== 'undefined' && HTMLDialogElement.prototype.showModal) {
+      return new Promise((resolve, reject) => {
+        const dialog = document.createElement('dialog');
+        dialog.setAttribute('aria-label', 'Image ready');
+        dialog.style.cssText = 'max-width:90vw;padding:20px;border:1px solid var(--line,#888);border-radius:12px;background:var(--panel,#fff);color:var(--ink,#111)';
+        const msg = document.createElement('p'); msg.textContent = 'Image ready. Tap Share image to continue.';
+        const share = document.createElement('button'); share.type = 'button'; share.textContent = 'Share image';
+        const download = document.createElement('button'); download.type = 'button'; download.textContent = 'Download PNG';
+        const cancel = document.createElement('button'); cancel.type = 'button'; cancel.textContent = 'Cancel';
+        const cleanup = () => { if (dialog.open) dialog.close(); dialog.remove(); };
+        const finish = () => { cleanup(); resolve(); };
+        const fail = err => { cleanup(); reject(err); };
+        share.addEventListener('click', async () => {
+          share.disabled = true;
+          try {
+            await navigator.share({files: [file], title: title || name});
+            finish();
+          } catch (err) {
+            share.disabled = false;
+            if (err?.name !== 'AbortError') {
+              msg.textContent = 'Sharing failed. Try again or download the PNG.';
+              console.error(err);
+            }
+          }
+        });
+        download.addEventListener('click', () => {
+          try { downloadFile(file); finish(); }
+          catch (err) { fail(err); }
+        });
+        cancel.addEventListener('click', finish);
+        dialog.addEventListener('click', e => e.stopPropagation());
+        dialog.addEventListener('cancel', e => { e.preventDefault(); finish(); });
+        dialog.append(msg, share, download, cancel);
+        document.body.append(dialog);
+        try { dialog.showModal(); }
+        catch (err) { fail(err); }
+      });
     }
+    downloadFile(file);
+  }
+
+  function downloadFile(file) {
     const a = document.createElement('a');
     a.href = URL.createObjectURL(file); a.download = file.name; document.body.append(a); a.click();
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
