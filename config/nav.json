@@ -7,6 +7,7 @@
     "aliases: other page keys (data-current) that highlight this tab. href '@awards' = the latest week's awards page.",
     "rows: fixed sub-rows (a page asks for one with data-row). Data-driven rows (seasons, weeks, projection archive) are built from the pages in reports/."
   ],
+  "awards_ceremonies": {"state": "hidden-dev"},
   "tabs": [
     {"id": "awards", "label": "Awards", "href": "@awards"},
     {"id": "map", "label": "Roster Map", "href": "roster-map.html"},
