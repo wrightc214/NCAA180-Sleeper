@@ -85,14 +85,21 @@ def ceremony_labels(config, week, awards):
 
 
 def section(title, year, awards, date_unknown=False):
+    config = lcfg.cfg()["postseason"]
+    nit_final = config["bowls"]["nit_final_label"]
     cards = []
     for row in awards:
         featured = " featured" if row["EventType"] == "NationalTitle" else ""
         status = "<small>Reconstructed</small>" if row["Status"] == "Reconstructed" else ""
-        event, team = e(row["Event"]), e(row["Team"])
+        event = row["Event"]
+        if row["EventType"] == "PlayoffRound" and row["Round"]:
+            event = f'{event} - {row["Round"]}'
+        elif row["EventType"] == "NIT":
+            event = f"{nit_final} - NIT Champ"
+        team = e(row["Team"])
         cards.append(f'<article class="ceremony-card{featured}">{tr.trophy_html(row, lazy=False)}'
-                     f'<p><strong>{team}</strong><small>{event}</small>{status}</p></article>')
-    sub = (f'<h3>{e(lcfg.cfg()["postseason"]["display"]["awards_labels"]["unknown_bowls"])}</h3>'
+                     f'<p><strong>{team}</strong><small>{e(event)}</small>{status}</p></article>')
+    sub = (f'<h3>{e(config["display"]["awards_labels"]["unknown_bowls"])}</h3>'
            if date_unknown else "")
     return (f'<section id="trophy-ceremony"><h2>{e(title)} <small>{year}</small></h2>{sub}'
             f'<div class="ceremony-shelf">{"".join(cards)}</div></section>')

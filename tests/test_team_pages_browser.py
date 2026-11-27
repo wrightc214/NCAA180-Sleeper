@@ -103,10 +103,13 @@ class TeamPageBrowser(unittest.TestCase):
                 case = p.locator(".tm-trophies")
                 cards = case.locator("article")
                 self.assertEqual([label.strip() for label in cards.locator("header").all_text_contents()], [
-                    "2025 · National Championship", "2025 · Rose Bowl", "2025 · Cotton Bowl",
+                    "2025 · National Championship", "2025 · Rose Bowl - Final Four",
+                    "2025 · Cotton Bowl - Elite 8",
                     "2024 · Tangerine Bowl", "2021 · Holiday Bowl", "2025 · Dwight Fight",
                     "2023 · Dwight Fight", "2022 · Dwight Fight",
                 ])
+                self.assertEqual(p.evaluate("NCAATrophy.eventLabel({EventType: 'NIT', Event: 'NIT'})"),
+                                 "Stagg Bowl - NIT Champ")
                 bounds = case.bounding_box()
                 feature, left, right = [cards.nth(i).bounding_box() for i in range(3)]
                 last = cards.last.bounding_box()
