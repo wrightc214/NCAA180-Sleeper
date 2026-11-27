@@ -139,6 +139,14 @@ class TeamPageBrowser(unittest.TestCase):
         self.assertIn("Overview", download.suggested_filename)
         self.assertEqual(download.path().read_bytes()[:8], bytes((137, 80, 78, 71, 13, 10, 26, 10)))
 
+    def test_head_to_head_separates_regular_and_postseason_records(self):
+        pac = league_id("NCAA PAC 12")
+        p = self.open(f"reports/team.html?league={pac}&roster=7", 390)
+        row = p.locator("#tm-h2h-t tbody tr").filter(has_text="California")
+        self.assertEqual(row.locator("td").nth(0).inner_text(), "California")
+        self.assertEqual(row.locator("td").nth(1).inner_text(), "3-5 (0-2)")
+        self.assertIn("postseason records in parentheses", p.locator("#tm-h2h-sec .note").inner_text())
+
     def test_chart_hover_tooltip(self):
         p = self.open(f"reports/team.html?league={league_id('NCAA PAC 12')}&roster=7")
         hit = p.locator("#tm-season-charts .tm-chart .hit").first
