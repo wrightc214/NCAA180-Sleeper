@@ -17,6 +17,10 @@ def test_historical_ceremonies_and_awards_navigation(tmp_path, monkeypatch):
     page = (tmp_path / ccg["href"]).read_text(encoding="utf-8")
     assert "Conference Championships" in page
     assert 'id="trophy-ceremony"' in page
+    final_four = (tmp_path / "ceremony-2025-16.html").read_text(encoding="utf-8")
+    assert "<small>Rose Bowl - Final Four</small>" in final_four
+    championship = (tmp_path / "ceremony-2025-17.html").read_text(encoding="utf-8")
+    assert "<small>Stagg Bowl - NIT Champ</small>" in championship
     past_final = (tmp_path / "ceremony-2022-18.html").read_text(encoding="utf-8")
     assert "Dwight Fight" in past_final
     rows = menu_data(str(tmp_path))["rows"]
