@@ -33,14 +33,15 @@
   let mine='';try{const m=window.NCAA180?.myTeam?.();if(m)mine=`${m.conf}:${m.roster}`;}catch(e){}
   const isMine=t=>mine&&`${index.leagues[lid(t)]?.label||''}:${t.r}`===mine;
   function myRowStyle(t){
-    const primary=ident(t).primary;
+    const primary=String(ident(t).primary||'').replace(/^#([0-9a-f])([0-9a-f])([0-9a-f])$/i,'#$1$1$2$2$3$3');
     const color=/^#[0-9a-f]{3}(?:[0-9a-f]{3})?$/i.test(primary)?primary:'var(--accent)';
-    return ` style="background:color-mix(in srgb,${color} 12%,var(--panel));box-shadow:inset 4px 0 0 ${color}"`;
+    const ink=color==='var(--accent)'?'var(--on-fill,#fff)':darkBg(color)?'#fff':'#000';
+    return ` style="background:${color};color:${ink};--mute:${ink};box-shadow:none;opacity:1"`;
   }
   const myLabel=' · <b>My Team</b>';
   const resultMark=advanced=>advanced
-    ? '<strong aria-hidden="true" style="color:var(--good)">✓</strong> '
-    : '<strong aria-hidden="true" style="color:var(--bad)">×</strong> ';
+    ? '<strong aria-hidden="true" style="color:var(--good);background:var(--panel);border-radius:3px;padding:0 3px">✓</strong> '
+    : '<strong aria-hidden="true" style="color:var(--bad);background:var(--panel);border-radius:3px;padding:0 3px">×</strong> ';
   function nflGames(data){
     if(Number(data.season?.year)!==season||Number(data.week?.number)!==week||!data.events?.length)throw Error('NFL schedule does not match the selected week');
     const games={};mnf={on:false,crunch:false};
@@ -164,7 +165,7 @@
       hasBubble ||= bubble;
       const mineRow=isMine(x.t),m=x.m;
       const warning=bubble&&mineRow?`<strong role="img" aria-label="Less than 50% chance to ${last?'win':'survive'}">!</strong> `:'';
-      const oddsStyle=bubble?` style="background:var(--bad-soft);border-radius:4px;${mineRow?'font-weight:800;':''}"`:'';
+      const oddsStyle=bubble?` style="background:var(--bad-soft);border-radius:4px;${mineRow?'color:var(--ink);font-weight:800;':''}"`:'';
       const cls=[m&&m.live?'live':'',mineRow?'mine':''].filter(Boolean).join(' ');
       rows+=`<div class="gl-r ${cls}"${mineRow?myRowStyle(x.t):''}>${icon(x.t)}<span class="gl-t">${esc(ident(x.t).name)}<small>${esc(lname(lid(x.t)))} · ${esc(x.t.owner)}${mineRow?myLabel:''}${m?.incomplete?' · stats incomplete':''}</small></span>
         <span class="gl-n sc">${m&&(m.played||m.final)?m.actual.toFixed(2):'–'}</span><span class="gl-n pj">${m?x.proj.toFixed(1):'–'}</span>
