@@ -1130,6 +1130,7 @@ CSS = """
 .tm-tip b,.tm-tip span{display:block}
 .tm-tbl summary{font-size:12px;color:var(--mute);cursor:pointer}
 .tm-tbl{overflow-x:auto;width:0;min-width:100%}
+.snapwrap .tm-scroll,.snapwrap .tm-tbl{overflow:visible;width:auto;min-width:0}
 .tm-tbl table{font-size:12px;border-collapse:collapse;margin-top:4px}
 .tm-tbl td,.tm-tbl th{padding:2px 8px;text-align:right;border-bottom:1px solid var(--line)}
 .tm-mine{grid-column:1/-1;margin-bottom:6px}
