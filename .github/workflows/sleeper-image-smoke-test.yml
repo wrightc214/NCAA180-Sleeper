@@ -1,0 +1,111 @@
+name: Sleeper image smoke test
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  send-test-image:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Upload the SEC trophy PNG
+        run: |
+          curl --fail --silent --show-error --max-time 25 \
+            --form 'file=@assets/trophies/conferences/SEC.png;type=image/png' \
+            --output "$RUNNER_TEMP/sleeper-trophy-upload.json" \
+            https://api.sleeper.app/upload
+          echo "Upload request completed."
+      - name: Attach the trophy to a test league chat post
+        env:
+          SLEEPER_SESSION_TOKEN: ${{ secrets.SLEEPER_SESSION_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          import urllib.error
+          import urllib.request
+          from urllib.parse import urlsplit
+          import uuid
+
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self, request, fp, code, msg, headers, newurl):
+                  return None
+
+          token = os.environ.get("SLEEPER_SESSION_TOKEN")
+          if not token:
+              raise SystemExit("Set the SLEEPER_SESSION_TOKEN Actions secret for SLM.")
+
+          league_id = "1432137859359313920"
+          upload_file = Path(os.environ["RUNNER_TEMP"]) / "sleeper-trophy-upload.json"
+          try:
+              image = json.loads(upload_file.read_text())
+              urls = [image["url"], image["url_original"]]
+              dimensions = [str(int(image["width"])), str(int(image["height"]))]
+              for url in urls:
+                  parsed = urlsplit(url)
+                  if parsed.scheme != "https" or parsed.netloc != "sleepercdn.com":
+                      raise ValueError("Unexpected image host")
+                  if not parsed.path.startswith("/uploads/") or parsed.query or parsed.fragment:
+                      raise ValueError("Unexpected image URL")
+              if any(int(dimension) < 1 for dimension in dimensions):
+                  raise ValueError("Invalid dimensions")
+          except (OSError, ValueError, TypeError, KeyError):
+              raise SystemExit("Sleeper upload did not return the expected image metadata.") from None
+
+          query = """
+          mutation create_message(
+            $parentId: String!, $parentType: String!, $clientId: String,
+            $attachmentType: String, $attachmentDataKeys: [String],
+            $attachmentDataValues: [String]
+          ) {
+            create_message(
+              parent_id: $parentId, parent_type: $parentType, client_id: $clientId,
+              attachment_type: $attachmentType,
+              k_attachment_data: $attachmentDataKeys, v_attachment_data: $attachmentDataValues
+            ) { message_id parent_id attachment }
+          }
+          """
+          body = {
+              "operationName": "create_message",
+              "query": query,
+              "variables": {
+                  "parentId": league_id,
+                  "parentType": "league",
+                  "clientId": str(uuid.uuid4()),
+                  "attachmentType": "photo",
+                  "attachmentDataKeys": ["url", "url_original", "width", "height", "pre_optimized"],
+                  "attachmentDataValues": [*urls, *dimensions, "true"],
+              },
+          }
+          request = urllib.request.Request(
+              "https://sleeper.app/graphql",
+              data=json.dumps(body).encode(),
+              headers={
+                  "Authorization": token,
+                  "Content-Type": "application/json",
+                  "X-Sleeper-GraphQL-Op": "create_message",
+              },
+          )
+          try:
+              with urllib.request.build_opener(NoRedirect()).open(request, timeout=20) as response:
+                  payload = json.load(response)
+          except urllib.error.HTTPError as error:
+              raise SystemExit(f"Sleeper chat returned HTTP {error.code}. Check chat before rerunning.")
+          except (OSError, ValueError):
+              raise SystemExit("Delivery could not be confirmed. Check chat before rerunning.")
+
+          posted = (payload.get("data") or {}).get("create_message") or {}
+          if not posted.get("message_id") or str(posted.get("parent_id")) != league_id:
+              raise SystemExit("Sleeper did not confirm the post. Check chat before rerunning.")
+          if not posted.get("attachment"):
+              raise SystemExit("Sleeper confirmed the post but did not return attachment metadata.")
+
+          print(f"Sleeper confirmed photo message {posted['message_id']} in league {league_id}.")
+          PY
