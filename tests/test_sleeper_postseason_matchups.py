@@ -71,15 +71,21 @@ def test_review_code_changes_on_scoring_correction_or_new_pairing(monkeypatch):
     assert notifications.review_code(*args) != original
 
 
-@pytest.mark.parametrize("approval", [None, "stale", "current"])
-def test_wednesday_sends_only_the_approved_unchanged_slate(tmp_path, monkeypatch, approval):
+@pytest.mark.parametrize("week, approval", [(13, None), (13, "stale"), (13, "current"), (14, None)])
+def test_wednesday_sends_only_the_approved_unchanged_slate(tmp_path, monkeypatch, week, approval):
     monkeypatch.chdir(tmp_path)
     monkeypatch.setenv("SLEEPER_SESSION_TOKEN", "test-token")
     monkeypatch.setattr(sys, "argv", ["sleeper_postseason_matchups.py", "--scheduled"])
-    monkeypatch.setattr(notifications.week_gate, "state", lambda: ("2026", 13, "regular"))
+    monkeypatch.setattr(notifications.week_gate, "state", lambda: ("2026", week, "postseason"))
     monkeypatch.setattr(notifications.league_config, "cfg", lambda: {
         "schedule": {"postseason_start_week": 13, "postseason_end_week": 17},
+        "postseason": {
+            "playoff": {"first_week": 13}, "bowls": {"tiers": [{"week": 13}]},
+            "nit": {"group_stage_1": {"week": 13}},
+        },
     })
+    monkeypatch.setattr(notifications.postseason, "league_short", lambda: {"SEC": "NCAA SEC"})
+
     class Wednesday:
         @staticmethod
         def now(zone):
@@ -88,19 +94,20 @@ def test_wednesday_sends_only_the_approved_unchanged_slate(tmp_path, monkeypatch
     monkeypatch.setattr(notifications, "datetime", Wednesday)
     data = tmp_path / "data"
     data.mkdir()
-    (data / "LeagueIDs_AllYears.csv").write_text("Year,LeagueID\n2026,100\n", encoding="utf-8")
+    (data / "LeagueIDs_AllYears.csv").write_text("Year,LeagueID,LeagueName\n2026,100,NCAA SEC\n", encoding="utf-8")
     if approval:
         (tmp_path / notifications.APPROVALS).write_text(
-            json.dumps({"2026/13": approval}), encoding="utf-8",
+            json.dumps({f"2026/{week}": approval}), encoding="utf-8",
         )
 
     class PublishedSlate:
         def to_dict(self, orient):
             return []
 
-    posts = [("2026/13/first/100", "100", "Auburn & @one vs. Clemson")]
+    key = f"2026/{week}/first/100"
+    posts = [(key, "100", "Auburn & @one vs. Clemson")]
     monkeypatch.setattr(notifications.postseason, "read_season", PublishedSlate)
-    monkeypatch.setattr(notifications, "matchup_posts", lambda *args: iter(posts))
+    monkeypatch.setattr(notifications, "matchup_posts", lambda *args, events, **kwargs: iter(posts if "Playoff" in events else []))
     monkeypatch.setattr(notifications, "review_code", lambda *args: "current")
     calls = []
     monkeypatch.setattr(notifications, "post_private_review", lambda *args: calls.append("review"))
@@ -113,7 +120,56 @@ def test_wednesday_sends_only_the_approved_unchanged_slate(tmp_path, monkeypatch
     else:
         notifications.main()
         assert calls == ([
-            "Reserve Sleeper matchup post 2026/13/first/100",
+            f"Reserve Sleeper matchup post {key}",
             "send",
-            "Confirm Sleeper matchup post 2026/13/first/100",
-        ] if approval else [])
+            f"Confirm Sleeper matchup post {key}",
+        ] if approval or week == 14 else [])
+
+
+@pytest.mark.parametrize("week,expected", [(13, True), (14, False)])
+def test_cut_line_is_only_on_initial_playoff_posts(tmp_path, monkeypatch, capsys, week, expected):
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(sys, "argv", ["sleeper_postseason_matchups.py"])
+    monkeypatch.setattr(notifications.week_gate, "state", lambda: ("2026", week, "postseason"))
+    monkeypatch.setattr(notifications.league_config, "cfg", lambda: {
+        "schedule": {"postseason_start_week": 13, "postseason_end_week": 17},
+        "postseason": {
+            "playoff": {"first_week": 13}, "bowls": {"tiers": [{"week": 13}]},
+            "nit": {"group_stage_1": {"week": 13}},
+        },
+    })
+    monkeypatch.setattr(notifications.postseason, "league_short", lambda: {"SEC": "NCAA SEC"})
+    data = tmp_path / "data"
+    data.mkdir()
+    (data / "LeagueIDs_AllYears.csv").write_text("Year,LeagueID,LeagueName\n2026,100,NCAA SEC\n", encoding="utf-8")
+    (tmp_path / notifications.postseason.FIELD_FILE).write_text(
+        "Year,BidType,Wins,Losses,PointsFor\n2026,At-Large,9,3,1700\n"
+        "2026,At-Large,8,4,1642.3\n2026,Auto,6,6,1510\n", encoding="utf-8",
+    )
+    game = dict(Year="2026", Week=str(week), Round="Playoff", GameID="game",
+                Status="Pending", BowlName="", PlayoffRound="Round", Stage="", LeagueID="100")
+
+    class PublishedSlate:
+        def to_dict(self, orient):
+            return [dict(game, Team="Auburn", RosterID="1"), dict(game, Team="Clemson", RosterID="2")]
+
+    monkeypatch.setattr(notifications.postseason, "read_season", PublishedSlate)
+    monkeypatch.setattr(notifications, "fetch_json", lambda url: [])
+    monkeypatch.setattr(notifications, "review_code", lambda *args: "current")
+    notifications.main()
+    output = capsys.readouterr().out
+    assert "Auburn vs. Clemson" in output
+    assert ("Last at-large in: 8–4, 1,642.3 pts. Think there's an error? Let us know." in output) == expected
+
+
+def test_nit_opening_group_includes_all_managers_in_their_home_leagues():
+    base = dict(Year="2026", Week="13", Round="NIT", Status="Pending", GameID="group-a",
+                BowlName="Group A", PlayoffRound="", Stage="Opening Groups")
+    roster_data = [("100", "1", "Auburn"), ("100", "2", "Clemson"), ("200", "3", "Utah")]
+    rows = [dict(base, LeagueID=league, RosterID=roster, Team=team)
+            for league, roster, team in roster_data]
+    posts = list(matchup_posts(rows, "2026", "13", {"100", "200"},
+                               lambda league, roster: f"manager_{roster}", {}))
+    assert len(posts) == 2
+    assert "Auburn & @manager_1 · Clemson & @manager_2 · Utah" in posts[0][2]
+    assert "Auburn · Clemson · Utah & @manager_3" in posts[1][2]
