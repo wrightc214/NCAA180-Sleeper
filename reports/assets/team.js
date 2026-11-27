@@ -452,6 +452,7 @@
     } catch (e) { storage = null; }
     mode = mode || globalMode;
     const box = $('tm-colors'), toggle = $('tm-color-override');
+    if (!box) return;
     const buttons = [...box.querySelectorAll('button[data-c]')];
     const apply = m => {
       mode = valid(m) ? m : 'full';
@@ -463,8 +464,10 @@
         b.setAttribute('aria-checked', String(b.dataset.c === mode));
         b.tabIndex = b.dataset.c === mode ? 0 : -1;
       });
-      toggle.setAttribute('aria-checked', String(overridden));
-      toggle.hidden = !storage || !key;
+      if (toggle) {
+        toggle.setAttribute('aria-checked', String(overridden));
+        toggle.hidden = !storage || !key;
+      }
     };
     const failed = () => { storage = null; overridden = false; };
     const select = m => {
@@ -487,7 +490,7 @@
         select(next.dataset.c); next.focus();
       });
     });
-    toggle.addEventListener('click', () => {
+    if (toggle) toggle.addEventListener('click', () => {
       if (!storage || !key) return;
       try {
         const map = readMap();
