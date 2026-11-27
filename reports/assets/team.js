@@ -32,7 +32,20 @@
   // ---- line chart (SVG, one y axis, hover crosshair + tooltip, direct end labels) ------------------
   // series: [{name, values (null = gap), cls: 's1'|'s2', dots?: only draw markers}], x: labels.
   let CHART_ID = 0;
-  function lineChart({x, series, invert = false, yMin, yMax, fmtY = fmt, title, height = 220, note = '', width = (window.innerWidth < 560 ? 360 : 520)}) {
+  function marker(s,x,y,r=3) {
+    const c = 'series-marker '+s.cls;
+    if(s.cls==='s2') return `<rect class="${c}" x="${x-r}" y="${y-r}" width="${2*r}" height="${2*r}"/>`;
+    if(s.cls==='s3') return `<polygon class="${c}" points="${x},${y-r} ${x-r},${y+r} ${x+r},${y+r}"/>`;
+    if(s.cls==='s4') return `<polygon class="${c}" points="${x},${y-r} ${x-r},${y} ${x},${y+r} ${x+r},${y}"/>`;
+    return `<circle class="${c}" cx="${x}" cy="${y}" r="${r}"/>`;
+  }
+  const sum = (rows,k) => rows.reduce((a,r)=>a+(Number(r[k])||0),0);
+  const combined = rows => Object.fromEntries(['w','l','t','pf','pa','pw','pl','titles','xw'].map(k=>[k,sum(rows,k)]));
+  const footer = cells => '<tfoot><tr>'+cells.map(v=>'<td>'+v+'</td>').join('')+'</tr></tfoot>';
+  const validEff = r => r.official_pf_complete !== false && Number.isFinite(r.pf_official) && Number.isFinite(r.max) && r.max>0;
+  const efficiency = rows => {const a=rows.filter(validEff);return a.length?100*sum(a,'pf_official')/sum(a,'max'):null;};
+  const mean = a => {a=a.filter(Number.isFinite);return a.length?a.reduce((x,y)=>x+y,0)/a.length:null;};
+  function lineChart({x, series, invert = false, yMin, yMax, fmtY = fmt, title, height = 220, note = '', totals = null, width = (window.innerWidth < 560 ? 360 : 520)}) {
     const id = 'tmc' + (++CHART_ID);
     const W = width, H = height, M = {l: 48, r: 58, t: 14, b: 26};
     const all = series.flatMap(s => s.values).filter(v => v != null && Number.isFinite(v));
@@ -54,12 +67,12 @@
     const paths = series.map(s => {
       let d = '', pen = false;
       s.values.forEach((v, i) => { if (v == null) { pen = false; return; } d += `${pen ? 'L' : 'M'}${X(i).toFixed(1)},${Y(v).toFixed(1)}`; pen = true; });
-      const dots = s.values.map((v, i) => v == null ? '' : `<circle cx="${X(i)}" cy="${Y(v)}" r="${s.dots ? 4.5 : 3}" class="${s.cls}"/>`).join('');
+      const dots = s.values.map((v, i) => v == null ? '' : marker(s,X(i),Y(v),s.dots ? 4.5 : 3)).join('');
       const li = s.values.map((v, i) => v == null ? -1 : i).filter(i => i >= 0).pop();
       const end = li >= 0 && !s.dots ? `<text x="${X(li) + 8}" y="${labelY(Y(s.values[li]) + 4)}" class="el">${esc(s.short || s.name)}</text>` : '';
-      return (s.dots ? '' : `<path d="${d}" class="${s.cls}"/>`) + dots + end;
+      return (s.dots ? '' : `<path d="${d}" class="series-line ${s.cls}"/>`) + dots + end;
     }).join('');
-    const legend = series.length > 1 ? `<div class="tm-legend">${series.map(s => `<span><i class="${s.cls}${s.dots ? ' dot' : ''}"></i>${esc(s.name)}</span>`).join('')}</div>` : '';
+    const legend = series.length > 1 ? `<div class="tm-legend">${series.map(s => `<span><svg viewBox="0 0 30 14" aria-hidden="true">${s.dots ? '' : `<path class="series-line ${s.cls}" d="M0 7H30"/>`}${marker(s,15,7,4)}</svg>${esc(s.name)}</span>`).join('')}</div>` : '';
     const rows = x.map((l, i) => `<tr><td>${esc(l)}</td>${series.map(s => `<td>${s.values[i] == null ? '—' : esc(fmtY(s.values[i]))}</td>`).join('')}</tr>`).join('');
     return `<figure class="tm-chart" id="${id}" data-x='${esc(JSON.stringify(x))}'>` +
       (title ? `<figcaption>${esc(title)}</figcaption>` : '') + legend +
@@ -67,13 +80,13 @@
       `<line class="cross" y1="${M.t}" y2="${H - M.b}" x1="0" x2="0" visibility="hidden"/>` +
       `<rect class="hit" x="${M.l - 10}" y="0" width="${W - M.l - M.r + 20}" height="${H}" data-l="${M.l}" data-r="${M.r}" data-w="${W}" data-n="${x.length}"/></svg>` +
       `<div class="tm-tip" hidden></div>` +
-      `<details class="tm-tbl"><summary>Table</summary><table><thead><tr><th></th>${series.map(s => `<th>${esc(s.name)}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></details>` +
+      `<details class="tm-tbl"><summary>Table</summary><table><thead><tr><th></th>${series.map(s => `<th>${esc(s.name)}</th>`).join('')}</tr></thead><tbody>${rows}</tbody>${totals ? footer(['Total',...totals.map(v=>v==null?'—':esc(fmtY(v)))]) : ''}</table></details>` +
       (note ? `<p class="note">${note}</p>` : '') + `</figure>`;
   }
   // One delegated handler: hover/tap a chart -> crosshair + tooltip from its own table.
   function wireCharts(root) {
     root.querySelectorAll('.tm-chart').forEach(fig => {
-      const hit = fig.querySelector('.hit'), svg = fig.querySelector('svg'), tip = fig.querySelector('.tm-tip'), cross = fig.querySelector('.cross');
+      const hit = fig.querySelector('.hit'), svg = hit && hit.ownerSVGElement, tip = fig.querySelector('.tm-tip'), cross = fig.querySelector('.cross');
       if (!hit) return;
       const n = +hit.dataset.n, l = +hit.dataset.l, r = +hit.dataset.r, w = +hit.dataset.w;
       const heads = [...fig.querySelectorAll('.tm-tbl th')].slice(1).map(t => t.textContent);
@@ -145,10 +158,10 @@
     if (!d.managers || !d.managers.length) return '<p class="tm-empty">No managers on file.</p>';
     const span = ys => { const a = Math.min(...ys), b = Math.max(...ys); return a === b ? `${a}` : `${a}–${b}`; };
     const wp = m => { const g = m.w + m.l + m.t; return g ? ((m.w + m.t / 2) / g).toFixed(3).replace(/^0/, '') : '—'; };
-    return `<div class="tm-scroll"><table class="tm-tbl-plain"><thead><tr><th>Manager</th><th>Seasons</th><th class="n">Record</th><th class="n">Pct</th><th class="n">Post</th><th class="n">Titles</th></tr></thead><tbody>` +
+    return `<div class="tm-scroll"><table class="tm-tbl-plain"><thead><tr><th>Manager</th><th>Seasons</th><th class="n">Record</th><th class="n">Pct</th><th class="n">Post seasons</th><th class="n">Post record</th><th class="n">Titles</th></tr></thead><tbody>` +
       d.managers.map(m => `<tr><td><b>${esc(m.manager)}</b></td><td>${span(m.years)} <small>(${m.years.length})</small></td>` +
-        `<td class="n">${m.w}-${m.l}${m.t ? '-' + m.t : ''}</td><td class="n">${wp(m)}</td><td class="n">${m.pw}-${m.pl}</td><td class="n">${m.titles || ''}</td></tr>`).join('') +
-      '</tbody></table></div><p class="note">Regular-season record; Post = postseason games won-lost.</p>';
+        `<td class="n">${m.w}-${m.l}${m.t ? '-' + m.t : ''}</td><td class="n">${wp(m)}</td><td class="n">${m.appearances ?? '—'}</td><td class="n">${m.pw}-${m.pl}</td><td class="n">${m.titles || ''}</td></tr>`).join('') +
+      '</tbody>'+footer(['Total',new Set(d.managers.flatMap(m=>m.years)).size,rec(combined(d.managers)),wp(combined(d.managers)),sum(d.managers,'appearances'),sum(d.managers,'pw')+'-'+sum(d.managers,'pl'),sum(d.managers,'titles')])+'</table></div><p class="note">Regular-season record; Post seasons = postseason appearances; Post record = postseason games won-lost.</p>';
   }
 
   function h2hHtml(d) {
@@ -161,7 +174,7 @@
         `<td class="n">${pts(x.pf)}</td><td class="n">${pts(x.pa)}</td><td class="n">${x.last}</td></tr>`;
     };
     return `<div class="tm-scroll"><table class="tm-tbl-plain" id="tm-h2h-t"><thead><tr><th>Opponent</th><th class="n">Record</th><th class="n">PF</th><th class="n">PA</th><th class="n">Last</th></tr></thead><tbody>` +
-      h.map((x, i) => row(x).replace('<tr>', `<tr${i >= 12 ? ' hidden' : ''}>`)).join('') + '</tbody></table></div>' +
+      h.map((x, i) => row(x).replace('<tr>', `<tr${i >= 12 ? ' hidden' : ''}>`)).join('') + '</tbody>'+footer(['Total ('+h.length+' opponents)',rec(combined(h)),pts(sum(h,'pf')),pts(sum(h,'pa')),'—'])+'</table></div>' +
       (h.length > 12 ? `<button type="button" class="tm-more" id="tm-h2h-more">Show all ${h.length}</button>` : '') +
       '<p class="note">Every game this roster has played, regular season and postseason. Opponents are listed under their current name.</p>';
   }
@@ -251,31 +264,41 @@
     const ss = d.seasons.filter(s => s.record && s.record.games).slice().sort((a, b) => a.year - b.year);
     if (!ss.length) return '';
     const x = ss.map(s => String(s.year));
+    const records = ss.map(s=>s.record);
     const pf = lineChart({x, title: 'Points for vs max possible (regular season)',
       series: [{name: 'Points for', short: 'PF', values: ss.map(s => s.record.pf), cls: 's1'},
                {name: 'Max PF', short: 'Max', values: ss.map(s => s.record.max ?? null), cls: 's2'}],
+      totals: [sum(records,'pf'),records.some(r=>r.max!=null)?sum(records,'max'):null],
       note: 'Points for on standard scoring; Max PF is the best possible lineup each week (Sleeper).'});
-    const eff = lineChart({x, title: 'Lineup efficiency (PF ÷ Max PF)', fmtY: v => v.toFixed(0) + '%', height: 170,
-      series: [{name: 'Efficiency', values: ss.map(s => s.record.max ? s.record.pf_official / s.record.max * 100 : null), cls: 's1'}]});
+    const eff = lineChart({x, title: 'Lineup efficiency (PF ÷ Max PF)', fmtY: v => v.toFixed(1) + '%', height: 170,
+      series: [{name: 'Efficiency', values: records.map(r=>efficiency([r])), cls: 's1'}, {name:'League average',short:'Avg',values:ss.map(s=>s.league_eff ?? null),cls:'s2'}], totals:[efficiency(records),mean(ss.map(s=>s.league_eff))], note:'League average: equally weighted NCAA 180 team efficiencies using official PF and Max PF. Career team efficiency uses combined PF and Max PF; benchmark total is the mean of displayed annual averages.'});
     const wins = lineChart({x, title: 'Wins vs expected wins', fmtY: v => v.toFixed(1),
       series: [{name: 'Wins', values: ss.map(s => s.record.w + s.record.t / 2), cls: 's1'},
                {name: 'Expected wins', short: 'xW', values: ss.map(s => s.record.xw ?? null), cls: 's2'}],
+      totals:[sum(records,'w')+sum(records,'t')/2,records.some(r=>r.xw!=null)?sum(records,'xw'):null],
       note: 'Expected wins = each week\'s share of the league this score would have beaten (all-play).'});
     const polls = d.seasons.filter(s => s.poll && s.poll.summary);
     const pr = v => v == null ? '—' : '#' + v;
+    const rankExtreme=(kind,key,fn)=>{const a=polls.map(s=>s.poll.summary[kind]?.[key]).filter(Number.isFinite);return a.length?pr(fn(...a)):'—';};
     const ptable = polls.length ? `<h3 class="tm-sub">Polls by season</h3><div class="tm-scroll"><table class="tm-tbl-plain"><thead><tr><th>Year</th>` +
       `<th class="n">Bots peak</th><th class="n">Low</th><th class="n">Final</th><th class="n">Top 25 peak</th><th class="n">Low</th><th class="n">Final</th><th class="n">1st-pl. votes</th></tr></thead><tbody>` +
       polls.map(s => { const c = s.poll.summary.cons || {}, o = s.poll.summary.official;
         return `<tr><td>${s.year}</td><td class="n">${pr(c.peak)}</td><td class="n">${pr(c.low)}</td><td class="n">${pr(c.final)}</td>` +
           (o ? `<td class="n">${pr(o.peak)}</td><td class="n">${pr(o.low)}</td><td class="n">${o.final == null ? 'NR' : pr(o.final)}</td>` : '<td class="n" colspan="3"><small>Not ranked</small></td>') +
           `<td class="n">${s.poll.summary.fpv || ''}</td></tr>`; }).join('') +
-      '</tbody></table></div><p class="note">Bots = the bot consensus ranking of all 180 teams. Top 25 = the official poll, shown only for seasons the team was ranked (low = lowest ranked week).</p>' : '';
+      '</tbody>'+footer(['Career',rankExtreme('cons','peak',Math.min),rankExtreme('cons','low',Math.max),'—',rankExtreme('official','peak',Math.min),rankExtreme('official','low',Math.max),'—',polls.reduce((a,s)=>a+(s.poll.summary.fpv||0),0)])+'</table></div><p class="note">Bots = the bot consensus ranking of all 180 teams. Top 25 = the official poll, shown only for seasons the team was ranked (low = lowest ranked week).</p>' : '';
     const ap = ss.filter(s => s.record.ap);
+    const ar=ap.map(s=>s.record), ac=combined(ar);
+    const triple=k=>[0,1,2].map(i=>ar.reduce((n,r)=>n+(r[k]?.[i]||0),0));
+    const apTotal=triple('ap'), medTotal=triple('med');
+    const trRec=a=>rec({w:a[0],l:a[1],t:a[2]});
+    const apPct=apTotal.reduce((a,b)=>a+b,0);
+    
     const aptable = ap.length ? `<h3 class="tm-sub">Strength beyond the schedule</h3><div class="tm-scroll"><table class="tm-tbl-plain"><thead><tr><th>Year</th><th class="n">Record</th><th class="n">All-play</th><th class="n">Vs median</th><th class="n">xW</th><th class="n">Luck</th><th class="n">Efficiency</th></tr></thead><tbody>` +
       ap.slice().reverse().map(s => { const r = s.record, w = r.w + r.t / 2, apg = r.ap[0] + r.ap[1] + r.ap[2];
         return `<tr><td>${s.year}</td><td class="n">${rec(r)}</td><td class="n">${r.ap[0]}-${r.ap[1]}${r.ap[2] ? '-' + r.ap[2] : ''} <small>${apg ? ((r.ap[0] + r.ap[2] / 2) / apg).toFixed(3).replace(/^0/, '') : ''}</small></td>` +
           `<td class="n">${r.med[0]}-${r.med[1]}${r.med[2] ? '-' + r.med[2] : ''}</td><td class="n">${(+r.xw).toFixed(1)}</td><td class="n">${(w - r.xw >= 0 ? '+' : '') + (w - r.xw).toFixed(1)}</td>` +
-          `<td class="n">${r.max ? (r.pf_official / r.max * 100).toFixed(1) + '%' : '—'}</td></tr>`; }).join('') + '</tbody></table></div>' : '';
+          `<td class="n">${validEff(r) ? efficiency([r]).toFixed(1) + '%' : '—'}</td></tr>`; }).join('') + '</tbody>'+footer(['Total',rec(ac),trRec(apTotal)+' '+(apPct?((apTotal[0]+apTotal[2]/2)/apPct).toFixed(3):'—'),trRec(medTotal),ac.xw.toFixed(1),(ac.w+ac.t/2-ac.xw>=0?'+':'')+(ac.w+ac.t/2-ac.xw).toFixed(1),efficiency(ar)==null?'—':efficiency(ar).toFixed(1)+'%'])+'</table></div>' : '';
     return `<div class="tm-charts">${pf}${wins}${eff}</div>${ptable}${aptable}`;
   }
 
@@ -297,6 +320,14 @@
       note: esc(line)});
   }
 
+  function gameTotals(games) {
+    return ['reg','post'].map(kind=>{
+      const rows=games.filter(g=>g.kind===kind&&g.res&&!('place' in g));
+      if(!rows.length)return '';
+      const r={w:rows.filter(g=>g.res==='W').length,l:rows.filter(g=>g.res==='L').length,t:rows.filter(g=>g.res==='T').length};
+      return '<tr><td colspan="2">'+(kind==='reg'?'Regular season':'Postseason')+' total</td><td class="n">'+pts(sum(rows,'pf'))+'–'+pts(sum(rows,'pa'))+'</td><td>'+rec(r)+'</td></tr>';
+    }).join('');
+  }
   function seasons(d) {
     if (!d.seasons.length) return '<p class="tm-empty">No seasons on file.</p>';
     const open = d.settings.current_season_open !== false;
@@ -314,7 +345,7 @@
       return `<details class="tm-season" data-year="${s.year}"${open && s.year === openYear ? ' open' : ''}><summary>` +
         `<span class="yr">${s.year}</span><span class="tm-chip" style="--chip-bg:${esc(id.bg)};--chip-ink:${esc(id.ink)}">${esc(s.name)}</span>` +
         `<span>${bits.join(' · ')}</span>${sum ? `<span class="sum">${esc(sum)}</span>` : ''}</summary>` +
-        `<div class="body">${seasonPoll(s)}<table class="tm-games"><colgroup><col class="c-wk"><col><col class="c-sc"><col class="c-r"></colgroup><tbody>${s.games.map(gameRow).join('')}</tbody></table></div></details>`;
+        `<div class="body">${seasonPoll(s)}<table class="tm-games"><colgroup><col class="c-wk"><col><col class="c-sc"><col class="c-r"></colgroup><tbody>${s.games.map(gameRow).join('')}</tbody><tfoot>${gameTotals(s.games)}</tfoot></table></div></details>`;
     }).join('');
   }
 
@@ -368,11 +399,28 @@
   }
 
   function loadScript(src) {
-    return new Promise(res => { const s = document.createElement('script'); s.src = src; s.onload = s.onerror = res; document.body.append(s); });
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = resolve;
+      script.onerror = () => reject(new Error('Unable to load ' + src));
+      document.body.append(script);
+    });
   }
   async function finish() {
-    await loadScript('assets/snapshot.js');
-    await loadScript('assets/sections.js');
+    try {
+      await loadScript('assets/snapshot.js');
+      if (!window.NCAASnap) throw new Error('Image export did not initialize');
+    } catch (error) {
+      $('tm-error').textContent = 'Save Image is unavailable. ' + error.message;
+      $('tm-error').hidden = false;
+    }
+    try {
+      await loadScript('assets/sections.js');
+    } catch (error) {
+      $('tm-error').textContent = 'Section controls are unavailable. ' + error.message;
+      $('tm-error').hidden = false;
+    }
     document.body.dataset.ready = '1';
   }
 
@@ -552,6 +600,10 @@
     if (tok) obs.observe(tok, {childList: true, characterData: true, subtree: true});
     obs.observe(document.documentElement, {attributes: true, attributeFilter: ['data-theme']});
     document.body.dataset.snapTag = d.name;
+    if (!d.defunct) {
+      document.body.dataset.snapState = 'snapshot';
+      document.body.dataset.snapTime = new Date().toISOString();
+    }
     await finish();
   }
   main();

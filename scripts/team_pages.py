@@ -22,6 +22,7 @@ import datetime as dt
 import glob
 import html
 import json
+import math
 import os
 import re
 import sys
@@ -254,11 +255,15 @@ def season_records(m, std_from):
         if r.Outcome not in standard_results.RESULTS:
             continue
         d = out.setdefault((r.Y, r.Key), {"w": 0, "l": 0, "t": 0, "pf": 0.0, "pa": 0.0,
-                                          "pf_official": 0.0, "pa_official": 0.0, "games": 0})
+                                          "pf_official": 0.0, "pa_official": 0.0, "games": 0, "official_pf_complete": True})
         d[{"Win": "w", "Loss": "l", "Tie": "t"}[r.Outcome]] += 1
         d["pf"] += num(r.PointsFor)
         d["pa"] += num(r.PointsAgainst)
-        d["pf_official"] += num(r.PointsOfficial)
+        official_pf = num(r.PointsOfficial, None)
+        if official_pf is None or not math.isfinite(official_pf):
+            d["official_pf_complete"] = False
+        else:
+            d["pf_official"] += official_pf
         d["pa_official"] += num(r.PointsAgainstOfficial)
         d["games"] += 1
     for (y, _), d in out.items():
@@ -596,6 +601,9 @@ def max_points(m):
     """{(year, key): Max PF} over the regular-season weeks played: LineupWeeks_Historic 'Best' (finished seasons)
     and MaxPoints_Season (this season). Max PF is Sleeper's best possible lineup score."""
     played = {(r.Y, r.Key, r.W) for r in m.itertuples() if r.Outcome in standard_results.RESULTS}
+    weeks_by_team = {}
+    for year, key, week in played:
+        weeks_by_team.setdefault((year, key), set()).add(week)
     out = {}
     for path, col in ((LINEUP_WEEKS, "Best"), (MAXPTS, "MaxPoints")):
         if not os.path.exists(path):
@@ -603,8 +611,24 @@ def max_points(m):
         for r in read(path).to_dict("records"):
             k = (int(r["Year"]), season_key(r["LeagueName"], r["RosterID"]), int(num(r["Week"])))
             if k in played and str(r.get(col, "")).strip():
-                out[k[:2]] = out.get(k[:2], 0.0) + num(r[col])
-    return {k: round(v, 2) for k, v in out.items()}
+                value = pd.to_numeric(r[col], errors="coerce")
+                if pd.notna(value) and math.isfinite(value) and value >= 0:
+                    out[k] = float(value)
+    totals = {}
+    for (year, key), weeks in weeks_by_team.items():
+        if all((year, key, w) in out for w in weeks):
+            totals[(year, key)] = round(sum(out[(year, key, w)] for w in weeks), 2)
+    return totals
+
+
+def annual_efficiencies(records, maxpf):
+    """Mean of eligible team efficiencies, with one vote per team per season."""
+    by_year = {}
+    for (year, key), record in records.items():
+        maximum = maxpf.get((year, key), 0)
+        if maximum > 0 and record["official_pf_complete"]:
+            by_year.setdefault(year, []).append(100 * record["pf_official"] / maximum)
+    return {year: round(sum(values) / len(values), 1) for year, values in by_year.items()}
 
 
 def all_play(m):
@@ -641,7 +665,7 @@ def head_to_head(seasons, names_by_key):
     for s in seasons:
         for g in s["games"]:
             k = g.get("opp_key")
-            if not k or not g.get("res"):
+            if not k or not g.get("res") or "place" in g:
                 continue
             d = h.setdefault(k, {"key": k, "w": 0, "l": 0, "t": 0, "pf": 0.0, "pa": 0.0, "last": s["year"], "post": 0})
             d[{"W": "w", "L": "l", "T": "t"}[g["res"]]] += 1
@@ -663,14 +687,15 @@ def manager_history(seasons):
     Grouped by Sleeper user (owner ID) so a username change stays one manager."""
     out = {}
     for s in sorted(seasons, key=lambda s: s["year"]):
-        who = s.get("owner_id") or s.get("manager") or "Orphan"
-        d = out.setdefault(who, {"manager": s.get("manager") or "Orphan", "years": [], "w": 0, "l": 0, "t": 0,
-                                 "pw": 0, "pl": 0, "titles": 0})
+        who = s.get("owner_id") or s.get("manager") or "Unknown"
+        d = out.setdefault(who, {"manager": s.get("manager") or "Unknown", "years": [], "w": 0, "l": 0, "t": 0,
+                                 "pw": 0, "pl": 0, "appearances": 0, "titles": 0})
         d["manager"] = s.get("manager") or d["manager"]
         d["years"].append(s["year"])
         rec = s.get("record") or {}
         for k in ("w", "l", "t"):
             d[k] += rec.get(k, 0)
+        d["appearances"] += any(g["kind"] == "post" and "place" not in g for g in s["games"])
         for g in s["games"]:
             if g["kind"] == "post" and g.get("res") in ("W", "L"):
                 d["pw" if g["res"] == "W" else "pl"] += 1
@@ -867,6 +892,7 @@ def build(out_dir=OUT_DIR, page=PAGE):
     trophy_rows = trophies(lids)
     polls = poll_history(lids)
     maxpf = max_points(m)
+    league_eff = annual_efficiencies(records, maxpf)
     ap = all_play(m)
     values, first = roster_values()
     over = overview_sources(lids, cur, short)
@@ -928,7 +954,7 @@ def build(out_dir=OUT_DIR, page=PAGE):
                     rec["max"] = maxpf[(y, key)]
                 rec.update(ap.get((y, key), {}))
             pd_ = polls.get((y, key))
-            s = {"year": y, "name": nm, "manager": sd.get("manager", ""), "owner_id": sd.get("owner_id", ""),
+            s = {"year": y, "league_eff": league_eff.get(y), "name": nm, "manager": sd.get("manager", ""), "owner_id": sd.get("owner_id", ""),
                  "division": sd.get("division", ""),
                  "record": rec, "place": list(pl) if pl and rec else None,
                  "post": postseason_summary(post.get((y, key), [])), "games": games}
@@ -941,7 +967,7 @@ def build(out_dir=OUT_DIR, page=PAGE):
             seasons.append(s)
         if t["defunct"]:
             last = seasons[0] if seasons else {}
-            mgr = last.get("manager") or ""
+            mgr = last.get("manager") or "Unknown"
             data_now = {"record": None, "place": None, "rank": None, "of": None, "roster_groups": [],
                         "defunct": {"first": t["first"], "last": t["last"]}}
         else:
@@ -951,6 +977,9 @@ def build(out_dir=OUT_DIR, page=PAGE):
             owner_rows = rosters[(rosters["LeagueName"].map(norm_league) == lg) & (rosters["RosterID"].map(rid) == r)]
             if len(owner_rows):
                 mgr = owner_rows["OwnerName"].iloc[0] or mgr
+                if "OwnerID" in owner_rows and not owner_rows["OwnerID"].iloc[0]:
+                    mgr = "Orphan"
+            mgr = mgr or "Unknown"
             data_now = {"record": now.get("record"), "place": now.get("place"),
                         "rank": int(o["Playoff Rank"]) if o.get("Playoff Rank") else None, "of": len(overall) or None,
                         "roster_groups": current_roster(lg, r, rosters, names, cfg["position_order"], values, first),
@@ -1098,8 +1127,11 @@ CSS = """
 .tm-chart .yl{font:12px var(--num,sans-serif);fill:var(--mute);text-anchor:end}
 .tm-chart .xl{font:12px var(--num,sans-serif);fill:var(--mute);text-anchor:middle}
 .tm-chart .el{font:600 12px var(--num,sans-serif);fill:var(--ink)}
-.tm-chart path.s1{fill:none;stroke:var(--s1);stroke-width:2}.tm-chart path.s2{fill:none;stroke:var(--s2);stroke-width:2}
-.tm-chart circle.s1{fill:var(--s1);stroke:var(--panel);stroke-width:2}.tm-chart circle.s2{fill:var(--s2);stroke:var(--panel);stroke-width:2}
+.tm-chart .series-line{fill:none;stroke-width:2}.tm-chart .series-line.s1{stroke:var(--s1)}.tm-chart .series-line.s2{stroke:var(--s2);stroke-dasharray:7 4}.tm-chart .series-line.s3{stroke:var(--s3);stroke-dasharray:2 4}.tm-chart .series-line.s4{stroke:var(--s4);stroke-dasharray:8 3 2 3}
+.tm-chart .series-marker{stroke:var(--panel);stroke-width:1}.tm-chart .series-marker.s1{fill:var(--s1)}.tm-chart .series-marker.s2{fill:var(--s2)}.tm-chart .series-marker.s3{fill:var(--s3)}.tm-chart .series-marker.s4{fill:var(--s4)}
+.tm-chart .tm-legend svg{display:inline-block;width:30px;height:14px;vertical-align:middle;margin-right:4px}.tm-legend{flex-wrap:wrap}
+#tm-sections tfoot td,.snapwrap section[id^="tm-"] tfoot td{font-weight:700;border-top:2px solid var(--line)}
+#tm-sections section.fold>h2{padding-right:70px}#tm-sections section.fold>.snap-btn{right:30px}
 .tm-chart .cross{stroke:var(--mute);stroke-width:1;stroke-dasharray:3 3}
 .tm-chart .hit{fill:transparent;cursor:crosshair}
 .tm-legend{display:flex;gap:12px;font-size:12px;color:var(--ink);margin-bottom:2px}
@@ -1110,6 +1142,7 @@ CSS = """
 .tm-tip b,.tm-tip span{display:block}
 .tm-tbl summary{font-size:12px;color:var(--mute);cursor:pointer}
 .tm-tbl{overflow-x:auto;width:0;min-width:100%}
+.snapwrap .tm-scroll,.snapwrap .tm-tbl{overflow:visible;width:auto;min-width:0}
 .tm-tbl table{font-size:12px;border-collapse:collapse;margin-top:4px}
 .tm-tbl td,.tm-tbl th{padding:2px 8px;text-align:right;border-bottom:1px solid var(--line)}
 .tm-mine{grid-column:1/-1;margin-bottom:6px}
@@ -1195,7 +1228,7 @@ def write_page(path=PAGE):
 <section id="tm-roster-sec"><h2>Current roster</h2><div id="tm-roster"></div></section>
 <section id="tm-picks-sec"><h2>Draft picks</h2><div id="tm-picks"></div></section>
 <section id="tm-trophy-sec"><h2>Trophies</h2><div id="tm-trophies"></div></section>
-<section id="tm-season-sec" data-nosnap><h2>Season by season</h2><div id="tm-season-charts"></div><div id="tm-seasons"></div>
+<section id="tm-season-sec"><h2>Season by season</h2><div id="tm-season-charts"></div><div id="tm-seasons"></div>
 <p class="note" id="tm-season-note"></p></section>
 <section id="tm-h2h-sec"><h2>Head to head</h2><div id="tm-h2h"></div></section>
 <section id="tm-draft-sec"><h2>Draft history</h2><div id="tm-drafts"></div></section>
