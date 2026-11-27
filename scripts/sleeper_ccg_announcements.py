@@ -1,0 +1,166 @@
+"""Preview and post the Trophy Room's final CCG awards to Sleeper."""
+import argparse
+import csv
+import json
+import os
+from pathlib import Path
+import re
+import subprocess
+import urllib.error
+import urllib.request
+from urllib.parse import urlsplit
+import uuid
+
+import trophies
+
+LEAGUE_DATA = "https://api.sleeper.app/v1/league"
+TEST_LEAGUE = "1432137859359313920"
+
+
+def public_json(url):
+    return json.loads(subprocess.check_output([
+        "curl", "--fail", "--silent", "--show-error", "--max-time", "20", url,
+    ]))
+
+
+def previews(year, selected, out):
+    expected = {
+        trophies.short_names().get(name, name): league_id
+        for (season, name), league_id in trophies.league_ids().items()
+        if season == year
+    }
+    if selected and selected not in expected:
+        raise SystemExit("Use the official conference short name for this season.")
+    with open(trophies.SEASON, encoding="utf-8-sig", newline="") as ledger:
+        rows = list(csv.DictReader(ledger))
+    out.mkdir(parents=True, exist_ok=True)
+    posts = []
+    for conference, league_id in sorted(expected.items()):
+        if selected and conference != selected:
+            continue
+        matches = [
+            row for row in rows
+            if row["Season"] == year and row["EventType"] == "CCG"
+            and row["Status"] == "Final" and row["LeagueID"] == league_id
+        ]
+        if len(matches) != 1:
+            print(f"{conference}: waiting for one final winner.")
+            continue
+        row = matches[0]
+        manager_id = row["ManagerUserID"]
+        if (row["Conference"] != conference or not row["RosterID"].isdigit()
+                or not manager_id.isdigit() or not league_id.isdigit() or league_id == TEST_LEAGUE):
+            print(f"{conference}: incomplete or inconsistent award record.")
+            continue
+        art = trophies.art_key(row)
+        if not art or trophies.resolved_art(row) != art:
+            print(f"{conference}: unique trophy artwork unavailable.")
+            continue
+
+        members = public_json(f"{LEAGUE_DATA}/{league_id}/users")
+        member = next((user for user in members if str(user.get("user_id")) == manager_id), None)
+        if not member:
+            print(f"{conference}: winner's Sleeper account is no longer in the league.")
+            continue
+        account = public_json(f"https://api.sleeper.app/v1/user/{manager_id}")
+        username = account.get("username", "") if isinstance(account, dict) else ""
+        if (not re.fullmatch(r"[A-Za-z0-9_]+", username or "")
+                or str(account.get("user_id")) != manager_id):
+            print(f"{conference}: winner's username could not be verified.")
+            continue
+
+        image = out / f"{league_id}.png"
+        trophies.engrave_png(row).save(image)
+        caption = f"Congrats @{username} for winning the {year} {conference} conference championship game!"
+        posts.append((league_id, image, caption))
+        print(f"{conference} | {row['Team']} | {league_id} | {image.name} | {caption}")
+    return posts
+
+
+def send(year, league_id, image, caption):
+    token = os.environ.get("SLEEPER_SESSION_TOKEN")
+    if not token:
+        raise SystemExit("The SLEEPER_SESSION_TOKEN Actions secret is missing.")
+
+    uploaded = json.loads(subprocess.check_output([
+        "curl", "--fail", "--silent", "--show-error", "--max-time", "25",
+        "--form", f"file=@{image};type=image/png", "https://api.sleeper.app/upload",
+    ]))
+    urls = [uploaded["url"], uploaded["url_original"]]
+    for url in urls:
+        parsed = urlsplit(url)
+        if (parsed.scheme != "https" or parsed.netloc != "sleepercdn.com"
+                or not parsed.path.startswith("/uploads/") or parsed.query or parsed.fragment):
+            raise SystemExit("Sleeper returned an unexpected image URL.")
+    size = [str(int(uploaded[field])) for field in ("width", "height")]
+    if any(int(dimension) < 1 for dimension in size):
+        raise SystemExit("Sleeper returned invalid image dimensions.")
+
+    query = """
+      mutation create_message($parentId: String!, $clientId: String, $text: String,
+        $keys: [String], $values: [String]) {
+        create_message(parent_type: "league", parent_id: $parentId, client_id: $clientId,
+          text: $text, attachment_type: "photo", k_attachment_data: $keys, v_attachment_data: $values) {
+          message_id parent_id attachment
+        }
+      }
+    """
+    body = {
+        "operationName": "create_message",
+        "query": query,
+        "variables": {
+            "parentId": league_id,
+            "clientId": str(uuid.uuid5(uuid.NAMESPACE_URL, f"ncaa180.ccg/{year}/{league_id}")),
+            "text": caption,
+            "keys": ["url", "url_original", "width", "height", "pre_optimized"],
+            "values": [*urls, *size, "true"],
+        },
+    }
+    # Keep the session credential out of process arguments and workflow logs.
+    class NoRedirect(urllib.request.HTTPRedirectHandler):
+        def redirect_request(self, request, fp, code, msg, headers, newurl):
+            return None
+
+    request = urllib.request.Request(
+        "https://sleeper.app/graphql",
+        data=json.dumps(body).encode(),
+        headers={
+            "Authorization": token,
+            "Content-Type": "application/json",
+            "X-Sleeper-GraphQL-Op": "create_message",
+        },
+    )
+    try:
+        with urllib.request.build_opener(NoRedirect()).open(request, timeout=20) as response:
+            payload = json.load(response)
+    except urllib.error.HTTPError as error:
+        raise SystemExit(f"Sleeper returned HTTP {error.code}. Check chat before rerunning.") from None
+    except (OSError, ValueError):
+        raise SystemExit("Delivery could not be confirmed. Check chat before rerunning.") from None
+    posted = (payload.get("data") or {}).get("create_message") or {}
+    if (not posted.get("message_id") or str(posted.get("parent_id")) != league_id
+            or not posted.get("attachment")):
+        raise SystemExit("Sleeper did not confirm the trophy post. Check chat before rerunning.")
+    print(f"Sleeper confirmed photo message {posted['message_id']} in league {league_id}.")
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--year", required=True)
+    parser.add_argument("--conference", default="")
+    parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--send", action="store_true")
+    args = parser.parse_args()
+    if not re.fullmatch(r"[0-9]{4}", args.year):
+        parser.error("use a four-digit season")
+    if args.send and not args.conference:
+        parser.error("select exactly one conference to send")
+    posts = previews(args.year, args.conference, args.out)
+    if args.send:
+        if len(posts) != 1:
+            raise SystemExit("No verified final award to send.")
+        send(args.year, *posts[0])
+
+
+if __name__ == "__main__":
+    main()
