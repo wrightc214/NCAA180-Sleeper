@@ -256,11 +256,12 @@
       titlePriority(b) - titlePriority(a) || impact(b) - impact(a) ||
       Number(b.Season) - Number(a.Season) || a.Event.localeCompare(b.Event));
     return '<div class="tm-trophies">' + ranked.map(t => {
-      const title = `${t.Season} ${t.Event} · ${t.Team}`;
+      const label = window.NCAATrophy?.eventLabel?.(t) ?? t.Event;
+      const title = `${t.Season} ${label} · ${t.Team}`;
       let fig = '';
       try { fig = window.NCAATrophy.html(t, null, null, null, {width: 200}); } catch (e) { fig = `<p>${esc(t.Event)}</p>`; }
       const featured = t.EventType === 'NationalTitle' ? ' tm-trophy-featured' : '';
-      return `<article class="tm-trophy-card${featured}" data-snap-card="${esc(title)}">${fig}<header>${esc(t.Season)} · ${esc(t.Event)}</header></article>`;
+      return `<article class="tm-trophy-card${featured}" data-snap-card="${esc(title)}">${fig}<header>${esc(t.Season)} · ${esc(label)}</header></article>`;
     }).join('') + '</div>';
   }
 
