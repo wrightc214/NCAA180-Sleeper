@@ -35,17 +35,41 @@ def fetch_json(url):
         return json.load(response)
 
 
-def matchup_posts(rows, year, week, league_ids, handle_for, recorded):
+def opening_weeks(config):
+    events = config["postseason"]
+    return {
+        "Playoff": int(events["playoff"]["first_week"]),
+        "Bowl": min(int(tier["week"]) for tier in events["bowls"]["tiers"]),
+        "NIT": int(events["nit"]["group_stage_1"]["week"]),
+    }
+
+
+def playoff_cut_line(year):
+    with open(postseason.FIELD_FILE, encoding="utf-8-sig", newline="") as source:
+        selected = [row for row in csv.DictReader(source)
+                    if row["Year"] == year and row["BidType"] == "At-Large"]
+    if not selected:
+        return ""
+    # The published field preserves selection order, including a resolved cut-line tie.
+    last = selected[-1]
+    return (f"Last at-large in: {int(last['Wins'])}–{int(last['Losses'])}, "
+            f"{float(last['PointsFor']):,.1f} pts. Think there's an error? Let us know.")
+
+
+def matchup_posts(rows, year, week, league_ids, handle_for, recorded, *,
+                  events=EVENTS, cut_lines=None):
     games = defaultdict(list)
     for row in rows:
         if (row["Year"] == year and row["Week"] == week and row["GameID"]
-                and row["Round"] in EVENTS):
+                and row["Round"] in events):
             games[row["GameID"]].append(row)
 
     for game_id, sides in sorted(games.items()):
-        if len(sides) != 2 or any(side["Status"] != "Pending" for side in sides):
+        group = sides[0]["Round"] == "NIT" and sides[0]["BowlName"].startswith("Group ")
+        if (len(sides) < 2 or (len(sides) != 2 and not group)
+                or any(side["Status"] != "Pending" for side in sides)):
             continue
-        if len({(side["LeagueID"], side["RosterID"]) for side in sides}) != 2:
+        if len({(side["LeagueID"], side["RosterID"]) for side in sides}) != len(sides):
             continue
         if any(
             side["LeagueID"] not in league_ids or not side["RosterID"].isdigit()
@@ -58,7 +82,7 @@ def matchup_posts(rows, year, week, league_ids, handle_for, recorded):
             continue
         event = EVENTS[first["Round"]]
         details = first["BowlName"] or first["PlayoffRound"] or first["Stage"]
-        heading = f"{year} NCAA 180 {event} matchup"
+        heading = f"{year} NCAA 180 {event} {'group' if group else 'matchup'}"
         if details:
             heading += f" · {details}"
         for league_id in sorted({side["LeagueID"] for side in sides}):
@@ -73,7 +97,12 @@ def matchup_posts(rows, year, week, league_ids, handle_for, recorded):
                     if handle:
                         team += f" & @{handle}"
                 teams.append(team)
-            yield key, league_id, f"{heading}\n{teams[0]} vs. {teams[1]}\nGood luck!"
+            lineup = (" · " if group else " vs. ").join(teams)
+            caption = f"{heading}\n{lineup}\nGood luck!"
+            cut_line = (cut_lines or {}).get(first["Round"])
+            if cut_line:
+                caption += f"\n{cut_line}"
+            yield key, league_id, caption
 
 
 def save_state(records, message, path=LEDGER):
@@ -132,7 +161,7 @@ def review_code(rows, year, week, league_ids, posts):
     return hashlib.sha256(snapshot.encode()).hexdigest()
 
 
-def post_private_review(year, week, code, posts):
+def post_private_review(year, week, code, posts, league_names):
     from discord_post import valid
     from poll_discord import send
 
@@ -150,7 +179,7 @@ def post_private_review(year, week, code, posts):
     send(hook, summary, mentions=[contact] if contact else [])
     batch = ""
     for _, league_id, caption in posts:
-        entry = f"**League {league_id}**\n{caption}"
+        entry = f"**{league_names[league_id]}**\n{caption}"
         if batch and len(batch) + len(entry) + 2 > 1800:
             send(hook, batch, mentions=[])
             batch = ""
@@ -169,19 +198,27 @@ def main():
         parser.error("select one notification stage")
     if args.scheduled and datetime.now(ZoneInfo("America/New_York")).weekday() != 2:
         return
-    year, week, season_type = week_gate.state()
-    if season_type != "regular":
-        return
-    schedule = league_config.cfg()["schedule"]
+    year, week, _ = week_gate.state()
+    config = league_config.cfg()
+    schedule = config["schedule"]
     if not int(schedule["postseason_start_week"]) <= week <= int(schedule["postseason_end_week"]):
         print(f"Week {week} is outside the NCAA 180 postseason window.")
         return
 
+    initial = {event for event, first in opening_weeks(config).items() if first == week}
+    if not initial and (args.review or args.approve):
+        if args.approve:
+            raise SystemExit("This week does not require matchup approval.")
+        return
+
+    short_names = {full: short for short, full in postseason.league_short().items()}
     with open("data/LeagueIDs_AllYears.csv", encoding="utf-8-sig", newline="") as source:
-        league_ids = {
-            row["LeagueID"] for row in csv.DictReader(source)
+        league_names = {
+            row["LeagueID"]: short_names.get(row["LeagueName"], row["LeagueName"])
+            for row in csv.DictReader(source)
             if row["Year"] == year and row["LeagueID"].isdigit() and row["LeagueID"] != TEST_LEAGUE
         }
+    league_ids = set(league_names)
     publish = args.scheduled
     token = os.environ.pop("SLEEPER_SESSION_TOKEN", "")
     if publish and not token:
@@ -212,42 +249,51 @@ def main():
         return handle if re.fullmatch(r"[A-Za-z0-9_]+", handle) else ""
 
     rows = postseason.read_season().to_dict("records")
-    # Prepare the whole slate before comparing approvals or making a chat request.
-    posts = list(matchup_posts(rows, year, str(week), league_ids, handle_for, {}))
-    if not posts:
-        print("No published matchups for this round.")
-        if args.approve:
-            raise SystemExit("There is no slate to approve.")
-        return
+    cut_lines = {}
+    if "Playoff" in initial and any(
+        row["Year"] == year and row["Week"] == str(week)
+        and row["Round"] == "Playoff" and row["Status"] == "Pending" for row in rows
+    ):
+        cut_lines["Playoff"] = playoff_cut_line(year)
+    initial_posts = list(matchup_posts(
+        rows, year, str(week), league_ids, handle_for, {}, events=initial, cut_lines=cut_lines,
+    ))
+    posts = [] if args.review or args.approve else list(matchup_posts(
+        rows, year, str(week), league_ids, handle_for, {}, events=EVENTS.keys() - initial,
+    ))
     approval_key = f"{year}/{week}"
-    approvals = json.loads(APPROVALS.read_text(encoding="utf-8")) if APPROVALS.exists() else {}
-    if publish and all(key in records for key, _, _ in posts):
-        print(f"{approval_key}: no unsent matchup posts.")
-        return
-    if publish and approval_key not in approvals:
-        print(f"{approval_key}: waiting for matchup approval. Sleeper send skipped.")
-        return
-    code = review_code(rows, year, week, league_ids, posts)
-    if args.approve:
-        if args.approve.strip() != code:
-            raise SystemExit("This approval code does not match the current slate and scores.")
-        if approvals.get(approval_key) == code:
-            print(f"{approval_key} is already approved.")
-            return
-        approvals[approval_key] = code
-        try:
-            save_state(approvals, f"Approve Sleeper matchups for {approval_key}", APPROVALS)
-        except subprocess.CalledProcessError:
-            raise SystemExit("Could not save approval to main. No posts were sent.") from None
-        print(f"Approved {approval_key} for the Wednesday run.")
-        return
-    if args.review:
-        post_private_review(year, week, code, posts)
-        return
-    if publish and approvals[approval_key] != code:
-        post_private_review(year, week, code, posts)
-        raise SystemExit("Pairings or scoring inputs changed after approval. Sleeper send held.")
-    print(f"Review code: {code}")
+    hold_changed = False
+    if initial_posts and (not publish or any(key not in records for key, _, _ in initial_posts)):
+        approvals = json.loads(APPROVALS.read_text(encoding="utf-8")) if APPROVALS.exists() else {}
+        if publish and approval_key not in approvals:
+            print(f"{approval_key}: waiting for opening matchup approval. Opening posts held.")
+        else:
+            review_rows = [row for row in rows if row["Week"] != str(week) or row["Round"] in initial]
+            code = review_code(review_rows, year, week, league_ids, initial_posts)
+            if args.approve:
+                if args.approve.strip() != code:
+                    raise SystemExit("This approval code does not match the current slate and scores.")
+                if approvals.get(approval_key) == code:
+                    print(f"{approval_key} is already approved.")
+                    return
+                approvals[approval_key] = code
+                try:
+                    save_state(approvals, f"Approve Sleeper matchups for {approval_key}", APPROVALS)
+                except subprocess.CalledProcessError:
+                    raise SystemExit("Could not save approval to main. No posts were sent.") from None
+                print(f"Approved {approval_key} for the Wednesday run.")
+                return
+            if args.review:
+                post_private_review(year, week, code, initial_posts, league_names)
+                return
+            if publish and approvals[approval_key] != code:
+                hold_changed = True
+            else:
+                print(f"Review code: {code}")
+                posts.extend(initial_posts)
+    elif args.approve:
+        raise SystemExit("There is no opening slate to approve.")
+
     failures = 0
     count = 0
     for key, league_id, caption in posts:
@@ -274,6 +320,9 @@ def main():
         except subprocess.CalledProcessError:
             raise SystemExit("Could not save the Sleeper confirmation. Further sends stopped.") from None
     print(f"{count} eligible postseason matchup posts.")
+    if hold_changed:
+        post_private_review(year, week, code, initial_posts, league_names)
+        raise SystemExit("Pairings or scoring inputs changed after approval. Opening sends held.")
     if failures:
         raise SystemExit("One or more matchup deliveries need review.")
 
