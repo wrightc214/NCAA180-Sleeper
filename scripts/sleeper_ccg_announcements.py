@@ -1,4 +1,11 @@
-"""Preview and post the Trophy Room's final CCG awards to Sleeper."""
+"""Preview and post the Trophy Room's final CCG awards to Sleeper.
+
+To reconcile a pending record in data/SleeperTrophyPosts.json, check the
+destination league's chat for the trophy post. If it was delivered, change
+the record's status to sent and set message_id to the Sleeper message ID.
+If you confirm it was not delivered, delete the record to allow a resend.
+Commit the reconciliation to main before rerunning.
+"""
 import argparse
 import csv
 import json
@@ -15,6 +22,7 @@ import trophies
 
 LEAGUE_DATA = "https://api.sleeper.app/v1/league"
 TEST_LEAGUE = "1432137859359313920"
+POSTS = Path("data/SleeperTrophyPosts.json")
 
 
 def public_json(url):
@@ -23,12 +31,16 @@ def public_json(url):
     ]))
 
 
-def previews(year, selected, out, *, ledger_path):
-    expected = {
+def conference_league_ids(year):
+    return {
         trophies.short_names().get(name, name): league_id
         for (season, name), league_id in trophies.league_ids().items()
         if season == year
     }
+
+
+def previews(year, selected, out, *, ledger_path, already_recorded=()):
+    expected = conference_league_ids(year)
     if selected and selected not in expected:
         raise SystemExit("Use the official conference short name for this season.")
     with open(ledger_path, encoding="utf-8-sig", newline="") as ledger:
@@ -37,6 +49,8 @@ def previews(year, selected, out, *, ledger_path):
     posts = []
     for conference, league_id in sorted(expected.items()):
         if selected and conference != selected:
+            continue
+        if f"{year}/CCG/{league_id}" in already_recorded:
             continue
         matches = [
             row for row in rows
@@ -71,21 +85,24 @@ def previews(year, selected, out, *, ledger_path):
 
         image = out / f"{league_id}.png"
         trophies.engrave_png(row).save(image)
-        caption = (f"Congrats {row['Team']} (@{username}) for winning the "
+        caption = (f"Congrats {row['Team']} & @{username} for winning the "
                    f"{year} {conference} conference championship game!")
         posts.append((league_id, image, caption))
         print(f"{conference} | {row['Team']} | {league_id} | {image.name} | {caption}")
     return posts
 
 
-def send(year, league_id, image, caption, *, token, intended_league=None):
+def send(year, league_id, image, caption, *, token, intended_league=None, before_post=None):
     if not token:
         raise SystemExit("The SLEEPER_SESSION_TOKEN Actions secret is missing.")
 
-    uploaded = json.loads(subprocess.check_output([
-        "curl", "--fail", "--silent", "--show-error", "--max-time", "25",
-        "--form", f"file=@{image};type=image/png", "https://api.sleeper.app/upload",
-    ]))
+    try:
+        uploaded = json.loads(subprocess.check_output([
+            "curl", "--fail", "--silent", "--show-error", "--max-time", "25",
+            "--form", f"file=@{image};type=image/png", "https://api.sleeper.app/upload",
+        ]))
+    except (subprocess.CalledProcessError, ValueError):
+        raise SystemExit("Sleeper image upload failed before the chat post.") from None
     urls = [uploaded["url"], uploaded["url_original"]]
     for url in urls:
         parsed = urlsplit(url)
@@ -130,6 +147,8 @@ def send(year, league_id, image, caption, *, token, intended_league=None):
             "X-Sleeper-GraphQL-Op": "create_message",
         },
     )
+    if before_post:
+        before_post()
     try:
         with urllib.request.build_opener(NoRedirect()).open(request, timeout=20) as response:
             payload = json.load(response)
@@ -142,23 +161,101 @@ def send(year, league_id, image, caption, *, token, intended_league=None):
             or not posted.get("attachment")):
         raise SystemExit("Sleeper did not confirm the trophy post. Check chat before rerunning.")
     print(f"Sleeper confirmed photo message {posted['message_id']} in league {league_id}.")
+    return str(posted['message_id'])
+
+
+def save_post_state(records, message):
+    POSTS.write_text(json.dumps(records, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    subprocess.run(["git", "add", str(POSTS)], check=True)
+    subprocess.run([
+        "git", "-c", "user.name=github-actions[bot]",
+        "-c", "user.email=41898282+github-actions[bot]@users.noreply.github.com",
+        "commit", "--only", "-m", message, "--", str(POSTS),
+    ], check=True)
+    subprocess.run(["git", "push", "origin", "HEAD:refs/heads/main"], check=True)
+
+
+def publish_final_ccgs(year, conference, out, token):
+    if not token:
+        raise SystemExit("The SLEEPER_SESSION_TOKEN Actions secret is missing.")
+    records = json.loads(POSTS.read_text(encoding="utf-8")) if POSTS.exists() else {}
+    if conference:
+        league_id = conference_league_ids(year).get(conference)
+        if not league_id:
+            raise SystemExit("Use the official conference short name for this season.")
+        record = records.get(f"{year}/CCG/{league_id}")
+        if record and record["status"] == "sent":
+            print(f"{conference}: already sent (Sleeper message {record['message_id']}).")
+            return
+        if record and record["status"] == "pending":
+            raise SystemExit(f"{conference}: prior delivery needs reconciliation. Check league chat.")
+
+    unresolved = [key for key, record in records.items()
+                  if key.startswith(f"{year}/CCG/") and record["status"] == "pending"]
+    for key in unresolved:
+        print(f"{key}: prior delivery needs reconciliation. Skipping automatic resend.")
+    posts = previews(year, conference, out, ledger_path=trophies.SEASON, already_recorded=records)
+    if conference and not posts:
+        raise SystemExit("No verified final award to send.")
+    failed = False
+    for league_id, image, caption in posts:
+        key = f"{year}/CCG/{league_id}"
+
+        def reserve():
+            records[key] = {"status": "pending", "caption": caption}
+            save_post_state(records, f"Reserve Sleeper trophy post {key}")
+
+        try:
+            message_id = send(year, league_id, image, caption, token=token, before_post=reserve)
+            records[key].update(status="sent", message_id=message_id)
+            save_post_state(records, f"Confirm Sleeper trophy post {key}")
+        except subprocess.CalledProcessError as error:
+            print(f"{key}: could not save the delivery record to main (git exit {error.returncode}). "
+                  "Stopping further sends. Check league chat and the ledger on main.")
+            failed = True
+            break
+        except SystemExit as error:
+            # Before reservation, an upload failure leaves the award eligible for a retry.
+            # After reservation, further sends require someone to check the league chat.
+            print(f"{key}: {error}")
+            failed = True
+            continue
+    if failed:
+        raise SystemExit("One or more Sleeper CCG notifications need review.")
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--year", required=True)
+    parser.add_argument("--year")
     parser.add_argument("--conference", default="")
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--send", action="store_true")
     parser.add_argument("--replay-2025", action="store_true")
+    parser.add_argument("--publish-scheduled", action="store_true")
     args = parser.parse_args()
-    if not re.fullmatch(r"[0-9]{4}", args.year):
+    token = os.environ.pop("SLEEPER_SESSION_TOKEN", None)
+    if args.publish_scheduled:
+        if args.year or args.conference or args.send or args.replay_2025:
+            parser.error("scheduled publishing uses the current season and final CCG ledger")
+        import league_config
+        import week_gate
+
+        year, week, _ = week_gate.state()
+        if week <= int(league_config.cfg()["schedule"]["ccg_week"]):
+            print("CCG week has not finished.")
+            return
+        publish_final_ccgs(year, "", args.out, token)
+        return
+
+    if not re.fullmatch(r"[0-9]{4}", args.year or ""):
         parser.error("use a four-digit season")
     if args.replay_2025 and (args.year != "2025" or args.send or args.conference):
         parser.error("replay requires season 2025 and is independent of live send")
     if args.send and not args.conference:
         parser.error("select exactly one conference to send")
-    token = os.environ.pop("SLEEPER_SESSION_TOKEN", None)
+    if args.send:
+        publish_final_ccgs(args.year, args.conference, args.out, token)
+        return
     ledger = trophies.HIST if args.replay_2025 else trophies.SEASON
     posts = previews(args.year, args.conference, args.out, ledger_path=ledger)
     if args.replay_2025:
@@ -168,10 +265,6 @@ def main():
             caption = re.sub(r" \((@[A-Za-z0-9_]+)\) for winning the ", r" & \1 for winning the ", caption, count=1)
             print(f"Replaying award for league {intended_league} into test league {TEST_LEAGUE}.", flush=True)
             send(args.year, TEST_LEAGUE, image, caption, token=token, intended_league=intended_league)
-    elif args.send:
-        if len(posts) != 1:
-            raise SystemExit("No verified final award to send.")
-        send(args.year, *posts[0], token=token)
 
 
 if __name__ == "__main__":
