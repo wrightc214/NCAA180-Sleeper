@@ -21,7 +21,9 @@ def test_historical_ceremonies_and_awards_navigation(tmp_path, monkeypatch):
     assert "Dwight Fight" in past_final
     rows = menu_data(str(tmp_path))["rows"]
     assert any(item["label"] == "2019" for item in rows["awards-seasons"]["items"])
-    assert {"label": "CCG", "href": ccg["href"]} in rows["awards-weeks-2025"]["items"]
+    assert {"label": "CCG", "href": ccg["href"], "state": "hidden-dev"} in rows["awards-weeks-2025"]["items"]
+    assert all(item["state"] == "hidden-dev" for item in rows["awards-seasons"]["items"])
+    assert menu_data(str(tmp_path))["awards"] is None
     assert ceremony.build() == manifest
 
 
