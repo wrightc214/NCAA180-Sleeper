@@ -1,5 +1,5 @@
 /* Special Events → The Guillotine (CW, 2026-11-14; claude/todo-guillotine.md).
-   Every team still alive, sorted by advancement odds, with score, minutes left and the chance to survive
+   Every team still alive, sorted by live projection, with score, minutes left and the chance to survive
    the cut; the current and projected cut lines on top; eliminated teams (and the week they went) below.
    Data: data/scoreboard/<season>/guillotine.json (scripts/guillotine.py) for who is still alive and every
    frozen week; the live week is scored in the browser from Sleeper + ESPN, same math as the Games page.
@@ -105,9 +105,7 @@
       x.call=calls[i]||null;
       x.odds=x.call==='safe'?100:x.call==='cut'?0:o==null||allFinal||!started?o:Math.min(99.999,Math.max(0.001,o));
     });
-    items.sort((a,b)=>(b.odds??-1)-(a.odds??-1)
-      ||(b.proj??-Infinity)-(a.proj??-Infinity)
-      ||ident(a.t).name.localeCompare(ident(b.t).name));
+    items.sort((a,b)=>(b.m?b.proj:-1e9)-(a.m?a.proj:-1e9)||ident(a.t).name.localeCompare(ident(b.t).name));
     const cur=started?G.cutLine(have.map(x=>x.m.actual),K):null,proj=G.cutLine(have.map(x=>x.proj),K);
     return {items,K,cur,proj,started,allFinal,missing:items.length-have.length};
   }
@@ -119,9 +117,10 @@
       <div class="gl-k"><b>${L.K}</b><span>${last?'champion':'survive'}</span></div>
       <div class="gl-k"><b>${L.cur==null?'—':L.cur.toFixed(2)}</b><span>${last?'leading score':'current cut line'}</span></div>
       <div class="gl-k proj"><b>${L.proj==null?'—':L.proj.toFixed(1)}</b><span>${last?'projected winning score':'projected cut line'}</span></div></section>`;
-    let rows='',hasBubble=false;
+    let rows='',drawn=false,hasBubble=false;
     L.items.forEach(x=>{
-      const bubble=x.odds!=null&&x.odds>=20&&x.odds<=80;
+      if(!drawn&&!last&&L.proj!=null&&x.m&&x.proj<L.proj-G.EPS){rows+=`<div class="gl-cut" aria-hidden="true"><span>Projected cut · ${L.proj.toFixed(1)}</span></div>`;drawn=true;}
+      const bubble=x.odds!=null&&x.odds>=40&&x.odds<50;
       hasBubble ||= bubble;
       const m=x.m,cls=[m&&m.live?'live':'',isMine(x.t)?'mine':'',bubble?'bubble':''].filter(Boolean).join(' ');
       rows+=`<div class="gl-r ${cls}">${icon(x.t)}<span class="gl-t">${esc(ident(x.t).name)}<small>${esc(lname(lid(x.t)))} · ${esc(x.t.owner)}${m?.incomplete?' · stats incomplete':''}</small></span>
@@ -130,7 +129,7 @@
     });
     const state=L.allFinal?'Final · waiting for the weekly run to lock the cut':L.started?'Live':'Preview · Tuesday projections';
     const line=baseline?`<p class="gl-state">${esc(wkName(week))} · ${esc(state)}${L.missing?` · ${L.missing} team${L.missing===1?'':'s'} not loaded`:''}</p>`:'';
-    const legend=hasBubble?`<p class="gl-state">Shaded rows have a 20%–80% chance to ${last?'win':'survive'}.</p>`:'';
+    const legend=hasBubble?`<p class="gl-state">Shaded rows have a 40% to under 50% chance to ${last?'win':'survive'}.</p>`:'';
     return `${head}${line}${legend}
       <div class="gl-table live-t"><div class="gl-h"><span></span><span>Team</span><span>Score</span><span>${L.started&&!L.allFinal?'Live proj':'Proj'}</span><span>Min left</span><span>${label}</span></div>${rows}</div>`;
   }
