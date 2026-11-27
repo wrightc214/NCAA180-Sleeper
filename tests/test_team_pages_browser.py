@@ -116,6 +116,17 @@ class TeamPageBrowser(unittest.TestCase):
         self.assertEqual(p.evaluate("document.documentElement.scrollWidth - document.documentElement.clientWidth"), 0)
         p.evaluate("localStorage.removeItem('ncaa180.teamColors')")
 
+    def test_overview_saves_a_png(self):
+        mw = league_id("NCAA MOUNTAIN WEST")
+        p = self.open(f"reports/team.html?league={mw}&roster=4")
+        p.evaluate("navigator.canShare = () => false")
+        save = p.locator("#tm-over-sec > button.snap-btn")
+        with p.expect_download(timeout=60000) as pending:
+            save.click()
+        download = pending.value
+        self.assertIn("Overview", download.suggested_filename)
+        self.assertEqual(download.path().read_bytes()[:8], bytes((137, 80, 78, 71, 13, 10, 26, 10)))
+
     def test_chart_hover_tooltip(self):
         p = self.open(f"reports/team.html?league={league_id('NCAA PAC 12')}&roster=7")
         hit = p.locator("#tm-season-charts .tm-chart .hit").first
