@@ -71,7 +71,7 @@ jobs:
           PUSH_ADMIN_TOKEN: ${{ secrets.PUSH_ADMIN_TOKEN }}
           DISCORD_WEBHOOK_TEAM_STATS: ${{ secrets.DISCORD_WEBHOOK_TEAM_STATS }}
           ALLOW_ZERO_GAMES: ${{ github.event.inputs.allow_zero_games }}
-          DISCORD_CONTACT_ID: ${{ vars.DISCORD_CONTACT_ID }}  # bowl_projection_publish pings Chris
+          DISCORD_CONTACT_ID: ${{ vars.DISCORD_CONTACT_ID }}  # bowl_projection_publish pings CW discord
         run: |
           # Default to 'all' if no manual input was provided
           SCRIPT_TO_RUN="${{ github.event.inputs.script_to_run }}"
