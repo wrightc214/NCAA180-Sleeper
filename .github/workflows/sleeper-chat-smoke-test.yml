@@ -41,7 +41,7 @@ jobs:
           )
           body = {"operationName": operation, "query": query, "variables": {"text": message}}
           request = urllib.request.Request(
-              "https://sleeper.com/graphql",
+              "https://sleeper.app/graphql",
               data=json.dumps(body).encode(),
               headers={
                   "Authorization": token,
