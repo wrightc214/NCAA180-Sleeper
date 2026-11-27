@@ -20,7 +20,7 @@
   'use strict';
   const LINE_HEIGHT = 1.15, LETTER_SPACING = -0.02, SAFETY = 1.03;
   const FALLBACK_BOX = {left: 0, top: 0, width: 100, height: 25};
-  let C = null, M = null, BOWL_ART = {}, APPROVED = new Set();
+  let C = null, M = null, BOWL_ART = {}, APPROVED = new Set(), NIT_FINAL_LABEL = '';
   const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
   const clean = o => Object.fromEntries(Object.entries(o || {}).filter(([k]) => !k.startsWith('_')));
   const floor = (x, nd) => Math.floor(x * 10 ** nd) / 10 ** nd;
@@ -31,6 +31,7 @@
     const bowls = (league && league.postseason && league.postseason.bowls) || {};
     BOWL_ART = {...clean(bowls.history_names), ...clean(config.bowl_art)};
     APPROVED = new Set(bowls.approved_logos || []);
+    NIT_FINAL_LABEL = bowls.nit_final_label || '';
     return api;
   }
   async function load(base = '../') {
@@ -131,7 +132,13 @@
     const [h, s] = await Promise.all([one('data/Trophies_Historic.csv'), one('data/Trophies_Season.csv')]);
     return (LEDGER = [...h, ...s]);
   }
-  const api = {load, init, engraving, html, ledger, parseCsv, artKey: (e, w, y) => artKey(row(e, w, y)), FALLBACK_BOX,
+  function eventLabel(trophy) {
+    if (trophy.EventType === 'PlayoffRound' && trophy.Round) return `${trophy.Event} - ${trophy.Round}`;
+    if (trophy.EventType === 'NIT') return NIT_FINAL_LABEL ? `${NIT_FINAL_LABEL} - NIT Champ` : 'NIT Champ';
+    return trophy.Event;
+  }
+
+  const api = {load, init, eventLabel, engraving, html, ledger, parseCsv, artKey: (e, w, y) => artKey(row(e, w, y)), FALLBACK_BOX,
     get config() { return C; }};
   return api;
 });
