@@ -138,6 +138,7 @@
           catch (err) { fail(err); }
         });
         cancel.addEventListener('click', finish);
+        dialog.addEventListener('click', e => e.stopPropagation());
         dialog.addEventListener('cancel', e => { e.preventDefault(); finish(); });
         dialog.append(msg, share, download, cancel);
         document.body.append(dialog);
