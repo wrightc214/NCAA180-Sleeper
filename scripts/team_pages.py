@@ -603,8 +603,15 @@ def max_points(m):
         for r in read(path).to_dict("records"):
             k = (int(r["Year"]), season_key(r["LeagueName"], r["RosterID"]), int(num(r["Week"])))
             if k in played and str(r.get(col, "")).strip():
-                out[k[:2]] = out.get(k[:2], 0.0) + num(r[col])
-    return {k: round(v, 2) for k, v in out.items()}
+                value = pd.to_numeric(r[col], errors="coerce")
+                if pd.notna(value) and value > 0:
+                    out[k] = float(value)
+    totals = {}
+    for year, key in {(y, k) for y, k, w in played}:
+        weeks = [w for y, k, w in played if (y, k) == (year, key)]
+        if all((year, key, w) in out for w in weeks):
+            totals[(year, key)] = round(sum(out[(year, key, w)] for w in weeks), 2)
+    return totals
 
 
 def all_play(m):
@@ -663,14 +670,15 @@ def manager_history(seasons):
     Grouped by Sleeper user (owner ID) so a username change stays one manager."""
     out = {}
     for s in sorted(seasons, key=lambda s: s["year"]):
-        who = s.get("owner_id") or s.get("manager") or "Orphan"
-        d = out.setdefault(who, {"manager": s.get("manager") or "Orphan", "years": [], "w": 0, "l": 0, "t": 0,
-                                 "pw": 0, "pl": 0, "titles": 0})
+        who = s.get("owner_id") or s.get("manager") or "Unknown"
+        d = out.setdefault(who, {"manager": s.get("manager") or "Unknown", "years": [], "w": 0, "l": 0, "t": 0,
+                                 "pw": 0, "pl": 0, "appearances": 0, "titles": 0})
         d["manager"] = s.get("manager") or d["manager"]
         d["years"].append(s["year"])
         rec = s.get("record") or {}
         for k in ("w", "l", "t"):
             d[k] += rec.get(k, 0)
+        d["appearances"] += any(g["kind"] == "post" and not g.get("place") for g in s["games"])
         for g in s["games"]:
             if g["kind"] == "post" and g.get("res") in ("W", "L"):
                 d["pw" if g["res"] == "W" else "pl"] += 1
@@ -947,7 +955,7 @@ def build(out_dir=OUT_DIR, page=PAGE):
             seasons.append(s)
         if t["defunct"]:
             last = seasons[0] if seasons else {}
-            mgr = last.get("manager") or ""
+            mgr = last.get("manager") or "Unknown"
             data_now = {"record": None, "place": None, "rank": None, "of": None, "roster_groups": [],
                         "defunct": {"first": t["first"], "last": t["last"]}}
         else:
@@ -957,6 +965,9 @@ def build(out_dir=OUT_DIR, page=PAGE):
             owner_rows = rosters[(rosters["LeagueName"].map(norm_league) == lg) & (rosters["RosterID"].map(rid) == r)]
             if len(owner_rows):
                 mgr = owner_rows["OwnerName"].iloc[0] or mgr
+                if "OwnerID" in owner_rows and not owner_rows["OwnerID"].iloc[0]:
+                    mgr = "Orphan"
+            mgr = mgr or "Unknown"
             data_now = {"record": now.get("record"), "place": now.get("place"),
                         "rank": int(o["Playoff Rank"]) if o.get("Playoff Rank") else None, "of": len(overall) or None,
                         "roster_groups": current_roster(lg, r, rosters, names, cfg["position_order"], values, first),
