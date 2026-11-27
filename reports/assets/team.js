@@ -298,7 +298,7 @@
       ap.slice().reverse().map(s => { const r = s.record, w = r.w + r.t / 2, apg = r.ap[0] + r.ap[1] + r.ap[2];
         return `<tr><td>${s.year}</td><td class="n">${rec(r)}</td><td class="n">${r.ap[0]}-${r.ap[1]}${r.ap[2] ? '-' + r.ap[2] : ''} <small>${apg ? ((r.ap[0] + r.ap[2] / 2) / apg).toFixed(3).replace(/^0/, '') : ''}</small></td>` +
           `<td class="n">${r.med[0]}-${r.med[1]}${r.med[2] ? '-' + r.med[2] : ''}</td><td class="n">${(+r.xw).toFixed(1)}</td><td class="n">${(w - r.xw >= 0 ? '+' : '') + (w - r.xw).toFixed(1)}</td>` +
-          `<td class="n">${validEff(r) ? efficiency([r]).toFixed(1) + '%' : '—'}</td></tr>`; }).join('') + '</tbody>'+footer(['Total',rec(ac),trRec(apTotal)+' '+(apPct?((apTotal[0]+apTotal[2]/2)/apPct).toFixed(3):'—'),trRec(medTotal),ac.xw.toFixed(1),(ac.w+ac.t/2-ac.xw).toFixed(1),efficiency(ar)==null?'—':efficiency(ar).toFixed(1)+'%'])+'</table></div>' : '';
+          `<td class="n">${validEff(r) ? efficiency([r]).toFixed(1) + '%' : '—'}</td></tr>`; }).join('') + '</tbody>'+footer(['Total',rec(ac),trRec(apTotal)+' '+(apPct?((apTotal[0]+apTotal[2]/2)/apPct).toFixed(3):'—'),trRec(medTotal),ac.xw.toFixed(1),(ac.w+ac.t/2-ac.xw>=0?'+':'')+(ac.w+ac.t/2-ac.xw).toFixed(1),efficiency(ar)==null?'—':efficiency(ar).toFixed(1)+'%'])+'</table></div>' : '';
     return `<div class="tm-charts">${pf}${wins}${eff}</div>${ptable}${aptable}`;
   }
 

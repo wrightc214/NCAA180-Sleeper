@@ -34,6 +34,10 @@ class TeamPageRegression(unittest.TestCase):
             T.write_page(generated)
             self.assertEqual(generated.read_bytes(), (ROOT / "reports/team.html").read_bytes())
 
+    def test_luck_total_signs_positive_values(self):
+        js = (ROOT / "reports/assets/team.js").read_text(encoding="utf-8")
+        self.assertIn("(ac.w+ac.t/2-ac.xw>=0?'+':'')+(ac.w+ac.t/2-ac.xw).toFixed(1)", js)
+
 
 if __name__ == "__main__":
     unittest.main()
