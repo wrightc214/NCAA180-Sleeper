@@ -108,9 +108,40 @@
     if (!blob || !blob.size) throw new Error('Image is too large; narrow the view or save a smaller section');
     const file = new File([blob], `${name || 'ncaa180'}.png`.replace(/[^\w .-]+/g, '').replace(/\s+/g, '-'), {type: 'image/png'});
     if (navigator.canShare && navigator.canShare({files: [file]})) {
-      try { await navigator.share({files: [file], title: title || name}); } catch (e) { if (e?.name !== 'AbortError') throw e; }
-      return;
+      return new Promise(resolve => {
+        const dialog = document.createElement('dialog');
+        dialog.setAttribute('aria-label', 'Image ready');
+        dialog.style.cssText = 'max-width:90vw;padding:20px;border:1px solid var(--line,#888);border-radius:12px;background:var(--panel,#fff);color:var(--ink,#111)';
+        const msg = document.createElement('p'); msg.textContent = 'Image ready. Tap Share image to continue.';
+        const share = document.createElement('button'); share.type = 'button'; share.textContent = 'Share image';
+        const download = document.createElement('button'); download.type = 'button'; download.textContent = 'Download PNG';
+        const cancel = document.createElement('button'); cancel.type = 'button'; cancel.textContent = 'Cancel';
+        const finish = () => { dialog.close(); dialog.remove(); resolve(); };
+        share.addEventListener('click', async () => {
+          share.disabled = true;
+          try {
+            await navigator.share({files: [file], title: title || name});
+            finish();
+          } catch (err) {
+            share.disabled = false;
+            if (err?.name !== 'AbortError') {
+              msg.textContent = 'Sharing failed. Try again or download the PNG.';
+              console.error(err);
+            }
+          }
+        });
+        download.addEventListener('click', () => { downloadFile(file); finish(); });
+        cancel.addEventListener('click', finish);
+        dialog.addEventListener('cancel', e => { e.preventDefault(); finish(); });
+        dialog.append(msg, share, download, cancel);
+        document.body.append(dialog);
+        dialog.showModal();
+      });
     }
+    downloadFile(file);
+  }
+
+  function downloadFile(file) {
     const a = document.createElement('a');
     a.href = URL.createObjectURL(file); a.download = file.name; document.body.append(a); a.click();
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
