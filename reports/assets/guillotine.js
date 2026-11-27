@@ -32,6 +32,12 @@
   const icon=t=>{const x=ident(t);return `<span class="team-icon" style="background:${esc(x.primary||'#14213a')}">${x.logo?`<img src="${esc(x.logo_forced||darkBg(x.primary)&&x.logo_dark||x.logo)}" alt="" onerror="this.hidden=true">`:''}</span>`;};
   let mine='';try{const m=window.NCAA180?.myTeam?.();if(m)mine=`${m.conf}:${m.roster}`;}catch(e){}
   const isMine=t=>mine&&`${index.leagues[lid(t)]?.label||''}:${t.r}`===mine;
+  function myRowStyle(t){
+    const primary=ident(t).primary;
+    const color=/^#[0-9a-f]{3}(?:[0-9a-f]{3})?$/i.test(primary)?primary:'var(--accent)';
+    return ` style="background:color-mix(in srgb,${color} 12%,var(--panel));box-shadow:inset 4px 0 0 ${color}"`;
+  }
+  const myLabel=' · <b>My Team</b>';
   function nflGames(data){
     if(Number(data.season?.year)!==season||Number(data.week?.number)!==week||!data.events?.length)throw Error('NFL schedule does not match the selected week');
     const games={};mnf={on:false,crunch:false};
@@ -86,7 +92,7 @@
     if(!out.length)return '';
     return `<details class="gl-out sec-d" open><summary><h3 class="sec">Eliminated <small>${out.length} team${out.length===1?'':'s'}</small></h3></summary>
       <div class="gl-table out-t"><div class="gl-h"><span></span><span>Team</span><span>Out</span><span>Score</span></div>
-      ${out.map(t=>`<div class="gl-r${isMine(t)?' mine':''}">${icon(t)}<span class="gl-t">${esc(ident(t).name)}<small>${esc(lname(lid(t)))} · ${esc(t.owner)}</small></span><span class="gl-w">${esc(wkName(t.out,true))}</span><span class="gl-n">${Number(t.scores[t.out]??0).toFixed(2)}</span></div>`).join('')}</div></details>`;
+      ${out.map(t=>`<div class="gl-r${isMine(t)?' mine':''}"${isMine(t)?myRowStyle(t):''}>${icon(t)}<span class="gl-t">${esc(ident(t).name)}<small>${esc(lname(lid(t)))} · ${esc(t.owner)}${isMine(t)?myLabel:''}</small></span><span class="gl-w">${esc(wkName(t.out,true))}</span><span class="gl-n">${Number(t.scores[t.out]??0).toFixed(2)}</span></div>`).join('')}</div></details>`;
   }
   function liveRows(){
     const field=gd.status==='final'?[]:alive();
@@ -153,14 +159,17 @@
       }
       const bubble=x.odds!=null&&x.odds<50;
       hasBubble ||= bubble;
-      const m=x.m,cls=[m&&m.live?'live':'',isMine(x.t)?'mine':'',bubble?'bubble':''].filter(Boolean).join(' ');
-      rows+=`<div class="gl-r ${cls}">${icon(x.t)}<span class="gl-t">${esc(ident(x.t).name)}<small>${esc(lname(lid(x.t)))} · ${esc(x.t.owner)}${m?.incomplete?' · stats incomplete':''}</small></span>
+      const mineRow=isMine(x.t),m=x.m;
+      const warning=bubble&&mineRow?`<strong role="img" aria-label="Less than 50% chance to ${last?'win':'survive'}">!</strong> `:'';
+      const oddsStyle=bubble?` style="background:var(--bad-soft);border-radius:4px;${mineRow?'font-weight:800;':''}"`:'';
+      const cls=[m&&m.live?'live':'',mineRow?'mine':''].filter(Boolean).join(' ');
+      rows+=`<div class="gl-r ${cls}"${mineRow?myRowStyle(x.t):''}>${icon(x.t)}<span class="gl-t">${esc(ident(x.t).name)}<small>${esc(lname(lid(x.t)))} · ${esc(x.t.owner)}${mineRow?myLabel:''}${m?.incomplete?' · stats incomplete':''}</small></span>
         <span class="gl-n sc">${m&&(m.played||m.final)?m.actual.toFixed(2):'–'}</span><span class="gl-n pj">${m?x.proj.toFixed(1):'–'}</span>
-        <span class="gl-n mn">${m?Math.round(m.minutes):'–'}</span><span class="gl-n od">${esc(pct(x.odds))}</span></div>`;
+        <span class="gl-n mn">${m?Math.round(m.minutes):'–'}</span><span class="gl-n od"${oddsStyle}>${warning}${esc(pct(x.odds))}</span></div>`;
     });
     const state=L.allFinal?'Final · waiting for the weekly run to lock the cut':L.started?'Live':'Preview · Tuesday projections';
     const line=baseline?`<p class="gl-state">${esc(wkName(week))} · ${esc(state)}${L.missing?` · ${L.missing} team${L.missing===1?'':'s'} not loaded`:''}</p>`:'';
-    const legend=hasBubble?`<p class="gl-state">Shaded rows have less than a 50% chance to ${last?'win':'survive'}.</p>`:'';
+    const legend=hasBubble?`<p class="gl-state">Shaded odds indicate less than a 50% chance to ${last?'win':'survive'}.</p>`:'';
     return `${head}${line}${legend}
       <div class="gl-table live-t"><div class="gl-h"><span></span>${sortHeader('team','Team')}${sortHeader('score','Score')}${sortHeader('projection',L.started&&!L.allFinal?'Live proj':'Proj')}${sortHeader('minutes','Min left')}${sortHeader('odds',label)}</div>${rows}</div>`;
   }
@@ -171,7 +180,7 @@
     field.forEach(t=>{
       const through=last?t.status==='champion':t.out!==w,added=(t.added||[]).includes(w);
       if(!drawn&&!through&&!last){rows+=`<div class="gl-cut final" aria-hidden="true"><span>Cut line · ${Number(f.cutline).toFixed(2)}</span></div>`;drawn=true;}
-      rows+=`<div class="gl-r${through?'':' gone'}${isMine(t)?' mine':''}">${icon(t)}<span class="gl-t">${esc(ident(t).name)}<small>${esc(lname(lid(t)))} · ${esc(t.owner)}${added?' · added after stat corrections':''}</small></span><span class="gl-n sc">${t.scores[w].toFixed(2)}</span><span class="gl-w">${last?(t.status==='champion'?'Champion':t.status==='tied'?'Tied':''):through?'Survived':'Out'}</span></div>`;
+      rows+=`<div class="gl-r${through?'':' gone'}${isMine(t)?' mine':''}"${isMine(t)?myRowStyle(t):''}>${icon(t)}<span class="gl-t">${esc(ident(t).name)}<small>${esc(lname(lid(t)))} · ${esc(t.owner)}${isMine(t)?myLabel:''}${added?' · added after stat corrections':''}</small></span><span class="gl-n sc">${t.scores[w].toFixed(2)}</span><span class="gl-w">${last?(t.status==='champion'?'Champion':t.status==='tied'?'Tied':''):through?'Survived':'Out'}</span></div>`;
     });
     const head=`<section class="gl-head card"><div class="gl-k"><b>${f.field}</b><span>played</span></div><div class="gl-k"><b>${f.advanced}</b><span>${last?'champion':'survived'}</span></div><div class="gl-k"><b>${Number(f.cutline).toFixed(2)}</b><span>${last?'winning score':'cut line'}</span></div>${f.added?`<div class="gl-k"><b>${f.added}</b><span>added by stat corrections</span></div>`:''}</section>`;
     return `${head}<p class="gl-state">${esc(wkName(w))} · Final</p><div class="gl-table fz-t"><div class="gl-h"><span></span><span>Team</span><span>Score</span><span></span></div>${rows}</div>`;
