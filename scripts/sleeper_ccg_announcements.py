@@ -74,7 +74,7 @@ def previews(year, selected, out, *, ledger_path, already_recorded=()):
 
         image = out / f"{league_id}.png"
         trophies.engrave_png(row).save(image)
-        caption = (f"Congrats {row['Team']} (@{username}) for winning the "
+        caption = (f"Congrats {row['Team']} & @{username} for winning the "
                    f"{year} {conference} conference championship game!")
         posts.append((league_id, image, caption))
         print(f"{conference} | {row['Team']} | {league_id} | {image.name} | {caption}")
