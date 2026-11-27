@@ -167,16 +167,31 @@
   function h2hHtml(d) {
     const h = d.h2h || [];
     if (!h.length) return '<p class="tm-empty">No games on file.</p>';
+    const postseason = new Map();
+    for (const season of d.seasons) {
+      for (const game of season.games) {
+        if (game.kind !== 'post' || !game.opp_key || 'place' in game) continue;
+        const result = {W: 'w', L: 'l', T: 't'}[game.res];
+        if (!result) continue;
+        if (!postseason.has(game.opp_key)) postseason.set(game.opp_key, {w: 0, l: 0, t: 0});
+        postseason.get(game.opp_key)[result]++;
+      }
+    }
+    const record = (overall, post) => {
+      if (!post || !(post.w + post.l + post.t)) return rec(overall);
+      const regular = {w: overall.w - post.w, l: overall.l - post.l, t: overall.t - post.t};
+      return `${rec(regular)} <small>(${rec(post)})</small>`;
+    };
     const row = x => {
       const href = teamHref(x.key);
       const nm = href ? `<a class="team-link" href="${href}">${esc(x.name)}</a>` : esc(x.name);
-      return `<tr><td>${nm}${x.post ? ` <small>(${x.post} postseason)</small>` : ''}</td><td class="n">${x.w}-${x.l}${x.t ? '-' + x.t : ''}</td>` +
+      return `<tr><td>${nm}</td><td class="n">${record(x, postseason.get(x.key))}</td>` +
         `<td class="n">${pts(x.pf)}</td><td class="n">${pts(x.pa)}</td><td class="n">${x.last}</td></tr>`;
     };
     return `<div class="tm-scroll"><table class="tm-tbl-plain" id="tm-h2h-t"><thead><tr><th>Opponent</th><th class="n">Record</th><th class="n">PF</th><th class="n">PA</th><th class="n">Last</th></tr></thead><tbody>` +
-      h.map((x, i) => row(x).replace('<tr>', `<tr${i >= 12 ? ' hidden' : ''}>`)).join('') + '</tbody>'+footer(['Total ('+h.length+' opponents)',rec(combined(h)),pts(sum(h,'pf')),pts(sum(h,'pa')),'—'])+'</table></div>' +
+      h.map((x, i) => row(x).replace('<tr>', `<tr${i >= 12 ? ' hidden' : ''}>`)).join('') + '</tbody>'+footer(['Total ('+h.length+' opponents)',record(combined(h), combined(h.map(x => postseason.get(x.key)).filter(Boolean))),pts(sum(h,'pf')),pts(sum(h,'pa')),'—'])+'</table></div>' +
       (h.length > 12 ? `<button type="button" class="tm-more" id="tm-h2h-more">Show all ${h.length}</button>` : '') +
-      '<p class="note">Every game this roster has played, regular season and postseason. Opponents are listed under their current name.</p>';
+      '<p class="note">Regular-season records are shown first, with postseason records in parentheses. PF and PA include both. Opponents are listed under their current name.</p>';
   }
 
 
