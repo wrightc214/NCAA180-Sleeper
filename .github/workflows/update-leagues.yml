@@ -383,6 +383,7 @@ jobs:
           fi
 
       - name: Commit and push CSVs
+        id: publish_csvs
         if: always() && steps.pub.outputs.ok == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -407,6 +408,13 @@ jobs:
           git add reports/ || true
           git commit -m "Auto-update CSVs" || echo "No changes to commit"
           git push
+
+      - name: Send final CCG trophy notifications to Sleeper
+        if: github.event_name == 'schedule' && github.ref == 'refs/heads/main' && steps.publish_csvs.outcome == 'success'
+        timeout-minutes: 20
+        env:
+          SLEEPER_SESSION_TOKEN: ${{ secrets.SLEEPER_SESSION_TOKEN }}
+        run: python -u scripts/sleeper_ccg_announcements.py --publish-scheduled --out "$RUNNER_TEMP/sleeper-ccg-trophies"
 
       # Weekly Discord post: automatic on the scheduled weekly run, or manual with `post`.
       # Problems -> held, commissioner alerted privately instead.
