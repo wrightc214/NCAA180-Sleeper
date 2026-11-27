@@ -107,8 +107,9 @@
     const blob = await render(html, footer ?? `${location.host}${location.pathname.replace(/[^/]*$/, '')}`, labels(stamp, whatif), width || 400, scale || 2);
     if (!blob || !blob.size) throw new Error('Image is too large; narrow the view or save a smaller section');
     const file = new File([blob], `${name || 'ncaa180'}.png`.replace(/[^\w .-]+/g, '').replace(/\s+/g, '-'), {type: 'image/png'});
-    if (navigator.canShare && navigator.canShare({files: [file]})) {
-      return new Promise(resolve => {
+    if (typeof navigator.share === 'function' && navigator.canShare?.({files: [file]}) &&
+        typeof HTMLDialogElement !== 'undefined' && HTMLDialogElement.prototype.showModal) {
+      return new Promise((resolve, reject) => {
         const dialog = document.createElement('dialog');
         dialog.setAttribute('aria-label', 'Image ready');
         dialog.style.cssText = 'max-width:90vw;padding:20px;border:1px solid var(--line,#888);border-radius:12px;background:var(--panel,#fff);color:var(--ink,#111)';
@@ -116,7 +117,9 @@
         const share = document.createElement('button'); share.type = 'button'; share.textContent = 'Share image';
         const download = document.createElement('button'); download.type = 'button'; download.textContent = 'Download PNG';
         const cancel = document.createElement('button'); cancel.type = 'button'; cancel.textContent = 'Cancel';
-        const finish = () => { dialog.close(); dialog.remove(); resolve(); };
+        const cleanup = () => { if (dialog.open) dialog.close(); dialog.remove(); };
+        const finish = () => { cleanup(); resolve(); };
+        const fail = err => { cleanup(); reject(err); };
         share.addEventListener('click', async () => {
           share.disabled = true;
           try {
@@ -130,12 +133,16 @@
             }
           }
         });
-        download.addEventListener('click', () => { downloadFile(file); finish(); });
+        download.addEventListener('click', () => {
+          try { downloadFile(file); finish(); }
+          catch (err) { fail(err); }
+        });
         cancel.addEventListener('click', finish);
         dialog.addEventListener('cancel', e => { e.preventDefault(); finish(); });
         dialog.append(msg, share, download, cancel);
         document.body.append(dialog);
-        dialog.showModal();
+        try { dialog.showModal(); }
+        catch (err) { fail(err); }
       });
     }
     downloadFile(file);
