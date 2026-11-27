@@ -31,3 +31,8 @@ test('button order and shared CSS',()=>{
  assert.match(css,/body:is\(\.tm-c-full,\.tm-c-inverted\) #tm-sections section/);
  assert.match(css,/body\.tm-c-inverted\{--tm-base:var\(--t1ink\)/);
 });
+
+test('inverted headings prefer primary rather than accent',()=>{
+ assert.ok(js.includes("--tm-inverted-heading:'+readable(bg,ink)"));
+ assert.ok(js.includes("--tm-full-heading:'+readable(accent,bg)"));
+});
