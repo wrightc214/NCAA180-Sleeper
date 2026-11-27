@@ -1,0 +1,402 @@
+[
+  {
+    "year": 2019,
+    "week": 12,
+    "label": "CCG",
+    "heading": "Conference Championships",
+    "key": "2019-12",
+    "href": "ceremony-2019-12.html",
+    "inline": false,
+    "digest": "0210ee9a15b5041835afa543f4dfbd5b5c93cf0c4caa949f969d1b65ac258701"
+  },
+  {
+    "year": 2019,
+    "week": 13,
+    "label": "Opening Bowls",
+    "heading": "Opening Bowls",
+    "key": "2019-13",
+    "href": "ceremony-2019-13.html",
+    "inline": false,
+    "digest": "38b00cb753c244951c2f0b29495bb15161e87cb34328c346fef851721385d93e"
+  },
+  {
+    "year": 2019,
+    "week": 14,
+    "label": "Showcase Bowls",
+    "heading": "Showcase Bowls",
+    "key": "2019-14",
+    "href": "ceremony-2019-14.html",
+    "inline": false,
+    "digest": "1857d89819323c50d39283a376e88dd3608878e1b4aa508a09e5f5258e36b584"
+  },
+  {
+    "year": 2019,
+    "week": 15,
+    "label": "Marquee Bowls",
+    "heading": "Marquee Bowls",
+    "key": "2019-15",
+    "href": "ceremony-2019-15.html",
+    "inline": false,
+    "digest": "f32c83fb0ad933b57d571363fbb70f47f6eda4c6faaed805ecc3c17661c380d0"
+  },
+  {
+    "year": 2019,
+    "week": 16,
+    "label": "Championship Week",
+    "heading": "Championship Week",
+    "key": "2019-16",
+    "href": "ceremony-2019-16.html",
+    "inline": false,
+    "digest": "973e9678bd804d3f35bc4d2b3bc5cf28409f0887411571c7c403faa59772f503"
+  },
+  {
+    "year": 2020,
+    "week": 12,
+    "label": "CCG",
+    "heading": "Conference Championships",
+    "key": "2020-12",
+    "href": "ceremony-2020-12.html",
+    "inline": false,
+    "digest": "0878d861066b5ecda1b281f9b2b2bb7832e568da6a21c9de2d59c8045317fcc2"
+  },
+  {
+    "year": 2020,
+    "week": 14,
+    "label": "Showcase Bowls",
+    "heading": "Showcase Bowls",
+    "key": "2020-14",
+    "href": "ceremony-2020-14.html",
+    "inline": false,
+    "digest": "c34a401d6c156da4f8cdee7a28265254261b425eb6f1440a78912ee8584f7fbb"
+  },
+  {
+    "year": 2020,
+    "week": 15,
+    "label": "Marquee Bowls",
+    "heading": "Marquee Bowls",
+    "key": "2020-15",
+    "href": "ceremony-2020-15.html",
+    "inline": false,
+    "digest": "77736f279fe88603658c7ee042369012879696d28bd7bb076ce76920ccd444b9"
+  },
+  {
+    "year": 2020,
+    "week": 16,
+    "label": "Championship Week",
+    "heading": "Championship Week",
+    "key": "2020-16",
+    "href": "ceremony-2020-16.html",
+    "inline": false,
+    "digest": "c43f6e56185387454a4211c8268cf549ebb3517fa60e3f48652d253897326bb1"
+  },
+  {
+    "year": 2021,
+    "week": 12,
+    "label": "CCG",
+    "heading": "Conference Championships",
+    "key": "2021-12",
+    "href": "ceremony-2021-12.html",
+    "inline": false,
+    "digest": "277d4e1bbe5d7fa2cb6345eaddc5eb298b8360036f169d218e6d2941b467e009"
+  },
+  {
+    "year": 2021,
+    "week": 13,
+    "label": "Opening Bowls",
+    "heading": "Opening Bowls",
+    "key": "2021-13",
+    "href": "ceremony-2021-13.html",
+    "inline": false,
+    "digest": "b8dfbceeea50f7bead02c142d57c9535a5a4534d182a4896e9fec36cb02fce68"
+  },
+  {
+    "year": 2021,
+    "week": 14,
+    "label": "Showcase Bowls",
+    "heading": "Showcase Bowls",
+    "key": "2021-14",
+    "href": "ceremony-2021-14.html",
+    "inline": false,
+    "digest": "9026bbcb7be43a383499e680bccc9e5e115bf5e775f0f42059fe71c763c19097"
+  },
+  {
+    "year": 2021,
+    "week": 17,
+    "label": "Championship Week",
+    "heading": "Championship Week",
+    "key": "2021-17",
+    "href": "ceremony-2021-17.html",
+    "inline": false,
+    "digest": "650f114a41cfce739798ac794aa7eed5b26390216c91b658488c4df7db072dd0"
+  },
+  {
+    "year": 2021,
+    "week": 18,
+    "label": "Week 18 · Postseason Week 6",
+    "heading": "Week 18 · Postseason Week 6",
+    "key": "2021-18",
+    "href": "ceremony-2021-18.html",
+    "inline": false,
+    "digest": "c290e20422712940b9de688cadfe0b70b7fd062a1e5f1d15edc5a55e80e8a314"
+  },
+  {
+    "year": 2022,
+    "week": 12,
+    "label": "CCG",
+    "heading": "Conference Championships",
+    "key": "2022-12",
+    "href": "ceremony-2022-12.html",
+    "inline": false,
+    "digest": "80cb7606823dfbcd0536049d13d8b4b237bc68175aada6d8874a16ce998f445c"
+  },
+  {
+    "year": 2022,
+    "week": 13,
+    "label": "Opening Bowls",
+    "heading": "Opening Bowls",
+    "key": "2022-13",
+    "href": "ceremony-2022-13.html",
+    "inline": false,
+    "digest": "16ef97fd717035a7611286e9428a87f44bdd80f41e66e840299cad734cd4606d"
+  },
+  {
+    "year": 2022,
+    "week": 14,
+    "label": "Showcase Bowls",
+    "heading": "Showcase Bowls",
+    "key": "2022-14",
+    "href": "ceremony-2022-14.html",
+    "inline": false,
+    "digest": "1a9dc715ab1ec4bcb0f900e9ab869f1c3b679e3926c09e0cff4a6a798cd6fef5"
+  },
+  {
+    "year": 2022,
+    "week": 15,
+    "label": "Marquee Bowls",
+    "heading": "Marquee Bowls",
+    "key": "2022-15",
+    "href": "ceremony-2022-15.html",
+    "inline": false,
+    "digest": "31c3da41dfa67c9dd43ff5833b97c9433ed1697bb5088e9ddc644dfca7dce2fb"
+  },
+  {
+    "year": 2022,
+    "week": 16,
+    "label": "Prestige Bowls",
+    "heading": "Prestige Bowls",
+    "key": "2022-16",
+    "href": "ceremony-2022-16.html",
+    "inline": false,
+    "digest": "b3b237bf9df14553ef1e0a255d2fdb902a3bbac22b14920faf1ab5a1c0714220"
+  },
+  {
+    "year": 2022,
+    "week": 17,
+    "label": "Championship Week",
+    "heading": "Championship Week",
+    "key": "2022-17",
+    "href": "ceremony-2022-17.html",
+    "inline": false,
+    "digest": "512ce63c64c4cb944b08e82e38d7e8ef354ae0346c3c833dbe19ab2b73478f29"
+  },
+  {
+    "year": 2022,
+    "week": 18,
+    "label": "Week 18 · Postseason Week 6",
+    "heading": "Week 18 · Postseason Week 6",
+    "key": "2022-18",
+    "href": "ceremony-2022-18.html",
+    "inline": false,
+    "digest": "1d2f8a2b1553358e5f940d60c98ac5f0e7c9c00ea6bc009827e2772040b6ad9f"
+  },
+  {
+    "year": 2023,
+    "week": 12,
+    "label": "CCG",
+    "heading": "Conference Championships",
+    "key": "2023-12",
+    "href": "ceremony-2023-12.html",
+    "inline": false,
+    "digest": "a4804c9cf3aeab73c459109ca47e5f0e85b499542681a075170f3449785b5f6c"
+  },
+  {
+    "year": 2023,
+    "week": 13,
+    "label": "Opening Bowls",
+    "heading": "Opening Bowls",
+    "key": "2023-13",
+    "href": "ceremony-2023-13.html",
+    "inline": false,
+    "digest": "bb926a4472e5bb3f6da15a52537c407545c377635261a15712a46fcac717f6ce"
+  },
+  {
+    "year": 2023,
+    "week": 14,
+    "label": "Showcase Bowls",
+    "heading": "Showcase Bowls",
+    "key": "2023-14",
+    "href": "ceremony-2023-14.html",
+    "inline": false,
+    "digest": "eb039ea2713153cad7a506a5656b2c107d5263da8994cb4fe8cbb229ca02d50d"
+  },
+  {
+    "year": 2023,
+    "week": 15,
+    "label": "Marquee Bowls",
+    "heading": "Marquee Bowls",
+    "key": "2023-15",
+    "href": "ceremony-2023-15.html",
+    "inline": false,
+    "digest": "26986d105a4d3af71a0bc36e47b0e32dc23a4e3aef39f77e0728ece14c08effe"
+  },
+  {
+    "year": 2023,
+    "week": 16,
+    "label": "Prestige Bowls",
+    "heading": "Prestige Bowls",
+    "key": "2023-16",
+    "href": "ceremony-2023-16.html",
+    "inline": false,
+    "digest": "c7f89677f79bbdaceef802f59790766c879c548e5bc1b9b10eefd1399a6beaff"
+  },
+  {
+    "year": 2023,
+    "week": 17,
+    "label": "Championship Week",
+    "heading": "Championship Week",
+    "key": "2023-17",
+    "href": "ceremony-2023-17.html",
+    "inline": false,
+    "digest": "7c4a6e4307e2dc830ceeb91c1d85a40060e2fc94a1bf7bdb9344256ceb93f145"
+  },
+  {
+    "year": 2023,
+    "week": 18,
+    "label": "Week 18 · Postseason Week 6",
+    "heading": "Week 18 · Postseason Week 6",
+    "key": "2023-18",
+    "href": "ceremony-2023-18.html",
+    "inline": false,
+    "digest": "07de46424cf0e9e1f49a958c84c8717648968263de22f7cc6aa2a842419b9d0f"
+  },
+  {
+    "year": 2024,
+    "week": 12,
+    "label": "CCG",
+    "heading": "Conference Championships",
+    "key": "2024-12",
+    "href": "ceremony-2024-12.html",
+    "inline": false,
+    "digest": "180dfca5b6dc504855e44d65ad021d676b8857ceaf57f4193285b1230816c943"
+  },
+  {
+    "year": 2024,
+    "week": 13,
+    "label": "Opening Bowls",
+    "heading": "Opening Bowls",
+    "key": "2024-13",
+    "href": "ceremony-2024-13.html",
+    "inline": false,
+    "digest": "6cf447e9ac97a54955ee939cda10bf089d6be5a6c6cb2f3f2eb5ec67ad794005"
+  },
+  {
+    "year": 2024,
+    "week": 14,
+    "label": "Showcase Bowls",
+    "heading": "Showcase Bowls",
+    "key": "2024-14",
+    "href": "ceremony-2024-14.html",
+    "inline": false,
+    "digest": "a49dd96d69990b0a7d32ce5326e5336f98d55a210e10ccbf06e97746b1023499"
+  },
+  {
+    "year": 2024,
+    "week": 15,
+    "label": "Marquee Bowls",
+    "heading": "Marquee Bowls",
+    "key": "2024-15",
+    "href": "ceremony-2024-15.html",
+    "inline": false,
+    "digest": "9c29d0aeb0c1696f3a3998f87714d25d62ce20b02745d0939a2c25e1136b0be0"
+  },
+  {
+    "year": 2024,
+    "week": 16,
+    "label": "Prestige Bowls",
+    "heading": "Prestige Bowls",
+    "key": "2024-16",
+    "href": "ceremony-2024-16.html",
+    "inline": false,
+    "digest": "4dc26bfd8e7d064d4e143e1289065b77d83e15ab3b9ed6be89b4389136748535"
+  },
+  {
+    "year": 2024,
+    "week": 17,
+    "label": "Championship Week",
+    "heading": "Championship Week",
+    "key": "2024-17",
+    "href": "ceremony-2024-17.html",
+    "inline": false,
+    "digest": "d77bf4f0e0acf496dd417682057372b7dde679d56a1908685290cae799d55722"
+  },
+  {
+    "year": 2025,
+    "week": 12,
+    "label": "CCG",
+    "heading": "Conference Championships",
+    "key": "2025-12",
+    "href": "ceremony-2025-12.html",
+    "inline": false,
+    "digest": "02f374f916985ad24ae6b2dbaccdcb0c9ef9969b157b65b0f40fd9556cb10bdd"
+  },
+  {
+    "year": 2025,
+    "week": 13,
+    "label": "Opening Bowls",
+    "heading": "Opening Bowls",
+    "key": "2025-13",
+    "href": "ceremony-2025-13.html",
+    "inline": false,
+    "digest": "97c1ea0646db5cf36cf0e039e978b1a16569bb52c117745a0b1fbd4377b7a30b"
+  },
+  {
+    "year": 2025,
+    "week": 14,
+    "label": "Showcase Bowls",
+    "heading": "Showcase Bowls",
+    "key": "2025-14",
+    "href": "ceremony-2025-14.html",
+    "inline": false,
+    "digest": "3ca85ed12d976f9e3aadf913c2a66af393416c1639d5c8004c693a7db7255528"
+  },
+  {
+    "year": 2025,
+    "week": 15,
+    "label": "Marquee Bowls",
+    "heading": "Marquee Bowls",
+    "key": "2025-15",
+    "href": "ceremony-2025-15.html",
+    "inline": false,
+    "digest": "ffe4bc9b5aea895af6ec6bbd6fdb7cca9d3fb7337af8eb570df88f6b31bbe2b1"
+  },
+  {
+    "year": 2025,
+    "week": 16,
+    "label": "Prestige Bowls",
+    "heading": "Prestige Bowls",
+    "key": "2025-16",
+    "href": "ceremony-2025-16.html",
+    "inline": false,
+    "digest": "c0cd07505aa61df65a73f1247e65a7d2570a05990ac9998ae5bfd10bd3202a35"
+  },
+  {
+    "year": 2025,
+    "week": 17,
+    "label": "Championship Week",
+    "heading": "Championship Week",
+    "key": "2025-17",
+    "href": "ceremony-2025-17.html",
+    "inline": false,
+    "digest": "4e3bea80e9bc4c16066a07d3ea9ebc4bc7f243176050c54fa071c78e8c4ab2fd"
+  }
+]

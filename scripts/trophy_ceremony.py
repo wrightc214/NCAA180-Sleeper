@@ -193,6 +193,8 @@ def publish(check=False):
     import requests
     from playwright.sync_api import sync_playwright
 
+    contact_id = os.environ.get("DISCORD_CONTACT_ID", "").strip()
+    mention = f"<@{contact_id}> " if re.fullmatch(r"[0-9]+", contact_id) else ""
     with sync_playwright() as pw:
         browser = pw.chromium.launch()
         page = browser.new_page(viewport={"width": 620, "height": 900},
@@ -204,8 +206,8 @@ def publish(check=False):
             png = page.locator("#trophy-ceremony").screenshot(animations="disabled")
             previous = ledger.get(item["key"], {})
             message = previous.get("id") if previous.get("destination") == destination else None
-            payload = {"content": f'**{item["year"]} · {item["heading"]}**\n{SITE}{item["href"]}',
-                       "allowed_mentions": {"parse": []},
+            payload = {"content": f'{mention}**{item["year"]} · {item["heading"]}**\n{SITE}{item["href"]}',
+                       "allowed_mentions": {"parse": [], "users": [contact_id] if mention and not message else []},
                        "attachments": [{"id": 0, "filename": "trophy-ceremony.png"}]}
             files = {"files[0]": ("trophy-ceremony.png", png, "image/png")}
             try:
