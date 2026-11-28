@@ -410,11 +410,19 @@ jobs:
           git push
 
       - name: Send final CCG trophy notifications to Sleeper
+        id: sleeper_ccg_trophies
         if: github.event_name == 'schedule' && github.ref == 'refs/heads/main' && steps.publish_csvs.outcome == 'success'
         timeout-minutes: 20
         env:
           SLEEPER_SESSION_TOKEN: ${{ secrets.SLEEPER_SESSION_TOKEN }}
         run: python -u scripts/sleeper_ccg_announcements.py --publish-scheduled --out "$RUNNER_TEMP/sleeper-ccg-trophies"
+
+      - name: Send Guillotine survivors to Sleeper
+        if: github.event_name == 'schedule' && github.ref == 'refs/heads/main' && steps.sleeper_ccg_trophies.outcome == 'success'
+        timeout-minutes: 20
+        env:
+          SLEEPER_SESSION_TOKEN: ${{ secrets.SLEEPER_SESSION_TOKEN }}
+        run: python -u scripts/sleeper_guillotine_survivors.py
 
       # Weekly Discord post: automatic on the scheduled weekly run, or manual with `post`.
       # Problems -> held, commissioner alerted privately instead.
