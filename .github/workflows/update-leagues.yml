@@ -32,6 +32,8 @@ concurrency:
 
 jobs:
   gate:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     outputs:
       run: ${{ steps.check.outputs.run }}
@@ -42,6 +44,9 @@ jobs:
           python-version: "3.11"
       - run: pip install pandas requests
       - id: check
+        env:
+          DISCORD_WEBHOOK_LM_PRIVATE_DATA: ${{ secrets.DISCORD_WEBHOOK_LM_PRIVATE_DATA }}
+          DISCORD_CONTACT_ID: ${{ vars.DISCORD_CONTACT_ID }}
         run: python scripts/week_gate.py check
 
   build:
@@ -418,7 +423,7 @@ jobs:
         run: python -u scripts/sleeper_ccg_announcements.py --publish-scheduled --out "$RUNNER_TEMP/sleeper-ccg-trophies"
 
       - name: Send Guillotine survivors to Sleeper
-        if: github.event_name == 'schedule' && github.ref == 'refs/heads/main' && steps.sleeper_ccg_trophies.outcome == 'success'
+        if: always() && github.event_name == 'schedule' && github.ref == 'refs/heads/main' && steps.publish_csvs.outcome == 'success'
         timeout-minutes: 20
         env:
           SLEEPER_SESSION_TOKEN: ${{ secrets.SLEEPER_SESSION_TOKEN }}
