@@ -15,9 +15,10 @@ If Sleeper can't be reached, a scheduled run is skipped (the next wake-up retrie
 Readiness (added 2026-10-06): Sleeper flips the shared NFL week at once, but finishes each
 league's end-of-week processing over roughly an hour (CW's leagues: 11:12-12:05 ET). So a
 scheduled run also waits until EVERY league for the season reports settings.last_scored_leg >=
-the week just finished. Leagues without that field count as ready (warning). Safety valve: after
-READY_DEADLINE (Wed 12:00 UTC) it runs anyway with a warning, so a stuck league can't block the
-week. Manual runs skip the check.
+the week just finished. Before the regular-season finale, missing readiness counts as ready and
+READY_DEADLINE (Wed 12:00 UTC) allows lagging leagues to be bypassed. Starting with the run that
+closes the regular season, missing readiness and lagging leagues both block the scheduled run,
+including after the deadline. Manual runs skip the check.
 """
 import datetime
 import os
@@ -38,10 +39,14 @@ def not_ready(season, done_week):
     """League names whose last scored week is still behind done_week; (list, warnings)."""
     lg = pd.read_csv(LEAGUES, dtype=str)
     lg = lg[lg["Year"] == season]
+    if lg.empty:
+        raise ValueError(f"No configured leagues for {season}")
     behind, warn = [], []
     for r in lg.itertuples():
-        s = requests.get(LEAGUE_URL.format(r.LeagueID), timeout=20,
-                         headers={"User-Agent": "NCAA180-Sleeper/1.0"}).json() or {}
+        response = requests.get(LEAGUE_URL.format(r.LeagueID), timeout=20,
+                                headers={"User-Agent": "NCAA180-Sleeper/1.0"})
+        response.raise_for_status()
+        s = response.json() or {}
         leg = (s.get("settings") or {}).get("last_scored_leg")
         if leg is None:
             warn.append(r.LeagueName)
@@ -97,6 +102,11 @@ def main():
                 behind, warn = not_ready(season, week - 1)
             except Exception as e:
                 return out(False, f"League readiness check failed ({e}); next wake-up retries")
+            strict = week - 1 >= lcfg.last_regular_week()
+            if strict and (behind or warn):
+                waiting = behind + [f"{league} (missing last_scored_leg)" for league in warn]
+                return out(False, f"Waiting for confirmed league scoring through Week {week - 1}: "
+                                  f"{'; '.join(waiting)}; next wake-up retries")
             if warn:
                 print(f"::warning::No last_scored_leg for: {', '.join(warn)} (treated as ready)")
             if behind:

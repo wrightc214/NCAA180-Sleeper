@@ -164,13 +164,13 @@ def send(year, league_id, image, caption, *, token, intended_league=None, before
     return str(posted['message_id'])
 
 
-def save_post_state(records, message):
-    POSTS.write_text(json.dumps(records, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    subprocess.run(["git", "add", str(POSTS)], check=True)
+def save_post_state(records, message, path=POSTS):
+    path.write_text(json.dumps(records, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    subprocess.run(["git", "add", str(path)], check=True)
     subprocess.run([
         "git", "-c", "user.name=github-actions[bot]",
         "-c", "user.email=41898282+github-actions[bot]@users.noreply.github.com",
-        "commit", "--only", "-m", message, "--", str(POSTS),
+        "commit", "--only", "-m", message, "--", str(path),
     ], check=True)
     subprocess.run(["git", "push", "origin", "HEAD:refs/heads/main"], check=True)
 
