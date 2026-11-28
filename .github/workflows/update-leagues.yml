@@ -470,6 +470,14 @@ jobs:
           python -m playwright install --only-shell chromium
           python scripts/postseason_preview.py --post
 
+      - name: Review published Sleeper matchups in the private LM channel
+        if: always() && !cancelled() && github.ref == 'refs/heads/main' && steps.publish_csvs.outcome == 'success' && (github.event_name == 'schedule' || contains(fromJSON('["playoff_publish","bowls_publish","nit_publish"]'), github.event.inputs.script_to_run))
+        continue-on-error: true
+        env:
+          DISCORD_WEBHOOK_LM_PRIVATE_DATA: ${{ secrets.DISCORD_WEBHOOK_LM_PRIVATE_DATA }}
+          DISCORD_CONTACT_ID: ${{ vars.DISCORD_CONTACT_ID }}
+        run: python scripts/sleeper_postseason_matchups.py --review
+
       # Bowl projection -> league channel with the other weekly posts (CW, 2026-11-03). Same gate as the
       # weekly post: never when publishing is blocked or any script failed (the weekly post is held then too).
       - name: Post bowl projection to Discord
