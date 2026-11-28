@@ -18,10 +18,13 @@ scheduled run also waits until EVERY league for the season reports settings.last
 the week just finished. Before the regular-season finale, missing readiness counts as ready and
 READY_DEADLINE (Wed 12:00 UTC) allows lagging leagues to be bypassed. Starting with the run that
 closes the regular season, missing readiness and lagging leagues both block the scheduled run,
-including after the deadline. Manual runs skip the check.
+including after the deadline. The first strict hold past the deadline alerts lm-private-data.
+Manual runs skip the check.
 """
 import datetime
 import os
+import re
+import subprocess
 import sys
 
 import pandas as pd
@@ -58,6 +61,49 @@ def not_ready(season, done_week):
 def past_deadline():
     now = datetime.datetime.now(datetime.timezone.utc)
     return (now.weekday(), now.hour) >= READY_DEADLINE and now.weekday() <= 3
+
+
+def alert_strict_hold(season, finished_week, reason):
+    hook = os.environ.get("DISCORD_WEBHOOK_LM_PRIVATE_DATA", "").strip()
+    contact = os.environ.get("DISCORD_CONTACT_ID", "").strip()
+    if not re.fullmatch(r"https://(?:discord|discordapp)\.com/api/webhooks/\d+/[\w-]+", hook):
+        print("::warning::Strict week gate alert skipped: private Discord webhook is missing or invalid.")
+        return
+    if not contact.isdecimal():
+        print("::warning::Strict week gate alert skipped: DISCORD_CONTACT_ID is missing or invalid.")
+        return
+
+    # Scheduled runs are serialized by the workflow. Reserve before the webhook so
+    # an ambiguous response cannot result in a second alert on the next wake-up.
+    ref = f"refs/tags/automation/strict-week-gate/{season}/{finished_week}"
+    try:
+        existing = subprocess.run(
+            ["git", "ls-remote", "--exit-code", "--refs", "origin", ref], capture_output=True, timeout=20,
+        )
+        if existing.returncode == 0:
+            return
+        if existing.returncode != 2:
+            raise RuntimeError("could not check the alert reservation")
+        subprocess.run(["git", "push", "origin", f"HEAD:{ref}"], check=True, capture_output=True, timeout=20)
+        response = requests.post(
+            hook,
+            json={
+                "content": (
+                    f"<@{contact}> Weekly League Update held · {season} Week {finished_week}\n"
+                    f"{reason}\n"
+                    'A manual "Weekly League Update" run bypasses the gate.'
+                ),
+                "allowed_mentions": {"parse": [], "users": [contact]},
+            },
+            timeout=20,
+            allow_redirects=False,
+        )
+        if not 200 <= response.status_code < 300:
+            raise RuntimeError(f"Discord returned HTTP {response.status_code}")
+    except (OSError, subprocess.SubprocessError, requests.RequestException, RuntimeError) as error:
+        # A requests exception can include the private webhook URL.
+        detail = str(error) if isinstance(error, RuntimeError) else type(error).__name__
+        print(f"::warning::Strict week gate alert failed ({detail}).")
 
 
 def state():
@@ -105,8 +151,11 @@ def main():
             strict = week - 1 >= lcfg.last_regular_week()
             if strict and (behind or warn):
                 waiting = behind + [f"{league} (missing last_scored_leg)" for league in warn]
-                return out(False, f"Waiting for confirmed league scoring through Week {week - 1}: "
-                                  f"{'; '.join(waiting)}; next wake-up retries")
+                reason = (f"Waiting for confirmed league scoring through Week {week - 1}: "
+                          f"{'; '.join(waiting)}; next wake-up retries")
+                if past_deadline():
+                    alert_strict_hold(season, week - 1, reason)
+                return out(False, reason)
             if warn:
                 print(f"::warning::No last_scored_leg for: {', '.join(warn)} (treated as ready)")
             if behind:
