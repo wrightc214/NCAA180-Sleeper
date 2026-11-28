@@ -53,29 +53,17 @@ def test_same_league_mentions_both_managers_once():
     assert "Arizona State & @one vs. Utah & @two\n" in posts[0][2]
 
 
-def test_review_code_changes_on_scoring_correction_or_new_pairing(monkeypatch):
-    game = {field: "" for field in (
-        "GameID", "Round", "Stage", "BowlName", "PlayoffRound", "LeagueID",
-        "RosterID", "Team", "Seed", "Status", "Outcome", "Points",
-    )}
-    game.update(Year="2026", Week="13", GameID="first", Team="Auburn", Status="Pending")
-    roster = {"roster_id": 1, "points": 100.1, "players_points": {"sample": 10.1}}
-    monkeypatch.setattr(notifications, "fetch_json", lambda url: [roster])
-    args = ([game], "2026", 13, {"100"}, [("key", "100", "caption")])
-    original = notifications.review_code(*args)
-    assert notifications.review_code(*args) == original
-    roster["points"] = 100.2
-    assert notifications.review_code(*args) != original
-    roster["points"] = 100.1
-    game["Team"] = "Clemson"
-    assert notifications.review_code(*args) != original
+def test_hold_code_is_stable_per_week():
+    code = notifications.hold_code("2026", 13)
+    assert code == notifications.hold_code("2026", 13)
+    assert code != notifications.hold_code("2026", 14)
+    assert len(code) == 10
 
 
-@pytest.mark.parametrize("week, approval", [(13, None), (13, "stale"), (13, "current"), (14, None)])
-def test_wednesday_sends_only_the_approved_unchanged_slate(tmp_path, monkeypatch, week, approval):
+def _wednesday_setup(tmp_path, monkeypatch, week, argv):
     monkeypatch.chdir(tmp_path)
     monkeypatch.setenv("SLEEPER_SESSION_TOKEN", "test-token")
-    monkeypatch.setattr(sys, "argv", ["sleeper_postseason_matchups.py", "--scheduled"])
+    monkeypatch.setattr(sys, "argv", ["sleeper_postseason_matchups.py", *argv])
     monkeypatch.setattr(notifications.week_gate, "state", lambda: ("2026", week, "postseason"))
     monkeypatch.setattr(notifications.league_config, "cfg", lambda: {
         "schedule": {"postseason_start_week": 13, "postseason_end_week": 17},
@@ -95,10 +83,6 @@ def test_wednesday_sends_only_the_approved_unchanged_slate(tmp_path, monkeypatch
     data = tmp_path / "data"
     data.mkdir()
     (data / "LeagueIDs_AllYears.csv").write_text("Year,LeagueID,LeagueName\n2026,100,NCAA SEC\n", encoding="utf-8")
-    if approval:
-        (tmp_path / notifications.APPROVALS).write_text(
-            json.dumps({f"2026/{week}": approval}), encoding="utf-8",
-        )
 
     class PublishedSlate:
         def to_dict(self, orient):
@@ -107,23 +91,48 @@ def test_wednesday_sends_only_the_approved_unchanged_slate(tmp_path, monkeypatch
     key = f"2026/{week}/first/100"
     posts = [(key, "100", "Auburn & @one vs. Clemson")]
     monkeypatch.setattr(notifications.postseason, "read_season", PublishedSlate)
-    monkeypatch.setattr(notifications, "matchup_posts", lambda *args, events, **kwargs: iter(posts if "Playoff" in events else []))
-    monkeypatch.setattr(notifications, "review_code", lambda *args: "current")
+    monkeypatch.setattr(notifications, "matchup_posts",
+                        lambda *args, events, **kwargs: iter(posts if "Playoff" in events else []))
     calls = []
     monkeypatch.setattr(notifications, "post_private_review", lambda *args: calls.append("review"))
-    monkeypatch.setattr(notifications, "save_state", lambda records, message: calls.append(message))
+    monkeypatch.setattr(notifications, "save_state",
+                        lambda records, message, path=None: calls.append(message))
     monkeypatch.setattr(notifications, "send_post", lambda *args: calls.append("send") or "123")
-    if approval == "stale":
-        with pytest.raises(SystemExit, match="changed after approval"):
-            notifications.main()
-        assert calls == ["review"]
-    else:
+    return key, calls
+
+
+@pytest.mark.parametrize("week, held", [(13, False), (13, True), (14, False)])
+def test_wednesday_sends_unless_the_opening_week_is_held(tmp_path, monkeypatch, week, held):
+    key, calls = _wednesday_setup(tmp_path, monkeypatch, week, ["--scheduled"])
+    if held:
+        (tmp_path / notifications.HOLDS).write_text(
+            json.dumps({f"2026/{week}": {"held": True}}), encoding="utf-8",
+        )
+    notifications.main()
+    assert calls == ([] if held else [
+        f"Reserve Sleeper matchup post {key}",
+        "send",
+        f"Confirm Sleeper matchup post {key}",
+    ])
+
+
+def test_hold_code_records_hold_for_opening_week_only(tmp_path, monkeypatch):
+    _, calls = _wednesday_setup(tmp_path, monkeypatch, 13, ["--hold", "wrong"])
+    with pytest.raises(SystemExit, match="not for the current week"):
         notifications.main()
-        assert calls == ([
-            f"Reserve Sleeper matchup post {key}",
-            "send",
-            f"Confirm Sleeper matchup post {key}",
-        ] if approval or week == 14 else [])
+    monkeypatch.setattr(sys, "argv", ["x", "--hold", notifications.hold_code("2026", 13)])
+    notifications.main()
+    assert calls == ["Hold Sleeper opening matchups for 2026/13"]
+    monkeypatch.setattr(notifications.week_gate, "state", lambda: ("2026", 14, "postseason"))
+    monkeypatch.setattr(sys, "argv", ["x", "--hold", notifications.hold_code("2026", 14)])
+    with pytest.raises(SystemExit, match="no opening posts to hold"):
+        notifications.main()
+
+
+def test_review_posts_hold_code_only_in_opening_week(tmp_path, monkeypatch):
+    _, calls = _wednesday_setup(tmp_path, monkeypatch, 13, ["--review"])
+    notifications.main()
+    assert calls == ["review"]
 
 
 @pytest.mark.parametrize("week,expected", [(13, True), (14, False)])
@@ -155,7 +164,6 @@ def test_cut_line_is_only_on_initial_playoff_posts(tmp_path, monkeypatch, capsys
 
     monkeypatch.setattr(notifications.postseason, "read_season", PublishedSlate)
     monkeypatch.setattr(notifications, "fetch_json", lambda url: [])
-    monkeypatch.setattr(notifications, "review_code", lambda *args: "current")
     notifications.main()
     output = capsys.readouterr().out
     assert "Auburn vs. Clemson" in output

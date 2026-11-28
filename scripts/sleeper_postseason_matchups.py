@@ -19,7 +19,7 @@ import league_config
 import week_gate
 
 LEDGER = Path("data/SleeperPostseasonMatchupPosts.json")
-APPROVALS = Path("data/SleeperPostseasonMatchupApprovals.json")
+HOLDS = Path("data/SleeperPostseasonMatchupHolds.json")
 API = "https://api.sleeper.app/v1"
 EVENTS = {"Playoff": "Playoff", "Bowl": "Bowl", "NIT": "NIT"}
 TEST_LEAGUE = "1432137859359313920"
@@ -143,22 +143,9 @@ def send_post(key, league_id, caption, token):
     return str(posted["message_id"])
 
 
-def review_code(rows, year, week, league_ids, posts):
-    fields = ("GameID", "Week", "Round", "Stage", "BowlName", "PlayoffRound",
-              "LeagueID", "RosterID", "Team", "Seed", "Status", "Outcome", "Points")
-    published = sorted(tuple(row[field] for field in fields) for row in rows
-                       if row["Year"] == year and (row["Week"] == str(week)
-                                                  or row["Status"] == "Final"))
-    scores = {}
-    for league_id in sorted(league_ids):
-        matchups = fetch_json(f"{API}/league/{league_id}/matchups/{week - 1}")
-        scores[league_id] = sorted(
-            (row["roster_id"], row.get("points"), row.get("custom_points"),
-             row.get("starters"), row.get("players_points"))
-            for row in matchups
-        )
-    snapshot = json.dumps([year, week, published, scores, sorted(posts)], sort_keys=True, separators=(",", ":"))
-    return hashlib.sha256(snapshot.encode()).hexdigest()
+def hold_code(year, week):
+    """Stable per-week code: holding is about the week, not one exact slate."""
+    return hashlib.sha256(f"ncaa180-matchup-hold/{year}/{week}".encode()).hexdigest()[:10]
 
 
 def post_private_review(year, week, code, posts, league_names):
@@ -172,8 +159,8 @@ def post_private_review(year, week, code, posts, league_names):
     prefix = f"<@{contact}> " if contact else ""
     summary = (
         f"{prefix}**Sleeper matchup review · {year} Week {week}**\n"
-        "Review the published pairings below. To approve this exact slate, run "
-        "**Sleeper postseason matchups** in GitHub Actions and paste this approval code:\n"
+        "Opening posts send automatically on the Wednesday run. To block them, run "
+        "**Sleeper postseason matchups** in GitHub Actions and paste this hold code:\n"
         f"`{code}`"
     )
     send(hook, summary, mentions=[contact] if contact else [])
@@ -192,9 +179,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--scheduled", action="store_true")
     parser.add_argument("--review", action="store_true")
-    parser.add_argument("--approve", default="")
+    parser.add_argument("--hold", default="")
     args = parser.parse_args()
-    if sum((args.scheduled, args.review, bool(args.approve))) > 1:
+    if sum((args.scheduled, args.review, bool(args.hold))) > 1:
         parser.error("select one notification stage")
     if args.scheduled and datetime.now(ZoneInfo("America/New_York")).weekday() != 2:
         return
@@ -206,9 +193,9 @@ def main():
         return
 
     initial = {event for event, first in opening_weeks(config).items() if first == week}
-    if not initial and (args.review or args.approve):
-        if args.approve:
-            raise SystemExit("This week does not require matchup approval.")
+    if not initial and (args.review or args.hold):
+        if args.hold:
+            raise SystemExit("This week has no opening posts to hold.")
         return
 
     short_names = {full: short for short, full in postseason.league_short().items()}
@@ -258,41 +245,38 @@ def main():
     initial_posts = list(matchup_posts(
         rows, year, str(week), league_ids, handle_for, {}, events=initial, cut_lines=cut_lines,
     ))
-    posts = [] if args.review or args.approve else list(matchup_posts(
+    posts = [] if args.review or args.hold else list(matchup_posts(
         rows, year, str(week), league_ids, handle_for, {}, events=EVENTS.keys() - initial,
     ))
-    approval_key = f"{year}/{week}"
-    hold_changed = False
-    if initial_posts and (not publish or any(key not in records for key, _, _ in initial_posts)):
-        approvals = json.loads(APPROVALS.read_text(encoding="utf-8")) if APPROVALS.exists() else {}
-        if publish and approval_key not in approvals:
-            print(f"{approval_key}: waiting for opening matchup approval. Opening posts held.")
+    hold_key = f"{year}/{week}"
+    code = hold_code(year, week)
+    holds = json.loads(HOLDS.read_text(encoding="utf-8")) if HOLDS.exists() else {}
+    if args.hold:
+        if args.hold.strip() != code:
+            raise SystemExit("This hold code is not for the current week.")
+        if not initial_posts:
+            raise SystemExit("There are no opening posts this week to hold.")
+        if all(key in records for key, _, _ in initial_posts):
+            raise SystemExit(f"{hold_key}: opening posts were already sent. Nothing to hold.")
+        if hold_key in holds:
+            print(f"{hold_key} is already held.")
+            return
+        holds[hold_key] = {"held": True}
+        try:
+            save_state(holds, f"Hold Sleeper opening matchups for {hold_key}", HOLDS)
+        except subprocess.CalledProcessError:
+            raise SystemExit("Could not save the hold to main. Opening posts are NOT held.") from None
+        print(f"Held opening posts for {hold_key}. Later-round posts are unaffected.")
+        return
+    if args.review:
+        if initial_posts:
+            post_private_review(year, week, code, initial_posts, league_names)
+        return
+    if initial_posts:
+        if hold_key in holds:
+            print(f"{hold_key}: opening posts held by hold code. Not sent.")
         else:
-            review_rows = [row for row in rows if row["Week"] != str(week) or row["Round"] in initial]
-            code = review_code(review_rows, year, week, league_ids, initial_posts)
-            if args.approve:
-                if args.approve.strip() != code:
-                    raise SystemExit("This approval code does not match the current slate and scores.")
-                if approvals.get(approval_key) == code:
-                    print(f"{approval_key} is already approved.")
-                    return
-                approvals[approval_key] = code
-                try:
-                    save_state(approvals, f"Approve Sleeper matchups for {approval_key}", APPROVALS)
-                except subprocess.CalledProcessError:
-                    raise SystemExit("Could not save approval to main. No posts were sent.") from None
-                print(f"Approved {approval_key} for the Wednesday run.")
-                return
-            if args.review:
-                post_private_review(year, week, code, initial_posts, league_names)
-                return
-            if publish and approvals[approval_key] != code:
-                hold_changed = True
-            else:
-                print(f"Review code: {code}")
-                posts.extend(initial_posts)
-    elif args.approve:
-        raise SystemExit("There is no opening slate to approve.")
+            posts.extend(initial_posts)
 
     failures = 0
     count = 0
@@ -320,9 +304,6 @@ def main():
         except subprocess.CalledProcessError:
             raise SystemExit("Could not save the Sleeper confirmation. Further sends stopped.") from None
     print(f"{count} eligible postseason matchup posts.")
-    if hold_changed:
-        post_private_review(year, week, code, initial_posts, league_names)
-        raise SystemExit("Pairings or scoring inputs changed after approval. Opening sends held.")
     if failures:
         raise SystemExit("One or more matchup deliveries need review.")
 
